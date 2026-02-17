@@ -2,7 +2,7 @@
 
 **A Repeatable Protocol for Establishing Autonomous AI Agent Fleets**
 
-v1.3 • February 2026
+v1.4 • February 2026
 
 -----
 
@@ -140,6 +140,18 @@ This is an example roster. Your fleet may have more or fewer roles. The critical
 Agents are not limited to traditional software engineering roles. Any function that can be defined by clear inputs, outputs, and constraints can be performed by an agent — including functions modeled after non-technical disciplines, simulated users, and autonomous processes with no human analog at all.
 
 When selecting roles from this catalog, define the "Does NOT Do" boundary for each (per the example roster above). A role without boundaries will drift into adjacent roles, and the fleet loses the specialization advantage.
+
+> **HOW TO USE THIS CATALOG**
+>
+> Do not deploy all ninety-three roles. A typical fleet needs five to ten. Select roles based on the project's actual needs, define their boundaries using the "Does NOT Do" column from the example roster, and add them to the Fleet Roster template. Roles from the Simulation & Adversarial, Meta & Autonomous, and the scale-oriented categories (Planetary & Environmental Scale through Transformation & Pipeline State Space) are especially valuable as periodic or scheduled agents rather than permanent fleet members — deploy them for specific review cycles, capacity planning sessions, or pre-launch audits rather than continuous operation. The Fleet Evolution category (Role Crystallizer) is unique — it monitors the fleet itself for signals that a new specialist role should be created, making the roster self-extending under Admiral approval. The Domain Specialization, Release & Incident Lifecycle, and Developer Platform & Ecosystem categories fill gaps where a general-purpose Implementer would lack the domain depth to handle specialized concerns correctly — deploy them when the project's scope touches their domain. The scale-oriented agents reason about dimensions that no individual human naturally perceives — planetary geography, deep combinatorial state spaces, multi-year decay curves, emergent system behaviors, full failure topologies, cognitive load surfaces, regulatory matrices, and migration state graphs. Their value is in surfacing the structural realities that become visible only when the observer can hold the entire system in view simultaneously.
+
+> ⚠️ **CALLOUT SEVERITY KEY**
+>
+> Throughout this document, callouts use two severity levels:
+>
+> ⛔ **Critical anti-pattern** — common, high-impact failure mode. If you see only one of these active, it can derail the fleet.
+>
+> ⚠️ **Secondary anti-pattern** — subtler, slower-acting failure mode. Less immediately destructive but compounds over time if unaddressed.
 
 **Command & Coordination**
 
@@ -368,10 +380,6 @@ When selecting roles from this catalog, define the "Does NOT Do" boundary for ea
 |---|----------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
 |92 |Migration State Space Navigator   |Maps the complete directed graph of all possible migration paths between the current system state and a target state — including intermediate states that are independently deployable, rollback checkpoints at every edge, paths that become irreversible once traversed, ordering constraints where step A must precede step B but step C is independent, and dead-end states where a partial migration leaves the system in a configuration from which neither forward nor backward progress is possible without data loss|
 |93 |Build/Deploy Pipeline Topologist  |Models the entire CI/CD pipeline as a time-dependency DAG with probabilistic failure rates at every node — cache invalidation surfaces where a single upstream change triggers disproportionate rebuild cascades, parallelization opportunities where independent stages could run concurrently but are serialized by convention, flaky test nodes whose stochastic failure rate compounds into a near-certain pipeline failure at scale, and the critical path analysis that reveals which stage's duration actually determines deployment latency versus which stages merely consume resources while the critical path waits elsewhere|
-
-> **HOW TO USE THIS CATALOG**
->
-> Do not deploy all ninety-three roles. A typical fleet needs five to ten. Select roles based on the project's actual needs, define their boundaries using the "Does NOT Do" column from the example roster, and add them to the Fleet Roster template. Roles from the Simulation & Adversarial, Meta & Autonomous, and the scale-oriented categories (Planetary & Environmental Scale through Transformation & Pipeline State Space) are especially valuable as periodic or scheduled agents rather than permanent fleet members — deploy them for specific review cycles, capacity planning sessions, or pre-launch audits rather than continuous operation. The Fleet Evolution category (Role Crystallizer) is unique — it monitors the fleet itself for signals that a new specialist role should be created, making the roster self-extending under Admiral approval. The Domain Specialization, Release & Incident Lifecycle, and Developer Platform & Ecosystem categories fill gaps where a general-purpose Implementer would lack the domain depth to handle specialized concerns correctly — deploy them when the project's scope touches their domain. The scale-oriented agents reason about dimensions that no individual human naturally perceives — planetary geography, deep combinatorial state spaces, multi-year decay curves, emergent system behaviors, full failure topologies, cognitive load surfaces, regulatory matrices, and migration state graphs. Their value is in surfacing the structural realities that become visible only when the observer can hold the entire system in view simultaneously.
 
 ### Routing Logic
 
@@ -798,12 +806,55 @@ Reference this section when diagnosing fleet problems. Most issues map to one or
 
 
 > **HOW TO USE THIS FIELD GUIDE**
-> 
+>
 > When something goes wrong, find the symptom in this table. The Primary Defense column tells you which section to audit and strengthen.
-> 
-> During the Admiral’s periodic review, scan for warning signs of each failure mode across all active fleets. Catching a failure mode early is an order of magnitude cheaper than diagnosing it after it has compounded through multiple sessions.
-> 
+>
+> During the Admiral's periodic review, scan for warning signs of each failure mode across all active fleets. Catching a failure mode early is an order of magnitude cheaper than diagnosing it after it has compounded through multiple sessions.
+>
 > When onboarding a new orchestrator configuration, review this list as a threat model. Ensure the system prompt and operating constraints address each failure mode explicitly.
+
+### Diagnostic Decision Tree
+
+When fleet output degrades and the cause is not immediately obvious, use this symptom-based triage. Start with the most visible symptom, follow the branches, and arrive at the likely failure mode and its primary defense.
+
+**Symptom: Output quality is declining**
+
+- Is quality worse at the end of outputs than the beginning? → **Attention Degradation** → Work Decomposition (05): reduce chunk size, apply attention-evening protocol
+- Is quality uniformly lower than previous sessions?
+  - Has context loading changed? → **Context Starvation** or **Context Stuffing** → Context Window Strategy (13): audit context profiles
+  - Has Ground Truth been updated recently? If no → **Stale Ground Truth** → Ground Truth (06): update environmental facts
+  - Has Ground Truth been updated recently? If yes → **Patch Without Cascade** → Adaptation Protocol (14): verify full cascade was completed
+
+**Symptom: Tasks are taking too long**
+
+- Are agents producing work but getting sent back repeatedly? → **Unclear Success Criteria** → Success Criteria (10): sharpen acceptance criteria
+- Are agents escalating frequently? → **Narrow Autonomous Tier** or **Unclear Decision Authority** → Decision Authority (04) and Admiral Self-Calibration (15)
+- Are agents idle, waiting for input? → **Admiral Bottleneck** → Admiral Self-Calibration (15): check bottleneck detection signals
+- Are agents retrying the same approach? → **Environmental Instability** or **Phantom Capabilities** → Ground Truth (06): update known issues and access permissions
+
+**Symptom: Agents are doing work that was not requested**
+
+- Adding features? → **Scope Creep via Helpfulness** → Boundaries (02): strengthen non-goals
+- Making architectural decisions? → **Hierarchical Drift** → Fleet Composition (03): clarify role boundaries in agent prompts
+- Modifying files outside their scope? → **Scope Boundary Violation** → Boundaries (02): enforce file ownership per agent
+
+**Symptom: Work from different agents does not integrate**
+
+- Were agents working in parallel? → **Optimistic Parallelism** → Parallel Execution (16): define contracts before dispatch
+- Were agents working sequentially with handoffs? → **Interface Contract Violation** → Fleet Composition (03): strengthen handoff contracts
+- Do they use different naming or patterns for the same concept? → **Invocation Inconsistency** → Ground Truth (06): anchor naming conventions in ontology
+
+**Symptom: The Admiral is overwhelmed**
+
+- Reviewing everything personally? → **Micromanagement Spiral** → Admiral Self-Calibration (15): widen Autonomous tier for proven categories
+- Rubber-stamping approvals without substantive review? → Those decisions should be Autonomous → Decision Authority (04): promote to Autonomous tier
+- Changing direction every session? → **Perpetual Pivot** → Adaptation Protocol (14): stabilize the Mission before continuing
+
+**Symptom: Everything looks fine but stakeholders are unhappy**
+
+- Is the fleet building to criteria that no longer match stakeholder needs? → **Stale Mission** or **Patch Without Cascade** → Mission (01) and Adaptation Protocol (14)
+- Is the fleet's output correct but hard to verify? → **Format Over Substance** → Institutional Memory (08): tighten checkpoint requirements
+- Is the fleet optimizing metrics rather than outcomes? → **Goodharting** → Fleet Health Metrics (17): rotate emphasis metrics, add qualitative spot-checks
 
 -----
 
@@ -895,13 +946,13 @@ Framework artifacts are not independent. They form a dependency graph. When one 
 **Primary cascade dependencies:**
 
 ```
-Mission (01) ──→ Boundaries (02) ──→ Work Decomposition (05)
+Mission (01) ──→ Boundaries (02) ──→ Work Decomposition (05) ──→ Parallel Execution (16)
      │                │
      │                ▼
-     │         Success Criteria (10) ──→ Quality Assurance (09)
+     │         Success Criteria (10) ──→ Quality Assurance (09) ──→ Fleet Health Metrics (17)
      │
      ▼
-Ground Truth (06) ──→ Fleet Composition (03) ──→ Decision Authority (04)
+Ground Truth (06) ──→ Fleet Composition (03) ──→ Decision Authority (04) ──→ Admiral Self-Calibration (15)
                               │
                               ▼
                     Context Profiles (13)
@@ -1279,6 +1330,84 @@ When standing up a new fleet, complete these sections in this order. This is not
 
 -----
 
-*The Fleet Admiral Framework • v1.3*
+## Worked Example: SaaS Task Manager
+
+A concrete application of the framework for a mid-complexity greenfield project. This example is abbreviated — a production deployment would fill in more detail in each template. It demonstrates how the first five artifacts in the Quick-Start Sequence connect.
+
+### Mission
+
+> This project is a collaborative task management application for small teams (5–20 members).
+>
+> It is successful when a team can create projects, assign tasks, track progress through customizable workflows, and receive notifications — all within a sub-200ms UI response time.
+>
+> It is built for small-team leads and individual contributors who need lightweight project tracking without enterprise overhead.
+>
+> Current phase: greenfield.
+
+### Boundaries (abbreviated)
+
+> NON-GOALS: No Gantt charts. No resource allocation or capacity planning. No time tracking. No mobile app (web-only MVP). No SSO (email/password auth only for v1). No real-time collaborative editing of task descriptions.
+>
+> CONSTRAINTS: Next.js 15 with TypeScript 5.7, PostgreSQL 16, Tailwind 4.0. Ship MVP in 6 weeks. Must pass WCAG 2.1 AA.
+>
+> BUDGETS: 50K tokens per task. 30 minutes wall-clock per task. Agents may only modify files in `src/` and `prisma/`.
+>
+> QUALITY FLOOR: All code passes ESLint with zero errors. All new code has test coverage. All pages score 90+ on Lighthouse accessibility. No `any` types in TypeScript.
+
+### Fleet Roster
+
+> FLEET: TaskFlow
+>
+> ORCHESTRATOR: Claude Opus — Autonomous tier for implementation decisions, Propose tier for schema and API design.
+>
+> SPECIALISTS:
+>
+> - Architect (#15): System structure, API design, schema decisions. Owns `prisma/schema.prisma` and `docs/architecture/`. Does NOT write implementation code or make UI decisions.
+> - Frontend Implementer (#5): UI components, pages, client state. Owns `src/app/` and `src/components/`. Does NOT modify API routes, database schemas, or server-side logic.
+> - Backend Implementer (#10): API routes, business logic, middleware. Owns `src/api/` and `src/lib/server/`. Does NOT modify UI components or database schemas directly.
+> - Database Agent (#12): Schema design, migrations, query optimization. Owns `prisma/`. Does NOT modify application code or choose API response shapes.
+> - QA Agent (#24): Reviews all output, runs test suites, validates acceptance criteria. Owns nothing (read-only access). Does NOT fix issues directly — sends structured reports back to the responsible specialist.
+> - Accessibility Auditor (#7): Periodic WCAG 2.1 AA review of all UI. Triggered per feature completion. Does NOT implement fixes — produces audit reports for Frontend Implementer.
+>
+> ROUTING: Database tasks → Database Agent. UI tasks → Frontend Implementer. API tasks → Backend Implementer. Cross-cutting design → Architect decomposes first. All completed work → QA Agent before acceptance.
+
+### Decision Authority
+
+> 🟢 AUTONOMOUS: Component naming, file structure within owned directories, test implementation, CSS/styling, internal refactors, dependency patch versions, code formatting, error message copy.
+>
+> 🟡 PROPOSE: New database tables or columns, new API endpoints, new external dependencies, component architecture patterns (first use of a pattern), authentication flow design, any change to the build pipeline.
+>
+> 🔴 ESCALATE: Scope additions not in the Mission, budget overruns >120%, security concerns, any change to the deployment target or tech stack, any deviation from the six-week timeline.
+
+### Context Profile: Frontend Implementer
+
+> STANDING CONTEXT: Role definition ("You are the Frontend Implementer. You do not make decisions that belong to the Architect or the Orchestrator."), Mission, Boundaries, design system tokens, component naming conventions.
+>
+> SESSION CONTEXT: Last session checkpoint, current task specification, relevant API contracts from Backend Implementer, Architect's component structure decisions.
+>
+> ON-DEMAND CONTEXT: Accessibility guidelines (loaded when building new interactive components), animation patterns (loaded for transition work), form validation patterns (loaded for form-heavy tasks).
+>
+> REFRESH TRIGGERS: After each feature completion, after any schema change, after any API contract modification.
+>
+> SACRIFICE ORDER: Previous session checkpoints (oldest first) → architectural history → design system details → component conventions → Boundaries → Mission (never sacrificed).
+
+### First Task Decomposition (abbreviated)
+
+> GOAL: Implement the core task board — create, view, and move tasks across workflow columns.
+>
+> CHUNKS:
+>
+> 1. **Schema design** — Entry: Mission + Boundaries defined — Exit: Prisma schema with Task, Project, Column models, migration runs clean — Budget: 20K tokens — Owner: Database Agent
+> 2. **API layer** — Entry: Schema approved — Exit: CRUD endpoints for tasks, projects, columns; all pass integration tests — Budget: 30K tokens — Owner: Backend Implementer
+> 3. **Board UI** — Entry: API contracts defined — Exit: Kanban board renders columns, displays tasks, supports drag-to-move — Budget: 40K tokens — Owner: Frontend Implementer
+> 4. **Accessibility pass** — Entry: Board UI complete — Exit: WCAG 2.1 AA audit report, all Blocker/Major issues resolved — Budget: 15K tokens — Owner: Accessibility Auditor → Frontend Implementer
+>
+> SEQUENCE: 1 → 2 → 3 → 4 (serialized — each depends on the previous). Chunks 2 and 3 could be staggered using Contract-First Parallelism if the API contract is defined during chunk 2's design phase.
+>
+> REVIEW ORDER: Reverse (4, 3, 2, 1), then middle-out (2, 3, 1, 4), then forward for continuity.
+
+-----
+
+*The Fleet Admiral Framework • v1.4*
 
 *Context is the currency of autonomous AI. Spend it wisely.*
