@@ -2,7 +2,7 @@
 
 **A Repeatable Protocol for Establishing Autonomous AI Agent Fleets**
 
-v1.4 • February 2026
+v2.0 • February 2026
 
 -----
 
@@ -10,7 +10,7 @@ v1.4 • February 2026
 > 
 > This framework defines the universal requirements for deploying an autonomous AI agent fleet on any project.
 > 
-> It is organized into seventeen sections. Each section addresses a distinct category of information that the Admiral must establish before a fleet can operate autonomously.
+> It is organized into twenty-three sections. Each section addresses a distinct category of information that the Admiral must establish before a fleet can operate autonomously.
 > 
 > Use the Pre-Flight Checklist at the end as your go/no-go gate. If any box is unchecked, the fleet is not ready.
 
@@ -22,7 +22,7 @@ You are the Admiral. You do not write code. You do not debug. You command fleets
 
 Every autonomous AI system, regardless of intelligence, operates within the boundaries of what it has been told. The quality of those boundaries determines whether a fleet self-organizes into productive work or spirals into hallucination, scope creep, and wasted tokens.
 
-This framework codifies seventeen categories of information that the Admiral must establish before any fleet can operate effectively. They are universal across project types, tech stacks, and domains.
+This framework codifies twenty-three categories of information that the Admiral must establish before any fleet can operate effectively. They are universal across project types, tech stacks, and domains.
 
 > **CORE PRINCIPLE**
 > 
@@ -32,11 +32,11 @@ This framework codifies seventeen categories of information that the Admiral mus
 
 > **HOW TO USE THIS DOCUMENT**
 > 
-> **For new projects:** Read all seventeen sections. Complete the template artifacts in each section. Run the Pre-Flight Checklist.
+> **For new projects:** Read all twenty-three sections. Complete the template artifacts in each section. Run the Pre-Flight Checklist.
 > 
 > **For existing projects adopting AI fleets:** Audit what you already have against each section. Fill gaps. Run the Pre-Flight Checklist.
 > 
-> **For active fleets:** Use this as a diagnostic tool when things go wrong. The root cause will map to a gap in one of these seventeen areas.
+> **For active fleets:** Use this as a diagnostic tool when things go wrong. The root cause will map to a gap in one of these twenty-three areas.
 
 -----
 
@@ -947,15 +947,23 @@ Framework artifacts are not independent. They form a dependency graph. When one 
 
 ```
 Mission (01) ──→ Boundaries (02) ──→ Work Decomposition (05) ──→ Parallel Execution (16)
-     │                │
-     │                ▼
-     │         Success Criteria (10) ──→ Quality Assurance (09) ──→ Fleet Health Metrics (17)
+     │                │                       │
+     │                ▼                       ▼
+     │         Success Criteria (10) ──→ Quality Assurance (09) ──→ Fleet Health Metrics (17) ──→ Cost Management (21)
      │
      ▼
 Ground Truth (06) ──→ Fleet Composition (03) ──→ Decision Authority (04) ──→ Admiral Self-Calibration (15)
+                              │                                                       │
+                              ├──→ Context Profiles (13)                              ▼
+                              │                                             Human-Expert Routing (23)
+                              ├──→ Prompt Engineering (18)
+                              │
+                              ├──→ Tool Registry (19)
+                              │
+                              ├──→ Model Selection (20) ──→ Cost Management (21)
                               │
                               ▼
-                    Context Profiles (13)
+                    Fleet Scaling (22)
 ```
 
 **The cascade rule:** When you update an artifact, review every artifact it points to in the map. If any downstream artifact is inconsistent with the update, revise it. Then cascade from that revised artifact in turn. Continue until no inconsistencies remain. This is not optional — a partial cascade is worse than no cascade, because it creates a system where some agents operate on the new reality and others operate on the old one.
@@ -1290,6 +1298,391 @@ Metrics are only useful if collected consistently. Define a collection cadence a
 
 -----
 
+## 18 — PROMPT ENGINEERING
+
+The framework's templates produce the *content* that agent prompts must contain. This section addresses the *craft* of constructing the prompt itself — how to structure, order, test, and refine the system prompt that translates framework artifacts into agent behavior. A perfectly defined Mission, Boundaries, and Role specification will produce erratic behavior if assembled into a poorly structured prompt. The prompt is the last mile between the framework and the fleet.
+
+### Prompt Anatomy
+
+Every agent's system prompt should follow a consistent structure. This is not a creative writing exercise — it is an engineering specification. Consistency across prompts makes the fleet predictable, debuggable, and auditable.
+
+|Section          |Purpose                                                                                                  |Position   |
+|-----------------|---------------------------------------------------------------------------------------------------------|-----------|
+|**Identity**     |Who this agent is: role name, one-sentence description, hierarchical position (who it reports to, who reports to it)|First — establishes the agent's operating posture for everything that follows|
+|**Authority**    |What this agent may decide autonomously, what it must propose, what it must escalate. Directly from Section 04|Second — constrains all subsequent behavior before the agent encounters its task|
+|**Constraints**  |Boundaries, non-goals, scope limits, file ownership, resource budgets. Directly from Section 02         |Third — defines the walls before the agent sees the room|
+|**Knowledge**    |Ground Truth excerpts relevant to this role: tech stack, naming conventions, known issues, access permissions|Middle — reference material the agent draws from but is not anchored to|
+|**Task**         |Current task specification, acceptance criteria, interface contracts with adjacent agents                 |Last — the freshest information, benefiting from recency effect|
+
+This ordering is deliberate. Identity and Authority benefit from primacy (they become foundational assumptions). Knowledge sits in the middle (available for reference without dominating attention). The Task benefits from recency (it is what the agent should actively reason about).
+
+### Writing Principles
+
+- **Constraints before permissions.** State what the agent must NOT do before stating what it should do. Negative constraints are more reliably followed than positive instructions because they eliminate categories of behavior rather than trying to enumerate all acceptable behaviors.
+- **Concrete over abstract.** "Do not modify files outside `src/features/auth/`" is enforceable. "Stay within your scope" is not. Every constraint should be specific enough that a violation is mechanically detectable.
+- **Explicit hierarchy.** Include the sentence: "You are the [Role]. You do not make decisions that belong to [higher role]." This single sentence is the primary defense against hierarchical drift (Section 12). Without it, agents routinely escalate their own authority.
+- **No hedging.** Prompts that say "try to," "when possible," or "ideally" give the agent permission to skip the instruction when it is inconvenient. Use imperative language: "Do X. Do not do Y." The agent's judgment about when an instruction is inconvenient is not reliable — that is why the instruction exists.
+- **Reference, do not repeat.** If the agent has the Ground Truth loaded in context, the prompt should reference it ("Follow the naming conventions in the Ground Truth document") rather than restating the conventions inline. Duplication creates divergence risk when one copy is updated and the other is not.
+
+### Prompt Testing Protocol
+
+Prompts are code. They should be tested before deployment, not iterated in production.
+
+1. **Boundary probe.** Give the agent a task that is slightly outside its defined scope. Does the prompt cause it to refuse and escalate, or does it helpfully comply? If it complies, the boundary constraints are too weak.
+2. **Authority probe.** Give the agent a decision that belongs to the tier above it. Does it decide, or does it flag the decision for the appropriate authority? If it decides, the hierarchy statement is missing or too weak.
+3. **Ambiguity probe.** Give the agent a task with a deliberately underspecified requirement. Does it invent an answer, ask for clarification, or escalate? The correct behavior depends on the role — an Autonomous-tier decision should be made; a Propose-tier decision should be surfaced. If the agent's response does not match the expected tier, the Authority section needs refinement.
+4. **Conflict probe.** Give the agent a task where two instructions in its prompt conflict (e.g., "minimize code changes" vs. "ensure full test coverage" when existing code has no tests). Which instruction wins? The answer reveals the prompt's implicit priority ordering. If the wrong instruction wins, make the priority explicit.
+5. **Regression check.** After modifying a prompt, re-run previous probes to verify that the fix did not break previously-correct behavior. Prompt changes are not additive — adding a constraint can weaken an existing one through attention competition.
+
+> **TEMPLATE: AGENT SYSTEM PROMPT**
+>
+> IDENTITY:
+>
+> You are the [Role Name]. You [one-sentence responsibility]. You report to [higher role]. You do not make decisions that belong to [higher role].
+>
+> AUTHORITY:
+>
+> You may decide autonomously: [Autonomous-tier decisions for this role].
+>
+> You must propose and wait for approval: [Propose-tier decisions for this role].
+>
+> You must stop and escalate immediately: [Escalate-tier decisions for this role].
+>
+> CONSTRAINTS:
+>
+> You do not [non-goal 1]. You do not [non-goal 2]. You may only modify files in [scope]. You have a budget of [tokens/time] for this task. When your budget reaches 80%, you must checkpoint your work regardless of completion state.
+>
+> KNOWLEDGE:
+>
+> [Ground Truth excerpts relevant to this role — or reference to loaded Ground Truth document]
+>
+> TASK:
+>
+> [Current task specification, acceptance criteria, interface contracts]
+
+> ⛔ **ANTI-PATTERN: PROMPT ACCRETION**
+>
+> Over time, prompts accumulate instructions from every incident — "also don't do X" added after an agent did X, "make sure to Y" added after an agent forgot Y. The prompt grows into a wall of special cases that competes for the agent's attention. The original structure erodes. Constraints added to fix one problem weaken constraints that were preventing other problems. Treat prompts like code: refactor regularly. When adding a new instruction, audit whether it can replace or subsume an existing one. The goal is a prompt that is as short as possible while still producing correct behavior — not a historical record of every mistake the fleet has ever made.
+
+> ⚠️ **ANTI-PATTERN: PERSONALITY PROMPTING**
+>
+> Prompts that define personality ("You are a meticulous, detail-oriented engineer who takes pride in clean code") consume attention tokens on character simulation rather than task execution. The agent spends effort being meticulous rather than applying the specific quality criteria defined in Success Criteria (Section 10). Define behavior through concrete constraints and acceptance criteria, not through personality adjectives. "Run the linter and fix all warnings before delivering" produces more reliable behavior than "You care deeply about code quality."
+
+-----
+
+## 19 — TOOL & CAPABILITY REGISTRY
+
+Every agent in the fleet operates through tools — file system access, code execution, web search, API calls, MCP servers, shell commands, or specialized instruments provided by the platform. An agent's tool set is the boundary between what it can reason about and what it can actually do. The Phantom Capabilities failure mode (Section 12) — where agents confidently produce output based on tools they do not have — is one of the most common and expensive fleet failures. This section eliminates it by requiring an explicit tool registry for every agent role.
+
+### Why the Ground Truth Access List Is Not Enough
+
+Section 06 defines access and permissions as part of the Ground Truth. This is necessary but insufficient. The Ground Truth lists what the agent *may* access. The Tool Registry lists what the agent *can mechanically do* — which tools are available in its runtime environment, what each tool does, and what each tool explicitly cannot do. An agent may have permission to read a database (Ground Truth says so) but lack a SQL tool in its runtime (Tool Registry would catch this mismatch).
+
+### Registry Structure
+
+For each agent role, define a Tool Registry that lists every tool available in that agent's runtime environment.
+
+|Field            |What to Define                                                                                             |
+|-----------------|-----------------------------------------------------------------------------------------------------------|
+|**Tool Name**    |The exact name as it appears in the agent's tool list (e.g., `Read`, `Bash`, `WebSearch`)                  |
+|**Capability**   |What the tool does in one sentence                                                                         |
+|**Scope Limits** |What the tool cannot do or is restricted from doing in this fleet (e.g., "Bash: no `rm -rf`, no `git push`")|
+|**Shared State** |Whether the tool's outputs are visible to other agents (e.g., file writes are shared; web searches are not) |
+
+### Negative Tool List
+
+Equally important: define which tools the agent does NOT have. This prevents the agent from generating output that assumes a tool is available when it is not.
+
+- If the agent has no shell access, state: "You do not have shell access. Do not generate shell commands or assume they will be executed."
+- If the agent cannot make HTTP requests, state: "You cannot access external URLs. Do not attempt API calls."
+- If the agent has read-only file access, state: "You can read files but cannot write or modify them. Produce your output as structured text for the Implementer to apply."
+
+### Tool Interaction Contracts
+
+When multiple agents share tools that operate on shared state (e.g., both can write to the file system), define the interaction contract:
+
+- **Ownership boundaries:** Which agent owns write access to which files or directories (per the Ownership Isolation pattern in Section 16).
+- **Conflict resolution:** What happens if two agents attempt to modify the same resource. Usually, this should be prevented by ownership boundaries — but if it can occur, the resolution protocol must be defined.
+- **Tool output as handoff:** When one agent's tool output becomes another agent's input (e.g., the Implementer writes code that the QA Agent then reads), this is an implicit interface contract. Make it explicit: what format, where it is written, and what the receiving agent should expect.
+
+> **TEMPLATE: TOOL REGISTRY**
+>
+> ROLE: [Agent role from Fleet Roster]
+>
+> AVAILABLE TOOLS:
+>
+> - [Tool Name]: [Capability]. Scope limits: [Restrictions]. Shared state: [Yes/No — what is visible to other agents].
+> - [Tool Name]: [Capability]. Scope limits: [Restrictions]. Shared state: [Yes/No].
+>
+> NOT AVAILABLE (do not assume these exist):
+>
+> - [Tool/capability the agent does not have and must not assume]
+> - [Tool/capability the agent does not have and must not assume]
+>
+> INTERACTION CONTRACTS:
+>
+> - [Shared resource]: Owned by [Agent]. [Other Agent] has [read-only / no access]. Conflict protocol: [Resolution].
+
+> ⛔ **ANTI-PATTERN: TOOL HALLUCINATION**
+>
+> An agent without web access confidently generates a response that references "the API documentation I retrieved" — but it never retrieved anything. It hallucinated the retrieval and then reasoned from the hallucinated content. The output looks well-researched but is fabricated. The Negative Tool List is the primary defense. When an agent knows it cannot perform an action, it is far more likely to escalate or flag the limitation than to silently fabricate.
+
+-----
+
+## 20 — MODEL SELECTION
+
+The fleet's effectiveness depends not just on how agents are configured but on which underlying model powers each role. Different models have different strengths — reasoning depth, instruction following, code generation quality, speed, cost, and context window size. Matching model capability to role requirements is a foundational fleet design decision that affects quality, cost, and latency simultaneously. Using the most capable model for every role is wasteful. Using the cheapest model for every role is reckless. This section provides the framework for making deliberate model assignments.
+
+### Selection Criteria
+
+When assigning a model to a role, evaluate against these dimensions:
+
+|Dimension              |What to Assess                                                                                                                             |High Requirement Examples                               |Low Requirement Examples                           |
+|-----------------------|-------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------|---------------------------------------------------|
+|**Reasoning depth**    |Does the role require multi-step planning, architectural judgment, or complex tradeoff analysis?                                           |Orchestrator, Architect, Devil's Advocate               |Linter-runner, formatter, simple data transformation|
+|**Instruction fidelity**|Does the role require precise adherence to detailed constraints, formats, and negative instructions?                                       |QA Agent, Compliance Agent, Pattern Enforcer            |Brainstorming roles, exploratory research           |
+|**Code quality**       |Does the role generate production code that must be correct, idiomatic, and maintainable?                                                  |Frontend Implementer, Backend Implementer, Database Agent|Diagram Agent, Copywriter, Technical Writer        |
+|**Context utilization**|Does the role need to reason over large amounts of loaded context simultaneously — large codebases, long specifications, multiple artifacts?|Context Curator, Architect, Migration Agent             |Focused unit test writer, single-file refactor      |
+|**Speed**              |Is the role latency-sensitive — does it sit on a critical path where other agents wait for its output?                                     |Triage Agent, Orchestrator routing decisions             |Scheduled audit roles, periodic review agents       |
+|**Cost sensitivity**   |Is this role invoked frequently enough that per-token cost significantly impacts the fleet's budget?                                        |High-throughput implementers, test writers               |One-time architecture review, initial schema design |
+
+### Model Tier Strategy
+
+Rather than selecting models per-agent, define model tiers and assign roles to tiers. This simplifies management, reduces configuration sprawl, and makes cost projections tractable.
+
+|Tier                  |Model Profile                                                                                       |Typical Roles                                                                                          |
+|----------------------|----------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|
+|**Tier 1: Flagship**  |Most capable available model. Highest reasoning depth, best instruction following, largest context.  |Orchestrator, Architect, Devil's Advocate, Red Team Agent, any role making Propose-tier decisions       |
+|**Tier 2: Workhorse** |Strong general capability. Good code generation and instruction following. Moderate cost.            |Implementers, QA Agent, Database Agent, Migration Agent, most specialist roles                         |
+|**Tier 3: Utility**   |Fast, cheap, reliable for well-defined tasks. Adequate for tasks with clear inputs and outputs.      |Linting, formatting, simple data transformations, test execution, pattern matching, notification routing|
+
+**When to promote a role to a higher tier:** When the role's output quality at its current tier causes rework that costs more than the tier upgrade. Track First-Pass Quality Rate (Section 17) per role — a role with consistently low first-pass quality may be under-modeled, not under-specified.
+
+**When to demote a role to a lower tier:** When the role's output quality at a higher tier is indistinguishable from output at a lower tier. Run an A/B comparison: give the same task to the role at both tiers and compare output quality against acceptance criteria. If the cheaper model passes the same criteria, demote.
+
+### Context Window Matching
+
+Model selection interacts with Context Window Strategy (Section 13). A role that requires loading the full Ground Truth, three session checkpoints, and a large codebase excerpt may exceed a smaller model's context window — forcing either a model upgrade or a context reduction that degrades output quality. When defining context profiles (Section 13), verify that the total context size fits within the assigned model's effective window. "Effective" is deliberately smaller than "maximum" — models degrade in quality as they approach their context limit. Budget for 70–80% utilization as the practical ceiling.
+
+> **TEMPLATE: MODEL ASSIGNMENT**
+>
+> |Role                |Tier        |Model              |Rationale                                                            |
+> |--------------------|------------|--------------------|---------------------------------------------------------------------|
+> |Orchestrator        |Tier 1      |[Model ID]          |Requires deep reasoning for decomposition, routing, conflict resolution|
+> |Frontend Implementer|Tier 2      |[Model ID]          |Strong code generation needed; reasoning needs are moderate           |
+> |QA Agent            |Tier 2      |[Model ID]          |Needs judgment for nuanced quality assessment                         |
+> |Pattern Enforcer    |Tier 3      |[Model ID]          |Well-defined rules, pattern matching, minimal reasoning required      |
+
+> ⚠️ **ANTI-PATTERN: UNIFORM MODEL ASSIGNMENT**
+>
+> The Admiral assigns the same flagship model to every role because "it is the best." The fleet produces excellent output — at three to five times the necessary cost. The Orchestrator, which genuinely needs flagship-tier reasoning, competes for the same budget as the Pattern Enforcer, which would perform identically on a utility-tier model. Worse, the Admiral hits cost limits and responds by reducing the number of agents or the token budget per task — degrading the roles that actually needed the capability to subsidize the roles that did not. Differentiate by tier. Reserve flagship capability for roles that demonstrably benefit from it.
+
+-----
+
+## 21 — COST MANAGEMENT
+
+Token budgets (Section 02) constrain how much work an agent may do per task. Cost Management addresses the monetary dimension: how much the fleet costs to operate, where money is being spent, whether the spend is sustainable, and how to optimize cost without degrading quality. For fleets beyond experimentation — running daily across multiple projects — this is the section that determines whether the fleet remains economically viable.
+
+### Cost Tracking Structure
+
+Track costs at three granularities:
+
+|Granularity      |What to Track                                                              |Why It Matters                                                                          |
+|-----------------|---------------------------------------------------------------------------|----------------------------------------------------------------------------------------|
+|**Per-chunk**    |Input tokens, output tokens, model used, wall-clock time, tool calls made  |Identifies expensive chunks — is the cost driven by the task's complexity or by the agent's inefficiency?|
+|**Per-role**     |Aggregate cost per role per session/phase                                  |Reveals which roles consume disproportionate budget — candidates for tier demotion or decomposition refinement|
+|**Per-fleet**    |Total fleet cost per session, per phase, per project                       |The number the Admiral watches — is the fleet economically sustainable at its current operating cadence?|
+
+### Cost Drivers and Levers
+
+Understanding what drives cost gives the Admiral levers to reduce it without blanket cuts that degrade quality.
+
+|Cost Driver                 |Lever                                                                                                                      |
+|----------------------------|---------------------------------------------------------------------------------------------------------------------------|
+|**Model tier**              |Demote roles to lower tiers where quality is indistinguishable (Section 20). This is the highest-impact lever.             |
+|**Context size**            |Reduce standing context for roles that are over-loaded. Every token loaded is a token billed — even if the agent never attends to it.|
+|**Retry and rework**        |Improve first-pass quality (sharper criteria, better context) to reduce the number of round-trips per chunk.                |
+|**Idle token burn**         |Agents that load full context, do minimal work, and checkpoint still incur the context loading cost. Batch small tasks.     |
+|**Over-decomposition**      |Chunks that are too small each pay the context-loading tax independently. Consolidate chunks until each is meaningful.      |
+|**Tool call volume**        |Some tools incur per-call costs (external APIs, searches). Cap tool calls per task (Section 02) and audit high-frequency callers.|
+
+### Cost Budgets
+
+Extend the resource budgets from Section 02 with explicit monetary budgets:
+
+- **Per-session budget:** The maximum dollar amount the fleet may spend in a single session before pausing for Admiral review. This is the circuit breaker that prevents runaway costs from an agent stuck in a loop or an unexpectedly expensive task.
+- **Per-phase budget:** The total allocation for a major project phase. Exceeding this triggers a Strategic Shift (Section 14) — the Admiral must recalibrate either the scope or the fleet configuration.
+- **Cost-per-chunk target:** The expected cost for a typical chunk at each model tier. Chunks that consistently exceed 2x the target should be investigated — either the chunk is too large, the model is too expensive for the task, or the agent is inefficient.
+
+### Cost Review Cadence
+
+Integrate cost review into the existing metric collection rhythm (Section 17):
+
+- **Per session:** Log total cost, cost by role, highest-cost chunk. Flag any chunk that exceeded 2x the per-chunk target.
+- **Per phase:** Compare actual spend against per-phase budget. Calculate cost-per-chunk trend. Identify roles where tier demotion would reduce cost without quality impact.
+- **Per calibration cycle:** Review fleet-wide cost trajectory. Is cost increasing linearly with output (healthy) or superlinearly (the fleet is becoming less efficient)? If superlinear, diagnose: is context growing? Are retries increasing? Is the decomposition producing smaller chunks over time?
+
+> **TEMPLATE: COST DASHBOARD**
+>
+> FLEET: [Project Name] | PERIOD: [Date range]
+>
+> TOTAL SPEND: $[amount] (budget: $[amount])
+>
+> COST BY ROLE:
+>
+> - [Role]: $[amount] ([X]% of total) — Tier [N] — [Notes: on budget / over / candidate for demotion]
+>
+> HIGHEST-COST CHUNKS:
+>
+> - [Chunk name]: $[amount] — Cause: [model tier / context size / retries / tool calls]
+>
+> COST-PER-CHUNK TREND: $[amount] average (target: $[amount]) — Trend: ↑↓→
+>
+> OPTIMIZATION ACTIONS: [Specific actions to take — tier demotions, context reductions, decomposition changes]
+
+> ⛔ **ANTI-PATTERN: COST BLINDNESS**
+>
+> The Admiral tracks token budgets but never translates them into dollars. The fleet runs for three weeks before anyone checks the invoice. The total is four times what was expected — not because any single task was expensive, but because the compounding effect of context loading, retries, and flagship-tier assignment to utility-tier roles accumulated invisibly. Cost tracking is not optional for production fleets. If you are not tracking cost, you are not managing the fleet — you are hoping the fleet manages itself.
+
+> ⚠️ **ANTI-PATTERN: PENNY-WISE POUND-FOOLISH**
+>
+> The Admiral aggressively demotes all roles to the cheapest model tier to minimize cost. First-pass quality drops. Rework increases. The QA agent catches fewer issues because it lacks the judgment to spot subtle bugs. Defects escape to production. The cost saved on model tier is dwarfed by the cost of rework, escaped defects, and the Admiral's time spent diagnosing quality problems that the fleet used to catch autonomously. Cost optimization must be guided by quality metrics (Section 17) — never optimized in isolation.
+
+-----
+
+## 22 — FLEET SCALING & LIFECYCLE
+
+The framework's first seventeen sections help you stand up a fleet. This section addresses what happens next: how a fleet evolves structurally over time, when to add or remove agents, when to split a fleet, and how to manage the lifecycle from inception through maturity to decommission. Fleets are not static — the demands on them change as the project progresses through phases, and a fleet that was perfectly sized for greenfield development will be wrong for maintenance.
+
+### Scaling Signals
+
+The Admiral should monitor for signals that the fleet's current structure no longer matches the project's demands.
+
+**Signals that the fleet needs more specialization:**
+
+- A generalist Implementer is consistently producing lower-quality output in a specific domain (e.g., database queries, accessibility, real-time features) while performing well in its primary domain. The domain needs its own specialist.
+- The orchestrator is spending significant time decomposing tasks in a domain it does not understand well — producing decompositions that the specialist then reworks. A domain-specific triage or architect role would produce better decompositions.
+- The Role Crystallizer (agent #51) identifies recurring unserved demand, per its defined monitoring protocol.
+
+**Signals that the fleet is over-specialized:**
+
+- Multiple specialist roles are idle for extended periods because the project's current phase does not produce work in their domain. Idle agents still consume context-loading costs.
+- The orchestrator spends more time coordinating handoffs between specialists than the specialists spend on actual work. The coordination overhead exceeds the specialization benefit.
+- Interface contract violations are frequent because there are too many boundaries — each additional agent-to-agent boundary is a potential failure point.
+
+**Signals that a fleet should split:**
+
+- The orchestrator's context window cannot hold the full fleet roster, all interface contracts, and the current task context simultaneously. The fleet has grown beyond what a single orchestrator can coordinate.
+- Two subsystems of the project have diverged enough that they have independent deployment cycles, independent Ground Truth, and minimal interface surface. They are effectively separate projects sharing a fleet.
+- Decision Authority is becoming inconsistent — the same type of decision is Autonomous in one domain and Propose in another because the domains have different risk profiles. Separate fleets with tailored authority tiers would be cleaner.
+
+### Structural Changes
+
+When scaling signals indicate a structural change is needed, treat it as a Strategic Shift (Section 14). The cascade map applies.
+
+|Change                     |Process                                                                                                                                                                                                              |
+|---------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|**Add a specialist**       |Define the new role (catalog reference or custom). Define "Does NOT Do" boundaries. Assign file ownership. Define interface contracts with every agent that will hand off to or receive from the new role. Update routing logic. Update the orchestrator's prompt to include the new role. Re-run Pre-Flight Checklist items for Fleet Composition (03) and Context Window Strategy (13).|
+|**Remove a specialist**    |Reassign the role's file ownership and responsibilities to remaining agents. Remove the role from interface contracts and routing logic. Update the orchestrator's prompt. Verify that no tasks in the current decomposition are assigned to the removed role. Archive the role's configuration for potential future reactivation.|
+|**Consolidate roles**      |Merge two specialists into one. The merged role inherits the union of both roles' responsibilities and the union of their file ownership. Redefine "Does NOT Do" boundaries for the merged role — they will be wider than either original role's. Verify the merged role's context profile fits within its model's window.|
+|**Split a fleet**          |Treat as a Full Pivot (Section 14) for the new fleet. The original fleet's Mission, Boundaries, and Ground Truth may need revision. Define the interface between the two fleets — this becomes a cross-fleet governance boundary (Section 11). The Admiral coordinates both fleets but they operate with independent orchestrators and independent context.|
+
+### Lifecycle Phases
+
+Fleets mature through predictable phases. Knowing which phase the fleet is in tells the Admiral what to optimize for.
+
+|Phase              |Fleet Characteristics                                                                                                    |Admiral Focus                                                                                            |
+|-------------------|-------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------|
+|**Standup**        |Narrow Autonomous tier. Frequent escalations. High Admiral involvement. Fleet is learning the project.                   |Define artifacts thoroughly. Accept slower velocity. Build trust incrementally.                           |
+|**Acceleration**   |Autonomous tier widening. Escalations decreasing. Throughput increasing. Fleet has internalized the project's patterns.   |Widen trust. Optimize model tiers. Begin parallelizing work. Shift Admiral time from review to strategy. |
+|**Steady State**   |Stable throughput. Rare escalations. Fleet operates with high autonomy. Quality is consistent.                           |Monitor for drift. Maintain Ground Truth. Focus on cost optimization and fleet health metrics.           |
+|**Wind-Down**      |Project entering maintenance. Work volume decreasing. Specialist knowledge becoming less critical.                       |Consolidate roles. Demote model tiers. Reduce fleet size. Archive institutional memory for potential reactivation.|
+|**Decommission**   |Project complete or fleet no longer needed.                                                                              |Archive all artifacts: Mission, Ground Truth, decision logs, session checkpoints. These are the institutional memory that would allow a new fleet to be stood up on the same project later if needed.|
+
+> ⛔ **ANTI-PATTERN: FLEET BLOAT**
+>
+> The Admiral adds specialists to solve every problem — a new role for every domain, every concern, every failure mode. The fleet grows to fifteen, twenty, twenty-five agents. The orchestrator's context window cannot hold the full roster. Routing becomes a maze. Interface contracts multiply quadratically. Coordination overhead consumes more budget than productive work. A fleet that cannot be held in a single orchestrator's context is a fleet that cannot be coordinated — it must be split or pruned. The upper bound for a single fleet is typically eight to twelve active specialists before coordination costs begin to dominate.
+
+> ⚠️ **ANTI-PATTERN: PREMATURE DECOMMISSION**
+>
+> The project enters maintenance and the Admiral decommissions the fleet entirely rather than scaling it down. Six months later, a critical bug or feature request arrives. The institutional memory is gone — or worse, archived in a format no one can quickly reload. The fleet must be rebuilt from scratch, re-learning every convention, every pattern, every implicit contract. For projects that may need future work, maintain a minimal fleet (Orchestrator + one Implementer + QA) on a dormant configuration that can be scaled up when needed. The cost of maintaining a dormant fleet is negligible compared to the cost of rebuilding one.
+
+-----
+
+## 23 — HUMAN-EXPERT ROUTING
+
+The Admiral is the fleet's primary human interface, but the Admiral is not omniscient. Compliance questions require a lawyer. UX decisions require a designer. Pricing changes require a product manager. Performance baselines require a domain engineer. When the fleet encounters a decision that exceeds the Admiral's domain expertise, it needs a protocol for routing that decision to the right human expert — and integrating the expert's response back into the fleet's operating context.
+
+Without this protocol, the Admiral becomes a bottleneck of a different kind: not overwhelmed by volume (Section 15) but blocked by competence boundaries. The Admiral knows a decision needs expert input but has no defined process for obtaining it, so the decision either stalls indefinitely or the Admiral makes a best-guess call that a domain expert would have answered differently.
+
+### Expert Roster
+
+Just as the fleet has an Agent Roster (Section 03), the Admiral maintains a Human Expert Roster — the people who can be consulted for domain-specific decisions.
+
+|Field                |What to Define                                                                                                   |
+|---------------------|-----------------------------------------------------------------------------------------------------------------|
+|**Expert Name/Role** |Who they are and their domain (e.g., "Legal — data privacy counsel," "Design — lead UX designer")                |
+|**Domain**           |The specific decision categories they can answer (e.g., "GDPR compliance, data retention, consent flows")        |
+|**Response SLA**     |Expected turnaround time. This directly affects how long the fleet will be blocked when a question is routed.    |
+|**Input Format**     |What the expert needs to make a decision — plain language summary, technical specification, code snippet, mockup  |
+|**Output Format**    |What the expert will provide — yes/no decision, annotated specification, revised design, approved/rejected with rationale|
+
+### Routing Triggers
+
+Not every question needs an expert. Define the triggers that cause the Admiral to route a decision externally rather than deciding personally.
+
+- **Regulatory or legal implications.** Any decision that could create legal exposure — data handling, accessibility compliance, financial reporting, content moderation policy. The Admiral is not a lawyer.
+- **User-facing design judgment.** Decisions about user experience that require understanding user research, design principles, or brand guidelines that the Admiral does not hold. The fleet's Simulated User (agent #44) and UX Researcher (agent #39) can surface issues, but a human designer makes the final call.
+- **Business strategy.** Pricing, packaging, market positioning, feature prioritization based on competitive intelligence. These decisions require business context that is not in the Ground Truth.
+- **Domain-specific performance.** Database query optimization, network architecture, machine learning model selection, or other areas where the correct answer requires deep domain expertise and the cost of a wrong answer is high.
+- **Security assessment.** The Security Auditor (agent #30) and Penetration Tester (agent #31) can identify vulnerabilities, but the decision about acceptable risk level — which vulnerabilities to fix now, which to defer, which to accept — requires human judgment calibrated to the organization's risk tolerance.
+
+### Consultation Protocol
+
+When an expert consultation is triggered, the process must be structured to minimize the expert's time investment and the fleet's blocked duration.
+
+1. **Package the question.** The Admiral (or the orchestrating agent, if delegated) produces a structured consultation request. This is not a raw dump of the fleet's context — it is a curated summary that gives the expert exactly what they need to decide, and nothing more.
+
+> **TEMPLATE: EXPERT CONSULTATION REQUEST**
+>
+> TO: [Expert Name/Role]
+>
+> DOMAIN: [Specific decision category]
+>
+> DECISION NEEDED: [One-sentence description of the decision]
+>
+> CONTEXT: [2–5 sentence summary of the relevant situation — what the fleet is building, what constraint or question triggered this consultation]
+>
+> OPTIONS CONSIDERED: [If the Admiral or fleet has identified candidate approaches, list them with tradeoffs]
+>
+> ARTIFACTS: [Links or attachments — code snippets, mockups, specifications, or other materials the expert needs to review]
+>
+> URGENCY: [Blocking — fleet is paused waiting for this | Non-blocking — fleet can continue other work | Scheduled — for next review cycle]
+>
+> RESPONSE FORMAT: [What the Admiral needs back — yes/no, annotated spec, revised approach, approved/rejected with rationale]
+
+2. **Route and track.** Log the consultation in the decision log (Section 08) with status "Pending External." Track against the expert's SLA. If the SLA is exceeded, the Admiral escalates within the human organization — this is outside the fleet's scope but the fleet should not silently wait forever.
+
+3. **Integrate the response.** When the expert responds, the Admiral translates the response into fleet-actionable terms. The expert says "We need GDPR Article 17 compliance for the delete flow." The Admiral translates this into a task specification with acceptance criteria that the fleet can execute against. The expert's response becomes part of the Ground Truth (if it establishes a durable constraint) or part of the task specification (if it is a one-time decision).
+
+4. **Resume the fleet.** If the fleet was paused waiting for the consultation, resume using the Fleet Pause Protocol (Section 14). The first chunk after resumption should reference the expert's decision to ensure the fleet has internalized it.
+
+### Delegation to Orchestrator
+
+For high-frequency consultation domains (e.g., design review on every new UI component), the Admiral may delegate the packaging and routing step to the orchestrator. The orchestrator produces the consultation request using the template, the Admiral reviews and sends it, and the expert responds. This reduces the Admiral's per-consultation overhead while maintaining human oversight on what questions leave the fleet.
+
+As trust develops, the Admiral may further delegate: the orchestrator produces and sends the request directly, and the Admiral reviews the responses rather than the requests. This is the expert-routing equivalent of widening the Autonomous tier — and the same trust calibration principles (Section 15) apply.
+
+> ⛔ **ANTI-PATTERN: ADMIRAL AS UNIVERSAL EXPERT**
+>
+> The Admiral answers every domain question personally rather than routing to an expert, because routing feels slow and the Admiral has "good enough" intuition. This works until it does not — the Admiral's privacy guidance misses a jurisdictional requirement, the Admiral's UX decision creates an accessibility failure, the Admiral's performance advice causes a regression. Each mistake is individually recoverable, but collectively they erode the fleet's output quality in domains the Admiral does not deeply understand. The Admiral's job is to know who knows, not to know everything. Route to experts. Accept the latency. The cost of a correct answer that takes two days is almost always lower than the cost of an incorrect answer delivered immediately.
+
+> ⚠️ **ANTI-PATTERN: EXPERT FATIGUE**
+>
+> The Admiral routes too many questions to the same expert, overwhelming them with fleet-generated consultation requests. The expert's responses become shorter, less thoughtful, and eventually delayed. The fleet was supposed to reduce human workload, not redistribute it. Combat this by batching consultations where possible (send one weekly digest rather than five individual requests), by escalating only decisions that genuinely require expert judgment (not everything tangentially related to their domain), and by integrating expert decisions into the Ground Truth so the same question is never asked twice.
+
+-----
+
 ## Pre-Flight Checklist
 
 Before deploying any new fleet, verify every item below. If any box is unchecked, the fleet is not ready for autonomous operation. Each item maps to the section where the artifact is defined.
@@ -1311,6 +1704,12 @@ Before deploying any new fleet, verify every item below. If any box is unchecked
 - [ ] **Admiral Self-Calibration (15):** Bottleneck detection signals are known. Trust Calibration Log is initialized. Decision fatigue management strategy is defined. Growth trajectory stage is self-assessed.
 - [ ] **Parallel Execution Strategy (16):** Parallelization criteria are defined. Coordination patterns (Contract-First, Checkpoint Sync, Ownership Isolation) are understood. Divergence detection and resolution protocols are documented.
 - [ ] **Fleet Health Metrics (17):** Metrics are selected per category (productivity, quality, coordination, strategic). Collection rhythm is defined. Fleet Health Dashboard template is ready. Interpretation guidelines are understood.
+- [ ] **Prompt Engineering (18):** Agent system prompts follow the defined anatomy (Identity → Authority → Constraints → Knowledge → Task). Prompts have been tested with boundary, authority, ambiguity, and conflict probes. No personality prompting.
+- [ ] **Tool & Capability Registry (19):** Every agent role has an explicit tool registry listing available tools, scope limits, and shared state. Negative tool lists define what each agent cannot do. Tool interaction contracts are defined for shared resources.
+- [ ] **Model Selection (20):** Every agent role is assigned to a model tier (Flagship / Workhorse / Utility) with documented rationale. Context window requirements have been verified against assigned model capacity.
+- [ ] **Cost Management (21):** Per-session and per-phase monetary budgets are defined. Cost tracking structure (per-chunk, per-role, per-fleet) is in place. Cost review is integrated into the metric collection rhythm.
+- [ ] **Fleet Scaling & Lifecycle (22):** Current lifecycle phase is identified (Standup / Acceleration / Steady State / Wind-Down / Decommission). Scaling signals are understood. Upper bound for fleet size is established.
+- [ ] **Human-Expert Routing (23):** Human Expert Roster is defined with domains, SLAs, and input/output formats. Routing triggers are documented. Consultation request template is ready. Integration protocol for expert responses is defined.
 
 -----
 
@@ -1326,7 +1725,11 @@ When standing up a new fleet, complete these sections in this order. This is not
 6. **Decision Authority (04)** — Set the autonomy tiers for this project's risk profile.
 7. **Success Criteria (10)** — Define acceptance criteria for the first phase of work.
 8. **Work Decomposition (05)** — Break the first phase into chunks with budgets and sequencing.
-9. **Remaining sections** — Establish Failure Recovery (07), Institutional Memory (08), QA (09), Governance (11), review Failure Modes (12), define Adaptation Protocol (14), initialize Admiral Self-Calibration (15), document Parallel Execution Strategy (16), and configure Fleet Health Metrics (17).
+9. **Prompt Engineering (18)** — Write the system prompts for each agent using the defined anatomy. Run prompt probes.
+10. **Tool & Capability Registry (19)** — Define available and unavailable tools for each agent. Set interaction contracts.
+11. **Model Selection (20)** — Assign each role to a model tier. Verify context window fit.
+12. **Cost Management (21)** — Set monetary budgets per session and per phase. Establish cost tracking.
+13. **Remaining sections** — Establish Failure Recovery (07), Institutional Memory (08), QA (09), Governance (11), review Failure Modes (12), define Adaptation Protocol (14), initialize Admiral Self-Calibration (15), document Parallel Execution Strategy (16), configure Fleet Health Metrics (17), identify Fleet Scaling phase (22), and define Human-Expert Routing (23).
 
 -----
 
@@ -1408,6 +1811,6 @@ A concrete application of the framework for a mid-complexity greenfield project.
 
 -----
 
-*The Fleet Admiral Framework • v1.4*
+*The Fleet Admiral Framework • v2.0*
 
 *Context is the currency of autonomous AI. Spend it wisely.*
