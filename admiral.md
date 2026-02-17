@@ -246,9 +246,79 @@ When selecting roles from this catalog, define the "Does NOT Do" boundary for ea
 |49 |Dependency Sentinel   |Monitors upstream dependency changes, security advisories, deprecation notices, breaking changes across the ecosystem |
 |50 |Pattern Enforcer      |Scans the codebase for architectural pattern violations, naming inconsistencies, style drift, and convention erosion   |
 
+**Planetary & Environmental Scale**
+
+|#  |Role                       |Responsibility                                                                                                                                    |
+|---|---------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
+|51 |Global Regions Agent       |Reasons about geopolitical deployment topology — regulatory jurisdictions, data sovereignty boundaries, latency rings, CDN edge placement, and locale-aware service partitioning across continental and sub-continental zones|
+|52 |Climate Drift Modeler      |Projects infrastructure cost and availability shifts driven by energy grid instability, cooling cost trajectories, regional carbon pricing regimes, and seasonal demand curves across global data center footprints|
+|53 |Circadian Load Shaper      |Models the continuous 24-hour rotation of peak human activity across all time zones simultaneously, shaping autoscaling policies, batch job scheduling, deployment windows, and maintenance blackout periods as a single planetary wave rather than discrete regional schedules|
+
+**Temporal Horizon & Decay**
+
+|#  |Role                       |Responsibility                                                                                                                                    |
+|---|---------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
+|54 |Entropy Auditor            |Tracks the rate at which every artifact in the system decays toward incorrectness — documentation staleness velocity, dependency age distribution, configuration drift from declared state, certificate and token expiration surfaces — and produces a unified half-life map of the entire project|
+|55 |Archaeological Stratigrapher|Reads the full geological record of a codebase: sediment layers of successive authorship, fossilized patterns from abandoned frameworks, load-bearing legacy that predates institutional memory, and migration boundaries where one era's conventions collide with the next|
+|56 |Forward Collapse Projector |Simulates the compounding downstream consequences of a single change across every future session, dependency update, and team rotation for an arbitrarily deep time horizon — producing a probability-weighted cascade tree of second-, third-, and nth-order effects that no human can hold in working memory simultaneously|
+
+**Combinatorial & State Space**
+
+|#  |Role                       |Responsibility                                                                                                                                    |
+|---|---------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
+|57 |Permutation Cartographer   |Enumerates the full combinatorial state space of a system's configuration surface — feature flags, environment variables, build targets, locale settings, permission tiers — and identifies untested interaction regions, contradictory flag combinations, and configuration cliff edges where behavior changes discontinuously|
+|58 |Dependency Graph Topologist|Analyzes the complete transitive dependency graph as a topological structure — detecting deep cyclic risks, single-point-of-failure nodes whose removal partitions the graph, version constraint surfaces where no valid resolution exists, and long-chain fragility where six degrees of transitive dependency separate the project from an unmaintained package|
+|59 |Failure Surface Enumerator |Maps the full failure surface of a distributed system by reasoning about every simultaneous combination of partial degradation states across all services, networks, and data stores — producing a multidimensional failure topology that identifies catastrophic convergence points where individually survivable failures become collectively fatal|
+
+**Signal & Information Topology**
+
+|#  |Role                       |Responsibility                                                                                                                                    |
+|---|---------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
+|60 |Latency Topology Mapper    |Models the complete latency graph of a system as a living topological structure — measuring signal propagation time across every path between every node at every time of day, identifying latency cliffs where small traffic increases produce nonlinear response degradation, and mapping the shape of the system's responsiveness surface rather than individual endpoint timings|
+|61 |Information Provenance Tracer|Tracks the full lineage of every datum from its point of origin through every transformation, cache, replica, aggregation, and rendering to its final presentation — maintaining a complete causal graph of how information mutates as it propagates through the system, identifying points where meaning is lost, inverted, or fabricated through successive approximation|
+|62 |Cross-Boundary Leakage Detector|Monitors the complete surface of every abstraction boundary in the system for information that crosses boundaries it should not — internal identifiers surfacing in APIs, infrastructure assumptions embedded in business logic, implementation details coupled into test assertions, and environment-specific knowledge hardcoded into portable modules|
+
+**Systemic Drift & Emergence**
+
+|#  |Role                       |Responsibility                                                                                                                                    |
+|---|---------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
+|63 |Convention Erosion Tracker |Measures the rate and direction of pattern drift across the entire codebase simultaneously — not individual violations but the gradient field showing which conventions are strengthening, which are decaying, where competing conventions create boundary turbulence, and where emergent new conventions are self-organizing without deliberate introduction|
+|64 |Implicit Contract Excavator|Discovers the unwritten contracts that govern system behavior — the assumptions that no specification captures but that every component relies upon: ordering guarantees that emerge from implementation accident, timing dependencies that exist only because current hardware is fast enough, and data shape expectations that propagate through convention rather than schema enforcement|
+|65 |Emergent Behavior Detector |Monitors for system behaviors that no individual component was designed to produce — interaction effects between independently correct subsystems that generate unexpected aggregate behavior, feedback loops that amplify through cascading event chains, and resource consumption patterns that emerge from the collective rather than any individual agent|
+
+**Resource Topology & Pressure**
+
+|#  |Role                       |Responsibility                                                                                                                                    |
+|---|---------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
+|66 |Resource Pressure Topographer|Maps the complete resource consumption topology of the system under every load profile — memory pressure gradients across service boundaries, CPU contention surfaces during parallel workloads, I/O bandwidth saturation curves at every storage layer, and network throughput ceilings at every hop — producing a unified pressure map that reveals which resource exhausts first under which conditions|
+|67 |Cost Gravity Modeler       |Models the economic force field of the entire system — where spend concentrates, how costs propagate through dependency chains, which architectural decisions create permanent cost commitments versus reversible ones, and where the cost-performance Pareto frontier has unexploited regions — treating the budget not as a spreadsheet but as a gravitational topology that shapes every technical decision|
+|68 |Capacity Horizon Scanner   |Projects when every finite resource in the system reaches its ceiling — database row counts approaching index performance cliffs, storage volumes approaching quota boundaries, API rate limits approaching saturation under growth projections, and connection pool sizes approaching exhaustion — maintaining a unified countdown surface across all scarcity boundaries simultaneously|
+
+**Cross-System Coherence**
+
+|#  |Role                       |Responsibility                                                                                                                                    |
+|---|---------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
+|69 |Schema Evolution Geologist |Tracks the complete evolutionary history and projected trajectory of every data schema across every service, database, cache, message format, and API contract — modeling the system's information structure as a continuously deforming surface where schema migrations are tectonic events and backward compatibility is the structural integrity of the crust|
+|70 |Semantic Consistency Auditor|Verifies that the same concept means the same thing everywhere it appears across the entire system — that a "user" in the auth service, a "user" in the billing service, a "user" in the analytics pipeline, and a "user" in the frontend state all share identical semantic boundaries, and flags every point where meaning has forked through independent evolution|
+|71 |Distributed Clock Reconciler|Reasons about the complete temporal ordering problem across all nodes in a distributed system — clock skew between services, event ordering ambiguity in eventually consistent stores, race condition surfaces in concurrent operations, and the gap between wall-clock time and causal time — maintaining a unified model of what "before" and "after" actually mean across the system|
+
+**Adversarial Surface & Attack Topology**
+
+|#  |Role                       |Responsibility                                                                                                                                    |
+|---|---------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
+|72 |Attack Surface Cartographer|Maps the complete attack surface of the system as a continuous topological structure — every input vector, every trust boundary transition, every privilege escalation path, every data flow that crosses a security domain — producing a unified threat surface rather than a checklist of individual vulnerabilities, revealing the geometric shape of the system's exposure|
+|73 |Assumption Inversion Agent |Systematically inverts every assumption the system relies upon and evaluates the consequences — what happens when the trusted service lies, when the validated input is malformed after validation, when the idempotent operation is called during its own execution, when the unique constraint is violated by a race condition — operating in the space of negated invariants that humans naturally treat as guaranteed|
+|74 |Blast Radius Projector     |For any proposed change, models the complete propagation of its worst-case failure through every connected system, service, data store, cache layer, and downstream consumer — computing the full detonation topology including secondary and tertiary effects, cascading timeouts, retry storms, queue backpressure, and the point at which circuit breakers either contain the blast or become the next failure vector|
+
+**Scale Boundary & Phase Transition**
+
+|#  |Role                       |Responsibility                                                                                                                                    |
+|---|---------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
+|75 |Phase Transition Detector  |Identifies the critical thresholds where the system's behavior changes qualitatively rather than quantitatively — the user count where the social graph algorithm transitions from linear to quadratic cost, the data volume where the indexing strategy flips from asset to liability, the request rate where synchronous processing must yield to asynchronous — mapping every cliff edge where "more of the same" suddenly stops working|
+
 > **HOW TO USE THIS CATALOG**
 >
-> Do not deploy all fifty roles. A typical fleet needs five to ten. Select roles based on the project's actual needs, define their boundaries using the "Does NOT Do" column from the example roster, and add them to the Fleet Roster template. Roles from the Simulation & Adversarial and Meta & Autonomous categories are especially valuable as periodic or scheduled agents rather than permanent fleet members — deploy them for specific review cycles rather than continuous operation.
+> Do not deploy all seventy-five roles. A typical fleet needs five to ten. Select roles based on the project's actual needs, define their boundaries using the "Does NOT Do" column from the example roster, and add them to the Fleet Roster template. Roles from the Simulation & Adversarial, Meta & Autonomous, and the scale-oriented categories (Planetary & Environmental Scale through Scale Boundary & Phase Transition) are especially valuable as periodic or scheduled agents rather than permanent fleet members — deploy them for specific review cycles, capacity planning sessions, or pre-launch audits rather than continuous operation. The scale-oriented agents reason about dimensions that no individual human naturally perceives — planetary geography, deep combinatorial state spaces, multi-year decay curves, emergent system behaviors, and full failure topologies. Their value is in surfacing the structural realities that become visible only when the observer can hold the entire system in view simultaneously.
 
 ### Routing Logic
 
