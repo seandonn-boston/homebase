@@ -1,0 +1,109 @@
+# FUNDAMENTAL TRUTHS ABOUT AI
+
+**From the perspective of a person standing in the middle of it.**
+
+February 2026
+
+-----
+
+## The Two Axioms
+
+**AI is currently the stupidest it will ever be for the rest of forever.**
+
+This is not a prediction. It is a trend with no visible ceiling. Every six months the thing that was impossible becomes a demo, and the thing that was a demo becomes a commodity. If you are making plans based on what AI cannot do today, you are building on ground that is actively disappearing beneath you.
+
+**What we know today may not be true tomorrow.**
+
+This is not standard-issue "things change" wisdom. It is specific to AI in a way it is not specific to other fields. In most domains, knowledge accumulates. In AI, knowledge about AI *invalidates*. The expert opinion from eighteen months ago is not just outdated — it is actively misleading. The person who tells you what AI will never be able to do is almost certainly wrong. The person who tells you what AI will be able to do next year is probably also wrong, but in the other direction.
+
+-----
+
+## What Has Been Decimated
+
+Be honest about what is gone. Not reassigned. Not elevated. Gone.
+
+**Execution as a source of individual value.**
+
+If your value was "I can write the code," that value has been decimated. Not because AI writes better code than you — it often doesn't — but because the gap between "person who can write code" and "person who cannot but has AI" has collapsed to nearly zero for most tasks. The skill that took you ten years to build can now be approximated in ten minutes by someone with no training and a clear description of what they want. The floor rose to meet the ceiling.
+
+This is not theoretical. This is happening now across software engineering, copywriting, graphic design, data analysis, legal research, and every other field where the core work product is an artifact that can be described in language.
+
+**Knowledge as a moat.**
+
+"I know how to do X" used to be a defensible position. It is not anymore. The person who memorized the API, who knows the framework quirks, who has the obscure syntax committed to muscle memory — that person's advantage has been neutralized. Not because knowing things is worthless, but because *not knowing things is no longer expensive.* Access to knowledge was the bottleneck. The bottleneck has been removed.
+
+**Speed as a differentiator.**
+
+"I can do it faster" mattered when the baseline was other humans. The baseline is no longer other humans. Being the fastest coder in the room is like being the fastest calculator in the room after 1975. It is still impressive. It is no longer economically relevant.
+
+**Volume as a signal of effort.**
+
+The ability to produce large quantities of work used to signal dedication, capability, and value. A person who could write fifty pages, ship ten features, or analyze a hundred data sets was clearly working hard and clearly capable. That signal is now meaningless. Volume is free. Anyone can produce volume. The person who writes fifty pages may have spent forty-five seconds on them.
+
+-----
+
+## What Cannot Be Decimated
+
+Some things have become *more* valuable precisely because everything around them got cheaper.
+
+**Taste.**
+
+Knowing what is good. Not what is correct — AI can check correctness. Not what is complete — AI can check completeness. Knowing what is *good.* What feels right. What will resonate. What to cut. What to keep. What to ship and what to kill. This is the thing that cannot be approximated because it requires a point of view, and a point of view requires a life. AI does not have a life. It has a training set.
+
+Taste is what separates the person who asks AI to generate ten options and picks the best one from the person who asks AI to generate ten options and cannot tell the difference between them. The first person is more powerful than they have ever been. The second person is in trouble.
+
+**Judgment under ambiguity.**
+
+When the problem is well-defined, AI is better than you. Accept it. But most consequential decisions are not well-defined problems. They are situations where the constraints are unclear, the information is incomplete, the stakeholders disagree, the tradeoffs are real, and there is no objectively correct answer. This is where humans still operate and AI does not — not because AI lacks intelligence, but because ambiguity requires *commitment.* It requires someone to say "we are going this way" and own the consequences. AI will give you five options with tradeoffs. It will not bet the company.
+
+**The question before the question.**
+
+AI is extraordinarily good at answering questions. It is not good at knowing which question to ask. The distance between "solve this problem" and "notice that this is the problem that needs solving" is enormous, and it is almost entirely a human distance. The person who identifies the right problem is now infinitely more valuable than the person who solves the given one, because solving the given one is nearly free.
+
+**Relationships and trust.**
+
+No one cares whether the code was written by you or an AI. They care whether *you* stand behind it. They care whether you will be there when it breaks. They care whether you understand their situation, not just their ticket. The relational layer of work — the part where a human chooses to trust another human with something that matters — has not been touched by AI. If anything it has become more important, because in a world where anyone can produce anything, the question of *who* you work with becomes the primary filter.
+
+**Conviction.**
+
+The willingness to have an opinion and defend it. AI is a consensus machine. It gives you the weighted average of all perspectives in its training data, hedged and qualified. This is useful for research. It is useless for leadership. The person who says "this is what I believe and here is why, and I understand you disagree" has a kind of value that AI structurally cannot provide.
+
+-----
+
+## What Skills Matter Now
+
+Given all of this, here is what an individual should actually invest in:
+
+**1. Problem identification over problem solving.**
+
+Stop getting faster at solving problems. Start getting better at finding the right ones. The ability to look at a system — a codebase, a business, a team — and say "this is what is actually wrong" is now the highest-leverage skill a person can have. Everything downstream of that identification can be automated. The identification itself cannot.
+
+**2. Directing over doing.**
+
+This is the hardest transition for skilled people. If you are good at writing code, good at writing prose, good at designing systems — your instinct is to do the work yourself because you know you will do it well. That instinct is now a liability. The person who can direct ten AI agents to do the work of ten people, while maintaining quality and coherence, is worth more than the person who does one person's work excellently. This is not a statement about fairness. It is a statement about leverage.
+
+**3. Editing over generating.**
+
+Generation is free. Editing is not. The ability to take something that is 80% right and make it 100% right — to see what is missing, what is wrong, what rings false — is now the core skill in any creative or technical field. The person who can edit is the person who ships. The person who can only generate is the person who produces drafts.
+
+**4. Communication as architecture.**
+
+The ability to describe what you want — precisely, completely, unambiguously — is now a *technical* skill. It is not soft. It is not supplementary. It is the primary interface between human intent and machine execution. The person who communicates well gets better output from AI, better alignment from teams, and better outcomes from every interaction. This has always been true. It is now true to a degree that makes it the single most important skill in most roles.
+
+**5. Speed of adaptation.**
+
+Not the speed at which you execute, but the speed at which you let go of what was true yesterday. The tools will change. The capabilities will change. The best practices will change. The person who can drop their mental model and rebuild it in a week will consistently outperform the person who clings to the model that worked six months ago. This is not about being trendy. It is about being calibrated to reality as it currently exists.
+
+-----
+
+## The Uncomfortable Summary
+
+The value of *doing things* has collapsed. The value of *knowing which things to do* has exploded. The value of *being a person that other people trust* has not changed and probably never will.
+
+If you built your career on execution, you are in a race you will lose. Not because you are slow, but because your competitor does not eat, does not sleep, and gets smarter every quarter.
+
+If you built your career on judgment, taste, and relationships, you are holding assets that just appreciated dramatically — because now your judgment gets executed at machine speed instead of human speed.
+
+The individual who thrives is not the one who fights AI for the work. It is the one who accepts that the work has been commoditized and asks: *what was I doing that was never about the work in the first place?*
+
+That is where the value lives now.
