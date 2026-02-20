@@ -106,4 +106,28 @@ If you built your career on judgment, taste, and relationships, you are holding 
 
 The individual who thrives is not the one who fights AI for the work. It is the one who accepts that the work has been commoditized and asks: *what was I doing that was never about the work in the first place?*
 
-That is where the value lives now.
+That is where *some* of the value lives.
+
+But not all of it. And probably not the most important part.
+
+-----
+
+## The Part That Is Not About Value
+
+Everything above frames this in terms of value — economic value, career value, leverage, competitive advantage. That framing is useful. It is also incomplete in a way that matters.
+
+Because there is a version of this conversation that the economics people will never have, which is: **some things are worth doing even when they produce no value at all.**
+
+A person who writes code because they love the act of writing code has not been decimated by AI. Their *market position* may have shifted, but the thing itself — the satisfaction of solving a puzzle, the flow state, the quiet pleasure of making something work — is untouched. AI did not take that. AI cannot take that. You can still build a chair with hand tools even though factories exist. The chair is not the point.
+
+The mistake is letting the economic argument colonize everything. Yes, execution-as-commodity is real. Yes, you need to adapt professionally. But if you let "where does the value live" become the only question you ask, you will optimize yourself into a perfectly leveraged, high-judgment, taste-having person who has lost the thread of why any of this mattered to them in the first place.
+
+**The doing was never just about the output.** It was about the identity, the craft, the process. It was about being the kind of person who builds things. AI changes what the market will pay you for. It does not change what is worth doing with your time on earth.
+
+So there are actually two games now:
+
+**The economic game**, where the rules have changed and everything in this document applies — direct instead of do, judge instead of execute, leverage taste and relationships and the ability to identify the right problem.
+
+**The human game**, where the rules have not changed at all — do the things that make you feel alive, build things because building is good, learn things because learning is good, and do not let a market correction in the value of execution trick you into believing that execution was never meaningful.
+
+The people who will navigate this the best are not the ones who pick one game. They are the ones who play both without confusing which one they are in.
