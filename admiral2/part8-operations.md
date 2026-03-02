@@ -1,12 +1,12 @@
-# PART 7 — OPERATIONS
+# PART 8 — OPERATIONS
 
 *How work persists, adapts, and scales over time.*
 
-*Parts 1–6 cover a single fleet executing a single phase of work. Part 7 addresses the ongoing reality: sessions end, requirements change, budgets matter, fleets grow and shrink, and multiple projects run simultaneously. These six sections keep the enterprise healthy over time.*
+*Parts 1–7 cover a single fleet executing a single phase of work. Part 8 addresses the ongoing reality: sessions end, requirements change, budgets matter, fleets grow and shrink, and multiple projects run simultaneously. These six sections keep the enterprise healthy over time.*
 
 -----
 
-## 21 — INSTITUTIONAL MEMORY
+## 24 — INSTITUTIONAL MEMORY
 
 > **TL;DR** — Agents lose context between sessions. Use checkpoint files, ledger files, handoff documents, or git-based state to persist across context window boundaries. Session persistence is the single biggest UX pain point in agentic coding.
 
@@ -59,7 +59,7 @@ Chronological record of every non-trivial decision: timestamp, decision, alterna
 
 -----
 
-## 22 — ADAPTATION PROTOCOL
+## 25 — ADAPTATION PROTOCOL
 
 > **TL;DR** — Three tiers of change: Tactical (update tasks, no pause), Strategic (pause, cascade through artifacts, resume), Full Pivot (halt, restart from scratch). Every artifact update must cascade through its downstream dependencies.
 
@@ -79,19 +79,23 @@ Framework artifacts form a dependency graph. When one changes, downstream artifa
 Mission (01) ──→ Boundaries (02) ──→ Success Criteria (03)
      │                │                       │
      │                ▼                       ▼
-     │         Work Decomposition (15) ──→ Parallel Execution (16)
+     │         Work Decomposition (18) ──→ Parallel Execution (19)
      │                                        │
      │                                        ▼
-     │         Quality Assurance (18) ──→ Fleet Health Metrics (24) ──→ Cost Management (23)
+     │         Quality Assurance (21) ──→ Fleet Health Metrics (27) ──→ Cost Management (26)
      │
      ▼
-Ground Truth (05) ──→ Fleet Composition (11) ──→ Decision Authority (09) ──→ Admiral Self-Calibration (27)
+Ground Truth (05) ──→ Fleet Composition (11) ──→ Decision Authority (09) ──→ Admiral Self-Calibration (30)
                               │
                               ├──→ Context Profiles (06)
                               ├──→ Context Engineering (04)
                               ├──→ Tool Registry (12) ──→ Protocol Integration (14)
-                              ├──→ Model Selection (13) ──→ Cost Management (23)
-                              └──→ Fleet Scaling (25)
+                              │                                 │
+                              │                                 └──→ Brain Architecture (15) ──→ Knowledge Protocol (16)
+                              │                                              │
+                              │                                              └──→ Institutional Memory (24)
+                              ├──→ Model Selection (13) ──→ Cost Management (26)
+                              └──→ Fleet Scaling (28)
 
 Enforcement (08) ──→ Config Strategy (07) ──→ Config Security (10)
 ```
@@ -115,9 +119,9 @@ Enforcement (08) ──→ Config Strategy (07) ──→ Config Security (10)
 
 -----
 
-## 23 — COST MANAGEMENT
+## 26 — COST MANAGEMENT
 
-> **TL;DR** — The biggest cost lever is LLM-Last design (Section 02): eliminating 30-60% of LLM calls by routing to deterministic tools. Second: model tier assignment. Third: context size via progressive disclosure. Track spend in dollars, not just tokens.
+> **TL;DR** — The biggest cost lever is LLM-Last design (Section 02): eliminating 30–60% of LLM calls by routing to deterministic tools. Second: model tier assignment. Third: context size via progressive disclosure. Track spend in dollars, not just tokens.
 
 ### Cost Drivers and Levers
 
@@ -148,7 +152,7 @@ Models like DeepSeek V3.2 at ~1/30th flagship cost change fleet economics:
 
 -----
 
-## 24 — FLEET HEALTH METRICS
+## 27 — FLEET HEALTH METRICS
 
 > **TL;DR** — Track productivity, quality, and coordination metrics. Interpret them in combination. Every review ends with "no changes needed" or "metric X indicates problem Y — here is the adjustment."
 
@@ -191,7 +195,7 @@ Models like DeepSeek V3.2 at ~1/30th flagship cost change fleet economics:
 
 -----
 
-## 25 — FLEET SCALING & LIFECYCLE
+## 28 — FLEET SCALING & LIFECYCLE
 
 > **TL;DR** — Fleets evolve through five phases: Standup → Acceleration → Steady State → Wind-Down → Dormant. Scale up when generalists produce lower quality in specific domains. Scale down when specialists idle.
 
@@ -217,7 +221,7 @@ Models like DeepSeek V3.2 at ~1/30th flagship cost change fleet economics:
 
 -----
 
-## 26 — INTER-FLEET GOVERNANCE
+## 29 — INTER-FLEET GOVERNANCE
 
 > **TL;DR** — Multiple fleets are isolated by default. Sharing happens through Admiral Relay (manual) or A2A (automated). Review across fleets regularly for promotable patterns, systemic failures, and resource imbalances.
 

@@ -1,4 +1,4 @@
-# PART 8 — THE ADMIRAL
+# PART 9 — THE ADMIRAL
 
 *The human element.*
 
@@ -6,7 +6,7 @@
 
 -----
 
-## 27 — ADMIRAL SELF-CALIBRATION
+## 30 — ADMIRAL SELF-CALIBRATION
 
 > **TL;DR** — If you're rubber-stamping approvals, widen Autonomous. If agents escalate constantly, narrow your review scope or improve context. Trust is earned per category, not globally, and withdrawn precisely.
 
@@ -51,7 +51,7 @@ The Admiral may itself be an AI agent — a meta-orchestrator. In this configura
 
 -----
 
-## 28 — HUMAN-EXPERT ROUTING
+## 31 — HUMAN-EXPERT ROUTING
 
 > **TL;DR** — The Admiral is not omniscient. Route regulatory, design, business strategy, domain performance, and security risk decisions to subject-matter experts. Package the question. Track the response. Integrate it as Ground Truth.
 
@@ -78,7 +78,7 @@ The Admiral may itself be an AI agent — a meta-orchestrator. In this configura
 1. **Package:** Structured request with exactly what the expert needs.
 2. **Route and track:** Log in decision log with "Pending External" status.
 3. **Integrate:** Translate response into fleet-actionable terms. Update Ground Truth if durable.
-4. **Resume:** If paused, resume using Fleet Pause Protocol (Section 22).
+4. **Resume:** If paused, resume using Fleet Pause Protocol (Section 25).
 
 > **TEMPLATE: EXPERT CONSULTATION REQUEST**
 >

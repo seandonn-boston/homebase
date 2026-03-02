@@ -1,12 +1,12 @@
-# PART 6 — QUALITY
+# PART 7 — QUALITY
 
 *How the fleet maintains standards and handles failure.*
 
-*Strategy defines the target. Execution produces the work. Quality is the feedback loop that closes the gap. These three sections define how work is verified, how failures are recovered, and a comprehensive catalog of the ways agent fleets systematically fail.*
+*Strategy defines the target. The Brain persists what was learned. Execution produces the work. Quality is the feedback loop that closes the gap. These three sections define how work is verified, how failures are recovered, and a comprehensive catalog of the ways agent fleets systematically fail.*
 
 -----
 
-## 18 — QUALITY ASSURANCE
+## 21 — QUALITY ASSURANCE
 
 > **TL;DR** — Self-healing quality loops (automated checks that fix their own failures) are more effective than multi-pass review. Reserve human-judgment review for what machines cannot check: logic correctness, design quality, architectural alignment.
 
@@ -51,7 +51,7 @@ QA focuses on what machines cannot check: logic correctness, design quality, edg
 
 -----
 
-## 19 — FAILURE RECOVERY
+## 22 — FAILURE RECOVERY
 
 > **TL;DR** — Five-step recovery ladder: retry with variation, fallback to simpler approach, backtrack to last-known-good state, isolate and skip, escalate. No silent recoveries. Every recovery action is logged.
 
@@ -93,7 +93,7 @@ Effective backtracking requires:
 
 -----
 
-## 20 — KNOWN AGENT FAILURE MODES
+## 23 — KNOWN AGENT FAILURE MODES
 
 > **TL;DR** — Twenty systematic failure modes cataloged with their primary defenses and warning signs. Use the Diagnostic Decision Tree when things go wrong.
 
@@ -101,31 +101,31 @@ Effective backtracking requires:
 
 | Failure Mode | Description | Primary Defense |
 |---|---|---|
-| **Premature Convergence** | Latches onto first viable solution without exploring alternatives | Recovery (19): require multiple candidates for critical decisions |
-| **Sycophantic Drift** | Increasingly agrees with established framing over time | QA (18): zero findings is a red flag |
-| **Completion Bias** | Delivers complete but degraded output rather than incomplete but excellent | Decomposition (15): chunk sizing ensures full attention |
-| **Confidence Uniformity** | All output presented with equal confidence regardless of certainty | QA (18): require confidence levels |
+| **Premature Convergence** | Latches onto first viable solution without exploring alternatives | Recovery (22): require multiple candidates for critical decisions |
+| **Sycophantic Drift** | Increasingly agrees with established framing over time | QA (21): zero findings is a red flag |
+| **Completion Bias** | Delivers complete but degraded output rather than incomplete but excellent | Decomposition (18): chunk sizing ensures full attention |
+| **Confidence Uniformity** | All output presented with equal confidence regardless of certainty | QA (21): require confidence levels |
 | **Context Recency Bias** | Last-loaded context dominates; early constraints deprioritized | Context Strategy (06): deliberate loading order |
 | **Phantom Capabilities** | Assumes tools or access it does not have | Tool Registry (12): explicit negative tool list |
 | **Scope Creep via Helpfulness** | Adds unrequested features; each reasonable, collectively budget-blowing | Boundaries (02): explicit non-goals |
 | **Hierarchical Drift** | Specialists make orchestrator-level decisions | Fleet Composition (11): explicit role boundaries |
 | **Invocation Inconsistency** | Same context, different outputs across runs; naming drifts | Ground Truth (05): explicit conventions |
-| **Silent Failure** | Encounters error, works around it without logging | Recovery (19): mandatory recovery logging |
+| **Silent Failure** | Encounters error, works around it without logging | Recovery (22): mandatory recovery logging |
 | **Context Stuffing** | Overloaded context → shallow, unfocused output | Context Strategy (06): curated profiles, <150 line rule |
 | **Context Starvation** | Underloaded context → drifts from Mission, infers incorrectly | Context Strategy (06): minimum viable context floor |
 | **Instruction Decay** | Rules followed early, ignored as session lengthens | Enforcement (08): critical rules must be hooks |
 | **Memory Poisoning** | False info in agent memory persists across sessions | Security (10): audit memory files |
 | **Configuration Injection** | Attacker modifies config to override constraints | Security (10): CODEOWNERS, review requirements |
 | **Tool Hallucination via MCP** | Assumes MCP server provides capabilities it does not | Tool Registry (12): explicit MCP capability list |
-| **Session Amnesia** | Loses critical context between sessions despite checkpointing | Memory (21): structured persistence patterns |
-| **Swarm Consensus Failure** | Agents reach consensus on an incorrect answer | Swarm (17): adversarial review, multi-model cross-check |
+| **Session Amnesia** | Loses critical context between sessions despite checkpointing | Memory (24): structured persistence patterns |
+| **Swarm Consensus Failure** | Agents reach consensus on an incorrect answer | Swarm (20): adversarial review, multi-model cross-check |
 | **Config Accretion** | Config files grow until agents ignore rules | Config Strategy (07): 150-line rule, regular refactoring |
-| **Goodharting** | Optimizes tracked metrics rather than genuine outcomes | Metrics (24): track in combination, rotate emphasis |
+| **Goodharting** | Optimizes tracked metrics rather than genuine outcomes | Metrics (27): track in combination, rotate emphasis |
 
 ### Diagnostic Decision Tree
 
 **Output quality declining:**
-- Worse at end than beginning? → **Completion Bias** → Decomposition (15): reduce chunk size.
+- Worse at end than beginning? → **Completion Bias** → Decomposition (18): reduce chunk size.
 - Uniformly lower? → **Context Starvation** or **Stuffing** → Context Strategy (06).
 - Rules followed early but not late? → **Instruction Decay** → Enforcement (08): convert to hooks.
 
@@ -140,7 +140,7 @@ Effective backtracking requires:
 - Modifying files outside scope? → Enforcement (08): add scope hook.
 
 **Work from different agents doesn't integrate:**
-- Working in parallel? → **Optimistic Parallelism** → Parallel Execution (16): define contracts first.
+- Working in parallel? → **Optimistic Parallelism** → Parallel Execution (19): define contracts first.
 - Different naming for same concept? → **Invocation Inconsistency** → Ground Truth (05).
 
 -----

@@ -134,7 +134,7 @@ The best exit conditions are ones an agent can verify autonomously by running a 
 >
 > No files modified outside `src/features/[feature-name]/`
 
-For criteria that cannot be machine-verified (design quality, UX, readability), assign them to QA verification levels (Section 18).
+For criteria that cannot be machine-verified (design quality, UX, readability), assign them to QA verification levels (Section 21).
 
 > **TEMPLATE: TASK ACCEPTANCE CRITERIA**
 >

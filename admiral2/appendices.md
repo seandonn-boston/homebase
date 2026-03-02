@@ -32,37 +32,37 @@ Before deploying any new fleet, verify every item. If any box is unchecked, the 
 - [ ] **Model Selection (13):** Every role assigned to tier with rationale. Context requirements verified.
 - [ ] **Protocol Integration (14):** MCP servers registered and pinned. A2A configured if needed.
 
-**Part 5 — Execution**
+**Part 5 — The Brain**
 
-- [ ] **Work Decomposition (15):** Chunks with entry/exit states, budgets, quality gates. Spec-first pipeline if applicable.
-- [ ] **Parallel Execution (16):** Parallelization criteria. Coordination patterns. Divergence detection.
-- [ ] **Swarm Patterns (17):** Confirmed hierarchical fleet sufficient, or swarm topology defined.
+- [ ] **Brain Architecture (15):** Postgres + pgvector deployed. Schema created. Embedding model selected. HNSW index built.
+- [ ] **Knowledge Protocol (16):** Brain MCP server running and registered. Access control configured per role. All agents have brain_query and brain_record in their tool registry.
+- [ ] **Intelligence Lifecycle (17):** Capture triggers defined (chunk boundaries, decisions, failures). Review cadence scheduled. Cross-project namespace established if multi-fleet.
 
-**Part 6 — Quality**
+**Part 6 — Execution**
 
-- [ ] **Quality Assurance (18):** Verification levels per task type. Self-healing loops operational. QA template ready.
-- [ ] **Failure Recovery (19):** Recovery ladder documented. Max retries set. Escalation template ready.
-- [ ] **Failure Modes (20):** Configuration reviewed against catalog. Mitigations in place.
+- [ ] **Work Decomposition (18):** Chunks with entry/exit states, budgets, quality gates. Spec-first pipeline if applicable.
+- [ ] **Parallel Execution (19):** Parallelization criteria. Coordination patterns. Divergence detection.
+- [ ] **Swarm Patterns (20):** Confirmed hierarchical fleet sufficient, or swarm topology defined.
 
-**Part 7 — Operations**
+**Part 7 — Quality**
 
-- [ ] **Institutional Memory (21):** Persistence pattern selected. Decision log location established. Checkpoint template ready.
-- [ ] **Adaptation Protocol (22):** Change tiers defined. Cascade map understood. Pause Protocol documented.
-- [ ] **Cost Management (23):** Per-session and per-phase budgets. Cost tracking in place. LLM-Last implemented.
-- [ ] **Fleet Health Metrics (24):** Metrics selected. Collection rhythm defined.
-- [ ] **Fleet Scaling (25):** Lifecycle phase identified. Scaling signals understood. Size upper bound set.
-- [ ] **Inter-Fleet Governance (26):** Knowledge boundaries set. Sharing protocol defined. Review cadence scheduled.
+- [ ] **Quality Assurance (21):** Verification levels per task type. Self-healing loops operational. QA template ready.
+- [ ] **Failure Recovery (22):** Recovery ladder documented. Max retries set. Escalation template ready.
+- [ ] **Failure Modes (23):** Configuration reviewed against catalog. Mitigations in place.
 
-**Part 8 — The Admiral**
+**Part 8 — Operations**
 
-- [ ] **Admiral Self-Calibration (27):** Bottleneck signals known. Trust log initialized. Growth stage assessed.
-- [ ] **Human-Expert Routing (28):** Expert Roster defined. Routing triggers documented. Consultation template ready.
+- [ ] **Institutional Memory (24):** Persistence pattern selected. Decision log location established. Checkpoint template ready.
+- [ ] **Adaptation Protocol (25):** Change tiers defined. Cascade map understood. Pause Protocol documented.
+- [ ] **Cost Management (26):** Per-session and per-phase budgets. Cost tracking in place. LLM-Last implemented.
+- [ ] **Fleet Health Metrics (27):** Metrics selected. Collection rhythm defined.
+- [ ] **Fleet Scaling (28):** Lifecycle phase identified. Scaling signals understood. Size upper bound set.
+- [ ] **Inter-Fleet Governance (29):** Knowledge boundaries set. Sharing protocol defined. Review cadence scheduled.
 
-**Part 9 — The Brain**
+**Part 9 — The Admiral**
 
-- [ ] **Brain Architecture (29):** Postgres + pgvector deployed. Schema created. Embedding model selected. HNSW index built.
-- [ ] **Knowledge Protocol (30):** Brain MCP server running and registered. Access control configured per role. All agents have brain_query and brain_record in their tool registry.
-- [ ] **Intelligence Lifecycle (31):** Capture triggers defined (chunk boundaries, decisions, failures). Review cadence scheduled. Cross-project namespace established if multi-fleet.
+- [ ] **Admiral Self-Calibration (30):** Bottleneck signals known. Trust log initialized. Growth stage assessed.
+- [ ] **Human-Expert Routing (31):** Expert Roster defined. Routing triggers documented. Consultation template ready.
 
 -----
 
@@ -84,11 +84,11 @@ Operational order for standing up a new fleet. This minimizes rework — not the
 12. **Protocol Integration (14)** — Register MCP servers. Configure A2A if needed.
 13. **Context Engineering (04)** — Write system prompts. Run probes.
 14. **Context Window Strategy (06)** — Profiles, loading order, progressive disclosure.
-15. **Work Decomposition (15)** — Break first phase into chunks.
-16. **Cost Management (23)** — Monetary budgets. Cost tracking.
-17. **Brain Architecture (29)** — Deploy Postgres + pgvector. Create schema. Register Brain MCP server.
-18. **Knowledge Protocol (30)** — Configure access control. Add brain_query and brain_record to agent tool registries.
-19. **Remaining sections** — QA (18), Recovery (19), Failure Modes (20), Memory (21), Adaptation (22), Metrics (24), Scaling (25), Governance (26), Admiral (27), Expert Routing (28), Intelligence Lifecycle (31).
+15. **Brain Architecture (15)** — Deploy Postgres + pgvector. Create schema. Register Brain MCP server.
+16. **Knowledge Protocol (16)** — Configure access control. Add brain_query and brain_record to agent tool registries.
+17. **Work Decomposition (18)** — Break first phase into chunks.
+18. **Cost Management (26)** — Monetary budgets. Cost tracking.
+19. **Remaining sections** — QA (21), Recovery (22), Failure Modes (23), Memory (24), Adaptation (25), Metrics (27), Scaling (28), Governance (29), Admiral (30), Expert Routing (31), Intelligence Lifecycle (17).
 
 -----
 
@@ -157,7 +157,7 @@ A concrete application for a mid-complexity greenfield project.
 >
 > ESCALATE: Scope additions, budget overruns >120%, security concerns, tech stack deviation.
 
-### First Task Decomposition (15)
+### First Task Decomposition (18)
 
 > GOAL: Core task board — create, view, move tasks across workflow columns.
 >

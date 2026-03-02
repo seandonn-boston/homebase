@@ -1,18 +1,18 @@
-# PART 9 — THE BRAIN
+# PART 5 — THE BRAIN
 
 *Infrastructure designed for anything.*
 
-*Parts 1–8 operate within a session. Part 9 transcends sessions, agents, and context windows entirely. The Brain is the fleet's long-term memory — a real database with semantic understanding, accessible through a standard protocol that any AI agent can speak, now and always. It replaces file-based persistence (Section 21) with a permanent, queryable knowledge system that captures not just what happened, but what it meant and why it mattered.*
+*Parts 1–4 define what the fleet is, what it knows, how it's enforced, and who does the work. Part 5 gives the fleet long-term memory — a real database with semantic understanding, accessible through a standard protocol that any AI agent can speak, now and always. It replaces file-based persistence (Section 24) with a permanent, queryable knowledge system that captures not just what happened, but what it meant and why it mattered. Set up the Brain before the fleet starts executing (Part 6) so that every decision, lesson, and failure is captured from day one.*
 
 -----
 
-## 29 — BRAIN ARCHITECTURE
+## 15 — BRAIN ARCHITECTURE
 
 > **TL;DR** — A Postgres database with pgvector stores every decision, rationale, outcome, and lesson as vector embeddings that capture meaning, not keywords. One database. One schema. Any project. Any agent. Any time horizon.
 
 ### Why a Database, Not Files
 
-Section 21 introduced five persistence patterns — checkpoint files, ledger files, handoff documents, git-based state, and continuous operation. All are file-based. Files work for single-agent, single-project, single-session persistence. They break down when:
+Section 24 introduced five persistence patterns — checkpoint files, ledger files, handoff documents, git-based state, and continuous operation. All are file-based. Files work for single-agent, single-project, single-session persistence. They break down when:
 
 - **Multiple agents need the same knowledge simultaneously.** Files have no concurrency model. Two agents reading and writing the same checkpoint creates race conditions or stale reads.
 - **Knowledge spans projects.** A lesson learned in Fleet A (e.g., "Prisma migrations must be reversible") is valuable in Fleet B. Files are siloed by project directory.
@@ -20,7 +20,7 @@ Section 21 introduced five persistence patterns — checkpoint files, ledger fil
 - **History compounds.** After 50 sessions, file-based persistence produces hundreds of checkpoint files no agent can hold in context. A database can answer "what matters now" from any volume of history.
 - **Audit and compliance demand structured records.** Files drift in format. A database enforces schema.
 
-The Brain does not replace files for session-level work. Checkpoint files and handoff documents remain the right tool for intra-session persistence (Section 21). The Brain is where durable knowledge goes — the decisions, rationale, and outcomes that should outlive any single session.
+The Brain does not replace files for session-level work. Checkpoint files and handoff documents remain the right tool for intra-session persistence (Section 24). The Brain is where durable knowledge goes — the decisions, rationale, and outcomes that should outlive any single session.
 
 ### Technology Choice: Postgres + pgvector
 
@@ -97,7 +97,7 @@ CREATE TABLE entry_links (
 | **outcome** | The result of a decision or task — success, failure, or partial | "JWT implementation completed. Auth middleware passes all 47 test cases" |
 | **lesson** | A reusable insight extracted from experience | "Prisma migrations fail silently when the database URL contains special characters. Always URL-encode credentials" |
 | **context** | A snapshot of Ground Truth, environment state, or configuration at a point in time | "Tech stack as of 2026-02-15: Next.js 15.2, Postgres 16, pgvector 0.8.0" |
-| **failure** | A failure mode encountered, diagnosis, and resolution | "Specialist drifted into orchestrator decisions (hierarchical drift, Section 20). Root cause: missing 'Does NOT Do' boundary in agent definition" |
+| **failure** | A failure mode encountered, diagnosis, and resolution | "Specialist drifted into orchestrator decisions (hierarchical drift, Section 23). Root cause: missing 'Does NOT Do' boundary in agent definition" |
 | **pattern** | A reusable solution or anti-pattern extracted from one or more projects | "Contract-first parallelism reduces handoff rejection rate from 18% to 3% when API contracts are defined before frontend and backend work begins" |
 
 ### Vector Embeddings: Meaning, Not Keywords
@@ -140,7 +140,7 @@ Knowledge is not static. The Brain tracks which entries are useful and which hav
 
 -----
 
-## 30 — THE KNOWLEDGE PROTOCOL
+## 16 — THE KNOWLEDGE PROTOCOL
 
 > **TL;DR** — An MCP server exposes the Brain to any AI agent using a standard protocol. Agents write decisions, query semantically, and retrieve contextually relevant history — the same way, regardless of which agent, which model, or which tool built them. Humans use SQL. Machines use the API. Agents use MCP.
 
@@ -238,11 +238,11 @@ Before making a Propose-tier or Escalate-tier decision, the agent queries the Br
 
 **Pattern 2: Record at Chunk Boundaries**
 
-At every chunk boundary (Section 15), the agent records durable knowledge:
+At every chunk boundary (Section 18), the agent records durable knowledge:
 
 ```
 1. Chunk completes
-2. Agent writes session checkpoint (file-based, Section 21) for intra-session use
+2. Agent writes session checkpoint (file-based, Section 24) for intra-session use
 3. Agent calls brain_record for any decisions, outcomes, lessons, or failures worth persisting
 4. Brain entries outlive the session; checkpoint file does not need to
 ```
@@ -260,7 +260,7 @@ When starting a new project, the orchestrator queries the Brain without a projec
 
 **Pattern 4: Failure Forensics**
 
-When the recovery ladder (Section 19) reaches Escalate, the agent queries the Brain for similar failures before writing the escalation report:
+When the recovery ladder (Section 22) reaches Escalate, the agent queries the Brain for similar failures before writing the escalation report:
 
 ```
 1. Agent exhausts retry → fallback → backtrack → isolate
@@ -287,7 +287,7 @@ Not every agent should read or write everything.
 
 -----
 
-## 31 — INTELLIGENCE LIFECYCLE
+## 17 — INTELLIGENCE LIFECYCLE
 
 > **TL;DR** — Knowledge enters the Brain as raw entries, gets strengthened through use and validation, linked into a knowledge graph, and surfaces to agents as contextually relevant intelligence. The lifecycle turns data into wisdom.
 
@@ -311,11 +311,11 @@ Capture → Embed → Store → Retrieve → Strengthen → Link → Surface →
 
 **7. Surface.** The Admiral or orchestrator periodically reviews Brain statistics — most accessed entries, highest usefulness scores, unlinked entries, superseded chains — and promotes key insights into Ground Truth (Section 05) or standing context (Section 06).
 
-**8. Review.** At regular intervals (or triggered by fleet health metrics, Section 24), the Admiral audits the Brain: stale entries flagged, contradictions resolved, patterns extracted, cross-project knowledge validated.
+**8. Review.** At regular intervals (or triggered by fleet health metrics, Section 27), the Admiral audits the Brain: stale entries flagged, contradictions resolved, patterns extracted, cross-project knowledge validated.
 
 ### What to Capture
 
-Not everything belongs in the Brain. File-based persistence (Section 21) handles ephemeral state. The Brain stores durable knowledge.
+Not everything belongs in the Brain. File-based persistence (Section 24) handles ephemeral state. The Brain stores durable knowledge.
 
 | Capture | Don't Capture |
 |---|---|
@@ -385,7 +385,7 @@ The Brain's greatest long-term value is knowledge that transfers across projects
 
 ### Migration from File-Based Persistence
 
-For fleets already operating with file-based persistence (Section 21), the Brain is additive, not a replacement.
+For fleets already operating with file-based persistence (Section 24), the Brain is additive, not a replacement.
 
 **Phase 1: Parallel operation.** Continue file-based checkpoints and handoff documents. Add brain_record calls at chunk boundaries for decisions, lessons, and failures. Agents begin querying the Brain but do not depend on it.
 

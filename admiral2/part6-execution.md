@@ -1,12 +1,12 @@
-# PART 5 — EXECUTION
+# PART 6 — EXECUTION
 
 *How work gets planned, parallelized, and completed.*
 
-*Strategy says what. Context says how agents know. Enforcement says what's mandatory. Fleet says who. Now: how does actual work flow? These three sections cover decomposition, parallelization, and advanced orchestration patterns.*
+*Strategy says what. Context says how agents know. Enforcement says what's mandatory. Fleet says who. The Brain persists what the fleet learns. Now: how does actual work flow? These three sections cover decomposition, parallelization, and advanced orchestration patterns.*
 
 -----
 
-## 15 — WORK DECOMPOSITION
+## 18 — WORK DECOMPOSITION
 
 > **TL;DR** — Break goals into chunks that each consume no more than 40% of an agent's token budget. Each chunk is independently completable, independently verifiable, with explicit entry and exit states.
 
@@ -57,7 +57,7 @@ Chunk complete
 
 -----
 
-## 16 — PARALLEL EXECUTION STRATEGY
+## 19 — PARALLEL EXECUTION STRATEGY
 
 > **TL;DR** — Parallelize when tasks share no state. Serialize when they share files. Always define the interface contract before dispatching parallel work. Thirty minutes on a contract saves hours on rework.
 
@@ -93,7 +93,7 @@ The power of fleet architecture lies in parallelism. But parallelism without coo
 
 -----
 
-## 17 — SWARM PATTERNS
+## 20 — SWARM PATTERNS
 
 > **TL;DR** — Hierarchical fleets (orchestrator + specialists) handle most projects. Swarms and multi-model orchestration extend capabilities for scale and adversarial quality — but add complexity. Don't reach for them unless you need them.
 
