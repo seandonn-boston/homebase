@@ -58,6 +58,12 @@ Before deploying any new fleet, verify every item. If any box is unchecked, the 
 - [ ] **Admiral Self-Calibration (27):** Bottleneck signals known. Trust log initialized. Growth stage assessed.
 - [ ] **Human-Expert Routing (28):** Expert Roster defined. Routing triggers documented. Consultation template ready.
 
+**Part 9 — The Brain**
+
+- [ ] **Brain Architecture (29):** Postgres + pgvector deployed. Schema created. Embedding model selected. HNSW index built.
+- [ ] **Knowledge Protocol (30):** Brain MCP server running and registered. Access control configured per role. All agents have brain_query and brain_record in their tool registry.
+- [ ] **Intelligence Lifecycle (31):** Capture triggers defined (chunk boundaries, decisions, failures). Review cadence scheduled. Cross-project namespace established if multi-fleet.
+
 -----
 
 ## B — Quick-Start Sequence
@@ -80,7 +86,9 @@ Operational order for standing up a new fleet. This minimizes rework — not the
 14. **Context Window Strategy (06)** — Profiles, loading order, progressive disclosure.
 15. **Work Decomposition (15)** — Break first phase into chunks.
 16. **Cost Management (23)** — Monetary budgets. Cost tracking.
-17. **Remaining sections** — QA (18), Recovery (19), Failure Modes (20), Memory (21), Adaptation (22), Metrics (24), Scaling (25), Governance (26), Admiral (27), Expert Routing (28).
+17. **Brain Architecture (29)** — Deploy Postgres + pgvector. Create schema. Register Brain MCP server.
+18. **Knowledge Protocol (30)** — Configure access control. Add brain_query and brain_record to agent tool registries.
+19. **Remaining sections** — QA (18), Recovery (19), Failure Modes (20), Memory (21), Adaptation (22), Metrics (24), Scaling (25), Governance (26), Admiral (27), Expert Routing (28), Intelligence Lifecycle (31).
 
 -----
 
@@ -164,6 +172,6 @@ A concrete application for a mid-complexity greenfield project.
 
 -----
 
-*The Fleet Admiral Framework · v3.1*
+*The Fleet Admiral Framework · v3.2*
 
-*Context is the currency of autonomous AI. Enforcement is how you protect it.*
+*Context is the currency of autonomous AI. The Brain is where that currency compounds.*

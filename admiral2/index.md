@@ -2,13 +2,13 @@
 
 **A Repeatable Protocol for Establishing Autonomous AI Agent Fleets**
 
-v3.1 · February 2026
+v3.2 · March 2026
 
 -----
 
 ## How to Read This Document
 
-This framework is split across ten files. This index is the entry point. Each part is a self-contained file that can be loaded into an agent's context independently.
+This framework is split across eleven files. This index is the entry point. Each part is a self-contained file that can be loaded into an agent's context independently.
 
 **Humans** — You are the Admiral. Start here. Read the operating model and glossary, then work through parts in order or jump to whichever part addresses your current need. The prose, anti-patterns, and worked example are for you.
 
@@ -33,6 +33,7 @@ This framework is split across ten files. This index is the entry point. Each pa
 | [`part6-quality.md`](part6-quality.md) | Sections 18–20: Quality Assurance, Failure Recovery, Known Agent Failure Modes |
 | [`part7-operations.md`](part7-operations.md) | Sections 21–26: Institutional Memory, Adaptation Protocol, Cost Management, Fleet Health Metrics, Fleet Scaling & Lifecycle, Inter-Fleet Governance |
 | [`part8-admiral.md`](part8-admiral.md) | Sections 27–28: Admiral Self-Calibration, Human-Expert Routing |
+| [`part9-brain.md`](part9-brain.md) | Sections 29–31: Brain Architecture, Knowledge Protocol, Intelligence Lifecycle |
 | [`appendices.md`](appendices.md) | Pre-Flight Checklist, Quick-Start Sequence, Worked Example |
 
 -----
@@ -64,6 +65,9 @@ Terms are listed alphabetically. When these terms appear in any part file, they 
 | **Anti-pattern** | A documented failure mode arising from a common but counterproductive practice. Each anti-pattern in this framework names the bad practice, describes why it fails, and references the section that prevents it. |
 | **Autonomous tier** | Decision authority level where the agent proceeds without asking. Logs the decision. Used for low-risk, reversible decisions within established patterns. |
 | **Backtracking** | Recovery strategy where an agent rolls back to a saved checkpoint and tries a fundamentally different path, rather than retrying variations of the failed approach. |
+| **Brain** | The fleet's long-term memory: a Postgres + pgvector database accessible via MCP that stores decisions, outcomes, lessons, failures, and patterns as vector embeddings. Transcends sessions, agents, and context windows. Section 29. |
+| **brain_query** | MCP tool for semantic search across Brain entries. Returns ranked results by cosine similarity, filtered by project, category, recency, and usefulness. Section 30. |
+| **brain_record** | MCP tool for writing a new entry to the Brain. Requires project, category, title, and content. Embedding is generated automatically. Section 30. |
 | **Boundaries** | Explicit constraints on what a project is NOT: non-goals, hard constraints, resource budgets, quality floors, and the LLM-Last boundary. Section 02. |
 | **Cascade map** | The dependency graph between framework artifacts. When one artifact changes, all downstream artifacts must be reviewed and revised. Section 22. |
 | **Checkpoint** | A structured summary written at chunk boundaries recording completed tasks, in-progress work, blockers, decisions, assumptions, and resource consumption. Section 21. |
@@ -78,7 +82,9 @@ Terms are listed alphabetically. When these terms appear in any part file, they 
 | **Contract-first parallelism** | Coordination pattern where the interface contract between parallel agents is defined before work is dispatched. Neither agent may unilaterally modify the contract. Section 16. |
 | **Decision authority** | The four-tier system (Enforced / Autonomous / Propose / Escalate) that defines what an agent may decide, recommend, or must stop and flag. Section 09. |
 | **Decision log** | Chronological record of every non-trivial decision: timestamp, decision, alternatives considered, rationale, authority tier used. Part of institutional memory. Section 21. |
+| **Decay awareness** | Brain mechanism that flags entries not accessed within a configurable window for Admiral review. Knowledge that is never retrieved may be stale. Section 29. |
 | **Deterministic enforcement** | Constraints implemented as hooks, CI gates, linters, or type checkers that fire 100% of the time regardless of context pressure. Contrasted with advisory instructions. Section 08. |
+| **Embedding** | A vector representation of text that captures semantic meaning. Used by the Brain (pgvector) to match queries by meaning, not keywords. Section 29. |
 | **Enforced tier** | Decision authority level handled by hooks, not agent judgment. The agent never makes this decision — the enforcement layer prevents or requires the action deterministically. |
 | **Escalate tier** | Decision authority level where the agent stops all work and flags to the Admiral immediately. Used for scope changes, budget overruns, security concerns, contradictory requirements. |
 | **Escalation report** | Structured document produced when an agent exhausts its recovery ladder: blocker, context, approaches attempted, root cause assessment, what's needed, impact, recommendation. Section 19. |
@@ -91,8 +97,11 @@ Terms are listed alphabetically. When these terms appear in any part file, they 
 | **Hard enforcement** | Hooks, CI gates, linters, type checkers — mechanisms that fire deterministically regardless of context. Top tier of the enforcement spectrum. Section 08. |
 | **Hierarchical drift** | Failure mode where specialists drift upward and make orchestrator-level decisions. Section 20. |
 | **Hook** | A shell command that executes deterministically at a defined lifecycle point (PreToolUse, PostToolUse, PreCommit, SessionStart, etc.). Not a request — executed code. Section 08. |
+| **Intelligence lifecycle** | The eight-stage pipeline for Brain knowledge: Capture → Embed → Store → Retrieve → Strengthen → Link → Surface → Review. Section 31. |
 | **Instruction decay** | Failure mode where rules in CLAUDE.md are followed initially but ignored as the session lengthens and context pressure builds. Section 20. |
 | **Interface contract** | The defined format for handoffs between agents: what the sender delivers, what the receiver returns. Section 11. |
+| **Knowledge graph** | The network of linked Brain entries. Entries connected by relationship types (supports, contradicts, supersedes, elaborates, caused_by) that agents can traverse for reasoning chains. Section 31. |
+| **Knowledge protocol** | The MCP server interface that exposes the Brain to any AI agent. Tools: brain_record, brain_query, brain_retrieve, brain_strengthen, brain_supersede, brain_status. Section 30. |
 | **LLM-Last** | Design principle: if a deterministic tool (linter, type checker, formatter, regex) can do it, the LLM should not. Highest-impact cost and reliability lever. Section 02. |
 | **MCP** | Model Context Protocol. Open standard (Anthropic, now Linux Foundation) for connecting agents to tools and data sources. "USB-C for AI." |
 | **MCP server** | A tool provider implementing the MCP standard. Extends agent capabilities. Must be registered, scoped, version-pinned, and audited. Section 12, Section 14. |
@@ -115,10 +124,12 @@ Terms are listed alphabetically. When these terms appear in any part file, they 
 | **Silent failure** | Failure mode where an agent encounters an error, works around it without logging, and delivers a subtly incorrect result. Section 20. |
 | **Skill** | A modular knowledge unit (`.claude/skills/*.md`) that loads into an agent's context only when a file pattern, keyword, or domain context matches. Section 07. |
 | **Soft guidance** | Constraints in code comments, READMEs, or verbal instructions. Low reliability. Bottom tier of the enforcement spectrum. Section 08. |
+| **Strengthening** | Brain mechanism where retrieved entries accumulate usefulness signals from consuming agents. High-usefulness entries rank higher in future queries. Section 29. |
 | **Spec-first pipeline** | Structured workflow: Requirements Spec → Design Spec → Task Decomposition → Implementation. Each phase produces artifacts feeding the next. Section 15. |
 | **Standing context** | The portion of an agent's context window that is always loaded: Mission, Boundaries, role definition, Ground Truth essentials. Typically 15–25% of the window. Section 06. |
 | **Success criteria** | Machine-verifiable definition of "done" for a task: functional, quality, completeness, and negative criteria. Section 03. |
 | **Swarm** | Advanced orchestration pattern where agents self-organize under a queen agent rather than following top-down routing. Section 17. |
+| **Supersession** | Brain mechanism where outdated entries are not deleted but linked to their replacement via `superseded_by`. Preserves full decision history while defaulting to current knowledge. Section 29. |
 | **Sycophantic drift** | Failure mode where agents increasingly agree with established framing over long sessions. QA finds fewer issues. Section 20. |
 | **Trust calibration** | The practice of measuring and adjusting an agent's Autonomous tier based on track record. Earned per category, not globally. Withdrawn precisely after failures. Section 27. |
 
@@ -166,6 +177,10 @@ Sections are ordered by impact and grouped by relevance.
 | | **PART 8 — THE ADMIRAL** | *The human element.* | [`part8-admiral.md`](part8-admiral.md) |
 | 27 | Admiral Self-Calibration | Bottleneck detection, trust calibration, and growth trajectory. | |
 | 28 | Human-Expert Routing | When the fleet needs expertise the Admiral doesn't have. | |
+| | **PART 9 — THE BRAIN** | *Infrastructure designed for anything.* | [`part9-brain.md`](part9-brain.md) |
+| 29 | Brain Architecture | Postgres + pgvector: the fleet's long-term memory with semantic understanding. | |
+| 30 | The Knowledge Protocol | MCP server interface — any agent speaks to the Brain, now and always. | |
+| 31 | Intelligence Lifecycle | How knowledge enters, strengthens, links, surfaces, and compounds over time. | |
 | | **APPENDICES** | | [`appendices.md`](appendices.md) |
 | A | Pre-Flight Checklist | Go/no-go gate before fleet deployment. | |
 | B | Quick-Start Sequence | Operational order for standing up a new fleet. | |
