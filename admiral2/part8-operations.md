@@ -121,7 +121,7 @@ Enforcement (08) ──→ Config Strategy (07) ──→ Config Security (10)
 
 ## 26 — COST MANAGEMENT
 
-> **TL;DR** — The biggest cost lever is LLM-Last design (Section 02): eliminating 30–60% of LLM calls by routing to deterministic tools. Second: model tier assignment. Third: context size via progressive disclosure. Track spend in dollars, not just tokens.
+> **TL;DR** — The biggest cost lever is LLM-Last design (Section 02): eliminating 30-60% of LLM calls by routing to deterministic tools. Second: model tier assignment. Third: context size via progressive disclosure. Track spend in dollars, not just tokens.
 
 ### Cost Drivers and Levers
 

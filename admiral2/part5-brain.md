@@ -12,7 +12,7 @@
 
 ### Why a Database, Not Files
 
-Section 24 introduced five persistence patterns — checkpoint files, ledger files, handoff documents, git-based state, and continuous operation. All are file-based. Files work for single-agent, single-project, single-session persistence. They break down when:
+Institutional Memory (Section 24) defines five file-based persistence patterns — checkpoint files, ledger files, handoff documents, git-based state, and continuous operation. Files work for single-agent, single-project, single-session persistence. They break down when:
 
 - **Multiple agents need the same knowledge simultaneously.** Files have no concurrency model. Two agents reading and writing the same checkpoint creates race conditions or stale reads.
 - **Knowledge spans projects.** A lesson learned in Fleet A (e.g., "Prisma migrations must be reversible") is valuable in Fleet B. Files are siloed by project directory.
@@ -20,7 +20,7 @@ Section 24 introduced five persistence patterns — checkpoint files, ledger fil
 - **History compounds.** After 50 sessions, file-based persistence produces hundreds of checkpoint files no agent can hold in context. A database can answer "what matters now" from any volume of history.
 - **Audit and compliance demand structured records.** Files drift in format. A database enforces schema.
 
-The Brain does not replace files for session-level work. Checkpoint files and handoff documents remain the right tool for intra-session persistence (Section 24). The Brain is where durable knowledge goes — the decisions, rationale, and outcomes that should outlive any single session.
+The Brain does not replace files for session-level work. Checkpoint files and handoff documents remain the right tool for intra-session persistence (see Institutional Memory, Section 24). The Brain is where durable knowledge goes — the decisions, rationale, and outcomes that should outlive any single session.
 
 ### Technology Choice: Postgres + pgvector
 
@@ -242,7 +242,7 @@ At every chunk boundary (Section 18), the agent records durable knowledge:
 
 ```
 1. Chunk completes
-2. Agent writes session checkpoint (file-based, Section 24) for intra-session use
+2. Agent writes session checkpoint (file-based, Institutional Memory, Section 24) for intra-session use
 3. Agent calls brain_record for any decisions, outcomes, lessons, or failures worth persisting
 4. Brain entries outlive the session; checkpoint file does not need to
 ```
@@ -315,7 +315,7 @@ Capture → Embed → Store → Retrieve → Strengthen → Link → Surface →
 
 ### What to Capture
 
-Not everything belongs in the Brain. File-based persistence (Section 24) handles ephemeral state. The Brain stores durable knowledge.
+Not everything belongs in the Brain. File-based persistence (Institutional Memory, Section 24) handles ephemeral state. The Brain stores durable knowledge.
 
 | Capture | Don't Capture |
 |---|---|
@@ -385,7 +385,7 @@ The Brain's greatest long-term value is knowledge that transfers across projects
 
 ### Migration from File-Based Persistence
 
-For fleets already operating with file-based persistence (Section 24), the Brain is additive, not a replacement.
+For fleets already operating with file-based persistence (Institutional Memory, Section 24), the Brain is additive, not a replacement.
 
 **Phase 1: Parallel operation.** Continue file-based checkpoints and handoff documents. Add brain_record calls at chunk boundaries for decisions, lessons, and failures. Agents begin querying the Brain but do not depend on it.
 
