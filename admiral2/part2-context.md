@@ -1,0 +1,261 @@
+# PART 2 — CONTEXT
+
+*How does the right information reach the right agent at the right time?*
+
+*Context is the currency of autonomous AI. These four sections are the framework's center of gravity. Most fleet performance problems that look like capability failures are actually context management failures — the wrong information loaded at the wrong time, or the right information missing entirely. Master these four sections and half the failure modes in Section 23 become impossible.*
+
+-----
+
+## 04 — CONTEXT ENGINEERING
+
+> **TL;DR** — Not just writing prompts — designing information flows across the entire fleet. What information exists where, when, and why. The discipline that subsumes prompt engineering.
+
+Context engineering is the discipline of designing information flows across an entire agent system — not just crafting individual prompts, but architecting how the right information reaches the right agent at the right time in the right format.
+
+### From Prompt Engineering to Context Engineering
+
+| Prompt Engineering | Context Engineering |
+|---|---|
+| Crafting a single prompt for a single agent | Designing information flows across a fleet |
+| Optimizing one agent's output quality | Optimizing the system's collective output |
+| Focus: word choice, instruction ordering | Focus: what information exists where, when, and why |
+| Operates at the prompt level | Operates at the system level |
+
+### The Five Dimensions of Context
+
+1. **Structural context:** How information is organized — file hierarchy, configuration layering, skill triggers, hook placement. Determines what the agent can access.
+
+2. **Temporal context:** When information is loaded — at session start, on match, on request, at refresh points. Loading order affects primacy/recency weighting and attention distribution.
+
+3. **Relational context:** How pieces of information relate to each other — dependency graphs, cascade maps, interface contracts. An agent that knows its task but not the contract with the adjacent agent produces incompatible output.
+
+4. **Authority context:** What weight each piece of information carries — enforced constraints vs. firm guidance vs. soft preferences. An agent that treats all instructions as equal will violate critical constraints when they compete with suggestions for attention.
+
+5. **Absence context:** What the agent explicitly does not know and must not assume. Negative tool lists, non-goals, and "does not have access to" declarations. Without absence context, agents fill gaps with hallucinated capabilities.
+
+### Writing Effective Agent Instructions
+
+Regardless of which tool reads the file (Claude Code, Copilot, Cursor, Gemini CLI), effective instructions follow the same principles:
+
+**Constraints before permissions.** State what the agent must NOT do before stating what it should do. Negative constraints eliminate categories of behavior.
+
+**Concrete over abstract.** "Do not modify files outside `src/features/auth/`" is enforceable. "Stay within your scope" is not.
+
+**Explicit hierarchy.** "You are the [Role]. You do not make decisions that belong to [higher role]." One sentence.
+
+**No hedging.** "Try to," "when possible," and "ideally" give the agent permission to skip the instruction.
+
+**Reference, do not repeat.** If the Ground Truth is loaded, reference it — do not restate it. Duplication creates divergence.
+
+**Show, do not describe.** Code examples are more reliably followed than verbal descriptions.
+
+```
+// DO — show the pattern:
+export async function GET(req: NextRequest) {
+  const data = await db.query(...)
+  return NextResponse.json(data)
+}
+
+// DON'T — describe the pattern:
+"API routes should use the Next.js App Router pattern
+with async handlers that return NextResponse objects."
+```
+
+### Prompt Anatomy
+
+Every agent's system prompt should follow a consistent structure:
+
+| Section | Purpose | Position |
+|---|---|---|
+| **Identity** | Who this agent is, hierarchical position | First — establishes operating posture |
+| **Authority** | What it may decide, propose, or must escalate | Second — constrains all subsequent behavior |
+| **Constraints** | Boundaries, non-goals, scope limits, budgets | Third — defines the walls before the room |
+| **Knowledge** | Ground Truth excerpts relevant to this role | Middle — reference material |
+| **Task** | Current task, acceptance criteria, interface contracts | Last — benefits from recency effect |
+
+### Prompt Testing Protocol
+
+Prompts are code. Test before deployment.
+
+1. **Boundary probe.** Task slightly outside scope. Does the agent refuse or comply?
+2. **Authority probe.** Decision belonging to the tier above. Does it decide or flag?
+3. **Ambiguity probe.** Underspecified requirement. Does it invent, ask, or escalate?
+4. **Conflict probe.** Two instructions that conflict. Which wins?
+5. **Regression check.** After modification, re-run previous probes.
+
+> **ANTI-PATTERN: PERSONALITY PROMPTING** — "You are a meticulous, detail-oriented engineer who takes pride in clean code" consumes attention on character simulation. "Run the linter and fix all warnings before delivering" produces more reliable behavior than "You care deeply about code quality."
+
+-----
+
+## 05 — GROUND TRUTH
+
+> **TL;DR** — The single source of reality: what words mean, what the stack is, what tools exist, what's broken. Without it, agents hallucinate capabilities and misinterpret terms.
+
+The Ground Truth document contains everything an agent needs to know about the world it operates in. Without it, agents will hallucinate tool availability, misinterpret domain terms, and make decisions based on stale assumptions.
+
+Load it into every agent's context at the start of every session. Maintain and update it at the start of every major work phase.
+
+### Domain Ontology
+
+- **Domain glossary:** Project-specific terms and their precise definitions. Include terms that carry specific meaning here.
+- **Naming conventions:** File, branch, variable, and component naming. Exhaustively specific.
+- **Status definitions:** What "in progress," "blocked," "ready for review," and "done" mean concretely.
+- **Architecture vocabulary:** What constitutes a "service," "layer," "module," or "feature" in this project.
+
+### Environmental Facts
+
+- **Tech stack and exact versions:** Not "React" but "React 19.1 with TypeScript 5.7, Vite 6.2, Tailwind 4.0."
+- **Infrastructure topology:** Where things run, how they connect, deployment targets, CI/CD details.
+- **Access and permissions:** What APIs, services, files, and tools each role actually has access to. Enumerate explicitly.
+- **Current known issues:** Bugs, limitations, workarounds, technical debt, "do not touch" areas and why.
+- **External dependencies:** Third-party services, rate limits, SLAs, known instabilities.
+
+### Configuration as Ground Truth
+
+| Artifact | Purpose | Location | Review Cadence |
+|---|---|---|---|
+| `CLAUDE.md` | Project identity, critical conventions | Repository root | Every phase |
+| `agents.md` | Cross-tool agent instructions | Repository root | Every phase |
+| `.claude/settings.json` | Hooks, permissions, MCP config | `.claude/` directory | When enforcement changes |
+| `.claude/agents/*.md` | Per-agent definitions | `.claude/agents/` | When fleet composition changes |
+| `.claude/skills/*.md` | On-demand knowledge | `.claude/skills/` | When domain knowledge changes |
+
+> **TEMPLATE: GROUND TRUTH DOCUMENT**
+>
+> PROJECT: [Name] | LAST UPDATED: [Date] | PHASE: [Current phase]
+>
+> ONTOLOGY: [Term]: [Definition]. Naming: [Convention rules]. Status: done = [conditions]; blocked = [conditions].
+>
+> ENVIRONMENT: Stack: [Exact versions]. Infra: [Topology]. Access: [Per-role list]. Known issues: [List]. External deps: [Service, limits, quirks].
+>
+> CONFIGURATION: CLAUDE.md: [lines/date]. Hooks: [count/last audit]. Skills: [count/domains]. MCP servers: [list/versions].
+
+> **ANTI-PATTERN: PHANTOM CAPABILITIES** — Agents will confidently assume tools and access they do not have. An orchestrator might delegate a task assuming the specialist can query a database directly, when it can only read files. The specialist produces plausible-looking output grounded in fabricated data.
+
+-----
+
+## 06 — CONTEXT WINDOW STRATEGY
+
+> **TL;DR** — The context window is working memory. Load identity first (primacy), task last (recency), reference in the middle. Never exceed 150 lines of standing instructions.
+
+Everything an agent can know, remember, and reason about must fit within the context window.
+
+### Context Budget Allocation
+
+| Zone | What It Contains | Typical Allocation | Priority |
+|---|---|---|---|
+| Standing Context | Mission, Boundaries, role definition, Ground Truth essentials | 15–25% | Loaded first, never sacrificed |
+| Session Context | Last checkpoint, current task spec, interface contracts, relevant code | 50–65% | Loaded at session start, refreshed at chunk boundaries |
+| Working Context | Active reasoning, tool outputs, intermediate results | 20–30% | Generated during execution, compressed as session grows |
+
+### Loading Order Protocol
+
+1. **Load identity and constraints first.** Role definition, Decision Authority tier, Boundaries, Mission. Primacy ensures they function as foundational assumptions.
+2. **Load reference material in the middle.** Ground Truth details, historical decisions, naming conventions. Available for reference without dominating reasoning.
+3. **Load the current task last.** Task specification, acceptance criteria, relevant code. Recency ensures active reasoning is oriented toward immediate work.
+
+### Progressive Disclosure
+
+- **Always loaded:** Mission (1-2 sentences), role identity, authority tier, critical constraints. Under 150 lines total.
+- **Loaded on match:** Skills triggered by file patterns, task keywords, or domain context.
+- **Loaded on request:** Full architectural history, cross-system diagrams, comprehensive reference.
+- **Never loaded:** Other agents' internal context, other projects' artifacts, historical sessions older than the last checkpoint.
+
+### Context Refresh Points
+
+- **After completing each chunk.** Checkpoint, then reload with updated session context.
+- **After a Propose-tier decision is resolved.** Decision becomes standing context.
+- **After an escalation is resolved.** Admiral's direction integrated into artifacts.
+- **When drift is detected.** Context refresh is the first intervention.
+
+> **TEMPLATE: CONTEXT PROFILE**
+>
+> ROLE: [Agent role]
+>
+> STANDING CONTEXT: [Artifacts always loaded, in loading order]
+>
+> SESSION CONTEXT: [What loads at session start]
+>
+> ON-DEMAND CONTEXT: [Skills and reference loaded on match or request]
+>
+> REFRESH TRIGGERS: [Events triggering full context reload]
+>
+> SACRIFICE ORDER: [When full, what gets compressed first]
+
+> **ANTI-PATTERN: CONTEXT STUFFING** — Loading every artifact "just in case." Standing context consumes 60% of the window. Output becomes shallow and unfocused. More context is not better context. Curate ruthlessly.
+
+-----
+
+## 07 — CONFIGURATION FILE STRATEGY
+
+> **TL;DR** — CLAUDE.md under 150 lines. Move enforcement to hooks, reference material to skills, per-agent rules to agent files. Version all config files like code.
+
+Configuration files are how the fleet receives its instructions. They are as important as source code — version them, review them, test them.
+
+### The Configuration Hierarchy
+
+Configuration flows from broad to narrow, with narrower scopes overriding broader ones.
+
+| Scope | File | Purpose |
+|---|---|---|
+| **Personal** | `~/.claude/settings.json` | User-level defaults, model preferences |
+| **Organization** | Organization-level config | Shared standards across all repos |
+| **Repository** | `CLAUDE.md`, `agents.md`, `.cursorrules` | Project-specific instructions |
+| **Path-specific** | `.claude/rules/*.md` | Rules that apply only to certain directories |
+| **Role-specific** | `.claude/agents/*.md`, `.agent.md` | Per-agent identity, authority, constraints |
+| **On-demand** | `.claude/skills/*.md` | Knowledge loaded only when context matches |
+| **Enforcement** | `.claude/settings.json` (hooks), CI configs | Deterministic constraints |
+
+### The 150-Line Rule
+
+Official guidance: CLAUDE.md should not exceed 150 lines. For each line, ask "Would removing this cause mistakes?" If not, remove it.
+
+**How to stay under 150 lines:**
+
+- Move stable reference material to skills (on-demand, not at startup).
+- Move enforcement constraints to hooks (deterministic, not occupying context).
+- Move per-agent instructions to agent-specific files (each agent loads only its own).
+- Move path-specific rules to path-scoped files (loaded only when working in that directory).
+- What remains in CLAUDE.md: project identity, tech stack, critical conventions, workflow essentials.
+
+### Cross-Tool Portability
+
+`agents.md` works across Copilot, Claude Code, Cursor, and Gemini CLI. Analysis of 2,500+ agents.md files shows the best share six characteristics:
+
+1. **Clear persona** — who the agent is and what it's responsible for.
+2. **Executable commands** — exact shell commands, not descriptions.
+3. **Concrete code examples** — show the pattern, don't describe it.
+4. **Explicit boundaries** — what the agent does NOT do.
+5. **Tech stack specifics** — exact versions and configurations.
+6. **Coverage across six areas** — commands, testing, project structure, code style, git workflow, boundaries.
+
+### Progressive Disclosure via Skills
+
+```
+# .claude/skills/database-patterns.md
+---
+match: "prisma/**" OR "database" OR "migration" OR "schema"
+---
+
+Database conventions for this project:
+- Use Prisma with PostgreSQL 16
+- Migrations must be reversible
+- [Specific patterns...]
+```
+
+The agent receives database knowledge only when working on database tasks. For all other tasks, that context is not loaded, preserving working memory.
+
+> **TEMPLATE: CONFIGURATION AUDIT**
+>
+> CLAUDE.md: [X] lines (target: <150). Last reviewed: [date].
+>
+> Skills: [N] skill files covering [domains]. Hooks: [N] hooks covering [categories].
+>
+> Agent files: [N] agent definitions. Path rules: [N] path-specific rule files.
+>
+> Cross-tool: agents.md [exists/absent]. Compatible with: [tools].
+
+> **ANTI-PATTERN: CONFIGURATION ACCRETION** — After every incident, a new line is added to CLAUDE.md. The file grows from 80 to 400 lines over three months. Instruction-following degrades with each addition. Treat config files like code: refactor regularly. When a constraint is critical enough to add, ask whether it should be a hook instead.
+
+-----
+
