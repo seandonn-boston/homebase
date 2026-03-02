@@ -2,13 +2,13 @@
 
 **A Repeatable Protocol for Establishing Autonomous AI Agent Fleets**
 
-v3.2 · March 2026
+v3.3 · March 2026
 
 -----
 
 ## How to Read This Document
 
-This framework is split across eleven files. This index is the entry point. Each part is a self-contained file that can be loaded into an agent's context independently.
+This framework is split across twelve files. This index is the entry point. Each part is a self-contained file that can be loaded into an agent's context independently.
 
 **Humans** — You are the Admiral. Start here. Read the operating model and glossary, then work through parts in order or jump to whichever part addresses your current need. The prose, anti-patterns, and worked example are for you.
 
@@ -33,7 +33,8 @@ This framework is split across eleven files. This index is the entry point. Each
 | [`part6-execution.md`](part6-execution.md) | Sections 18–20: Work Decomposition, Parallel Execution Strategy, Swarm Patterns |
 | [`part7-quality.md`](part7-quality.md) | Sections 21–23: Quality Assurance, Failure Recovery, Known Agent Failure Modes |
 | [`part8-operations.md`](part8-operations.md) | Sections 24–29: Institutional Memory, Adaptation Protocol, Cost Management, Fleet Health Metrics, Fleet Scaling & Lifecycle, Inter-Fleet Governance |
-| [`part9-admiral.md`](part9-admiral.md) | Sections 30–31: Admiral Self-Calibration, Human-Expert Routing |
+| [`part9-platform.md`](part9-platform.md) | Sections 30–32: Fleet Observability, CI/CD & Event-Driven Operations, Fleet Evaluation & Benchmarking |
+| [`part10-admiral.md`](part10-admiral.md) | Sections 33–34: Admiral Self-Calibration, Human-Expert Routing |
 | [`appendices.md`](appendices.md) | Pre-Flight Checklist, Quick-Start Sequence, Worked Example |
 
 -----
@@ -88,9 +89,12 @@ Terms are listed alphabetically. When these terms appear in any part file, they 
 | **Enforced tier** | Decision authority level handled by hooks, not agent judgment. The agent never makes this decision — the enforcement layer prevents or requires the action deterministically. |
 | **Escalate tier** | Decision authority level where the agent stops all work and flags to the Admiral immediately. Used for scope changes, budget overruns, security concerns, contradictory requirements. |
 | **Escalation report** | Structured document produced when an agent exhausts its recovery ladder: blocker, context, approaches attempted, root cause assessment, what's needed, impact, recommendation. Section 22. |
+| **Event-driven agent** | An agent triggered by repository or system events (PR opened, CI failed, scheduled cron) rather than interactive sessions. Requires pre-configured context bootstrapping and narrower authority tiers. Section 31. |
 | **Failure mode** | A systematic way agent fleets fail. Twenty cataloged in Section 23 with primary defenses and warning signs. |
 | **Firm guidance** | Constraints in CLAUDE.md, system prompts, or agents.md. High reliability but degradable under context pressure, especially in long sessions. Middle tier of the enforcement spectrum. Section 08. |
 | **Fleet** | A coordinated group of AI agents operating under a single orchestrator on a single project. Typically five to twelve specialists. |
+| **Fleet evaluation** | The practice of measuring whether a fleet configuration produces better outcomes than alternatives, through controlled A/B testing and benchmarking against baselines. Section 32. |
+| **Fleet observability** | The ability to understand fleet behavior through traces, logs, and metrics at the individual operation level. Monitoring tells you something is wrong; observability tells you why. Section 30. |
 | **Fleet pause protocol** | Six-step procedure for halting fleet operations, collecting checkpoints, cascading changes through artifacts, re-validating, rebriefing, and resuming. Section 25. |
 | **Ground truth** | The single source of reality for the fleet: domain ontology, tech stack versions, access/permissions, known issues, configuration artifacts. Section 05. |
 | **Handoff document** | Narrative briefing written at session end, designed to be loaded at the next session start. Captures intent and reasoning, not just status. Section 24. |
@@ -106,10 +110,11 @@ Terms are listed alphabetically. When these terms appear in any part file, they 
 | **MCP** | Model Context Protocol. Open standard (Anthropic, now Linux Foundation) for connecting agents to tools and data sources. "USB-C for AI." |
 | **MCP server** | A tool provider implementing the MCP standard. Extends agent capabilities. Must be registered, scoped, version-pinned, and audited. Section 12, Section 14. |
 | **Memory poisoning** | Attack where an adversary implants false information into agent long-term storage that persists across all future sessions. Section 10. |
-| **Meta-agent** | An AI agent serving as the Admiral — managing fleet composition, updating Ground Truth, making strategic decisions. Must have the most heavily enforced constraints. Section 30. |
+| **Meta-agent** | An AI agent serving as the Admiral — managing fleet composition, updating Ground Truth, making strategic decisions. Must have the most heavily enforced constraints. Section 33. |
 | **Mission** | One sentence defining what the project is. One sentence defining success. The gravitational center every agent decision orbits. Section 01. |
 | **Negative tool list** | Explicit declaration of tools and capabilities an agent does NOT have. Primary defense against phantom capabilities. Section 12. |
 | **Non-goals** | Explicit statements of what the project is NOT. More powerful than goals because they eliminate entire categories of work. Part of Boundaries. Section 02. |
+| **Observability** | Understanding fleet behavior through external outputs — traces for individual operations, logs for event records, metrics for aggregate health. Distinct from monitoring: monitoring detects problems; observability diagnoses them. Section 30. |
 | **Orchestrator** | The coordinating agent that decomposes goals into tasks, routes to specialists, manages progress, and enforces standards. Does not write production code. |
 | **Phantom capabilities** | Failure mode where an agent assumes tools or access it does not have and produces output grounded in hallucinated capabilities. Section 23. |
 | **Progressive disclosure** | Loading strategy where knowledge is provided on-demand via skills rather than front-loaded at startup. Preserves context window capacity. Section 07. |
@@ -131,7 +136,8 @@ Terms are listed alphabetically. When these terms appear in any part file, they 
 | **Swarm** | Advanced orchestration pattern where agents self-organize under a queen agent rather than following top-down routing. Section 20. |
 | **Supersession** | Brain mechanism where outdated entries are not deleted but linked to their replacement via `superseded_by`. Preserves full decision history while defaulting to current knowledge. Section 15. |
 | **Sycophantic drift** | Failure mode where agents increasingly agree with established framing over long sessions. QA finds fewer issues. Section 23. |
-| **Trust calibration** | The practice of measuring and adjusting an agent's Autonomous tier based on track record. Earned per category, not globally. Withdrawn precisely after failures. Section 30. |
+| **Trace** | An end-to-end record of a task as it flows through multiple agents, tools, and systems. Enables debugging specific failures by showing exactly what happened, in what order, at what cost. Section 30. |
+| **Trust calibration** | The practice of measuring and adjusting an agent's Autonomous tier based on track record. Earned per category, not globally. Withdrawn precisely after failures. Section 33. |
 
 -----
 
@@ -178,9 +184,13 @@ Sections are ordered by impact and grouped by relevance.
 | 27 | Fleet Health Metrics | What to measure, what healthy looks like, and what to do when it doesn't. | |
 | 28 | Fleet Scaling & Lifecycle | How fleets grow, shrink, and transition across project phases. | |
 | 29 | Inter-Fleet Governance | Isolation, controlled sharing, and cross-fleet review across projects. | |
-| | **PART 9 — THE ADMIRAL** | *The human element.* | [`part9-admiral.md`](part9-admiral.md) |
-| 30 | Admiral Self-Calibration | Bottleneck detection, trust calibration, and growth trajectory. | |
-| 31 | Human-Expert Routing | When the fleet needs expertise the Admiral doesn't have. | |
+| | **PART 9 — PLATFORM** | *The infrastructure that surrounds the fleet.* | [`part9-platform.md`](part9-platform.md) |
+| 30 | Fleet Observability | Why a specific agent failed on a specific task — traces, not just metrics. | |
+| 31 | CI/CD & Event-Driven Operations | Agents triggered by PRs, CI failures, schedules, and webhooks. | |
+| 32 | Fleet Evaluation & Benchmarking | A/B testing fleet configs and measuring whether the fleet is worth it. | |
+| | **PART 10 — THE ADMIRAL** | *The human element.* | [`part10-admiral.md`](part10-admiral.md) |
+| 33 | Admiral Self-Calibration | Bottleneck detection, trust calibration, and growth trajectory. | |
+| 34 | Human-Expert Routing | When the fleet needs expertise the Admiral doesn't have. | |
 | | **APPENDICES** | | [`appendices.md`](appendices.md) |
 | A | Pre-Flight Checklist | Go/no-go gate before fleet deployment. | |
 | B | Quick-Start Sequence | Operational order for standing up a new fleet. | |

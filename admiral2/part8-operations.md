@@ -83,9 +83,11 @@ Mission (01) ──→ Boundaries (02) ──→ Success Criteria (03)
      │                                        │
      │                                        ▼
      │         Quality Assurance (21) ──→ Fleet Health Metrics (27) ──→ Cost Management (26)
+     │                                        │
+     │                                        └──→ Fleet Observability (30) ──→ Fleet Evaluation (32)
      │
      ▼
-Ground Truth (05) ──→ Fleet Composition (11) ──→ Decision Authority (09) ──→ Admiral Self-Calibration (30)
+Ground Truth (05) ──→ Fleet Composition (11) ──→ Decision Authority (09) ──→ Admiral Self-Calibration (33)
                               │
                               ├──→ Context Profiles (06)
                               ├──→ Context Engineering (04)
@@ -95,7 +97,7 @@ Ground Truth (05) ──→ Fleet Composition (11) ──→ Decision Authority 
                               │                                              │
                               │                                              └──→ Institutional Memory (24)
                               ├──→ Model Selection (13) ──→ Cost Management (26)
-                              └──→ Fleet Scaling (28)
+                              └──→ Fleet Scaling (28) ──→ CI/CD Operations (31)
 
 Enforcement (08) ──→ Config Strategy (07) ──→ Config Security (10)
 ```

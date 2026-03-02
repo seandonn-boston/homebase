@@ -1,12 +1,12 @@
-# PART 9 — THE ADMIRAL
+# PART 10 — THE ADMIRAL
 
 *The human element.*
 
-*Every section above defines what the fleet needs. This section addresses the Admiral's own development — how to detect when you are the bottleneck, how to calibrate trust over time, and when to route decisions to experts instead of answering them yourself.*
+*Every section above defines what the fleet needs — its strategy, context, enforcement, composition, memory, execution, quality, operations, and platform infrastructure. This part addresses the Admiral's own development — how to detect when you are the bottleneck, how to calibrate trust over time, and when to route decisions to experts instead of answering them yourself.*
 
 -----
 
-## 30 — ADMIRAL SELF-CALIBRATION
+## 33 — ADMIRAL SELF-CALIBRATION
 
 > **TL;DR** — If you're rubber-stamping approvals, widen Autonomous. If agents escalate constantly, narrow your review scope or improve context. Trust is earned per category, not globally, and withdrawn precisely.
 
@@ -51,7 +51,7 @@ The Admiral may itself be an AI agent — a meta-orchestrator. In this configura
 
 -----
 
-## 31 — HUMAN-EXPERT ROUTING
+## 34 — HUMAN-EXPERT ROUTING
 
 > **TL;DR** — The Admiral is not omniscient. Route regulatory, design, business strategy, domain performance, and security risk decisions to subject-matter experts. Package the question. Track the response. Integrate it as Ground Truth.
 

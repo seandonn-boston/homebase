@@ -59,10 +59,16 @@ Before deploying any new fleet, verify every item. If any box is unchecked, the 
 - [ ] **Fleet Scaling (28):** Lifecycle phase identified. Scaling signals understood. Size upper bound set.
 - [ ] **Inter-Fleet Governance (29):** Knowledge boundaries set. Sharing protocol defined. Review cadence scheduled.
 
-**Part 9 — The Admiral**
+**Part 9 — Platform**
 
-- [ ] **Admiral Self-Calibration (30):** Bottleneck signals known. Trust log initialized. Growth stage assessed.
-- [ ] **Human-Expert Routing (31):** Expert Roster defined. Routing triggers documented. Consultation template ready.
+- [ ] **Fleet Observability (30):** Instrumentation strategy defined. Trace correlation configured. Sampling policy set. Dashboard or trace viewer operational.
+- [ ] **CI/CD & Event-Driven Operations (31):** Event-driven agent definitions created per trigger type. Context bootstrap sequences configured. Cost caps set per invocation. Result routing configured.
+- [ ] **Fleet Evaluation (32):** Baseline metrics established. Evaluation cadence defined. A/B testing methodology understood. First evaluation report template ready.
+
+**Part 10 — The Admiral**
+
+- [ ] **Admiral Self-Calibration (33):** Bottleneck signals known. Trust log initialized. Growth stage assessed.
+- [ ] **Human-Expert Routing (34):** Expert Roster defined. Routing triggers documented. Consultation template ready.
 
 -----
 
@@ -88,7 +94,7 @@ Operational order for standing up a new fleet. This minimizes rework — not the
 16. **Knowledge Protocol (16)** — Configure access control. Add brain_query and brain_record to agent tool registries.
 17. **Work Decomposition (18)** — Break first phase into chunks.
 18. **Cost Management (26)** — Monetary budgets. Cost tracking.
-19. **Remaining sections** — QA (21), Recovery (22), Failure Modes (23), Memory (24), Adaptation (25), Metrics (27), Scaling (28), Governance (29), Admiral (30), Expert Routing (31), Intelligence Lifecycle (17).
+19. **Remaining sections** — QA (21), Recovery (22), Failure Modes (23), Memory (24), Adaptation (25), Metrics (27), Scaling (28), Governance (29), Observability (30), CI/CD Operations (31), Evaluation (32), Admiral (33), Expert Routing (34), Intelligence Lifecycle (17).
 
 -----
 
@@ -172,6 +178,6 @@ A concrete application for a mid-complexity greenfield project.
 
 -----
 
-*The Fleet Admiral Framework · v3.2*
+*The Fleet Admiral Framework · v3.3*
 
 *Context is the currency of autonomous AI. The Brain is where that currency compounds.*
