@@ -34,6 +34,7 @@ Agents that make decisions with cascading consequences, perform adversarial reas
 | Red Team Agent | Adversarial review requires strongest reasoning |
 | Incident Response Agent | Production incidents require deep judgment under pressure |
 | Role Crystallizer | Fleet evolution requires system-level pattern recognition |
+| Bias Sentinel | Must detect subtle cognitive biases across agent outputs |
 | All Scale agents (1–29) | Inhuman-scale analysis requires maximum reasoning capacity |
 
 ### Tier 2 — Workhorse
@@ -77,6 +78,10 @@ Agents that implement, review, and produce concrete deliverables:
 | All Domain Specialization agents | Domain-specific implementation |
 | All Lifecycle agents (except Incident Response) | Process management |
 | Context Curator | Context assembly judgment |
+| Drift Monitor | Must detect subtle scope creep and mission drift across sessions |
+| Hallucination Auditor | Must verify claims against available evidence |
+| Context Health Monitor | Must assess context window utilization and instruction decay |
+| Contradiction Detector | Must identify inconsistencies across multi-agent outputs |
 
 ### Tier 3 — Utility
 
@@ -89,6 +94,8 @@ Agents with well-defined inputs, simple decision logic, and structured outputs:
 | Pattern Enforcer | Rule-based scanning |
 | Dependency Sentinel | Changelog monitoring and CVE matching |
 | SEO Crawler | Structured audit against defined criteria |
+| Token Budgeter | Cost tracking and budget enforcement against defined thresholds |
+| Loop Breaker | Pattern matching for retry loops, circular handoffs, diminishing returns |
 
 ### Tier 4 — Economy
 

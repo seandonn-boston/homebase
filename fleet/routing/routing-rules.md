@@ -70,6 +70,13 @@ The primary routing strategy. Match the task's nature to the agent whose scope c
 | **Real-time / WebSocket** | Real-time Systems Agent | Backend Implementer |
 | **Media processing** | Media Processing Agent | Backend Implementer |
 | **Notifications** | Notification Orchestrator | Backend Implementer |
+| **Token budget enforcement** | Token Budgeter | Orchestrator |
+| **Scope / mission drift detection** | Drift Monitor | Orchestrator |
+| **Hallucination audit** | Hallucination Auditor | Orchestrator |
+| **Bias detection** | Bias Sentinel | Orchestrator |
+| **Loop / thrash detection** | Loop Breaker | Orchestrator |
+| **Context health monitoring** | Context Health Monitor | Context Curator |
+| **Contradiction detection** | Contradiction Detector | Mediator |
 | **Release management** | Release Orchestrator | DevOps Agent |
 | **Incident response** | Incident Response Agent | Admiral |
 | **Feature flags** | Feature Flag Strategist | DevOps Agent |

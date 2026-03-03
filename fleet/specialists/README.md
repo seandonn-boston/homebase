@@ -52,13 +52,14 @@ All specialist agent definitions live in [`../agents/`](../agents/). They are or
 | **Security & Compliance** | `../agents/security/` | 4 | Security audit, pen testing, compliance, privacy |
 | **Data & Analytics** | `../agents/data/` | 5 | Data engineering, analytics, ML, validation, visualization |
 | **Documentation & Design** | `../agents/design/` | 5 | UX research, design systems, copywriting, tech writing, diagrams |
+| **Governance** | `../agents/governance/` | 7 | Token budgeting, drift detection, hallucination audit, bias detection, loop breaking, context health, contradiction detection |
 | **Simulation & Adversarial** | `../agents/adversarial/` | 4 | Simulated users, devil's advocate, red team, persona agents |
 | **Meta & Autonomous** | `../agents/meta/` | 4 | Pattern enforcement, dependency sentinel, SEO, role crystallizer |
 | **Domain Specialization** | `../agents/domain/` | 7 | Auth, search, payments, real-time, media, notifications, i18n |
 | **Inhuman-Scale Analysis** | `../agents/scale/` | 29 | Planetary, temporal, combinatorial, topology, threat, phase transition |
 | **Release & Developer Platform** | `../agents/lifecycle/` | 6 | Release, incident response, feature flags, SDK, monorepo, contracts |
 
-**Total: 89 specialist agents across 13 categories.**
+**Total: 96 specialist agents across 14 categories.**
 
 -----
 

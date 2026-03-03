@@ -35,6 +35,7 @@ fleet/
 │   ├── data/               # Data engineering, analytics, ML, validation, visualization
 │   ├── design/             # UX research, design systems, copywriting, tech writing, diagrams
 │   ├── adversarial/        # Simulated users, devil's advocate, red team, persona agents
+│   ├── governance/         # ALWAYS DEPLOY: Token budgeter, drift, hallucination, bias, loops, context, contradictions
 │   ├── meta/               # Pattern enforcement, dependency sentinel, role crystallizer
 │   ├── domain/             # Auth, search, payments, real-time, media, notifications, i18n
 │   ├── scale/              # Inhuman-scale analysis (planetary, temporal, combinatorial, topology)
@@ -80,24 +81,25 @@ The `prompts/templates/` directory provides the assembly pattern for building co
 
 ## Agent Catalog
 
-| Category | Directory | Agent Count |
-|---|---|---|
-| Command & Coordination | `agents/command/` | 4 |
-| Engineering — Frontend | `agents/engineering/frontend/` | 5 |
-| Engineering — Backend | `agents/engineering/backend/` | 5 |
-| Engineering — Cross-Cutting | `agents/engineering/cross-cutting/` | 5 |
-| Engineering — Infrastructure | `agents/engineering/infrastructure/` | 4 |
-| Quality & Testing | `agents/quality/` | 6 |
-| Security & Compliance | `agents/security/` | 4 |
-| Data & Analytics | `agents/data/` | 5 |
-| Documentation & Design | `agents/design/` | 5 |
-| Simulation & Adversarial | `agents/adversarial/` | 4 |
-| Meta & Autonomous | `agents/meta/` | 4 |
-| Domain Specialization | `agents/domain/` | 7 |
-| Inhuman-Scale Analysis | `agents/scale/` | 29 |
-| Release & Developer Platform | `agents/lifecycle/` | 6 |
+| Category | Directory | Agent Count | Deploy |
+|---|---|---|---|
+| Command & Coordination | `agents/command/` | 4 | |
+| **Governance** | **`agents/governance/`** | **7** | **Always** |
+| Engineering — Frontend | `agents/engineering/frontend/` | 5 | |
+| Engineering — Backend | `agents/engineering/backend/` | 5 | |
+| Engineering — Cross-Cutting | `agents/engineering/cross-cutting/` | 5 | |
+| Engineering — Infrastructure | `agents/engineering/infrastructure/` | 4 | |
+| Quality & Testing | `agents/quality/` | 6 | |
+| Security & Compliance | `agents/security/` | 4 | |
+| Data & Analytics | `agents/data/` | 5 | |
+| Documentation & Design | `agents/design/` | 5 | |
+| Simulation & Adversarial | `agents/adversarial/` | 4 | |
+| Meta & Autonomous | `agents/meta/` | 4 | |
+| Domain Specialization | `agents/domain/` | 7 | |
+| Inhuman-Scale Analysis | `agents/scale/` | 29 | |
+| Release & Developer Platform | `agents/lifecycle/` | 6 | |
 
-**Total catalog: 93 agent definitions.** Each is independently deployable. Combine as the project demands.
+**Total catalog: 100 agent definitions.** Each is independently deployable. Combine as the project demands.
 
 -----
 
