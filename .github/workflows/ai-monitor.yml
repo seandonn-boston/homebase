@@ -1,0 +1,137 @@
+name: AI Landscape Monitor
+
+# Runs on a schedule and on-demand to scan the AI ecosystem
+# for new releases, trending repos, and significant developments.
+
+on:
+  schedule:
+    # Daily at 07:00 UTC (morning scan)
+    - cron: "0 7 * * *"
+    # Weekly deep scan on Monday at 06:00 UTC
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+    inputs:
+      scan_type:
+        description: "Type of scan to run"
+        required: false
+        default: "full"
+        type: choice
+        options:
+          - full
+          - releases
+          - discover
+      dry_run:
+        description: "Preview without saving state"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write      # To commit state and digests
+  issues: write        # To create alert issues for high-priority findings
+  pull-requests: write # To create PRs with seed candidates
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run monitor scan
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ARGS=""
+
+          # Determine scan type
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            SCAN_TYPE="${{ inputs.scan_type }}"
+            if [ "$SCAN_TYPE" = "releases" ]; then
+              ARGS="--releases"
+            elif [ "$SCAN_TYPE" = "discover" ]; then
+              ARGS="--discover"
+            fi
+            if [ "${{ inputs.dry_run }}" = "true" ]; then
+              ARGS="$ARGS --dry-run"
+            fi
+          fi
+
+          python -m aiStrat.monitor.scanner $ARGS --verbose 2>&1 | tee scan-output.txt
+
+      - name: Check for high-priority findings
+        id: check_findings
+        run: |
+          if grep -q "HIGH PRIORITY" scan-output.txt 2>/dev/null; then
+            echo "has_alerts=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_alerts=false" >> "$GITHUB_OUTPUT"
+          fi
+
+          if [ -f "aiStrat/monitor/digests/$(date -u +%Y-%m-%d).md" ]; then
+            echo "has_digest=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_digest=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create alert issue for high-priority findings
+        if: steps.check_findings.outputs.has_alerts == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          DATE=$(date -u +%Y-%m-%d)
+          DIGEST_FILE="aiStrat/monitor/digests/${DATE}.md"
+
+          # Extract the alerts section
+          ALERTS=$(sed -n '/## Alerts/,/^## /p' "$DIGEST_FILE" | head -100)
+
+          gh issue create \
+            --title "AI Monitor Alert: High-Priority Findings — ${DATE}" \
+            --body "$(cat <<EOF
+          ## AI Landscape Monitor — Alerts
+
+          The scheduled monitor scan detected high-priority developments
+          that may require attention.
+
+          ${ALERTS}
+
+          ---
+          Full digest: \`${DIGEST_FILE}\`
+          Seed candidates: \`aiStrat/monitor/digests/seed-candidates-${DATE}.py\`
+
+          **Next steps:**
+          1. Review the findings in the digest
+          2. Approve relevant seed candidates for Brain ingestion
+          3. Update the watchlist if new repos should be tracked
+          EOF
+          )" \
+            --label "ai-monitor,high-priority"
+
+      - name: Commit state and digests
+        if: inputs.dry_run != 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # Add state file and any new digests
+          git add aiStrat/monitor/state.json || true
+          git add aiStrat/monitor/digests/ || true
+
+          # Only commit if there are changes
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            DATE=$(date -u +%Y-%m-%d)
+            git commit -m "chore(monitor): AI landscape scan ${DATE}
+
+          Automated scan by AI Landscape Monitor.
+          See aiStrat/monitor/digests/${DATE}.md for findings."
+            git push
+          fi

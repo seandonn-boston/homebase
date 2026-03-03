@@ -3,12 +3,18 @@
 Implements the Knowledge Protocol from admiral/part5-brain.md, Section 16.
 
 Tools:
-  brain_record     — Record a new entry
+  brain_record     — Record a new entry (with quarantine validation)
   brain_query      — Semantic search across entries
   brain_retrieve   — Fetch entry by ID with link graph
   brain_strengthen — Signal usefulness of a retrieved entry
   brain_supersede  — Mark an entry as superseded
   brain_status     — Health and statistics
+
+All write operations pass through the immune system (quarantine module)
+which validates content against prompt injection, XSS, SQL injection,
+PII/secret exposure, authority spoofing, and data poisoning attacks.
+Detected attacks are converted into FAILURE entries (antibodies) that
+strengthen the Brain's defenses over time.
 
 This module provides the tool definitions and handlers. The actual MCP
 transport (stdio, HTTP, etc.) is handled by the MCP SDK at the call site.
@@ -16,6 +22,7 @@ transport (stdio, HTTP, etc.) is handled by the MCP SDK at the call site.
 
 from __future__ import annotations
 
+import logging
 from typing import Any, Optional
 
 from ..core.embeddings import EmbeddingProvider
@@ -29,6 +36,8 @@ from ..core.models import (
 )
 from ..core.retrieval import query as retrieval_query
 from ..core.store import BrainStore
+
+logger = logging.getLogger(__name__)
 
 
 class BrainServer:
@@ -58,8 +67,72 @@ class BrainServer:
     ) -> dict[str, str]:
         """Record a new entry in the Brain.
 
-        Returns: {"id": entry_id}
+        All entries pass through quarantine validation before admission.
+        Hostile content is rejected and converted into antibody (FAILURE)
+        entries. Suspicious content is sanitized before admission.
+
+        Returns:
+            {"id": entry_id} on success
+            {"rejected": True, "reason": ..., "antibody_id": ...} if blocked
         """
+        # ── Quarantine gate: validate before writing ──
+        candidate = {
+            "title": title,
+            "content": content,
+            "category": category,
+            "metadata": metadata or {},
+        }
+
+        try:
+            from aiStrat.monitor.quarantine import quarantine, ThreatLevel
+            result = quarantine(candidate)
+
+            if not result.should_admit:
+                logger.warning(
+                    "Quarantine REJECTED entry '%s': %s (level: %s)",
+                    title[:80], result.threat_summary, result.threat_level.value,
+                )
+
+                response: dict[str, Any] = {
+                    "rejected": True,
+                    "reason": result.threat_summary,
+                    "threat_level": result.threat_level.value,
+                }
+
+                # If hostile/critical, create an antibody entry
+                if result.antibody:
+                    antibody = result.antibody
+                    antibody_entry = Entry(
+                        project=antibody["project"],
+                        category=EntryCategory(antibody["category"]),
+                        title=antibody["title"],
+                        content=antibody["content"],
+                        embedding=self._embeddings.embed(
+                            f"{antibody['title']} {antibody['content']}"
+                        ),
+                        metadata=antibody["metadata"],
+                        source_agent=antibody.get("source_agent", "quarantine"),
+                        source_session=antibody.get("source_session"),
+                    )
+                    antibody_id = self._store.add_entry(antibody_entry)
+                    response["antibody_id"] = antibody_id
+                    logger.info("Antibody created: %s", antibody_id)
+
+                # If only suspicious, use the sanitized version
+                if result.sanitized_entry and result.threat_level == ThreatLevel.SUSPICIOUS:
+                    logger.info("Admitting sanitized version of '%s'", title[:80])
+                    title = result.sanitized_entry.get("title", title)
+                    content = result.sanitized_entry.get("content", content)
+                    metadata = result.sanitized_entry.get("metadata", metadata)
+                    # Fall through to normal admission below
+                else:
+                    return response
+
+        except ImportError:
+            # Quarantine module not available — log but allow
+            # (supports running Brain independently of monitor)
+            logger.debug("Quarantine module not available, skipping validation")
+
         cat = EntryCategory(category)
         tier = AuthorityTier(authority_tier) if authority_tier else None
 
