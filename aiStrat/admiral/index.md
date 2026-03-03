@@ -144,7 +144,7 @@ Terms are listed alphabetically. When these terms appear in any part file, they 
 
 ## Relationship to the Fleet
 
-The `fleet/` directory (sibling to this `admiral/` directory within `ai-strategy/`) provides 100+ reusable agent definitions organized by category. This framework defines principles; fleet provides implementations.
+The `fleet/` directory (sibling to this `admiral/` directory within `aiStrat/`) provides 100+ reusable agent definitions organized by category. This framework defines principles; fleet provides implementations.
 
 | Admiral Section | Fleet Implementation |
 |---|---|
