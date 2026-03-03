@@ -1,15 +1,18 @@
-"""Main scanner orchestrator — runs all sources and produces findings.
+"""Main scanner — feeds the Brain with intelligence the Admiral needs.
 
-Two scanning missions:
-1. MODEL RELEASES — Detect new LLM model releases and fetch official content
-2. BEST PRACTICES — Find state-of-the-art SDLC practices using LLMs
+Two scanning missions, both serving fleet deployment:
+
+1. MODEL INTELLIGENCE — What models exist, what changed, what can they do?
+   Brain category: CONTEXT (snapshots of model capabilities at a point in time)
+
+2. AGENT PATTERNS — How do the best tools configure agents, prompts,
+   instructions, and tool use for software development?
+   Brain category: PATTERN (reusable solutions) and LESSON (what works/doesn't)
 
 Usage:
     python -m aiStrat.monitor.scanner              # Full scan (both missions)
-    python -m aiStrat.monitor.scanner --models      # Model releases only
-    python -m aiStrat.monitor.scanner --practices   # SDLC practices only
-    python -m aiStrat.monitor.scanner --releases    # Legacy: repo releases only
-    python -m aiStrat.monitor.scanner --discover    # Legacy: discovery only
+    python -m aiStrat.monitor.scanner --models      # Model intelligence only
+    python -m aiStrat.monitor.scanner --patterns    # Agent patterns only
     python -m aiStrat.monitor.scanner --dry-run     # Preview without saving state
 """
 
@@ -18,12 +21,11 @@ from __future__ import annotations
 import argparse
 import logging
 import os
-import sys
 from datetime import datetime, timezone, timedelta
 from typing import Optional
 
 from .config import (
-    WATCHED_REPOS, MODEL_PROVIDERS, SDLC_EXEMPLARS,
+    WATCHED_REPOS, MODEL_PROVIDERS, AGENT_EXEMPLARS,
     SEARCH_QUERIES, QUALITY_SIGNALS, SETTINGS,
 )
 from .state import MonitorState
@@ -35,13 +37,23 @@ logger = logging.getLogger(__name__)
 
 
 class Finding:
-    """A single discovery from the monitor."""
+    """A single discovery from the monitor.
+
+    Each finding maps to a Brain entry category:
+      model_release     → CONTEXT  (what models can do right now)
+      model_docs        → CONTEXT  (official docs/blog content for a release)
+      agent_pattern     → PATTERN  (how a tool configures its agents)
+      exemplar_update   → PATTERN  (change to a tracked exemplar's approach)
+      practice_found    → PATTERN  (new repo with fleet-relevant patterns)
+      star_surge        → PATTERN  (community validates an approach)
+      release           → CONTEXT  (general release — backward compat)
+      new_repo          → CONTEXT  (general discovery — backward compat)
+    """
 
     def __init__(self, kind: str, title: str, body: str,
                  url: str = "", tags: list[str] | None = None,
                  priority: str = "normal", data: dict | None = None):
-        self.kind = kind          # "model_release", "release", "new_repo", "star_surge",
-                                  # "best_practice", "practice_update"
+        self.kind = kind
         self.title = title
         self.body = body
         self.url = url
@@ -76,34 +88,30 @@ class ScanResult:
         logger.warning(msg)
 
 
-def scan(state: MonitorState, releases: bool = True, discover: bool = True,
-         models: bool = False, practices: bool = False,
+def scan(state: MonitorState, models: bool = False, patterns: bool = False,
+         releases: bool = False, discover: bool = False,
          dry_run: bool = False) -> ScanResult:
     """Run a monitoring scan.
 
     Args:
         state: Persistent state tracker
-        releases: Whether to check for new releases (all watched repos)
-        discover: Whether to run discovery searches
-        models: If True, run model release mission (releases + content fetch)
-        practices: If True, run SDLC best practices mission
+        models: Run model intelligence mission
+        patterns: Run agent patterns mission
+        releases: Legacy: check all watched repos for releases
+        discover: Legacy: run discovery searches
         dry_run: If True, don't update state
-
-    Returns:
-        ScanResult with all findings
     """
     result = ScanResult()
     lookback = timedelta(days=SETTINGS["lookback_days"])
     since = datetime.now(timezone.utc) - lookback
 
-    # New focused missions
     if models:
-        _scan_model_releases(state, result, since)
-    if practices:
-        _scan_best_practices(state, result)
+        _scan_model_intelligence(state, result, since)
+    if patterns:
+        _scan_agent_patterns(state, result, since)
 
-    # Legacy scan paths (still work for backward compat)
-    if not models and not practices:
+    # Legacy paths
+    if not models and not patterns:
         if releases:
             _scan_releases(state, result, since)
         if discover:
@@ -116,22 +124,24 @@ def scan(state: MonitorState, releases: bool = True, discover: bool = True,
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# MISSION 1: MODEL RELEASE TRACKING
+# MISSION 1: MODEL INTELLIGENCE
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Admiral question: "What models exist and what tier should each role use?"
+# Brain category: CONTEXT
 
-def _scan_model_releases(state: MonitorState, result: ScanResult,
-                         since: datetime) -> None:
-    """Check model provider repos for new releases and fetch official content.
+def _scan_model_intelligence(state: MonitorState, result: ScanResult,
+                             since: datetime) -> None:
+    """Detect new model releases and capture official documentation.
 
-    When a new release is found:
-    1. Record the release finding
-    2. Extract URLs from release notes pointing to official docs/blogs
-    3. Fetch content from those URLs + configured content_urls
-    4. Create enriched findings with the full official content
+    When a provider ships a new SDK/model release:
+    1. Record the release itself (capabilities, API changes)
+    2. Fetch official docs/blog content for full understanding
+    3. Everything is high-priority — model changes affect fleet-wide
+       tier assignment decisions.
     """
-    for entry in MODEL_PROVIDERS:
-        repo = entry["repo"]
-        if "releases" not in entry.get("track", []):
+    for provider in MODEL_PROVIDERS:
+        repo = provider["repo"]
+        if "releases" not in provider.get("track", []):
             continue
 
         result.repos_checked += 1
@@ -146,43 +156,45 @@ def _scan_model_releases(state: MonitorState, result: ScanResult,
             if state.is_release_known(repo, tag):
                 continue
 
-            # New model release found — always high priority
             logger.info("MODEL RELEASE: %s %s", repo, tag)
 
+            # The release itself — Brain CONTEXT entry
             finding = Finding(
                 kind="model_release",
-                title=f"Model release: {repo} {tag}",
+                title=f"{repo} {tag}",
                 body=_summarize_release_body(rel["body"]),
                 url=rel["url"],
-                tags=entry.get("tags", []) + ["model-release"],
+                tags=provider.get("tags", []),
                 priority="high",
                 data={
                     "repo": repo, "tag": tag,
                     "published_at": rel["published_at"],
                     "prerelease": rel["prerelease"],
                     "full_release_body": rel["body"],
+                    "admiral_question": provider.get("admiral_question", ""),
                 },
             )
             result.add(finding)
             state.record_release(repo, tag, rel["published_at"])
 
-            # Fetch official content from URLs in release notes
+            # Fetch official content — docs, blog posts
             body_urls = extract_urls_from_release(rel["body"])
-            content_urls = entry.get("content_urls", [])
-            all_urls = list(dict.fromkeys(body_urls + content_urls))  # Dedupe, preserve order
+            configured_urls = provider.get("content_urls", [])
+            all_urls = list(dict.fromkeys(body_urls + configured_urls))
 
-            for url in all_urls[:5]:  # Cap at 5 URLs per release
+            for url in all_urls[:5]:
                 _fetch_and_record_content(
                     state, result, url,
                     parent_repo=repo, parent_tag=tag,
-                    tags=entry.get("tags", []) + ["official-content"],
+                    tags=provider.get("tags", []) + ["official-docs"],
+                    admiral_question=provider.get("admiral_question", ""),
                 )
 
 
 def _fetch_and_record_content(state: MonitorState, result: ScanResult,
                               url: str, parent_repo: str, parent_tag: str,
-                              tags: list[str]) -> None:
-    """Fetch a URL and create a finding with the extracted content."""
+                              tags: list[str], admiral_question: str = "") -> None:
+    """Fetch a URL and create a Brain CONTEXT finding."""
     url_id = content_hash(url)
     if state.is_feed_item_known(url_id):
         return
@@ -192,12 +204,11 @@ def _fetch_and_record_content(state: MonitorState, result: ScanResult,
     if not text:
         return
 
-    # Truncate for the finding body but store full text in data
     summary = text[:500] + "..." if len(text) > 500 else text
 
     finding = Finding(
-        kind="model_release",
-        title=f"Official content for {parent_repo} {parent_tag}: {url}",
+        kind="model_docs",
+        title=f"Official docs: {parent_repo} {parent_tag}",
         body=summary,
         url=url,
         tags=tags,
@@ -206,7 +217,7 @@ def _fetch_and_record_content(state: MonitorState, result: ScanResult,
             "repo": parent_repo, "tag": parent_tag,
             "content_url": url,
             "full_content": text,
-            "content_type": "official_docs",
+            "admiral_question": admiral_question,
         },
     )
     result.add(finding)
@@ -214,40 +225,41 @@ def _fetch_and_record_content(state: MonitorState, result: ScanResult,
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# MISSION 2: SDLC BEST PRACTICES SCANNING
+# MISSION 2: AGENT PATTERNS
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Admiral question: "How should I configure this agent's prompt,
+# instructions, tools, and boundaries?"
+# Brain category: PATTERN
 
-def _scan_best_practices(state: MonitorState, result: ScanResult) -> None:
-    """Search for state-of-the-art SDLC practices using LLMs.
+def _scan_agent_patterns(state: MonitorState, result: ScanResult,
+                         since: datetime) -> None:
+    """Find and track agent design patterns relevant to fleet configuration.
 
-    Runs targeted queries focused on:
-    - How repos configure Claude Code and Copilot agents
-    - Prompt patterns and instruction design for dev tools
-    - Working examples of LLM-assisted SDLC workflows
-
-    Quality filtering: Only surfaces repos that pass quality signals
-    (star count, practice indicators, SDLC keyword relevance).
+    Three sources:
+    1. Exemplar updates — tracked repos that define state-of-the-art
+    2. Search queries — find new repos with fleet-relevant patterns
+    3. Recent discoveries — newly created repos gaining traction
     """
-    # 1. Check SDLC exemplar repos for updates
-    _scan_exemplar_updates(state, result)
-
-    # 2. Run search queries for new best-practice repos
-    _scan_practice_queries(state, result)
-
-    # 3. Discover recently created SDLC-focused repos
-    _scan_recent_sdlc_repos(state, result)
+    _scan_exemplar_updates(state, result, since)
+    _scan_pattern_queries(state, result)
+    _scan_recent_agent_repos(state, result)
 
 
-def _scan_exemplar_updates(state: MonitorState, result: ScanResult) -> None:
-    """Check known best-in-class repos for new releases and star surges."""
-    for entry in SDLC_EXEMPLARS:
-        repo = entry["repo"]
+def _scan_exemplar_updates(state: MonitorState, result: ScanResult,
+                           since: datetime) -> None:
+    """Check tracked exemplar repos for new releases.
 
-        # Check releases
-        if "releases" in entry.get("track", []):
+    When Claude Code, Aider, Cline, etc. ship updates, we need to know
+    what changed in their agent design — new prompt patterns, tool
+    definitions, orchestration approaches.
+    """
+    for exemplar in AGENT_EXEMPLARS:
+        repo = exemplar["repo"]
+
+        if "releases" in exemplar.get("track", []):
             result.repos_checked += 1
             try:
-                rels = fetch_releases(repo, since=datetime.now(timezone.utc) - timedelta(days=7))
+                rels = fetch_releases(repo, since=since)
             except Exception as e:
                 result.add_error(f"Failed to fetch releases for {repo}: {e}")
                 continue
@@ -258,26 +270,29 @@ def _scan_exemplar_updates(state: MonitorState, result: ScanResult) -> None:
                     continue
 
                 is_major = _is_major_release(tag)
+                watch_for = exemplar.get("watch_for", [])
+
                 finding = Finding(
-                    kind="practice_update",
-                    title=f"Exemplar update: {repo} {tag}",
+                    kind="exemplar_update",
+                    title=f"{repo} {tag}",
                     body=_summarize_release_body(rel["body"]),
                     url=rel["url"],
-                    tags=entry.get("tags", []) + ["practice-update"],
+                    tags=exemplar.get("tags", []),
                     priority="high" if is_major else "normal",
                     data={
                         "repo": repo, "tag": tag,
                         "published_at": rel["published_at"],
                         "prerelease": rel["prerelease"],
                         "full_release_body": rel["body"],
+                        "watch_for": watch_for,
                     },
                 )
                 result.add(finding)
                 state.record_release(repo, tag, rel["published_at"])
                 logger.info("Exemplar update: %s %s", repo, tag)
 
-        # Check star surges
-        if "stars" in entry.get("track", []):
+        # Star surges on exemplars = community validates their approach
+        if "stars" in exemplar.get("track", []):
             try:
                 info = fetch_repo_info(repo)
             except Exception as e:
@@ -287,15 +302,18 @@ def _scan_exemplar_updates(state: MonitorState, result: ScanResult) -> None:
             if info:
                 current_stars = info.get("stargazers_count", 0)
                 delta = state.get_star_delta(repo, current_stars)
-                threshold = QUALITY_SIGNALS["star_velocity_threshold"]
 
-                if delta >= threshold:
+                if delta >= QUALITY_SIGNALS["star_velocity_threshold"]:
                     finding = Finding(
                         kind="star_surge",
-                        title=f"Star surge: {repo} gained {delta:,} stars",
-                        body=f"{repo} went from {current_stars - delta:,} to {current_stars:,} stars since last scan.",
+                        title=f"{repo} gained {delta:,} stars",
+                        body=(
+                            f"{repo} went from {current_stars - delta:,} to "
+                            f"{current_stars:,} stars. Community is rapidly adopting "
+                            f"this approach — review for patterns the fleet should learn."
+                        ),
                         url=info.get("html_url", ""),
-                        tags=entry.get("tags", []) + ["star-surge", "validation"],
+                        tags=exemplar.get("tags", []) + ["validation"],
                         priority="high",
                         data={"repo": repo, "stars": current_stars, "delta": delta},
                     )
@@ -304,8 +322,12 @@ def _scan_exemplar_updates(state: MonitorState, result: ScanResult) -> None:
                 state.record_repo(repo, current_stars)
 
 
-def _scan_practice_queries(state: MonitorState, result: ScanResult) -> None:
-    """Run focused search queries for SDLC best practices."""
+def _scan_pattern_queries(state: MonitorState, result: ScanResult) -> None:
+    """Run targeted search queries for fleet-relevant patterns.
+
+    Each query is tied to an Admiral question. Only surface repos that
+    would actually inform fleet configuration decisions.
+    """
     for query_cfg in SEARCH_QUERIES:
         result.queries_run += 1
         try:
@@ -327,39 +349,39 @@ def _scan_practice_queries(state: MonitorState, result: ScanResult) -> None:
             stars = repo.get("stars", 0)
 
             if not state.is_repo_known(full_name):
-                # New discovery — assess quality
-                quality = _assess_quality(repo)
-                if quality == "skip":
+                relevance = _assess_fleet_relevance(repo)
+                if relevance == "irrelevant":
                     state.record_repo(full_name, stars)
                     continue
 
-                is_elite = stars >= QUALITY_SIGNALS["elite_star_threshold"]
                 finding = Finding(
-                    kind="best_practice",
-                    title=f"SDLC practice: {full_name} ({stars:,} stars)",
+                    kind="practice_found",
+                    title=f"{full_name} ({stars:,} stars)",
                     body=repo.get("description", "No description"),
                     url=repo.get("url", ""),
-                    tags=query_cfg.get("tags", []) + ["discovery"],
-                    priority="high" if is_elite else "normal",
+                    tags=query_cfg.get("tags", []),
+                    priority="high" if relevance == "exemplar" else "normal",
                     data={
                         "full_name": full_name, "stars": stars,
                         "language": repo.get("language", ""),
                         "query": query_cfg["query"],
-                        "quality_tier": quality,
+                        "relevance": relevance,
+                        "admiral_need": query_cfg.get("admiral_need", ""),
                     },
                 )
                 result.add(finding)
-                logger.info("SDLC practice found: %s (%d stars, %s)", full_name, stars, quality)
+                logger.info("Pattern found: %s (%d stars, %s)",
+                            full_name, stars, relevance)
             else:
-                # Check for star surge on known repos
+                # Star surge on known repos = community validates the pattern
                 delta = state.get_star_delta(full_name, stars)
                 if delta >= QUALITY_SIGNALS["star_velocity_threshold"]:
                     finding = Finding(
                         kind="star_surge",
-                        title=f"Star surge: {full_name} gained {delta:,} stars",
+                        title=f"{full_name} gained {delta:,} stars",
                         body=repo.get("description", ""),
                         url=repo.get("url", ""),
-                        tags=query_cfg.get("tags", []) + ["star-surge", "validation"],
+                        tags=query_cfg.get("tags", []) + ["validation"],
                         priority="high",
                         data={"full_name": full_name, "stars": stars, "delta": delta},
                     )
@@ -368,17 +390,17 @@ def _scan_practice_queries(state: MonitorState, result: ScanResult) -> None:
             state.record_repo(full_name, stars)
 
 
-def _scan_recent_sdlc_repos(state: MonitorState, result: ScanResult) -> None:
-    """Find recently created repos focused on LLM-assisted development."""
-    sdlc_topics = [
+def _scan_recent_agent_repos(state: MonitorState, result: ScanResult) -> None:
+    """Find recently created repos in the agent/SDLC space."""
+    agent_topics = [
         "ai-coding-agent", "llm-agents", "claude-code",
-        "copilot", "agentic-ai", "mcp-server",
+        "mcp-server", "agentic-ai",
     ]
     try:
         recent = discover_recent(
             days=SETTINGS["lookback_days"],
             min_stars=QUALITY_SIGNALS["min_stars"],
-            topics=sdlc_topics,
+            topics=agent_topics,
         )
         for repo in recent:
             full_name = repo["full_name"]
@@ -386,62 +408,64 @@ def _scan_recent_sdlc_repos(state: MonitorState, result: ScanResult) -> None:
                 continue
 
             stars = repo.get("stars", 0)
-            quality = _assess_quality(repo)
-            if quality == "skip":
+            relevance = _assess_fleet_relevance(repo)
+            if relevance == "irrelevant":
                 state.record_repo(full_name, stars)
                 continue
 
             finding = Finding(
-                kind="best_practice",
-                title=f"New SDLC repo: {full_name} ({stars:,} stars)",
+                kind="practice_found",
+                title=f"New: {full_name} ({stars:,} stars)",
                 body=repo.get("description", "No description"),
                 url=repo.get("url", ""),
-                tags=["recent", "sdlc-practice", "discovery"],
+                tags=["recent", "agent-pattern"],
                 priority="high" if stars >= 1000 else "normal",
                 data={
                     "full_name": full_name, "stars": stars,
                     "language": repo.get("language", ""),
                     "created_at": repo.get("created_at", ""),
-                    "quality_tier": quality,
+                    "relevance": relevance,
                 },
             )
             result.add(finding)
             state.record_repo(full_name, stars)
     except Exception as e:
-        result.add_error(f"Recent SDLC discovery failed: {e}")
+        result.add_error(f"Recent agent repo discovery failed: {e}")
 
 
-def _assess_quality(repo: dict) -> str:
-    """Assess whether a repo meets "best in class" quality bar.
+def _assess_fleet_relevance(repo: dict) -> str:
+    """Assess whether a repo has patterns the Admiral can use.
 
-    Returns: "elite", "high", "standard", or "skip"
+    Returns: "exemplar", "relevant", or "irrelevant"
+
+    Not just "is this popular?" but "does this demonstrate agent design,
+    prompt patterns, or SDLC workflows that would inform fleet config?"
     """
     stars = repo.get("stars", 0)
     description = (repo.get("description") or "").lower()
 
-    # Elite tier — massive community validation
-    if stars >= QUALITY_SIGNALS["elite_star_threshold"]:
-        return "elite"
+    keywords = QUALITY_SIGNALS["fleet_relevance_keywords"]
+    hits = sum(1 for kw in keywords if kw.lower() in description)
 
-    # Check for SDLC keyword relevance in description
-    sdlc_keywords = QUALITY_SIGNALS["sdlc_keywords"]
-    keyword_hits = sum(1 for kw in sdlc_keywords if kw.lower() in description)
+    # Exemplar: high stars AND clearly about agent/SDLC patterns
+    if stars >= QUALITY_SIGNALS["elite_star_threshold"] and hits >= 1:
+        return "exemplar"
 
-    if keyword_hits >= 2 and stars >= 1000:
-        return "high"
-    elif keyword_hits >= 1 and stars >= QUALITY_SIGNALS["min_stars"]:
-        return "standard"
+    # Relevant: meaningful signal that this is about agent design for dev
+    if hits >= 2 and stars >= 1000:
+        return "relevant"
+    if hits >= 1 and stars >= QUALITY_SIGNALS["min_stars"]:
+        return "relevant"
 
-    # Not relevant enough
-    return "skip"
+    return "irrelevant"
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# LEGACY SCAN PATHS (kept for backward compat)
+# LEGACY SCAN PATHS
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 def _scan_releases(state: MonitorState, result: ScanResult, since: datetime) -> None:
-    """Check watched repos for new releases."""
+    """Check all watched repos for new releases."""
     for entry in WATCHED_REPOS:
         repo = entry["repo"]
         if "releases" not in entry.get("track", []):
@@ -460,7 +484,6 @@ def _scan_releases(state: MonitorState, result: ScanResult, since: datetime) -> 
                 continue
 
             is_major = _is_major_release(tag)
-            priority = "high" if is_major else "normal"
             prerelease_label = " [PRE-RELEASE]" if rel["prerelease"] else ""
 
             finding = Finding(
@@ -469,15 +492,13 @@ def _scan_releases(state: MonitorState, result: ScanResult, since: datetime) -> 
                 body=_summarize_release_body(rel["body"]),
                 url=rel["url"],
                 tags=entry.get("tags", []) + ["release"],
-                priority=priority,
+                priority="high" if is_major else "normal",
                 data={"repo": repo, "tag": tag, "published_at": rel["published_at"],
                       "prerelease": rel["prerelease"]},
             )
             result.add(finding)
             state.record_release(repo, tag, rel["published_at"])
-            logger.info("New release: %s %s", repo, tag)
 
-    # Also check star counts for watched repos with "stars" tracking
     for entry in WATCHED_REPOS:
         repo = entry["repo"]
         if "stars" not in entry.get("track", []):
@@ -492,25 +513,22 @@ def _scan_releases(state: MonitorState, result: ScanResult, since: datetime) -> 
         if info:
             current_stars = info.get("stargazers_count", 0)
             delta = state.get_star_delta(repo, current_stars)
-            threshold = SETTINGS["star_velocity_threshold"]
-
-            if delta >= threshold:
+            if delta >= SETTINGS["star_velocity_threshold"]:
                 finding = Finding(
                     kind="star_surge",
                     title=f"Star surge: {repo} gained {delta:,} stars",
-                    body=f"{repo} went from {current_stars - delta:,} to {current_stars:,} stars since last scan.",
+                    body=f"{repo} went from {current_stars - delta:,} to {current_stars:,} stars.",
                     url=info.get("html_url", ""),
                     tags=entry.get("tags", []) + ["star-surge"],
                     priority="high",
                     data={"repo": repo, "stars": current_stars, "delta": delta},
                 )
                 result.add(finding)
-
             state.record_repo(repo, current_stars)
 
 
 def _scan_discovery(state: MonitorState, result: ScanResult) -> None:
-    """Run search queries to discover new or trending repos."""
+    """Run search queries to discover new repos."""
     for query_cfg in SEARCH_QUERIES:
         result.queries_run += 1
         try:
@@ -528,7 +546,6 @@ def _scan_discovery(state: MonitorState, result: ScanResult) -> None:
             full_name = repo["full_name"]
             if not full_name:
                 continue
-
             stars = repo.get("stars", 0)
 
             if not state.is_repo_known(full_name):
@@ -544,7 +561,6 @@ def _scan_discovery(state: MonitorState, result: ScanResult) -> None:
                           "query": query_cfg["query"]},
                 )
                 result.add(finding)
-                logger.info("New repo discovered: %s (%d stars)", full_name, stars)
             else:
                 delta = state.get_star_delta(full_name, stars)
                 if delta >= SETTINGS["star_velocity_threshold"]:
@@ -558,36 +574,7 @@ def _scan_discovery(state: MonitorState, result: ScanResult) -> None:
                         data={"full_name": full_name, "stars": stars, "delta": delta},
                     )
                     result.add(finding)
-
             state.record_repo(full_name, stars)
-
-    # Also run a broad "recently created" discovery
-    try:
-        recent = discover_recent(
-            days=SETTINGS["lookback_days"],
-            min_stars=SETTINGS["discovery_min_stars"],
-        )
-        for repo in recent:
-            full_name = repo["full_name"]
-            if not full_name or state.is_repo_known(full_name):
-                continue
-
-            stars = repo.get("stars", 0)
-            finding = Finding(
-                kind="new_repo",
-                title=f"Recently created: {full_name} ({stars:,} stars)",
-                body=repo.get("description", "No description"),
-                url=repo.get("url", ""),
-                tags=["recent", "discovery"],
-                priority="normal" if stars < 1000 else "high",
-                data={"full_name": full_name, "stars": stars,
-                      "language": repo.get("language", ""),
-                      "created_at": repo.get("created_at", "")},
-            )
-            result.add(finding)
-            state.record_repo(full_name, stars)
-    except Exception as e:
-        result.add_error(f"Recent discovery failed: {e}")
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -623,11 +610,11 @@ def _summarize_release_body(body: str, max_len: int = 500) -> str:
 def main() -> None:
     parser = argparse.ArgumentParser(description="AI Landscape Monitor")
     parser.add_argument("--models", action="store_true",
-                        help="Scan for new LLM model releases + fetch official content")
-    parser.add_argument("--practices", action="store_true",
-                        help="Scan for SDLC best practices using LLMs")
-    parser.add_argument("--releases", action="store_true", help="Check releases (all repos)")
-    parser.add_argument("--discover", action="store_true", help="Run discovery searches")
+                        help="Scan for new model releases + fetch official docs")
+    parser.add_argument("--patterns", action="store_true",
+                        help="Scan for agent design patterns and SDLC practices")
+    parser.add_argument("--releases", action="store_true", help="Legacy: check all releases")
+    parser.add_argument("--discover", action="store_true", help="Legacy: run discovery")
     parser.add_argument("--dry-run", action="store_true", help="Don't save state")
     parser.add_argument("--verbose", "-v", action="store_true", help="Verbose logging")
     args = parser.parse_args()
@@ -637,50 +624,44 @@ def main() -> None:
         format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
     )
 
-    # Determine root directory
     root = _find_repo_root()
     state_path = os.path.join(root, SETTINGS["state_file"])
     state = MonitorState(state_path)
 
-    # New mission flags
     do_models = args.models
-    do_practices = args.practices
-
-    # Legacy flags (if no new flags, use legacy for backward compat)
+    do_patterns = args.patterns
     do_releases = args.releases
     do_discover = args.discover
 
-    # If nothing specified, run both new missions
-    if not any([do_models, do_practices, do_releases, do_discover]):
+    # Default: both missions
+    if not any([do_models, do_patterns, do_releases, do_discover]):
         do_models = True
-        do_practices = True
+        do_patterns = True
 
     print(f"AI Landscape Monitor — scan #{state.scan_count + 1}")
     if state.last_scan:
         print(f"  Last scan: {state.last_scan}")
-    print(f"  Missions: ", end="")
     missions = []
     if do_models:
-        missions.append("model-releases")
-    if do_practices:
-        missions.append("sdlc-practices")
+        missions.append("model-intelligence")
+    if do_patterns:
+        missions.append("agent-patterns")
     if do_releases:
         missions.append("releases")
     if do_discover:
         missions.append("discovery")
-    print(", ".join(missions))
+    print(f"  Missions: {', '.join(missions)}")
     print()
 
     result = scan(
         state,
+        models=do_models,
+        patterns=do_patterns,
         releases=do_releases,
         discover=do_discover,
-        models=do_models,
-        practices=do_practices,
         dry_run=args.dry_run,
     )
 
-    # Print summary
     print(f"Scan complete: {len(result.findings)} findings, {len(result.errors)} errors")
     print(f"  Repos checked: {result.repos_checked}")
     print(f"  Queries run: {result.queries_run}")

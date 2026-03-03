@@ -74,9 +74,13 @@ def _render_digest(result: ScanResult, date: str) -> str:
         by_kind.setdefault(f.kind, []).append(f)
 
     kind_labels = {
+        "model_release": "Model Intelligence",
+        "model_docs": "Official Documentation",
+        "exemplar_update": "Exemplar Updates",
+        "practice_found": "Agent Patterns Discovered",
+        "star_surge": "Community Validation (Star Surges)",
         "release": "New Releases",
         "new_repo": "Newly Discovered Repositories",
-        "star_surge": "Star Surges",
         "trending": "Trending",
     }
 

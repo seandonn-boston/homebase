@@ -1,15 +1,14 @@
 name: AI Landscape Monitor
 
-# Two missions:
-# 1. MODEL RELEASES — Detect new LLM models, fetch official docs/blogs
-# 2. SDLC BEST PRACTICES — Daily scan for state-of-the-art LLM usage in dev
+# Runs on a schedule and on-demand to scan the AI ecosystem
+# for new releases, trending repos, and significant developments.
 
 on:
   schedule:
-    # Daily at 07:00 UTC — SDLC best practices scan + model release check
+    # Daily at 07:00 UTC (morning scan)
     - cron: "0 7 * * *"
-    # Second daily check at 19:00 UTC — model releases (catch announcements in all timezones)
-    - cron: "0 19 * * *"
+    # Weekly deep scan on Monday at 06:00 UTC
+    - cron: "0 6 * * 1"
   workflow_dispatch:
     inputs:
       scan_type:
@@ -20,7 +19,7 @@ on:
         options:
           - full
           - models
-          - practices
+          - patterns
           - releases
           - discover
       dry_run:
@@ -59,8 +58,8 @@ jobs:
             SCAN_TYPE="${{ inputs.scan_type }}"
             if [ "$SCAN_TYPE" = "models" ]; then
               ARGS="--models"
-            elif [ "$SCAN_TYPE" = "practices" ]; then
-              ARGS="--practices"
+            elif [ "$SCAN_TYPE" = "patterns" ]; then
+              ARGS="--patterns"
             elif [ "$SCAN_TYPE" = "releases" ]; then
               ARGS="--releases"
             elif [ "$SCAN_TYPE" = "discover" ]; then
@@ -71,12 +70,11 @@ jobs:
               ARGS="$ARGS --dry-run"
             fi
           else
-            # Scheduled runs: 07:00 = full, 19:00 = models only
+            # Scheduled: 07:00 = full scan, 19:00 = model check only
             HOUR=$(date -u +%H)
             if [ "$HOUR" = "19" ]; then
               ARGS="--models"
             fi
-            # 07:00 runs with no args = full scan (both missions)
           fi
 
           python -m aiStrat.monitor.scanner $ARGS --verbose 2>&1 | tee scan-output.txt
