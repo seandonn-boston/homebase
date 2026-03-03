@@ -195,7 +195,11 @@ Equally important: what the agent does NOT have.
 
 Different models have different strengths. Model assignment affects quality, cost, and latency simultaneously.
 
-### Model Landscape (February 2026)
+### Model Landscape Updates
+
+The model landscape changes frequently. The Continuous AI Landscape Monitor (`monitor/`) tracks releases across 11 model providers (Anthropic, OpenAI, Google, Meta, Mistral, DeepSeek, xAI, Cohere, HuggingFace, Ollama, llama.cpp) and feeds new model intelligence into the Brain as CONTEXT entries. When the monitor surfaces a new release, the Admiral should reassess tier assignments using the promotion/demotion signals in `fleet/model-tiers.md`.
+
+### Model Landscape (March 2026)
 
 | Model | Strengths | Context | Best For |
 |---|---|---|---|
@@ -215,9 +219,9 @@ Different models have different strengths. Model assignment affects quality, cos
 | **Tier 3: Utility** | Fast, cheap, reliable for well-defined tasks. | Triage, formatting, pattern matching |
 | **Tier 4: Economy** | Near-frontier at fraction of cost. | High-volume utility, cost-sensitive batch processing |
 
-**When to promote:** Role's First-Pass Quality Rate causes rework costing more than the tier upgrade.
+**When to promote:** Role's First-Pass Quality Rate causes rework costing more than the tier upgrade. Or: the monitor surfaces a new model release with significantly improved capabilities at the same tier's price point.
 
-**When to demote:** Output quality at a higher tier is indistinguishable from lower. A/B test: same task, both tiers, compare.
+**When to demote:** Output quality at a higher tier is indistinguishable from lower. A/B test: same task, both tiers, compare. Or: the monitor surfaces a new economy-tier model that matches current workhorse quality.
 
 ### Multi-Model Orchestration
 

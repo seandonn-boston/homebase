@@ -1,3 +1,7 @@
 __pycache__/
 *.pyc
 .pytest_cache/
+
+# Monitor: state and digests are committed deliberately via CI,
+# but seed candidates should be reviewed before committing
+# aiStrat/monitor/digests/seed-candidates-*.py

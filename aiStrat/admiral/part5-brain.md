@@ -295,7 +295,17 @@ Not every agent should read or write everything.
 
 ```
 Capture → Embed → Store → Retrieve → Strengthen → Link → Surface → Review
+   ▲
+   │
+External Intelligence (Monitor)
 ```
+
+Knowledge enters the Brain from two channels:
+
+- **Internal capture:** Agents record decisions, outcomes, lessons, and failures from their own work.
+- **External intelligence:** The Continuous AI Landscape Monitor (`monitor/`) feeds curated ecosystem intelligence — model releases, agent patterns, emerging tools — through a quarantine layer before it reaches the Brain.
+
+Both channels converge at the same pipeline. External entries arrive as seed candidates with `"approved": False` — requiring Admiral review before activation.
 
 **1. Capture.** An agent calls `brain_record` with a decision, outcome, lesson, or failure. Content should include the *why*, not just the *what* — rationale is what makes an entry useful to future agents.
 
@@ -353,6 +363,33 @@ Decision: "Use JWT for auth"
 ```
 
 Agents traversing links get not just an answer but the *reasoning chain* behind it. When `brain_retrieve` is called with `depth: 2`, the agent receives the entry and two levels of linked entries — enough context to understand why a decision was made and what happened after.
+
+### External Intelligence: The Continuous Monitor
+
+The Brain does not only learn from the fleet's own experience. The Continuous AI Landscape Monitor (`monitor/`) is an automated surveillance system that scans the AI ecosystem and feeds curated intelligence into the Brain.
+
+**What the monitor captures:**
+
+| Finding Kind | Brain Category | Source |
+|---|---|---|
+| Model/SDK releases | CONTEXT | GitHub Releases API across 11 providers |
+| Official docs, blog posts, RSS announcements | CONTEXT | Provider blogs, RSS feeds, release content URLs |
+| Exemplar tool updates (Claude Code, Aider, Cline, etc.) | PATTERN | 20 tracked repos with watch-for criteria |
+| Agent configuration files (CLAUDE.md, .cursorrules, etc.) | PATTERN | Direct extraction from exemplar repos |
+| Fleet-relevant repos discovered via search | PATTERN | 13 targeted GitHub queries + 8 topic scans |
+| Trending repos gaining traction | PATTERN | Star-surge detection with quality filtering |
+
+**The quarantine layer:** All external content passes through `quarantine.py` — a four-layer immune system (structural validation, injection detection, semantic analysis, antibody generation) — before reaching the Brain. Hostile content is rejected and converted into FAILURE entries that teach the fleet what adversarial patterns look like.
+
+**The approval gate:** Monitor findings arrive as seed candidates with `"approved": False`. Nothing enters the Brain without Admiral review. This prevents automated poisoning while keeping the intelligence pipeline flowing.
+
+**How the fleet benefits:**
+
+- **Model Selection (Section 13)** stays current — new releases trigger tier reassessment.
+- **Agent definitions** evolve — patterns extracted from exemplar tools inform prompt design, tool configuration, and boundary definitions.
+- **Ground Truth (Section 05)** is refreshed — ecosystem changes surface as context entries the Admiral can integrate.
+
+> **ANTI-PATTERN: INTELLIGENCE WITHOUT ACTION** — The monitor runs daily, digests accumulate, seed candidates pile up — but the Admiral never reviews them and findings never reach the Brain. Intelligence has value only when it changes fleet behavior. Review cadence must match scan cadence.
 
 ### Cross-Project Intelligence
 

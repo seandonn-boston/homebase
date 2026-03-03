@@ -110,6 +110,16 @@ Load it into every agent's context at the start of every session. Maintain and u
 - **Current known issues:** Bugs, limitations, workarounds, technical debt, "do not touch" areas and why.
 - **External dependencies:** Third-party services, rate limits, SLAs, known instabilities.
 
+### Ecosystem Intelligence as Ground Truth
+
+The Continuous AI Landscape Monitor (`monitor/`) produces intelligence that may update Ground Truth:
+
+- **Model capabilities change.** A new model release may alter optimal tier assignments, context window sizes, or tool support. When the Admiral approves a model release seed candidate into the Brain, review whether the tech stack versions or model references in Ground Truth need updating.
+- **Agent patterns evolve.** Exemplar tools (Claude Code, Aider, Cline, etc.) change their configuration approaches. New patterns may warrant updating agent definitions, prompt anatomy, or configuration file strategy.
+- **New tools emerge.** The monitor discovers fleet-relevant repos and MCP servers. These may belong in the Tool Registry (Section 12) or Ground Truth's external dependencies.
+
+The monitor does not update Ground Truth automatically. It surfaces intelligence; the Admiral decides what enters Ground Truth and what remains Brain context.
+
 ### Configuration as Ground Truth
 
 | Artifact | Purpose | Location | Review Cadence |

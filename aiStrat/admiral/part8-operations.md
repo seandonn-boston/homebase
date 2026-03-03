@@ -71,6 +71,20 @@ Chronological record of every non-trivial decision: timestamp, decision, alterna
 | **Strategic Shift** | Mission evolution, Boundary changes, Ground Truth updates, significant scope change | Pause at chunk boundary. Cascade through artifacts. Re-validate. Resume. |
 | **Full Pivot** | Fundamental direction change, complete tech change, total scope replacement | Halt fleet. Treat as new deployment. Full Quick-Start. |
 
+### External Intelligence as Adaptation Trigger
+
+The Continuous AI Landscape Monitor (`monitor/`) surfaces ecosystem changes that may trigger adaptation. When the Admiral reviews monitor digests and approves seed candidates into the Brain, assess each finding against the change classification:
+
+| Monitor Finding | Likely Classification | Cascade Target |
+|---|---|---|
+| New flagship model release (e.g., Opus 5) | Strategic Shift | Model Selection (13) → Cost Management (26) → Fleet Composition (11) |
+| New economy-tier model matching workhorse quality | Strategic Shift | Model Selection (13) → Cost Management (26) |
+| Exemplar tool redesigns agent patterns | Tactical Adjustment | Agent definitions, prompt anatomy, context profiles |
+| New MCP server ecosystem emerges | Tactical or Strategic | Tool Registry (12) → Protocol Integration (14) |
+| Security vulnerability in tracked dependency | Strategic Shift | Configuration Security (10) → Tool Registry (12) |
+
+The monitor runs daily. The Admiral should review digests at matching cadence and classify findings before they accumulate into stale intelligence.
+
 ### The Cascade Map
 
 Framework artifacts form a dependency graph. When one changes, downstream artifacts may become stale.

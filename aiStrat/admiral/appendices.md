@@ -37,6 +37,7 @@ Before deploying any new fleet, verify every item. If any box is unchecked, the 
 - [ ] **Brain Architecture (15):** Postgres + pgvector deployed. Schema created. Embedding model selected. HNSW index built.
 - [ ] **Knowledge Protocol (16):** Brain MCP server running and registered. Access control configured per role. All agents have brain_query and brain_record in their tool registry.
 - [ ] **Intelligence Lifecycle (17):** Capture triggers defined (chunk boundaries, decisions, failures). Review cadence scheduled. Cross-project namespace established if multi-fleet.
+- [ ] **Continuous Monitor:** Monitor configured with watched repos, search queries, and RSS feeds. GitHub Actions workflow (`ai-monitor.yml`) enabled. Quarantine tests passing. Digest review cadence matches scan cadence. Seed candidate approval workflow established.
 
 **Part 6 — Execution**
 
@@ -92,9 +93,10 @@ Operational order for standing up a new fleet. This minimizes rework — not the
 14. **Context Window Strategy (06)** — Profiles, loading order, progressive disclosure.
 15. **Brain Architecture (15)** — Deploy Postgres + pgvector. Create schema. Register Brain MCP server.
 16. **Knowledge Protocol (16)** — Configure access control. Add brain_query and brain_record to agent tool registries.
-17. **Work Decomposition (18)** — Break first phase into chunks.
-18. **Cost Management (26)** — Monetary budgets. Cost tracking.
-19. **Remaining sections** — QA (21), Recovery (22), Failure Modes (23), Memory (24), Adaptation (25), Metrics (27), Scaling (28), Governance (29), Observability (30), CI/CD Operations (31), Evaluation (32), Admiral (33), Expert Routing (34), Intelligence Lifecycle (17).
+17. **Continuous Monitor** — Configure watched repos, search queries, RSS feeds. Enable GitHub Actions workflow. Run initial scan. Review seed candidates.
+18. **Work Decomposition (18)** — Break first phase into chunks.
+19. **Cost Management (26)** — Monetary budgets. Cost tracking.
+20. **Remaining sections** — QA (21), Recovery (22), Failure Modes (23), Memory (24), Adaptation (25), Metrics (27), Scaling (28), Governance (29), Observability (30), CI/CD Operations (31), Evaluation (32), Admiral (33), Expert Routing (34), Intelligence Lifecycle (17).
 
 -----
 
