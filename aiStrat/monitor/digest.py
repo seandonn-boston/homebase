@@ -141,6 +141,13 @@ def _render_finding(finding: Finding) -> list[str]:
         lines.append(f"Language: {_md_escape(str(data['language']))}")
     if data.get("published_at"):
         lines.append(f"Published: {_md_escape(str(data['published_at']))}")
+    if data.get("config_type"):
+        lines.append(f"Config type: {_md_escape(str(data['config_type']))}")
+    if data.get("config_path"):
+        lines.append(f"Config path: {_md_escape(str(data['config_path']))}")
+    if data.get("matched_keywords"):
+        safe_kws = [_md_escape(str(kw)) for kw in data["matched_keywords"]]
+        lines.append(f"Matched: {', '.join(safe_kws)}")
 
     lines.append("")
     return lines

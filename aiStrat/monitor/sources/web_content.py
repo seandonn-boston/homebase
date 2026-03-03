@@ -42,6 +42,8 @@ ALLOWED_DOMAINS = frozenset([
     "cohere.com",
     "docs.cohere.com",
     "x.ai",
+    "ollama.com",
+    "raw.githubusercontent.com",
 ])
 
 

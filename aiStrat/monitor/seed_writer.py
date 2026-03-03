@@ -243,9 +243,12 @@ def _exemplar_update_entry(finding: Finding, data: dict) -> dict:
 def _practice_found_entry(finding: Finding, data: dict) -> dict:
     """Brain PATTERN: A repo demonstrating fleet-relevant agent design.
 
-    Not just "popular repo" — this is a repo that shows how to configure
-    agents, structure prompts, or manage SDLC workflows with LLMs.
-    The Admiral should investigate it for patterns to adopt.
+    Two variants:
+    1. Repo discovery — "this repo has patterns worth studying"
+    2. Extracted config — "here's the actual CLAUDE.md / .cursorrules content"
+
+    The second variant is far more valuable: it gives the Brain the real
+    instruction patterns, not just a pointer to a repo.
     """
     full_name = data.get("full_name", "unknown")
     stars = data.get("stars", 0)
@@ -253,6 +256,33 @@ def _practice_found_entry(finding: Finding, data: dict) -> dict:
     relevance = data.get("relevance", "relevant")
     admiral_need = data.get("admiral_need", "")
 
+    # Extracted agent config — include the actual content
+    if data.get("config_type"):
+        config_type = data["config_type"]
+        config_path = data.get("config_path", "")
+        full_content = data.get("full_content", "")
+
+        return {
+            "category": "pattern",
+            "title": _sanitize_text(
+                f"Agent config ({config_type}): {full_name}"
+            ),
+            "content": _sanitize_text(
+                f"Extracted {config_type} from {full_name}.\n"
+                f"File: {config_path}\n\n"
+                f"--- Begin extracted content ---\n"
+                f"{full_content}\n"
+                f"--- End extracted content ---\n\n"
+                f"Admiral: Study this for patterns the fleet should adopt — "
+                f"instruction design, tool configuration, constraints, "
+                f"and workflow structure."
+            ),
+            "tags": [_sanitize_tag(t) for t in finding.tags],
+            "relevance": "exemplar",
+            "admiral_context": admiral_need,
+        }
+
+    # Standard repo discovery
     context_str = f"\n\nAdmiral context: {admiral_need}" if admiral_need else ""
 
     return {

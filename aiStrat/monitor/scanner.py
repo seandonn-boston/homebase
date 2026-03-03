@@ -26,12 +26,14 @@ from typing import Optional
 
 from .config import (
     WATCHED_REPOS, MODEL_PROVIDERS, AGENT_EXEMPLARS,
-    SEARCH_QUERIES, QUALITY_SIGNALS, SETTINGS,
+    SEARCH_QUERIES, QUALITY_SIGNALS, SETTINGS, RSS_FEEDS,
 )
 from .state import MonitorState
 from .sources.github_releases import fetch_releases, fetch_repo_info
 from .sources.github_trending import search_repos, discover_recent
 from .sources.web_content import fetch_page_text, extract_urls_from_release, content_hash
+from .sources.rss_feeds import fetch_feed, entry_id
+from .sources.repo_content import fetch_agent_configs
 
 logger = logging.getLogger(__name__)
 
@@ -190,6 +192,63 @@ def _scan_model_intelligence(state: MonitorState, result: ScanResult,
                     admiral_question=provider.get("admiral_question", ""),
                 )
 
+    # RSS feeds — official blog announcements about models and agents
+    _scan_rss_feeds(state, result, since)
+
+
+def _scan_rss_feeds(state: MonitorState, result: ScanResult,
+                    since: datetime) -> None:
+    """Scan RSS feeds for official announcements about models and agents.
+
+    When Anthropic posts about Claude 4.6, or OpenAI announces Codex updates,
+    or GitHub blogs about Copilot agent mode — the Brain needs that content.
+    """
+    for feed_cfg in RSS_FEEDS:
+        url = feed_cfg["url"]
+        name = feed_cfg.get("name", url)
+        keywords = feed_cfg.get("keywords", [])
+        tags = feed_cfg.get("tags", [])
+
+        try:
+            entries = fetch_feed(url, keywords=keywords, since=since)
+        except Exception as e:
+            result.add_error(f"Failed to fetch RSS feed {name}: {e}")
+            continue
+
+        for entry in entries:
+            eid = entry_id(entry["url"], entry["title"])
+            if state.is_feed_item_known(eid):
+                continue
+
+            logger.info("RSS: %s — %s", name, entry["title"])
+
+            # Fetch full content if the entry has a URL
+            full_content = ""
+            if entry["url"]:
+                full_content = fetch_page_text(entry["url"]) or ""
+
+            finding = Finding(
+                kind="model_docs",
+                title=f"{name}: {entry['title']}",
+                body=entry.get("summary", "")[:500],
+                url=entry["url"],
+                tags=tags + ["rss", "official-announcement"],
+                priority="high",
+                data={
+                    "repo": name,
+                    "tag": "",
+                    "content_url": entry["url"],
+                    "full_content": full_content or entry.get("summary", ""),
+                    "published": entry.get("published", ""),
+                    "matched_keywords": entry.get("matched_keywords", []),
+                    "admiral_question": (
+                        f"What did {name} announce that affects fleet configuration?"
+                    ),
+                },
+            )
+            result.add(finding)
+            state.record_feed_item(eid, entry["title"])
+
 
 def _fetch_and_record_content(state: MonitorState, result: ScanResult,
                               url: str, parent_repo: str, parent_tag: str,
@@ -235,12 +294,14 @@ def _scan_agent_patterns(state: MonitorState, result: ScanResult,
                          since: datetime) -> None:
     """Find and track agent design patterns relevant to fleet configuration.
 
-    Three sources:
+    Four sources:
     1. Exemplar updates — tracked repos that define state-of-the-art
-    2. Search queries — find new repos with fleet-relevant patterns
-    3. Recent discoveries — newly created repos gaining traction
+    2. Exemplar content — actual config files (CLAUDE.md, .cursorrules, etc.)
+    3. Search queries — find new repos with fleet-relevant patterns
+    4. Recent discoveries — newly created repos gaining traction
     """
     _scan_exemplar_updates(state, result, since)
+    _scan_exemplar_content(state, result)
     _scan_pattern_queries(state, result)
     _scan_recent_agent_repos(state, result)
 
@@ -322,6 +383,69 @@ def _scan_exemplar_updates(state: MonitorState, result: ScanResult,
                 state.record_repo(repo, current_stars)
 
 
+def _scan_exemplar_content(state: MonitorState, result: ScanResult) -> None:
+    """Fetch actual agent config files from exemplar repos.
+
+    This is where the real patterns live. When a repo has a CLAUDE.md,
+    .cursorrules, or copilot-instructions.md, we fetch its content so
+    the Brain has the actual instruction patterns — not just "this repo
+    exists" but "here's exactly how they configure their agents."
+
+    Only fetches on the first scan or when new releases are detected
+    (content might have changed with a release).
+    """
+    for exemplar in AGENT_EXEMPLARS:
+        repo = exemplar["repo"]
+        # Check if we've already fetched content for this repo
+        content_key = f"content:{repo}"
+        if state.is_feed_item_known(content_key):
+            # Re-fetch if there was a new release this scan
+            if not any(
+                f.kind == "exemplar_update" and f.data.get("repo") == repo
+                for f in result.findings
+            ):
+                continue
+
+        try:
+            configs = fetch_agent_configs(repo)
+        except Exception as e:
+            result.add_error(f"Failed to fetch agent configs from {repo}: {e}")
+            continue
+
+        for cfg in configs:
+            finding = Finding(
+                kind="practice_found",
+                title=f"Agent config: {repo}/{cfg['path']}",
+                body=(
+                    f"Extracted {cfg['config_type']} from {repo}. "
+                    f"File: {cfg['path']}. "
+                    f"This is an actual production agent configuration "
+                    f"from a state-of-the-art tool."
+                ),
+                url=f"https://github.com/{repo}/blob/HEAD/{cfg['path']}",
+                tags=exemplar.get("tags", []) + ["extracted-config", cfg["config_type"]],
+                priority="high",
+                data={
+                    "full_name": repo,
+                    "stars": 0,
+                    "language": "markdown",
+                    "relevance": "exemplar",
+                    "config_type": cfg["config_type"],
+                    "config_path": cfg["path"],
+                    "full_content": cfg["content"],
+                    "admiral_need": (
+                        f"How does {repo} configure its agents? "
+                        f"What patterns from {cfg['path']} should the fleet adopt?"
+                    ),
+                },
+            )
+            result.add(finding)
+            logger.info("Extracted agent config: %s/%s", repo, cfg["path"])
+
+        if configs:
+            state.record_feed_item(content_key, f"Agent configs from {repo}")
+
+
 def _scan_pattern_queries(state: MonitorState, result: ScanResult) -> None:
     """Run targeted search queries for fleet-relevant patterns.
 
@@ -372,6 +496,14 @@ def _scan_pattern_queries(state: MonitorState, result: ScanResult) -> None:
                 result.add(finding)
                 logger.info("Pattern found: %s (%d stars, %s)",
                             full_name, stars, relevance)
+
+                # For exemplar-quality repos, extract actual agent configs
+                if relevance == "exemplar":
+                    _extract_discovered_configs(
+                        state, result, full_name,
+                        tags=query_cfg.get("tags", []),
+                        admiral_need=query_cfg.get("admiral_need", ""),
+                    )
             else:
                 # Star surge on known repos = community validates the pattern
                 delta = state.get_star_delta(full_name, stars)
@@ -394,7 +526,8 @@ def _scan_recent_agent_repos(state: MonitorState, result: ScanResult) -> None:
     """Find recently created repos in the agent/SDLC space."""
     agent_topics = [
         "ai-coding-agent", "llm-agents", "claude-code",
-        "mcp-server", "agentic-ai",
+        "mcp-server", "agentic-ai", "copilot-agent",
+        "ai-developer-tools", "code-generation",
     ]
     try:
         recent = discover_recent(
@@ -431,6 +564,50 @@ def _scan_recent_agent_repos(state: MonitorState, result: ScanResult) -> None:
             state.record_repo(full_name, stars)
     except Exception as e:
         result.add_error(f"Recent agent repo discovery failed: {e}")
+
+
+def _extract_discovered_configs(state: MonitorState, result: ScanResult,
+                                full_name: str, tags: list[str],
+                                admiral_need: str = "") -> None:
+    """Extract agent configs from a newly discovered exemplar-quality repo."""
+    content_key = f"content:{full_name}"
+    if state.is_feed_item_known(content_key):
+        return
+
+    try:
+        configs = fetch_agent_configs(full_name)
+    except Exception as e:
+        logger.debug("Failed to extract configs from %s: %s", full_name, e)
+        return
+
+    for cfg in configs:
+        finding = Finding(
+            kind="practice_found",
+            title=f"Extracted config: {full_name}/{cfg['path']}",
+            body=(
+                f"Found {cfg['config_type']} in discovered exemplar {full_name}. "
+                f"This is a real-world agent configuration worth studying."
+            ),
+            url=f"https://github.com/{full_name}/blob/HEAD/{cfg['path']}",
+            tags=tags + ["extracted-config", cfg["config_type"]],
+            priority="high",
+            data={
+                "full_name": full_name,
+                "stars": 0,
+                "language": "markdown",
+                "relevance": "exemplar",
+                "config_type": cfg["config_type"],
+                "config_path": cfg["path"],
+                "full_content": cfg["content"],
+                "admiral_need": admiral_need or (
+                    f"What agent patterns does {full_name} use in {cfg['path']}?"
+                ),
+            },
+        )
+        result.add(finding)
+
+    if configs:
+        state.record_feed_item(content_key, f"Configs from {full_name}")
 
 
 def _assess_fleet_relevance(repo: dict) -> str:

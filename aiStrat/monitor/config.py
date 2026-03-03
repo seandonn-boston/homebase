@@ -105,6 +105,44 @@ MODEL_PROVIDERS: list[dict] = [
         ],
         "admiral_question": "What new models are available on the Hub for fleet use?",
     },
+
+    # ── xAI / Grok (potential Economy/Utility tier) ──
+    {
+        "repo": "xai-org/grok-1",
+        "track": ["releases", "activity"],
+        "tags": ["xai", "grok", "model-intelligence"],
+        "content_urls": [],
+        "admiral_question": "Is Grok viable for fleet agent roles?",
+    },
+
+    # ── Cohere (enterprise-focused, embeddings + RAG) ──
+    {
+        "repo": "cohere-ai/cohere-python",
+        "track": ["releases"],
+        "tags": ["cohere", "model-intelligence", "embeddings"],
+        "content_urls": [
+            "https://docs.cohere.com/docs/models",
+        ],
+        "admiral_question": "What Cohere models serve embedding/RAG roles in the fleet?",
+    },
+
+    # ── Ollama (local model deployment — Economy tier) ──
+    {
+        "repo": "ollama/ollama",
+        "track": ["releases"],
+        "tags": ["ollama", "local-deployment", "economy-tier"],
+        "content_urls": [],
+        "admiral_question": "What local models can serve as Economy tier agents via Ollama?",
+    },
+
+    # ── llama.cpp (quantization + local inference engine) ──
+    {
+        "repo": "ggerganov/llama.cpp",
+        "track": ["releases"],
+        "tags": ["llama-cpp", "local-inference", "economy-tier"],
+        "content_urls": [],
+        "admiral_question": "What quantization options affect Economy tier agent quality?",
+    },
 ]
 
 
@@ -226,6 +264,12 @@ AGENT_EXEMPLARS: list[dict] = [
         "tags": ["mcp", "sdk", "implementation"],
         "watch_for": ["API changes", "new patterns", "server examples"],
     },
+    {
+        "repo": "modelcontextprotocol/servers",
+        "track": ["releases", "activity"],
+        "tags": ["mcp", "servers", "tool-use", "reference"],
+        "watch_for": ["new server types", "server patterns", "tool definitions"],
+    },
 
     # ── Prompt engineering (the science behind our prompt anatomy) ──
     {
@@ -332,6 +376,30 @@ SEARCH_QUERIES: list[dict] = [
         "tags": ["orchestration", "multi-agent", "routing"],
         "admiral_need": "What routing and orchestration patterns work for multi-agent fleets?",
     },
+
+    # ── AGENTS.md (Anthropic's multi-agent context format) ──
+    {
+        "query": "AGENTS.md in:path language:markdown",
+        "sort": "updated", "min_stars": 100,
+        "tags": ["agents-md", "multi-agent", "agent-config"],
+        "admiral_need": "How do repos structure multi-agent coordination via AGENTS.md?",
+    },
+
+    # ── Claude hooks and custom tooling ──
+    {
+        "query": "claude hooks agent automation in:description",
+        "sort": "stars", "min_stars": 100,
+        "tags": ["claude-code", "hooks", "automation"],
+        "admiral_need": "What hook patterns extend Claude Code agent capabilities?",
+    },
+
+    # ── AI-assisted deployment and CI/CD ──
+    {
+        "query": "ai deployment pipeline agent in:description",
+        "sort": "stars", "min_stars": 200,
+        "tags": ["deployment", "cicd", "sdlc-workflow"],
+        "admiral_need": "How should the fleet handle deployment automation?",
+    },
 ]
 
 
@@ -376,6 +444,12 @@ RSS_FEEDS: list[dict] = [
         "tags": ["meta", "official", "model-intelligence"],
         "keywords": ["llama", "model", "release", "open-source", "agent"],
     },
+    {
+        "url": "https://github.blog/changelog/feed/",
+        "name": "GitHub Changelog",
+        "tags": ["github", "copilot", "changelog"],
+        "keywords": ["copilot", "agent", "claude", "ai", "code review", "pull request"],
+    },
 ]
 
 
@@ -400,12 +474,15 @@ QUALITY_SIGNALS = {
     # (if a repo has these, it's worth deeper inspection)
     "practice_indicators": [
         "CLAUDE.md",                          # Claude Code instructions
+        "AGENTS.md",                          # Multi-agent context (Anthropic)
         ".github/copilot-instructions.md",    # Copilot agent config
         ".cursorrules",                       # Cursor agent config
+        ".claude/settings.json",              # Claude Code settings
         "system_prompt",                      # Custom system prompts
         "agent_config",                       # Agent configuration
         "prompts/",                           # Prompt library
         ".aider.conf.yml",                    # Aider configuration
+        ".ai/instructions.md",               # Generic AI instructions
     ],
 
     # Keywords that indicate the repo is relevant to fleet design
@@ -423,6 +500,13 @@ QUALITY_SIGNALS = {
         "MCP", "model context protocol",
         # Quality
         "SWE-bench", "evaluation", "benchmark",
+        # Agent configuration formats
+        "CLAUDE.md", "AGENTS.md", "copilot-instructions", "cursorrules",
+        # Context and knowledge
+        "context window", "RAG", "retrieval", "embedding",
+        # Modern patterns
+        "agentic", "autonomous coding", "AI-native", "AI-first",
+        "sandbox", "containerized", "isolated execution",
     ],
 }
 
