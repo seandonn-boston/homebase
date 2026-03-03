@@ -15,6 +15,7 @@ import html
 import logging
 import re
 import urllib.error
+import urllib.parse
 import urllib.request
 from typing import Optional
 
@@ -43,7 +44,19 @@ ALLOWED_DOMAINS = frozenset([
     "docs.cohere.com",
     "x.ai",
     "ollama.com",
-    "raw.githubusercontent.com",
+    # v4: raw.githubusercontent.com removed — use org-scoped validation instead
+    # (Vuln 8.2.3: anyone can host content on raw.githubusercontent.com)
+])
+
+# Trusted GitHub orgs whose raw.githubusercontent.com content is allowed
+_TRUSTED_GITHUB_ORGS = frozenset([
+    "anthropics",
+    "openai",
+    "google",
+    "meta-llama",
+    "mistralai",
+    "huggingface",
+    "cohere-ai",
 ])
 
 
@@ -112,7 +125,12 @@ def content_hash(text: str) -> str:
 
 
 def _validate_url(url: str) -> str:
-    """Validate and normalize a URL. Returns empty string if invalid."""
+    """Validate and normalize a URL. Returns empty string if invalid.
+
+    v4: Uses urllib.parse.urlparse for domain extraction instead of
+    string splitting, preventing bypass via userinfo@ or port tricks.
+    Also validates BEFORE fetch, not just after redirect (Vuln 8.2.3).
+    """
     if not url or not isinstance(url, str):
         return ""
 
@@ -132,13 +150,38 @@ def _validate_url(url: str) -> str:
 
 
 def _is_allowed_domain(url: str) -> bool:
-    """Check if a URL is on an allowed domain."""
+    """Check if a URL is on an allowed domain.
+
+    v4: Uses urllib.parse.urlparse().hostname for proper domain extraction.
+    Removed subdomain wildcard matching (domain.endswith("." + allowed))
+    which allowed bypass via e.g. 'anthropic.com.attacker.com'.
+    Added org-scoped validation for raw.githubusercontent.com.
+    """
     try:
-        domain = url.split("://", 1)[1].split("/", 1)[0].split(":", 1)[0].lower()
-        return domain in ALLOWED_DOMAINS or any(
-            domain.endswith("." + allowed) for allowed in ALLOWED_DOMAINS
-        )
-    except (IndexError, ValueError):
+        parsed = urllib.parse.urlparse(url)
+        hostname = (parsed.hostname or "").lower()
+
+        if not hostname:
+            return False
+
+        # Exact domain match only — no subdomain wildcards
+        if hostname in ALLOWED_DOMAINS:
+            return True
+
+        # Org-scoped raw.githubusercontent.com access
+        if hostname == "raw.githubusercontent.com":
+            path = parsed.path.lstrip("/")
+            org = path.split("/")[0].lower() if path else ""
+            if org in _TRUSTED_GITHUB_ORGS:
+                return True
+            logger.warning(
+                "raw.githubusercontent.com access denied for org '%s' (URL: %s)",
+                org, url[:200],
+            )
+            return False
+
+        return False
+    except (ValueError, AttributeError):
         return False
 
 

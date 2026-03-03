@@ -23,10 +23,15 @@ SOURCE = "initial-research"
 SESSION = "seed-feb-2026"
 
 
-def seed(brain) -> int:
+_SEED_TOKEN = "__seed__"  # Internal token for seeding — requires NoAuthProvider or api_keys config
+
+
+def seed(brain, token: str = _SEED_TOKEN) -> int:
     """Populate the Brain with research findings. Returns entry count."""
-    record = brain.server.brain_record
     entries = []
+
+    def record(**kwargs):
+        return brain.server.brain_record(**kwargs, token=token, provenance="seed")
 
     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     # PATTERNS — Reusable approaches observed across the ecosystem
@@ -360,8 +365,14 @@ def seed(brain) -> int:
 
 
 def main() -> None:
-    brain = bootstrap()
-    count = seed(brain)
+    from brain.mcp.auth import Scope
+
+    seed_token = "seed-admin-key"
+    brain = bootstrap(
+        api_keys={seed_token: ("seed-loader", Scope.ADMIN)},
+        strict_mode=False,
+    )
+    count = seed(brain, token=seed_token)
 
     # Print status
     status = brain.server.brain_status()
@@ -372,6 +383,7 @@ def main() -> None:
     # Verify retrieval works
     results = brain.server.brain_query(
         query="What patterns work best for production agent deployments?",
+        token=seed_token,
         min_score=0.0,
         limit=3,
     )

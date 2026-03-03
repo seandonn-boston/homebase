@@ -1,20 +1,26 @@
-"""Six-signal ranked retrieval pipeline for the Fleet Brain.
+"""Seven-signal ranked retrieval pipeline for the Fleet Brain.
 
 Implements the retrieval ranking from admiral/part5-brain.md, Section 17:
 
 1. Semantic similarity (cosine distance) — primary signal
 2. Project relevance — current project entries rank higher
 3. Recency — newer entries rank higher when similarity is close
-4. Usefulness — higher net usefulness scores rank higher
+4. Usefulness — higher net usefulness scores rank higher (bounded)
 5. Currency — superseded entries excluded by default
-6. Category match — implied category from query boosts matching entries
+6. Category match — inferred category from query boosts matching entries
+7. Provenance — human/seed entries weighted higher than monitor/agent
+
+v4: Added word-boundary category inference, negative usefulness signal
+    preservation, provenance weighting, result diversity enforcement.
 
 Reference: admiral/part5-brain.md, Sections 15 and 17.
 """
 
 from __future__ import annotations
 
+import re
 import time
+from collections import Counter
 from typing import Optional
 
 from .embeddings import EmbeddingProvider, cosine_similarity
@@ -38,7 +44,6 @@ _CATEGORY_HINTS: dict[str, EntryCategory] = {
     "failure": EntryCategory.FAILURE,
     "went wrong": EntryCategory.FAILURE,
     "broke": EntryCategory.FAILURE,
-    "error": EntryCategory.FAILURE,
     "pattern": EntryCategory.PATTERN,
     "approach": EntryCategory.PATTERN,
     "best practice": EntryCategory.PATTERN,
@@ -47,28 +52,45 @@ _CATEGORY_HINTS: dict[str, EntryCategory] = {
     "stack": EntryCategory.CONTEXT,
 }
 
+# "error" removed from hints — too broad (matches "error handling", "error recovery")
+# Use "went wrong" or "failure" for explicit failure queries.
+
 # Tuning weights for combining signals
 WEIGHT_SIMILARITY = 0.50
 WEIGHT_PROJECT = 0.15
-WEIGHT_RECENCY = 0.10
+WEIGHT_RECENCY = 0.05  # Reduced from 0.10 to make room for provenance
 WEIGHT_USEFULNESS = 0.10
 WEIGHT_CATEGORY = 0.15
+WEIGHT_PROVENANCE = 0.05  # New: human > seed > agent > monitor
+
+# Provenance trust scores (0.0 to 1.0)
+_PROVENANCE_SCORES: dict[str, float] = {
+    "human": 1.0,
+    "seed": 0.8,
+    "system": 0.7,
+    "agent": 0.5,
+    "monitor": 0.3,
+}
+
+# Max entries per category in results (diversity enforcement)
+_MAX_PER_CATEGORY = 3
 
 
 def _infer_category(query: str) -> Optional[EntryCategory]:
-    """Attempt to infer an entry category from query text."""
+    """Attempt to infer an entry category from query text.
+
+    Uses word-boundary matching to prevent false positives
+    (e.g., "error handling strategy" should NOT match "error" → FAILURE).
+    """
     query_lower = query.lower()
     for hint, category in _CATEGORY_HINTS.items():
-        if hint in query_lower:
+        if re.search(r'\b' + re.escape(hint) + r'\b', query_lower):
             return category
     return None
 
 
 def _recency_score(entry: Entry, max_age_days: float = 180.0) -> float:
-    """Score from 0.0 to 1.0 based on how recent the entry is.
-
-    Entries created today score 1.0. Entries older than max_age_days score 0.0.
-    """
+    """Score from 0.0 to 1.0 based on how recent the entry is."""
     age = entry.age_days
     if age >= max_age_days:
         return 0.0
@@ -78,12 +100,51 @@ def _recency_score(entry: Entry, max_age_days: float = 180.0) -> float:
 def _usefulness_score(entry: Entry, max_usefulness: int = 50) -> float:
     """Normalize usefulness to 0.0–1.0 range.
 
-    Caps at max_usefulness to prevent a single entry from dominating.
+    Preserves negative signal: negative usefulness maps to [0.0, 0.5),
+    zero maps to 0.5, positive maps to (0.5, 1.0].
     """
     if max_usefulness == 0:
         return 0.5
-    clamped = max(0, min(entry.usefulness, max_usefulness))
-    return clamped / max_usefulness
+    clamped = max(-max_usefulness, min(entry.usefulness, max_usefulness))
+    # Map [-max, +max] to [0.0, 1.0]
+    return (clamped + max_usefulness) / (2 * max_usefulness)
+
+
+def _provenance_score(entry: Entry) -> float:
+    """Score based on entry provenance (source trust)."""
+    return _PROVENANCE_SCORES.get(entry.provenance, 0.3)
+
+
+def _enforce_diversity(scored: list[ScoredEntry], limit: int) -> list[ScoredEntry]:
+    """Enforce category diversity in results.
+
+    No more than _MAX_PER_CATEGORY entries from any single category.
+    When a category exceeds the limit, the lowest-scoring entry from
+    that category is replaced with the next-best from an
+    underrepresented category.
+    """
+    if len(scored) <= limit:
+        return scored
+
+    result: list[ScoredEntry] = []
+    category_counts: Counter[str] = Counter()
+    overflow: list[ScoredEntry] = []
+
+    for entry in scored:
+        cat = entry.entry.category.value
+        if category_counts[cat] < _MAX_PER_CATEGORY:
+            result.append(entry)
+            category_counts[cat] += 1
+            if len(result) >= limit:
+                break
+        else:
+            overflow.append(entry)
+
+    # Fill remaining slots from overflow if we haven't hit limit
+    while len(result) < limit and overflow:
+        result.append(overflow.pop(0))
+
+    return result
 
 
 def query(
@@ -98,22 +159,12 @@ def query(
 ) -> list[ScoredEntry]:
     """Execute a ranked retrieval query against the Brain.
 
-    Applies six ranking signals:
-    1. Semantic similarity (cosine)
-    2. Project relevance boost
-    3. Recency
-    4. Usefulness
-    5. Currency (superseded filtering)
-    6. Category match boost
-
-    Returns scored entries sorted by combined score, descending.
+    Applies seven ranking signals and enforces result diversity.
     """
-    # Get the query embedding
     query_embedding = embedding_provider.embed(query_text)
 
-    # Fetch candidate entries
     candidates = store.list_entries(
-        project=None,  # Fetch all, we'll score project relevance
+        project=None,
         category=category,
         current_only=current_only,
     )
@@ -121,7 +172,6 @@ def query(
     if not candidates:
         return []
 
-    # Infer category from query if not explicitly provided
     inferred_category = category or _infer_category(query_text)
 
     scored: list[ScoredEntry] = []
@@ -141,16 +191,18 @@ def query(
         # Signal 3: Recency
         recency = _recency_score(entry)
 
-        # Signal 4: Usefulness
+        # Signal 4: Usefulness (bounded, preserves negative signal)
         usefulness = _usefulness_score(entry)
 
-        # Signal 5: Currency (already filtered by current_only above)
-        # No additional scoring needed — superseded entries are excluded
+        # Signal 5: Currency (already filtered above)
 
         # Signal 6: Category match
         category_boost = 0.0
         if inferred_category and entry.category == inferred_category:
             category_boost = 1.0
+
+        # Signal 7: Provenance trust
+        provenance = _provenance_score(entry)
 
         # Combine signals
         combined = (
@@ -159,14 +211,15 @@ def query(
             + WEIGHT_RECENCY * recency
             + WEIGHT_USEFULNESS * usefulness
             + WEIGHT_CATEGORY * category_boost
+            + WEIGHT_PROVENANCE * provenance
         )
 
         scored.append(ScoredEntry(entry=entry, score=combined))
 
-        # Track access
         store.increment_access(entry.id)
 
     # Sort by combined score, descending
     scored.sort(key=lambda s: s.score, reverse=True)
 
-    return scored[:limit]
+    # Apply diversity enforcement
+    return _enforce_diversity(scored, limit)

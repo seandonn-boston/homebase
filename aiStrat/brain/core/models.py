@@ -3,6 +3,9 @@
 Defines the core types: entries (the atomic unit of knowledge),
 entry links (relationships between entries), and supporting enums.
 
+v4: Added ALLOWED_METADATA_KEYS whitelist, provenance field,
+    superseded_at timestamp, typed metadata.
+
 Reference: admiral/part5-brain.md, Section 15.
 """
 
@@ -13,6 +16,23 @@ import time
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Optional
+
+# Metadata key whitelist — only these keys are stored. Unknown keys are stripped.
+# Reference: REVIEW.md Section 8.1.6 — Metadata schema poisoning (MEDIUM fix).
+ALLOWED_METADATA_KEYS: frozenset[str] = frozenset({
+    "tags",
+    "source_url",
+    "confidence",
+    "verified_date",
+    "speculative",
+    "provenance",
+    "tool_version",
+    "model_name",
+    "benchmark_scores",
+    "scan_date",
+    "finding_type",
+    "scan_source",
+})
 
 
 class EntryCategory(Enum):
@@ -69,18 +89,20 @@ class Entry:
     # Semantic search
     embedding: Optional[list[float]] = None
 
-    # Metadata
+    # Metadata — only ALLOWED_METADATA_KEYS are stored
     metadata: dict = field(default_factory=dict)
 
-    # Provenance
+    # Provenance — tracks entry origin for trust weighting
     source_agent: Optional[str] = None
     source_session: Optional[str] = None
     authority_tier: Optional[AuthorityTier] = None
+    provenance: str = "agent"  # one of: human, seed, monitor, agent, system
 
     # Strengthening
     access_count: int = 0
     usefulness: int = 0
     superseded_by: Optional[str] = None
+    superseded_at: Optional[float] = None
 
     @property
     def is_current(self) -> bool:

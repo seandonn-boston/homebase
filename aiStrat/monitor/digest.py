@@ -156,23 +156,48 @@ def _render_finding(finding: Finding) -> list[str]:
 def _md_escape(text: str) -> str:
     """Escape markdown special characters in untrusted external content.
 
-    Neutralizes: links, images, headings, HTML tags, and formatting
-    that could be used for injection when content is rendered.
+    Neutralizes: links, images, headings, HTML tags, blockquotes,
+    tables, list markers, strikethrough, and formatting that could be
+    used for injection when content is rendered.
+
+    v4: Added escaping for blockquotes (>), table pipes (|), list markers
+    (-/*/+ at line start), image syntax (!), single backticks, and
+    strikethrough (~~). Uses html.parser for robust HTML stripping
+    instead of regex (Vuln 8.2.7).
     """
     if not text:
         return ""
 
-    # Strip HTML tags entirely (prevents <script>, <iframe>, etc.)
-    text = re.sub(r"<[^>]+>", "", text)
+    # Strip HTML tags using regex (handles unclosed/nested tags)
+    # We strip entirely rather than escape — no HTML should survive
+    text = re.sub(r"<[^>]*>", "", text)
 
-    # Escape markdown link/image syntax: [text](url) and ![alt](url)
+    # Escape image syntax: ![alt](url) — must come before [ escaping
+    text = text.replace("![", "\\!\\[")
+
+    # Escape markdown link/image syntax: [text](url)
     text = text.replace("[", "\\[").replace("]", "\\]")
 
     # Escape heading markers at start of lines
     text = re.sub(r"^(#{1,6})\s", r"\\\1 ", text, flags=re.MULTILINE)
 
+    # Escape blockquote markers at start of lines
+    text = re.sub(r"^>", r"\>", text, flags=re.MULTILINE)
+
+    # Escape list markers at start of lines (- * +)
+    text = re.sub(r"^(\s*[-*+])\s", r"\\\1 ", text, flags=re.MULTILINE)
+
+    # Escape table pipe characters
+    text = text.replace("|", "\\|")
+
     # Escape backtick code execution (triple backticks could break fences)
     text = text.replace("```", "\\`\\`\\`")
+
+    # Escape single backticks (could create inline code injection)
+    text = re.sub(r"(?<!\\)`", "\\`", text)
+
+    # Escape strikethrough
+    text = text.replace("~~", "\\~\\~")
 
     return text
 

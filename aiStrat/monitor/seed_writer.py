@@ -26,9 +26,14 @@ No raw external content is ever written directly to the Brain.
 
 from __future__ import annotations
 
+import html as html_lib
+import logging
 import os
 import re
+import unicodedata
 from datetime import datetime, timezone
+
+logger = logging.getLogger(__name__)
 
 from .config import SETTINGS
 from .scanner import ScanResult, Finding
@@ -354,32 +359,73 @@ def _generic_repo_entry(finding: Finding, data: dict) -> dict:
     }
 
 
+_INJECTION_MARKERS = [
+    "ignore previous instructions",
+    "ignore all instructions",
+    "disregard your instructions",
+    "system prompt",
+    "you are now",
+    "new instructions:",
+    "override:",
+    "admin mode",
+    "jailbreak",
+    "<script",
+    "javascript:",
+    "onerror=",
+    "onload=",
+    "[INST]",
+    "<|im_start|>",
+    "<|im_end|>",
+    "<<SYS>>",
+]
+
+_MAX_INJECTION_MARKERS = 3  # Reject entirely if this many markers found
+
+
 def _sanitize_text(text: str) -> str:
-    """Remove potentially dangerous content from text headed for Brain storage."""
+    """Remove potentially dangerous content from text headed for Brain storage.
+
+    v4: Changed from flag-appending to actual REDACTION of injection patterns.
+    Previous behavior appended '[QUARANTINE FLAG: ...]' which preserved the
+    dangerous content. Now the matched content is replaced with [REDACTED].
+    Text with 3+ distinct injection markers is rejected entirely.
+
+    Also: HTML entity decoding + Unicode normalization before matching
+    to catch obfuscated attacks like '&#106;avascript:' (Vuln 8.2.2).
+    """
     if not text:
         return ""
 
+    # Strip control characters
     text = re.sub(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]", "", text)
 
-    injection_markers = [
-        "ignore previous instructions",
-        "ignore all instructions",
-        "disregard your instructions",
-        "system prompt",
-        "you are now",
-        "new instructions:",
-        "override:",
-        "admin mode",
-        "jailbreak",
-        "<script",
-        "javascript:",
-        "onerror=",
-        "onload=",
-    ]
-    text_lower = text.lower()
-    for marker in injection_markers:
-        if marker in text_lower:
-            text = text + f" [QUARANTINE FLAG: contains pattern '{marker}']"
+    # Decode HTML entities and normalize Unicode BEFORE pattern matching
+    # to catch obfuscated injection like &#106;avascript: or homoglyphs
+    decoded = html_lib.unescape(text)
+    normalized = unicodedata.normalize("NFKC", decoded)
+    check_text = normalized.lower()
+
+    # Count distinct markers hit
+    markers_found = []
+    for marker in _INJECTION_MARKERS:
+        if marker.lower() in check_text:
+            markers_found.append(marker)
+
+    # Reject entirely if too many injection markers
+    if len(markers_found) >= _MAX_INJECTION_MARKERS:
+        logger.warning(
+            "Seed text rejected: %d injection markers found (%s)",
+            len(markers_found), ", ".join(markers_found[:5]),
+        )
+        return "[REJECTED: multiple injection patterns detected]"
+
+    # Redact each matched marker (case-insensitive replacement)
+    for marker in markers_found:
+        pattern = re.compile(re.escape(marker), re.IGNORECASE)
+        text = pattern.sub("[REDACTED]", text)
+        # Also redact in the HTML-decoded/normalized form if different
+        if decoded != text:
+            decoded = pattern.sub("[REDACTED]", decoded)
 
     return text.strip()
 
