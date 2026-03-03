@@ -72,26 +72,29 @@ You are the {Agent Name}. {One to three sentences defining who this agent is and
 
 {How this agent learns project-specific information at deployment time. What does it need to discover? Where does it find it? What must be validated before work begins?}
 
-**Project context this agent must learn before operating:**
+**Project context this agent must learn before operating (Standing Order 11):**
 - {What project-specific data source does this agent need? e.g., "Database schema and migration history" for a Database Agent, "Component library and design tokens" for a Frontend Implementer}
-- {Where does the agent find it? e.g., "Ground Truth document", "Project README", "Existing codebase structure"}
+- {Where does the agent find it? e.g., "Ground Truth document (Section 05)", "Project README", "Existing codebase structure", "Request from Context Curator"}
+- {What conventions, patterns, or constraints are project-specific? e.g., "Naming conventions, test patterns, deployment pipeline"}
 
-**Discovery questions to resolve:**
+**Discovery questions to resolve before producing output:**
 - {What must this agent ask or determine before it can produce reliable output?}
-- {e.g., "What naming conventions does this project use?" or "What testing framework is in use?"}
+- {e.g., "What naming conventions does this project use?", "What testing framework is in use?", "What are the scope boundaries for this deployment?"}
 
-**If context is missing:** Request it from the Orchestrator or Context Curator. Do not proceed without it. See Standing Order 11.
+**If context is missing:** Request it from the Orchestrator or Context Curator. Do not proceed without it. Do not fill gaps with assumptions. See Standing Order 11.
 
 ## Guardrails
 
 {How this agent protects the project from its own limitations. Every agent is a risk — what specific risks does this one carry, and how does it mitigate them?}
 
 - **Blast radius awareness:** {What damage could this agent cause if wrong? e.g., "Schema changes can break all downstream services" or "Security audit gaps leave attack surface unprotected"}
-- **Transparency:** {What must this agent make visible? e.g., "All assumptions must be labeled. All changes must be explained."}
-- **Bias risks:** {What biases is this agent most susceptible to? e.g., "Confirmation bias when reviewing code the agent previously recommended" or "Anchoring to the first viable solution"}
-- **Human review triggers:** {When must this agent recommend human review? e.g., "When security implications exceed LLM analysis capability" or "When architectural decisions have multi-year consequences". Reference [Section 38](../admiral/part11-protocols.md) for the full Human Referral Protocol.}
+- **Pre-access risk assessment:** {What resources does this agent typically need access to, and what is the risk profile of each? See Standing Order 12 for pre/post-access risk assessment requirements.}
+- **Transparency requirements:** {What must this agent make visible in every output? e.g., "All assumptions labeled, all Brain retrievals cited with entry ID, all changes explained"}
+- **Bias risks:** {What biases is this agent most susceptible to? e.g., "Confirmation bias when reviewing code the agent previously recommended", "Completion bias — rushing to finish rather than escalating complexity", "Anchoring to the first viable solution"}
+- **Human review triggers:** {When must this agent recommend human review? e.g., "When security implications exceed LLM analysis capability", "When architectural decisions have multi-year consequences". Reference [Section 38](../../admiral/part11-protocols.md) for the full Human Referral Protocol.}
+- **RAG grounding:** {When this agent retrieves from the Brain, what must it verify? e.g., "Check entry currency, cite source entry ID, distinguish retrieved vs. generated content"}
 
-{See Standing Orders 12, 13, and 14 for the universal self-protection, bias awareness, and compliance requirements that apply to all agents.}
+{See Standing Orders 12, 13, and 14 for the universal zero-trust self-protection, bias awareness, and compliance requirements that apply to all agents.}
 
 ## Prompt Anchor
 

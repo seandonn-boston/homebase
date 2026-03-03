@@ -272,7 +272,7 @@ When the recovery ladder (Section 22) reaches Escalate, the agent queries the Br
 
 ### Access Control
 
-Not every agent should read or write everything.
+Not every agent should read or write everything. **Access control is mandatory and enforced — not advisory.**
 
 | Permission | Who | Why |
 |---|---|---|
@@ -283,7 +283,99 @@ Not every agent should read or write everything.
 | **Supersede** | Admiral, orchestrator | Correcting the record requires authority |
 | **Delete** | Admiral only (soft delete) | The Brain does not forget; it supersedes |
 
+#### Zero-Trust Identity Verification
+
+The Brain operates on zero-trust principles. **Caller-declared identity is never trusted.**
+
+- Every MCP request must include a verifiable identity token — not just an agent name string.
+- The MCP server validates the token against the fleet's identity registry before executing any operation.
+- If identity cannot be verified, the request is rejected. No fallback to "trust the caller."
+- The identity token binds the agent to a specific project, role, and permission scope. An agent cannot claim a different role or project than its token authorizes.
+- Tokens are session-scoped and expire. A token from a prior session does not grant access in the current session.
+
+#### Mandatory Enforcement
+
+The permission matrix above is **not documentation — it is a runtime enforcement requirement.** The Brain MCP server must:
+
+1. **Verify identity** on every request (see zero-trust above).
+2. **Check project scope** — reject writes to projects the agent is not assigned to.
+3. **Check operation authority** — reject supersede operations from agents below orchestrator level.
+4. **Enforce read boundaries** — non-orchestrator agents querying `brain_query(project=None)` (cross-project) receive only their own project's results.
+5. **Log every access** — see Audit Logging below.
+
+Any Brain implementation that does not enforce these checks is non-compliant with the framework, regardless of what the documentation says.
+
+#### Audit Logging
+
+Every Brain operation is logged for accountability and forensic review:
+
+| Field | What It Records |
+|---|---|
+| **timestamp** | When the operation occurred |
+| **agent_identity** | Verified identity of the requesting agent (not self-declared) |
+| **operation** | Which MCP tool was called (record, query, retrieve, strengthen, supersede) |
+| **project** | Which project was accessed |
+| **entry_ids** | Which entries were read, written, or modified |
+| **result** | Success, denied (with reason), or error |
+| **risk_flags** | Any sensitivity flags triggered (PII detected, cross-project access, supersession of high-usefulness entry) |
+
+Audit logs are:
+- **Immutable** — append-only. No agent can modify or delete audit records.
+- **Reviewable** — the Admiral can query audit logs at any time for compliance review.
+- **Alertable** — anomalous patterns (unusual access volume, repeated denials, cross-project probing) trigger alerts to the Admiral.
+
+#### Sensitivity Classification
+
+Not all Brain entries carry the same risk. The Brain classifies entry sensitivity:
+
+| Level | Criteria | Additional Controls |
+|---|---|---|
+| **Standard** | General decisions, patterns, lessons with no sensitive content | Normal access control |
+| **Elevated** | Entries referencing credentials, infrastructure configs, security posture | Logged read access, restricted to assigned agents |
+| **Restricted** | Entries containing PII, financial data, compliance-critical records | Admiral-approved access only, access logged per-read, automatic decay |
+
+Sensitivity is assessed at write time (by the MCP server, not the writing agent) and re-assessed when entries are retrieved in new contexts.
+
+### RAG Security — Retrieval Integrity and Grounding
+
+The Brain is the fleet's primary knowledge retrieval system — a RAG (Retrieval-Augmented Generation) pipeline. RAG introduces specific security risks that must be addressed:
+
+#### Retrieval Poisoning Prevention
+
+If an attacker or a malfunctioning agent writes misleading entries to the Brain, every future agent that retrieves those entries will be influenced by poisoned knowledge. Defenses:
+
+- **Provenance tracking**: Every entry records its source agent, session, and authority tier. Entries from lower-authority sources are flagged when retrieved alongside higher-authority entries.
+- **Usefulness signal**: The strengthening model (access_count, usefulness) surfaces well-validated entries and deprioritizes unreliable ones. Entries with net-negative usefulness are flagged for Admiral review.
+- **Quarantine integration**: External intelligence passes through `quarantine.py` before Brain ingestion. Internal entries from agents that have triggered security alerts are flagged for review.
+- **Contradiction detection**: When a retrieved entry contradicts another entry on the same topic, both are surfaced with the conflict clearly labeled. The consuming agent must not silently pick one.
+
+#### Retrieval Grounding Requirements
+
+When an agent retrieves Brain entries and uses them to inform its output, the following grounding rules apply:
+
+1. **Cite the source.** Any claim derived from a Brain entry must reference the entry ID. No unattributed use of retrieved knowledge.
+2. **Distinguish retrieved from generated.** The agent must clearly separate "The Brain says X (entry UUID)" from "I infer Y based on this." Consumers of the agent's output must be able to tell which parts came from retrieval and which from generation.
+3. **Check currency.** Before relying on a retrieved entry, verify it has not been superseded. Stale entries used as current fact are a grounding failure.
+4. **Assess relevance.** A high similarity score does not guarantee relevance. The agent must evaluate whether the retrieved entry actually applies to the current context before incorporating it.
+5. **Never fabricate retrieval results.** If the Brain returns no relevant entries, the agent reports "No precedent found" — it does not generate plausible-sounding fake precedent.
+
+#### RAG Pipeline Integrity
+
+The end-to-end RAG pipeline (query → embed → search → rank → retrieve → ground → output) must maintain integrity at each stage:
+
+| Stage | Integrity Check |
+|---|---|
+| **Query** | Is the query well-formed and scoped to authorized projects? |
+| **Embed** | Is the embedding model the expected version? Has it been tampered with? |
+| **Search** | Are results filtered by access control before ranking? |
+| **Rank** | Are ranking signals (similarity, usefulness, recency) applied consistently? |
+| **Retrieve** | Are returned entries complete and unmodified from storage? |
+| **Ground** | Does the consuming agent cite, distinguish, and validate retrieved content? |
+| **Output** | Is the final output auditable — can a reviewer trace every claim to its source? |
+
 > **ANTI-PATTERN: BRAIN BYPASS** — Agents that never query the Brain before decisions. They make the same mistakes as previous sessions. They re-litigate settled questions. Wire brain_query into the decision workflow — either as a hook trigger or as a required step in the Propose-tier template.
+
+> **ANTI-PATTERN: BLIND TRUST IN RETRIEVAL** — An agent retrieves a Brain entry with high similarity score and incorporates it into its output without checking provenance, currency, or relevance. The entry was superseded two sessions ago. The agent's output is built on stale knowledge presented as current fact. Always verify before grounding.
 
 -----
 
