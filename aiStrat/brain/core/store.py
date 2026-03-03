@@ -20,20 +20,34 @@ from .models import (
     LinkType,
     ScoredEntry,
 )
+from .sanitizer import scan_entry
 
 
 class BrainStore:
     """Thread-safe in-memory store for Brain entries and links."""
 
     def __init__(self) -> None:
-        self._lock = threading.Lock()
+        self._lock = threading.RLock()
         self._entries: dict[str, Entry] = {}
         self._links: list[EntryLink] = []
 
     # ── Writes ────────────────────────────────────────────────
 
     def add_entry(self, entry: Entry) -> str:
-        """Store a new entry. Returns the entry ID."""
+        """Store a new entry. Returns the entry ID.
+
+        Raises SensitiveDataError if the entry contains PII,
+        secrets, or other sensitive data. This is the lowest-level
+        enforcement point — all storage paths go through here.
+        """
+        # Enforce BEFORE acquiring the lock — fail fast
+        scan_entry(
+            title=entry.title,
+            content=entry.content,
+            metadata=entry.metadata,
+            source_agent=entry.source_agent,
+            source_session=entry.source_session,
+        )
         with self._lock:
             self._entries[entry.id] = entry
             return entry.id

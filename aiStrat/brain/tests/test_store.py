@@ -8,6 +8,7 @@ from __future__ import annotations
 import unittest
 
 from ..core.models import EntryCategory, LinkType
+from ..core.sanitizer import SensitiveDataError
 from ..services.bootstrap import bootstrap
 
 
@@ -202,6 +203,133 @@ class TestBrainStatus(unittest.TestCase):
         self.assertEqual(status_a["total_entries"], 2)
         self.assertEqual(status_a["by_category"]["decision"], 1)
         self.assertEqual(status_a["by_category"]["lesson"], 1)
+
+
+class TestSensitiveDataRejection(unittest.TestCase):
+    """Test that the Brain rejects PII, secrets, and sensitive data."""
+
+    def setUp(self) -> None:
+        self.brain = bootstrap()
+
+    def test_rejects_email_in_content(self) -> None:
+        with self.assertRaises(SensitiveDataError):
+            self.brain.server.brain_record(
+                project="test",
+                category="lesson",
+                title="Auth debugging",
+                content="User john.doe@example.com had an auth failure.",
+            )
+
+    def test_rejects_email_in_title(self) -> None:
+        with self.assertRaises(SensitiveDataError):
+            self.brain.server.brain_record(
+                project="test",
+                category="context",
+                title="Issue reported by admin@company.org",
+                content="The admin reported slow queries.",
+            )
+
+    def test_rejects_ssn(self) -> None:
+        with self.assertRaises(SensitiveDataError):
+            self.brain.server.brain_record(
+                project="test",
+                category="context",
+                title="User identity",
+                content="SSN is 123-45-6789 for verification.",
+            )
+
+    def test_rejects_api_key(self) -> None:
+        with self.assertRaises(SensitiveDataError):
+            self.brain.server.brain_record(
+                project="test",
+                category="decision",
+                title="API config",
+                content="Set api_key=FAKE_KEY_abc123def456ghi789jkl012mno",
+            )
+
+    def test_rejects_aws_key(self) -> None:
+        with self.assertRaises(SensitiveDataError):
+            self.brain.server.brain_record(
+                project="test",
+                category="context",
+                title="AWS setup",
+                content="Access key is AKIAIOSFODNN7EXAMPLE.",
+            )
+
+    def test_rejects_connection_string(self) -> None:
+        with self.assertRaises(SensitiveDataError):
+            self.brain.server.brain_record(
+                project="test",
+                category="context",
+                title="DB config",
+                content="Connect to postgresql://admin:s3cret@db.example.com:5432/prod",
+            )
+
+    def test_rejects_secret_token(self) -> None:
+        with self.assertRaises(SensitiveDataError):
+            self.brain.server.brain_record(
+                project="test",
+                category="decision",
+                title="Token setup",
+                content="Use token key_test_4eC39HqLyjWDarjtT1zdp7dc for payments.",
+            )
+
+    def test_rejects_sensitive_metadata_keys(self) -> None:
+        with self.assertRaises(SensitiveDataError):
+            self.brain.server.brain_record(
+                project="test",
+                category="context",
+                title="User context",
+                content="Recorded user preferences.",
+                metadata={"email": "user@example.com"},
+            )
+
+    def test_rejects_password_in_metadata_values(self) -> None:
+        with self.assertRaises(SensitiveDataError):
+            self.brain.server.brain_record(
+                project="test",
+                category="context",
+                title="Config notes",
+                content="Service configuration.",
+                metadata={"config": "password=hunter2insecure"},
+            )
+
+    def test_accepts_clean_entries(self) -> None:
+        """Entries with knowledge (not data) must be accepted."""
+        result = self.brain.server.brain_record(
+            project="test",
+            category="pattern",
+            title="Always validate webhook signatures",
+            content="Webhook payloads must be verified using HMAC signatures "
+                    "before processing. This prevents replay attacks.",
+            metadata={"tags": ["security", "webhooks"]},
+        )
+        self.assertIn("id", result)
+
+    def test_accepts_credential_reference_without_value(self) -> None:
+        """Referencing where credentials live (not their values) is fine."""
+        result = self.brain.server.brain_record(
+            project="test",
+            category="decision",
+            title="Credential storage approach",
+            content="All database credentials are stored in the vault "
+                    "under prod/db/primary. Agents access via broker only.",
+        )
+        self.assertIn("id", result)
+
+    def test_no_sensitive_data_stored_after_rejection(self) -> None:
+        """After rejection, nothing should be persisted."""
+        try:
+            self.brain.server.brain_record(
+                project="test",
+                category="lesson",
+                title="Bad entry",
+                content="Contact admin@example.com for help.",
+            )
+        except SensitiveDataError:
+            pass
+        status = self.brain.server.brain_status()
+        self.assertEqual(status["total_entries"], 0)
 
 
 if __name__ == "__main__":

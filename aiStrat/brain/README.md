@@ -71,6 +71,16 @@ export BRAIN_EMBEDDING_API_KEY="sk-..."
 python -m brain.mcp.server
 ```
 
+## Data Sensitivity
+
+**The Brain must never store PII, passwords, secrets, credentials, or sensitive information.** This is enforced deterministically at three layers:
+
+1. **Application sanitizer** (`core/sanitizer.py`) — scans all entry fields before storage, raises `SensitiveDataError` on match
+2. **Database trigger** (`schema/001_initial.sql`) — SQL-level pattern rejection as defense-in-depth
+3. **Standing Orders** (Section 35.10, Section 40) — advisory rules for agents
+
+Store **knowledge** (patterns, decisions, lessons), not **data** (emails, credentials, PII). See [admiral/part11-protocols.md, Section 40](../admiral/part11-protocols.md) for the full protocol.
+
 ## Design Decisions
 
 - **In-memory store for development.** Matches broker/'s pattern. Swappable for Postgres without changing the interface.
