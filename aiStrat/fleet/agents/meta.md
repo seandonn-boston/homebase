@@ -1,6 +1,7 @@
 # Meta & Autonomous Agents
 
 **Category:** Meta & Autonomous
+**Model Tier:** Tier 3 — Utility (default)
 
 These agents operate on the fleet and codebase itself rather than on product features. They monitor patterns, enforce conventions, track ecosystem changes, and evolve the fleet's own composition. They are infrastructure for the fleet, not for the product.
 

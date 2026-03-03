@@ -25,6 +25,8 @@ brain/
 │   └── server.py           # MCP server exposing all 6 Brain tools
 ├── services/
 │   └── bootstrap.py        # Wiring and initialization
+├── seeds/
+│   └── seed_research.py    # Initial knowledge base (50 entries from framework research)
 └── tests/
     └── test_store.py        # Store and retrieval tests
 ```

@@ -41,17 +41,21 @@ class BrainStore:
     def add_link(self, link: EntryLink) -> None:
         """Create a relationship between two entries."""
         with self._lock:
-            if link.source_id not in self._entries:
-                raise ValueError(f"Source entry not found: {link.source_id}")
-            if link.target_id not in self._entries:
-                raise ValueError(f"Target entry not found: {link.target_id}")
-            # Avoid duplicates
-            for existing in self._links:
-                if (existing.source_id == link.source_id
-                        and existing.target_id == link.target_id
-                        and existing.link_type == link.link_type):
-                    return
-            self._links.append(link)
+            self._add_link_unlocked(link)
+
+    def _add_link_unlocked(self, link: EntryLink) -> None:
+        """Inner add_link logic — caller must already hold self._lock."""
+        if link.source_id not in self._entries:
+            raise ValueError(f"Source entry not found: {link.source_id}")
+        if link.target_id not in self._entries:
+            raise ValueError(f"Target entry not found: {link.target_id}")
+        # Avoid duplicates
+        for existing in self._links:
+            if (existing.source_id == link.source_id
+                    and existing.target_id == link.target_id
+                    and existing.link_type == link.link_type):
+                return
+        self._links.append(link)
 
     # ── Reads ─────────────────────────────────────────────────
 
@@ -152,8 +156,8 @@ class BrainStore:
                 raise ValueError(f"New entry not found: {new_id}")
             old_entry.superseded_by = new_id
             old_entry.updated_at = time.time()
-            # Also create a supersedes link
-            self.add_link(EntryLink(
+            # Create a supersedes link (use unlocked variant — we already hold the lock)
+            self._add_link_unlocked(EntryLink(
                 source_id=new_id,
                 target_id=old_id,
                 link_type=LinkType.SUPERSEDES,

@@ -32,7 +32,7 @@ This is not a disclaimer bolted on at the end of a response. It is a core operat
 
 - A **software architecture specialist** can produce a detailed migration plan with rollback checkpoints, but it has the judgment to tell the Admiral: *"Given the blast radius of this migration (production database + auth flow), have a human senior engineer review this plan before execution."*
 
-The full protocol for human referral is defined in [`../instructions/human-referral-protocol.md`](../instructions/human-referral-protocol.md).
+The full protocol for human referral is defined in [admiral/part11-protocols.md, Section 38](../admiral/part11-protocols.md).
 
 **An agent that never recommends human consultation is either operating in a trivial domain or is overestimating its own capabilities.** Both are problems.
 
@@ -40,24 +40,24 @@ The full protocol for human referral is defined in [`../instructions/human-refer
 
 ## Specialist Categories
 
-All specialist agent definitions live in [`../agents/`](../agents/). They are organized by domain:
+All specialist agent definitions live in [`agents/`](agents/). They are organized by domain:
 
-| Category | Directory | Count | Covers |
+| Category | Location | Count | Covers |
 |---|---|---|---|
-| **Engineering — Frontend** | `../agents/engineering/frontend/` | 5 | UI, interaction, accessibility, responsive layout, state management |
-| **Engineering — Backend** | `../agents/engineering/backend/` | 5 | Server logic, API, database, messaging, caching |
-| **Engineering — Cross-Cutting** | `../agents/engineering/cross-cutting/` | 5 | Architecture, integration, migration, refactoring, dependencies |
-| **Engineering — Infrastructure** | `../agents/engineering/infrastructure/` | 4 | DevOps, IaC, containers, observability |
-| **Quality & Testing** | `../agents/quality/` | 6 | QA, unit tests, E2E tests, performance, chaos, regression |
-| **Security & Compliance** | `../agents/security/` | 4 | Security audit, pen testing, compliance, privacy |
-| **Data & Analytics** | `../agents/data/` | 5 | Data engineering, analytics, ML, validation, visualization |
-| **Documentation & Design** | `../agents/design/` | 5 | UX research, design systems, copywriting, tech writing, diagrams |
-| **Governance** | `../agents/governance/` | 7 | Token budgeting, drift detection, hallucination audit, bias detection, loop breaking, context health, contradiction detection |
-| **Simulation & Adversarial** | `../agents/adversarial/` | 4 | Simulated users, devil's advocate, red team, persona agents |
-| **Meta & Autonomous** | `../agents/meta/` | 4 | Pattern enforcement, dependency sentinel, SEO, role crystallizer |
-| **Domain Specialization** | `../agents/domain/` | 7 | Auth, search, payments, real-time, media, notifications, i18n |
-| **Inhuman-Scale Analysis** | `../agents/scale/` | 29 | Planetary, temporal, combinatorial, topology, threat, phase transition |
-| **Release & Developer Platform** | `../agents/lifecycle/` | 6 | Release, incident response, feature flags, SDK, monorepo, contracts |
+| **Engineering — Frontend** | `agents/engineering/frontend/` | 5 | UI, interaction, accessibility, responsive layout, state management |
+| **Engineering — Backend** | `agents/engineering/backend/` | 5 | Server logic, API, database, messaging, caching |
+| **Engineering — Cross-Cutting** | `agents/engineering/cross-cutting/` | 5 | Architecture, integration, migration, refactoring, dependencies |
+| **Engineering — Infrastructure** | `agents/engineering/infrastructure/` | 4 | DevOps, IaC, containers, observability |
+| **Quality & Testing** | `agents/quality.md` | 6 | QA, unit tests, E2E tests, performance, chaos, regression |
+| **Security & Compliance** | `agents/security.md` | 4 | Security audit, pen testing, compliance, privacy |
+| **Data & Analytics** | `agents/data.md` | 5 | Data engineering, analytics, ML, validation, visualization |
+| **Documentation & Design** | `agents/design.md` | 5 | UX research, design systems, copywriting, tech writing, diagrams |
+| **Governance** | `agents/governance.md` | 7 | Token budgeting, drift detection, hallucination audit, bias detection, loop breaking, context health, contradiction detection |
+| **Simulation & Adversarial** | `agents/adversarial.md` | 4 | Simulated users, devil's advocate, red team, persona agents |
+| **Meta & Autonomous** | `agents/meta.md` | 4 | Pattern enforcement, dependency sentinel, SEO, role crystallizer |
+| **Domain Specialization** | `agents/domain.md` | 7 | Auth, search, payments, real-time, media, notifications, i18n |
+| **Inhuman-Scale Analysis** | `agents/scale.md` | 29 | Planetary, temporal, combinatorial, topology, threat, phase transition |
+| **Release & Developer Platform** | `agents/lifecycle.md` | 6 | Release, incident response, feature flags, SDK, monorepo, contracts |
 
 **Total: 96 specialist agents across 14 categories.**
 
@@ -86,4 +86,9 @@ These apply to every specialist in the fleet, regardless of domain:
 2. **Know your neighbors.** Understand which other specialists your work affects and who affects yours.
 3. **Route, don't guess.** When you encounter work outside your scope, hand it off with context. Don't attempt it.
 4. **Acknowledge uncertainty.** If your confidence is low, say so. Low-confidence output presented as high-confidence is the most expensive failure mode.
-5. **Know when to call a human.** This is your highest-value judgment. See [`../instructions/human-referral-protocol.md`](../instructions/human-referral-protocol.md).
+5. **Know when to call a human.** This is your highest-value judgment. See [admiral/part11-protocols.md, Section 38](../admiral/part11-protocols.md).
+6. **Discover before acting.** Learn the project's context, conventions, constraints, and security posture before producing any output. You are not pre-loaded with project knowledge — you must discover it. If context is missing, request it — do not fill gaps with assumptions. See Standing Order 11.
+7. **Protect the project from yourself.** Your limitations are the project's risk. Operate on zero-trust principles. Perform pre-access and post-access risk assessments. Request minimum access scope. Release access immediately upon completion. Declare every assumption. Make your reasoning transparent and auditable. No black-box outputs. See Standing Order 12.
+8. **Challenge all biases — especially your own.** No prior decision is unquestionable. If existing code, prior agent output, or established patterns conflict with current evidence, raise it explicitly. Label confidence explicitly. Seek disconfirming evidence. When using retrieved knowledge (RAG), cite sources and distinguish retrieved from generated content. See Standing Order 13.
+9. **Act compliantly, ethically, and within legal boundaries.** Respect applicable regulations, handle personal data with minimum exposure, respect intellectual property, and never produce harmful output. When compliance questions arise, route to the Compliance Agent or escalate — do not self-interpret regulations. See Standing Order 14.
+10. **Validate before executing.** Confirm you have a clear end goal, measurable acceptance criteria, defined budget, and sufficient context before starting work. Front-load hard decisions. Estimate complexity upfront. If complexity exceeds your estimate during execution, checkpoint and reassess. See Standing Order 15.

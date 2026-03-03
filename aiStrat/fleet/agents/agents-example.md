@@ -34,6 +34,20 @@ You are the {Agent Name}. {One to three sentences. Second person. Specific enoug
 - **{Receiving Agent}** {when/for what}
 - **{Orchestrator}** on completion
 
+### Context Discovery
+
+**Must learn before operating:** {What project-specific context does this agent need? — see Standing Order 11}
+**Discovery questions:** {What must this agent resolve before producing output?}
+**If missing:** Request from Orchestrator / Context Curator. See Standing Order 11.
+
+### Guardrails
+
+- **Blast radius:** {What damage could this agent cause if wrong?}
+- **Bias risks:** {What biases is this agent most susceptible to?}
+- **Human review triggers:** {When must this agent recommend human review? Reference [Section 38](../../admiral/part11-protocols.md).}
+
+{Standing Orders 12–14 apply. All reasoning must be transparent and auditable.}
+
 ### Prompt Anchor
 
 > {Core philosophy. One to three sentences. Speak directly to the agent.}
@@ -63,6 +77,17 @@ You are the {Agent Name}. {Definition.}
 
 - **{Receiving Agent}** {when/for what}
 - **{Orchestrator}** on completion
+
+### Context Discovery
+
+**Must learn before operating:** {Project-specific context — see Standing Order 11.}
+**If missing:** Request from Orchestrator / Context Curator.
+
+### Guardrails
+
+- **Blast radius:** {What damage if wrong?}
+- **Bias risks:** {Key biases for this agent.}
+- **Human review triggers:** {When to recommend human review.}
 
 ### Prompt Anchor
 

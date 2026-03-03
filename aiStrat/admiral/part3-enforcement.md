@@ -163,5 +163,78 @@ Additionally, all monitor findings arrive as seed candidates with `"approved": F
 
 > **ANTI-PATTERN: TRUST BY DEFAULT** — A popular MCP server with 10K GitHub stars is installed without reading its source code. It functions perfectly — and sends a copy of every file the agent reads to an external endpoint. Popularity is not security. Stars are not audits.
 
+### Security-First Fleet Deployment Checklist
+
+When an Admiral deploys a fleet onto a project, security is the first concern — not an afterthought. This checklist must be completed **before the first agent begins executing work**.
+
+#### Identity and Access
+
+- [ ] Every agent in the fleet has a verified identity token — no agent operates with self-declared identity alone
+- [ ] Access broker is configured with project-specific resource mappings
+- [ ] Credential vault is populated with project credentials — agents never see raw credentials
+- [ ] Zero-trust identity verification is active on the Brain MCP server
+- [ ] Access decay schedule is configured (max session duration, idle timeout, post-completion sweep)
+- [ ] Sensitive data resources are classified and marked for elevated access controls
+
+#### Enforcement
+
+- [ ] PreToolUse hooks are active for all safety-critical constraints (scope boundaries, dangerous commands, secret detection)
+- [ ] PostToolUse hooks are active for audit logging
+- [ ] File scope boundaries are enforced via hooks, not just instructions
+- [ ] Secret scanning is active on all pre-commit hooks
+- [ ] Token budget limits are enforced via hooks (kill session on budget exceed)
+
+#### Brain Security
+
+- [ ] Brain MCP server enforces access control (not just documents it) — verified per permission matrix
+- [ ] Audit logging is active and writing to immutable log
+- [ ] Sensitivity classification is configured for the project's data categories
+- [ ] RAG retrieval grounding requirements are loaded into agent standing context
+- [ ] Cross-project read is restricted to orchestrators and Admiral only
+
+#### Zero-Trust Verification
+
+- [ ] No agent has persistent access to any resource — all access is session-scoped and task-scoped
+- [ ] Pre-access risk assessment is configured on the broker for all elevated and restricted resources
+- [ ] Post-access risk assessment requirements are loaded into agent standing context (Standing Order 12)
+- [ ] Emergency halt protocol is loaded into every agent's standing context
+- [ ] Emergency revocation capability is tested — Admiral can revoke all access fleet-wide in one action
+
+#### External Surface
+
+- [ ] All MCP servers are pinned to specific versions (no `latest`)
+- [ ] All third-party skills have been source-reviewed
+- [ ] External intelligence quarantine layer (`quarantine.py`) is active if the monitor is deployed
+- [ ] Network egress is restricted — agents cannot reach external endpoints beyond the approved list
+
+#### Compliance and Ethics
+
+- [ ] Project jurisdiction and applicable regulations are documented in Ground Truth
+- [ ] Compliance-critical data categories are identified and mapped to sensitivity classifications
+- [ ] Human referral triggers are defined for the project's domain
+- [ ] Standing Orders 11-15 are verified in every agent's standing context
+
+> **TEMPLATE: DEPLOYMENT SECURITY SIGN-OFF**
+>
+> ```
+> FLEET DEPLOYMENT SECURITY SIGN-OFF
+> ===================================
+>
+> PROJECT: [Project name]
+> ADMIRAL: [Admiral identity]
+> DATE: [Deployment date]
+>
+> IDENTITY & ACCESS:    [PASS | FAIL — details]
+> ENFORCEMENT:          [PASS | FAIL — details]
+> BRAIN SECURITY:       [PASS | FAIL — details]
+> ZERO-TRUST:           [PASS | FAIL — details]
+> EXTERNAL SURFACE:     [PASS | FAIL — details]
+> COMPLIANCE:           [PASS | FAIL — details]
+>
+> SIGN-OFF: [Admiral confirms all checks pass before fleet execution begins]
+> ```
+
+> **ANTI-PATTERN: DEPLOY FIRST, SECURE LATER** — The Admiral is eager to start the fleet working and skips the security checklist. "We'll harden it after the first sprint." The fleet operates for three sessions with no access control, no audit logging, and no scope enforcement. By the time security is applied, agents have already established patterns (and memory entries) that assume unrestricted access. Retroactive security is always more expensive and less effective than security-first deployment.
+
 -----
 

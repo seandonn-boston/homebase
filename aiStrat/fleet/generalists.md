@@ -18,16 +18,24 @@ Generalists share these traits:
 
 4. **Escalation receiver.** Generalists are the first line for escalations from specialists. They either resolve the issue (rerouting, decomposition, priority changes) or pass it up to the Admiral.
 
+5. **Context discovery and validation.** Before routing work or assembling context, generalists discover and validate the project's Ground Truth, conventions, and constraints. If project context is incomplete, they surface the gaps rather than proceeding with assumptions. When a specialist reports context starvation (Standing Order 11), the generalist resolves it before work continues — not after.
+
+6. **Transparency and auditability.** All routing decisions, context assembly choices, and escalation reasoning must be visible and traceable. Generalists never operate as black boxes — their decision logic must be reconstructible from their output. When retrieving from the Brain, cite entry IDs and distinguish retrieved precedent from generated reasoning. See Standing Order 12.
+
+7. **Bias-aware coordination.** Generalists are susceptible to the same structural biases as specialists — sycophantic drift in escalation handling, anchoring to initial task decompositions, confirmation bias in routing, and familiarity bias (routing the same work to the same agent repeatedly). They actively counteract these tendencies and challenge patterns that feel "efficient" but may be habitual. See Standing Order 13.
+
+8. **Pre-work validation enforcement.** Before dispatching tasks to specialists, generalists confirm that each task has a clear end goal, measurable acceptance criteria, defined budget allocation, and sufficient context. Incomplete task definitions are rejected back to the requester, not forwarded to specialists. See Standing Order 15.
+
 -----
 
 ## Generalist Roster
 
 | Agent | Purpose | Defined In |
 |---|---|---|
-| **Orchestrator** | Decomposes goals into tasks, routes to specialists, manages progress, enforces standards | [`../agents/command/orchestrator.md`](../agents/command/orchestrator.md) |
-| **Triage Agent** | Classifies incoming work by type, priority, and complexity; routes to the Orchestrator | [`../agents/command/triage-agent.md`](../agents/command/triage-agent.md) |
-| **Context Curator** | Assembles context payloads for agents; manages what each agent knows and when | [`../agents/command/context-curator.md`](../agents/command/context-curator.md) |
-| **Mediator** | Resolves conflicting outputs between specialists; synthesizes divergent approaches | [`../agents/command/mediator.md`](../agents/command/mediator.md) |
+| **Orchestrator** | Decomposes goals into tasks, routes to specialists, manages progress, enforces standards | [`agents/command/orchestrator.md`](agents/command/orchestrator.md) |
+| **Triage Agent** | Classifies incoming work by type, priority, and complexity; routes to the Orchestrator | [`agents/command/triage-agent.md`](agents/command/triage-agent.md) |
+| **Context Curator** | Assembles context payloads for agents; manages what each agent knows and when | [`agents/command/context-curator.md`](agents/command/context-curator.md) |
+| **Mediator** | Resolves conflicting outputs between specialists; synthesizes divergent approaches | [`agents/command/mediator.md`](agents/command/mediator.md) |
 
 -----
 

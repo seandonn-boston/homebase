@@ -60,8 +60,9 @@ class Entry:
     title: str
     content: str
 
-    # Identity
-    id: str = field(default_factory=lambda: uuid.uuid4().hex)
+    # Identity — UUID string in standard 8-4-4-4-12 format for Postgres compatibility.
+    # Timestamps are Unix floats in-memory; the Postgres adapter converts to TIMESTAMPTZ.
+    id: str = field(default_factory=lambda: str(uuid.uuid4()))
     created_at: float = field(default_factory=time.time)
     updated_at: float = field(default_factory=time.time)
 
