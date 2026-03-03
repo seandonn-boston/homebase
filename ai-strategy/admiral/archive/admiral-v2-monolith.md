@@ -1,3 +1,8 @@
+> **ARCHIVED** — This monolithic v2.0 document has been superseded by the Fleet Admiral Framework v3.3.
+> See [../index.md](../index.md) for the current version.
+
+---
+
 # THE FLEET ADMIRAL FRAMEWORK
 
 **A Repeatable Protocol for Establishing Autonomous AI Agent Fleets**
