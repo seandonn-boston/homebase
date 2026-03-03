@@ -3,11 +3,17 @@
 Each scan produces a dated digest file summarizing all findings,
 organized by priority and type. These serve as both human-readable
 reports and input for seed candidate generation.
+
+SECURITY: All external content (repo names, descriptions, release bodies,
+tags) is escaped before embedding in markdown. This prevents markdown
+injection attacks where a malicious repo description could create
+executable links or manipulate rendering in GitHub Issues.
 """
 
 from __future__ import annotations
 
 import os
+import re
 from datetime import datetime, timezone
 
 from .scanner import ScanResult, Finding
@@ -96,34 +102,77 @@ def _render_digest(result: ScanResult, date: str) -> str:
 
 
 def _render_finding(finding: Finding) -> list[str]:
-    """Render a single finding as markdown list items."""
+    """Render a single finding as markdown list items.
+
+    All external content is escaped via _md_escape() to prevent
+    markdown injection (malicious links, heading manipulation, etc.).
+    """
     lines = []
     priority_marker = "**[!]** " if finding.priority == "high" else ""
-    lines.append(f"### {priority_marker}{finding.title}")
+    lines.append(f"### {priority_marker}{_md_escape(finding.title)}")
     lines.append("")
 
     if finding.body:
-        lines.append(f"{finding.body}")
+        lines.append(f"{_md_escape(finding.body)}")
         lines.append("")
 
     if finding.url:
-        lines.append(f"Link: {finding.url}")
-        lines.append("")
+        safe_url = _sanitize_url(finding.url)
+        if safe_url:
+            lines.append(f"Link: {safe_url}")
+            lines.append("")
 
     if finding.tags:
-        lines.append(f"Tags: {', '.join(finding.tags)}")
+        safe_tags = [_md_escape(t) for t in finding.tags]
+        lines.append(f"Tags: {', '.join(safe_tags)}")
         lines.append("")
 
-    # Embed key data points
+    # Embed key data points (numeric values — safe by construction)
     data = finding.data
     if data.get("stars"):
-        lines.append(f"Stars: {data['stars']:,}")
+        lines.append(f"Stars: {int(data['stars']):,}")
     if data.get("delta"):
-        lines.append(f"Star change: +{data['delta']:,}")
+        lines.append(f"Star change: +{int(data['delta']):,}")
     if data.get("language"):
-        lines.append(f"Language: {data['language']}")
+        lines.append(f"Language: {_md_escape(str(data['language']))}")
     if data.get("published_at"):
-        lines.append(f"Published: {data['published_at']}")
+        lines.append(f"Published: {_md_escape(str(data['published_at']))}")
 
     lines.append("")
     return lines
+
+
+def _md_escape(text: str) -> str:
+    """Escape markdown special characters in untrusted external content.
+
+    Neutralizes: links, images, headings, HTML tags, and formatting
+    that could be used for injection when content is rendered.
+    """
+    if not text:
+        return ""
+
+    # Strip HTML tags entirely (prevents <script>, <iframe>, etc.)
+    text = re.sub(r"<[^>]+>", "", text)
+
+    # Escape markdown link/image syntax: [text](url) and ![alt](url)
+    text = text.replace("[", "\\[").replace("]", "\\]")
+
+    # Escape heading markers at start of lines
+    text = re.sub(r"^(#{1,6})\s", r"\\\1 ", text, flags=re.MULTILINE)
+
+    # Escape backtick code execution (triple backticks could break fences)
+    text = text.replace("```", "\\`\\`\\`")
+
+    return text
+
+
+def _sanitize_url(url: str) -> str:
+    """Allow only http/https URLs. Block javascript:, data:, and other schemes."""
+    if not url:
+        return ""
+    url = url.strip()
+    if url.startswith(("https://", "http://")):
+        # Also strip any embedded newlines or control chars
+        url = re.sub(r"[\n\r\t\x00-\x1f]", "", url)
+        return url
+    return ""  # Reject non-http(s) URLs entirely

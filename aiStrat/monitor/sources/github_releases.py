@@ -2,11 +2,15 @@
 
 Uses the GitHub CLI (`gh`) for authenticated API access.
 Falls back to unauthenticated REST if gh is unavailable.
+
+SECURITY: All repository names are validated against a strict pattern
+before being used in subprocess calls or URL construction.
 """
 
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 import logging
 from datetime import datetime, timezone, timedelta
@@ -14,18 +18,37 @@ from typing import Optional
 
 logger = logging.getLogger(__name__)
 
+# Strict pattern: owner/repo where both are alphanumeric + hyphens + dots + underscores
+_REPO_PATTERN = re.compile(r"^[a-zA-Z0-9\-_.]+/[a-zA-Z0-9\-_.]+$")
+
+
+def _validate_repo(repo: str) -> str:
+    """Validate a repository name before use in commands or URLs.
+
+    Raises ValueError if the name contains unexpected characters
+    that could be used for injection.
+    """
+    if not _REPO_PATTERN.match(repo):
+        raise ValueError(
+            f"Invalid repository name: {repo!r}. "
+            f"Must match 'owner/name' with only alphanumeric, hyphens, dots, underscores."
+        )
+    return repo
+
 
 def fetch_releases(repo: str, since: Optional[datetime] = None, limit: int = 10) -> list[dict]:
     """Fetch recent releases for a repository.
 
     Args:
-        repo: "owner/name" format
+        repo: "owner/name" format (validated before use)
         since: Only return releases published after this datetime
         limit: Max releases to return
 
     Returns:
         List of release dicts with keys: tag, name, published_at, url, body, prerelease
     """
+    repo = _validate_repo(repo)
+
     if since is None:
         since = datetime.now(timezone.utc) - timedelta(days=7)
 
@@ -97,6 +120,7 @@ def _fetch_via_rest(repo: str, limit: int) -> list[dict]:
 
 def fetch_repo_info(repo: str) -> Optional[dict]:
     """Fetch basic repo metadata (stars, description, updated_at)."""
+    repo = _validate_repo(repo)
     try:
         result = subprocess.run(
             ["gh", "api", f"repos/{repo}", "-q",

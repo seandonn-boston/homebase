@@ -2,17 +2,25 @@
 
 Uses GitHub's search API to find repos matching configured queries,
 then compares against previous state to identify what's new or surging.
+
+SECURITY: Search queries are validated to prevent shell metacharacter
+injection. Repository data from API responses is treated as untrusted
+and normalized through _normalize() before use.
 """
 
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 import logging
 from datetime import datetime, timezone, timedelta
 from typing import Optional
 
 logger = logging.getLogger(__name__)
+
+# Search queries must not contain shell metacharacters
+_UNSAFE_QUERY_CHARS = re.compile(r"[;|&`$(){}\\]")
 
 
 def search_repos(query: str, sort: str = "stars", per_page: int = 30,
@@ -28,6 +36,11 @@ def search_repos(query: str, sort: str = "stars", per_page: int = 30,
     Returns:
         List of repo dicts with standardized keys.
     """
+    if _UNSAFE_QUERY_CHARS.search(query):
+        raise ValueError(f"Search query contains unsafe characters: {query!r}")
+    if sort not in ("stars", "updated", "forks"):
+        raise ValueError(f"Invalid sort field: {sort!r}")
+
     full_query = f"{query} stars:>={min_stars}"
     repos = _search_via_gh(full_query, sort, per_page)
     if repos is None:

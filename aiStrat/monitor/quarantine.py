@@ -369,11 +369,13 @@ def _build_patterns() -> None:
          ThreatCategory.PII_EXPOSURE, ThreatLevel.CRITICAL,
          "SSN pattern: matches US Social Security Number format"),
 
-        (r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b",
+        # Email: anchored with @ to prevent backtracking; limited local part length
+        (r"\b[A-Za-z0-9][A-Za-z0-9._%+-]{0,63}@[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?(?:\.[A-Za-z]{2,6})+\b",
          ThreatCategory.PII_EXPOSURE, ThreatLevel.HOSTILE,
          "Email address: contains a personal email address"),
 
-        (r"\b(?:\+?1[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}\b",
+        # Phone: fixed-width digit groups to eliminate backtracking
+        (r"\b\d{3}[-.\s]\d{3}[-.\s]\d{4}\b",
          ThreatCategory.PII_EXPOSURE, ThreatLevel.SUSPICIOUS,
          "Phone number: matches US phone number format"),
 
@@ -398,14 +400,18 @@ def _build_patterns() -> None:
 _build_patterns()
 
 
+_MAX_SCAN_LEN = 50_000  # Cap text length to prevent ReDoS on adversarial input
+
+
 def _scan_injections(entry: dict) -> list[ThreatSignal]:
     """Scan all text fields for injection patterns."""
     signals = []
 
     # Fields to scan (with their names for reporting)
+    # Text is truncated to _MAX_SCAN_LEN to bound regex processing time.
     text_fields = [
-        ("title", entry.get("title", "")),
-        ("content", entry.get("content", "")),
+        ("title", entry.get("title", "")[:_MAX_SCAN_LEN]),
+        ("content", entry.get("content", "")[:_MAX_SCAN_LEN]),
     ]
 
     # Also scan metadata values

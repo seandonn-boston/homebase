@@ -208,9 +208,10 @@ def _sanitize_tag(tag: str) -> str:
 
 
 def _safe_repr(s: str) -> str:
-    """Produce a safe string representation for Python source."""
-    # Use triple-quoted strings for content that may contain quotes
-    if "\n" in s or '"' in s or "'" in s:
-        escaped = s.replace("\\", "\\\\").replace('"""', '\\"\\"\\"')
-        return f'"""{escaped}"""'
+    """Produce a safe string representation for Python source.
+
+    SECURITY: Uses repr() which handles all escaping correctly.
+    Never construct Python string literals manually from untrusted input —
+    the escape ordering is error-prone and can lead to code injection.
+    """
     return repr(s)

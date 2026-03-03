@@ -89,29 +89,27 @@ jobs:
           DATE=$(date -u +%Y-%m-%d)
           DIGEST_FILE="aiStrat/monitor/digests/${DATE}.md"
 
-          # Extract the alerts section
-          ALERTS=$(sed -n '/## Alerts/,/^## /p' "$DIGEST_FILE" | head -100)
+          # Build issue body as a file to avoid shell injection.
+          # The digest contains external content (repo names, release notes)
+          # that must NEVER be shell-expanded. Using --body-file prevents
+          # command substitution ($(), ``) from executing.
+          {
+            echo "## AI Landscape Monitor — Alerts"
+            echo ""
+            echo "The scheduled monitor scan detected high-priority developments"
+            echo "that may require attention."
+            echo ""
+            echo "See full digest: \`${DIGEST_FILE}\`"
+            echo ""
+            echo "**Next steps:**"
+            echo "1. Review the findings in the digest file"
+            echo "2. Approve relevant seed candidates for Brain ingestion"
+            echo "3. Update the watchlist if new repos should be tracked"
+          } > /tmp/issue-body.md
 
           gh issue create \
             --title "AI Monitor Alert: High-Priority Findings — ${DATE}" \
-            --body "$(cat <<EOF
-          ## AI Landscape Monitor — Alerts
-
-          The scheduled monitor scan detected high-priority developments
-          that may require attention.
-
-          ${ALERTS}
-
-          ---
-          Full digest: \`${DIGEST_FILE}\`
-          Seed candidates: \`aiStrat/monitor/digests/seed-candidates-${DATE}.py\`
-
-          **Next steps:**
-          1. Review the findings in the digest
-          2. Approve relevant seed candidates for Brain ingestion
-          3. Update the watchlist if new repos should be tracked
-          EOF
-          )" \
+            --body-file /tmp/issue-body.md \
             --label "ai-monitor,high-priority"
 
       - name: Commit state and digests
