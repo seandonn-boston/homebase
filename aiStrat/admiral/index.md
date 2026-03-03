@@ -76,8 +76,8 @@ Terms are listed alphabetically. When these terms appear in any part file, they 
 | **Chunk** | An independently completable, independently verifiable unit of work. Sized to consume no more than 40% of an agent's token budget. Section 18. |
 | **Completion bias** | Failure mode where an agent produces complete but degraded output rather than incomplete but excellent output when approaching resource limits. Section 23. |
 | **Configuration accretion** | Failure mode where instruction files grow line-by-line after each incident until agents ignore the bloated rules. Section 23. |
-| **Continuous AI Landscape Monitor** | Automated surveillance system (`monitor/`) that scans the AI ecosystem — model releases, agent patterns, trending tools — and feeds curated intelligence into the Brain through a quarantine layer. Runs on GitHub Actions (daily + weekly). Section 17, Section 31. |
 | **Configuration injection** | Attack where an adversary modifies agent config files (CLAUDE.md, hooks, skills) in a PR or through compromised CI. Section 10. |
+| **Continuous AI Landscape Monitor** | Automated surveillance system (`monitor/`) that scans the AI ecosystem — model releases, agent patterns, trending tools — and feeds curated intelligence into the Brain through a quarantine layer. Runs on GitHub Actions (daily + weekly). Section 17, Section 31. |
 | **Context engineering** | The discipline of designing information flows across an entire agent system — what information exists where, when, and why. Subsumes prompt engineering. Section 04. |
 | **Context profile** | Per-role specification of what loads into an agent's context: standing context, session context, on-demand context, refresh triggers, sacrifice order. Section 06. |
 | **Context starvation** | Failure mode where an agent's context is underloaded, causing it to drift from Mission and infer incorrectly. Section 23. |
@@ -92,9 +92,9 @@ Terms are listed alphabetically. When these terms appear in any part file, they 
 | **Escalate tier** | Decision authority level where the agent stops all work and flags to the Admiral immediately. Used for scope changes, budget overruns, security concerns, contradictory requirements. |
 | **Escalation report** | Structured document produced when an agent exhausts its recovery ladder: blocker, context, approaches attempted, root cause assessment, what's needed, impact, recommendation. Section 22. |
 | **Event-driven agent** | An agent triggered by repository or system events (PR opened, CI failed, scheduled cron) rather than interactive sessions. Requires pre-configured context bootstrapping and narrower authority tiers. Section 31. |
+| **Exemplar** | A tracked repository representing best-in-class agent tooling (e.g., Claude Code, Aider, Cline). The monitor watches exemplars for releases, configuration changes, and design patterns that should inform fleet configuration. Section 17. |
 | **Failure mode** | A systematic way agent fleets fail. Twenty cataloged in Section 23 with primary defenses and warning signs. |
 | **Firm guidance** | Constraints in CLAUDE.md, system prompts, or agents.md. High reliability but degradable under context pressure, especially in long sessions. Middle tier of the enforcement spectrum. Section 08. |
-| **Exemplar** | A tracked repository representing best-in-class agent tooling (e.g., Claude Code, Aider, Cline). The monitor watches exemplars for releases, configuration changes, and design patterns that should inform fleet configuration. Section 17. |
 | **Fleet** | A coordinated group of AI agents operating under a single orchestrator on a single project. Typically five to twelve specialists. |
 | **Fleet evaluation** | The practice of measuring whether a fleet configuration produces better outcomes than alternatives, through controlled A/B testing and benchmarking against baselines. Section 32. |
 | **Fleet observability** | The ability to understand fleet behavior through traces, logs, and metrics at the individual operation level. Monitoring tells you something is wrong; observability tells you why. Section 30. |
@@ -122,8 +122,8 @@ Terms are listed alphabetically. When these terms appear in any part file, they 
 | **Phantom capabilities** | Failure mode where an agent assumes tools or access it does not have and produces output grounded in hallucinated capabilities. Section 23. |
 | **Progressive disclosure** | Loading strategy where knowledge is provided on-demand via skills rather than front-loaded at startup. Preserves context window capacity. Section 07. |
 | **Prompt anatomy** | Standard structure for agent system prompts: Identity → Authority → Constraints → Knowledge → Task. Section 04. |
-| **Quarantine** | Four-layer immune system (`quarantine.py`) that validates all external content before it enters the Brain: structural validation, injection detection, semantic analysis, and antibody generation. Part of the Continuous AI Landscape Monitor. Section 10, Section 17. |
 | **Propose tier** | Decision authority level where the agent drafts the decision with rationale, presents alternatives, and waits for approval. Used for architecture changes, schema migrations, new dependencies. |
+| **Quarantine** | Four-layer immune system (`quarantine.py`) that validates all external content before it enters the Brain: structural validation, injection detection, semantic analysis, and antibody generation. Part of the Continuous AI Landscape Monitor. Section 10, Section 17. |
 | **Quality floor** | Minimum acceptable quality bar, defined concretely. Prevents infinite refinement by defining "good enough." Part of Boundaries. Section 02. |
 | **Recovery ladder** | Five-step sequence agents follow when things go wrong: retry with variation → fallback → backtrack → isolate and skip → escalate. Section 22. |
 | **Routing logic** | Rules the orchestrator uses to assign tasks to specialists: by task type, by file ownership, or by escalation. Section 11. |
