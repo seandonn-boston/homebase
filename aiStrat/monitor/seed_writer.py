@@ -30,6 +30,7 @@ import os
 import re
 from datetime import datetime, timezone
 
+from .config import SETTINGS
 from .scanner import ScanResult, Finding
 
 
@@ -89,7 +90,7 @@ def _render_seed_file(result: ScanResult, date: str) -> str:
     lines.append(f"")
     lines.append(f"from __future__ import annotations")
     lines.append(f"")
-    lines.append(f'SESSION = "monitor-{date}"')
+    lines.append(f'SESSION = "{SETTINGS["seed_session_prefix"]}-{date}"')
     lines.append(f'PROJECT = "fleet-admiral"')
     lines.append(f"")
     lines.append(f"CANDIDATES = [")

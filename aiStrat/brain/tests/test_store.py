@@ -5,9 +5,16 @@ Validates the core pipeline: record → embed → store → query → retrieve.
 
 from __future__ import annotations
 
+import time
 import unittest
 
-from ..core.models import EntryCategory, LinkType
+from ..core.models import Entry, EntryCategory, LinkType
+from ..core.retrieval import (
+    _infer_category,
+    _recency_score,
+    _usefulness_score,
+    query,
+)
 from ..services.bootstrap import bootstrap
 
 
@@ -202,6 +209,153 @@ class TestBrainStatus(unittest.TestCase):
         self.assertEqual(status_a["total_entries"], 2)
         self.assertEqual(status_a["by_category"]["decision"], 1)
         self.assertEqual(status_a["by_category"]["lesson"], 1)
+
+
+class TestRetrievalSignals(unittest.TestCase):
+    """Test the 6-signal ranked retrieval pipeline."""
+
+    def test_infer_category_decision(self) -> None:
+        self.assertEqual(_infer_category("why did we choose Postgres?"), EntryCategory.DECISION)
+
+    def test_infer_category_failure(self) -> None:
+        self.assertEqual(_infer_category("what went wrong with the migration?"), EntryCategory.FAILURE)
+
+    def test_infer_category_lesson(self) -> None:
+        self.assertEqual(_infer_category("what lesson did we learn?"), EntryCategory.LESSON)
+
+    def test_infer_category_none(self) -> None:
+        self.assertIsNone(_infer_category("tell me about the project"))
+
+    def test_recency_score_new_entry(self) -> None:
+        entry = Entry(project="p", category=EntryCategory.DECISION, title="t", content="c")
+        score = _recency_score(entry)
+        self.assertAlmostEqual(score, 1.0, places=2)
+
+    def test_recency_score_old_entry(self) -> None:
+        entry = Entry(project="p", category=EntryCategory.DECISION, title="t", content="c")
+        entry.created_at = time.time() - (200 * 86400)  # 200 days ago
+        score = _recency_score(entry)
+        self.assertEqual(score, 0.0)
+
+    def test_usefulness_score_zero(self) -> None:
+        entry = Entry(project="p", category=EntryCategory.DECISION, title="t", content="c")
+        self.assertEqual(_usefulness_score(entry), 0.0)
+
+    def test_usefulness_score_capped(self) -> None:
+        entry = Entry(project="p", category=EntryCategory.DECISION, title="t", content="c")
+        entry.usefulness = 100
+        self.assertEqual(_usefulness_score(entry, max_usefulness=50), 1.0)
+
+    def test_query_returns_scored_entries(self) -> None:
+        brain = bootstrap()
+        brain.server.brain_record(
+            project="test-project",
+            category="decision",
+            title="Chose Postgres for the database",
+            content="Relational model plus pgvector for embeddings.",
+        )
+        brain.server.brain_record(
+            project="test-project",
+            category="pattern",
+            title="Contract-first API design",
+            content="Define OpenAPI spec before implementing endpoints.",
+        )
+
+        results = query(
+            store=brain.store,
+            embedding_provider=brain.embeddings,
+            query_text="database decision",
+            project="test-project",
+            min_score=0.0,
+        )
+        self.assertGreater(len(results), 0)
+        self.assertIsInstance(results[0].score, float)
+
+    def test_query_project_boost(self) -> None:
+        brain = bootstrap()
+        brain.server.brain_record(
+            project="project-a",
+            category="decision",
+            title="Chose Redis for caching",
+            content="In-memory caching for low latency.",
+        )
+        brain.server.brain_record(
+            project="project-b",
+            category="decision",
+            title="Chose Redis for caching",
+            content="In-memory caching for low latency.",
+        )
+
+        results = query(
+            store=brain.store,
+            embedding_provider=brain.embeddings,
+            query_text="caching decision",
+            project="project-a",
+            min_score=0.0,
+        )
+        # With identical content, the project-a entry should score higher
+        if len(results) >= 2:
+            project_a_entries = [r for r in results if r.entry.project == "project-a"]
+            project_b_entries = [r for r in results if r.entry.project == "project-b"]
+            if project_a_entries and project_b_entries:
+                self.assertGreater(project_a_entries[0].score, project_b_entries[0].score)
+
+    def test_query_excludes_superseded(self) -> None:
+        brain = bootstrap()
+        old = brain.server.brain_record(
+            project="test-project",
+            category="decision",
+            title="Use MySQL",
+            content="Simple SQL database.",
+        )
+        new = brain.server.brain_record(
+            project="test-project",
+            category="decision",
+            title="Switch to Postgres",
+            content="Need pgvector support.",
+        )
+        brain.server.brain_supersede(old_id=old["id"], new_id=new["id"])
+
+        results = query(
+            store=brain.store,
+            embedding_provider=brain.embeddings,
+            query_text="database decision",
+            min_score=0.0,
+            current_only=True,
+        )
+        result_ids = [r.entry.id for r in results]
+        self.assertNotIn(old["id"], result_ids)
+
+    def test_query_empty_store(self) -> None:
+        brain = bootstrap()
+        results = query(
+            store=brain.store,
+            embedding_provider=brain.embeddings,
+            query_text="anything",
+            min_score=0.0,
+        )
+        self.assertEqual(results, [])
+
+    def test_query_skips_entries_without_embedding(self) -> None:
+        brain = bootstrap()
+        # Manually add an entry without an embedding
+        entry = Entry(
+            project="test-project",
+            category=EntryCategory.DECISION,
+            title="No embedding",
+            content="This entry has no vector.",
+            embedding=None,
+        )
+        brain.store.add_entry(entry)
+
+        results = query(
+            store=brain.store,
+            embedding_provider=brain.embeddings,
+            query_text="no embedding",
+            min_score=0.0,
+        )
+        result_ids = [r.entry.id for r in results]
+        self.assertNotIn(entry.id, result_ids)
 
 
 if __name__ == "__main__":
