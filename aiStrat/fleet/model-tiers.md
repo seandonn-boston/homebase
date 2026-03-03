@@ -119,6 +119,15 @@ No default assignments. Use for high-volume batch variations of Tier 2/3 tasks w
 - The role's tasks have become more routine and well-defined over time
 - Cost pressure requires optimization and the role's error tolerance allows it
 
+### External signal: the Continuous Monitor
+
+The Continuous AI Landscape Monitor (`monitor/`) tracks releases across 11 model providers and feeds new model intelligence into the Brain as CONTEXT entries. When a new model release appears in a monitor digest:
+
+1. Review the release capabilities, benchmarks, and pricing.
+2. Assess whether any current tier assignment should change (promote or demote).
+3. If a Strategic Shift (see Adaptation Protocol, Section 25), cascade through fleet artifacts.
+4. Record the tier decision in the Brain with rationale.
+
 ### How to test:
 
 Run the same task through both tiers. Compare outputs against acceptance criteria. If the lower tier passes at the same rate, demote. If the lower tier produces measurably worse output, keep the higher tier.

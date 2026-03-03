@@ -122,6 +122,23 @@ Agent configurations are attack surfaces. A compromised CLAUDE.md, a malicious M
 2. **Blue team:** Review for overly broad permissions. Audit MCP access. Verify hooks cover critical constraints. Check scope enforcement.
 3. **Auditor:** Compare actual behavior against documented constraints. Verify enforcement classification (Section 08) is implemented correctly.
 
+### External Intelligence Quarantine
+
+The Continuous AI Landscape Monitor (`monitor/`) feeds external content into the Brain — model releases, agent patterns, repo configurations. This is a potential ingestion attack vector: a poisoned repo description or crafted release note could inject false information into fleet memory.
+
+Defense: all external content passes through `quarantine.py`, a four-layer immune system:
+
+| Layer | Defense | Threat |
+|---|---|---|
+| **Structural** | Enforces schema, field lengths, valid categories | Malformed entries |
+| **Injection** | Scans for prompt injection, XSS, SQL injection, command injection, secrets, PII | Adversarial content |
+| **Semantic** | Detects authority spoofing, false credentials, behavior manipulation | Social engineering |
+| **Antibody** | Converts detected attacks into Brain FAILURE entries | Future defense learning |
+
+Hostile content is rejected before it can reach the Brain. Attack patterns are preserved in defanged form as antibody entries, teaching future agents to recognize similar threats.
+
+Additionally, all monitor findings arrive as seed candidates with `"approved": False` — requiring Admiral review before Brain activation. This two-layer defense (quarantine + approval gate) prevents both automated and subtle poisoning.
+
 ### Configuration Hygiene
 
 - **Version all configuration files** in git, reviewed in PRs.

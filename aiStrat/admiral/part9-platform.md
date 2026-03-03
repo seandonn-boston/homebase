@@ -182,6 +182,28 @@ Result routing: Event-specific destination
 Cost cap: Event-specific budget
 ```
 
+**Pattern 5: AI Landscape Monitor**
+
+```
+Trigger: Daily cron (07:00 UTC), weekly deep scan (Monday 06:00 UTC), manual dispatch
+Context: Persistent state (state.json), watched repo list, search queries, RSS feeds
+Agent: Scanner (Python, not an LLM agent — deterministic tool, LLM-Last principle)
+Actions:
+  - Track releases across 11 model providers and 20 exemplar repos
+  - Discover trending repos via GitHub search and topic scans
+  - Extract agent configuration files from exemplar repos
+  - Scan RSS feeds for keyword-matching announcements
+  - Fetch full web content for release notes, blog posts, documentation
+Result routing:
+  - Digest (markdown report) → committed to repo for Admiral review
+  - Seed candidates (Python file with brain_record calls, approved: False) → Admiral reviews and approves
+  - High-priority findings → automatic GitHub Issue creation
+  - State (JSON) → committed to repo for persistence across runs
+Security: All external content passes through quarantine.py (4-layer immune system)
+  before reaching seed candidates. See Section 10 and Part 5, Section 17.
+Cost cap: GitHub API rate limits only — no LLM token costs (deterministic scanning)
+```
+
 ### Context Bootstrapping for Headless Agents
 
 Interactive agents receive context from the Admiral in real time. Headless agents must bootstrap their own context from pre-configured sources.
@@ -220,6 +242,7 @@ Section 11 catalogs three scheduled agent roles (Docs Sync, Quality Review, Depe
 
 | Agent | Cadence | Trigger Method |
 |---|---|---|
+| AI Landscape Monitor | Daily (07:00 UTC) + Weekly deep scan (Monday 06:00 UTC) | GitHub Actions (`ai-monitor.yml`) |
 | Docs Sync | Monthly | Cron job or CI scheduled pipeline |
 | Quality Review | Weekly | Cron job or CI scheduled pipeline |
 | Dependency Audit | Biweekly | Cron job or CI scheduled pipeline |
