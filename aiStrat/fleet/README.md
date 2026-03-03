@@ -98,6 +98,34 @@ The `prompt-anatomy.md` file provides the assembly pattern for building complete
 
 **Total catalog: 100 agent definitions.** Each is independently deployable. Combine as the project demands.
 
+> **IMPLEMENTATION STATUS (v4):** The full 100-agent catalog is aspirational. None of
+> these agents are currently implemented as executable code — they are specification
+> documents. For a working fleet, start with the **Core Fleet** below (5-8 agents)
+> and add specialists only when demonstrated need arises. The remaining definitions
+> serve as a reference library for when you need to expand.
+
+### Core Fleet (Minimum Viable Deployment)
+
+These are the agents to implement first. A fleet can operate effectively with
+just these roles. All other agents are enhancements to add when a project grows
+beyond what the core fleet handles.
+
+| Priority | Agent | Source | Role |
+|---|---|---|---|
+| 1 | **Orchestrator** | `agents/command/orchestrator.md` | Routes tasks, coordinates workflow, manages handoffs |
+| 2 | **Triage Agent** | `agents/command/triage-agent.md` | Classifies incoming work, assigns priority and agent |
+| 3 | **Backend Implementer** | `agents/engineering/backend/agents.md` | Core code generation — API, data, logic |
+| 4 | **Frontend Implementer** | `agents/engineering/frontend/agents.md` | UI, components, client-side logic |
+| 5 | **QA Agent** | `agents/quality.md` | Testing, quality gates, acceptance verification |
+| 6 | **Security Auditor** | `agents/security.md` | Security review of all code changes |
+| 7 | **Architect** | `agents/engineering/cross-cutting/agents.md` | System design, technical decisions |
+| 8 | **DevOps Agent** | `agents/engineering/infrastructure/agents.md` | Deployment, CI/CD, infrastructure |
+
+**Do not deploy 100 agents for a project that needs 8.** The administrative cost of
+configuring, routing, and coordinating 100 agents exceeds the value for any
+reasonably-scoped project. Start small. Add roles when the Orchestrator reports
+routing bottlenecks or when specific domain expertise gaps emerge.
+
 -----
 
 ## Quick Reference

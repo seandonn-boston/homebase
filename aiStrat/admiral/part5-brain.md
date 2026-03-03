@@ -2,13 +2,22 @@
 
 *Infrastructure designed for anything.*
 
-*Parts 1–4 define what the fleet is, what it knows, how it's enforced, and who does the work. Part 5 gives the fleet long-term memory — a real database with semantic understanding, accessible through a standard protocol that any AI agent can speak, now and always. It replaces file-based persistence (Section 24) with a permanent, queryable knowledge system that captures not just what happened, but what it meant and why it mattered. Set up the Brain before the fleet starts executing (Part 6) so that every decision, lesson, and failure is captured from day one.*
+*Parts 1–4 define what the fleet is, what it knows, how it's enforced, and who does the work. Part 5 gives the fleet long-term memory — a queryable knowledge system accessible through a standard protocol that any AI agent can speak. It replaces file-based persistence (Section 24) with a permanent knowledge system that captures not just what happened, but what it meant and why it mattered. Set up the Brain before the fleet starts executing (Part 6) so that every decision, lesson, and failure is captured from day one.*
+
+> **IMPLEMENTATION STATUS (v4):** The current Brain implementation is an **in-memory
+> Python dict** (`BrainStore`) with threading locks, authentication, audit trails,
+> and a 7-signal retrieval pipeline. It provides the full API described below but
+> uses `MockEmbeddingProvider` (SHA-512-derived pseudo-vectors) instead of real
+> semantic embeddings. The Postgres + pgvector schema below is the **target
+> architecture** — the `BrainStore` interface is designed so a Postgres adapter
+> can be swapped in without changing callers. Until then, retrieval results are
+> structurally correct but not semantically meaningful.
 
 -----
 
 ## 15 — BRAIN ARCHITECTURE
 
-> **TL;DR** — A Postgres database with pgvector stores every decision, rationale, outcome, and lesson as vector embeddings that capture meaning, not keywords. One database. One schema. Any project. Any agent. Any time horizon.
+> **TL;DR** — **Target:** A Postgres database with pgvector stores every decision, rationale, outcome, and lesson as vector embeddings that capture meaning, not keywords. One database. One schema. Any project. Any agent. Any time horizon. **Current:** In-memory BrainStore with mock embeddings (see Implementation Status above).
 
 ### Why a Database, Not Files
 

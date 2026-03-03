@@ -172,24 +172,24 @@ def seed(brain, token: str = _SEED_TOKEN) -> int:
     entries.append(record(
         project=PROJECT, category="context",
         title="LLM model rankings for agent work — February 2026",
-        content="Claude Opus 4.6: 1M token context, leads SWE-Bench Verified at 72.5%, strongest coder, powers Perplexity Computer orchestration. GPT-5.2 Pro: highest reasoning (93.2% GPQA Diamond), perfect AIME 2025. DeepSeek V3.2-Speciale: near-frontier at ~1/30th cost of GPT-5.2 Pro — reshaping cost structure. Gemini 3 Pro: surpasses 2.5 Pro at coding, stronger agentic workflows. Qwen 3.5: top-10 coding, growing open-source. Source: research-llm-agents-feb-2026.md.",
-        metadata={"tags": ["models", "rankings", "performance", "feb-2026"], "source_doc": "research-llm-agents-feb-2026.md"},
+        content="[UNVERIFIED BENCHMARKS — treat as approximate, not authoritative] Claude Opus 4.6: 1M token context, leads SWE-Bench Verified at ~72.5% (claimed), strongest coder, powers Perplexity Computer orchestration. GPT-5.2 Pro: highest reasoning (~93.2% GPQA Diamond, claimed), perfect AIME 2025. DeepSeek V3.2-Speciale: near-frontier at ~1/30th cost of GPT-5.2 Pro — reshaping cost structure. Gemini 3 Pro: surpasses 2.5 Pro at coding (claimed), stronger agentic workflows. Qwen 3.5: top-10 coding, growing open-source. Source: research-llm-agents-feb-2026.md. NOTE: Model names and benchmark scores sourced from a single research document; verify against official provider announcements before making deployment decisions.",
+        metadata={"tags": ["models", "rankings", "performance", "feb-2026"], "speculative": True, "confidence": "unverified-benchmarks", "source_doc": "research-llm-agents-feb-2026.md"},
         source_agent="seed", source_session=SESSION,
     ))
 
     entries.append(record(
         project=PROJECT, category="context",
         title="Agentic AI market size and adoption metrics — February 2026",
-        content="Market: $7.84B in 2025 → projected $52.62B by 2030 (CAGR 46.3%). 40% of enterprise apps will feature AI agents by end of 2026 (Gartner). 92% of US developers use AI coding tools daily. 41% of all code written globally is now AI-generated. 30% of code at Google and Microsoft written by AI. Anthropic: $1B ARR (Dec 2024) → $14B (Feb 2026) — 14x in 14 months. $30B funding round at $380B valuation. Enterprise contracts = 80% of revenue. Source: research-llm-agents-feb-2026.md.",
-        metadata={"tags": ["market", "adoption", "statistics", "growth"], "source_doc": "research-llm-agents-feb-2026.md"},
+        content="[PROJECTED/UNVERIFIED STATISTICS — extraordinary claims requiring independent verification] Market: $7.84B in 2025 → projected $52.62B by 2030 (CAGR 46.3%, analyst projection). 40% of enterprise apps will feature AI agents by end of 2026 (Gartner forecast, not observed). 92% of US developers use AI coding tools daily (survey-based). 41% of all code written globally is now AI-generated (extraordinary claim, methodology unclear). 30% of code at Google and Microsoft written by AI (company claims). Anthropic: $1B ARR (Dec 2024) → $14B ARR (Feb 2026, unaudited claim). $30B funding round at $380B valuation (press reports). Enterprise contracts = 80% of revenue (company claim). Source: research-llm-agents-feb-2026.md. NOTE: Market statistics and revenue figures are sourced from press reports and company claims, not audited financials. Use for directional understanding only.",
+        metadata={"tags": ["market", "adoption", "statistics", "growth"], "speculative": True, "confidence": "projections-and-claims", "source_doc": "research-llm-agents-feb-2026.md"},
         source_agent="seed", source_session=SESSION,
     ))
 
     entries.append(record(
         project=PROJECT, category="context",
         title="Enterprise AI agent deployments at scale — February 2026",
-        content="Spotify 'Honk': best devs haven't written code since Dec 2025, 650+ AI changes/month, ~50% of all updates through AI, 90% engineering time reduction. Shopify Sidekick: AI-native commerce OS, write access to critical infrastructure. Salesforce + Claude: 96% satisfaction, saving 97 min/week. Sedgwick (insurance): 30%+ claims efficiency. Suzano (manufacturing): 95% query time reduction. Danfoss: 80% order automation. Elanco (pharma): $1.3M avoided impact per site. Source: research-llm-agents-feb-2026.md.",
-        metadata={"tags": ["enterprise", "production", "deployment", "case-studies"], "source_doc": "research-llm-agents-feb-2026.md"},
+        content="[COMPANY CLAIMS — not independently verified] Spotify 'Honk': best devs haven't written code since Dec 2025, 650+ AI changes/month, ~50% of all updates through AI, 90% engineering time reduction (extraordinary claim from company presentation). Shopify Sidekick: AI-native commerce OS, write access to critical infrastructure. Salesforce + Claude: 96% satisfaction, saving 97 min/week (vendor case study). Sedgwick (insurance): 30%+ claims efficiency (vendor case study). Suzano (manufacturing): 95% query time reduction (vendor case study). Danfoss: 80% order automation (vendor case study). Elanco (pharma): $1.3M avoided impact per site (vendor case study). Source: research-llm-agents-feb-2026.md. NOTE: All metrics sourced from company presentations or vendor case studies, which have inherent selection and publication bias.",
+        metadata={"tags": ["enterprise", "production", "deployment", "case-studies"], "speculative": True, "confidence": "vendor-claims", "source_doc": "research-llm-agents-feb-2026.md"},
         source_agent="seed", source_session=SESSION,
     ))
 
@@ -300,16 +300,16 @@ def seed(brain, token: str = _SEED_TOKEN) -> int:
     entries.append(record(
         project=PROJECT, category="decision",
         title="Postgres + pgvector chosen for Brain architecture",
-        content="Postgres + pgvector selected as the Brain's storage layer over alternatives. Rationale: (1) Structured + unstructured in one system (relational tables + JSONB + vector columns), (2) pgvector is the most widely adopted vector extension, (3) ACID guarantees for atomic writes, (4) handles thousands to millions of records without architectural changes, (5) standard SQL for humans + standard drivers for machines + MCP for agents. Alternatives considered: dedicated vector DB (Pinecone/Weaviate) — rejected because it requires a second system for structured data; file-based persistence — insufficient for concurrent multi-agent access. Source: admiral Section 15.",
-        metadata={"tags": ["postgres", "pgvector", "database", "brain", "architecture"], "source_doc": "admiral/part5-brain.md"},
+        content="[TARGET ARCHITECTURE — not yet implemented; current implementation is in-memory Python dict] Postgres + pgvector selected as the Brain's TARGET storage layer over alternatives. Rationale: (1) Structured + unstructured in one system (relational tables + JSONB + vector columns), (2) pgvector is the most widely adopted vector extension, (3) ACID guarantees for atomic writes, (4) handles thousands to millions of records without architectural changes, (5) standard SQL for humans + standard drivers for machines + MCP for agents. Alternatives considered: dedicated vector DB (Pinecone/Weaviate) — rejected because it requires a second system for structured data; file-based persistence — insufficient for concurrent multi-agent access. CURRENT STATE: The Brain uses BrainStore (in-memory dict with threading locks). The interface is designed so a Postgres adapter can be swapped in without changing callers. Source: admiral Section 15.",
+        metadata={"tags": ["postgres", "pgvector", "database", "brain", "architecture"], "speculative": True, "confidence": "aspirational-not-implemented", "source_doc": "admiral/part5-brain.md"},
         source_agent="seed", source_session=SESSION,
     ))
 
     entries.append(record(
         project=PROJECT, category="decision",
         title="Four-tier model selection strategy for fleet economics",
-        content="Fleet uses four model tiers to optimize cost vs. capability: Tier 1 (Flagship): Claude Opus 4.6, GPT-5.2 Pro — for orchestration, architecture, complex reasoning. Tier 2 (Workhorse): Claude Sonnet 4.6 — for implementation, code generation, routine analysis. Tier 3 (Utility): Claude Haiku 4.5, GPT-5.2 Mini — for embedding generation, simple classification, formatting. Tier 4 (Economy): DeepSeek V3.2 — near-frontier at 1/30th cost, suitable for high-volume low-stakes tasks. Key insight from research: DeepSeek V3.2-Speciale is 'reshaping the industry's cost structure.' Source: admiral Section 13, research-llm-agents.",
-        metadata={"tags": ["models", "tiers", "cost", "economics"], "source_doc": "research-llm-agents-feb-2026.md"},
+        content="[SOME MODEL NAMES MAY BE SPECULATIVE] Fleet uses four model tiers to optimize cost vs. capability: Tier 1 (Flagship): Claude Opus 4.6, GPT-5.2 Pro — for orchestration, architecture, complex reasoning. Tier 2 (Workhorse): Claude Sonnet 4.6 — for implementation, code generation, routine analysis. Tier 3 (Utility): Claude Haiku 4.5, GPT-5.2 Mini — for embedding generation, simple classification, formatting. Tier 4 (Economy): DeepSeek V3.2 — near-frontier at 1/30th cost, suitable for high-volume low-stakes tasks. Key insight from research: DeepSeek V3.2-Speciale is 'reshaping the industry's cost structure.' Source: admiral Section 13, research-llm-agents. NOTE: Some model names (GPT-5.2 Pro, DeepSeek V3.2-Speciale, GPT-5.2 Mini) and pricing ratios sourced from a single research document. Verify model availability and pricing against official provider pages before deployment.",
+        metadata={"tags": ["models", "tiers", "cost", "economics"], "speculative": True, "confidence": "some-model-names-unverified", "source_doc": "research-llm-agents-feb-2026.md"},
         source_agent="seed", source_session=SESSION,
     ))
 

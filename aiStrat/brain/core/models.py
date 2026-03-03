@@ -22,6 +22,7 @@ from typing import Optional
 ALLOWED_METADATA_KEYS: frozenset[str] = frozenset({
     "tags",
     "source_url",
+    "source_doc",
     "confidence",
     "verified_date",
     "speculative",
@@ -32,6 +33,8 @@ ALLOWED_METADATA_KEYS: frozenset[str] = frozenset({
     "scan_date",
     "finding_type",
     "scan_source",
+    "sanitized",
+    "original_signals",
 })
 
 

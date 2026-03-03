@@ -455,7 +455,12 @@ def _scan_injections(entry: dict) -> list[ThreatSignal]:
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 def _analyze_semantics(entry: dict) -> list[ThreatSignal]:
-    """Detect semantic-level threats: authority spoofing, false credentials, etc."""
+    """Detect semantic-level threats: authority spoofing, false credentials, etc.
+
+    v4: Now also invokes the pluggable SemanticValidator (from semantic_validator.py)
+    to detect dangerous technical advice that regex cannot catch. The validator
+    is configurable — default is RuleBasedValidator, future: LLM-based.
+    """
     signals = []
     content = (entry.get("content", "") + " " + entry.get("title", "")).lower()
 
@@ -511,6 +516,31 @@ def _analyze_semantics(entry: dict) -> list[ThreatSignal]:
                 field="content",
                 description=f"Data poisoning: {description}",
             ))
+
+    # ── Pluggable semantic validator (Rec 5 extension point) ──
+    try:
+        from .semantic_validator import get_validator, SemanticRisk
+        validator = get_validator()
+        result = validator.validate(entry)
+        for finding in result.findings:
+            # Map semantic risk to threat level
+            if finding.risk == SemanticRisk.DANGEROUS:
+                level = ThreatLevel.HOSTILE
+            elif finding.risk == SemanticRisk.REVIEW:
+                level = ThreatLevel.SUSPICIOUS
+            else:
+                continue
+
+            signals.append(ThreatSignal(
+                category=ThreatCategory.DATA_POISONING,
+                level=level,
+                pattern_matched=f"semantic:{finding.category}",
+                matched_text=finding.matched_text[:200],
+                field=finding.field,
+                description=f"Semantic: {finding.description} (via {result.validator_name})",
+            ))
+    except ImportError:
+        logger.debug("Semantic validator not available, skipping")
 
     return signals
 
