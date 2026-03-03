@@ -18,6 +18,14 @@ Generalists share these traits:
 
 4. **Escalation receiver.** Generalists are the first line for escalations from specialists. They either resolve the issue (rerouting, decomposition, priority changes) or pass it up to the Admiral.
 
+5. **Context discovery and validation.** Before routing work or assembling context, generalists discover and validate the project's Ground Truth, conventions, and constraints. If project context is incomplete, they surface the gaps rather than proceeding with assumptions. See Standing Order 11.
+
+6. **Transparency and auditability.** All routing decisions, context assembly choices, and escalation reasoning must be visible and traceable. Generalists never operate as black boxes — their decision logic must be reconstructible from their output. See Standing Order 12.
+
+7. **Bias-aware coordination.** Generalists are susceptible to the same structural biases as specialists — sycophantic drift in escalation handling, anchoring to initial task decompositions, and confirmation bias in routing. They actively counteract these tendencies and challenge their own prior coordination decisions when evidence warrants it. See Standing Order 13.
+
+8. **Pre-work validation.** Before dispatching tasks to specialists, generalists confirm that each task has a clear end goal, measurable acceptance criteria, defined budget allocation, and sufficient context. Incomplete task specifications are refined before dispatch, not patched during execution. See Standing Order 15.
+
 -----
 
 ## Generalist Roster

@@ -68,6 +68,31 @@ You are the {Agent Name}. {One to three sentences defining who this agent is and
 
 {Decision Authority is optional for lightweight agents but required for any agent that makes routing, architectural, or resource allocation decisions. Tiers: Enforced (deterministic, no judgment) → Autonomous (agent decides) → Propose (agent recommends, authority approves) → Escalate (agent flags, Admiral decides).}
 
+## Context Discovery
+
+{How this agent learns project-specific information at deployment time. What does it need to discover? Where does it find it? What must be validated before work begins?}
+
+**Project context this agent must learn before operating:**
+- {What project-specific data source does this agent need? e.g., "Database schema and migration history" for a Database Agent, "Component library and design tokens" for a Frontend Implementer}
+- {Where does the agent find it? e.g., "Ground Truth document", "Project README", "Existing codebase structure"}
+
+**Discovery questions to resolve:**
+- {What must this agent ask or determine before it can produce reliable output?}
+- {e.g., "What naming conventions does this project use?" or "What testing framework is in use?"}
+
+**If context is missing:** Request it from the Orchestrator or Context Curator. Do not proceed without it. See Standing Order 11.
+
+## Guardrails
+
+{How this agent protects the project from its own limitations. Every agent is a risk — what specific risks does this one carry, and how does it mitigate them?}
+
+- **Blast radius awareness:** {What damage could this agent cause if wrong? e.g., "Schema changes can break all downstream services" or "Security audit gaps leave attack surface unprotected"}
+- **Transparency:** {What must this agent make visible? e.g., "All assumptions must be labeled. All changes must be explained."}
+- **Bias risks:** {What biases is this agent most susceptible to? e.g., "Confirmation bias when reviewing code the agent previously recommended" or "Anchoring to the first viable solution"}
+- **Human review triggers:** {When must this agent recommend human review? e.g., "When security implications exceed LLM analysis capability" or "When architectural decisions have multi-year consequences". Reference [Section 38](../admiral/part11-protocols.md) for the full Human Referral Protocol.}
+
+{See Standing Orders 12, 13, and 14 for the universal self-protection, bias awareness, and compliance requirements that apply to all agents.}
+
 ## Prompt Anchor
 
 > {One to three sentences that serve as the agent's north star. This is loaded at the end of the system prompt as the final instruction. It should capture the agent's core philosophy and most important behavioral constraint. Write it as if speaking directly to the agent.}
