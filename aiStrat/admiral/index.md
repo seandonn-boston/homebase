@@ -8,7 +8,7 @@ v3.3 · March 2026
 
 ## How to Read This Document
 
-This framework is split across twelve files. This index is the entry point. Each part is a self-contained file that can be loaded into an agent's context independently.
+This framework is split across thirteen files. This index is the entry point. Each part is a self-contained file that can be loaded into an agent's context independently.
 
 **Humans** — You are the Admiral. Start here. Read the operating model and glossary, then work through parts in order or jump to whichever part addresses your current need. The prose, anti-patterns, and worked example are for you.
 
@@ -35,6 +35,7 @@ This framework is split across twelve files. This index is the entry point. Each
 | [`part8-operations.md`](part8-operations.md) | Sections 24–29: Institutional Memory, Adaptation Protocol, Cost Management, Fleet Health Metrics, Fleet Scaling & Lifecycle, Inter-Fleet Governance |
 | [`part9-platform.md`](part9-platform.md) | Sections 30–32: Fleet Observability, CI/CD & Event-Driven Operations, Fleet Evaluation & Benchmarking |
 | [`part10-admiral.md`](part10-admiral.md) | Sections 33–34: Admiral Self-Calibration, Human-Expert Routing |
+| [`part11-protocols.md`](part11-protocols.md) | Sections 35–39: Standing Orders, Escalation, Handoffs, Human Referral, Paid Resource Authorization |
 | [`appendices.md`](appendices.md) | Pre-Flight Checklist, Quick-Start Sequence, Worked Example |
 
 -----
@@ -141,6 +142,23 @@ Terms are listed alphabetically. When these terms appear in any part file, they 
 
 -----
 
+## Relationship to the Fleet
+
+The `fleet/` directory (sibling to this `admiral/` directory within `aiStrat/`) provides 100+ reusable agent definitions organized by category. This framework defines principles; fleet provides implementations.
+
+| Admiral Section | Fleet Implementation |
+|---|---|
+| Section 11 (Fleet Composition) | `fleet/agents/` — 100 concrete agent definitions |
+| Section 04 (Context Engineering) | `fleet/prompt-anatomy.md`, `fleet/context-injection.md` |
+| Section 09 (Decision Authority) | Each agent definition includes a Decision Authority table |
+| Section 13 (Model Selection) | `fleet/model-tiers.md` — tier assignments for every agent |
+| Section 11 (Routing Logic) | `fleet/routing-rules.md` — task-to-agent routing decision table |
+| Part 11 (Protocols) | Authoritative source; agents reference these protocols |
+
+> **This framework is the engineering manual. Fleet is the parts catalog.** Use the admiral to learn *what to do and why*. Use the fleet to learn *how to do it with specific agents*.
+
+-----
+
 ## Table of Contents
 
 Sections are ordered by impact and grouped by relevance.
@@ -191,6 +209,12 @@ Sections are ordered by impact and grouped by relevance.
 | | **PART 10 — THE ADMIRAL** | *The human element.* | [`part10-admiral.md`](part10-admiral.md) |
 | 33 | Admiral Self-Calibration | Bottleneck detection, trust calibration, and growth trajectory. | |
 | 34 | Human-Expert Routing | When the fleet needs expertise the Admiral doesn't have. | |
+| | **PART 11 — PROTOCOLS** | *The universal operating rules every agent follows.* | [`part11-protocols.md`](part11-protocols.md) |
+| 35 | Standing Orders | Ten non-negotiable rules loaded into every agent's standing context. | |
+| 36 | Escalation Protocol | How and when agents stop work and flag issues upward. | |
+| 37 | Handoff Protocol | Structured format for transferring work between agents. | |
+| 38 | Human Referral Protocol | When and how specialists recommend consulting a human professional. | |
+| 39 | Paid Resource Authorization | Human-authorized access to paid software, licenses, and subscriptions. | |
 | | **APPENDICES** | | [`appendices.md`](appendices.md) |
 | A | Pre-Flight Checklist | Go/no-go gate before fleet deployment. | |
 | B | Quick-Start Sequence | Operational order for standing up a new fleet. | |
