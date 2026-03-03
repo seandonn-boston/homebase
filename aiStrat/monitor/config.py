@@ -1,156 +1,336 @@
-"""Watchlist configuration for the AI landscape monitor.
+"""Configuration for the AI Landscape Monitor.
 
-Edit this file to control what the monitor tracks. Three main sections:
+Two scanning missions:
 
-1. WATCHED_REPOS   — Specific repos to track for releases and activity
-2. SEARCH_QUERIES  — GitHub search queries to discover new repos
-3. RSS_FEEDS       — Blog/news feeds to scan for announcements
+1. MODEL RELEASES — Track every major LLM provider. When a new model ships,
+   capture the release notes, blog post, and docs so the Brain has full
+   context on capabilities, API changes, and pricing shifts.
 
-The monitor runs these on a schedule and produces digests + seed candidates.
+2. SDLC BEST PRACTICES — Daily scan for the best examples of LLMs used in
+   software development. We want state-of-the-art agent configurations,
+   prompt patterns, and instruction designs — especially from Claude Code
+   and Copilot ecosystems — to distill into reusable patterns for the fleet.
 """
 
 from __future__ import annotations
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# WATCHED REPOS — Track releases, stars, and major changes
+# 1. MODEL RELEASE TRACKING
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 #
-# Each entry: { "repo": "owner/name", "track": [...], "tags": [...] }
-#   track options: "releases", "stars", "activity"
-#   tags: used to categorize findings in digests and seeds
+# Every major LLM provider. Track their release repos for new model
+# announcements. The "content_urls" field lists official blogs/docs
+# that should be fetched when a new release is detected.
 
-WATCHED_REPOS: list[dict] = [
-    # ── Agent Frameworks ──
-    {"repo": "langchain-ai/langchain", "track": ["releases", "stars"], "tags": ["framework", "langchain", "orchestration"]},
-    {"repo": "langchain-ai/langgraph", "track": ["releases", "stars"], "tags": ["framework", "langgraph", "orchestration"]},
-    {"repo": "crewAIInc/crewAI", "track": ["releases", "stars"], "tags": ["framework", "crewai", "orchestration"]},
-    {"repo": "openai/openai-agents-python", "track": ["releases", "stars"], "tags": ["framework", "openai", "agents-sdk"]},
-    {"repo": "microsoft/autogen", "track": ["releases", "stars"], "tags": ["framework", "autogen", "microsoft"]},
-    {"repo": "google/adk-python", "track": ["releases", "stars"], "tags": ["framework", "google-adk", "google"]},
-    {"repo": "pydantic/pydantic-ai", "track": ["releases", "stars"], "tags": ["framework", "pydantic-ai", "orchestration"]},
-    {"repo": "huggingface/smolagents", "track": ["releases", "stars"], "tags": ["framework", "smolagents", "huggingface"]},
-    {"repo": "All-Hands-AI/OpenHands", "track": ["releases", "stars"], "tags": ["coding-agent", "openhands", "swe-bench"]},
-    {"repo": "SWE-agent/SWE-agent", "track": ["releases", "stars"], "tags": ["coding-agent", "swe-agent", "princeton"]},
+MODEL_PROVIDERS: list[dict] = [
+    # ── Anthropic / Claude ──
+    {
+        "repo": "anthropics/anthropic-sdk-python",
+        "track": ["releases"],
+        "tags": ["anthropic", "claude", "sdk", "model-release"],
+        "content_urls": [
+            "https://docs.anthropic.com/en/docs/about-claude/models",
+            "https://www.anthropic.com/news",
+        ],
+    },
+    {
+        "repo": "anthropics/courses",
+        "track": ["activity"],
+        "tags": ["anthropic", "claude", "education"],
+        "content_urls": [],
+    },
 
-    # ── Coding Agents & Tools ──
-    {"repo": "anthropics/claude-code", "track": ["releases", "stars"], "tags": ["coding-agent", "claude-code", "anthropic"]},
-    {"repo": "paul-gauthier/aider", "track": ["releases", "stars"], "tags": ["coding-agent", "aider"]},
-    {"repo": "cline/cline", "track": ["releases", "stars"], "tags": ["coding-agent", "cline", "vscode"]},
-    {"repo": "openai/codex", "track": ["releases", "stars"], "tags": ["coding-agent", "codex", "openai"]},
+    # ── OpenAI / GPT ──
+    {
+        "repo": "openai/openai-python",
+        "track": ["releases"],
+        "tags": ["openai", "gpt", "sdk", "model-release"],
+        "content_urls": [
+            "https://platform.openai.com/docs/models",
+        ],
+    },
 
-    # ── MCP Ecosystem ──
-    {"repo": "modelcontextprotocol/specification", "track": ["releases", "activity"], "tags": ["mcp", "protocol", "specification"]},
+    # ── Google / Gemini ──
+    {
+        "repo": "google/generative-ai-python",
+        "track": ["releases"],
+        "tags": ["google", "gemini", "sdk", "model-release"],
+        "content_urls": [
+            "https://ai.google.dev/gemini-api/docs/models",
+        ],
+    },
+
+    # ── Meta / Llama ──
+    {
+        "repo": "meta-llama/llama-models",
+        "track": ["releases"],
+        "tags": ["meta", "llama", "model-release"],
+        "content_urls": [
+            "https://ai.meta.com/blog/",
+        ],
+    },
+
+    # ── Mistral ──
+    {
+        "repo": "mistralai/mistral-common",
+        "track": ["releases"],
+        "tags": ["mistral", "model-release"],
+        "content_urls": [
+            "https://docs.mistral.ai/getting-started/models/models_overview/",
+        ],
+    },
+    {
+        "repo": "mistralai/client-python",
+        "track": ["releases"],
+        "tags": ["mistral", "sdk", "model-release"],
+        "content_urls": [],
+    },
+
+    # ── Cohere ──
+    {
+        "repo": "cohere-ai/cohere-python",
+        "track": ["releases"],
+        "tags": ["cohere", "command", "sdk", "model-release"],
+        "content_urls": [],
+    },
+
+    # ── xAI / Grok ──
+    {
+        "repo": "xai-org/grok-1",
+        "track": ["releases", "activity"],
+        "tags": ["xai", "grok", "model-release"],
+        "content_urls": [],
+    },
+
+    # ── DeepSeek ──
+    {
+        "repo": "deepseek-ai/DeepSeek-V3",
+        "track": ["releases", "activity"],
+        "tags": ["deepseek", "model-release"],
+        "content_urls": [],
+    },
+
+    # ── Hugging Face (model hub releases) ──
+    {
+        "repo": "huggingface/transformers",
+        "track": ["releases"],
+        "tags": ["huggingface", "transformers", "model-release"],
+        "content_urls": [
+            "https://huggingface.co/blog",
+        ],
+    },
+]
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 2. SDLC BEST PRACTICES — Exemplar repos to watch closely
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+#
+# These are the repos that define state-of-the-art LLM usage for
+# software development. We watch for how they configure agents,
+# structure prompts, handle tool use, and manage the SDLC.
+
+SDLC_EXEMPLARS: list[dict] = [
+    # ── Claude Code ecosystem (primary focus) ──
+    {"repo": "anthropics/claude-code", "track": ["releases", "stars"], "tags": ["claude-code", "agent", "sdlc", "primary"]},
+    {"repo": "anthropics/anthropic-cookbook", "track": ["activity"], "tags": ["claude", "patterns", "cookbook"]},
+    {"repo": "hesreallyhim/awesome-claude-code", "track": ["activity", "stars"], "tags": ["claude-code", "ecosystem", "curated"]},
+
+    # ── GitHub Copilot ecosystem ──
+    {"repo": "github/copilot.vim", "track": ["releases"], "tags": ["copilot", "agent", "sdlc"]},
+    {"repo": "github/copilot-docs", "track": ["activity"], "tags": ["copilot", "docs", "patterns"]},
+
+    # ── Coding agents (competitors & inspirations) ──
+    {"repo": "paul-gauthier/aider", "track": ["releases", "stars"], "tags": ["aider", "coding-agent", "sdlc"]},
+    {"repo": "cline/cline", "track": ["releases", "stars"], "tags": ["cline", "coding-agent", "vscode"]},
+    {"repo": "openai/codex", "track": ["releases", "stars"], "tags": ["codex", "coding-agent", "openai"]},
+    {"repo": "All-Hands-AI/OpenHands", "track": ["releases", "stars"], "tags": ["openhands", "coding-agent", "sdlc"]},
+    {"repo": "SWE-agent/SWE-agent", "track": ["releases", "stars"], "tags": ["swe-agent", "coding-agent", "sdlc"]},
+    {"repo": "CodiumAI/pr-agent", "track": ["releases", "stars"], "tags": ["pr-agent", "code-review", "sdlc"]},
+    {"repo": "Pythagora-io/gpt-pilot", "track": ["releases", "stars"], "tags": ["gpt-pilot", "coding-agent", "sdlc"]},
+    {"repo": "stitionai/devika", "track": ["releases", "stars"], "tags": ["devika", "coding-agent", "sdlc"]},
+
+    # ── Agent frameworks used for SDLC ──
+    {"repo": "langchain-ai/langgraph", "track": ["releases"], "tags": ["langgraph", "orchestration", "agent-framework"]},
+    {"repo": "openai/openai-agents-python", "track": ["releases"], "tags": ["openai-agents", "agent-framework"]},
+    {"repo": "pydantic/pydantic-ai", "track": ["releases"], "tags": ["pydantic-ai", "agent-framework"]},
+    {"repo": "crewAIInc/crewAI", "track": ["releases"], "tags": ["crewai", "agent-framework"]},
+
+    # ── MCP (tool use protocol — critical for agent design) ──
+    {"repo": "modelcontextprotocol/specification", "track": ["releases", "activity"], "tags": ["mcp", "protocol", "tool-use"]},
     {"repo": "modelcontextprotocol/python-sdk", "track": ["releases"], "tags": ["mcp", "sdk", "python"]},
     {"repo": "modelcontextprotocol/typescript-sdk", "track": ["releases"], "tags": ["mcp", "sdk", "typescript"]},
 
-    # ── Orchestration & Infrastructure ──
-    {"repo": "ruvnet/claude-flow", "track": ["releases", "stars"], "tags": ["orchestration", "ruflo", "swarm"]},
-    {"repo": "awslabs/multi-agent-orchestrator", "track": ["releases", "stars"], "tags": ["orchestration", "aws", "multi-agent"]},
-    {"repo": "letta-ai/letta", "track": ["releases", "stars"], "tags": ["memory", "letta", "agents"]},
+    # ── Prompt engineering & instruction design ──
+    {"repo": "dair-ai/Prompt-Engineering-Guide", "track": ["activity", "stars"], "tags": ["prompts", "guide", "patterns"]},
+    {"repo": "brexhq/prompt-engineering", "track": ["activity"], "tags": ["prompts", "enterprise", "patterns"]},
 
-    # ── Claude Code Ecosystem ──
-    {"repo": "anthropics/courses", "track": ["activity"], "tags": ["anthropic", "education", "courses"]},
-    {"repo": "hesreallyhim/awesome-claude-code", "track": ["activity", "stars"], "tags": ["claude-code", "ecosystem", "awesome-list"]},
-    {"repo": "anthropics/anthropic-cookbook", "track": ["activity"], "tags": ["anthropic", "cookbook", "examples"]},
-
-    # ── Benchmarks & Research ──
-    {"repo": "princeton-nlp/SWE-bench", "track": ["releases", "activity"], "tags": ["benchmark", "swe-bench", "evaluation"]},
-    {"repo": "SakanaAI/AI-Scientist", "track": ["releases", "stars"], "tags": ["research", "ai-scientist", "autonomy"]},
+    # ── Benchmarks (to evaluate quality of practices) ──
+    {"repo": "princeton-nlp/SWE-bench", "track": ["releases"], "tags": ["benchmark", "swe-bench", "evaluation"]},
 ]
 
+# Combined list for backward-compat with scanner release checking
+WATCHED_REPOS: list[dict] = MODEL_PROVIDERS + SDLC_EXEMPLARS
+
+
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# SEARCH QUERIES — Discover new repos trending in the ecosystem
+# SEARCH QUERIES — Find best-in-class SDLC practices daily
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 #
-# Each entry: { "query": "...", "sort": "stars|updated", "tags": [...] }
-#   query: GitHub search syntax (supports qualifiers like topic:, language:, stars:>N)
-#   sort: how to rank results
-#   min_stars: minimum star count to surface (filters noise)
+# Focused on: How do the best repos use LLMs in their development
+# workflow? What agent configurations, prompts, and instructions
+# produce the best results?
 
 SEARCH_QUERIES: list[dict] = [
-    # Broad ecosystem scans — find newly popular repos
+    # ── Claude Code usage patterns ──
     {
-        "query": "topic:ai-agents language:python",
+        "query": "CLAUDE.md in:path language:markdown",
+        "sort": "updated", "min_stars": 200,
+        "tags": ["claude-code", "instructions", "sdlc-practice"],
+    },
+    {
+        "query": "claude-code agent in:readme stars:>500",
         "sort": "stars", "min_stars": 500,
-        "tags": ["ai-agents", "python", "discovery"],
+        "tags": ["claude-code", "agent-config", "sdlc-practice"],
+    },
+
+    # ── Copilot usage patterns ──
+    {
+        "query": "copilot-instructions.md in:path",
+        "sort": "updated", "min_stars": 200,
+        "tags": ["copilot", "instructions", "sdlc-practice"],
     },
     {
-        "query": "topic:mcp-server",
-        "sort": "stars", "min_stars": 200,
-        "tags": ["mcp", "server", "discovery"],
+        "query": "github copilot agent in:readme stars:>300",
+        "sort": "stars", "min_stars": 300,
+        "tags": ["copilot", "agent-config", "sdlc-practice"],
     },
+
+    # ── General LLM-assisted SDLC ──
     {
-        "query": "topic:claude-code",
-        "sort": "updated", "min_stars": 100,
-        "tags": ["claude-code", "ecosystem", "discovery"],
-    },
-    {
-        "query": "topic:llm-agents",
+        "query": "topic:ai-coding-agent language:python",
         "sort": "stars", "min_stars": 500,
-        "tags": ["llm-agents", "discovery"],
+        "tags": ["coding-agent", "python", "sdlc-practice"],
     },
     {
-        "query": "topic:agentic-ai",
+        "query": "agentic software development in:description",
         "sort": "stars", "min_stars": 300,
-        "tags": ["agentic-ai", "discovery"],
+        "tags": ["agentic", "sdlc", "sdlc-practice"],
     },
-    # Keyword searches for emerging patterns
     {
-        "query": "agent orchestration framework in:description language:python",
+        "query": "llm software engineering workflow in:readme",
         "sort": "stars", "min_stars": 200,
-        "tags": ["orchestration", "framework", "discovery"],
+        "tags": ["llm-sdlc", "workflow", "sdlc-practice"],
     },
+
+    # ── Prompt & instruction patterns for dev tools ──
     {
-        "query": "ai coding agent in:description",
+        "query": "system prompt coding assistant in:readme",
         "sort": "stars", "min_stars": 300,
-        "tags": ["coding-agent", "discovery"],
+        "tags": ["prompts", "system-prompt", "sdlc-practice"],
     },
     {
-        "query": "model context protocol in:description",
+        "query": "topic:prompt-engineering topic:software-development",
+        "sort": "stars", "min_stars": 200,
+        "tags": ["prompts", "sdlc", "sdlc-practice"],
+    },
+
+    # ── MCP servers for dev workflows ──
+    {
+        "query": "topic:mcp-server topic:developer-tools",
         "sort": "stars", "min_stars": 100,
-        "tags": ["mcp", "protocol", "discovery"],
+        "tags": ["mcp", "dev-tools", "sdlc-practice"],
     },
 ]
 
+
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# RSS FEEDS — Blogs, announcements, arxiv categories
+# RSS FEEDS — Official provider announcements
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 #
-# Each entry: { "url": "...", "name": "...", "tags": [...] }
-#   Keywords to filter on (empty = all entries from that feed)
+# When a model provider publishes a blog post about a new model,
+# we want to capture the full content for Brain ingestion.
 
 RSS_FEEDS: list[dict] = [
     {
         "url": "https://www.anthropic.com/rss.xml",
         "name": "Anthropic Blog",
-        "tags": ["anthropic", "official"],
-        "keywords": ["claude", "agent", "mcp", "model", "release", "update"],
+        "tags": ["anthropic", "official", "model-release"],
+        "keywords": ["claude", "model", "release", "sonnet", "opus", "haiku", "api"],
     },
     {
         "url": "https://openai.com/blog/rss.xml",
         "name": "OpenAI Blog",
-        "tags": ["openai", "official"],
-        "keywords": ["agent", "codex", "gpt", "model", "release", "api"],
+        "tags": ["openai", "official", "model-release"],
+        "keywords": ["gpt", "model", "release", "o1", "o3", "codex", "agent", "api"],
     },
     {
         "url": "https://blog.google/technology/ai/rss/",
         "name": "Google AI Blog",
-        "tags": ["google", "official"],
-        "keywords": ["gemini", "agent", "model", "release", "adk"],
+        "tags": ["google", "official", "model-release"],
+        "keywords": ["gemini", "model", "release", "agent", "adk", "api"],
     },
     {
         "url": "https://github.blog/feed/",
         "name": "GitHub Blog",
-        "tags": ["github", "official"],
-        "keywords": ["copilot", "agent", "ai", "claude", "codex"],
+        "tags": ["github", "official", "copilot"],
+        "keywords": ["copilot", "agent", "claude", "ai", "coding"],
     },
     {
-        "url": "http://export.arxiv.org/rss/cs.AI",
-        "name": "arXiv cs.AI",
-        "tags": ["arxiv", "research"],
-        "keywords": ["agent", "autonomous", "multi-agent", "agentic", "llm"],
+        "url": "https://mistral.ai/feed/",
+        "name": "Mistral Blog",
+        "tags": ["mistral", "official", "model-release"],
+        "keywords": ["model", "release", "mistral", "agent", "api"],
+    },
+    {
+        "url": "https://ai.meta.com/blog/rss/",
+        "name": "Meta AI Blog",
+        "tags": ["meta", "official", "model-release"],
+        "keywords": ["llama", "model", "release", "open-source", "agent"],
     },
 ]
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# QUALITY SIGNALS — How we distinguish "best in class"
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+#
+# Not every repo with stars is worth learning from.
+# These criteria filter for repos that demonstrate real,
+# working, state-of-the-art practices.
+
+QUALITY_SIGNALS = {
+    # Minimum star count to even consider (filters toy projects)
+    "min_stars": 200,
+
+    # Star velocity — rapid adoption signals the community validates it
+    "star_velocity_threshold": 300,
+
+    # Repos above this are automatically high-priority
+    "elite_star_threshold": 5000,
+
+    # Files that signal a repo has real agent/prompt practices
+    # (used to prioritize repos for deeper inspection)
+    "practice_indicators": [
+        "CLAUDE.md",
+        ".github/copilot-instructions.md",
+        "system_prompt",
+        "agent_config",
+        "prompts/",
+        ".cursorrules",
+        "aider.conf",
+    ],
+
+    # Keywords in README that signal SDLC-relevant content
+    "sdlc_keywords": [
+        "agent", "prompt", "instruction", "system prompt",
+        "tool use", "function calling", "code review",
+        "test generation", "code generation", "refactor",
+        "pull request", "commit", "CI/CD", "workflow",
+        "MCP", "model context protocol",
+    ],
+}
+
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # MONITOR SETTINGS
@@ -164,10 +344,10 @@ SETTINGS = {
     "lookback_days": 7,
 
     # Star velocity threshold — repos gaining this many stars/week get flagged
-    "star_velocity_threshold": 500,
+    "star_velocity_threshold": QUALITY_SIGNALS["star_velocity_threshold"],
 
     # Minimum star count for a repo to appear in discovery results
-    "discovery_min_stars": 100,
+    "discovery_min_stars": QUALITY_SIGNALS["min_stars"],
 
     # Where to write digest files
     "digest_dir": "aiStrat/monitor/digests",

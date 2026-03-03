@@ -1,8 +1,10 @@
 """Convert monitor findings into Brain seed candidates.
 
-Findings are translated into Brain entry format matching the schema
-in brain/core/models.py. Candidates are written to a Python file
-that can be reviewed, edited, and then executed to plant the seeds.
+Two types of seeds:
+1. MODEL KNOWLEDGE — New model capabilities, API changes, pricing,
+   official documentation extracted from release blogs/docs.
+2. SDLC PRACTICES — Agent configurations, prompt patterns, instruction
+   designs, and working examples of LLM-assisted development.
 
 IMPORTANT: All candidates pass through the immune system (quarantine.py)
 before being eligible for Brain ingestion. No raw external content
@@ -20,10 +22,12 @@ from .scanner import ScanResult, Finding
 
 # Maps finding kinds to Brain entry categories
 _KIND_TO_CATEGORY = {
-    "release": "context",
-    "new_repo": "context",
-    "star_surge": "context",
-    "trending": "context",
+    "model_release": "context",       # Model capabilities, API changes
+    "release": "context",             # General release info
+    "new_repo": "context",            # Repo discovery
+    "star_surge": "pattern",          # Ecosystem adoption signal
+    "best_practice": "pattern",       # SDLC practice to learn from
+    "practice_update": "pattern",     # Update to a known exemplar
 }
 
 
@@ -66,6 +70,12 @@ def _render_seed_file(result: ScanResult, date: str) -> str:
     lines.append(f"Each entry must be reviewed for accuracy and relevance before planting.")
     lines.append(f"All entries will pass through quarantine validation before Brain ingestion.")
     lines.append(f"")
+    lines.append(f"Candidate types:")
+    lines.append(f"  - model_release: New LLM model info, capabilities, API changes")
+    lines.append(f"  - best_practice: SDLC pattern worth learning from")
+    lines.append(f"  - practice_update: Update to a known exemplar repo")
+    lines.append(f"  - star_surge: Ecosystem adoption signal (peer validation)")
+    lines.append(f"")
     lines.append(f"To plant approved seeds:")
     lines.append(f"    python -m aiStrat.monitor.seed_writer --plant {date}")
     lines.append(f'"""')
@@ -87,7 +97,7 @@ def _render_seed_file(result: ScanResult, date: str) -> str:
             lines.append(f"    {{")
             lines.append(f'        "approved": False,  # Set to True after review')
             lines.append(f'        "project": PROJECT,')
-            lines.append(f'        "category": "{entry["category"]}",')
+            lines.append(f'        "category": {_safe_repr(entry["category"])},')
             lines.append(f'        "title": {_safe_repr(entry["title"])},')
             lines.append(f'        "content": {_safe_repr(entry["content"])},')
             lines.append(f'        "metadata": {{')
@@ -96,6 +106,8 @@ def _render_seed_file(result: ScanResult, date: str) -> str:
             lines.append(f'            "scan_date": "{date}",')
             if finding.url:
                 lines.append(f'            "url": {_safe_repr(finding.url)},')
+            if entry.get("quality_tier"):
+                lines.append(f'            "quality_tier": {_safe_repr(entry["quality_tier"])},')
             lines.append(f"        }},")
             lines.append(f'        "source_agent": "monitor",')
             lines.append(f'        "source_session": SESSION,')
@@ -117,50 +129,153 @@ def _finding_to_entry(finding: Finding, index: int) -> dict | None:
     category = _KIND_TO_CATEGORY.get(finding.kind, "context")
     data = finding.data
 
-    if finding.kind == "release":
-        repo = data.get("repo", "unknown")
-        tag = data.get("tag", "")
-        title = f"Release: {repo} {tag}"
-        content = (
-            f"{repo} released version {tag}. "
-            f"{finding.body}"
-        )
-        tags = finding.tags
-
+    if finding.kind == "model_release":
+        return _model_release_entry(finding, data, category)
+    elif finding.kind == "best_practice":
+        return _best_practice_entry(finding, data)
+    elif finding.kind == "practice_update":
+        return _practice_update_entry(finding, data)
+    elif finding.kind == "release":
+        return _release_entry(finding, data, category)
     elif finding.kind == "new_repo":
-        full_name = data.get("full_name", "unknown")
-        stars = data.get("stars", 0)
-        title = f"New repository: {full_name}"
-        content = (
-            f"Discovered {full_name} ({stars:,} stars). "
-            f"{finding.body} "
-            f"Language: {data.get('language', 'unknown')}."
-        )
-        tags = finding.tags
-
+        return _new_repo_entry(finding, data, category)
     elif finding.kind == "star_surge":
-        name = data.get("repo") or data.get("full_name", "unknown")
-        delta = data.get("delta", 0)
-        stars = data.get("stars", 0)
-        title = f"Star surge: {name} (+{delta:,})"
-        content = (
-            f"{name} gained {delta:,} stars (now {stars:,} total). "
-            f"Rapid growth signals increasing ecosystem adoption. "
-            f"{finding.body}"
-        )
-        tags = finding.tags
-        category = "pattern"  # Star surges indicate ecosystem shifts
-
+        return _star_surge_entry(finding, data)
     else:
-        title = finding.title
-        content = finding.body
-        tags = finding.tags
+        return {
+            "category": category,
+            "title": _sanitize_text(finding.title),
+            "content": _sanitize_text(finding.body),
+            "tags": [_sanitize_tag(t) for t in finding.tags],
+        }
+
+
+def _model_release_entry(finding: Finding, data: dict, category: str) -> dict:
+    """Build a rich seed entry for a model release.
+
+    Includes full official content when available (blog posts, docs).
+    """
+    repo = data.get("repo", "unknown")
+    tag = data.get("tag", "")
+
+    # If this is an official content fetch (has full_content), use it
+    full_content = data.get("full_content", "")
+    if full_content:
+        title = f"Model release docs: {repo} {tag}"
+        content = (
+            f"Official content for {repo} {tag}.\n\n"
+            f"Source: {data.get('content_url', finding.url)}\n\n"
+            f"{full_content}"
+        )
+    else:
+        title = f"Model release: {repo} {tag}"
+        release_body = data.get("full_release_body", finding.body)
+        content = (
+            f"{repo} released version {tag}.\n\n"
+            f"Release notes:\n{release_body}"
+        )
 
     return {
         "category": category,
         "title": _sanitize_text(title),
         "content": _sanitize_text(content),
-        "tags": [_sanitize_tag(t) for t in tags],
+        "tags": [_sanitize_tag(t) for t in finding.tags],
+    }
+
+
+def _best_practice_entry(finding: Finding, data: dict) -> dict:
+    """Build a seed entry for an SDLC best practice discovery."""
+    full_name = data.get("full_name", "unknown")
+    stars = data.get("stars", 0)
+    language = data.get("language", "unknown")
+    quality = data.get("quality_tier", "standard")
+
+    title = f"SDLC practice: {full_name}"
+    content = (
+        f"Discovered {full_name} ({stars:,} stars, {language}).\n\n"
+        f"Quality tier: {quality}.\n\n"
+        f"Description: {finding.body}\n\n"
+        f"Investigate: How does this repo configure agents, structure prompts, "
+        f"and manage the software development lifecycle with LLMs? "
+        f"Extract reusable patterns for the fleet."
+    )
+
+    return {
+        "category": "pattern",
+        "title": _sanitize_text(title),
+        "content": _sanitize_text(content),
+        "tags": [_sanitize_tag(t) for t in finding.tags],
+        "quality_tier": quality,
+    }
+
+
+def _practice_update_entry(finding: Finding, data: dict) -> dict:
+    """Build a seed entry for an update to a known exemplar repo."""
+    repo = data.get("repo", "unknown")
+    tag = data.get("tag", "")
+    release_body = data.get("full_release_body", finding.body)
+
+    title = f"Exemplar update: {repo} {tag}"
+    content = (
+        f"{repo} released {tag}.\n\n"
+        f"This is a tracked best-practice exemplar. Review the changes for:\n"
+        f"- New agent configurations or patterns\n"
+        f"- Updated prompt/instruction designs\n"
+        f"- Changes to tool use or MCP integration\n"
+        f"- Workflow improvements to adopt in our fleet\n\n"
+        f"Release notes:\n{release_body}"
+    )
+
+    return {
+        "category": "pattern",
+        "title": _sanitize_text(title),
+        "content": _sanitize_text(content),
+        "tags": [_sanitize_tag(t) for t in finding.tags],
+    }
+
+
+def _release_entry(finding: Finding, data: dict, category: str) -> dict:
+    """Build a seed entry for a general release."""
+    repo = data.get("repo", "unknown")
+    tag = data.get("tag", "")
+    return {
+        "category": category,
+        "title": _sanitize_text(f"Release: {repo} {tag}"),
+        "content": _sanitize_text(f"{repo} released version {tag}. {finding.body}"),
+        "tags": [_sanitize_tag(t) for t in finding.tags],
+    }
+
+
+def _new_repo_entry(finding: Finding, data: dict, category: str) -> dict:
+    """Build a seed entry for a newly discovered repo."""
+    full_name = data.get("full_name", "unknown")
+    stars = data.get("stars", 0)
+    return {
+        "category": category,
+        "title": _sanitize_text(f"New repository: {full_name}"),
+        "content": _sanitize_text(
+            f"Discovered {full_name} ({stars:,} stars). "
+            f"{finding.body} "
+            f"Language: {data.get('language', 'unknown')}."
+        ),
+        "tags": [_sanitize_tag(t) for t in finding.tags],
+    }
+
+
+def _star_surge_entry(finding: Finding, data: dict) -> dict:
+    """Build a seed entry for a star surge (ecosystem validation signal)."""
+    name = data.get("repo") or data.get("full_name", "unknown")
+    delta = data.get("delta", 0)
+    stars = data.get("stars", 0)
+    return {
+        "category": "pattern",
+        "title": _sanitize_text(f"Star surge: {name} (+{delta:,})"),
+        "content": _sanitize_text(
+            f"{name} gained {delta:,} stars (now {stars:,} total). "
+            f"Rapid growth signals the community validates this approach. "
+            f"{finding.body}"
+        ),
+        "tags": [_sanitize_tag(t) for t in finding.tags],
     }
 
 
@@ -177,7 +292,6 @@ def _sanitize_text(text: str) -> str:
     text = re.sub(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]", "", text)
 
     # Neutralize common injection patterns in data destined for LLM consumption
-    # These patterns could manipulate agents that later read Brain entries
     injection_markers = [
         "ignore previous instructions",
         "ignore all instructions",
@@ -196,7 +310,6 @@ def _sanitize_text(text: str) -> str:
     text_lower = text.lower()
     for marker in injection_markers:
         if marker in text_lower:
-            # Don't silently remove — flag it
             text = text + f" [QUARANTINE FLAG: contains pattern '{marker}']"
 
     return text.strip()
