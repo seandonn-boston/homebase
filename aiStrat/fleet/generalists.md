@@ -24,10 +24,10 @@ Generalists share these traits:
 
 | Agent | Purpose | Defined In |
 |---|---|---|
-| **Orchestrator** | Decomposes goals into tasks, routes to specialists, manages progress, enforces standards | [`../agents/command/orchestrator.md`](../agents/command/orchestrator.md) |
-| **Triage Agent** | Classifies incoming work by type, priority, and complexity; routes to the Orchestrator | [`../agents/command/triage-agent.md`](../agents/command/triage-agent.md) |
-| **Context Curator** | Assembles context payloads for agents; manages what each agent knows and when | [`../agents/command/context-curator.md`](../agents/command/context-curator.md) |
-| **Mediator** | Resolves conflicting outputs between specialists; synthesizes divergent approaches | [`../agents/command/mediator.md`](../agents/command/mediator.md) |
+| **Orchestrator** | Decomposes goals into tasks, routes to specialists, manages progress, enforces standards | [`agents/command/orchestrator.md`](agents/command/orchestrator.md) |
+| **Triage Agent** | Classifies incoming work by type, priority, and complexity; routes to the Orchestrator | [`agents/command/triage-agent.md`](agents/command/triage-agent.md) |
+| **Context Curator** | Assembles context payloads for agents; manages what each agent knows and when | [`agents/command/context-curator.md`](agents/command/context-curator.md) |
+| **Mediator** | Resolves conflicting outputs between specialists; synthesizes divergent approaches | [`agents/command/mediator.md`](agents/command/mediator.md) |
 
 -----
 

@@ -40,24 +40,24 @@ The full protocol for human referral is defined in [admiral/part11-protocols.md,
 
 ## Specialist Categories
 
-All specialist agent definitions live in [`../agents/`](../agents/). They are organized by domain:
+All specialist agent definitions live in [`agents/`](agents/). They are organized by domain:
 
-| Category | Directory | Count | Covers |
+| Category | Location | Count | Covers |
 |---|---|---|---|
-| **Engineering — Frontend** | `../agents/engineering/frontend/` | 5 | UI, interaction, accessibility, responsive layout, state management |
-| **Engineering — Backend** | `../agents/engineering/backend/` | 5 | Server logic, API, database, messaging, caching |
-| **Engineering — Cross-Cutting** | `../agents/engineering/cross-cutting/` | 5 | Architecture, integration, migration, refactoring, dependencies |
-| **Engineering — Infrastructure** | `../agents/engineering/infrastructure/` | 4 | DevOps, IaC, containers, observability |
-| **Quality & Testing** | `../agents/quality/` | 6 | QA, unit tests, E2E tests, performance, chaos, regression |
-| **Security & Compliance** | `../agents/security/` | 4 | Security audit, pen testing, compliance, privacy |
-| **Data & Analytics** | `../agents/data/` | 5 | Data engineering, analytics, ML, validation, visualization |
-| **Documentation & Design** | `../agents/design/` | 5 | UX research, design systems, copywriting, tech writing, diagrams |
-| **Governance** | `../agents/governance/` | 7 | Token budgeting, drift detection, hallucination audit, bias detection, loop breaking, context health, contradiction detection |
-| **Simulation & Adversarial** | `../agents/adversarial/` | 4 | Simulated users, devil's advocate, red team, persona agents |
-| **Meta & Autonomous** | `../agents/meta/` | 4 | Pattern enforcement, dependency sentinel, SEO, role crystallizer |
-| **Domain Specialization** | `../agents/domain/` | 7 | Auth, search, payments, real-time, media, notifications, i18n |
-| **Inhuman-Scale Analysis** | `../agents/scale/` | 29 | Planetary, temporal, combinatorial, topology, threat, phase transition |
-| **Release & Developer Platform** | `../agents/lifecycle/` | 6 | Release, incident response, feature flags, SDK, monorepo, contracts |
+| **Engineering — Frontend** | `agents/engineering/frontend/` | 5 | UI, interaction, accessibility, responsive layout, state management |
+| **Engineering — Backend** | `agents/engineering/backend/` | 5 | Server logic, API, database, messaging, caching |
+| **Engineering — Cross-Cutting** | `agents/engineering/cross-cutting/` | 5 | Architecture, integration, migration, refactoring, dependencies |
+| **Engineering — Infrastructure** | `agents/engineering/infrastructure/` | 4 | DevOps, IaC, containers, observability |
+| **Quality & Testing** | `agents/quality.md` | 6 | QA, unit tests, E2E tests, performance, chaos, regression |
+| **Security & Compliance** | `agents/security.md` | 4 | Security audit, pen testing, compliance, privacy |
+| **Data & Analytics** | `agents/data.md` | 5 | Data engineering, analytics, ML, validation, visualization |
+| **Documentation & Design** | `agents/design.md` | 5 | UX research, design systems, copywriting, tech writing, diagrams |
+| **Governance** | `agents/governance.md` | 7 | Token budgeting, drift detection, hallucination audit, bias detection, loop breaking, context health, contradiction detection |
+| **Simulation & Adversarial** | `agents/adversarial.md` | 4 | Simulated users, devil's advocate, red team, persona agents |
+| **Meta & Autonomous** | `agents/meta.md` | 4 | Pattern enforcement, dependency sentinel, SEO, role crystallizer |
+| **Domain Specialization** | `agents/domain.md` | 7 | Auth, search, payments, real-time, media, notifications, i18n |
+| **Inhuman-Scale Analysis** | `agents/scale.md` | 29 | Planetary, temporal, combinatorial, topology, threat, phase transition |
+| **Release & Developer Platform** | `agents/lifecycle.md` | 6 | Release, incident response, feature flags, SDK, monorepo, contracts |
 
 **Total: 96 specialist agents across 14 categories.**
 
