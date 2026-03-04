@@ -93,10 +93,7 @@ class AuditLog:
 
 
 class BrainStore:
-    """Thread-safe in-memory store for Brain entries and links.
-
-    v4: Includes audit trail for all mutations.
-    """
+    """Thread-safe in-memory store for Brain entries and links."""
 
     def __init__(self) -> None:
         self._lock = threading.Lock()

@@ -1,7 +1,7 @@
 """Tests for the monitor state module.
 
-v4: Tests for file locking, atomic writes, schema validation, pruning,
-    star delta bug fix, and plausibility checks (Vuln 8.2.4, 8.2.5).
+Covers file locking, atomic writes, schema validation, pruning,
+star delta bug fix, and plausibility checks.
 """
 
 from __future__ import annotations
@@ -51,7 +51,7 @@ class TestMonitorState(unittest.TestCase):
 
 
 class TestStarDelta(unittest.TestCase):
-    """v4: Star delta bug fix (Vuln 8.2.5)."""
+    """Star delta bug fix tests."""
 
     def setUp(self) -> None:
         self.tmpdir = tempfile.mkdtemp()

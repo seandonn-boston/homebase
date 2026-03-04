@@ -1,9 +1,9 @@
 """Cascading trust chain validation test.
 
-Simulates the 10-step cascading attack from REVIEW.md Section 8.4
+Simulates a multi-step cascading attack against the trust chain
 and verifies the full attack chain is broken at every link.
 
-v4: Phase 7 — proves all defensive layers work together.
+Proves all defensive layers work together end-to-end.
 """
 
 from __future__ import annotations

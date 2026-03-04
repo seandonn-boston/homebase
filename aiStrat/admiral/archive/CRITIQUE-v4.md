@@ -1,4 +1,10 @@
-# Independent Critique: aiStrat/
+# ARCHIVED — Independent Critique: aiStrat/ (v4)
+
+> **STATUS: ARCHIVED.** This critique was written on 2026-03-04 against the v4 codebase.
+> Findings were addressed in the same session: real embeddings added, provenance enforcement
+> implemented, speculative discount wired into retrieval, decision_log honestly renamed,
+> REVIEW.md references stripped, scale reframed. Retained as historical record of the
+> issues that drove v4→v5 improvements.
 
 **Reviewer:** Claude Opus 4.6 (independent critical analysis — zero bias, zero deference)
 **Date:** 2026-03-04

@@ -1,8 +1,8 @@
 """Tests for the seed writer sanitization.
 
-v4: Tests for proper REDACTION (not flag-appending) of injection patterns,
-    HTML entity bypass detection, Unicode normalization, and multi-marker
-    rejection (Vuln 8.2.2).
+Covers proper redaction (not flag-appending) of injection patterns,
+HTML entity bypass detection, Unicode normalization, and multi-marker
+rejection.
 """
 
 from __future__ import annotations

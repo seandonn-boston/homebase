@@ -9,9 +9,9 @@ Tracked state:
   - Known repos from discovery (full_name → star count at last scan)
   - Processed feed items (url hash → title)
 
-v4: Added file locking (fcntl.flock), atomic writes (temp + os.replace),
-    schema validation, pruning of old entries, star delta bug fix,
-    plausibility check for star surges (Vuln 8.2.4, 8.2.5).
+Includes file locking (fcntl.flock), atomic writes (temp + os.replace),
+schema validation, pruning of old entries, and plausibility checks for
+star surges.
 """
 
 from __future__ import annotations
@@ -46,7 +46,7 @@ _MAX_PLAUSIBLE_STAR_DELTA = 5000
 class MonitorState:
     """Read/write persistent monitor state.
 
-    v4: Thread-safe file I/O with locking and atomic writes.
+    Thread-safe file I/O with locking and atomic writes.
     """
 
     def __init__(self, state_file: str):
@@ -86,7 +86,7 @@ class MonitorState:
     def save(self) -> None:
         """Write state to disk atomically with file locking.
 
-        v4: Uses temp file + os.replace for atomicity, fcntl for locking,
+        Uses temp file + os.replace for atomicity, fcntl for locking,
         and prunes old entries before writing.
         """
         self.data["last_scan"] = datetime.now(timezone.utc).isoformat()
@@ -193,9 +193,9 @@ class MonitorState:
     def get_star_delta(self, full_name: str, current_stars: int) -> int:
         """Return change in stars since last scan.
 
-        v4: Fixed bug where prev=0 was treated as falsy, hiding real star
-        surges for repos with 0 recorded stars (Vuln 8.2.5). Now checks
-        repo existence explicitly. Also caps implausible deltas.
+        Fixed bug where prev=0 was treated as falsy, hiding real star
+        surges for repos with 0 recorded stars. Now checks repo existence
+        explicitly. Also caps implausible deltas.
         """
         if full_name not in self.data.get("repos", {}):
             return 0  # Truly unknown repo — no delta to report

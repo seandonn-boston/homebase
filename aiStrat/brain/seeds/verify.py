@@ -3,8 +3,6 @@
 Computes SHA-256 checksums of the seed_research.py source file and
 compares against a known-good hash. If the file has been tampered with,
 the verification fails and the Brain should refuse to load seeds.
-
-v4: Added for Vuln 8.1.7 — seed supply chain protection.
 """
 
 from __future__ import annotations
@@ -17,7 +15,7 @@ from ..core.models import Provenance
 
 logger = logging.getLogger(__name__)
 
-# SHA-256 of the seed_research.py file at v4 release.
+# SHA-256 of the seed_research.py file at release.
 # Update this value when legitimate seed changes are made.
 # To recompute: python -c "import hashlib; print(hashlib.sha256(open('aiStrat/brain/seeds/seed_research.py','rb').read()).hexdigest())"
 _EXPECTED_CHECKSUM = "57abaa4b0dee4daa80170d1b24369b8c2192a04ba704323a101e6a2edd13dcb8"
