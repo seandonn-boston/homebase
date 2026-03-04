@@ -47,12 +47,10 @@ _SCAN_DIRS = [
 # ── Check 1: Seed checksum ──────────────────────────────────────
 
 def check_seed_checksum() -> tuple[bool, str]:
-    """Verify the seed file exists and compute its checksum.
+    """Verify the seed file checksum matches the known-good value from verify.py.
 
     Returns:
         (passed, message) tuple.
-
-    v4: Protects seed supply chain (Vuln 8.1.7).
     """
     if not os.path.exists(_SEED_FILE):
         return False, f"FAIL: Seed file not found: {_SEED_FILE}"
@@ -67,7 +65,22 @@ def check_seed_checksum() -> tuple[bool, str]:
             source = f.read()
         compile(source, _SEED_FILE, "exec")
 
-        return True, f"PASS: Seed checksum verified: {checksum[:16]}..."
+        # Load the reference checksum from verify.py
+        sys.path.insert(0, _AISTRAT_ROOT)
+        try:
+            from brain.seeds.verify import _EXPECTED_CHECKSUM
+        finally:
+            sys.path.pop(0)
+
+        if checksum != _EXPECTED_CHECKSUM:
+            return False, (
+                f"FAIL: Seed checksum mismatch!\n"
+                f"       Expected: {_EXPECTED_CHECKSUM[:16]}...\n"
+                f"       Got:      {checksum[:16]}...\n"
+                f"       The seed file may have been tampered with."
+            )
+
+        return True, f"PASS: Seed checksum verified against reference: {checksum[:16]}..."
 
     except SyntaxError as e:
         return False, f"FAIL: Seed file has syntax error: {e}"

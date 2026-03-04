@@ -74,16 +74,24 @@ class OpenAIEmbeddingProvider:
         logger.info("OpenAIEmbeddingProvider initialized (model=%s)", model)
 
     def embed(self, text: str) -> list[float]:
-        """Generate a real semantic embedding via OpenAI API."""
+        """Generate a real semantic embedding via OpenAI API.
+
+        Includes a 30-second timeout to prevent indefinite blocking.
+        """
         if not text.strip():
             return [0.0] * EMBEDDING_DIMENSIONS
 
-        response = self._client.embeddings.create(
-            input=text,
-            model=self._model,
-            dimensions=EMBEDDING_DIMENSIONS,
-        )
-        return response.data[0].embedding
+        try:
+            response = self._client.embeddings.create(
+                input=text,
+                model=self._model,
+                dimensions=EMBEDDING_DIMENSIONS,
+                timeout=30.0,
+            )
+            return response.data[0].embedding
+        except Exception as e:
+            logger.error("Embedding request failed: %s", e)
+            raise
 
 
 def cosine_similarity(a: list[float], b: list[float]) -> float:

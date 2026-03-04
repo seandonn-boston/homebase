@@ -759,14 +759,20 @@ def _scan_discovery(state: MonitorState, result: ScanResult) -> None:
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 def _is_major_release(tag: str) -> bool:
-    """Heuristic: is this a major (non-patch) release?"""
+    """Heuristic: is this a major or minor (non-patch) release?
+
+    x.0.0 = major release (e.g., 2.0.0)
+    x.y.0 = minor release (e.g., 1.2.0)
+    x.y.z where z > 0 = patch release (e.g., 1.2.3)
+    """
     tag = tag.lstrip("v")
     parts = tag.split(".")
     if len(parts) >= 2:
         try:
             minor = int(parts[1])
             patch = int(parts[2]) if len(parts) > 2 else 0
-            return minor == 0 or patch == 0
+            # Major: x.0.0, Minor: x.y.0 — both count as "major" for priority
+            return minor == 0 and patch == 0
         except (ValueError, IndexError):
             pass
     return True

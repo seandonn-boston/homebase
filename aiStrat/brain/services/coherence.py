@@ -148,22 +148,26 @@ def analyze_coherence(store) -> CoherenceReport:
         for entry in entries:
             text = f"{entry.title} {entry.content}".lower()
 
-            # Check weakening patterns
-            is_weakening = False
-            for pat in patterns["weakening"]:
-                if re.search(pat, text, re.IGNORECASE):
-                    is_weakening = True
-                    weakening_entries.append(entry.title)
-                    break
+            # Check weakening first. If an entry matches ANY weakening pattern,
+            # classify it as weakening regardless of strengthening matches.
+            # For security-sensitive drift detection, weakening signals take
+            # priority — it is better to over-detect than under-detect.
+            is_weakening = any(
+                re.search(pat, text, re.IGNORECASE)
+                for pat in patterns["weakening"]
+            )
 
             if is_weakening:
+                weakening_entries.append(entry.title)
                 continue
 
-            # Check strengthening patterns
-            for pat in patterns["strengthening"]:
-                if re.search(pat, text, re.IGNORECASE):
-                    strengthening_count += 1
-                    break
+            # Only check strengthening if no weakening patterns matched
+            is_strengthening = any(
+                re.search(pat, text, re.IGNORECASE)
+                for pat in patterns["strengthening"]
+            )
+            if is_strengthening:
+                strengthening_count += 1
 
         total = len(weakening_entries) + strengthening_count
         if total == 0:
