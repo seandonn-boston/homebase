@@ -562,9 +562,13 @@ class _AntibodyTracker:
     v4: Added to address Vuln 4.4 — antibody write amplifier.
     """
 
+    # Cap fingerprint set size to prevent unbounded memory growth
+    _MAX_FINGERPRINTS = 10_000
+
     def __init__(self) -> None:
         self._lock = threading.Lock()
-        self._fingerprints: set[str] = set()
+        self._fingerprints: deque[str] = deque(maxlen=self._MAX_FINGERPRINTS)
+        self._fingerprint_set: set[str] = set()
         self._timestamps: deque[float] = deque()
 
     def _fingerprint(self, entry: dict) -> str:
@@ -584,7 +588,7 @@ class _AntibodyTracker:
 
         with self._lock:
             # Dedup check
-            if fp in self._fingerprints:
+            if fp in self._fingerprint_set:
                 logger.info("Antibody dedup: skipping duplicate fingerprint %s", fp[:8])
                 return False
 
@@ -601,8 +605,12 @@ class _AntibodyTracker:
                 )
                 return False
 
-            # Admit
-            self._fingerprints.add(fp)
+            # Admit — evict oldest fingerprint if at capacity
+            if len(self._fingerprints) >= self._MAX_FINGERPRINTS:
+                evicted = self._fingerprints.popleft()
+                self._fingerprint_set.discard(evicted)
+            self._fingerprints.append(fp)
+            self._fingerprint_set.add(fp)
             self._timestamps.append(now)
             return True
 
@@ -610,6 +618,7 @@ class _AntibodyTracker:
         """Reset tracker state (for testing)."""
         with self._lock:
             self._fingerprints.clear()
+            self._fingerprint_set.clear()
             self._timestamps.clear()
 
 
@@ -712,6 +721,15 @@ def _defang(text: str) -> str:
     text = re.sub(r"<\|im_start\|>", "<|im[DEFANGED]_start|>", text)
     text = re.sub(r"<\|im_end\|>", "<|im[DEFANGED]_end|>", text)
 
+    # Defang secrets and PII so antibodies don't leak sensitive data
+    text = re.sub(r"(?i)(sk|pk|ak|rk)-[a-zA-Z0-9\-_]{20,}", r"\1-[REDACTED]", text)
+    text = re.sub(r"(?i)(ghp|gho|ghu|ghs|ghr)_[a-zA-Z0-9]{36,}", r"\1_[REDACTED]", text)
+    text = re.sub(r"(?i)AKIA[0-9A-Z]{16}", "AKIA[REDACTED]", text)
+    text = re.sub(r"(?i)(password|passwd|pwd)\s*[:=]\s*\S{4,}", r"\1=[REDACTED]", text)
+    text = re.sub(r"\b\d{3}-\d{2}-\d{4}\b", "[SSN-REDACTED]", text)
+    text = re.sub(r"\b\d{4}[\s-]?\d{4}[\s-]?\d{4}[\s-]?\d{4}\b", "[CARD-REDACTED]", text)
+    text = re.sub(r"-----BEGIN\s+(RSA\s+)?PRIVATE\s+KEY-----", "[PRIVATE-KEY-REDACTED]", text, flags=re.IGNORECASE)
+
     return text
 
 
@@ -771,9 +789,29 @@ def quarantine(entry: dict) -> QuarantineResult:
             )
 
     # Build sanitized entry if only suspicious (not hostile/critical)
+    # Re-validate after sanitization to catch payloads that survive cleanup
     sanitized_entry = None
     if threat_level == ThreatLevel.SUSPICIOUS:
-        sanitized_entry = _sanitize_entry(entry, all_signals)
+        candidate = _sanitize_entry(entry, all_signals)
+        # Re-scan the sanitized entry for any remaining injection patterns
+        rescan_signals = _scan_injections(candidate) + _analyze_semantics(candidate)
+        hostile_rescan = [
+            s for s in rescan_signals
+            if s.level in (ThreatLevel.HOSTILE, ThreatLevel.CRITICAL)
+        ]
+        if hostile_rescan:
+            logger.warning(
+                "Sanitized entry still contains %d hostile signal(s) — rejecting",
+                len(hostile_rescan),
+            )
+            all_signals.extend(hostile_rescan)
+            threat_level = ThreatLevel.HOSTILE
+            is_clean = False
+            # Generate antibody for the escalated threat
+            if _antibody_tracker.should_generate(entry):
+                antibody = _generate_antibody(entry, all_signals)
+        else:
+            sanitized_entry = candidate
 
     return QuarantineResult(
         entry_hash=content_hash,

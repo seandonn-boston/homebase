@@ -419,15 +419,16 @@ def _sanitize_text(text: str) -> str:
         )
         return "[REJECTED: multiple injection patterns detected]"
 
-    # Redact each matched marker (case-insensitive replacement)
+    # CRITICAL FIX: Perform redaction on the decoded/normalized text, then
+    # return that. Redacting against the original text misses HTML-encoded
+    # payloads like &#106;avascript: where the pattern matches the decoded
+    # form but not the original.
+    result = normalized
     for marker in markers_found:
         pattern = re.compile(re.escape(marker), re.IGNORECASE)
-        text = pattern.sub("[REDACTED]", text)
-        # Also redact in the HTML-decoded/normalized form if different
-        if decoded != text:
-            decoded = pattern.sub("[REDACTED]", decoded)
+        result = pattern.sub("[REDACTED]", result)
 
-    return text.strip()
+    return result.strip()
 
 
 def _sanitize_tag(tag: str) -> str:

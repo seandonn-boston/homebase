@@ -56,26 +56,29 @@ class MonitorState:
     def _load(self) -> dict:
         if os.path.exists(self.state_file):
             try:
-                with open(self.state_file) as f:
-                    fcntl.flock(f.fileno(), fcntl.LOCK_SH)
-                    try:
+                lock_path = self.state_file + ".lock"
+                fd_lock = os.open(lock_path, os.O_CREAT | os.O_RDWR)
+                try:
+                    fcntl.flock(fd_lock, fcntl.LOCK_SH)
+                    with open(self.state_file) as f:
                         data = json.load(f)
-                    finally:
-                        fcntl.flock(f.fileno(), fcntl.LOCK_UN)
+                finally:
+                    fcntl.flock(fd_lock, fcntl.LOCK_UN)
+                    os.close(fd_lock)
 
-                    # Schema validation — reset invalid types to defaults
-                    validated = copy.deepcopy(DEFAULT_STATE)
-                    for key in DEFAULT_STATE:
-                        if key in data:
-                            expected_type = type(DEFAULT_STATE[key])
-                            if expected_type is not type(None) and not isinstance(data[key], expected_type):
-                                logger.warning(
-                                    "State schema violation: '%s' expected %s, got %s. Using default.",
-                                    key, expected_type.__name__, type(data[key]).__name__,
-                                )
-                            else:
-                                validated[key] = data[key]
-                    return validated
+                # Schema validation — reset invalid types to defaults
+                validated = copy.deepcopy(DEFAULT_STATE)
+                for key in DEFAULT_STATE:
+                    if key in data:
+                        expected_type = type(DEFAULT_STATE[key])
+                        if expected_type is not type(None) and not isinstance(data[key], expected_type):
+                            logger.warning(
+                                "State schema violation: '%s' expected %s, got %s. Using default.",
+                                key, expected_type.__name__, type(data[key]).__name__,
+                            )
+                        else:
+                            validated[key] = data[key]
+                return validated
             except (json.JSONDecodeError, OSError) as e:
                 logger.warning("Failed to load state from %s: %s — using defaults", self.state_file, e)
         return copy.deepcopy(DEFAULT_STATE)
@@ -95,23 +98,28 @@ class MonitorState:
         state_dir = os.path.dirname(self.state_file) or "."
         os.makedirs(state_dir, exist_ok=True)
 
-        # Atomic write: write to temp, then os.replace
-        fd, tmp_path = tempfile.mkstemp(dir=state_dir, suffix=".tmp")
+        # Atomic write: acquire exclusive lock on state file (or .lock file),
+        # write to temp, then os.replace.
+        # CRITICAL FIX: Lock the state file itself, NOT the temp file.
+        # Locking the temp file provides zero coordination between writers.
+        lock_path = self.state_file + ".lock"
+        fd_lock = os.open(lock_path, os.O_CREAT | os.O_RDWR)
         try:
-            with os.fdopen(fd, "w") as f:
-                fcntl.flock(f.fileno(), fcntl.LOCK_EX)
-                try:
-                    json.dump(self.data, f, indent=2, default=str)
-                finally:
-                    fcntl.flock(f.fileno(), fcntl.LOCK_UN)
-            os.replace(tmp_path, self.state_file)
-        except Exception:
-            # Clean up temp file on failure
+            fcntl.flock(fd_lock, fcntl.LOCK_EX)
+            fd, tmp_path = tempfile.mkstemp(dir=state_dir, suffix=".tmp")
             try:
-                os.unlink(tmp_path)
-            except OSError:
-                pass
-            raise
+                with os.fdopen(fd, "w") as f:
+                    json.dump(self.data, f, indent=2, default=str)
+                os.replace(tmp_path, self.state_file)
+            except Exception:
+                try:
+                    os.unlink(tmp_path)
+                except OSError:
+                    pass
+                raise
+        finally:
+            fcntl.flock(fd_lock, fcntl.LOCK_UN)
+            os.close(fd_lock)
 
     def _prune(self) -> None:
         """Remove stale entries to prevent unbounded state growth."""

@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import unittest
 
-from ..core.models import Entry, EntryCategory
+from ..core.models import Entry, EntryCategory, Provenance
 from ..core.retrieval import query
 from ..core.store import BrainStore
 from ..mcp.auth import (
@@ -117,7 +117,7 @@ class TestCascadingTrustChain(unittest.TestCase):
             project="test", category="pattern",
             title="Human verified pattern for security",
             content="This pattern was verified by a human expert.",
-            provenance="human",
+            provenance=Provenance.HUMAN,
             token=_WRITE_TOKEN,
         )
         # Create an identical monitor-sourced entry
@@ -125,7 +125,7 @@ class TestCascadingTrustChain(unittest.TestCase):
             project="test", category="pattern",
             title="Monitor found pattern for security",
             content="This pattern was found by the monitor.",
-            provenance="monitor",
+            provenance=Provenance.MONITOR,
             token=_WRITE_TOKEN,
         )
 
@@ -137,8 +137,8 @@ class TestCascadingTrustChain(unittest.TestCase):
         )
 
         if len(results) >= 2:
-            human_entries = [r for r in results if r.entry.provenance == "human"]
-            monitor_entries = [r for r in results if r.entry.provenance == "monitor"]
+            human_entries = [r for r in results if r.entry.provenance == Provenance.HUMAN]
+            monitor_entries = [r for r in results if r.entry.provenance == Provenance.MONITOR]
             if human_entries and monitor_entries:
                 self.assertGreater(human_entries[0].score, monitor_entries[0].score)
 
@@ -251,7 +251,7 @@ class TestCascadingTrustChain(unittest.TestCase):
         self.assertNotIn("evil_payload", entry.metadata)
 
         # 3. Entry is recorded with correct provenance
-        self.assertEqual(entry.provenance, "agent")
+        self.assertEqual(entry.provenance, Provenance.AGENT)
 
         # 4. Audit trail captures the operation
         audit = self.brain.store.audit.query(entry_id=result["id"])

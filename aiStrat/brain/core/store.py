@@ -283,7 +283,9 @@ class BrainStore:
             if not new_entry:
                 raise ValueError(f"New entry not found: {new_id}")
 
-            # Circular supersession detection: walk chain from new_id
+            # Circular supersession detection: check BOTH directions.
+            # Forward: walk superseded_by chain from new_id — if we reach
+            # old_id, the link would create a cycle.
             visited = {new_id}
             current = new_entry
             while current.superseded_by:
@@ -294,6 +296,23 @@ class BrainStore:
                 if current.superseded_by in visited:
                     break  # Already-detected chain loop
                 visited.add(current.superseded_by)
+                current = self._entries.get(current.superseded_by)
+                if not current:
+                    break
+
+            # Backward: walk superseded_by chain from old_id — if old_id
+            # is already upstream of new_id via existing chains, the link
+            # would create a cycle (e.g. A→B→C, then supersede(C, A)).
+            visited_back = {old_id}
+            current = old_entry
+            while current.superseded_by:
+                if current.superseded_by == new_id:
+                    raise ValueError(
+                        f"Circular supersession: {new_id} is already upstream of {old_id}"
+                    )
+                if current.superseded_by in visited_back:
+                    break
+                visited_back.add(current.superseded_by)
                 current = self._entries.get(current.superseded_by)
                 if not current:
                     break
@@ -347,6 +366,7 @@ class BrainStore:
         """Health and statistics for the Brain."""
         with self._lock:
             entries = list(self._entries.values())
+            link_count = len(self._links)
 
         if project:
             entries = [e for e in entries if e.project == project]
@@ -358,7 +378,7 @@ class BrainStore:
                 "avg_usefulness": 0.0,
                 "total_access_count": 0,
                 "superseded_count": 0,
-                "link_count": len(self._links),
+                "link_count": link_count,
             }
 
         by_category: dict[str, int] = {}
@@ -380,5 +400,5 @@ class BrainStore:
             "avg_usefulness": total_usefulness / len(entries),
             "total_access_count": total_access,
             "superseded_count": superseded,
-            "link_count": len(self._links),
+            "link_count": link_count,
         }

@@ -122,11 +122,18 @@ class DecisionLog:
 
         with self._lock:
             self._log.append(entry)
-            # Prune oldest if over limit
+            # Prune oldest if over limit.
+            # WARNING: This violates the append-only invariant. In production,
+            # decisions should be persisted to durable storage before pruning
+            # from the in-memory log.
             if len(self._log) > _MAX_DECISION_LOG_SIZE:
                 pruned = len(self._log) - _MAX_DECISION_LOG_SIZE
                 self._log = self._log[-_MAX_DECISION_LOG_SIZE:]
-                logger.info("Decision log pruned: removed %d oldest entries", pruned)
+                logger.warning(
+                    "Decision log pruned: removed %d oldest entries. "
+                    "Ensure decisions are persisted to durable storage.",
+                    pruned,
+                )
 
         logger.info(
             "Decision logged [%s]: %s (by %s, project=%s)",

@@ -20,7 +20,7 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import Optional
 
-from ..core.models import Entry, EntryCategory, EntryLink, LinkType, AuthorityTier
+from ..core.models import Entry, EntryCategory, EntryLink, LinkType, AuthorityTier, Provenance
 from ..core.store import AuditEntry, BrainStore
 
 logger = logging.getLogger(__name__)
@@ -43,7 +43,7 @@ def _entry_to_dict(entry: Entry) -> dict:
         "source_agent": entry.source_agent,
         "source_session": entry.source_session,
         "authority_tier": entry.authority_tier.value if entry.authority_tier else None,
-        "provenance": entry.provenance,
+        "provenance": entry.provenance.value if isinstance(entry.provenance, Provenance) else entry.provenance,
         "access_count": entry.access_count,
         "usefulness": entry.usefulness,
         "superseded_by": entry.superseded_by,
@@ -71,7 +71,7 @@ def _dict_to_entry(d: dict) -> Entry:
         source_agent=d.get("source_agent"),
         source_session=d.get("source_session"),
         authority_tier=authority,
-        provenance=d.get("provenance", "agent"),
+        provenance=Provenance(d.get("provenance", "agent")),
         access_count=d.get("access_count", 0),
         usefulness=d.get("usefulness", 0),
         superseded_by=d.get("superseded_by"),
@@ -213,6 +213,25 @@ def import_brain(
 
     manifest_counts = data.get("counts", {})
 
+    # VERIFY BEFORE MUTATION — check counts match manifest before writing
+    # to the store, so we don't leave the store in an inconsistent state
+    # on verification failure.
+    if verify:
+        expected_entries = manifest_counts.get("entries", 0)
+        expected_links = manifest_counts.get("links", 0)
+        actual_entries = len(data.get("entries", []))
+        actual_links = len(data.get("links", []))
+        if actual_entries != expected_entries:
+            raise ValueError(
+                f"Entry count mismatch in backup file: found {actual_entries}, "
+                f"manifest says {expected_entries}"
+            )
+        if actual_links != expected_links:
+            raise ValueError(
+                f"Link count mismatch in backup file: found {actual_links}, "
+                f"manifest says {expected_links}"
+            )
+
     # Import entries
     imported_entries = 0
     for entry_dict in data.get("entries", []):
@@ -242,20 +261,6 @@ def import_brain(
         "links": imported_links,
         "audit_records": imported_audit,
     }
-
-    if verify:
-        expected_entries = manifest_counts.get("entries", 0)
-        expected_links = manifest_counts.get("links", 0)
-        if imported_entries != expected_entries:
-            raise ValueError(
-                f"Entry count mismatch: imported {imported_entries}, "
-                f"expected {expected_entries}"
-            )
-        if imported_links != expected_links:
-            raise ValueError(
-                f"Link count mismatch: imported {imported_links}, "
-                f"expected {expected_links}"
-            )
 
     logger.info(
         "Brain imported: %d entries, %d links, %d audit records from %s",

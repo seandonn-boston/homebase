@@ -12,7 +12,7 @@ from __future__ import annotations
 import time
 import unittest
 
-from ..core.models import Entry, EntryCategory, LinkType
+from ..core.models import Entry, EntryCategory, LinkType, Provenance
 from ..core.retrieval import (
     _infer_category,
     _recency_score,
@@ -412,10 +412,10 @@ class TestRetrievalSignals(unittest.TestCase):
 
     def test_provenance_score(self) -> None:
         """v4: Human > seed > agent > monitor (Vuln 8.1.4)."""
-        e_human = Entry(project="p", category=EntryCategory.DECISION, title="t", content="c", provenance="human")
-        e_seed = Entry(project="p", category=EntryCategory.DECISION, title="t", content="c", provenance="seed")
-        e_agent = Entry(project="p", category=EntryCategory.DECISION, title="t", content="c", provenance="agent")
-        e_monitor = Entry(project="p", category=EntryCategory.DECISION, title="t", content="c", provenance="monitor")
+        e_human = Entry(project="p", category=EntryCategory.DECISION, title="t", content="c", provenance=Provenance.HUMAN)
+        e_seed = Entry(project="p", category=EntryCategory.DECISION, title="t", content="c", provenance=Provenance.SEED)
+        e_agent = Entry(project="p", category=EntryCategory.DECISION, title="t", content="c", provenance=Provenance.AGENT)
+        e_monitor = Entry(project="p", category=EntryCategory.DECISION, title="t", content="c", provenance=Provenance.MONITOR)
         self.assertGreater(_provenance_score(e_human), _provenance_score(e_seed))
         self.assertGreater(_provenance_score(e_seed), _provenance_score(e_agent))
         self.assertGreater(_provenance_score(e_agent), _provenance_score(e_monitor))

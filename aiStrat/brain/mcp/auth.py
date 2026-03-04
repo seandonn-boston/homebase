@@ -109,9 +109,16 @@ class NoAuthProvider:
     """Allows all requests without authentication.
 
     ONLY for isolated testing with strict_mode=False.
-    Logs a warning on every call.
+    Logs a warning on every call. Grants READ scope only — never ADMIN.
     """
 
+    _warned = False
+
     def authenticate(self, token: str) -> AuthContext:
-        logger.warning("NoAuthProvider: all requests allowed without authentication")
-        return AuthContext(identity="anonymous", scope=Scope.ADMIN)
+        if not NoAuthProvider._warned:
+            logger.warning(
+                "NoAuthProvider in use — grants READ only. "
+                "Do NOT use in production. Configure APIKeyAuthProvider instead."
+            )
+            NoAuthProvider._warned = True
+        return AuthContext(identity="anonymous", scope=Scope.READ)

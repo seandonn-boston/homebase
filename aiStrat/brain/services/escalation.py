@@ -145,11 +145,26 @@ class EscalationRouter:
 
         with self._lock:
             self._escalations.append(report)
-            # Prune oldest if over limit
+            # Prune oldest RESOLVED/DISMISSED only — never discard OPEN/ACKNOWLEDGED
             if len(self._escalations) > _MAX_ESCALATION_LOG_SIZE:
-                pruned = len(self._escalations) - _MAX_ESCALATION_LOG_SIZE
-                self._escalations = self._escalations[-_MAX_ESCALATION_LOG_SIZE:]
-                logger.info("Escalation log pruned: removed %d oldest entries", pruned)
+                active = [
+                    e for e in self._escalations
+                    if e.status in (EscalationStatus.OPEN, EscalationStatus.ACKNOWLEDGED)
+                ]
+                closed = [
+                    e for e in self._escalations
+                    if e.status not in (EscalationStatus.OPEN, EscalationStatus.ACKNOWLEDGED)
+                ]
+                # Keep all active + most recent closed up to limit
+                keep_closed = _MAX_ESCALATION_LOG_SIZE - len(active)
+                if keep_closed > 0:
+                    closed = closed[-keep_closed:]
+                else:
+                    closed = []
+                pruned = len(self._escalations) - len(active) - len(closed)
+                self._escalations = active + closed
+                if pruned > 0:
+                    logger.info("Escalation log pruned: removed %d resolved entries", pruned)
 
         logger.warning(
             "ESCALATION [%s] %s: %s (reporter=%s, project=%s)",

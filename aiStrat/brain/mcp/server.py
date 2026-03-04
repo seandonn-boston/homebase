@@ -32,6 +32,7 @@ from ..core.models import (
     EntryCategory,
     EntryLink,
     LinkType,
+    Provenance,
     ScoredEntry,
 )
 from ..core.retrieval import query as retrieval_query
@@ -223,7 +224,7 @@ class BrainServer:
                         metadata=antibody["metadata"],
                         source_agent=antibody.get("source_agent", "quarantine"),
                         source_session=antibody.get("source_session"),
-                        provenance="system",
+                        provenance=Provenance.SYSTEM,
                     )
                     antibody_id = self._store.add_entry(antibody_entry)
                     response["antibody_id"] = antibody_id
@@ -251,7 +252,12 @@ class BrainServer:
         embedding = self._embeddings.embed(f"{title} {content}")
 
         # Determine provenance from auth context if not explicitly set
-        effective_provenance = provenance or "agent"
+        prov_str = provenance or "agent"
+        try:
+            effective_provenance = Provenance(prov_str)
+        except ValueError:
+            logger.warning("Invalid provenance '%s', defaulting to AGENT", prov_str)
+            effective_provenance = Provenance.AGENT
 
         entry = Entry(
             project=project,
@@ -431,7 +437,7 @@ def _serialize_entry(entry: Entry) -> dict[str, Any]:
         "source_agent": entry.source_agent,
         "source_session": entry.source_session,
         "authority_tier": entry.authority_tier.value if entry.authority_tier else None,
-        "provenance": entry.provenance,
+        "provenance": entry.provenance.value if isinstance(entry.provenance, Provenance) else entry.provenance,
         "access_count": entry.access_count,
         "usefulness": entry.usefulness,
         "superseded_by": entry.superseded_by,

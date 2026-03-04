@@ -13,11 +13,14 @@ import hashlib
 import logging
 import os
 
+from ..core.models import Provenance
+
 logger = logging.getLogger(__name__)
 
 # SHA-256 of the seed_research.py file at v4 release.
 # Update this value when legitimate seed changes are made.
 # To recompute: python -c "import hashlib; print(hashlib.sha256(open('aiStrat/brain/seeds/seed_research.py','rb').read()).hexdigest())"
+_EXPECTED_CHECKSUM = "57abaa4b0dee4daa80170d1b24369b8c2192a04ba704323a101e6a2edd13dcb8"
 _SEED_FILE = os.path.join(os.path.dirname(__file__), "seed_research.py")
 
 # Known seed entry titles — if any are missing or changed, integrity check fails
@@ -78,7 +81,7 @@ def verify_seed_titles(brain) -> list[str]:
 
     # Get all entries with provenance="seed"
     entries = brain.store.list_entries(current_only=False)
-    seed_titles = {e.title for e in entries if e.provenance == "seed"}
+    seed_titles = {e.title for e in entries if e.provenance == Provenance.SEED}
 
     # Check for missing expected titles
     missing = EXPECTED_SEED_TITLES - seed_titles
@@ -101,6 +104,18 @@ def verify_seeds(warn_only: bool = False) -> bool:
     try:
         checksum = compute_seed_checksum()
         logger.info("Seed file checksum: %s", checksum)
+        if checksum != _EXPECTED_CHECKSUM:
+            msg = (
+                f"Seed file integrity check FAILED: "
+                f"expected {_EXPECTED_CHECKSUM[:16]}..., "
+                f"got {checksum[:16]}..."
+            )
+            if warn_only:
+                logger.warning(msg)
+                return True
+            logger.error(msg)
+            return False
+        logger.info("Seed file integrity check passed.")
         return True
     except FileNotFoundError:
         msg = "Seed file not found: %s" % _SEED_FILE

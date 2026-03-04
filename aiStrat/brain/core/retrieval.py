@@ -24,7 +24,7 @@ from collections import Counter
 from typing import Optional
 
 from .embeddings import EmbeddingProvider, cosine_similarity
-from .models import Entry, EntryCategory, ScoredEntry
+from .models import Entry, EntryCategory, Provenance, ScoredEntry
 from .store import BrainStore
 
 
@@ -64,12 +64,12 @@ WEIGHT_CATEGORY = 0.15
 WEIGHT_PROVENANCE = 0.05  # New: human > seed > agent > monitor
 
 # Provenance trust scores (0.0 to 1.0)
-_PROVENANCE_SCORES: dict[str, float] = {
-    "human": 1.0,
-    "seed": 0.8,
-    "system": 0.7,
-    "agent": 0.5,
-    "monitor": 0.3,
+_PROVENANCE_SCORES: dict[Provenance, float] = {
+    Provenance.HUMAN: 1.0,
+    Provenance.SEED: 0.8,
+    Provenance.SYSTEM: 0.7,
+    Provenance.AGENT: 0.5,
+    Provenance.MONITOR: 0.3,
 }
 
 # Max entries per category in results (diversity enforcement)
@@ -111,8 +111,11 @@ def _usefulness_score(entry: Entry, max_usefulness: int = 50) -> float:
 
 
 def _provenance_score(entry: Entry) -> float:
-    """Score based on entry provenance (source trust)."""
-    return _PROVENANCE_SCORES.get(entry.provenance, 0.3)
+    """Score based on entry provenance (source trust).
+
+    Unknown provenance values get 0.0 (untrusted), not 0.3.
+    """
+    return _PROVENANCE_SCORES.get(entry.provenance, 0.0)
 
 
 def _enforce_diversity(scored: list[ScoredEntry], limit: int) -> list[ScoredEntry]:
@@ -216,10 +219,14 @@ def query(
 
         scored.append(ScoredEntry(entry=entry, score=combined))
 
-        store.increment_access(entry.id)
-
     # Sort by combined score, descending
     scored.sort(key=lambda s: s.score, reverse=True)
 
     # Apply diversity enforcement
-    return _enforce_diversity(scored, limit)
+    results = _enforce_diversity(scored, limit)
+
+    # Increment access counts ONLY for entries actually returned
+    for se in results:
+        store.increment_access(se.entry.id)
+
+    return results
