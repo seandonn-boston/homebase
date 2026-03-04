@@ -517,7 +517,7 @@ def _analyze_semantics(entry: dict) -> list[ThreatSignal]:
                 description=f"Data poisoning: {description}",
             ))
 
-    # ── Pluggable semantic validator (Rec 5 extension point) ──
+    # ── Pluggable semantic validator extension point ──
     try:
         from .semantic_validator import get_validator, SemanticRisk
         validator = get_validator()

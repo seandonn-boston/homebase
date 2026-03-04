@@ -63,7 +63,7 @@ class TestStarDelta(unittest.TestCase):
         self.assertEqual(delta, 0)
 
     def test_known_repo_with_zero_stars_reports_correct_delta(self) -> None:
-        """v4: Fixed bug where prev=0 was treated as falsy."""
+        """Fixed bug where prev=0 was treated as falsy."""
         state = MonitorState(self.state_file)
         state.record_repo("test/repo", 0)
         delta = state.get_star_delta("test/repo", 500)
@@ -76,7 +76,7 @@ class TestStarDelta(unittest.TestCase):
         self.assertEqual(delta, 200)
 
     def test_implausible_delta_capped(self) -> None:
-        """v4: Plausibility check caps unreasonable deltas."""
+        """Plausibility check caps unreasonable deltas."""
         state = MonitorState(self.state_file)
         state.record_repo("test/repo", 100)
         delta = state.get_star_delta("test/repo", 100_000)
@@ -84,7 +84,7 @@ class TestStarDelta(unittest.TestCase):
 
 
 class TestSchemaValidation(unittest.TestCase):
-    """v4: Schema validation on load."""
+    """Schema validation on load."""
 
     def setUp(self) -> None:
         self.tmpdir = tempfile.mkdtemp()
