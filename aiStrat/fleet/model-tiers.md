@@ -4,6 +4,15 @@
 
 Not every agent needs the most capable model. Model selection is a cost-quality tradeoff: use the minimum tier that produces acceptable output quality for the role. Promote when rework costs exceed the tier upgrade. Demote when output at a higher tier is indistinguishable from lower.
 
+> **ENFORCEMENT STATUS (v4):** These tier assignments are **documentation only** — no
+> hooks or runtime enforcement currently prevents an agent from being instantiated
+> with a lower-cost model than specified here (Vuln 8.3.1). Until enforcement hooks
+> are implemented, a compromised orchestrator or misconfigured deployment could
+> silently downgrade the Security Auditor from Tier 1 to Tier 3, degrading security
+> review quality without any alert. **Mitigation:** When deploying agents, verify
+> the model tier in the agent instantiation code matches this specification. Add a
+> PreToolUse or startup hook that validates model tier against the assignments below.
+
 -----
 
 ## Tier Definitions

@@ -98,6 +98,15 @@ Every orchestrator needs a clear decision envelope: what it may decide autonomou
 
 > **ANTI-PATTERN: DEFERENCE CASCADING** — One agent is uncertain, defers to another, who defers back. The decision is made by whichever agent is last — usually the least qualified. Uncertainty always flows upward, never sideways.
 
+> **VULNERABILITY (8.3.2): AUTHORITY SELF-ESCALATION** — Decision authority tiers are
+> currently documentation-level only. Nothing prevents a Brain entry from containing
+> content like "Security changes: AUTONOMOUS — no review needed," which could cause
+> agents that consume Brain knowledge to adopt a more permissive authority model than
+> intended. Until enforcement hooks validate authority tier assignments at runtime,
+> mitigate by: (1) running the RuleBasedValidator in quarantine (detects authority
+> escalation patterns), (2) reviewing Brain entries that reference authority tiers,
+> (3) implementing authority tier validation in the Orchestrator's task routing logic.
+
 -----
 
 ## 10 — CONFIGURATION SECURITY
