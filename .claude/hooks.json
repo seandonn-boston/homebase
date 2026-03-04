@@ -3,14 +3,14 @@
     "PreToolUse": [
       {
         "matcher": "Write|Edit",
-        "command": "python -c \"import sys, os; path = os.environ.get('CLAUDE_FILE_PATH', ''); allowed = ['aiStrat/', 'src/', 'prisma/']; sys.exit(0 if any(path.startswith(a) or path.startswith(os.path.join(os.getcwd(), a)) for a in allowed) or not path else 1)\"",
-        "description": "Block modifications outside allowed directories (aiStrat/, src/, prisma/)"
+        "command": "python aiStrat/scripts/hooks/check_file_scope.py",
+        "description": "Block modifications outside allowed directories (aiStrat/, src/, prisma/, .claude/)"
       }
     ],
     "PostToolUse": [
       {
         "matcher": "Write|Edit",
-        "command": "python -c \"import sys, os; path = os.environ.get('CLAUDE_FILE_PATH', ''); ext = os.path.splitext(path)[1]; sys.exit(0) if ext != '.py' else None; os.system(f'python -m py_compile {path}') or sys.exit(0)\"",
+        "command": "python aiStrat/scripts/hooks/post_edit_check.py",
         "description": "Syntax-check Python files after modification"
       },
       {
@@ -22,7 +22,7 @@
     "SessionStart": [
       {
         "matcher": "",
-        "command": "python -c \"import os, json; halt_path = os.path.join('.claude', 'HALT'); print(f'WARNING: Brain is HALTED — {json.load(open(halt_path))[\\\"reason\\\"]}') if os.path.exists(halt_path) else None\"",
+        "command": "python aiStrat/scripts/hooks/session_halt_check.py",
         "description": "Check for active Brain halt on session start"
       }
     ]
