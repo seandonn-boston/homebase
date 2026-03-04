@@ -1,4 +1,8 @@
-# Critical Review: aiStrat/ v4
+# ARCHIVED — Critical Review: aiStrat/ v4
+
+> **STATUS: ARCHIVED.** This review was written on 2026-03-04 and rated the codebase 5.5/10.
+> It has been superseded by REVIEW-v5.md. Retained as historical record of the assessment
+> at that point in the codebase's evolution.
 
 **Reviewer:** Claude Opus 4.6 (independent adversarial analysis)
 **Date:** 2026-03-04
