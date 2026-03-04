@@ -3,8 +3,8 @@
 **Reviewer:** Claude Opus 4.6 (independent adversarial analysis)
 **Date:** 2026-03-04
 **Scope:** Every file in aiStrat/ — admiral/ (14 files), brain/ (19 files), fleet/ (33 files), monitor/ (17 files), scripts/ (2 files), pyproject.toml
-**Prior review:** REVIEW.md (2026-03-03, rated 3/10 after expanded analysis)
-**Context:** v4 was built explicitly in response to the REVIEW.md critique. This review evaluates whether the fixes hold, what remains broken, and what new problems the patches introduced.
+**Prior reviews:** REVIEW-v3.md (2026-03-03, rated 3/10), CRITIQUE-v4.md (2026-03-04, rated 4.5/10) — both archived in `admiral/archive/`
+**Context:** v4 was built in response to the v3 critique. A second independent review (CRITIQUE-v4.md) identified further gaps. The codebase has since been updated again: real embeddings added, provenance enforcement implemented, speculative discount wired into retrieval, and all v4/REVIEW.md reference markers stripped. This review reflects the current state.
 
 ---
 
@@ -26,7 +26,7 @@ Credit where earned. These changes are real, functioning, and address their targ
 
 7. **Metadata key whitelist** (`brain/core/models.py:22-38`). Unknown keys stripped, logged at WARNING. Prevents metadata schema poisoning.
 
-8. **Provenance tracking** (`brain/core/models.py:62-69`). Five-tier origin classification (human > seed > system > agent > monitor) with retrieval weighting.
+8. **Provenance tracking with scope enforcement** (`brain/core/models.py`, `brain/mcp/server.py`). Five-tier origin classification (human > seed > system > agent > monitor) with retrieval weighting. Provenance is now derived from auth context via `_resolve_provenance()` — WRITE scope is limited to agent/system/monitor; only ADMIN can claim human/seed. Known identity patterns (e.g., `monitor-service`) auto-resolve.
 
 9. **Antibody rate limiting and dedup** (`monitor/quarantine.py:552-626`). 50/hour cap, SHA-256 fingerprint dedup, bounded fingerprint set. Write amplification is substantially mitigated.
 
@@ -34,7 +34,7 @@ Credit where earned. These changes are real, functioning, and address their targ
 
 11. **Title normalization for dedup** (`monitor/sources/rss_feeds.py:112-120`). NFKC + strip + lower before hashing.
 
-12. **pyproject.toml** exists with declared dependencies.
+12. **pyproject.toml** exists with declared dependencies (including `openai` as optional extra via `aistrat[openai]`).
 
 13. **Traversal node limit** (`brain/core/store.py:32`). `_MAX_TRAVERSAL_NODES = 500` caps graph traversal.
 
@@ -71,25 +71,13 @@ The REVIEW.md identified this. v4 did not address it.
 
 **Impact:** The system's core value proposition — accumulated knowledge — is impossible. Every test, demo, and seed run starts from zero.
 
-### 2. Retrieval Is Random Noise
+### 2. ~~Retrieval Is Random Noise~~ PARTIALLY RESOLVED
 
-The `MockEmbeddingProvider` generates embeddings by hashing text with SHA-512 and converting byte pairs to floats:
+**Update:** `OpenAIEmbeddingProvider` now exists (`brain/core/embeddings.py`) and produces real semantic embeddings via OpenAI's `text-embedding-3-small`. The `bootstrap()` function auto-resolves to real embeddings when `openai` is installed and `OPENAI_API_KEY` is set, falling back to `MockEmbeddingProvider` with a clear warning. A dedicated test suite (`brain/tests/test_semantic_retrieval.py`) proves that database queries rank database entries above CSS/art entries.
 
-```python
-digest = hashlib.sha512(text.encode()).hexdigest()
-raw = []
-for i in range(EMBEDDING_DIMENSIONS):
-    byte_val = int(digest[(i * 2) % len(digest):(i * 2) % len(digest) + 2], 16)
-    raw.append((byte_val / 255.0) * 2 - 1)
-```
+**What remains:** The fallback path still uses `MockEmbeddingProvider` with hash-based pseudo-vectors. Any deployment without `OPENAI_API_KEY` silently degrades to noise-based retrieval. The `demo_e2e.py` still uses `min_score=0.0`. Tests outside of `test_semantic_retrieval.py` still use mock embeddings. The in-memory store problem (#1) still means all embeddings are lost on restart — real or not.
 
-SHA-512 is a cryptographic hash designed so that similar inputs produce dissimilar outputs. "database security best practices" and "database backup strategies" produce vectors with no more similarity than "database security best practices" and "chocolate cake recipe." The seven-signal retrieval pipeline carefully combines semantic similarity, project relevance, recency, usefulness, currency, category match, and provenance. The dominant signal (50% weight) is noise.
-
-The `demo_e2e.py` uses `min_score=0.0` (line 83), which means every entry matches every query. The demo's "ranked results" section (Step 3) displays results whose ordering is determined by the non-semantic signals (project, recency, usefulness, category, provenance) while the primary signal contributes randomness.
-
-The `embeddings.py` docstring mentions `OpenAIEmbeddingProvider` but no such class exists in the codebase. The only real embedding provider is the mock. The pyproject.toml lists `openai>=1.0` as an optional dependency, but no code uses it.
-
-**Impact:** The Brain cannot answer questions. It cannot find relevant knowledge. It returns entries in an order unrelated to the query's meaning.
+**Impact (revised):** The Brain *can* answer questions when properly configured. The semantic retrieval pipeline works. But the default path (no API key) still produces meaningless results, and there is no persistent vector index.
 
 ### 3. Zero Executable Agents
 
@@ -246,16 +234,11 @@ The API key auth system (`brain/mcp/auth.py`) is missing standard protections:
 
 The `NoAuthProvider` grants `Scope.READ` to any caller with any (including empty) token. Tests use this provider. If `NoAuthProvider` is accidentally deployed, all read operations are open.
 
-### 13. Seed Data Still Contains Speculative Claims
+### 13. ~~Seed Data Still Contains Speculative Claims~~ PARTIALLY RESOLVED
 
-v4 added "[UNVERIFIED BENCHMARKS]" markers and `speculative: True` metadata to the most problematic seed entries. This is a real improvement over presenting claims as fact.
+**Update:** The retrieval pipeline now includes an 8th signal — `_speculative_score()` — that penalizes entries with `metadata.speculative: True`. Speculative entries receive only 30% of the speculative weight (`_SPECULATIVE_DISCOUNT = 0.3`), causing them to rank structurally below verified entries. Similarity weight was rebalanced from 0.50 to 0.45 to make room for the 0.10 speculative weight.
 
-However:
-- The `speculative` metadata key is in the whitelist but **nothing in the retrieval pipeline checks it**. A query for "what models are available" returns speculative entries with the same ranking weight as verified ones.
-- Provenance scoring gives seeds 0.8 out of 1.0 (`_PROVENANCE_SCORES[Provenance.SEED] = 0.8`), just below human (1.0). Speculative seeds rank higher than agent-generated verified facts.
-- The warnings are in the `content` field, not in a structured field that retrieval can filter on. An agent consuming the entry must parse natural language warnings from the content body.
-
-Model names like "GPT-5.2 Pro," "DeepSeek V3.2-Speciale," and "Gemini 3 Pro" remain in the seed data. Whether these names are accurate as of March 2026 is verifiable but not verified by the framework.
+**What remains:** The speculative penalty is meaningful but modest — at 0.10 weight × 0.3 discount = 0.03 effective contribution for speculative entries vs. 0.10 for verified. A speculative entry with high semantic similarity could still outrank a verified entry with moderate similarity. Model names like "GPT-5.2 Pro," "DeepSeek V3.2-Speciale," and "Gemini 3 Pro" remain in the seed data. The content-inline warnings still require natural language parsing by consuming agents.
 
 ---
 
@@ -285,7 +268,7 @@ The framework warns against context bloat (CLAUDE.md should be under 150 lines).
 
 v4 did not address this. The fleet README added "start with 5-8 agents" guidance (good). But the admiral protocol itself — the meta-framework that governs how any agent operates — remains 4,000 lines of standing instructions.
 
-### 16. Self-Referential Authority
+### 16. Self-Referential Authority (Partially Mitigated)
 
 The Brain's knowledge is sourced from:
 - Seeds derived from research documents not in the repo
@@ -294,7 +277,9 @@ The Brain's knowledge is sourced from:
 
 None of these sources provide ground truth. Yet the framework's retrieval grounding protocol (Section 16) requires agents to cite Brain entries as evidence for decisions. This creates a closed epistemic loop: the Brain's contents are treated as authoritative because they are in the Brain, not because they have been verified against external reality.
 
-The provenance system partially addresses this by weighting human entries higher. But no entry in the current seed set has `Provenance.HUMAN`. All seeds have `Provenance.SEED`, which ranks at 0.8 — near-human authority for entries that were written by an AI agent during a research session.
+**Update:** Provenance is now enforced via auth scope ceiling (`_resolve_provenance()` in `server.py`). WRITE-scoped callers cannot claim `human` or `seed` provenance — they are capped at agent/system/monitor. Only ADMIN scope can claim human/seed. This prevents trust escalation attacks where a bot self-declares high-authority provenance. Combined with the speculative discount, the retrieval pipeline now structurally de-ranks unverified and bot-originated content.
+
+**What remains:** All seed entries still have `Provenance.SEED` (0.8 weight) — near-human authority for AI-written content. No entry has `Provenance.HUMAN`. The closed epistemic loop is mitigated but not broken.
 
 ---
 
@@ -332,28 +317,28 @@ The semantic validator — the layer meant to catch the most dangerous attacks (
 
 ## VII. RATING
 
-**Rating: 5/10**
+**Rating: 5.5/10**
 
-| Dimension | REVIEW.md (v3) | This review (v4) | Change | Rationale |
-|---|---|---|---|---|
-| Conceptual design | 7/10 | 7/10 | = | The insights remain strong. No new conceptual contributions in v4. |
-| Implementation | 2/10 | 4/10 | +2 | Auth, audit, quarantine hardening, rate limiting, provenance. Real improvements. Still in-memory, still mock embeddings, still no agents. |
-| Security | 3/10 | 5/10 | +2 | Auth closes the wide-open door. Quarantine fail-closed. Antibody rate limiting. But semantic poisoning unaddressed, auth is toy-grade, and 3 governance modules aren't wired in. |
-| Practicality | 2/10 | 2/10 | = | Still no runnable deployment path. Still 4,000 lines of protocol overhead. Still no hooks. Governance modules are dead code. |
-| Honesty | 5/10 | 7/10 | +2 | Seed data marked speculative. Fleet README admits aspirational scope. Demo lists what it doesn't prove. Quality check script still lies about verification. |
-| Documentation quality | 7/10 | 7/10 | = | Still well-organized and clearly written. |
+| Dimension | v3 | v4 (prev) | Current | Change | Rationale |
+|---|---|---|---|---|---|
+| Conceptual design | 7/10 | 7/10 | 7/10 | = | The insights remain strong. No new conceptual contributions. |
+| Implementation | 2/10 | 4/10 | 5/10 | +1 | Real embeddings exist (OpenAI). Bootstrap auto-resolves. Semantic retrieval tests prove the pipeline works. Provenance enforcement is real code, not just schema. Still in-memory, still no agents. |
+| Security | 3/10 | 5/10 | 5.5/10 | +0.5 | Provenance scope ceiling prevents trust escalation. Speculative discount penalizes unverified claims. Semantic poisoning still unaddressed by LLM validation. |
+| Practicality | 2/10 | 2/10 | 2/10 | = | Still no runnable deployment path. Still 4,000 lines of protocol overhead. Still no hooks. Governance modules are dead code. |
+| Honesty | 5/10 | 7/10 | 7.5/10 | +0.5 | v4/REVIEW.md markers stripped (no more stale self-references). Old reviews properly archived with status headers. Codebase no longer claims fixes by citing the review that prompted them. |
+| Documentation quality | 7/10 | 7/10 | 7/10 | = | Still well-organized and clearly written. |
 
-**Movement: 3/10 → 5/10 (+2 points)**
+**Movement: 3/10 → 5/10 → 5.5/10 (+0.5 from last review)**
 
-The v4 patches demonstrate that the framework's author is responsive to criticism and capable of implementing real fixes. The auth module, quarantine hardening, and antibody rate limiting are not cosmetic — they close genuine attack vectors. The honesty improvements (speculative markers, aspirational disclaimers) build credibility.
+The latest changes address one of the three structural blockers identified previously: **retrieval is no longer meaningless** when configured with real embeddings. The `OpenAIEmbeddingProvider` + `test_semantic_retrieval.py` combination proves the pipeline works end-to-end for semantic queries. Provenance enforcement via scope ceiling is a genuine security improvement over self-declared provenance. The archival of stale reviews and stripping of v4 markers improves codebase honesty.
 
-The +2 is capped by three immovable structural problems:
+The +0.5 (rather than +1) reflects that:
 
-1. **In-memory storage** makes the Brain's value proposition physically impossible.
-2. **Mock embeddings** make retrieval physically meaningless.
-3. **Zero executable agents** means the fleet does not exist as software.
+1. **In-memory storage** still makes the Brain's value proposition physically impossible — real embeddings don't help if they vanish on restart.
+2. **Mock embeddings remain the default** when no API key is set, with only a warning-level log.
+3. **Zero executable agents** — the fleet still does not exist as software.
 
-Until one of these three changes, the framework remains a design document with a working quarantine module, an in-memory CRUD service, and a well-organized markdown library.
+The improvement trajectory is real. Two of the original three blockers remain.
 
 ---
 
@@ -361,14 +346,16 @@ Until one of these three changes, the framework remains a design document with a
 
 Each of these independently shifts the rating:
 
-| Change | Rating impact | Why |
-|---|---|---|
-| Real embeddings (OpenAI, local model, anything semantic) | +1 | Retrieval becomes meaningful. The Brain can actually answer questions. |
-| Postgres adapter (even SQLite) | +1 | Knowledge survives restarts. The Brain can actually remember. |
-| Wire halt/escalation/coherence into BrainServer | +0.5 | Governance modules stop being dead code. |
-| One executable agent (system prompt + routing + tool access) | +1 | The fleet produces an agent, not just a specification. |
-| LLM-based semantic validation in quarantine | +0.5 | The most dangerous attack vector gets a real defense. |
-| Hook definitions (even 3-5 basic hooks) | +0.5 | The framework's first principle gets a first implementation. |
-| Fix quality_check.py to compare against stored checksum | +0 (but stops it from lying) | Currently claims verification without verifying. |
+| Change | Rating impact | Status | Why |
+|---|---|---|---|
+| ~~Real embeddings~~ | ~~+1~~ | **DONE** | `OpenAIEmbeddingProvider` works. Semantic retrieval tests pass. |
+| ~~Speculative discount in retrieval~~ | ~~+0.25~~ | **DONE** | 8th signal penalizes `speculative: True` entries. |
+| ~~Provenance enforcement~~ | ~~+0.25~~ | **DONE** | Scope ceiling prevents trust escalation. |
+| Postgres adapter (even SQLite) | +1 | Open | Knowledge survives restarts. The Brain can actually remember. |
+| Wire halt/escalation/coherence into BrainServer | +0.5 | Open | Governance modules stop being dead code. |
+| One executable agent (system prompt + routing + tool access) | +1 | Open | The fleet produces an agent, not just a specification. |
+| LLM-based semantic validation in quarantine | +0.5 | Open | The most dangerous attack vector gets a real defense. |
+| Hook definitions (even 3-5 basic hooks) | +0.5 | Open | The framework's first principle gets a first implementation. |
+| Fix quality_check.py to compare against stored checksum | +0 (but stops it from lying) | Open | Currently claims verification without verifying. |
 
-All of the above: **5/10 → 9.5/10**. The conceptual design is genuinely strong. The gap is entirely execution.
+Remaining open items: **5.5/10 → 9/10**. The conceptual design is genuinely strong. The gap is narrowing but remains primarily execution.
