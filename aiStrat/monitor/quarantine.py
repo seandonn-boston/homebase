@@ -457,7 +457,7 @@ def _scan_injections(entry: dict) -> list[ThreatSignal]:
 def _analyze_semantics(entry: dict) -> list[ThreatSignal]:
     """Detect semantic-level threats: authority spoofing, false credentials, etc.
 
-    v4: Now also invokes the pluggable SemanticValidator (from semantic_validator.py)
+    Also invokes the pluggable SemanticValidator (from semantic_validator.py)
     to detect dangerous technical advice that regex cannot catch. The validator
     is configurable — default is RuleBasedValidator, future: LLM-based.
     """
@@ -517,7 +517,7 @@ def _analyze_semantics(entry: dict) -> list[ThreatSignal]:
                 description=f"Data poisoning: {description}",
             ))
 
-    # ── Pluggable semantic validator (Rec 5 extension point) ──
+    # ── Pluggable semantic validator extension point ──
     try:
         from .semantic_validator import get_validator, SemanticRisk
         validator = get_validator()
@@ -559,7 +559,7 @@ class _AntibodyTracker:
     Prevents write amplification attacks where an adversary floods
     quarantine to generate unbounded antibody entries.
 
-    v4: Added to address Vuln 4.4 — antibody write amplifier.
+    Prevents unbounded antibody generation from flooding attacks.
     """
 
     # Cap fingerprint set size to prevent unbounded memory growth
@@ -866,7 +866,7 @@ def batch_quarantine(entries: list[dict]) -> tuple[list[dict], list[dict], list[
     """Process a batch of entries through quarantine.
 
     Antibody generation is rate-limited across the entire batch to prevent
-    write amplification attacks (v4: Vuln 4.4).
+    write amplification attacks.
 
     Returns:
         Tuple of (clean_entries, sanitized_entries, antibodies)

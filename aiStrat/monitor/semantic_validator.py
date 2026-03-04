@@ -17,8 +17,6 @@ Implementations:
                             whether technical advice is sound
 
 Integration point: quarantine.py Layer 3 calls the registered validator.
-
-Reference: REVIEW.md Rec 5, Vuln 8.1.4.
 """
 
 from __future__ import annotations
@@ -80,7 +78,7 @@ class SemanticValidator(Protocol):
     safe — i.e., whether the technical advice/patterns/claims are sound
     and not subtly dangerous.
 
-    This is the extension point for LLM-based validation (Rec 5).
+    This is the extension point for LLM-based validation.
     """
 
     def validate(self, entry: dict) -> SemanticValidationResult:

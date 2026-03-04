@@ -3,8 +3,6 @@
 Verifies that cumulative bias drift detection correctly identifies
 when multiple individually-benign entries collectively weaken
 the system's security/quality posture.
-
-Reference: REVIEW.md Vuln 8.3.3 — Cumulative Bias Amplification.
 """
 
 from __future__ import annotations

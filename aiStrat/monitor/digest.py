@@ -160,10 +160,10 @@ def _md_escape(text: str) -> str:
     tables, list markers, strikethrough, and formatting that could be
     used for injection when content is rendered.
 
-    v4: Added escaping for blockquotes (>), table pipes (|), list markers
+    Also escapes blockquotes (>), table pipes (|), list markers
     (-/*/+ at line start), image syntax (!), single backticks, and
     strikethrough (~~). Uses html.parser for robust HTML stripping
-    instead of regex (Vuln 8.2.7).
+    instead of regex.
     """
     if not text:
         return ""

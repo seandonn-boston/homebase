@@ -1,7 +1,5 @@
 """MCP server exposing the Brain tools with authentication and quarantine.
 
-Implements the Knowledge Protocol from admiral/part5-brain.md, Section 16.
-
 Tools:
   brain_record     — Record a new entry (with quarantine validation)
   brain_query      — Semantic search across entries
@@ -11,12 +9,9 @@ Tools:
   brain_status     — Health and statistics (unauthenticated)
   brain_audit      — Query audit trail (read scope)
 
-All write operations pass through the immune system (quarantine module)
-which validates content against prompt injection, XSS, SQL injection,
-PII/secret exposure, authority spoofing, and data poisoning attacks.
-
-v4: Added authentication, scoped authorization, metadata schema
-    validation, and fail-closed quarantine.
+All write operations pass through the quarantine module which validates
+content against prompt injection, XSS, SQL injection, PII/secret
+exposure, authority spoofing, and data poisoning attacks.
 """
 
 from __future__ import annotations
@@ -58,17 +53,66 @@ except ImportError:
     )
 
 
+# ── Provenance resolution ─────────────────────────────────────────
+# Auth scope constrains which provenance levels a caller can claim.
+# This prevents trust escalation — a bot with WRITE scope cannot
+# self-declare provenance="human" to get top-tier retrieval weight.
+_SCOPE_PROVENANCE_CEILING: dict[Scope, set[Provenance]] = {
+    Scope.READ: set(),  # READ scope cannot write entries
+    Scope.WRITE: {Provenance.AGENT, Provenance.SYSTEM, Provenance.MONITOR},
+    Scope.ADMIN: {Provenance.HUMAN, Provenance.SEED, Provenance.AGENT, Provenance.SYSTEM, Provenance.MONITOR},
+}
+
+# Identity patterns that map to specific provenance levels
+_IDENTITY_PROVENANCE: dict[str, Provenance] = {
+    "monitor": Provenance.MONITOR,
+    "monitor-service": Provenance.MONITOR,
+    "seed-loader": Provenance.SEED,
+}
+
+
+def _resolve_provenance(ctx: AuthContext, requested: str | None) -> Provenance:
+    """Determine effective provenance from auth context and request.
+
+    Rules:
+    - ADMIN scope can claim any provenance (human, seed, agent, system, monitor)
+    - WRITE scope is limited to agent, system, or monitor
+    - Known identity patterns (e.g., "monitor-service") override to their provenance
+    - If the requested provenance exceeds scope ceiling, it's downgraded to AGENT
+    """
+    # Identity-based override (takes precedence)
+    identity_prov = _IDENTITY_PROVENANCE.get(ctx.identity)
+    if identity_prov is not None:
+        return identity_prov
+
+    # Parse requested provenance
+    if requested:
+        try:
+            prov = Provenance(requested)
+        except ValueError:
+            logger.warning("Invalid provenance '%s', defaulting to AGENT", requested)
+            return Provenance.AGENT
+    else:
+        prov = Provenance.AGENT
+
+    # Enforce scope ceiling
+    allowed = _SCOPE_PROVENANCE_CEILING.get(ctx.scope, set())
+    if prov not in allowed:
+        logger.warning(
+            "Provenance '%s' exceeds scope '%s' ceiling for caller '%s'. "
+            "Downgrading to AGENT.",
+            prov.value, ctx.scope.value, ctx.identity,
+        )
+        return Provenance.AGENT
+
+    return prov
+
+
 class BrainServer:
     """Handler for all Brain MCP tools.
 
     Wraps the store, embedding provider, and retrieval pipeline
-    behind the MCP tool interface defined in Section 16.
-
-    v4 changes:
-    - Authentication required on all tools except brain_status
-    - Scoped authorization: read/write/admin
-    - Metadata schema validation with key whitelist
-    - Fail-closed quarantine (strict_mode=True by default)
+    behind the MCP tool interface.
     """
 
     def __init__(
@@ -158,6 +202,10 @@ class BrainServer:
         Requires write scope. All entries pass through quarantine validation
         before admission. Hostile content is rejected and converted into
         antibody (FAILURE) entries.
+
+        Provenance is derived from auth context — callers cannot self-declare
+        higher trust than their scope permits. ADMIN scope can claim any
+        provenance; WRITE scope is limited to agent/system/monitor.
 
         Returns:
             {"id": entry_id} on success
@@ -251,13 +299,9 @@ class BrainServer:
         # Generate embedding from title + content
         embedding = self._embeddings.embed(f"{title} {content}")
 
-        # Determine provenance from auth context if not explicitly set
-        prov_str = provenance or "agent"
-        try:
-            effective_provenance = Provenance(prov_str)
-        except ValueError:
-            logger.warning("Invalid provenance '%s', defaulting to AGENT", prov_str)
-            effective_provenance = Provenance.AGENT
+        # Provenance derived from auth context — callers cannot self-declare
+        # higher trust than their scope permits.
+        effective_provenance = _resolve_provenance(ctx, provenance)
 
         entry = Entry(
             project=project,
@@ -387,12 +431,8 @@ class BrainServer:
         limit: int = 100,
         token: str | None = None,
     ) -> list[dict[str, Any]]:
-        """Query the audit trail. Requires read scope.
-
-        v4: Added for Vuln 8.1.8 — no audit trail.
-        """
+        """Query the audit trail. Requires read scope."""
         self._authenticate(token, Scope.READ)
-        from ..core.store import AuditEntry
         entries = self._store.audit.query(
             entry_id=entry_id,
             operation=operation,

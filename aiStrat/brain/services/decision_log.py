@@ -1,17 +1,13 @@
-"""Append-only decision log for the Fleet Brain.
+"""Bounded decision buffer for the Fleet Brain.
 
-Records significant decisions made by agents, the Admiral, or the system
-itself. Unlike Brain entries (which are knowledge), decision log records
-capture the reasoning process: what was decided, why, by whom, and what
-alternatives were considered.
+Records significant decisions made by agents, the Admiral, or the system.
+Unlike Brain entries (which are knowledge), decision records capture the
+reasoning process: what was decided, why, by whom, and alternatives.
 
-The log is append-only — entries cannot be modified or deleted, ensuring
-a tamper-resistant audit trail for post-incident review and learning.
-
-v4: Added for governance and auditability — every significant decision
-    leaves a trace that can be queried and reviewed.
-
-Reference: admiral/part5-brain.md, Section 15.
+Entries are append-only within the buffer, but the buffer is bounded to
+_MAX_DECISION_LOG_SIZE entries. Oldest entries are pruned when the limit
+is exceeded. For durable append-only persistence, pipe entries to an
+external store (Postgres, file-based log) before they leave the buffer.
 """
 
 from __future__ import annotations
@@ -58,10 +54,11 @@ class DecisionEntry:
 
 
 class DecisionLog:
-    """Append-only log of decisions made across the fleet.
+    """Bounded decision buffer for fleet governance.
 
-    Thread-safe. Bounded to _MAX_DECISION_LOG_SIZE entries (oldest pruned
-    when limit is exceeded).
+    Thread-safe. Entries are immutable once written. The buffer is bounded
+    to _MAX_DECISION_LOG_SIZE entries — when full, the oldest entries are
+    pruned. For durable retention, export entries before they age out.
 
     Usage:
         log = DecisionLog()
@@ -73,8 +70,6 @@ class DecisionLog:
             project="fleet-admiral",
         )
         recent = log.query_decisions(project="fleet-admiral", limit=10)
-
-    v4: Append-only design ensures tamper-resistant decision audit trail.
     """
 
     def __init__(self) -> None:
@@ -106,8 +101,6 @@ class DecisionLog:
 
         Returns:
             The unique ID of the new decision entry.
-
-        v4: Every significant decision is logged for governance review.
         """
         entry = DecisionEntry(
             decision=decision,
@@ -122,10 +115,7 @@ class DecisionLog:
 
         with self._lock:
             self._log.append(entry)
-            # Prune oldest if over limit.
-            # WARNING: This violates the append-only invariant. In production,
-            # decisions should be persisted to durable storage before pruning
-            # from the in-memory log.
+            # Prune oldest if over limit — buffer is bounded, not unbounded.
             if len(self._log) > _MAX_DECISION_LOG_SIZE:
                 pruned = len(self._log) - _MAX_DECISION_LOG_SIZE
                 self._log = self._log[-_MAX_DECISION_LOG_SIZE:]

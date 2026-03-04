@@ -1,9 +1,15 @@
-# Critical Review: aiStrat/
+# ARCHIVED — Critical Review: aiStrat/ (v3)
+
+> **STATUS: ARCHIVED.** This review was written against the v3 codebase on 2026-03-03.
+> Many vulnerabilities identified here were resolved in v4 (auth, audit trail, usefulness bounds,
+> metadata whitelist, cycle detection, defusedxml, antibody rate limiting). This document is
+> retained as historical record of the issues that drove v4 development. Do not treat claims
+> in this document as current — refer to the codebase directly.
 
 **Reviewer:** Claude Opus 4.6 (adversarial analysis mode)
 **Date:** 2026-03-03
 **Scope:** Every file in aiStrat/ — admiral/ (13 files), brain/ (16 files), fleet/ (33 files), monitor/ (17 files)
-**Verdict:** The framework contains genuine intellectual contributions buried under fatal structural problems. It describes a sophisticated system; it implements almost none of it.
+**Original Verdict:** The framework contains genuine intellectual contributions buried under fatal structural problems. It describes a sophisticated system; it implements almost none of it.
 
 ---
 

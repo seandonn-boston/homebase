@@ -2,9 +2,9 @@
 
 Validates the core pipeline: record → embed → store → query → retrieve.
 
-v4: Updated for authentication, audit trail, scoped authorization,
-    usefulness bounds, circular supersession detection, provenance,
-    metadata whitelist, and result diversity.
+Covers authentication, audit trail, scoped authorization,
+usefulness bounds, circular supersession detection, provenance,
+metadata whitelist, and result diversity.
 """
 
 from __future__ import annotations
@@ -192,7 +192,7 @@ class TestBrainStrengthen(unittest.TestCase):
         self.assertEqual(result["usefulness"], 1)
 
     def test_strengthen_bounded_at_max(self) -> None:
-        """v4: Usefulness clamped at [-100, 100] (Vuln 8.1.2)."""
+        """Usefulness clamped at [-100, 100]."""
         entry = self.brain.store.get_entry(self.entry_id)
         entry.usefulness = 99
         result = self.brain.server.brain_strengthen(id=self.entry_id, useful=True, token=_TEST_TOKEN)
@@ -249,14 +249,14 @@ class TestBrainSupersede(unittest.TestCase):
         self.assertIn(self.new_id, ids)
 
     def test_supersede_requires_admin(self) -> None:
-        """v4: Supersede requires admin scope (Vuln 8.1.3)."""
+        """Supersede requires admin scope."""
         with self.assertRaises(AuthorizationError):
             self.brain.server.brain_supersede(
                 old_id=self.old_id, new_id=self.new_id, token=_TEST_TOKEN,
             )
 
     def test_supersede_circular_rejected(self) -> None:
-        """v4: Circular supersession detected and rejected."""
+        """Circular supersession detected and rejected."""
         self.brain.server.brain_supersede(old_id=self.old_id, new_id=self.new_id, token=_ADMIN_TOKEN)
         with self.assertRaises(ValueError):
             self.brain.store.supersede(self.new_id, self.old_id)
@@ -295,13 +295,13 @@ class TestBrainStatus(unittest.TestCase):
         self.assertEqual(status_a["by_category"]["lesson"], 1)
 
     def test_status_includes_audit_log_size(self) -> None:
-        """v4: Status includes audit log size."""
+        """Status includes audit log size."""
         status = self.brain.server.brain_status()
         self.assertIn("audit_log_size", status)
 
 
 class TestAuditTrail(unittest.TestCase):
-    """v4: Tests for the audit trail (Vuln 8.1.8)."""
+    """Tests for the audit trail."""
 
     def setUp(self) -> None:
         self.brain = _make_brain()
@@ -377,7 +377,7 @@ class TestRetrievalSignals(unittest.TestCase):
         self.assertIsNone(_infer_category("tell me about the project"))
 
     def test_infer_category_word_boundary(self) -> None:
-        """v4: 'error handling' should NOT match FAILURE (Vuln 8.1.5)."""
+        """'error handling' should NOT match FAILURE."""
         self.assertIsNone(_infer_category("error handling strategy"))
         self.assertEqual(_infer_category("what failed?"), EntryCategory.FAILURE)
 
@@ -393,7 +393,7 @@ class TestRetrievalSignals(unittest.TestCase):
         self.assertEqual(score, 0.0)
 
     def test_usefulness_score_center(self) -> None:
-        """v4: Zero usefulness maps to 0.5 (preserves negative signal)."""
+        """Zero usefulness maps to 0.5 (preserves negative signal)."""
         entry = Entry(project="p", category=EntryCategory.DECISION, title="t", content="c")
         self.assertEqual(_usefulness_score(entry), 0.5)
 
@@ -403,7 +403,7 @@ class TestRetrievalSignals(unittest.TestCase):
         self.assertEqual(_usefulness_score(entry, max_usefulness=50), 1.0)
 
     def test_usefulness_score_negative(self) -> None:
-        """v4: Negative usefulness maps to (0.0, 0.5)."""
+        """Negative usefulness maps to (0.0, 0.5)."""
         entry = Entry(project="p", category=EntryCategory.DECISION, title="t", content="c")
         entry.usefulness = -25
         score = _usefulness_score(entry, max_usefulness=50)
@@ -411,7 +411,7 @@ class TestRetrievalSignals(unittest.TestCase):
         self.assertLess(score, 0.5)
 
     def test_provenance_score(self) -> None:
-        """v4: Human > seed > agent > monitor (Vuln 8.1.4)."""
+        """Human > seed > agent > monitor provenance ordering."""
         e_human = Entry(project="p", category=EntryCategory.DECISION, title="t", content="c", provenance=Provenance.HUMAN)
         e_seed = Entry(project="p", category=EntryCategory.DECISION, title="t", content="c", provenance=Provenance.SEED)
         e_agent = Entry(project="p", category=EntryCategory.DECISION, title="t", content="c", provenance=Provenance.AGENT)
@@ -529,7 +529,7 @@ class TestRetrievalSignals(unittest.TestCase):
 
 
 class TestCircularLinks(unittest.TestCase):
-    """v4: Tests for cycle detection in link traversal (Vuln 8.1.1)."""
+    """Tests for cycle detection in link traversal."""
 
     def test_cycle_terminates(self) -> None:
         brain = _make_brain()

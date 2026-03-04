@@ -44,8 +44,8 @@ ALLOWED_DOMAINS = frozenset([
     "docs.cohere.com",
     "x.ai",
     "ollama.com",
-    # v4: raw.githubusercontent.com removed — use org-scoped validation instead
-    # (Vuln 8.2.3: anyone can host content on raw.githubusercontent.com)
+    # raw.githubusercontent.com removed — use org-scoped validation instead
+    # (anyone can host content on raw.githubusercontent.com)
 ])
 
 # Trusted GitHub orgs whose raw.githubusercontent.com content is allowed
@@ -127,9 +127,9 @@ def content_hash(text: str) -> str:
 def _validate_url(url: str) -> str:
     """Validate and normalize a URL. Returns empty string if invalid.
 
-    v4: Uses urllib.parse.urlparse for domain extraction instead of
-    string splitting, preventing bypass via userinfo@ or port tricks.
-    Also validates BEFORE fetch, not just after redirect (Vuln 8.2.3).
+    Uses urllib.parse.urlparse for domain extraction instead of string
+    splitting, preventing bypass via userinfo@ or port tricks. Validates
+    before fetch, not just after redirect.
     """
     if not url or not isinstance(url, str):
         return ""
@@ -152,7 +152,7 @@ def _validate_url(url: str) -> str:
 def _is_allowed_domain(url: str) -> bool:
     """Check if a URL is on an allowed domain.
 
-    v4: Uses urllib.parse.urlparse().hostname for proper domain extraction.
+    Uses urllib.parse.urlparse().hostname for proper domain extraction.
     Removed subdomain wildcard matching (domain.endswith("." + allowed))
     which allowed bypass via e.g. 'anthropic.com.attacker.com'.
     Added org-scoped validation for raw.githubusercontent.com.

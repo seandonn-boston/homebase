@@ -3,11 +3,6 @@
 Provides the same interface that a Postgres-backed store would,
 using Python data structures and threading locks. Swap this for
 a Postgres adapter in production without changing callers.
-
-v4: Added usefulness bounds, cycle detection, supersession chain
-    protection, max traversal limits, audit trail.
-
-Reference: admiral/part5-brain.md, Section 15.
 """
 
 from __future__ import annotations
@@ -39,10 +34,7 @@ _MAX_AUDIT_LOG_SIZE = 10_000  # Max audit entries kept in memory
 
 @dataclass
 class AuditEntry:
-    """A record of a mutation or significant access in the Brain.
-
-    v4: Added for Vuln 8.1.8 — no audit trail.
-    """
+    """A record of a mutation or significant access in the Brain."""
     timestamp: float = field(default_factory=time.time)
     operation: str = ""           # record, strengthen, supersede, unsupersede, access
     caller_identity: str = ""     # Who performed the operation
@@ -101,10 +93,7 @@ class AuditLog:
 
 
 class BrainStore:
-    """Thread-safe in-memory store for Brain entries and links.
-
-    v4: Includes audit trail for all mutations.
-    """
+    """Thread-safe in-memory store for Brain entries and links."""
 
     def __init__(self) -> None:
         self._lock = threading.Lock()

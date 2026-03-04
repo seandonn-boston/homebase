@@ -385,13 +385,13 @@ _MAX_INJECTION_MARKERS = 3  # Reject entirely if this many markers found
 def _sanitize_text(text: str) -> str:
     """Remove potentially dangerous content from text headed for Brain storage.
 
-    v4: Changed from flag-appending to actual REDACTION of injection patterns.
+    Changed from flag-appending to actual REDACTION of injection patterns.
     Previous behavior appended '[QUARANTINE FLAG: ...]' which preserved the
     dangerous content. Now the matched content is replaced with [REDACTED].
     Text with 3+ distinct injection markers is rejected entirely.
 
     Also: HTML entity decoding + Unicode normalization before matching
-    to catch obfuscated attacks like '&#106;avascript:' (Vuln 8.2.2).
+    to catch obfuscated attacks like '&#106;avascript:'.
     """
     if not text:
         return ""
