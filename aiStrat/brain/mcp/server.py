@@ -19,6 +19,8 @@ from __future__ import annotations
 import logging
 from typing import Any, Optional
 
+import time
+
 from ..core.embeddings import EmbeddingProvider
 from ..core.models import (
     ALLOWED_METADATA_KEYS,
@@ -35,6 +37,15 @@ from ..core.store import BrainStore
 from .auth import AuthContext, AuthenticationError, AuthorizationError, AuthProvider, Scope
 
 logger = logging.getLogger(__name__)
+
+# ── Safety limits ─────────────────────────────────────────────
+_MAX_TITLE_LENGTH = 500        # Characters
+_MAX_CONTENT_LENGTH = 100_000  # Characters (~100KB)
+_MAX_METADATA_VALUE_LENGTH = 10_000  # Characters per metadata value
+_MAX_METADATA_NESTING_DEPTH = 3      # Max nesting depth for metadata values
+_RATE_LIMIT_WINDOW = 60        # Seconds
+_RATE_LIMIT_MAX_WRITES = 60    # Max write operations per identity per window
+_RATE_LIMIT_MAX_READS = 300    # Max read operations per identity per window
 
 # ── Quarantine availability (resolved at import time) ──────────────
 _quarantine_available = False
@@ -78,12 +89,22 @@ def _resolve_provenance(ctx: AuthContext, requested: str | None) -> Provenance:
     - ADMIN scope can claim any provenance (human, seed, agent, system, monitor)
     - WRITE scope is limited to agent, system, or monitor
     - Known identity patterns (e.g., "monitor-service") override to their provenance
+      BUT only if the identity's provenance is within the caller's scope ceiling
     - If the requested provenance exceeds scope ceiling, it's downgraded to AGENT
     """
-    # Identity-based override (takes precedence)
+    allowed = _SCOPE_PROVENANCE_CEILING.get(ctx.scope, set())
+
+    # Identity-based override — still subject to scope ceiling
     identity_prov = _IDENTITY_PROVENANCE.get(ctx.identity)
     if identity_prov is not None:
-        return identity_prov
+        if identity_prov in allowed:
+            return identity_prov
+        logger.warning(
+            "Identity '%s' maps to provenance '%s' but scope '%s' does not permit it. "
+            "Downgrading to AGENT.",
+            ctx.identity, identity_prov.value, ctx.scope.value,
+        )
+        return Provenance.AGENT
 
     # Parse requested provenance
     if requested:
@@ -96,7 +117,6 @@ def _resolve_provenance(ctx: AuthContext, requested: str | None) -> Provenance:
         prov = Provenance.AGENT
 
     # Enforce scope ceiling
-    allowed = _SCOPE_PROVENANCE_CEILING.get(ctx.scope, set())
     if prov not in allowed:
         logger.warning(
             "Provenance '%s' exceeds scope '%s' ceiling for caller '%s'. "
@@ -106,6 +126,32 @@ def _resolve_provenance(ctx: AuthContext, requested: str | None) -> Provenance:
         return Provenance.AGENT
 
     return prov
+
+
+class _RateLimiter:
+    """Per-identity sliding window rate limiter."""
+
+    def __init__(self, window: int = _RATE_LIMIT_WINDOW) -> None:
+        import threading
+        self._lock = threading.Lock()
+        self._window = window
+        # identity -> list of timestamps
+        self._calls: dict[str, list[float]] = {}
+
+    def check(self, identity: str, limit: int) -> bool:
+        """Return True if allowed, False if rate limited."""
+        now = time.time()
+        cutoff = now - self._window
+        with self._lock:
+            calls = self._calls.get(identity, [])
+            # Prune old entries
+            calls = [t for t in calls if t > cutoff]
+            if len(calls) >= limit:
+                self._calls[identity] = calls
+                return False
+            calls.append(now)
+            self._calls[identity] = calls
+            return True
 
 
 class BrainServer:
@@ -126,6 +172,13 @@ class BrainServer:
         self._embeddings = embedding_provider
         self._auth = auth_provider
         self._strict_mode = strict_mode
+        self._write_limiter = _RateLimiter()
+        self._read_limiter = _RateLimiter()
+
+        # Governance modules (wired in, checked on writes)
+        self._halt_manager = None
+        self._escalation_router = None
+        self._decision_log = None
 
         if not _quarantine_available and self._strict_mode:
             logger.warning(
@@ -157,11 +210,41 @@ class BrainServer:
         return ctx
 
     @staticmethod
+    def _sanitize_metadata_value(value: Any, depth: int = 0) -> Any:
+        """Recursively sanitize a metadata value with depth and length limits."""
+        if depth >= _MAX_METADATA_NESTING_DEPTH:
+            return "[truncated: max nesting depth]"
+
+        if isinstance(value, str):
+            if len(value) > _MAX_METADATA_VALUE_LENGTH:
+                logger.warning(
+                    "Metadata value truncated from %d to %d chars",
+                    len(value), _MAX_METADATA_VALUE_LENGTH,
+                )
+                return value[:_MAX_METADATA_VALUE_LENGTH]
+            return value
+        elif isinstance(value, (int, float, bool)) or value is None:
+            return value
+        elif isinstance(value, list):
+            return [
+                BrainServer._sanitize_metadata_value(item, depth + 1)
+                for item in value[:100]  # Cap list length
+            ]
+        elif isinstance(value, dict):
+            return {
+                str(k)[:200]: BrainServer._sanitize_metadata_value(v, depth + 1)
+                for k, v in list(value.items())[:50]  # Cap dict size
+            }
+        else:
+            return str(value)[:_MAX_METADATA_VALUE_LENGTH]
+
+    @staticmethod
     def _sanitize_metadata(metadata: dict | None) -> dict:
         """Strip unknown keys from metadata and enforce schema.
 
         Only keys in ALLOWED_METADATA_KEYS are retained.
         Unknown keys are logged at WARNING level.
+        Values are recursively sanitized with depth and length limits.
         """
         if not metadata:
             return {}
@@ -170,7 +253,7 @@ class BrainServer:
         stripped = []
         for key, value in metadata.items():
             if key in ALLOWED_METADATA_KEYS:
-                clean[key] = value
+                clean[key] = BrainServer._sanitize_metadata_value(value)
             else:
                 stripped.append(key)
 
@@ -212,6 +295,24 @@ class BrainServer:
             {"rejected": True, "reason": ..., "antibody_id": ...} if blocked
         """
         ctx = self._authenticate(token, Scope.WRITE)
+
+        # ── Rate limiting ──
+        if not self._write_limiter.check(ctx.identity, _RATE_LIMIT_MAX_WRITES):
+            logger.warning("Rate limit exceeded for caller '%s'", ctx.identity)
+            return {"rejected": True, "reason": "Rate limit exceeded"}
+
+        # ── Halt check ──
+        if self._halt_manager and self._halt_manager.is_halted():
+            record = self._halt_manager.get_halt_record()
+            reason = record.reason if record else "unknown"
+            logger.warning("brain_record REJECTED: Brain is halted (%s)", reason)
+            return {"rejected": True, "reason": f"Brain is halted: {reason}"}
+
+        # ── Size limits ──
+        if len(title) > _MAX_TITLE_LENGTH:
+            return {"rejected": True, "reason": f"Title exceeds {_MAX_TITLE_LENGTH} chars"}
+        if len(content) > _MAX_CONTENT_LENGTH:
+            return {"rejected": True, "reason": f"Content exceeds {_MAX_CONTENT_LENGTH} chars"}
 
         # ── Metadata schema validation ──
         metadata = self._sanitize_metadata(metadata)
@@ -278,6 +379,19 @@ class BrainServer:
                     response["antibody_id"] = antibody_id
                     logger.info("Antibody created: %s (caller: %s)", antibody_id, ctx.identity)
 
+                    # Escalate critical/hostile quarantine rejections
+                    if self._escalation_router:
+                        self._escalation_router.escalate(
+                            title=f"Quarantine rejected hostile entry from {ctx.identity}",
+                            description=(
+                                f"Title: {title[:200]}\n"
+                                f"Threat: {result.threat_summary}\n"
+                                f"Level: {result.threat_level.value}"
+                            ),
+                            severity="high",
+                            reporter="quarantine-system",
+                        )
+
                 # If only suspicious, use the sanitized version
                 if (result.sanitized_entry
                         and result.threat_level == _ThreatLevel.SUSPICIOUS):
@@ -342,7 +456,9 @@ class BrainServer:
         current_only: bool = True,
     ) -> list[dict[str, Any]]:
         """Semantic search across entries. Requires read scope."""
-        self._authenticate(token, Scope.READ)
+        ctx = self._authenticate(token, Scope.READ)
+        if not self._read_limiter.check(ctx.identity, _RATE_LIMIT_MAX_READS):
+            raise ValueError("Rate limit exceeded")
         cat = EntryCategory(category) if category else None
 
         scored = retrieval_query(
@@ -405,6 +521,10 @@ class BrainServer:
     ) -> dict[str, Any]:
         """Signal that a retrieved entry was useful (or not). Requires write scope."""
         ctx = self._authenticate(token, Scope.WRITE)
+        if self._halt_manager and self._halt_manager.is_halted():
+            raise ValueError("Brain is halted — write operations suspended")
+        if not self._write_limiter.check(ctx.identity, _RATE_LIMIT_MAX_WRITES):
+            raise ValueError("Rate limit exceeded")
         new_score = self._store.adjust_usefulness(id, useful, caller=ctx.identity)
         return {"id": id, "usefulness": new_score}
 
@@ -419,7 +539,17 @@ class BrainServer:
     ) -> dict[str, str]:
         """Mark an entry as superseded. Requires admin scope."""
         ctx = self._authenticate(token, Scope.ADMIN)
+        if self._halt_manager and self._halt_manager.is_halted():
+            raise ValueError("Brain is halted — write operations suspended")
         self._store.supersede(old_id, new_id, caller=ctx.identity)
+        # Log the decision if decision log is wired
+        if self._decision_log:
+            self._decision_log.log_decision(
+                decision=f"Supersede entry {old_id[:12]} with {new_id[:12]}",
+                rationale=reason or "No reason provided",
+                decider=ctx.identity,
+                authority_tier="admin",
+            )
         return {"old_id": old_id, "new_id": new_id, "status": "superseded"}
 
     # ── brain_audit ───────────────────────────────────────────

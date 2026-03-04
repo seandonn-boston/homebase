@@ -60,6 +60,17 @@ _TRUSTED_GITHUB_ORGS = frozenset([
 ])
 
 
+class _SafeRedirectHandler(urllib.request.HTTPRedirectHandler):
+    """Validates redirect URLs against the domain allowlist before following."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        if not _is_allowed_domain(newurl):
+            raise urllib.error.URLError(
+                f"Redirect to unallowed domain blocked: {newurl}"
+            )
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
 def fetch_page_text(url: str) -> Optional[str]:
     """Fetch a web page and extract its text content.
 
@@ -75,7 +86,9 @@ def fetch_page_text(url: str) -> Optional[str]:
             "User-Agent": "homebase-ai-monitor/1.0 (research bot)",
             "Accept": "text/html,application/xhtml+xml,text/plain",
         })
-        with urllib.request.urlopen(req, timeout=_FETCH_TIMEOUT) as resp:
+        # Use a non-redirecting opener to validate redirect URLs before following
+        opener = urllib.request.build_opener(_SafeRedirectHandler)
+        with opener.open(req, timeout=_FETCH_TIMEOUT) as resp:
             final_url = resp.url
             if not _is_allowed_domain(final_url):
                 logger.warning("Redirect to unallowed domain: %s -> %s", url, final_url)

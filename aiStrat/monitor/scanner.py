@@ -759,14 +759,24 @@ def _scan_discovery(state: MonitorState, result: ScanResult) -> None:
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 def _is_major_release(tag: str) -> bool:
-    """Heuristic: is this a major (non-patch) release?"""
+    """Heuristic: is this a major or minor (non-patch) release?
+
+    Returns True for releases that warrant high-priority attention:
+    - x.0.0 = major release (e.g., 2.0.0)
+    - x.y.0 = minor release (e.g., 1.2.0)
+    Returns False for patch releases (x.y.z where z > 0).
+
+    The original bug used `minor == 0 OR patch == 0` which incorrectly
+    classified "1.0.5" as major. Fixed to use `patch == 0` only — both
+    major (x.0.0) and minor (x.y.0) releases get high priority since
+    they typically introduce new features, capabilities, or breaking changes.
+    """
     tag = tag.lstrip("v")
     parts = tag.split(".")
     if len(parts) >= 2:
         try:
-            minor = int(parts[1])
             patch = int(parts[2]) if len(parts) > 2 else 0
-            return minor == 0 or patch == 0
+            return patch == 0
         except (ValueError, IndexError):
             pass
     return True

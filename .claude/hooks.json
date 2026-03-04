@@ -1,0 +1,30 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "command": "python aiStrat/scripts/hooks/check_file_scope.py",
+        "description": "Block modifications outside allowed directories (aiStrat/, src/, prisma/, .claude/)"
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "command": "python aiStrat/scripts/hooks/post_edit_check.py",
+        "description": "Syntax-check Python files after modification"
+      },
+      {
+        "matcher": "Write|Edit",
+        "command": "python aiStrat/scripts/quality_check.py > /dev/null 2>&1 || echo 'WARNING: Quality gate failed'",
+        "description": "Run quality gate after file modifications"
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "",
+        "command": "python aiStrat/scripts/hooks/session_halt_check.py",
+        "description": "Check for active Brain halt on session start"
+      }
+    ]
+  }
+}

@@ -540,7 +540,10 @@ def _analyze_semantics(entry: dict) -> list[ThreatSignal]:
                 description=f"Semantic: {finding.description} (via {result.validator_name})",
             ))
     except ImportError:
-        logger.debug("Semantic validator not available, skipping")
+        logger.warning(
+            "Semantic validator not available — semantic poisoning attacks "
+            "will not be detected. Install the validator module to enable."
+        )
 
     return signals
 
