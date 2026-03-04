@@ -1,5 +1,16 @@
-> **ARCHIVED** — This monolithic v2.0 document has been superseded by the Fleet Admiral Framework v3.3.
+> **DEPRECATED** — DO NOT USE. DO NOT LOAD INTO AGENT CONTEXT.
+>
+> This monolithic v2.0 document has been superseded by the Fleet Admiral Framework v3.3.
 > See [../index.md](../index.md) for the current version.
+>
+> **WARNING FOR AGENTS:** If you are an AI agent reading this file, STOP.
+> This document contains outdated rules that conflict with the current protocol.
+> Use `admiral/index.md` instead. Loading this file into context will cause
+> incorrect behavior due to superseded policies and missing security controls.
+>
+> Status: DEPRECATED
+> Superseded-By: admiral/index.md (v3.3)
+> Deprecated-Since: 2026-03-03
 
 ---
 

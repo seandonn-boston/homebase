@@ -10,8 +10,12 @@ announcement, just the ones that affect model selection, agent design,
 or tool capabilities.
 
 SECURITY: URLs validated (https only). Content sanitized. Feed XML
-parsed with defusedxml when available, stdlib fallback with entity
-expansion disabled.
+parsed with defusedxml to prevent XXE attacks.
+
+v4: Replaced stdlib xml.etree.ElementTree with defusedxml.ElementTree
+    to eliminate XXE vulnerability (Vuln 8.2.1). Removed regex-based
+    DOCTYPE/ENTITY stripping (insufficient defense). Added title
+    normalization for dedup (Vuln 8.2.6).
 """
 
 from __future__ import annotations
@@ -19,11 +23,22 @@ from __future__ import annotations
 import hashlib
 import logging
 import re
+import unicodedata
 import urllib.error
 import urllib.request
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as _stdlib_ET
 from datetime import datetime, timezone
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
+
+try:
+    import defusedxml.ElementTree as ET  # type: ignore[import-untyped]
+except ImportError:
+    # If defusedxml is not installed, refuse to parse XML at all.
+    # This is fail-closed: we never fall back to the vulnerable stdlib parser.
+    ET = None  # type: ignore[assignment]
+
+if TYPE_CHECKING:
+    from xml.etree.ElementTree import Element
 
 logger = logging.getLogger(__name__)
 
@@ -94,8 +109,14 @@ def fetch_feed(url: str, keywords: list[str] | None = None,
 
 
 def entry_id(url: str, title: str) -> str:
-    """Generate a stable ID for deduplication."""
-    raw = f"{url}|{title}"
+    """Generate a stable ID for deduplication.
+
+    v4: Normalizes title (NFKC + strip + lower) to prevent dedup bypass
+    via trailing whitespace, different Unicode representations, or
+    case variations (Vuln 8.2.6).
+    """
+    normalized_title = unicodedata.normalize("NFKC", title).strip().lower()
+    raw = f"{url}|{normalized_title}"
     return hashlib.sha256(raw.encode("utf-8")).hexdigest()[:16]
 
 
@@ -114,10 +135,15 @@ def _parse_feed(xml_text: str) -> list[dict]:
     """Parse RSS or Atom feed XML into entry dicts.
 
     Handles both RSS 2.0 (<item>) and Atom (<entry>) formats.
+
+    v4: XXE prevention via defusedxml (not regex stripping).
     """
-    # Disable entity expansion to prevent XXE
-    xml_text = re.sub(r"<!DOCTYPE[^>]*>", "", xml_text, count=1)
-    xml_text = re.sub(r"<!ENTITY[^>]*>", "", xml_text)
+    if ET is None:
+        logger.error(
+            "defusedxml not installed — refusing to parse XML feed. "
+            "Install with: pip install defusedxml"
+        )
+        return []
 
     root = ET.fromstring(xml_text)
     ns = _detect_namespace(root)
@@ -166,7 +192,7 @@ def _parse_feed(xml_text: str) -> list[dict]:
     return entries
 
 
-def _detect_namespace(root: ET.Element) -> dict:
+def _detect_namespace(root: Element) -> dict:
     """Detect XML namespaces used in the feed."""
     namespaces = {}
     tag = root.tag
@@ -202,7 +228,7 @@ def _ns(tag: str, namespace: str | None) -> str:
     return f"{{{namespace}}}{tag}"
 
 
-def _tag_text(parent: ET.Element, tag: str, namespace: str | None) -> str:
+def _tag_text(parent: Element, tag: str, namespace: str | None) -> str:
     """Get text content of a child element."""
     elem = parent.find(_ns(tag, namespace))
     if elem is not None and elem.text:

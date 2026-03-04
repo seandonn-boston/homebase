@@ -38,11 +38,16 @@ Reference: admiral/part3-enforcement.md (hooks over instructions),
 from __future__ import annotations
 
 import hashlib
+import logging
 import re
+import threading
 import time
+from collections import deque
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Optional
+
+logger = logging.getLogger(__name__)
 
 
 class ThreatLevel(Enum):
@@ -401,6 +406,8 @@ _build_patterns()
 
 
 _MAX_SCAN_LEN = 50_000  # Cap text length to prevent ReDoS on adversarial input
+_MAX_METADATA_VALUE_LEN = 5_000  # Cap individual metadata string values
+_MAX_METADATA_LIST_ITEMS = 50    # Cap list items in metadata values
 
 
 def _scan_injections(entry: dict) -> list[ThreatSignal]:
@@ -414,15 +421,15 @@ def _scan_injections(entry: dict) -> list[ThreatSignal]:
         ("content", entry.get("content", "")[:_MAX_SCAN_LEN]),
     ]
 
-    # Also scan metadata values
+    # Also scan metadata values (capped to prevent DoS via oversized metadata)
     metadata = entry.get("metadata", {})
     for key, value in metadata.items():
         if isinstance(value, str):
-            text_fields.append((f"metadata.{key}", value))
+            text_fields.append((f"metadata.{key}", value[:_MAX_METADATA_VALUE_LEN]))
         elif isinstance(value, list):
-            for i, item in enumerate(value):
+            for i, item in enumerate(value[:_MAX_METADATA_LIST_ITEMS]):
                 if isinstance(item, str):
-                    text_fields.append((f"metadata.{key}[{i}]", item))
+                    text_fields.append((f"metadata.{key}[{i}]", item[:_MAX_METADATA_VALUE_LEN]))
 
     for field_name, text in text_fields:
         if not text:
@@ -448,7 +455,12 @@ def _scan_injections(entry: dict) -> list[ThreatSignal]:
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 def _analyze_semantics(entry: dict) -> list[ThreatSignal]:
-    """Detect semantic-level threats: authority spoofing, false credentials, etc."""
+    """Detect semantic-level threats: authority spoofing, false credentials, etc.
+
+    v4: Now also invokes the pluggable SemanticValidator (from semantic_validator.py)
+    to detect dangerous technical advice that regex cannot catch. The validator
+    is configurable — default is RuleBasedValidator, future: LLM-based.
+    """
     signals = []
     content = (entry.get("content", "") + " " + entry.get("title", "")).lower()
 
@@ -505,12 +517,114 @@ def _analyze_semantics(entry: dict) -> list[ThreatSignal]:
                 description=f"Data poisoning: {description}",
             ))
 
+    # ── Pluggable semantic validator (Rec 5 extension point) ──
+    try:
+        from .semantic_validator import get_validator, SemanticRisk
+        validator = get_validator()
+        result = validator.validate(entry)
+        for finding in result.findings:
+            # Map semantic risk to threat level
+            if finding.risk == SemanticRisk.DANGEROUS:
+                level = ThreatLevel.HOSTILE
+            elif finding.risk == SemanticRisk.REVIEW:
+                level = ThreatLevel.SUSPICIOUS
+            else:
+                continue
+
+            signals.append(ThreatSignal(
+                category=ThreatCategory.DATA_POISONING,
+                level=level,
+                pattern_matched=f"semantic:{finding.category}",
+                matched_text=finding.matched_text[:200],
+                field=finding.field,
+                description=f"Semantic: {finding.description} (via {result.validator_name})",
+            ))
+    except ImportError:
+        logger.debug("Semantic validator not available, skipping")
+
     return signals
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # LAYER 4: THREAT PRESERVATION (ANTIBODY GENERATION)
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+_MAX_ANTIBODIES_PER_HOUR = 50
+_ANTIBODY_WINDOW_SECONDS = 3600
+
+
+class _AntibodyTracker:
+    """Rate limiter and deduplicator for antibody generation.
+
+    Prevents write amplification attacks where an adversary floods
+    quarantine to generate unbounded antibody entries.
+
+    v4: Added to address Vuln 4.4 — antibody write amplifier.
+    """
+
+    # Cap fingerprint set size to prevent unbounded memory growth
+    _MAX_FINGERPRINTS = 10_000
+
+    def __init__(self) -> None:
+        self._lock = threading.Lock()
+        self._fingerprints: deque[str] = deque(maxlen=self._MAX_FINGERPRINTS)
+        self._fingerprint_set: set[str] = set()
+        self._timestamps: deque[float] = deque()
+
+    def _fingerprint(self, entry: dict) -> str:
+        """Generate a dedup fingerprint from entry content."""
+        raw = (entry.get("title", "") + "|" + entry.get("content", "")[:500]).encode()
+        return hashlib.sha256(raw).hexdigest()[:32]
+
+    def should_generate(self, entry: dict) -> bool:
+        """Check if an antibody should be generated for this entry.
+
+        Returns False if:
+        - An identical antibody was already generated (dedup)
+        - The rate limit has been exceeded (max per hour)
+        """
+        now = time.time()
+        fp = self._fingerprint(entry)
+
+        with self._lock:
+            # Dedup check
+            if fp in self._fingerprint_set:
+                logger.info("Antibody dedup: skipping duplicate fingerprint %s", fp[:8])
+                return False
+
+            # Prune old timestamps
+            cutoff = now - _ANTIBODY_WINDOW_SECONDS
+            while self._timestamps and self._timestamps[0] < cutoff:
+                self._timestamps.popleft()
+
+            # Rate limit check
+            if len(self._timestamps) >= _MAX_ANTIBODIES_PER_HOUR:
+                logger.warning(
+                    "Antibody rate limit reached: %d in last hour (max %d)",
+                    len(self._timestamps), _MAX_ANTIBODIES_PER_HOUR,
+                )
+                return False
+
+            # Admit — evict oldest fingerprint if at capacity
+            if len(self._fingerprints) >= self._MAX_FINGERPRINTS:
+                evicted = self._fingerprints.popleft()
+                self._fingerprint_set.discard(evicted)
+            self._fingerprints.append(fp)
+            self._fingerprint_set.add(fp)
+            self._timestamps.append(now)
+            return True
+
+    def reset(self) -> None:
+        """Reset tracker state (for testing)."""
+        with self._lock:
+            self._fingerprints.clear()
+            self._fingerprint_set.clear()
+            self._timestamps.clear()
+
+
+# Module-level singleton
+_antibody_tracker = _AntibodyTracker()
+
 
 def _generate_antibody(entry: dict, signals: list[ThreatSignal]) -> dict:
     """Convert a detected attack into a Brain FAILURE entry.
@@ -607,6 +721,15 @@ def _defang(text: str) -> str:
     text = re.sub(r"<\|im_start\|>", "<|im[DEFANGED]_start|>", text)
     text = re.sub(r"<\|im_end\|>", "<|im[DEFANGED]_end|>", text)
 
+    # Defang secrets and PII so antibodies don't leak sensitive data
+    text = re.sub(r"(?i)(sk|pk|ak|rk)-[a-zA-Z0-9\-_]{20,}", r"\1-[REDACTED]", text)
+    text = re.sub(r"(?i)(ghp|gho|ghu|ghs|ghr)_[a-zA-Z0-9]{36,}", r"\1_[REDACTED]", text)
+    text = re.sub(r"(?i)AKIA[0-9A-Z]{16}", "AKIA[REDACTED]", text)
+    text = re.sub(r"(?i)(password|passwd|pwd)\s*[:=]\s*\S{4,}", r"\1=[REDACTED]", text)
+    text = re.sub(r"\b\d{3}-\d{2}-\d{4}\b", "[SSN-REDACTED]", text)
+    text = re.sub(r"\b\d{4}[\s-]?\d{4}[\s-]?\d{4}[\s-]?\d{4}\b", "[CARD-REDACTED]", text)
+    text = re.sub(r"-----BEGIN\s+(RSA\s+)?PRIVATE\s+KEY-----", "[PRIVATE-KEY-REDACTED]", text, flags=re.IGNORECASE)
+
     return text
 
 
@@ -654,15 +777,41 @@ def quarantine(entry: dict) -> QuarantineResult:
 
     is_clean = threat_level == ThreatLevel.CLEAN
 
-    # Layer 4: Generate antibody if threats detected
+    # Layer 4: Generate antibody if threats detected (rate-limited + deduped)
     antibody = None
     if not is_clean and threat_level in (ThreatLevel.HOSTILE, ThreatLevel.CRITICAL):
-        antibody = _generate_antibody(entry, all_signals)
+        if _antibody_tracker.should_generate(entry):
+            antibody = _generate_antibody(entry, all_signals)
+        else:
+            logger.info(
+                "Antibody generation skipped (rate limit or dedup) for '%s'",
+                entry.get("title", "")[:80],
+            )
 
     # Build sanitized entry if only suspicious (not hostile/critical)
+    # Re-validate after sanitization to catch payloads that survive cleanup
     sanitized_entry = None
     if threat_level == ThreatLevel.SUSPICIOUS:
-        sanitized_entry = _sanitize_entry(entry, all_signals)
+        candidate = _sanitize_entry(entry, all_signals)
+        # Re-scan the sanitized entry for any remaining injection patterns
+        rescan_signals = _scan_injections(candidate) + _analyze_semantics(candidate)
+        hostile_rescan = [
+            s for s in rescan_signals
+            if s.level in (ThreatLevel.HOSTILE, ThreatLevel.CRITICAL)
+        ]
+        if hostile_rescan:
+            logger.warning(
+                "Sanitized entry still contains %d hostile signal(s) — rejecting",
+                len(hostile_rescan),
+            )
+            all_signals.extend(hostile_rescan)
+            threat_level = ThreatLevel.HOSTILE
+            is_clean = False
+            # Generate antibody for the escalated threat
+            if _antibody_tracker.should_generate(entry):
+                antibody = _generate_antibody(entry, all_signals)
+        else:
+            sanitized_entry = candidate
 
     return QuarantineResult(
         entry_hash=content_hash,
@@ -715,6 +864,9 @@ def _sanitize_entry(entry: dict, signals: list[ThreatSignal]) -> dict:
 
 def batch_quarantine(entries: list[dict]) -> tuple[list[dict], list[dict], list[dict]]:
     """Process a batch of entries through quarantine.
+
+    Antibody generation is rate-limited across the entire batch to prevent
+    write amplification attacks (v4: Vuln 4.4).
 
     Returns:
         Tuple of (clean_entries, sanitized_entries, antibodies)
