@@ -3,8 +3,6 @@
 Creates and wires together all Brain components including authentication,
 quarantine enforcement, and audit trailing.
 
-v4: Added auth_provider, strict_mode, api_keys config.
-
 Usage:
     from brain.services.bootstrap import bootstrap
     brain = bootstrap(api_keys={"my-key": ("admin-user", Scope.ADMIN)})
@@ -13,12 +11,15 @@ Usage:
 
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass
 
 from ..core.embeddings import EmbeddingProvider, MockEmbeddingProvider
 from ..core.store import BrainStore
 from ..mcp.auth import APIKeyAuthProvider, AuthProvider, NoAuthProvider, Scope
 from ..mcp.server import BrainServer
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -30,6 +31,27 @@ class Brain:
     server: BrainServer
 
 
+def _resolve_embeddings() -> EmbeddingProvider:
+    """Attempt to create a real embedding provider, fall back to mock.
+
+    Tries OpenAIEmbeddingProvider first (requires openai package + OPENAI_API_KEY).
+    Falls back to MockEmbeddingProvider with a clear warning.
+    """
+    try:
+        from ..core.embeddings import OpenAIEmbeddingProvider
+        provider = OpenAIEmbeddingProvider()
+        logger.info("Using OpenAIEmbeddingProvider (real semantic embeddings)")
+        return provider
+    except (ImportError, Exception) as e:
+        logger.warning(
+            "OpenAI embeddings unavailable (%s). Falling back to MockEmbeddingProvider. "
+            "Semantic retrieval will NOT work — install 'aistrat[openai]' and set "
+            "OPENAI_API_KEY for real embeddings.",
+            e,
+        )
+        return MockEmbeddingProvider()
+
+
 def bootstrap(
     embedding_provider: EmbeddingProvider | None = None,
     auth_provider: AuthProvider | None = None,
@@ -39,8 +61,8 @@ def bootstrap(
     """Wire up and return a fully-initialized Brain.
 
     Args:
-        embedding_provider: Custom embedding provider. Defaults to
-            MockEmbeddingProvider for development/testing.
+        embedding_provider: Custom embedding provider. If not provided,
+            attempts OpenAIEmbeddingProvider, then falls back to Mock.
         auth_provider: Custom auth provider. If not provided, uses
             APIKeyAuthProvider with api_keys (if given) or NoAuthProvider
             with strict_mode=False for testing only.
@@ -53,7 +75,7 @@ def bootstrap(
         Brain container with store, embeddings, and MCP server.
     """
     store = BrainStore()
-    embeddings = embedding_provider or MockEmbeddingProvider()
+    embeddings = embedding_provider or _resolve_embeddings()
 
     # Resolve auth provider
     if auth_provider is not None:

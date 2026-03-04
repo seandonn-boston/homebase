@@ -7,8 +7,6 @@ Scopes:
   read  — Query, retrieve, audit
   write — Record, strengthen (includes read)
   admin — Supersede, halt (includes write)
-
-Reference: REVIEW.md Section 4.1 — No auth on MCP server (CRITICAL fix).
 """
 
 from __future__ import annotations

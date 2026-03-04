@@ -2,11 +2,6 @@
 
 Defines the core types: entries (the atomic unit of knowledge),
 entry links (relationships between entries), and supporting enums.
-
-v4: Added ALLOWED_METADATA_KEYS whitelist, provenance field,
-    superseded_at timestamp, typed metadata.
-
-Reference: admiral/part5-brain.md, Section 15.
 """
 
 from __future__ import annotations
@@ -18,7 +13,6 @@ from enum import Enum
 from typing import Optional
 
 # Metadata key whitelist — only these keys are stored. Unknown keys are stripped.
-# Reference: REVIEW.md Section 8.1.6 — Metadata schema poisoning (MEDIUM fix).
 ALLOWED_METADATA_KEYS: frozenset[str] = frozenset({
     "tags",
     "source_url",

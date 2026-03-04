@@ -1,6 +1,4 @@
-"""Seven-signal ranked retrieval pipeline for the Fleet Brain.
-
-Implements the retrieval ranking from admiral/part5-brain.md, Section 17:
+"""Eight-signal ranked retrieval pipeline for the Fleet Brain.
 
 1. Semantic similarity (cosine distance) — primary signal
 2. Project relevance — current project entries rank higher
@@ -9,11 +7,7 @@ Implements the retrieval ranking from admiral/part5-brain.md, Section 17:
 5. Currency — superseded entries excluded by default
 6. Category match — inferred category from query boosts matching entries
 7. Provenance — human/seed entries weighted higher than monitor/agent
-
-v4: Added word-boundary category inference, negative usefulness signal
-    preservation, provenance weighting, result diversity enforcement.
-
-Reference: admiral/part5-brain.md, Sections 15 and 17.
+8. Speculative discount — entries marked speculative are penalized
 """
 
 from __future__ import annotations
@@ -56,12 +50,18 @@ _CATEGORY_HINTS: dict[str, EntryCategory] = {
 # Use "went wrong" or "failure" for explicit failure queries.
 
 # Tuning weights for combining signals
-WEIGHT_SIMILARITY = 0.50
+WEIGHT_SIMILARITY = 0.45
 WEIGHT_PROJECT = 0.15
-WEIGHT_RECENCY = 0.05  # Reduced from 0.10 to make room for provenance
+WEIGHT_RECENCY = 0.05
 WEIGHT_USEFULNESS = 0.10
-WEIGHT_CATEGORY = 0.15
-WEIGHT_PROVENANCE = 0.05  # New: human > seed > agent > monitor
+WEIGHT_CATEGORY = 0.10
+WEIGHT_PROVENANCE = 0.05
+WEIGHT_SPECULATIVE = 0.10  # Penalty applied to entries with speculative metadata
+
+# Speculative penalty — entries marked speculative=True get this multiplier
+# (0.0 = fully discounted, 1.0 = no discount). 0.3 means speculative entries
+# contribute only 30% of the speculative weight, vs 100% for verified entries.
+_SPECULATIVE_DISCOUNT = 0.3
 
 # Provenance trust scores (0.0 to 1.0)
 _PROVENANCE_SCORES: dict[Provenance, float] = {
@@ -118,6 +118,20 @@ def _provenance_score(entry: Entry) -> float:
     return _PROVENANCE_SCORES.get(entry.provenance, 0.0)
 
 
+def _speculative_score(entry: Entry) -> float:
+    """Score based on whether the entry is marked as speculative.
+
+    Returns 1.0 for verified entries (no speculative flag or speculative=False).
+    Returns _SPECULATIVE_DISCOUNT for entries with speculative=True.
+    This ensures unverified claims (model benchmarks, market stats) are
+    ranked below verified knowledge in retrieval results.
+    """
+    is_speculative = entry.metadata.get("speculative", False)
+    if is_speculative is True or is_speculative == "true":
+        return _SPECULATIVE_DISCOUNT
+    return 1.0
+
+
 def _enforce_diversity(scored: list[ScoredEntry], limit: int) -> list[ScoredEntry]:
     """Enforce category diversity in results.
 
@@ -162,7 +176,7 @@ def query(
 ) -> list[ScoredEntry]:
     """Execute a ranked retrieval query against the Brain.
 
-    Applies seven ranking signals and enforces result diversity.
+    Applies eight ranking signals and enforces result diversity.
     """
     query_embedding = embedding_provider.embed(query_text)
 
@@ -207,6 +221,9 @@ def query(
         # Signal 7: Provenance trust
         provenance = _provenance_score(entry)
 
+        # Signal 8: Speculative discount
+        speculative = _speculative_score(entry)
+
         # Combine signals
         combined = (
             WEIGHT_SIMILARITY * sim
@@ -215,6 +232,7 @@ def query(
             + WEIGHT_USEFULNESS * usefulness
             + WEIGHT_CATEGORY * category_boost
             + WEIGHT_PROVENANCE * provenance
+            + WEIGHT_SPECULATIVE * speculative
         )
 
         scored.append(ScoredEntry(entry=entry, score=combined))

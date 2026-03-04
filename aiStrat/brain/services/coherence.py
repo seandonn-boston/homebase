@@ -1,9 +1,9 @@
 """Brain coherence analysis — detect cumulative bias and drift.
 
 An attacker can plant 30-50 individually reasonable Brain entries that
-collectively bias agent behavior (Vuln 8.3.3). Each entry passes quarantine
-because no single entry contains injection patterns. But together, they
-erode security posture, testing standards, or review processes.
+collectively bias agent behavior. Each entry passes quarantine because
+no single entry contains injection patterns. But together, they erode
+security posture, testing standards, or review processes.
 
 This module detects such cumulative drift by:
 
@@ -14,8 +14,6 @@ This module detects such cumulative drift by:
 
 Run periodically (e.g., after bulk imports or monitor ingestion) to detect
 gradual drift before it affects agent behavior.
-
-Reference: REVIEW.md Vuln 8.3.3 — Context Window Cumulative Bias Amplification.
 """
 
 from __future__ import annotations

@@ -79,21 +79,17 @@ The code was written **to pass the review**, not to be correct by construction. 
 
 The code comments explicitly acknowledge violating its own design principle — and then does it anyway. An "append-only" log that prunes at 5,000 entries is a bounded circular buffer. An "immutable audit trail" stored in RAM that vanishes on restart is not immutable. The framework's own audit log (`store.py`, 10,000 entries) has the same problem.
 
-### 3.2 defusedxml: Listed but Never Used
+### 3.2 ~~defusedxml: Listed but Never Used~~ CORRECTED
 
-`pyproject.toml` line 11: `"defusedxml>=0.7"` — a base dependency.
-
-`rss_feeds.py` still uses `xml.etree.ElementTree` with regex-based DOCTYPE stripping. The XXE fix from REVIEW.md Vuln 8.2.1 was adding the dependency to the manifest without changing the code. This is cosmetic compliance.
+**Correction:** `rss_feeds.py` v4 DOES import and use `defusedxml.ElementTree` (lines 33-38) with fail-closed behavior when unavailable (`ET = None`, returns empty list). The dead `_stdlib_ET` import on line 29 is unused code that should be removed, but the XXE fix is properly implemented. This critique was wrong on initial review.
 
 ### 3.3 Regex Defending Against Regex-Bypass Attacks
 
 The coherence module (`coherence.py`) addresses the cumulative bias attack (REVIEW.md Vuln 8.3.3 — "Context Window Cumulative Bias Amplification") using regex pattern matching. The REVIEW.md itself says regex "catches ~20% of realistic attacks." The defense against the vulnerability that bypasses regex is itself regex. This is circular.
 
-### 3.4 Provenance Is Self-Declared
+### 3.4 ~~Provenance Is Self-Declared~~ RESOLVED
 
-The retrieval pipeline weights by provenance: `HUMAN: 1.0, SEED: 0.8, AGENT: 0.5, MONITOR: 0.3`. But callers set their own provenance via the `provenance` parameter on `brain_record`. Nothing in the auth system constrains provenance to match the caller's actual identity. A bot with a write token can set `provenance="human"` and receive the highest trust weight in all future retrievals.
-
-Auth validates **scope** (read/write/admin). It does not validate **provenance claims**. These are orthogonal, and conflating them is a trust escalation path.
+**Resolution:** `_resolve_provenance()` in `server.py` now enforces provenance based on auth scope. WRITE scope is limited to `agent/system/monitor` provenance. Only ADMIN scope can claim `human` or `seed` provenance. Known identity patterns (e.g., `monitor-service`) auto-resolve to their correct provenance. Scope ceiling enforcement prevents trust escalation.
 
 ---
 
@@ -117,7 +113,7 @@ The framework proposes:
 
 The worked example (Appendix C) is a task management SaaS app. The administrative overhead of establishing the framework's required artifacts (Mission, Boundaries, Ground Truth, Success Criteria, Context Profiles, Fleet Roster, Tool Registry, Model Assignments, Routing Rules, Brain Deployment, Monitor Config) exceeds the effort of building the application.
 
-**The framework optimizes for comprehensiveness at the expense of usability.** A 5-section guide with executable examples would serve 90% of users better than a 39-section treatise with zero runnable code.
+**Counterpoint (added after initial review):** If the framework is understood as a **workforce toolkit** — a Swiss army knife you reach for when needed, not overhead imposed on every project — the scale concern is reframed. You don't adopt all 100+ agents to use 5 of them. The comprehensive catalog exists so you can pick what fits. The scale inversion applies only if someone treats the entire framework as prerequisite setup for a single project, which is not the intended use pattern. The index now makes this explicit.
 
 ---
 
@@ -150,7 +146,7 @@ The seed data and model tier documents contain:
 | "Spotify: 90% engineering time reduction" | Cited from a document not in the repo |
 | "Anthropic: $14B ARR" | Unverifiable |
 
-The `metadata.speculative: True` key exists in the schema but **nothing in the retrieval pipeline uses it.** Speculative entries receive the same ranking weight as verified facts. When the Brain is bootstrapped with seeds, agents treat projections as established knowledge and make decisions based on them.
+**Resolution:** The retrieval pipeline now includes an 8th signal — `_speculative_score()` — that penalizes entries with `metadata.speculative: True`. Speculative entries receive only 30% of the speculative weight (0.03 vs 0.10), causing them to rank below verified entries. The seed data already labels speculative entries with `speculative: True` and inline `[UNVERIFIED BENCHMARKS]` / `[PROJECTED/UNVERIFIED STATISTICS]` markers in content. The system now structurally discounts what it labels as uncertain.
 
 ---
 

@@ -10,12 +10,8 @@ announcement, just the ones that affect model selection, agent design,
 or tool capabilities.
 
 SECURITY: URLs validated (https only). Content sanitized. Feed XML
-parsed with defusedxml to prevent XXE attacks.
-
-v4: Replaced stdlib xml.etree.ElementTree with defusedxml.ElementTree
-    to eliminate XXE vulnerability (Vuln 8.2.1). Removed regex-based
-    DOCTYPE/ENTITY stripping (insufficient defense). Added title
-    normalization for dedup (Vuln 8.2.6).
+parsed with defusedxml to prevent XXE attacks. If defusedxml is not
+installed, XML parsing is refused entirely (fail-closed).
 """
 
 from __future__ import annotations
@@ -26,15 +22,13 @@ import re
 import unicodedata
 import urllib.error
 import urllib.request
-import xml.etree.ElementTree as _stdlib_ET
 from datetime import datetime, timezone
 from typing import TYPE_CHECKING, Optional
 
 try:
     import defusedxml.ElementTree as ET  # type: ignore[import-untyped]
 except ImportError:
-    # If defusedxml is not installed, refuse to parse XML at all.
-    # This is fail-closed: we never fall back to the vulnerable stdlib parser.
+    # Fail-closed: never fall back to the vulnerable stdlib parser.
     ET = None  # type: ignore[assignment]
 
 if TYPE_CHECKING:
@@ -111,9 +105,8 @@ def fetch_feed(url: str, keywords: list[str] | None = None,
 def entry_id(url: str, title: str) -> str:
     """Generate a stable ID for deduplication.
 
-    v4: Normalizes title (NFKC + strip + lower) to prevent dedup bypass
-    via trailing whitespace, different Unicode representations, or
-    case variations (Vuln 8.2.6).
+    Normalizes title (NFKC + strip + lower) to prevent dedup bypass via
+    trailing whitespace, different Unicode representations, or case variations.
     """
     normalized_title = unicodedata.normalize("NFKC", title).strip().lower()
     raw = f"{url}|{normalized_title}"
@@ -136,7 +129,6 @@ def _parse_feed(xml_text: str) -> list[dict]:
 
     Handles both RSS 2.0 (<item>) and Atom (<entry>) formats.
 
-    v4: XXE prevention via defusedxml (not regex stripping).
     """
     if ET is None:
         logger.error(

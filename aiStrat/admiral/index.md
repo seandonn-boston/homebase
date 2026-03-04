@@ -1,14 +1,22 @@
 # THE FLEET ADMIRAL FRAMEWORK
 
-**A Repeatable Protocol for Establishing Autonomous AI Agent Fleets**
+**A Workforce Toolkit for Autonomous AI Agent Fleets**
 
-v3.3 · March 2026
+v4.0 · March 2026
+
+-----
+
+## What This Is
+
+This is a **Swiss army knife for AI agent orchestration** — a reusable toolkit of patterns, agent definitions, enforcement strategies, and operational knowledge. It is the workforce itself, not overhead for building a specific product.
+
+Pick the parts you need. A two-person team might use only the enforcement spectrum (Part 3) and five agent definitions. A platform team might deploy the full Brain, Monitor, and Fleet. The framework scales to what you need — you don't adopt all of it to use any of it.
 
 -----
 
 ## How to Read This Document
 
-This framework is split across thirteen files. This index is the entry point. Each part is a self-contained file that can be loaded into an agent's context independently.
+This framework is split across thirteen files. This index is the entry point. Each part is a self-contained module that can be loaded into an agent's context independently.
 
 **Humans** — You are the Admiral. Start here. Read the operating model and glossary, then work through parts in order or jump to whichever part addresses your current need. The prose, anti-patterns, and worked example are for you.
 
