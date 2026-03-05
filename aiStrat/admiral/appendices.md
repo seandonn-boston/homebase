@@ -301,10 +301,17 @@ These frameworks handle orchestration (routing, handoffs, tool calls). Admiral a
 
 ### Version Policy
 
-The Admiral Framework uses semantic versioning: **MAJOR.MINOR** (e.g., v5.0, v5.1, v6.0).
+The Admiral Framework uses semantic versioning: **MAJOR.MINOR.PATCH[-PRERELEASE]** (e.g., v0.1.0-alpha, v0.1.1, v1.0.0).
 
-- **MAJOR** (e.g., v5 → v6): Breaking changes to Standing Orders, agent definition format, Brain schema, or enforcement model. Requires migration.
-- **MINOR** (e.g., v5.0 → v5.1): New agent definitions, additional appendices, clarifications, or non-breaking extensions. Backwards compatible.
+Pre-release qualifiers indicate maturity:
+- **alpha** — Specification drafted but not yet validated through real-world use. Structure may change significantly.
+- **beta** — Specification validated in at least one production fleet. Core patterns stable, details may shift.
+- **rc** (release candidate) — Feature-complete and battle-tested. Only critical fixes before stable release.
+- *(no qualifier)* — Stable release. Breaking changes only in new MAJOR versions.
+
+- **MAJOR** (e.g., v1 → v2): Breaking changes to Standing Orders, agent definition format, Brain schema, or enforcement model. Requires migration.
+- **MINOR** (e.g., v1.0 → v1.1): New agent definitions, additional appendices, clarifications, or non-breaking extensions. Backwards compatible.
+- **PATCH** (e.g., v1.0.0 → v1.0.1): Typo fixes, clarifications, and corrections that don't change semantics.
 
 ### Migration Between Versions
 
@@ -322,6 +329,6 @@ Agent definitions do not carry individual version numbers. They are versioned co
 
 -----
 
-*The Fleet Admiral Framework · v5.0*
+*The Fleet Admiral Framework · v0.1.0-alpha*
 
 *Context is the currency of autonomous AI. The Brain is where that currency compounds.*
