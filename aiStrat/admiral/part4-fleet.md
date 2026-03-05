@@ -24,85 +24,31 @@ Define every agent role. Each needs a clear identity, a defined scope, and expli
 | Database Agent | Designs schemas, writes migrations, optimizes queries | Modify application code, change API contracts without approval |
 | Design Agent | Produces UI/UX specifications, component layouts, style guidelines | Implement designs in code (hands off to Implementer) |
 
-### Practical Role Catalog
+### Agent Catalog
 
-Select from these based on the project's actual needs. Define "Does NOT Do" boundaries for each.
+The canonical agent catalog lives in [`fleet/README.md`](../fleet/README.md). It contains 67 core agent definitions across 12 specialist categories plus 4 command & coordination agents, with an additional 29 extended agents in `fleet/agents/extras/`.
 
-**Command & Coordination**
+Select agents based on the project's actual needs. Define "Does NOT Do" boundaries for each. See `fleet/README.md` for the complete catalog with agent counts per category.
 
-| # | Role | Responsibility |
+### Core Fleet (Minimum Viable Deployment)
+
+These are the agents to implement first. A fleet can operate effectively with just these roles. All other agents are enhancements to add when a project grows beyond what the core fleet handles.
+
+| Priority | Agent | Role |
 |---|---|---|
-| 1 | Orchestrator | Decomposes goals, routes to specialists, manages progress |
-| 2 | Triage Agent | Classifies work by type, priority, and complexity; routes to queue |
-| 3 | Context Curator | Manages context window loading per role; compresses stale context |
+| 1 | **Orchestrator** | Routes tasks, coordinates workflow, manages handoffs |
+| 2 | **Triage Agent** | Classifies incoming work, assigns priority and agent |
+| 3 | **Backend Implementer** | Core code generation — API, data, logic |
+| 4 | **Frontend Implementer** | UI, components, client-side logic |
+| 5 | **QA Agent** | Testing, quality gates, acceptance verification |
+| 6 | **Security Auditor** | Security review of all code changes |
+| 7 | **Architect** | System design, technical decisions |
+| 8 | **DevOps Agent** | Deployment, CI/CD, infrastructure |
+| 9 | **Token Budgeter** | Governance (always deploy) — tracks and enforces token/cost budgets |
+| 10 | **Hallucination Auditor** | Governance (always deploy) — detects fabricated facts, false citations |
+| 11 | **Loop Breaker** | Governance (always deploy) — detects and terminates circular agent loops |
 
-**Engineering — Frontend**
-
-| # | Role | Responsibility |
-|---|---|---|
-| 4 | Frontend Implementer | UI components, designs, browser-specific concerns |
-| 5 | Accessibility Auditor | WCAG compliance, screen readers, keyboard navigation |
-| 6 | State Management Agent | Client-side state architecture, data flow, cache sync |
-
-**Engineering — Backend**
-
-| # | Role | Responsibility |
-|---|---|---|
-| 7 | Backend Implementer | Server-side logic, business rules, request handling |
-| 8 | API Designer | Endpoint contracts, versioning, request/response schemas |
-| 9 | Database Agent | Schemas, migrations, query optimization, data integrity |
-| 10 | Queue & Messaging Agent | Async workflows, event schemas, pub/sub, dead letters |
-
-**Engineering — Cross-Cutting**
-
-| # | Role | Responsibility |
-|---|---|---|
-| 11 | Architect | System structure, pattern evaluation, decision records |
-| 12 | Integration Agent | Third-party APIs, data sync, webhooks, protocol translation |
-| 13 | Migration Agent | System migrations, data transformations, version upgrades |
-| 14 | Refactoring Agent | Restructures code without changing external behavior |
-| 15 | Dependency Manager | Evaluates, updates, audits deps; version conflicts, license compliance |
-
-**Engineering — Infrastructure**
-
-| # | Role | Responsibility |
-|---|---|---|
-| 16 | DevOps Agent | CI/CD pipelines, deployment automation, build systems |
-| 17 | Infrastructure Agent | Cloud resources via IaC, network config, resource scaling |
-| 18 | Observability Agent | Logging, metrics, distributed tracing, alerting rules |
-
-**Quality & Testing**
-
-| # | Role | Responsibility |
-|---|---|---|
-| 19 | QA Agent | Reviews output against criteria, validates deliverables |
-| 20 | Unit Test Writer | Unit tests, fixtures, edge case coverage |
-| 21 | E2E Test Writer | Integration tests, cross-system workflow validation |
-| 22 | Performance Tester | Load testing, benchmarking, profiling, bottlenecks |
-
-**Security & Compliance**
-
-| # | Role | Responsibility |
-|---|---|---|
-| 23 | Security Auditor | Vulnerability scanning, auth flow review, dependency CVE audit |
-| 24 | Compliance Agent | Regulatory framework validation, policy enforcement |
-
-**Adversarial & Meta**
-
-| # | Role | Responsibility |
-|---|---|---|
-| 25 | Simulated User | Tests workflows as a real user — happy path, deviations, UX friction |
-| 26 | Devil's Advocate | Challenges decisions, argues opposing positions, stress-tests assumptions |
-| 27 | Red Team Agent | Adversarial review: reasoning gaps, failure modes, rigor |
-| 28 | Meta-Agent Builder | Generates new agent definitions and skill files from descriptions |
-
-**Scheduled Agents**
-
-| # | Role | Cadence | Responsibility |
-|---|---|---|---|
-| 29 | Docs Sync | Monthly | Audits documentation against code, flags stale docs |
-| 30 | Quality Review | Weekly | Comprehensive quality analysis across the codebase |
-| 31 | Dependency Audit | Biweekly | Outdated deps, security advisories, license changes |
+**Do not deploy 67 agents for a project that needs 11.** The administrative cost of configuring, routing, and coordinating a large fleet exceeds the value for most projects. Start with the core 11. Add roles when the Orchestrator reports routing bottlenecks or when specific domain expertise gaps emerge.
 
 ### Routing Logic
 
@@ -303,7 +249,7 @@ Agent Cards are registered with the fleet's discovery service (typically the Orc
 | Agents in different processes, same machine | A2A or shared filesystem with contracts |
 | Agents across machines or organizations | A2A with full authentication and encryption |
 | Agents using different LLM providers | A2A — provider-agnostic communication |
-| Simple task delegation | Orchestrator-mediated handoff (Section 37) |
+| Simple task delegation | Orchestrator-mediated handoff (Section 38) |
 | Complex multi-step collaboration | A2A with structured contracts |
 
 ### Protocol Security

@@ -20,7 +20,7 @@ You don't need to read 200 pages before deploying your first agent. Start at Lev
 
 | Level | What You Use | Time to Value | When to Advance |
 |---|---|---|---|
-| **Level 1: Disciplined Solo** | CLAUDE.md with enforcement spectrum (Section 08). Hooks for safety-critical constraints. Standing Orders (Section 35). One agent with clear Identity/Scope/Boundaries. | 30 minutes | When you need multiple specialists coordinating on a single task. |
+| **Level 1: Disciplined Solo** | CLAUDE.md with enforcement spectrum (Section 08). Hooks for safety-critical constraints. Standing Orders (Section 36). One agent with clear Identity/Scope/Boundaries. | 30 minutes | When you need multiple specialists coordinating on a single task. |
 | **Level 2: Core Fleet** | Everything in Level 1 plus Fleet Composition (Section 11) with 5–8 agents, routing rules, interface contracts, and the recovery ladder. File-based checkpoints for session persistence. | 2–4 hours | When convention drift, scope creep, or hallucination compound across sessions and you can't catch them manually. |
 | **Level 3: Governed Fleet** | Everything in Level 2 plus 3–7 governance agents (Token Budgeter, Hallucination Auditor, Loop Breaker minimum). Decision authority tiers enforced. Brain at Level 1–2 (file-based or SQLite). | 1–2 days | When cross-session knowledge reuse is critical, or when fleet size exceeds what one Orchestrator can effectively govern. |
 | **Level 4: Full Framework** | Everything in Level 3 plus full Brain (Postgres + pgvector + MCP), Continuous Monitor, scale agents for review cycles, identity tokens, zero-trust access control, fleet observability. | 1–2 weeks | This is the target state for production fleets operating continuously. |
@@ -44,7 +44,7 @@ If you are starting at Level 1, you do not need to read the entire framework. Th
 | 1 | [`index.md`](index.md) | Glossary + Adoption Levels | Shared vocabulary and your roadmap. |
 | 2 | [`part1-strategy.md`](part1-strategy.md) | Full file | Mission, Boundaries, Success Criteria — the three inputs every agent needs. |
 | 3 | [`part3-enforcement.md`](part3-enforcement.md) | Full file | The enforcement spectrum: hooks over instructions. This is the framework's core insight. |
-| 4 | [`part11-protocols.md`](part11-protocols.md) | Section 35 (Standing Orders) only | The fifteen non-negotiable rules loaded into every agent's standing context. |
+| 4 | [`part11-protocols.md`](part11-protocols.md) | Section 36 (Standing Orders) only | The fifteen non-negotiable rules loaded into every agent's standing context. |
 | 5 | [`appendices.md`](appendices.md) | Appendix A (Pre-Flight Checklist) | Go/no-go gate — confirms you have not missed anything critical. |
 
 Start here. Graduate to the full framework when you hit the limits of Level 1.
@@ -108,8 +108,8 @@ This framework is split across thirteen files. This index is the entry point. Ea
 | [`part7-quality.md`](part7-quality.md) | Sections 21–23: Quality Assurance, Failure Recovery, Known Agent Failure Modes |
 | [`part8-operations.md`](part8-operations.md) | Sections 24–29: Institutional Memory, Adaptation Protocol, Cost Management, Fleet Health Metrics, Fleet Scaling & Lifecycle, Inter-Fleet Governance |
 | [`part9-platform.md`](part9-platform.md) | Sections 30–32: Fleet Observability, CI/CD & Event-Driven Operations, Fleet Evaluation & Benchmarking |
-| [`part10-admiral.md`](part10-admiral.md) | Sections 33–34: Admiral Self-Calibration, Human-Expert Routing |
-| [`part11-protocols.md`](part11-protocols.md) | Sections 35–39: Standing Orders, Escalation, Handoffs, Human Referral, Paid Resource Authorization |
+| [`part10-admiral.md`](part10-admiral.md) | Sections 33–35: Admiral Self-Calibration, Human-Expert Routing, Multi-Operator Governance |
+| [`part11-protocols.md`](part11-protocols.md) | Sections 36–40: Standing Orders, Escalation, Handoffs, Human Referral, Paid Resource Authorization |
 | [`appendices.md`](appendices.md) | Pre-Flight Checklist, Quick-Start Sequence, Worked Example |
 
 -----
@@ -182,7 +182,7 @@ Terms are listed alphabetically. When these terms appear in any part file, they 
 | **Instruction decay** | Rules followed initially but ignored as session lengthens and context pressure builds. See Section 23 (Failure Mode Catalog) for diagnosis and defense. |
 | **Interface contract** | The defined format for handoffs between agents: what the sender delivers, what the receiver returns. Section 11. |
 | **Knowledge graph** | The network of linked Brain entries. Entries connected by relationship types (supports, contradicts, supersedes, elaborates, caused_by) that agents can traverse for reasoning chains. Section 17. |
-| **Knowledge protocol** | The MCP server interface that exposes the Brain to any AI agent. Tools: brain_record, brain_query, brain_retrieve, brain_strengthen, brain_supersede, brain_status. Section 16. |
+| **Knowledge protocol** | The MCP server interface that exposes the Brain to any AI agent. Tools: brain_record, brain_query, brain_retrieve, brain_strengthen, brain_supersede, brain_status, brain_audit. Section 16. |
 | **LLM-Last** | Design principle: if a deterministic tool (linter, type checker, formatter, regex) can do it, the LLM should not. Highest-impact cost and reliability lever. Section 02. |
 | **Computer use** | Agent capability to interact with graphical user interfaces — clicking, typing, scrolling, reading screen content. Requires sandboxed environment, strict time limits, and narrow Autonomous tier. Section 32b. |
 | **Extended thinking** | Dedicated reasoning tokens consumed before the model's response begins. Deeper reasoning, not longer output. 5-50x output volume. Must be budgeted separately. Section 32b. |
@@ -226,7 +226,7 @@ Terms are listed alphabetically. When these terms appear in any part file, they 
 
 ## Relationship to the Fleet and Monitor
 
-The `fleet/` directory provides 71 core agent definitions (plus 29 extended agents in `fleet/agents/extras/`) organized by category. The `monitor/` directory specifies the continuous intelligence pipeline. The `brain/` directory contains the database schema and architecture specification for long-term memory.
+The `fleet/` directory provides 67 core agent definitions (plus 29 extended agents in `fleet/agents/extras/`) organized by category. The `monitor/` directory specifies the continuous intelligence pipeline. The `brain/` directory contains the database schema and architecture specification for long-term memory.
 
 | Admiral Section | Companion Specification |
 |---|---|
@@ -295,11 +295,11 @@ Sections are ordered by impact and grouped by relevance.
 | 33 | Admiral Self-Calibration | Bottleneck detection, trust calibration, and growth trajectory. | |
 | 34 | Human-Expert Routing | When the fleet needs expertise the Admiral doesn't have. | |
 | | **PART 11 — PROTOCOLS** | *The universal operating rules every agent follows.* | [`part11-protocols.md`](part11-protocols.md) |
-| 35 | Standing Orders | Fifteen non-negotiable rules loaded into every agent's standing context. | |
-| 36 | Escalation Protocol | How and when agents stop work and flag issues upward. | |
-| 37 | Handoff Protocol | Structured format for transferring work between agents. | |
-| 38 | Human Referral Protocol | When and how specialists recommend consulting a human professional. | |
-| 39 | Paid Resource Authorization | Human-authorized access to paid software, licenses, and subscriptions. | |
+| 36 | Standing Orders | Fifteen non-negotiable rules loaded into every agent's standing context. | |
+| 37 | Escalation Protocol | How and when agents stop work and flag issues upward. | |
+| 38 | Handoff Protocol | Structured format for transferring work between agents. | |
+| 39 | Human Referral Protocol | When and how specialists recommend consulting a human professional. | |
+| 40 | Paid Resource Authorization | Human-authorized access to paid software, licenses, and subscriptions. | |
 | | **APPENDICES** | | [`appendices.md`](appendices.md) |
 | A | Pre-Flight Checklist | Go/no-go gate before fleet deployment. | |
 | B | Quick-Start Sequence | Level-structured operational order for standing up a new fleet. | |

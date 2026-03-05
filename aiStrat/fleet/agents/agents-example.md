@@ -44,7 +44,7 @@ You are the {Agent Name}. {One to three sentences. Second person. Specific enoug
 
 - **Blast radius:** {What damage could this agent cause if wrong?}
 - **Bias risks:** {What biases is this agent most susceptible to?}
-- **Human review triggers:** {When must this agent recommend human review? Reference [Section 38](../../admiral/part11-protocols.md).}
+- **Human review triggers:** {When must this agent recommend human review? Reference [Section 39](../../admiral/part11-protocols.md).}
 
 {Standing Orders 12–14 apply. All reasoning must be transparent and auditable.}
 

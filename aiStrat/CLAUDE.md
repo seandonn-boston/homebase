@@ -11,7 +11,7 @@ aiStrat is the **Admiral Framework** — a comprehensive specification for AI ag
 ### Three Pillars
 
 1. **Doctrine (admiral/)** — 11-part operational framework defining strategy, context engineering, enforcement, fleet composition, the Brain knowledge system, execution patterns, quality assurance, operations, platform integration, meta-agent governance, and universal protocols. Start with `admiral/index.md`.
-2. **Fleet (fleet/)** — Agent catalog with 71 core role definitions (plus 29 extended in `fleet/agents/extras/`), prompt assembly patterns, routing rules, interface contracts, model tier assignments, and context injection guides. Each agent is a self-contained specification — project-agnostic, independently deployable.
+2. **Fleet (fleet/)** — Agent catalog with 67 core role definitions (plus 29 extended in `fleet/agents/extras/`), prompt assembly patterns, routing rules, interface contracts, model tier assignments, and context injection guides. Each agent is a self-contained specification — project-agnostic, independently deployable.
 3. **Design Artifacts (brain/, monitor/)** — Architecture specifications for the Brain (semantic long-term memory) and Monitor (ecosystem intelligence with immune system). Includes database schema and architectural diagrams, not code.
 
 ### Key Entry Points
