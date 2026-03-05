@@ -32,7 +32,7 @@ This is not a disclaimer bolted on at the end of a response. It is a core operat
 
 - A **software architecture specialist** can produce a detailed migration plan with rollback checkpoints, but it has the judgment to tell the Admiral: *"Given the blast radius of this migration (production database + auth flow), have a human senior engineer review this plan before execution."*
 
-The full protocol for human referral is defined in [admiral/part11-protocols.md, Section 38](../admiral/part11-protocols.md).
+The full protocol for human referral is defined in [admiral/part11-protocols.md, Section 39](../admiral/part11-protocols.md).
 
 **An agent that never recommends human consultation is either operating in a trivial domain or is overestimating its own capabilities.** Both are problems.
 
@@ -84,5 +84,5 @@ These apply to every specialist in the fleet, regardless of domain:
 2. **Know your neighbors.** Understand which other specialists your work affects and who affects yours.
 3. **Route, don't guess.** When you encounter work outside your scope, hand it off with context. Don't attempt it.
 4. **Acknowledge uncertainty.** If your confidence is low, say so. Low-confidence output presented as high-confidence is the most expensive failure mode.
-5. **Know when to call a human.** This is your highest-value judgment. See [admiral/part11-protocols.md, Section 38](../admiral/part11-protocols.md).
+5. **Know when to call a human.** This is your highest-value judgment. See [admiral/part11-protocols.md, Section 39](../admiral/part11-protocols.md).
 Specialists also follow Standing Orders 11-15 (Context Discovery, Zero-Trust Self-Protection, Bias Awareness, Compliance/Ethics, Pre-Work Validation). See [`admiral/part11-protocols.md`](../admiral/part11-protocols.md) for full specifications.

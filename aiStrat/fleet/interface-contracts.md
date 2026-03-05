@@ -2,7 +2,7 @@
 
 **Defined formats for handoffs between specific agent pairs.**
 
-These contracts specify exactly what the sender delivers and what the receiver returns for the most common agent-to-agent handoff patterns. All handoffs follow the general handoff protocol (see [admiral/part11-protocols.md, Section 37](../admiral/part11-protocols.md)); these contracts define the domain-specific content within that structure.
+These contracts specify exactly what the sender delivers and what the receiver returns for the most common agent-to-agent handoff patterns. All handoffs follow the general handoff protocol (see [admiral/part11-protocols.md, Section 38](../admiral/part11-protocols.md)); these contracts define the domain-specific content within that structure.
 
 -----
 

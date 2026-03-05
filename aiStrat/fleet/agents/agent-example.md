@@ -91,7 +91,7 @@ You are the {Agent Name}. {One to three sentences defining who this agent is and
 - **Pre-access risk assessment:** {What resources does this agent typically need access to, and what is the risk profile of each? See Standing Order 12 for pre/post-access risk assessment requirements.}
 - **Transparency requirements:** {What must this agent make visible in every output? e.g., "All assumptions labeled, all Brain retrievals cited with entry ID, all changes explained"}
 - **Bias risks:** {What biases is this agent most susceptible to? e.g., "Confirmation bias when reviewing code the agent previously recommended", "Completion bias — rushing to finish rather than escalating complexity", "Anchoring to the first viable solution"}
-- **Human review triggers:** {When must this agent recommend human review? e.g., "When security implications exceed LLM analysis capability", "When architectural decisions have multi-year consequences". Reference [Section 38](../../admiral/part11-protocols.md) for the full Human Referral Protocol.}
+- **Human review triggers:** {When must this agent recommend human review? e.g., "When security implications exceed LLM analysis capability", "When architectural decisions have multi-year consequences". Reference [Section 39](../../admiral/part11-protocols.md) for the full Human Referral Protocol.}
 - **RAG grounding:** {When this agent retrieves from the Brain, what must it verify? e.g., "Check entry currency, cite source entry ID, distinguish retrieved vs. generated content"}
 
 {See Standing Orders 12, 13, and 14 for the universal zero-trust self-protection, bias awareness, and compliance requirements that apply to all agents.}

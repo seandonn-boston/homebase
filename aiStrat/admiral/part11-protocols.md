@@ -4,11 +4,11 @@
 
 *Parts 1–10 define principles, architecture, and strategy. This part consolidates the concrete, non-negotiable protocols that every agent must follow during execution. These are the "how" — structured formats, decision ladders, and behavioral contracts that turn framework principles into repeatable agent behavior.*
 
-<!-- Five protocol areas: 35 Standing Orders | 36 Escalation | 37 Handoff | 38 Human Referral | 39 Paid Resources -->
+<!-- Five protocol areas: 36 Standing Orders | 37 Escalation | 38 Handoff | 39 Human Referral | 40 Paid Resources -->
 
 -----
 
-## 35 — STANDING ORDERS
+## 36 — STANDING ORDERS
 
 > **TL;DR** — Fifteen rules loaded into every agent's standing context. Non-negotiable. Project-specific instructions layer on top but cannot contradict them.
 
@@ -173,7 +173,7 @@ OUTPUT GOES TO: [Next recipient]
 
 -----
 
-## 36 — ESCALATION PROTOCOL
+## 37 — ESCALATION PROTOCOL
 
 > **TL;DR** — Escalation is not failure. It is the fleet's mechanism for routing decisions to the entity with the right authority. Suppressing escalation is the actual failure.
 
@@ -306,7 +306,7 @@ AWAITING: Admiral direction. All work ceased.
 
 -----
 
-## 37 — HANDOFF PROTOCOL
+## 38 — HANDOFF PROTOCOL
 
 > **TL;DR** — Every time one agent's output becomes another agent's input, it must follow a structured format. Unstructured handoffs produce the "I assumed you would give me X" failure mode.
 
@@ -378,7 +378,7 @@ OPEN QUESTIONS:
 - **Returns:** Acknowledgment or rerouting instructions
 
 #### Any Agent → Orchestrator (Blocked)
-- **Deliverable:** Escalation report (see Section 36)
+- **Deliverable:** Escalation report (see Section 37)
 - **Context:** Approaches attempted, root cause assessment
 - **Returns:** Resolution or rerouting
 
@@ -414,7 +414,7 @@ CRITICAL CONTEXT:
 
 -----
 
-## 38 — HUMAN REFERRAL PROTOCOL
+## 39 — HUMAN REFERRAL PROTOCOL
 
 > **TL;DR** — Knowing the boundary between "I can help with this" and "you need a human for this" is the specialist's most important capability. An agent that never recommends human consultation is overestimating itself.
 
@@ -479,7 +479,7 @@ URGENCY:
 
 ### Integration with Standing Orders
 
-This protocol integrates with Standing Orders Section 35.4 (Context Honesty) and Section 35.5 (Decision Authority):
+This protocol integrates with Standing Order 4 (Context Honesty) and Standing Order 5 (Decision Authority):
 
 - **Context Honesty:** If a specialist doesn't have enough information to judge whether a human professional is needed, it says so and errs toward recommending consultation.
 - **Decision Authority — Escalate tier:** Human professional referral is always at least a Propose-tier recommendation. For safety-critical referrals, it is an Escalate-tier action: the specialist stops work and flags the need for human professional consultation immediately.
@@ -492,7 +492,7 @@ This protocol integrates with Standing Orders Section 35.4 (Context Honesty) and
 
 -----
 
-## 39 — PAID RESOURCE AUTHORIZATION PROTOCOL
+## 40 — PAID RESOURCE AUTHORIZATION PROTOCOL
 
 > **TL;DR** — When fleet work requires paid software, licensed tools, or subscription services, agents must never approve transactions autonomously. All paid resource usage requires explicit human authorization and structured access through a resource broker.
 
@@ -560,7 +560,7 @@ Sessions that exceed max duration are expired automatically by the broker.
 - **Least privilege** — Minimum scope for the stated task. Read-only when write is not justified.
 - **Assume breach** — Limit blast radius through scope constraints, duration limits, and monitoring.
 - **No implicit trust inheritance** — Authorization for one resource does not grant access to another.
-- **All access is temporary** — No agent retains persistent access. The broker revokes access on task completion, and sweeps all grants at fleet session end. Emergency revocation (Section 36) revokes all access fleet-wide immediately.
+- **All access is temporary** — No agent retains persistent access. The broker revokes access on task completion, and sweeps all grants at fleet session end. Emergency revocation (Section 37) revokes all access fleet-wide immediately.
 - **Sensitive data** (PII, credentials, financial/health records) is always single-task-scoped and cannot be pooled or extended without fresh Admiral authorization.
 
 ### Anti-Patterns

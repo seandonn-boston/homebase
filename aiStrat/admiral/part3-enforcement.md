@@ -131,7 +131,7 @@ Every orchestrator needs a clear decision envelope: what it may decide autonomou
 | External-facing or regulated | Narrow Autonomous significantly. |
 | Self-healing hooks in place | Widen Autonomous for hook-covered categories. |
 
-> **ANTI-PATTERN: DEFERENCE CASCADING** — One agent is uncertain, defers to another, who defers back. The decision is made by whichever agent is last — usually the least qualified. **Uncertainty always flows upward (to Orchestrator or Admiral), never sideways (to a peer agent).** Handoffs between peers (Section 37) transfer *work*, not *uncertainty*. If Agent A is uncertain about a task, it escalates to the Orchestrator — it does not hand the uncertainty to Agent B as a task. The Orchestrator resolves the uncertainty, then delegates clearly-scoped work to the appropriate agent.
+> **ANTI-PATTERN: DEFERENCE CASCADING** — One agent is uncertain, defers to another, who defers back. The decision is made by whichever agent is last — usually the least qualified. **Uncertainty always flows upward (to Orchestrator or Admiral), never sideways (to a peer agent).** Handoffs between peers (Section 38) transfer *work*, not *uncertainty*. If Agent A is uncertain about a task, it escalates to the Orchestrator — it does not hand the uncertainty to Agent B as a task. The Orchestrator resolves the uncertainty, then delegates clearly-scoped work to the appropriate agent.
 
 > **VULNERABILITY (8.3.2): AUTHORITY SELF-ESCALATION** — Decision authority tiers
 > are vulnerable to poisoning when stored as advisory documentation rather than

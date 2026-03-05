@@ -542,8 +542,8 @@ Frontier models support extended thinking — dedicated reasoning tokens that ar
 Models that support structured output (JSON mode, schema-constrained generation) can enforce output format compliance without post-processing validation.
 
 **Use structured outputs for:**
-- Handoff documents (Section 37) — enforce the HANDOFF schema at generation time
-- Escalation reports (Section 36) — ensure all required fields are present
+- Handoff documents (Section 38) — enforce the HANDOFF schema at generation time
+- Escalation reports (Section 37) — ensure all required fields are present
 - Brain entries — enforce category, title, content, metadata structure
 - Interface contracts — validate that specialist output matches the declared contract schema
 - Decision logs — ensure timestamp, decision, alternatives, rationale, and tier are all present

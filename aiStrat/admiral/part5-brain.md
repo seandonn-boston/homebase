@@ -54,55 +54,11 @@ The Brain schema is deliberately simple. Complexity lives in the embeddings, not
 
 **Core tables:**
 
-```sql
--- The atomic unit of knowledge
-CREATE TABLE entries (
-    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+- **`entries`** — The atomic unit of knowledge: classification, content, vector embedding, metadata, provenance, sensitivity, approval status, strengthening signals, and decay tracking.
+- **`entry_links`** — Typed relationships between entries (supports, contradicts, supersedes, elaborates, caused_by). Enables knowledge graph traversal and multi-hop retrieval.
+- **`audit_log`** — Append-only record of every MCP tool invocation: timestamp, agent identity, operation, project, affected entry IDs, result, and risk flags. Immutable by design.
 
-    -- Classification
-    project         TEXT NOT NULL,           -- Which project/fleet
-    category        TEXT NOT NULL,           -- decision | outcome | lesson | context | failure | pattern
-
-    -- Content
-    title           TEXT NOT NULL,           -- Human-readable summary (one line)
-    content         TEXT NOT NULL,           -- Full record: what happened, why, alternatives, rationale
-
-    -- Semantic search
-    embedding       vector(1536),            -- Vector embedding of title + content
-
-    -- Metadata
-    metadata        JSONB NOT NULL DEFAULT '{}',  -- Flexible: agent, section, tags, refs, authority_tier
-
-    -- Provenance
-    source_agent    TEXT,                    -- Which agent created this entry
-    source_session  TEXT,                    -- Which session
-    authority_tier  TEXT,                    -- enforced | autonomous | propose | escalate
-
-    -- Strengthening
-    access_count    INT NOT NULL DEFAULT 0,  -- How often retrieved
-    usefulness      INT NOT NULL DEFAULT 0,  -- Net upvotes from consuming agents
-    superseded_by   UUID REFERENCES entries(id)  -- Null if current; points to replacement if outdated
-);
-
--- Semantic search index
-CREATE INDEX ON entries USING hnsw (embedding vector_cosine_ops);
-
--- Filtered search indexes
-CREATE INDEX ON entries (project, category);
-CREATE INDEX ON entries (created_at);
-CREATE INDEX ON entries (authority_tier);
-CREATE INDEX ON entries ((metadata->>'tags')) USING gin;
-
--- Relationships between entries
-CREATE TABLE entry_links (
-    source_id   UUID NOT NULL REFERENCES entries(id),
-    target_id   UUID NOT NULL REFERENCES entries(id),
-    link_type   TEXT NOT NULL,              -- supports | contradicts | supersedes | elaborates | caused_by
-    PRIMARY KEY (source_id, target_id, link_type)
-);
-```
+See `brain/schema/001_initial.sql` for the canonical schema.
 
 ### Entry Categories
 
@@ -225,6 +181,16 @@ brain_status
   Parameters:
     project     (optional)  — Filter to a specific project
   Returns: entry counts by category, avg usefulness, access patterns, storage metrics
+
+brain_audit
+  Query the audit log. Restricted to Admiral.
+  Parameters:
+    project     (optional)  — Filter to a specific project
+    agent_id    (optional)  — Filter to a specific agent
+    operation   (optional)  — Filter by operation type (record | query | retrieve | strengthen | supersede)
+    since       (optional)  — Only entries after this timestamp
+    limit       (optional)  — Max results (default: 50)
+  Returns: audit log entries with timestamp, agent_id, operation, project, entry_ids, result, risk_flags
 ```
 
 ### Multi-Audience Access

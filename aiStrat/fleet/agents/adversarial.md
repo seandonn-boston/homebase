@@ -1,7 +1,7 @@
 # Simulation & Adversarial Agents
 
 **Category:** Simulation & Adversarial
-**Model Tier:** Tier 1 — Flagship (for adversarial reasoning)
+**Model Tier:** Varies by agent (see individual definitions below)
 
 These agents challenge the fleet's outputs through simulation, argumentation, and adversarial review. They are the fleet's challenge layer — the agents that actively try to break assumptions, find weaknesses, and expose blind spots that conventional QA misses.
 

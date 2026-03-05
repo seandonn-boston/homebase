@@ -264,7 +264,7 @@ The Admiral Framework is platform-agnostic. These patterns show how to apply Adm
 
 ### Pattern 1: Admiral with Claude Code
 
-- **CLAUDE.md** → Part 7 Configuration File Strategy. Keep under 150 lines. Use the sacrifice order: Identity → Authority → Constraints → Knowledge → Task.
+- **CLAUDE.md** → Section 07, Configuration File Strategy (Part 2 — Context). Keep under 150 lines. Use the sacrifice order: Identity → Authority → Constraints → Knowledge → Task.
 - **Hooks** → Part 3 Deterministic Enforcement. Claude Code hooks map directly to the Hook Execution Model (Section 08). PreToolUse, PostToolUse, and other lifecycle hooks ARE the enforcement layer.
 - **Skills** (.claude/skills/*.md) → Part 2 Progressive Disclosure (Section 07). Skills are the native mechanism for on-demand context loading.
 - **agents.md** → Part 4 Fleet Composition (Section 11). Define agent roles with Identity, Scope, Does NOT Do, Output routing.

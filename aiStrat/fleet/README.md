@@ -97,7 +97,7 @@ The `prompt-anatomy.md` file provides the assembly pattern for building complete
 | Inhuman-Scale Analysis | `agents/scale.md` | 12 | |
 | Release & Developer Platform | `agents/lifecycle.md` | 6 | |
 
-**Core catalog: 71 agent definitions.** Each is independently deployable. Combine as the project demands. Start with the **Core Fleet** below (11 agents) and add specialists only when demonstrated need arises.
+**Core catalog: 67 agent definitions.** Each is independently deployable. Combine as the project demands. Start with the **Core Fleet** below (11 agents) and add specialists only when demonstrated need arises.
 
 An additional **29 extended agents** are held in reserve in `agents/extras/` — domain specialists (7), data & analytics (5), and supplementary scale agents (17). See `agents/extras/README.md` for activation instructions.
 
@@ -123,7 +123,7 @@ beyond what the core fleet handles.
 | 10 | **Hallucination Auditor** | `agents/governance.md` | Governance (always deploy) — detects fabricated facts, false citations |
 | 11 | **Loop Breaker** | `agents/governance.md` | Governance (always deploy) — detects and terminates circular agent loops |
 
-**Do not deploy 71 agents for a project that needs 11.** The administrative cost of
+**Do not deploy 67 agents for a project that needs 11.** The administrative cost of
 configuring, routing, and coordinating a large fleet exceeds the value for most
 projects. Start with the core 11. Add roles when the Orchestrator reports
 routing bottlenecks or when specific domain expertise gaps emerge.
@@ -138,14 +138,14 @@ routing bottlenecks or when specific domain expertise gaps emerge.
 | Understand an agent's capabilities | `agents/[category].md` — read the agent definition |
 | See what an agent needs to operate | Agent definition → Context Profile |
 | See where an agent's output goes | Agent definition → Output Goes To |
-| Know when to consult a human professional | [admiral/part11-protocols.md, Section 38](../admiral/part11-protocols.md) |
-| Know the rules for paid resource access | [admiral/part11-protocols.md, Section 39](../admiral/part11-protocols.md) |
+| Know when to consult a human professional | [admiral/part11-protocols.md, Section 39](../admiral/part11-protocols.md) |
+| Know the rules for paid resource access | [admiral/part11-protocols.md, Section 40](../admiral/part11-protocols.md) |
 | Assemble a system prompt | `prompt-anatomy.md` |
 | Inject project context into agents | `context-injection.md` |
 | Route a task to the right agent | `routing-rules.md` |
 | Understand handoff format between agents | `interface-contracts.md` |
 | Choose the right model for an agent | `model-tiers.md` |
-| Understand universal agent rules | [admiral/part11-protocols.md, Section 35](../admiral/part11-protocols.md) |
+| Understand universal agent rules | [admiral/part11-protocols.md, Section 36](../admiral/part11-protocols.md) |
 
 -----
 
