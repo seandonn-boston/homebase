@@ -322,6 +322,48 @@ Agent definitions do not carry individual version numbers. They are versioned co
 
 -----
 
+## G — Implementation Status Map (March 2026)
+
+**Current as of March 2026. Re-assess quarterly or when the Monitor surfaces relevant ecosystem changes.**
+
+This appendix maps every major framework component to its real-world implementation difficulty. Use this to plan adoption timelines, allocate engineering resources, and avoid over-investing in infrastructure before the lighter approaches hit their limits.
+
+**Categories:**
+- **Category 1 — Available today.** Native platform features or existing tools. No custom engineering required.
+- **Category 2 — Moderate custom work.** Days to weeks of standard engineering. No specialized infrastructure skills needed.
+- **Category 3 — Significant infrastructure.** Weeks to months. Requires specialized skills (database administration, security engineering, distributed systems).
+
+| Component | Cat. | Concrete Tooling | Custom Work Required |
+|---|---|---|---|
+| **CLAUDE.md / config files** | 1 | Claude Code native, any text editor | None — write markdown, commit to repo |
+| **Hooks (PreToolUse / PostToolUse)** | 1 | Claude Code hooks, shell scripts | Write hook scripts, version-control alongside fleet config |
+| **Standing Orders** | 1 | System prompt content, CLAUDE.md | None — text loaded into agent context |
+| **Agent definitions** | 1 | Claude Code `agents.md`, Agent SDK agent constructors | Write agent specifications per prompt anatomy (Section 04) |
+| **Self-healing quality loops** | 1 | Hook exit codes + agent retry (Section 08) | Configure hooks for linter/type-checker/test; retry logic is built-in |
+| **Recovery ladder** | 1 | Agent instructions + hooks | Define fallback/backtrack strategies per agent; hook enforcement for max retries |
+| **Brain Level 1 (file-based)** | 1 | JSON files + grep + git | Create `.brain/` directory, write JSON files (see `brain/level1-spec.md`) |
+| **Routing rules** | 2 | Custom orchestrator logic, Agent SDK handoffs | Implement routing decision tree; map task types to agent roles |
+| **Brain Level 2 (SQLite + embeddings)** | 2 | SQLite + embedding API or local model | Set up SQLite schema, embedding generation, cosine similarity search (see `brain/level2-spec.md`) |
+| **Governance agents** | 2 | Agent definitions + monitoring hooks | Write agent definitions, configure detection patterns, wire outputs to Orchestrator |
+| **Quarantine immune system** | 2 | Regex patterns + LLM classifier | Implement 4-layer validation pipeline (structural, injection, semantic, antibody) |
+| **Continuous Monitor** | 2–3 | GitHub API + scheduler (cron/Actions) + quarantine | Implement scanner, state persistence, digest generation, seed writing |
+| **Fleet observability / metrics** | 2–3 | Custom dashboards + structured logging | Define trace format, implement log aggregation, build or configure dashboards |
+| **Brain Level 3 (Postgres + pgvector)** | 3 | Postgres 16 + pgvector extension + MCP server | Database deployment, schema creation, HNSW index tuning, MCP server implementation |
+| **Brain Level 4 (full specification)** | 3 | Everything in Level 3 + identity service + quarantine integration | Full MCP server with zero-trust access control, sensitivity classification, audit logging |
+| **Identity tokens / zero-trust** | 3 | Custom identity service, cryptographic signing | Token issuance, validation, rotation, revocation infrastructure |
+| **Cross-project intelligence** | 3 | Brain Level 3-4 + MCP + `_global` namespace | Multi-project Brain deployment, cross-project query authorization, knowledge promotion workflow |
+
+**Reading this table:**
+
+- **Level 1 adoption** (Appendix B) uses only Category 1 components. Zero custom infrastructure.
+- **Level 2 adoption** adds some Category 2 components (routing rules, file-based checkpoints). Moderate engineering effort.
+- **Level 3 adoption** adds governance agents (Category 2) and Brain Level 1-2 (Category 1-2). Still no heavy infrastructure.
+- **Level 4 adoption** requires Category 3 components. This is where infrastructure investment is justified by proven fleet value at lower levels.
+
+> **ANTI-PATTERN: CATEGORY 3 BEFORE CATEGORY 1** — Deploying Postgres + pgvector + identity tokens before implementing hooks and standing orders. The highest-impact, lowest-cost improvements are all Category 1. A fleet with comprehensive hooks and no Brain outperforms a fleet with a full Brain and no hooks.
+
+-----
+
 *The Fleet Admiral Framework · v5.0*
 
 *Context is the currency of autonomous AI. The Brain is where that currency compounds.*

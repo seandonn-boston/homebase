@@ -20,9 +20,9 @@ You don't need to read 200 pages before deploying your first agent. Start at Lev
 
 | Level | What You Use | Time to Value | When to Advance |
 |---|---|---|---|
-| **Level 1: Disciplined Solo** | CLAUDE.md with enforcement spectrum (Section 08). Hooks for safety-critical constraints. Standing Orders (Section 36). One agent with clear Identity/Scope/Boundaries. | 30 minutes | When you need multiple specialists coordinating on a single task. |
-| **Level 2: Core Fleet** | Everything in Level 1 plus Fleet Composition (Section 11) with 5–8 agents, routing rules, interface contracts, and the recovery ladder. File-based checkpoints for session persistence. | 2–4 hours | When convention drift, scope creep, or hallucination compound across sessions and you can't catch them manually. |
-| **Level 3: Governed Fleet** | Everything in Level 2 plus 3–7 governance agents (Token Budgeter, Hallucination Auditor, Loop Breaker minimum). Decision authority tiers enforced. Brain at Level 1–2 (file-based or SQLite). | 1–2 days | When cross-session knowledge reuse is critical, or when fleet size exceeds what one Orchestrator can effectively govern. |
+| **Level 1: Disciplined Solo** | CLAUDE.md with enforcement spectrum (Section 08). Hooks for safety-critical constraints (including token budget, loop detection, and context health hooks from Section 08). Standing Orders (Section 36). One agent with clear Identity/Scope/Boundaries. | 30 minutes | When you need multiple specialists coordinating on a single task. |
+| **Level 2: Core Fleet** | Everything in Level 1 plus Fleet Composition (Section 11) with 5–8 agents, routing rules, interface contracts, and the recovery ladder. Hook-based enforcement for budget, loops, and context health (no governance agents required). File-based checkpoints for session persistence. | 2–4 hours | When convention drift, scope creep, or hallucination compound across sessions and you can't catch them manually. |
+| **Level 3: Governed Fleet** | Everything in Level 2 plus 3–7 governance agents (Drift Monitor, Hallucination Auditor, Bias Sentinel minimum). Token Budgeter, Loop Breaker, and Context Health Monitor add trend analysis and calibration on top of Level 1-2 hooks. Decision authority tiers enforced. Brain at Level 1–2 (file-based or SQLite). | 1–2 days | When cross-session knowledge reuse is critical, or when fleet size exceeds what one Orchestrator can effectively govern. |
 | **Level 4: Full Framework** | Everything in Level 3 plus full Brain (Postgres + pgvector + MCP), Continuous Monitor, scale agents for review cycles, identity tokens, zero-trust access control, fleet observability. | 1–2 weeks | This is the target state for production fleets operating continuously. |
 
 **The most common mistake is starting at Level 4.** The administrative overhead of 40+ agents, a full Brain, and 7 governance agents exceeds the value for any project that hasn't yet validated its fleet's core workflow. Start at Level 1. Each level builds on the previous one. Skip nothing.
@@ -31,7 +31,7 @@ You don't need to read 200 pages before deploying your first agent. Start at Lev
 
 **Level 1 → 2:** You go from one agent to coordinated specialists. The Orchestrator decomposes work, routes to the right agent, and enforces handoff contracts. This is where most of the productivity gain lives.
 
-**Level 2 → 3:** You add the fleet's immune system. Governance agents catch the failure modes that compound silently over multiple sessions — sycophantic drift, hallucination, scope creep, retry loops. Without them, quality degrades gradually and invisibly.
+**Level 2 → 3:** You add the fleet's immune system. Governance agents add analytical capabilities on top of the deterministic hooks already present at Levels 1-2. They catch the failure modes that compound silently over multiple sessions — sycophantic drift, hallucination, scope creep, cross-agent patterns. Without them, quality degrades gradually and invisibly.
 
 **Level 3 → 4:** You add persistent memory and ecosystem intelligence. The Brain captures lessons that outlive sessions. The Monitor captures lessons that outlive the fleet. Identity tokens and zero-trust access control harden the system for continuous, unsupervised operation.
 
@@ -306,3 +306,5 @@ Sections are ordered by impact and grouped by relevance.
 | C | Worked Example | A complete SaaS application fleet, end to end. | |
 | D | Case Studies | Three synthetic case studies: ungoverned, over-engineered, security-first. | |
 | E | Platform Integration Patterns | How to use Admiral with Claude Code, Agent SDKs, and orchestration frameworks. | |
+| F | Framework Versioning | Version policy, migration between versions, agent definition versioning. | |
+| G | Implementation Status Map | Category 1/2/3 implementability for every framework component. | |

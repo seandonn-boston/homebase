@@ -16,8 +16,8 @@ The full Brain specification below is enterprise-grade. Before committing to Pos
 
 | Level | Storage | Retrieval | When to Advance |
 |---|---|---|---|
-| **Level 1: File-based** | JSON files in `.brain/` directory, one per entry. Git-tracked. | Keyword search via grep. Manual lookup. | When keyword search misses semantically relevant entries more than 30% of the time. |
-| **Level 2: SQLite + embeddings** | Single SQLite file with entries table and vector column. Embeddings via local model or API. | Cosine similarity search. No multi-hop. | When concurrent agent access causes lock contention, or cross-project queries are needed. |
+| **Level 1: File-based** | JSON files in `.brain/` directory, one per entry. Git-tracked. See `brain/level1-spec.md` for entry format, directory layout, naming convention, and retrieval interface. | Keyword search via grep. Manual lookup. | When keyword search misses semantically relevant entries more than 30% of the time. |
+| **Level 2: SQLite + embeddings** | Single SQLite file with entries table and vector column. Embeddings via local model or API. See `brain/level2-spec.md` for SQLite schema, embedding generation, similarity search, and Level 1 migration path. | Cosine similarity search. No multi-hop. | When concurrent agent access causes lock contention, or cross-project queries are needed. |
 | **Level 3: Postgres + pgvector** | Full schema from `brain/schema/001_initial.sql`. HNSW indexes. | Multi-signal retrieval pipeline. Multi-hop traversal. | When retrieval latency or ranking quality needs the full specification below. |
 | **Level 4: Full specification** | Everything in Levels 1-3 plus MCP server, identity tokens, quarantine, zero-trust access control. | Full retrieval with confidence levels, strengthening, decay awareness. | This is the target state for production fleets. |
 
@@ -187,10 +187,25 @@ brain_audit
   Parameters:
     project     (optional)  — Filter to a specific project
     agent_id    (optional)  — Filter to a specific agent
-    operation   (optional)  — Filter by operation type (record | query | retrieve | strengthen | supersede)
+    operation   (optional)  — Filter by operation type (record | query | retrieve | strengthen | supersede | purge)
     since       (optional)  — Only entries after this timestamp
     limit       (optional)  — Max results (default: 50)
   Returns: audit log entries with timestamp, agent_id, operation, project, entry_ids, result, risk_flags
+
+brain_purge
+  Permanently delete a Brain entry. Admiral only. For regulatory compliance (right-to-erasure).
+  Parameters:
+    id          (required)  — Entry UUID to purge
+    regulation  (required)  — Regulatory basis (e.g., "GDPR Art. 17", "CCPA", "internal-policy")
+    reason      (required)  — Human-readable justification for the purge
+  Behavior:
+    - The entry's content, title, metadata, and embedding are permanently deleted.
+    - A tombstone record remains: the entry ID, purged_at timestamp, purge_reason, and regulation are preserved.
+    - The tombstone is not retrievable via brain_query or brain_retrieve. It exists only for audit trail completeness.
+    - All entry_links referencing the purged entry are removed.
+    - An audit_log entry records the purge event. The audit log does NOT contain the purged content — only the entry ID, regulation, reason, and timestamp.
+  Returns: { id, status: "purged", purged_at: timestamp }
+  Errors: AUTHORITY_INSUFFICIENT if caller is not Admiral. NOT_FOUND. ALREADY_PURGED if entry was previously purged.
 ```
 
 ### Multi-Audience Access
@@ -346,6 +361,14 @@ Not all Brain entries carry the same risk. The Brain classifies entry sensitivit
 | **Restricted** | Entries containing PII, financial data, compliance-critical records | Admiral-approved access only, access logged per-read, automatic decay |
 
 Sensitivity is assessed at write time (by the MCP server, not the writing agent) and re-assessed when entries are retrieved in new contexts.
+
+### Compliance Operations
+
+**Right-to-erasure (brain_purge):** When regulatory requirements (GDPR Article 17, CCPA, or internal data retention policy) mandate permanent deletion, `brain_purge` removes all recoverable content while preserving a tombstone for audit trail integrity. This is distinct from supersession: superseded entries retain their full content for historical context; purged entries are permanently destroyed. Only the Admiral may invoke `brain_purge`, and the regulatory basis must be specified.
+
+**Data retention:** Entries classified as `restricted` sensitivity should have a configurable retention period. When the retention period expires, the Admiral is alerted for review — entries may be purged, downgraded to a lower sensitivity, or explicitly retained with documented justification. The retention period is project-specific and recorded in Ground Truth.
+
+**Supersession vs. purging:** Supersession is a knowledge management operation — old knowledge is replaced by new knowledge, but the historical record is preserved. Purging is a compliance operation — content is destroyed because it must not exist. These are fundamentally different operations with different authorization requirements and different audit semantics. Never use supersession as a substitute for purging when regulatory deletion is required. The `brain_supersede` audit trail preserves content; the `brain_purge` audit trail preserves only the fact that content was destroyed, the regulatory basis, and the justification — never the content itself.
 
 ### RAG Security — Retrieval Integrity and Grounding
 

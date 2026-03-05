@@ -181,5 +181,35 @@ When a failure mode is diagnosed, follow these remediation steps:
 3. Determine the hallucination type: factual (wrong version number), structural (nonexistent API), or logical (invalid reasoning chain).
 4. Fix: Add RAG grounding requirements to the task context, tighten Standing Order 4 (Context Honesty) enforcement, or add a post-output fact-checking hook.
 
+### Framework-Level Failure Modes
+
+The failure modes above describe individual agent behavior. The following catalog addresses failures of the framework itself — when the governance, enforcement, or architectural structures fail to deliver their intended value. These are meta-failures: the system designed to prevent agent failures is itself failing.
+
+| Framework Failure Mode | Description | Symptom |
+|---|---|---|
+| **Governance Theater** | Governance agents deployed but not connected to enforcement. Reports generated, never acted on. | Governance agent logs show findings; agent behavior unchanged. Governance reports accumulate without corresponding configuration changes. |
+| **Hook Erosion** | Hooks disabled "temporarily" for velocity, never re-enabled. Enforcement gap grows silently. | Hook execution logs show decreasing coverage over time. Constraints classified as "Hard enforcement" in Section 08 are no longer firing. |
+| **Brain Write-Only** | Brain accumulates entries that are never queried. Knowledge captured but never reused. | `brain_status` shows growing entry counts with near-zero `access_count` values. Agents make decisions without consulting relevant precedent. |
+| **Adoption Level Mismatch** | Framework deployed at Level 4 for a project that needs Level 1. Overhead exceeds value. | More time spent on framework governance than on productive work. Orchestrator spends >40% of budget on routing and coordination. |
+| **Standing Order Drift** | Standing Orders in agent context diverge from the canonical source. Different agents operate under different rules. | Agents cite different versions of the same Standing Order. Behavioral inconsistencies between agents that should follow identical constraints. |
+| **Quarantine Bypass** | External content reaches the Brain without passing through quarantine. May be architectural (missing integration) or operational (manual override normalized). | Brain entries with no quarantine audit trail. Entries from external sources with `approved: true` but no Admiral review record. |
+| **Recovery Ladder Collapse** | Agents skip recovery ladder steps, jumping from retry to escalate. Middle steps (fallback, backtrack, isolate) atrophy. | Escalation reports with no fallback or backtrack attempts logged. Recovery ladder steps 2-4 never appear in audit trails. |
+| **Specification-Implementation Divergence** | The specification (this document) evolves but deployed fleet configurations do not track changes. | Fleet behavior contradicts current specification. Configuration files reference deprecated section numbers or removed concepts. |
+
+**Diagnostic Decision Tree (Framework Level):**
+
+- Governance agents produce reports but nothing changes? → **Governance Theater** → Wire governance outputs to hooks or Orchestrator action items. Each governance finding must map to a concrete configuration change, threshold adjustment, or Admiral decision.
+- Enforcement coverage declining? → **Hook Erosion** → Audit hook configurations against the enforcement classification (Section 08). Re-enable disabled hooks. Add hook-presence verification to the pre-flight checklist (Appendix A).
+- Brain growing but retrieval rate flat? → **Brain Write-Only** → Check agent context for `brain_query` instructions. Verify agents have the Brain MCP tools in their tool registry. Add pre-decision query hooks or standing instructions to query before Propose-tier decisions.
+- Framework overhead consuming more time than productive work? → **Adoption Level Mismatch** → Drop to the appropriate adoption level. Re-evaluate graduation criteria. See Appendix B for level-appropriate configurations.
+- Agents behaving inconsistently on the same rules? → **Standing Order Drift** → Diff each agent's loaded Standing Orders against the canonical source (Section 36). Automate standing context injection via SessionStart hooks.
+- External intelligence in Brain without audit trail? → **Quarantine Bypass** → Audit all Brain entries with external `source_agent` values. Verify the quarantine layer is active and integrated with all ingestion paths. Close any manual override workflows.
+- Escalations without recovery attempts? → **Recovery Ladder Collapse** → Review escalation reports for evidence of steps 2-4 (fallback, backtrack, isolate). Add recovery-step verification to the escalation template. Consider a PostToolUse hook that requires recovery step evidence before accepting an escalation.
+- Fleet behavior contradicts spec? → **Specification-Implementation Divergence** → Establish a version-check process. When the framework version increments, diff the changelog against deployed configurations. Add framework version to fleet metadata and alert when they diverge.
+
+**Remediation Principles:**
+
+Framework-level failures are harder to detect than agent-level failures because they manifest as *absence* — the absence of enforcement, the absence of retrieval, the absence of governance action. The primary diagnostic tool is the audit log: if a framework mechanism exists but the audit log shows no evidence of it executing, the mechanism has failed. Periodic framework health audits (quarterly or after each major project phase) should verify that every specified mechanism is actually operational, not just deployed.
+
 -----
 

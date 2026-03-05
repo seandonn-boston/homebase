@@ -50,7 +50,13 @@ CREATE TABLE entries (
 
     -- Decay tracking — entries not accessed in 90 days flagged for review
     -- Application code updates last_accessed_at on every brain_query/brain_retrieve hit
-    last_accessed_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    last_accessed_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+
+    -- Regulatory purge support (right-to-erasure)
+    -- When purged: content, title, metadata, and embedding are NULLed; only tombstone fields remain.
+    -- Note: Adding 'purge' to audit_log operation CHECK requires constraint recreation on existing databases.
+    purged_at       TIMESTAMPTZ,
+    purge_reason    TEXT
 );
 
 -- Semantic search index (HNSW for fast approximate nearest neighbor)
@@ -89,7 +95,7 @@ CREATE TABLE entry_links (
 CREATE TABLE audit_log (
     id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     timestamp   TIMESTAMPTZ NOT NULL DEFAULT now(),
-    operation   TEXT NOT NULL CHECK (operation IN ('record', 'query', 'retrieve', 'strengthen', 'supersede', 'audit')),
+    operation   TEXT NOT NULL CHECK (operation IN ('record', 'query', 'retrieve', 'strengthen', 'supersede', 'audit', 'purge')),
     agent_id    TEXT NOT NULL,
     session_id  TEXT NOT NULL,
     project     TEXT NOT NULL,

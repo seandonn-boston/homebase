@@ -77,6 +77,78 @@ Agent action
 | **Process** | Require test existence before implementation accepted | Write tests for new features |
 | **Cost** | Kill session after token budget exceeded | Be mindful of token usage |
 
+### Reference Hook Implementations
+
+The enforcement classifications above (e.g., "Kill session after token budget exceeded") require concrete hook specifications. The following hooks implement the deterministic enforcement for token budgets, loop detection, and context health — three areas where advisory instructions are insufficient and hook-based enforcement is mandatory.
+
+**Token Budget Enforcement Hooks:**
+
+```
+PostToolUse: token_budget_tracker
+  Format:     Shell script or Python. Version-controlled.
+  Invocation: Synchronous. Fires after every tool invocation.
+  Input:      { "event": "PostToolUse", "tool": "...", "params": { ... },
+                "agent_identity": "...", "session_state": { "tokens_used": N, "token_budget": M } }
+  Output:     Exit 0: pass. Stdout includes updated cumulative token count.
+              At 80% utilization: stdout warning ("Token budget at 80%: {used}/{limit}").
+              At 90% utilization: stdout escalation alert for Orchestrator.
+  Timeout:    5 seconds.
+
+PreToolUse: token_budget_gate
+  Format:     Shell script or Python. Version-controlled.
+  Invocation: Synchronous. Fires before every tool invocation.
+  Input:      { "event": "PreToolUse", "tool": "...", "params": { ... },
+                "agent_identity": "...", "session_state": { "tokens_used": N, "token_budget": M } }
+  Output:     Exit 0: budget available, proceed.
+              Exit non-zero (block): "Token budget exhausted: {used}/{limit}. Session terminated."
+  Timeout:    5 seconds.
+```
+
+**Retry Loop Detection Hook:**
+
+```
+PostToolUse: loop_detector
+  Format:     Shell script or Python. Version-controlled.
+  Invocation: Synchronous. Fires after every tool invocation.
+  Input:      { "event": "PostToolUse", "tool": "...", "result": { "exit_code": N, "error": "..." },
+                "agent_identity": "...", "trace_id": "..." }
+  Output:     Exit 0: no loop detected.
+              Exit non-zero: "Loop detected: error signature '{sig}' repeated {count} times.
+              Moving to recovery ladder (Section 22)."
+  Behavior:   Tracks (agent_id, error_signature) tuples across invocations.
+              Triggers when: same error recurs 3+ times, OR total retry count across all
+              error signatures in a session exceeds configurable maximum (default: 10).
+              This hook makes the cycle detection specified above enforceable rather than advisory.
+  Timeout:    5 seconds.
+```
+
+**Context Health Monitoring Hooks:**
+
+```
+SessionStart: context_baseline
+  Format:     Shell script or Python. Version-controlled.
+  Invocation: Synchronous. Fires once at session start.
+  Input:      { "event": "SessionStart", "agent_identity": "...",
+                "context": { "standing_context_tokens": N, "total_capacity": M } }
+  Output:     Exit 0: baseline recorded. Stdout: initial context utilization metrics.
+  Behavior:   Measures initial context window utilization, records baseline metrics
+              (standing context size, available capacity) for comparison by context_health_check.
+  Timeout:    10 seconds.
+
+PostToolUse: context_health_check
+  Format:     Shell script or Python. Version-controlled.
+  Invocation: Synchronous. Fires every N tool invocations (configurable, default: 10).
+  Input:      { "event": "PostToolUse", "tool": "...", "agent_identity": "...",
+                "context": { "current_utilization": P, "standing_context_present": [...] } }
+  Output:     Exit 0: context health acceptable.
+              Exit non-zero: "Context health critical" — triggers when:
+              (a) utilization exceeds threshold (default: 85%) without sacrifice order activation, OR
+              (b) critical context (Identity, Authority, Constraints) is missing from active context.
+  Timeout:    10 seconds.
+```
+
+Governance agents (`fleet/agents/governance.md`) analyze patterns and recommend calibration for these hooks. The hooks handle real-time enforcement; the agents handle trend analysis.
+
 ### Self-Healing Quality Loops
 
 The most effective fleet pattern discovered in production: hooks that detect failures and trigger automatic repair.
@@ -197,6 +269,8 @@ Defense: all external content passes through the quarantine layer, a four-layer 
 Hostile content is rejected before it can reach the Brain. Attack patterns are preserved in defanged form as antibody entries, teaching future agents to recognize similar threats.
 
 Additionally, all monitor findings arrive as seed candidates with `"approved": False` — requiring Admiral review before Brain activation. This two-layer defense (quarantine + approval gate) prevents both automated and subtle poisoning.
+
+> **Layer 3 (Semantic) is defense-in-depth, not a standalone guarantee.** The quarantine's semantic classification layer uses an LLM classifier, which is inherently probabilistic. It supplements the deterministic checks in Layers 1-2 but cannot guarantee detection of novel adversarial patterns. Layers 1-2 plus the Admiral approval gate provide the primary security boundary. See `monitor/README.md` for Layer 3's specific limitations and mitigations.
 
 ### Configuration Hygiene
 
