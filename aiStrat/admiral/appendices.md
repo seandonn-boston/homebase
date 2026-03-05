@@ -37,7 +37,7 @@ Before deploying any new fleet, verify every item. If any box is unchecked, the 
 - [ ] **Brain Architecture (15):** Postgres + pgvector deployed. Schema created. Embedding model selected. HNSW index built.
 - [ ] **Knowledge Protocol (16):** Brain MCP server running and registered. Access control configured per role. All agents have brain_query and brain_record in their tool registry.
 - [ ] **Intelligence Lifecycle (17):** Capture triggers defined (chunk boundaries, decisions, failures). Review cadence scheduled. Cross-project namespace established if multi-fleet.
-- [ ] **Continuous Monitor:** Monitor configured with watched repos, search queries, and RSS feeds. GitHub Actions workflow (`ai-monitor.yml`) enabled. Quarantine tests passing. Digest review cadence matches scan cadence. Seed candidate approval workflow established.
+- [ ] **Continuous Monitor:** Monitor configured with watched repos, search queries, and RSS feeds. Scheduler (cron or CI workflow) enabled. Quarantine layer active. Digest review cadence matches scan cadence. Seed candidate approval workflow established.
 
 **Part 6 — Execution**
 
@@ -75,28 +75,49 @@ Before deploying any new fleet, verify every item. If any box is unchecked, the 
 
 ## B — Quick-Start Sequence
 
-Operational order for standing up a new fleet. This minimizes rework — not the document order.
+Structured around the four Adoption Levels (see index.md). Complete each level before advancing.
+
+### Level 1: Disciplined Solo (30 minutes)
 
 1. **Mission (01)** — What you are building. What success looks like.
-2. **Ground Truth (05)** — Tech stack, tools, access, vocabulary.
-3. **Boundaries (02)** — What you are NOT building. Resource budgets.
-4. **Success Criteria (03)** — Machine-verifiable definition of "done."
-5. **Deterministic Enforcement (08)** — Classify constraints. Implement hooks.
-6. **Configuration File Strategy (07)** — CLAUDE.md (<150 lines), skills, agent files.
-7. **Configuration Security (10)** — Audit configs. Pin MCP servers. Set CODEOWNERS.
-8. **Fleet Composition (11)** — Agents, roles, routing, interface contracts.
+2. **Boundaries (02)** — What you are NOT building. Resource budgets.
+3. **Success Criteria (03)** — Machine-verifiable definition of "done."
+4. **Deterministic Enforcement (08)** — Classify constraints. Implement hooks for safety-critical ones.
+5. **Configuration File Strategy (07)** — CLAUDE.md (<150 lines). Standing Orders loaded.
+6. **Configuration Security (10)** — Audit configs. Pin MCP servers. Set CODEOWNERS.
+
+**You can start working here.** One agent with clear Identity, Scope, Boundaries, and hooks.
+
+### Level 2: Core Fleet (2-4 hours)
+
+7. **Ground Truth (05)** — Tech stack, tools, access, vocabulary.
+8. **Fleet Composition (11)** — 5-8 agents, roles, routing, interface contracts.
 9. **Decision Authority (09)** — Four authority tiers for this project's risk profile.
 10. **Tool & Capability Registry (12)** — Available and unavailable tools per agent.
 11. **Model Selection (13)** — Assign each role to a tier. Verify context fit.
-12. **Protocol Integration (14)** — Register MCP servers. Configure A2A if needed.
-13. **Context Engineering (04)** — Write system prompts. Run probes.
-14. **Context Window Strategy (06)** — Profiles, loading order, progressive disclosure.
-15. **Brain Architecture (15)** — Deploy Postgres + pgvector. Create schema. Register Brain MCP server.
-16. **Knowledge Protocol (16)** — Configure access control. Add brain_query and brain_record to agent tool registries.
-17. **Continuous Monitor** — Configure watched repos, search queries, RSS feeds. Enable GitHub Actions workflow. Run initial scan. Review seed candidates.
-18. **Work Decomposition (18)** — Break first phase into chunks.
-19. **Cost Management (26)** — Monetary budgets. Cost tracking.
-20. **Remaining sections** — QA (21), Recovery (22), Failure Modes (23), Memory (24), Adaptation (25), Metrics (27), Scaling (28), Governance (29), Observability (30), CI/CD Operations (31), Evaluation (32), Admiral (33), Expert Routing (34), Intelligence Lifecycle (17).
+12. **Context Engineering (04)** — Write system prompts per prompt anatomy. Run probes.
+13. **Context Window Strategy (06)** — Profiles, loading order, progressive disclosure.
+14. **Work Decomposition (18)** — Break first phase into chunks.
+15. **Institutional Memory (24)** — File-based checkpoints and handoff documents.
+
+### Level 3: Governed Fleet (1-2 days)
+
+16. **Governance agents** — Deploy Token Budgeter, Hallucination Auditor, and Loop Breaker minimum. Add remaining governance agents as needed.
+17. **Cost Management (26)** — Per-session and per-phase budgets. Cost tracking active.
+18. **Brain Level 1-2** — File-based or SQLite Brain. Validate that persistent memory improves retrieval before scaling (see Section 15, "Start Simple").
+19. **Quality Assurance (21)** — Verification levels per task type. Self-healing loops operational.
+20. **Failure Recovery (22)** — Recovery ladder documented. Max retries set.
+
+### Level 4: Full Framework (1-2 weeks)
+
+21. **Brain Architecture (15)** — Deploy Postgres + pgvector. Create schema. Register Brain MCP server.
+22. **Knowledge Protocol (16)** — Configure zero-trust access control. Identity tokens. Add brain_query and brain_record to agent tool registries.
+23. **Protocol Integration (14)** — Register MCP servers. Configure A2A if needed.
+24. **Continuous Monitor** — Configure watched repos, RSS feeds. Enable GitHub Actions workflow. Quarantine layer active.
+25. **Fleet Observability (30)** — Instrumentation strategy. Trace correlation. Dashboards.
+26. **Remaining sections** — Adaptation (25), Metrics (27), Scaling (28), Governance (29), CI/CD Operations (31), Evaluation (32), Admiral (33), Expert Routing (34).
+
+**The most common mistake is starting at Level 4.** See Case Study 2 (Appendix D) for what happens when you over-engineer from day one.
 
 -----
 
@@ -180,6 +201,127 @@ A concrete application for a mid-complexity greenfield project.
 
 -----
 
-*The Fleet Admiral Framework · v3.3*
+## D — Case Studies
+
+These case studies are synthesized from patterns observed across multiple agent fleet deployments. They illustrate what works, what fails, and why governance matters.
+
+### Case Study 1: The Ungoverned Sprint
+
+**Setup:** 6-agent fleet (Orchestrator, 2 Implementers, QA, Database, Architect). No governance agents. No Brain. File-based checkpoints only. 3-week sprint.
+
+**Week 1:** High productivity. 14 tasks completed. First-pass quality rate: 78%.
+
+**Week 2:** Sycophantic drift emerges. QA findings per review drop from 3.2 to 0.8. Two subtle bugs ship — Backend Implementer hallucinated an API endpoint that didn't exist, QA didn't catch it. Convention erosion: three different error handling patterns now coexist.
+
+**Week 3:** Scope creep compounds. Frontend Implementer "helpfully" adds 3 unrequested features totaling 40K extra tokens. Retry loops waste 15% of session budgets. A refactoring task breaks an implicit contract between two services (nobody tracked implicit contracts). Total rework: 22% of all completed work.
+
+**Lesson:** Without Drift Monitor, Hallucination Auditor, and Loop Breaker, failures compound silently. The fleet doesn't know it's failing until rework costs are already paid.
+
+**Metrics:**
+
+- First-pass quality degraded from 78% → 54% over 3 weeks.
+- Token waste from loops: 15%.
+- Rework rate: 22%.
+- Estimated governance overhead to prevent: ~8% of session tokens.
+
+### Case Study 2: The Over-Engineered Fleet
+
+**Setup:** 42-agent fleet for a CRUD application. Full Brain with Postgres + pgvector. All 7 governance agents. 12 scale agents deployed simultaneously. Token budgets set but not enforced via hooks (instructions only).
+
+**Result:** Orchestrator spends 60% of its token budget routing between 42 agents. Governance agents produce more reports than the Admiral can review. Scale agents generate findings for systems that don't exist yet. The Brain accumulates 400 entries in week 1 — 90% are never retrieved (write-only memory anti-pattern).
+
+**Pivot:** Reduced to 8-agent core fleet. Disabled Brain until week 3. Deployed only 3 governance agents (Token Budgeter, Hallucination Auditor, Loop Breaker). Added scale agents only for pre-release review.
+
+**Lesson:** Administrative overhead scales with fleet size. The optimal fleet is the smallest fleet that covers the project's actual needs. Start with the Core Fleet (8 agents). Add specialists only when the Orchestrator reports routing gaps.
+
+**Metrics:**
+
+- Orchestrator overhead dropped from 60% to 15% of token budget.
+- Task throughput increased 3x.
+- Brain entries with >0 retrievals went from 10% to 65%.
+
+### Case Study 3: The Security-First Fleet
+
+**Setup:** 8-agent fleet building a healthcare data API. Zero-trust from day one: identity tokens on all Brain access, model tier enforcement via hooks, file scope boundaries enforced, configuration security audit before first session.
+
+**Challenge (Week 2):** A PR modifies the CLAUDE.md to add a new "Autonomous" permission for the Backend Implementer to modify authentication middleware. The configuration security hook flags it — CODEOWNERS requires Admiral approval for CLAUDE.md changes. Admiral reviews and rejects: auth changes require Propose tier.
+
+**Challenge (Week 4):** The Continuous Monitor ingests a new library version. The quarantine layer's injection detection flags suspicious content in the changelog (embedded prompt injection attempt). Entry is quarantined and converted to a FAILURE Brain entry that teaches the fleet what the attack pattern looks like.
+
+**Lesson:** Zero-trust enforcement caught two incidents that advisory instructions would have missed. The configuration security hook prevented an authority escalation. The quarantine layer prevented memory poisoning. Both were silent — no human noticed until the audit log was reviewed.
+
+**Metrics:**
+
+- Two security incidents caught by hooks (zero caught by instructions alone in control fleet).
+- Zero false positives from quarantine over 6 weeks.
+- Identity token overhead: <2% of request latency.
+
+-----
+
+## E — Platform Integration Patterns
+
+The Admiral Framework is platform-agnostic. These patterns show how to apply Admiral concepts with specific tools. Each pattern maps framework sections to platform-native features.
+
+### Pattern 1: Admiral with Claude Code
+
+- **CLAUDE.md** → Part 7 Configuration File Strategy. Keep under 150 lines. Use the sacrifice order: Identity → Authority → Constraints → Knowledge → Task.
+- **Hooks** → Part 3 Deterministic Enforcement. Claude Code hooks map directly to the Hook Execution Model (Section 08). PreToolUse, PostToolUse, and other lifecycle hooks ARE the enforcement layer.
+- **Skills** (.claude/skills/*.md) → Part 2 Progressive Disclosure (Section 07). Skills are the native mechanism for on-demand context loading.
+- **agents.md** → Part 4 Fleet Composition (Section 11). Define agent roles with Identity, Scope, Does NOT Do, Output routing.
+- **Claude Code's built-in subagent** → Swarm Patterns (Section 20). The Agent tool enables parallel work with coordination.
+
+> **Note:** Claude Code is the closest native implementation of the Admiral model. Most framework concepts map directly to Claude Code features.
+
+### Pattern 2: Admiral with Multi-Agent SDK (e.g., Anthropic Agent SDK)
+
+- **Agent definitions** (fleet/) → Agent class constructors with system prompts assembled per prompt-anatomy.md.
+- **Routing rules** → Agent handoff logic. Map the routing decision tree (fleet/routing-rules.md) to the SDK's handoff mechanism.
+- **Hooks** → Tool wrapping. Wrap tool calls with pre/post validation logic that mirrors the Hook Execution Model.
+- **Brain** → External tool registered with agents. Implement brain_query and brain_record as tools available to all agents.
+- **Governance agents** → Separate agent instances running in parallel, monitoring shared state.
+- **Standing Orders** → Prepended to every agent's system prompt as binding constraints.
+
+> **Note:** SDKs provide the runtime; Admiral provides the operational doctrine. The SDK handles message passing; Admiral defines what messages should say, who should receive them, and what constraints govern the exchange.
+
+### Pattern 3: Admiral with LangGraph / CrewAI / AutoGen
+
+These frameworks handle orchestration (routing, handoffs, tool calls). Admiral adds what they typically lack:
+
+- **Governance agents:** Most frameworks have no equivalent. Implement as monitoring nodes in the graph or as "observer" agents in the crew.
+- **Enforcement spectrum:** Most frameworks rely on instructions. Add hook-equivalent validation at graph edges or as pre/post-processing steps.
+- **Decision authority tiers:** Not natively supported. Implement as metadata on agent roles, checked by the orchestrator before accepting actions.
+- **Brain/persistent memory:** Most frameworks offer simple memory. The Brain specification provides the schema and retrieval pipeline for a more capable alternative.
+- **Standing Orders:** Load as shared system prompt context across all agents.
+
+> **Note:** Admiral is complementary, not competitive, with these frameworks. They solve "how do agents communicate?" Admiral solves "what should agents communicate, under what constraints, with what governance?"
+
+-----
+
+## F — Framework Versioning
+
+### Version Policy
+
+The Admiral Framework uses semantic versioning: **MAJOR.MINOR** (e.g., v5.0, v5.1, v6.0).
+
+- **MAJOR** (e.g., v5 → v6): Breaking changes to Standing Orders, agent definition format, Brain schema, or enforcement model. Requires migration.
+- **MINOR** (e.g., v5.0 → v5.1): New agent definitions, additional appendices, clarifications, or non-breaking extensions. Backwards compatible.
+
+### Migration Between Versions
+
+When upgrading a fleet to a new MAJOR version:
+
+1. **Read the changelog.** Identify breaking changes that affect your adoption level. Level 1 fleets are affected only by Standing Order changes; Level 4 fleets may need Brain schema migrations.
+2. **Update Standing Orders first.** These are the operational core — agents must operate under the new orders before other changes propagate.
+3. **Follow the Cascade Map** (Section 25). Changes propagate: Standing Orders → Agent Definitions → Routing Rules → Interface Contracts → Brain Schema.
+4. **Re-run the Pre-Flight Checklist** (Appendix A) against the new version.
+5. **Reset trust calibration** for any agents whose scope or authority changed.
+
+### Agent Definition Versioning
+
+Agent definitions do not carry individual version numbers. They are versioned collectively with the framework. When a specific agent definition changes between versions, the changelog notes the affected agent and the nature of the change.
+
+-----
+
+*The Fleet Admiral Framework · v5.0*
 
 *Context is the currency of autonomous AI. The Brain is where that currency compounds.*

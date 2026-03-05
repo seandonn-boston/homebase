@@ -1,1 +1,0 @@
-"""Fleet Brain MCP server."""

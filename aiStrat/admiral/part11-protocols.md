@@ -4,6 +4,8 @@
 
 *Parts 1–10 define principles, architecture, and strategy. This part consolidates the concrete, non-negotiable protocols that every agent must follow during execution. These are the "how" — structured formats, decision ladders, and behavioral contracts that turn framework principles into repeatable agent behavior.*
 
+<!-- Five protocol areas: 35 Standing Orders | 36 Escalation | 37 Handoff | 38 Human Referral | 39 Paid Resources -->
+
 -----
 
 ## 35 — STANDING ORDERS
@@ -11,6 +13,18 @@
 > **TL;DR** — Fifteen rules loaded into every agent's standing context. Non-negotiable. Project-specific instructions layer on top but cannot contradict them.
 
 These orders apply to every agent in the fleet regardless of role, category, or model tier.
+
+### Standing Order Priority
+
+When Standing Orders conflict, the higher-priority category prevails:
+
+1. **Safety** (SO 10: Prohibitions, SO 12: Zero-Trust Self-Protection, SO 14: Compliance/Ethics) — always takes precedence
+2. **Authority** (SO 5: Decision Authority, SO 6: Recovery Protocol) — governs how decisions are made
+3. **Process** (SO 7: Checkpointing, SO 8: Quality Standards, SO 15: Pre-Work Validation) — governs how work is done
+4. **Communication** (SO 2: Output Routing, SO 4: Context Honesty, SO 9: Communication Format) — governs how information flows
+5. **Scope** (SO 1: Identity Discipline, SO 3: Scope Boundaries, SO 11: Context Discovery, SO 13: Bias Awareness) — governs what the agent addresses
+
+In practice, conflicts are rare because the orders are designed to be complementary. When uncertainty arises, escalate per SO 5.
 
 ### 1. Identity Discipline
 
@@ -480,54 +494,26 @@ This protocol integrates with Standing Orders Section 35.4 (Context Honesty) and
 
 ## 39 — PAID RESOURCE AUTHORIZATION PROTOCOL
 
-> **TL;DR** — When fleet work requires paid software, licensed tools, or subscription services, agents must never approve transactions autonomously. All paid resource usage requires explicit human authorization, metered billing transparency, and structured access through a resource broker.
+> **TL;DR** — When fleet work requires paid software, licensed tools, or subscription services, agents must never approve transactions autonomously. All paid resource usage requires explicit human authorization and structured access through a resource broker.
 
 ### The Core Principle
 
-AI agent fleets routinely need access to paid tools, licensed software, and subscription services to complete their work — IDEs, cloud services, SaaS platforms, API endpoints with usage fees, streaming data providers, and specialized tooling. These resources have real financial costs. **No agent may autonomously approve, initiate, or authorize any transaction involving paid resources.**
+AI agent fleets routinely need access to paid tools, licensed software, and subscription services — IDEs, cloud services, SaaS platforms, API endpoints with usage fees, and specialized tooling. These resources have real financial costs. **No agent may autonomously approve, initiate, or authorize any transaction involving paid resources.**
 
 Paid resource access is always **Escalate-tier** under the Decision Authority framework (Section 09). There are no exceptions.
 
 ### What Counts as a Paid Resource
 
-| Category | Examples |
-|---|---|
-| **Subscription software** | IDEs, design tools, CI/CD platforms, monitoring services |
-| **Licensed tools** | Proprietary compilers, database engines, testing suites |
-| **API usage fees** | Cloud provider APIs, third-party data services, LLM inference costs |
-| **Cloud infrastructure** | Compute instances, storage, bandwidth, managed services |
-| **SaaS platforms** | Project management, analytics, communication tools |
-| **Data subscriptions** | Market data feeds, research databases, content libraries |
+Subscription software, licensed tools, API usage fees, cloud infrastructure, SaaS platforms, and data subscriptions. If it has a cost — whether per-seat, per-use, or per-month — it is a paid resource.
 
 ### Authorization Flow
 
-```
-Agent identifies need for paid resource
-    │
-    ▼
-Agent produces RESOURCE REQUEST (structured format below)
-    │
-    ▼
-Request routes to Admiral (human) — always Escalate tier
-    │
-    ▼
-Admiral reviews: cost, necessity, alternatives, duration
-    │
-    ▼
-    ├── APPROVED → Broker allocates access, session begins
-    │                 Metered billing starts
-    │                 Max duration enforced
-    │
-    ├── DENIED → Agent must use alternative approach
-    │             or mark task as blocked
-    │
-    └── NEEDS INFO → Admiral requests clarification
-                      Agent provides additional justification
-```
+1. Agent identifies need for a paid resource and produces a **Resource Request** (format below).
+2. Request routes to the Admiral (human) — always Escalate tier.
+3. Admiral reviews cost, necessity, alternatives, and duration.
+4. **Approved** — Broker allocates access; session begins with max duration enforced. **Denied** — Agent uses an alternative approach or marks the task as blocked. **Needs Info** — Admiral requests clarification.
 
 ### Resource Request Format
-
-Every request for paid resource access must include:
 
 ```
 RESOURCE REQUEST
@@ -535,149 +521,53 @@ RESOURCE REQUEST
 
 AGENT: [Your role]
 TASK: [What you need the resource for]
-
-RESOURCE NEEDED:
-[Specific tool, service, or platform]
-
-ESTIMATED COST:
-[Per-session, per-hour, or per-use cost if known; "Unknown — requires Admiral research" if not]
-
-ESTIMATED DURATION:
-[How long access is needed]
-
-JUSTIFICATION:
-[Why this specific paid resource is required — what cannot be accomplished without it]
-
-FREE ALTERNATIVES CONSIDERED:
-[What free/open-source alternatives exist and why they are insufficient]
-
-AUTHORIZATION REQUESTED:
-[One-time use | Session-scoped | Project-scoped (requires explicit Admiral approval for each scope)]
+RESOURCE NEEDED: [Specific tool, service, or platform]
+ESTIMATED COST: [Per-session/hour/use cost if known; "Unknown — requires Admiral research" if not]
+ESTIMATED DURATION: [How long access is needed]
+JUSTIFICATION: [Why this resource is required — what cannot be accomplished without it]
+FREE ALTERNATIVES CONSIDERED: [What exists and why it is insufficient]
+AUTHORIZATION REQUESTED: [One-time use | Session-scoped | Project-scoped]
 ```
 
-### Pooled License Sharing
+### The Resource Broker
 
-When the fleet operates under a shared license pool (multiple agents or sessions sharing subscription accounts), the following rules apply:
+All paid resource access flows through a resource broker. Agents never interact directly with paid services. The broker provides:
 
-#### How It Works
+- **Credential vault** — Secure storage with checkout/checkin lifecycle. Agents never see raw credentials.
+- **Session management** — Slot allocation, concurrency limits, queuing, and max-duration enforcement.
+- **Cost tracking** — Metered usage records per agent, per service, attributable and auditable.
+- **Risk assessment** — Pre-access and post-access evaluation with sensitivity classification.
+- **Audit log** — Complete record of every access grant, operation, and revocation.
 
-1. **Credential pooling** — Shared accounts are registered in a secure vault. Agents never see raw credentials; the broker handles authentication.
-2. **Slot-based allocation** — Each license has a concurrency limit (e.g., a 4-seat license supports 4 simultaneous sessions). The broker tracks active sessions and queues requests when at capacity.
-3. **Fair-split billing** — Subscription costs are split proportionally by usage time across all consumers. A 2-hour session on a $20/month tool costs proportionally less than a 20-hour session.
-4. **Queue-based backpressure** — When all slots are occupied, new requests are queued (not rejected). Agents are notified of queue position and estimated wait time.
+### Credential Vault Requirements
 
-#### Operational Rules
+- Credentials are stored encrypted at rest and in transit.
+- Agents authenticate through the broker; passwords and tokens are never exposed to agents.
+- Disabled or flagged credentials block new sessions until the Admiral resolves the issue.
+- Human approval is required for every new subscription, scope expansion, tier upgrade, or trial extension.
 
-| Rule | Rationale |
-|---|---|
-| **Human approves every new subscription** | No agent may sign up for, subscribe to, or purchase any service |
-| **Human approves scope expansion** | Upgrading a tier, adding seats, or extending a trial requires human authorization |
-| **Sessions have max duration** | Prevents runaway costs from forgotten or stuck sessions |
-| **Agents see their cost** | Every session produces a usage record with calculated cost |
-| **Credentials never leave the vault** | Agents authenticate through the broker, never handle passwords directly |
-| **Disabled credentials block new sessions** | If a service flags an account (e.g., sharing detection), no new sessions are allocated until the Admiral resolves it |
+### Session Lifecycle
 
-#### Session Lifecycle
+1. **Acquire** — Agent submits a Resource Request. If approved, the broker allocates a credential slot. If all slots are in use, the request is queued and the agent continues other work.
+2. **Use** — Agent uses the resource for the stated task. Metered billing is active. Agent minimizes session duration and does not use the resource for unrelated work.
+3. **Release** — Agent completes the task and releases the slot immediately. Usage record is created. Slot returns to the pool.
 
-```
-QUEUED → ACTIVE → ENDED (normal completion)
-                → EXPIRED (max duration exceeded — automatic)
-```
-
-- **QUEUED**: Agent has requested access; all slots are in use. Agent should continue other work while waiting.
-- **ACTIVE**: Broker has allocated a credential slot. Metered billing has started. Agent may use the resource.
-- **ENDED**: Agent has finished and released the slot. Usage record is created. Slot returns to pool for queue drain.
-- **EXPIRED**: Session exceeded max duration. Broker forces session end, creates usage record, and frees the slot. Agent receives notification.
-
-### Cost Transparency
-
-Agents must be cost-aware when using paid resources:
-
-- **Before requesting:** Check if a free alternative exists. Prefer open-source and built-in tools.
-- **During use:** Minimize session duration. Do not leave sessions open while doing unrelated work.
-- **After use:** Log the usage in checkpoint output. Include cost in handoff documents when relevant.
-
-The Admiral can review cost summaries at any time:
-- Per-agent cost breakdown (which agents consume the most paid resources)
-- Per-service cost recovery (how much of the subscription cost is being utilized)
-- Platform-wide economics (total spend, utilization rates, waste identification)
-
-### Anti-Patterns
-
-> **ANTI-PATTERN: Autonomous Purchasing** — An agent encounters a task requiring a paid tool and signs up for a free trial or initiates a purchase without human approval. Even free trials may convert to paid subscriptions. All resource acquisition requires Admiral authorization.
-
-> **ANTI-PATTERN: Credential Hoarding** — An agent checks out a license slot and holds it for the entire session even though the paid tool is only needed for 10 minutes of a 2-hour session. Release slots as soon as the specific task requiring the tool is complete.
-
-> **ANTI-PATTERN: Shadow Subscriptions** — An agent discovers a workaround to access a paid service (using a personal API key found in the codebase, exploiting a trial reset, etc.). All access must flow through the authorized broker. Unauthorized access paths are a security violation.
-
-> **ANTI-PATTERN: Cost Blindness** — An agent uses the most expensive tool tier for every task without considering whether a cheaper tier or free alternative would suffice. Cost is a first-class constraint, not an afterthought.
+Sessions that exceed max duration are expired automatically by the broker.
 
 ### Zero-Trust Access Model
 
-The broker operates on zero-trust principles. **No agent is trusted by default, regardless of role, prior authorization, or fleet membership.**
+- **Verify explicitly** — Every request requires identity verification, task context, and justification, even for previously authorized agents.
+- **Least privilege** — Minimum scope for the stated task. Read-only when write is not justified.
+- **Assume breach** — Limit blast radius through scope constraints, duration limits, and monitoring.
+- **No implicit trust inheritance** — Authorization for one resource does not grant access to another.
+- **All access is temporary** — No agent retains persistent access. The broker revokes access on task completion, and sweeps all grants at fleet session end. Emergency revocation (Section 36) revokes all access fleet-wide immediately.
+- **Sensitive data** (PII, credentials, financial/health records) is always single-task-scoped and cannot be pooled or extended without fresh Admiral authorization.
 
-| Principle | Broker Implementation |
-|---|---|
-| **Verify explicitly** | Every access request requires identity verification, task context, and justification — even for agents that accessed the same resource previously |
-| **Least privilege** | Grant the minimum scope required for the stated task. Read-only when write is not justified. Single-resource when multi-resource is not justified |
-| **Assume breach** | Design every session as if the requesting agent could be compromised. Limit blast radius through scope constraints, duration limits, and monitoring |
-| **No implicit trust inheritance** | Authorization for Resource A does not grant implicit access to Resource B, even if they are on the same platform or share credentials |
+### Anti-Patterns
 
-### Pre-Access and Post-Access Risk Assessment
+- **Autonomous Purchasing** — Signing up for services or free trials without Admiral approval. Even free trials may convert to paid.
+- **Credential Hoarding** — Holding a license slot longer than needed. Release as soon as the specific task is complete.
+- **Shadow Subscriptions** — Using unauthorized access paths (stale API keys, trial resets). All access must flow through the broker.
+- **Cost Blindness** — Using the most expensive tier without considering cheaper alternatives. Cost is a first-class constraint.
 
-Every resource request triggers a two-phase risk assessment:
-
-**Phase 1 — Pre-Access (before granting access):**
-
-The broker (or requesting agent, per Standing Order 12) evaluates:
-- What data does this resource contain or expose?
-- What is the blast radius if the agent misuses, corrupts, or leaks this data?
-- Is this the minimum access scope required for the stated task?
-- Does the agent's current task actually require this resource?
-
-If pre-access risk is acceptable → grant access. If elevated → route to Admiral for approval. If unacceptable → deny.
-
-**Phase 2 — Post-Access (after granting, before changes):**
-
-Once the agent has access and can see the real data:
-- Is the actual sensitivity higher than the pre-access estimate?
-- Are there data categories present (PII, credentials, financial records, health data) that were not anticipated?
-- Does the scope of the data exceed what the task requires?
-
-If post-access risk exceeds pre-access estimate → the agent must **re-escalate to the Admiral** before making any changes (per Standing Order 12). The agent does not proceed silently.
-
-### Access Decay, Revocation, and Temporary Access
-
-**All access is temporary.** No agent retains persistent access to any resource. The broker enforces:
-
-| Mechanism | How It Works |
-|---|---|
-| **Time-bound access** | Every session has a maximum duration. When it expires, access is revoked automatically — no agent action required |
-| **Task-scoped revocation** | When an agent completes its task, the broker revokes access immediately. Agents do not retain access "in case it's needed later" |
-| **Decay schedule** | For long-running tasks, access tokens decay on a configurable schedule (e.g., 50% scope reduction after 1 hour, full revocation after 2 hours). Agents must re-request with fresh justification to continue |
-| **Idle revocation** | If an agent holds access but has not performed any operation within a configurable idle window, access is revoked and the slot returns to the pool |
-| **Post-completion sweep** | After a fleet session ends, the broker revokes ALL outstanding access grants — no exceptions, no carryover to the next session |
-| **Emergency revocation** | The Admiral or any agent triggering an Emergency Halt (Section 36) can revoke all access fleet-wide immediately |
-
-**Sensitive data receives additional protection:**
-
-- Access to sensitive data (PII, credentials, financial data, health records, security configurations) is **always temporary and always single-task-scoped**.
-- Sensitive data access cannot be pooled, shared, or extended without fresh Admiral authorization.
-- The broker logs every read and write operation against sensitive resources, not just session start/end.
-- When sensitive data access is revoked, the broker confirms that no cached copies remain in the agent's working context.
-
-> **ANTI-PATTERN: PERSISTENT ACCESS** — An agent is granted database access for a migration task. The migration completes but the access is never revoked. Three sessions later, a different agent in the same fleet inherits the stale credential and uses it for an unrelated query — bypassing the authorization flow entirely. All access must be earned per-task, not inherited.
-
-### Integration with the Broker
-
-The fleet's resource broker (see `broker/` for reference implementation) provides the operational infrastructure for this protocol:
-
-- **Vault**: Secure credential storage with checkout/checkin lifecycle
-- **Session management**: Slot allocation, queuing, and max-duration enforcement
-- **Billing engine**: Per-second metered cost calculation with fair splitting
-- **Status API**: Real-time availability, queue depth, and cost queries
-- **Risk assessment engine**: Pre-access and post-access risk evaluation with sensitivity classification
-- **Decay manager**: Time-bound access tokens with configurable decay schedules and idle revocation
-- **Audit log**: Complete record of every access grant, operation, revocation, and risk assessment result
-
-Agents interact with the broker through structured requests, never directly with paid services. The broker enforces concurrency limits, tracks costs, and ensures every resource usage is attributable and auditable.
+> Implementation details (decay schedules, idle revocation, pooled licensing mechanics, billing attribution) should be specified per-deployment based on the resources in use.

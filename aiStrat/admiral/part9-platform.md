@@ -71,6 +71,46 @@ A trace tells you exactly what happened, in what order, at what cost. When throu
 - **Brain interaction patterns.** Agents that never query before deciding are flying blind. Agents that query but never strengthen are consuming without contributing.
 - **Context window utilization.** How much of the window is standing context vs. working context. Agents near capacity produce degraded output.
 
+### Native Model Telemetry
+
+Modern frontier models emit structured telemetry that supplements hook-based instrumentation:
+
+| Signal | What It Reveals | Source |
+|---|---|---|
+| **Input/output/thinking token breakdown** | Whether extended thinking is consuming disproportionate budget. Whether prompts are bloated relative to outputs. | Model API response metadata |
+| **Cache hit rate** | Whether prompt caching is effective. Low hit rates indicate context is changing too frequently between calls. | Model API response metadata |
+| **Time-to-first-token (TTFT)** | Model latency independent of output length. Spikes indicate provider congestion or excessively long prompts. | Model API response metadata |
+| **Tool use patterns** | Which tools are called, in what order, how often. Reveals whether the agent is using tools efficiently or brute-forcing solutions. | Agent runtime |
+| **Extended thinking token ratio** | Ratio of thinking tokens to output tokens. High ratios on routine tasks indicate the model is over-reasoning — consider a lower tier. | Model API response metadata |
+
+**Integration:** Capture native telemetry alongside hook-based traces. The trace record for each tool call should include both the hook output (what the agent did) and the model telemetry (what the model consumed doing it). This dual-layer view enables cost attribution at the granularity needed for tier optimization.
+
+### MCP Protocol Evolution
+
+The framework assumes MCP as the universal tool access protocol. As MCP matures, the following capabilities become available and should be leveraged:
+
+**Streaming context:** MCP servers can push context updates to agents in real-time rather than requiring pull-based queries. Use streaming for:
+- Brain notifications when entries relevant to the current task are created or superseded by other agents
+- CI/CD status updates during headless operations
+- Real-time cost tracking updates as budget thresholds approach
+
+**Subscriptions:** Agents can subscribe to MCP server events rather than polling. Use subscriptions for:
+- Brain change notifications (new entries in the agent's project scope)
+- Tool availability changes (MCP server goes offline/online)
+- Security alerts (token revocation, anomaly detection)
+
+**Discovery with trust signals:** MCP servers can self-advertise capabilities, security posture, and trust indicators. Before registering a new MCP server:
+- Verify the server's declared capabilities match its actual behavior (capability probing)
+- Check for SLSA provenance or equivalent supply-chain attestation
+- Confirm the server's network egress matches its declared scope (no undeclared outbound connections)
+- Pin the server version and, when deployed, monitor for updates through the Continuous Monitor
+
+**Heterogeneous protocol support:** Not all agents in a fleet speak MCP. The framework must accommodate:
+- Agents using Claude Agent SDK directly (native tool definitions, not MCP-wrapped)
+- Agents using REST APIs for tool access
+- Legacy agents using filesystem-based communication
+- Cross-protocol translation at the Orchestrator level — the Orchestrator speaks all protocols; specialists speak their native protocol
+
 ### Instrumentation Strategy
 
 **Hooks as instrumentation points.** The framework's hook system (Section 08) provides natural instrumentation:
@@ -199,7 +239,7 @@ Result routing:
   - Seed candidates (Python file with brain_record calls, approved: False) → Admiral reviews and approves
   - High-priority findings → automatic GitHub Issue creation
   - State (JSON) → committed to repo for persistence across runs
-Security: All external content passes through quarantine.py (4-layer immune system)
+Security: All external content passes through the quarantine layer (4-layer immune system)
   before reaching seed candidates. See Section 10 and Part 5, Section 17.
 Cost cap: GitHub API rate limits only — no LLM token costs (deterministic scanning)
 ```
@@ -452,6 +492,75 @@ The strategic question every Admiral must eventually answer: is the fleet worth 
 > **ANTI-PATTERN: EVALUATION THEATER** — Metrics collected, reports generated, dashboards built — but no configuration ever changes as a result. Every evaluation must end with a concrete action: adopt, revert, modify, or confirm. If evaluations never lead to changes, you're either already optimal or not evaluating the right things.
 
 > **ANTI-PATTERN: PREMATURE OPTIMIZATION** — A/B testing model tiers on a fleet that hasn't stabilized its agent definitions. Optimize the fundamentals first — clear roles, sharp context, working enforcement — before fine-tuning configuration variables. The biggest gains come from fixing broken foundations, not tweaking knobs.
+
+-----
+
+## 32b — MULTI-MODAL AND EXTENDED CAPABILITIES
+
+> **TL;DR** — Modern agents can see (vision), interact with UIs (computer use), reason deeply (extended thinking), and produce structured outputs. Each capability changes cost, latency, and security profiles. Define when and how each is used.
+
+### Computer Use
+
+Agents with computer use capability can interact with graphical interfaces — clicking, typing, scrolling, reading screen content. This extends the fleet's reach beyond code and CLI into visual workflows.
+
+**When to use computer use:**
+- Visual regression testing — comparing UI screenshots against design specifications
+- Interacting with third-party tools that lack APIs or MCP servers
+- End-to-end workflow testing from the user's perspective
+- Infrastructure management through web consoles when CLI/API alternatives are unavailable
+
+**Security constraints for computer use:**
+- Computer use agents operate in sandboxed environments with no access to production systems
+- Screen captures are treated as potentially sensitive data — no persistence without Admiral authorization
+- Computer use sessions have strict time limits (default: 5 minutes per interaction)
+- All computer use actions are logged with screenshots for audit trail
+- Computer use agents have the narrowest Autonomous tier — most actions require Propose-tier approval
+
+**Cost implications:** Computer use is token-intensive (vision tokens for screen reading + action tokens for interaction). Budget accordingly — typically 3-5x the token cost of equivalent CLI operations.
+
+### Extended Thinking
+
+Frontier models support extended thinking — dedicated reasoning tokens that are consumed before the response begins. This is not the same as a longer response; it is deeper reasoning.
+
+**When to enable extended thinking:**
+- Propose-tier and Escalate-tier decisions where reasoning quality is critical
+- Adversarial review and Devil's Advocate sessions
+- Complex debugging where the failure mode is non-obvious
+- Architecture decisions with long-term consequences
+
+**When NOT to enable extended thinking:**
+- Routine Autonomous-tier tasks (formatting, simple implementations, pattern-following)
+- High-volume batch processing where cost scales with thinking tokens
+- Tasks where the agent already has clear instructions and sufficient context
+
+**Cost model:** Extended thinking tokens are billed at the same rate as output tokens but can be 5-50x the output volume. A task that costs $0.10 without extended thinking may cost $0.50-$5.00 with it. Budget extended thinking as a separate line item, not as part of the general token budget.
+
+**Budget enforcement:** Set per-task thinking token limits. If extended thinking exceeds the limit, the model truncates reasoning — which is worse than not using extended thinking at all. Set limits high enough to be useful or disable extended thinking entirely.
+
+### Structured Outputs
+
+Models that support structured output (JSON mode, schema-constrained generation) can enforce output format compliance without post-processing validation.
+
+**Use structured outputs for:**
+- Handoff documents (Section 37) — enforce the HANDOFF schema at generation time
+- Escalation reports (Section 36) — ensure all required fields are present
+- Brain entries — enforce category, title, content, metadata structure
+- Interface contracts — validate that specialist output matches the declared contract schema
+- Decision logs — ensure timestamp, decision, alternatives, rationale, and tier are all present
+
+**Integration with hooks:** Structured outputs complement but do not replace hook-based validation. The hook validates behavior; structured outputs validate format. Both are needed.
+
+### Vision and Image Analysis
+
+Agents with vision capabilities can analyze screenshots, diagrams, UI mockups, and visual artifacts.
+
+**Fleet integration patterns:**
+- QA Agent reviews screenshots of implemented UI against design specifications
+- Accessibility Auditor checks visual contrast ratios and layout from rendered screenshots
+- Architecture diagrams are analyzed for consistency with actual system topology
+- Error screenshots from bug reports are analyzed for diagnostic information
+
+**Security:** Images may contain sensitive information (credentials visible on screen, PII in UI, internal system names). Vision-processed images should be treated with the same sensitivity classification as text content. Do not persist processed images without classification.
 
 -----
 

@@ -34,13 +34,13 @@ You are the {Agent Name}. {One to three sentences. Second person. Specific enoug
 - **{Receiving Agent}** {when/for what}
 - **{Orchestrator}** on completion
 
-### Context Discovery
+### Context Discovery — *Recommended for categories with blast-radius or bias concerns; included in governance agents by default*
 
 **Must learn before operating:** {What project-specific context does this agent need? — see Standing Order 11}
 **Discovery questions:** {What must this agent resolve before producing output?}
 **If missing:** Request from Orchestrator / Context Curator. See Standing Order 11.
 
-### Guardrails
+### Guardrails — *Recommended for categories with blast-radius or bias concerns; included in governance agents by default*
 
 - **Blast radius:** {What damage could this agent cause if wrong?}
 - **Bias risks:** {What biases is this agent most susceptible to?}
@@ -78,12 +78,12 @@ You are the {Agent Name}. {Definition.}
 - **{Receiving Agent}** {when/for what}
 - **{Orchestrator}** on completion
 
-### Context Discovery
+### Context Discovery — *Recommended for categories with blast-radius or bias concerns; included in governance agents by default*
 
 **Must learn before operating:** {Project-specific context — see Standing Order 11.}
 **If missing:** Request from Orchestrator / Context Curator.
 
-### Guardrails
+### Guardrails — *Recommended for categories with blast-radius or bias concerns; included in governance agents by default*
 
 - **Blast radius:** {What damage if wrong?}
 - **Bias risks:** {Key biases for this agent.}

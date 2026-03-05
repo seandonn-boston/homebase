@@ -4,20 +4,26 @@
 
 *Parts 1–4 define what the fleet is, what it knows, how it's enforced, and who does the work. Part 5 gives the fleet long-term memory — a queryable knowledge system accessible through a standard protocol that any AI agent can speak. It replaces file-based persistence (Section 24) with a permanent knowledge system that captures not just what happened, but what it meant and why it mattered. Set up the Brain before the fleet starts executing (Part 6) so that every decision, lesson, and failure is captured from day one.*
 
-> **IMPLEMENTATION STATUS (v4):** The current Brain implementation is an **in-memory
-> Python dict** (`BrainStore`) with threading locks, authentication, audit trails,
-> and a 7-signal retrieval pipeline. It provides the full API described below but
-> uses `MockEmbeddingProvider` (SHA-512-derived pseudo-vectors) instead of real
-> semantic embeddings. The Postgres + pgvector schema below is the **target
-> architecture** — the `BrainStore` interface is designed so a Postgres adapter
-> can be swapped in without changing callers. Until then, retrieval results are
-> structurally correct but not semantically meaningful.
-
 -----
 
 ## 15 — BRAIN ARCHITECTURE
 
-> **TL;DR** — **Target:** A Postgres database with pgvector stores every decision, rationale, outcome, and lesson as vector embeddings that capture meaning, not keywords. One database. One schema. Any project. Any agent. Any time horizon. **Current:** In-memory BrainStore with mock embeddings (see Implementation Status above).
+> **TL;DR** — A Postgres database with pgvector stores every decision, rationale, outcome, and lesson as vector embeddings that capture meaning, not keywords. One database. One schema. Any project. Any agent. Any time horizon.
+
+### Start Simple: Validating the Brain Hypothesis
+
+The full Brain specification below is enterprise-grade. Before committing to Postgres + pgvector + MCP, validate the core hypothesis: that persistent semantic memory improves fleet performance. Start with the lightest possible implementation, measure, then scale.
+
+| Level | Storage | Retrieval | When to Advance |
+|---|---|---|---|
+| **Level 1: File-based** | JSON files in `.brain/` directory, one per entry. Git-tracked. | Keyword search via grep. Manual lookup. | When keyword search misses semantically relevant entries more than 30% of the time. |
+| **Level 2: SQLite + embeddings** | Single SQLite file with entries table and vector column. Embeddings via local model or API. | Cosine similarity search. No multi-hop. | When concurrent agent access causes lock contention, or cross-project queries are needed. |
+| **Level 3: Postgres + pgvector** | Full schema from `brain/schema/001_initial.sql`. HNSW indexes. | Multi-signal retrieval pipeline. Multi-hop traversal. | When retrieval latency or ranking quality needs the full specification below. |
+| **Level 4: Full specification** | Everything in Levels 1-3 plus MCP server, identity tokens, quarantine, zero-trust access control. | Full retrieval with confidence levels, strengthening, decay awareness. | This is the target state for production fleets. |
+
+Each level should run for at least 2 weeks of active fleet operation before advancing. Measure: retrieval hit rate (did the agent find what it needed?), retrieval precision (was the top result actually relevant?), and knowledge reuse rate (what percentage of Brain entries are accessed more than once?). If these metrics don't improve at the next level, the current level is sufficient.
+
+> **ANTI-PATTERN: PREMATURE ARCHITECTURE** — Deploying Postgres + pgvector + MCP + identity tokens for a fleet that hasn't yet determined whether persistent memory helps. The infrastructure cost (setup, maintenance, security surface) is justified only when lighter approaches hit their limits. Start at Level 1. Graduate when you have evidence.
 
 ### Why a Database, Not Files
 
@@ -302,6 +308,36 @@ The Brain operates on zero-trust principles. **Caller-declared identity is never
 - The identity token binds the agent to a specific project, role, and permission scope. An agent cannot claim a different role or project than its token authorizes.
 - Tokens are session-scoped and expire. A token from a prior session does not grant access in the current session.
 
+### Identity Token Lifecycle
+
+Tokens are the atomic unit of trust in the Brain's zero-trust model. Their lifecycle is fully specified:
+
+**Issuance:**
+- Tokens are issued by the fleet's identity authority (Admiral or automated identity service) at session start.
+- Each token binds: agent identity, project scope, role, authority tier, session ID, and expiration time.
+- Tokens are cryptographically signed. The Brain MCP server verifies the signature before processing any request.
+
+**Scope:**
+- A token grants access to exactly one project (or `_global` for cross-project orchestrators).
+- A token grants exactly one authority tier. No token grants multiple tiers.
+- A token grants exactly one role. An agent cannot claim a different role than its token specifies.
+
+**Rotation:**
+- Long-running sessions must rotate tokens at a configurable interval (default: 1 hour).
+- Rotation requires re-authentication with the identity authority. Stale tokens are rejected.
+- The Brain logs token rotation events in the audit trail.
+
+**Revocation:**
+- Any token can be revoked immediately by the Admiral or the Emergency Halt Protocol.
+- Revocation is propagated to the Brain MCP server within one heartbeat interval (default: 10 seconds).
+- A revoked token is permanently invalid. No re-issuance of the same token.
+- When a token is revoked mid-operation, the in-flight operation completes but no subsequent operations are accepted.
+
+**Delegation:**
+- Tokens cannot be delegated. An agent cannot pass its token to another agent.
+- If Agent A needs Agent B to access the Brain on its behalf, Agent B must obtain its own token from the identity authority with appropriate scope.
+- This prevents privilege escalation through token sharing.
+
 #### Mandatory Enforcement
 
 The permission matrix above is **not documentation — it is a runtime enforcement requirement.** The Brain MCP server must:
@@ -355,7 +391,7 @@ If an attacker or a malfunctioning agent writes misleading entries to the Brain,
 
 - **Provenance tracking**: Every entry records its source agent, session, and authority tier. Entries from lower-authority sources are flagged when retrieved alongside higher-authority entries.
 - **Usefulness signal**: The strengthening model (access_count, usefulness) surfaces well-validated entries and deprioritizes unreliable ones. Entries with net-negative usefulness are flagged for Admiral review.
-- **Quarantine integration**: External intelligence passes through `quarantine.py` before Brain ingestion. Internal entries from agents that have triggered security alerts are flagged for review.
+- **Quarantine integration**: External intelligence passes through the quarantine layer before Brain ingestion. Internal entries from agents that have triggered security alerts are flagged for review.
 - **Contradiction detection**: When a retrieved entry contradicts another entry on the same topic, both are surfaced with the conflict clearly labeled. The consuming agent must not silently pick one.
 
 #### Retrieval Grounding Requirements
@@ -404,7 +440,7 @@ External Intelligence (Monitor)
 Knowledge enters the Brain from two channels:
 
 - **Internal capture:** Agents record decisions, outcomes, lessons, and failures from their own work.
-- **External intelligence:** The Continuous AI Landscape Monitor (`monitor/`) feeds curated ecosystem intelligence — model releases, agent patterns, emerging tools — through a quarantine layer before it reaches the Brain.
+- **External intelligence:** The Continuous AI Landscape Monitor (`monitor/`) is designed to feed curated ecosystem intelligence — model releases, agent patterns, emerging tools — through a quarantine layer before it reaches the Brain.
 
 Both channels converge at the same pipeline. External entries arrive as seed candidates with `"approved": False` — requiring Admiral review before activation.
 
@@ -448,6 +484,43 @@ Vector similarity alone is not enough. The Brain's retrieval pipeline applies mu
 4. **Usefulness** — entries with higher net usefulness scores rank higher.
 5. **Currency** — superseded entries are excluded by default (retrievable via explicit flag).
 6. **Category match** — when the query implies a category (e.g., "what went wrong with..." implies `failure`), category-matched entries rank higher.
+7. **Provenance weight** — entries from higher-authority sources (HUMAN, ENFORCED) rank above entries from lower-authority sources (AGENT, MONITOR) when similarity scores are close.
+8. **Contradiction awareness** — when two retrieved entries contradict each other (linked via `contradicts` relationship), both are returned with the conflict explicitly flagged. The consuming agent must resolve the contradiction, not silently pick one.
+
+### Multi-Hop Retrieval
+
+Single-pass retrieval answers "what is relevant to my query?" Multi-hop retrieval answers "what is the full reasoning chain behind a decision?"
+
+**How it works:**
+
+1. Agent queries: "Why did we choose JWT for authentication?"
+2. Brain returns the primary entry (the JWT decision).
+3. Agent requests `brain_retrieve(id, depth: 2)` — follows links two levels deep.
+4. Brain returns: the decision + the context that caused it + the outcome that resulted + any lessons or failures linked to the outcome.
+5. The agent now has the full chain: cause → decision → outcome → consequence.
+
+**When to use multi-hop:**
+- Before making a Propose-tier decision that reverses or extends a prior decision
+- When a retrieved entry references other entries (links exist)
+- During failure forensics — tracing the causal chain from symptom to root cause
+- During cross-project intelligence queries — understanding whether a pattern applies in the current context
+
+**Traversal limits:**
+- Default depth: 1 (entry + immediate links)
+- Maximum depth: 3 (prevents runaway graph traversal)
+- Maximum nodes returned: 50 (prevents context overflow from dense graphs)
+- Cycle detection: the traversal engine tracks visited nodes and never revisits them
+
+### Retrieval Confidence
+
+Every retrieval result includes a confidence indicator reflecting the quality of the match:
+
+| Confidence | Criteria | Agent Action |
+|---|---|---|
+| **High** | Similarity > 0.85, same project, high usefulness, not superseded | Use directly with citation |
+| **Medium** | Similarity 0.70–0.85, or cross-project, or moderate usefulness | Use with verification — check currency and applicability |
+| **Low** | Similarity 0.50–0.70, or low usefulness, or superseded entries included | Treat as suggestive, not authoritative. Verify independently before relying on it |
+| **Conflict** | Multiple entries contradict each other | Present both sides. Do not silently resolve. Escalate if the decision depends on which is correct |
 
 ### The Knowledge Graph
 
@@ -467,7 +540,7 @@ Agents traversing links get not just an answer but the *reasoning chain* behind 
 
 ### External Intelligence: The Continuous Monitor
 
-The Brain does not only learn from the fleet's own experience. The Continuous AI Landscape Monitor (`monitor/`) is an automated surveillance system that scans the AI ecosystem and feeds curated intelligence into the Brain.
+The Brain does not only learn from the fleet's own experience. The Continuous AI Landscape Monitor (`monitor/`) specifies an automated surveillance system designed to scan the AI ecosystem and feed curated intelligence into the Brain.
 
 **What the monitor captures:**
 
@@ -480,9 +553,9 @@ The Brain does not only learn from the fleet's own experience. The Continuous AI
 | Fleet-relevant repos discovered via search | PATTERN | 13 targeted GitHub queries + 8 topic scans |
 | Trending repos gaining traction | PATTERN | Star-surge detection with quality filtering |
 
-**The quarantine layer:** All external content passes through `quarantine.py` — a four-layer immune system (structural validation, injection detection, semantic analysis, antibody generation) — before reaching the Brain. Hostile content is rejected and converted into FAILURE entries that teach the fleet what adversarial patterns look like.
+**The quarantine layer:** Per the Monitor specification, all external content passes through the quarantine layer — a four-layer immune system (structural validation, injection detection, semantic analysis, antibody generation) — before reaching the Brain. Hostile content is rejected and converted into FAILURE entries that teach the fleet what adversarial patterns look like.
 
-**The approval gate:** Monitor findings arrive as seed candidates with `"approved": False`. Nothing enters the Brain without Admiral review. This prevents automated poisoning while keeping the intelligence pipeline flowing.
+**The approval gate:** When deployed, Monitor findings arrive as seed candidates with `"approved": False`. Nothing enters the Brain without Admiral review. This prevents automated poisoning while keeping the intelligence pipeline flowing.
 
 **How the fleet benefits:**
 
@@ -490,7 +563,7 @@ The Brain does not only learn from the fleet's own experience. The Continuous AI
 - **Agent definitions** evolve — patterns extracted from exemplar tools inform prompt design, tool configuration, and boundary definitions.
 - **Ground Truth (Section 05)** is refreshed — ecosystem changes surface as context entries the Admiral can integrate.
 
-> **ANTI-PATTERN: INTELLIGENCE WITHOUT ACTION** — The monitor runs daily, digests accumulate, seed candidates pile up — but the Admiral never reviews them and findings never reach the Brain. Intelligence has value only when it changes fleet behavior. Review cadence must match scan cadence.
+> **ANTI-PATTERN: INTELLIGENCE WITHOUT ACTION** — The Monitor is configured to run daily, digests accumulate, seed candidates pile up — but the Admiral never reviews them and findings never reach the Brain. Intelligence has value only when it changes fleet behavior. Review cadence must match scan cadence.
 
 ### Cross-Project Intelligence
 
@@ -537,6 +610,6 @@ For fleets already operating with file-based persistence (Institutional Memory, 
 
 -----
 
-*The Fleet Admiral Framework · v3.3*
+*The Fleet Admiral Framework · v5.0*
 
 *Context is the currency of autonomous AI. The Brain is where that currency compounds.*

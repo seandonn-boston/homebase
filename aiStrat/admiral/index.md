@@ -2,7 +2,7 @@
 
 **A Workforce Toolkit for Autonomous AI Agent Fleets**
 
-v4.0 · March 2026
+v5.0 · March 2026
 
 -----
 
@@ -11,6 +11,72 @@ v4.0 · March 2026
 This is a **Swiss army knife for AI agent orchestration** — a reusable toolkit of patterns, agent definitions, enforcement strategies, and operational knowledge. It is the workforce itself, not overhead for building a specific product.
 
 Pick the parts you need. A two-person team might use only the enforcement spectrum (Part 3) and five agent definitions. A platform team might deploy the full Brain, Monitor, and Fleet. The framework scales to what you need — you don't adopt all of it to use any of it.
+
+-----
+
+## Adoption Levels
+
+You don't need to read 200 pages before deploying your first agent. Start at Level 1. Graduate when you hit the limits of your current level.
+
+| Level | What You Use | Time to Value | When to Advance |
+|---|---|---|---|
+| **Level 1: Disciplined Solo** | CLAUDE.md with enforcement spectrum (Section 08). Hooks for safety-critical constraints. Standing Orders (Section 35). One agent with clear Identity/Scope/Boundaries. | 30 minutes | When you need multiple specialists coordinating on a single task. |
+| **Level 2: Core Fleet** | Everything in Level 1 plus Fleet Composition (Section 11) with 5–8 agents, routing rules, interface contracts, and the recovery ladder. File-based checkpoints for session persistence. | 2–4 hours | When convention drift, scope creep, or hallucination compound across sessions and you can't catch them manually. |
+| **Level 3: Governed Fleet** | Everything in Level 2 plus 3–7 governance agents (Token Budgeter, Hallucination Auditor, Loop Breaker minimum). Decision authority tiers enforced. Brain at Level 1–2 (file-based or SQLite). | 1–2 days | When cross-session knowledge reuse is critical, or when fleet size exceeds what one Orchestrator can effectively govern. |
+| **Level 4: Full Framework** | Everything in Level 3 plus full Brain (Postgres + pgvector + MCP), Continuous Monitor, scale agents for review cycles, identity tokens, zero-trust access control, fleet observability. | 1–2 weeks | This is the target state for production fleets operating continuously. |
+
+**The most common mistake is starting at Level 4.** The administrative overhead of 40+ agents, a full Brain, and 7 governance agents exceeds the value for any project that hasn't yet validated its fleet's core workflow. Start at Level 1. Each level builds on the previous one. Skip nothing.
+
+### What Each Level Adds
+
+**Level 1 → 2:** You go from one agent to coordinated specialists. The Orchestrator decomposes work, routes to the right agent, and enforces handoff contracts. This is where most of the productivity gain lives.
+
+**Level 2 → 3:** You add the fleet's immune system. Governance agents catch the failure modes that compound silently over multiple sessions — sycophantic drift, hallucination, scope creep, retry loops. Without them, quality degrades gradually and invisibly.
+
+**Level 3 → 4:** You add persistent memory and ecosystem intelligence. The Brain captures lessons that outlive sessions. The Monitor captures lessons that outlive the fleet. Identity tokens and zero-trust access control harden the system for continuous, unsupervised operation.
+
+### Minimum Viable Reading Path
+
+If you are starting at Level 1, you do not need to read the entire framework. These five files (~800 lines total) give you everything you need to deploy your first governed agent. Read the rest when you need it.
+
+| Order | File | What to Read | Why |
+|---|---|---|---|
+| 1 | [`index.md`](index.md) | Glossary + Adoption Levels | Shared vocabulary and your roadmap. |
+| 2 | [`part1-strategy.md`](part1-strategy.md) | Full file | Mission, Boundaries, Success Criteria — the three inputs every agent needs. |
+| 3 | [`part3-enforcement.md`](part3-enforcement.md) | Full file | The enforcement spectrum: hooks over instructions. This is the framework's core insight. |
+| 4 | [`part11-protocols.md`](part11-protocols.md) | Section 35 (Standing Orders) only | The fifteen non-negotiable rules loaded into every agent's standing context. |
+| 5 | [`appendices.md`](appendices.md) | Appendix A (Pre-Flight Checklist) | Go/no-go gate — confirms you have not missed anything critical. |
+
+Start here. Graduate to the full framework when you hit the limits of Level 1.
+
+-----
+
+## Why Admiral
+
+Other frameworks solve agent orchestration. Admiral solves agent *governance*.
+
+(Landscape as of March 2026 — verify current state via Monitor or manual review)
+
+| Framework | What It Provides | What It Lacks |
+|---|---|---|
+| **CrewAI / AutoGen / LangGraph** | Agent definition, routing, tool calling, memory | No enforcement spectrum (hooks vs instructions). No governance agents. No failure mode catalog. No decision authority tiers. No persistent semantic memory with retrieval confidence. |
+| **OpenAI Swarm** | Lightweight agent handoffs | Explicitly "educational" — no production governance, no security model, no quality assurance pipeline. |
+| **Anthropic Agent SDK** | Agent runtime, tool use, handoffs, guardrails | Runtime, not doctrine. Provides the engine; Admiral provides the operating manual. Complementary, not competitive. |
+| **Custom orchestration** | Full control | You build everything from scratch, including every failure mode Admiral has already cataloged and every governance pattern already specified. |
+
+**Admiral's unique contributions:**
+
+1. **The enforcement spectrum.** The insight that constraints exist on a reliability continuum (hooks → firm guidance → soft guidance) and that the most important constraints must be hooks, not instructions. No other framework makes this distinction.
+
+2. **Governance agents as first-class citizens.** Seven agents that operationalize 20 documented failure modes — sycophantic drift, hallucination, scope creep, retry loops, context starvation, convention erosion, contradiction. These are structural LLM weaknesses that every fleet encounters. Most frameworks ignore them.
+
+3. **Zero-trust continuous verification.** Identity tokens, access control per Brain entry, quarantine for external intelligence, configuration security audits. Most frameworks treat security as an afterthought. Admiral treats it as the first thought.
+
+4. **The Brain specification.** Persistent semantic memory with vector retrieval, multi-hop reasoning chains, retrieval confidence levels, strengthening signals, and decay awareness. This is fleet institutional memory, not just chat history.
+
+5. **Decision authority tiers.** Enforced/Autonomous/Propose/Escalate with concrete calibration rubric. Every agent knows exactly what it can decide, what it should recommend, and what it must escalate. No other framework provides this granularity.
+
+Admiral is complementary to agent SDKs and orchestration frameworks. They provide the runtime. Admiral provides the operational doctrine that makes the runtime safe, governed, and effective. See Appendix E for platform integration patterns.
 
 -----
 
@@ -82,14 +148,14 @@ Terms are listed alphabetically. When these terms appear in any part file, they 
 | **Cascade map** | The dependency graph between framework artifacts. When one artifact changes, all downstream artifacts must be reviewed and revised. Section 25. |
 | **Checkpoint** | A structured summary written at chunk boundaries recording completed tasks, in-progress work, blockers, decisions, assumptions, and resource consumption. Section 24. |
 | **Chunk** | An independently completable, independently verifiable unit of work. Sized to consume no more than 40% of an agent's token budget. Section 18. |
-| **Completion bias** | Failure mode where an agent produces complete but degraded output rather than incomplete but excellent output when approaching resource limits. Section 23. |
-| **Configuration accretion** | Failure mode where instruction files grow line-by-line after each incident until agents ignore the bloated rules. Section 23. |
+| **Completion bias** | Agent produces complete but degraded output near resource limits. See Section 23 (Failure Mode Catalog) for diagnosis and defense. |
+| **Configuration accretion** | Instruction files grow after each incident until agents ignore bloated rules. See Section 23 (Failure Mode Catalog) for diagnosis and defense. |
 | **Configuration injection** | Attack where an adversary modifies agent config files (CLAUDE.md, hooks, skills) in a PR or through compromised CI. Section 10. |
 | **Continuous AI Landscape Monitor** | Automated surveillance system (`monitor/`) that scans the AI ecosystem — model releases, agent patterns, trending tools — and feeds curated intelligence into the Brain through a quarantine layer. Runs on GitHub Actions (daily + weekly). Section 17, Section 31. |
 | **Context engineering** | The discipline of designing information flows across an entire agent system — what information exists where, when, and why. Subsumes prompt engineering. Section 04. |
 | **Context profile** | Per-role specification of what loads into an agent's context: standing context, session context, on-demand context, refresh triggers, sacrifice order. Section 06. |
-| **Context starvation** | Failure mode where an agent's context is underloaded, causing it to drift from Mission and infer incorrectly. Section 23. |
-| **Context stuffing** | Failure mode where an agent's context is overloaded with artifacts "just in case," making output shallow and unfocused. Section 23. |
+| **Context starvation** | Agent lacks critical information needed for the task. See Section 23 (Failure Mode Catalog) for diagnosis and defense. |
+| **Context stuffing** | Agent context overloaded with artifacts "just in case," making output shallow. See Section 23 (Failure Mode Catalog) for diagnosis and defense. |
 | **Contract-first parallelism** | Coordination pattern where the interface contract between parallel agents is defined before work is dispatched. Neither agent may unilaterally modify the contract. Section 19. |
 | **Decision authority** | The four-tier system (Enforced / Autonomous / Propose / Escalate) that defines what an agent may decide, recommend, or must stop and flag. Section 09. |
 | **Decision log** | Chronological record of every non-trivial decision: timestamp, decision, alternatives considered, rationale, authority tier used. Part of institutional memory. Section 24. |
@@ -110,15 +176,19 @@ Terms are listed alphabetically. When these terms appear in any part file, they 
 | **Ground truth** | The single source of reality for the fleet: domain ontology, tech stack versions, access/permissions, known issues, configuration artifacts. Section 05. |
 | **Handoff document** | Narrative briefing written at session end, designed to be loaded at the next session start. Captures intent and reasoning, not just status. Section 24. |
 | **Hard enforcement** | Hooks, CI gates, linters, type checkers — mechanisms that fire deterministically regardless of context. Top tier of the enforcement spectrum. Section 08. |
-| **Hierarchical drift** | Failure mode where specialists drift upward and make orchestrator-level decisions. Section 23. |
-| **Hook** | A shell command that executes deterministically at a defined lifecycle point (PreToolUse, PostToolUse, PreCommit, SessionStart, etc.). Not a request — executed code. Section 08. |
+| **Hierarchical drift** | Specialists drift upward and make orchestrator-level decisions. See Section 23 (Failure Mode Catalog) for diagnosis and defense. |
+| **Hook** | An executable program (shell script, Python, compiled binary) invoked by the agent runtime at a defined lifecycle point. Receives structured JSON on stdin, returns exit code (0=pass, non-zero=block) with stdout fed back to the agent. Timeout-enforced, idempotent, sandboxed. Section 08. |
 | **Intelligence lifecycle** | The eight-stage pipeline for Brain knowledge: Capture → Embed → Store → Retrieve → Strengthen → Link → Surface → Review. Section 17. |
-| **Instruction decay** | Failure mode where rules in CLAUDE.md are followed initially but ignored as the session lengthens and context pressure builds. Section 23. |
+| **Instruction decay** | Rules followed initially but ignored as session lengthens and context pressure builds. See Section 23 (Failure Mode Catalog) for diagnosis and defense. |
 | **Interface contract** | The defined format for handoffs between agents: what the sender delivers, what the receiver returns. Section 11. |
 | **Knowledge graph** | The network of linked Brain entries. Entries connected by relationship types (supports, contradicts, supersedes, elaborates, caused_by) that agents can traverse for reasoning chains. Section 17. |
 | **Knowledge protocol** | The MCP server interface that exposes the Brain to any AI agent. Tools: brain_record, brain_query, brain_retrieve, brain_strengthen, brain_supersede, brain_status. Section 16. |
 | **LLM-Last** | Design principle: if a deterministic tool (linter, type checker, formatter, regex) can do it, the LLM should not. Highest-impact cost and reliability lever. Section 02. |
-| **MCP** | Model Context Protocol. Open standard (Anthropic, now Linux Foundation) for connecting agents to tools and data sources. "USB-C for AI." |
+| **Computer use** | Agent capability to interact with graphical user interfaces — clicking, typing, scrolling, reading screen content. Requires sandboxed environment, strict time limits, and narrow Autonomous tier. Section 32b. |
+| **Extended thinking** | Dedicated reasoning tokens consumed before the model's response begins. Deeper reasoning, not longer output. 5-50x output volume. Must be budgeted separately. Section 32b. |
+| **Identity token** | Cryptographically signed, session-scoped, non-delegable credential binding an agent to a specific project, role, authority tier, and session. Verified by the Brain MCP server on every request. Section 16. |
+| **MCP** | Model Context Protocol. Open standard (Anthropic, now Linux Foundation) for connecting agents to tools and data sources. Supports streaming, subscriptions, and discovery with trust signals. "USB-C for AI." |
+| **Multi-hop retrieval** | Brain retrieval pattern that follows entry links to return full reasoning chains — cause → decision → outcome → consequence — not just the directly matching entry. Maximum depth: 3. Section 17. |
 | **MCP server** | A tool provider implementing the MCP standard. Extends agent capabilities. Must be registered, scoped, version-pinned, and audited. Section 12, Section 14. |
 | **Memory poisoning** | Attack where an adversary implants false information into agent long-term storage that persists across all future sessions. Section 10. |
 | **Meta-agent** | An AI agent serving as the Admiral — managing fleet composition, updating Ground Truth, making strategic decisions. Must have the most heavily enforced constraints. Section 33. |
@@ -127,19 +197,19 @@ Terms are listed alphabetically. When these terms appear in any part file, they 
 | **Non-goals** | Explicit statements of what the project is NOT. More powerful than goals because they eliminate entire categories of work. Part of Boundaries. Section 02. |
 | **Observability** | Understanding fleet behavior through external outputs — traces for individual operations, logs for event records, metrics for aggregate health. Distinct from monitoring: monitoring detects problems; observability diagnoses them. Section 30. |
 | **Orchestrator** | The coordinating agent that decomposes goals into tasks, routes to specialists, manages progress, and enforces standards. Does not write production code. |
-| **Phantom capabilities** | Failure mode where an agent assumes tools or access it does not have and produces output grounded in hallucinated capabilities. Section 23. |
+| **Phantom capabilities** | Agent assumes tools or access it does not have. See Section 23 (Failure Mode Catalog) for diagnosis and defense. |
 | **Progressive disclosure** | Loading strategy where knowledge is provided on-demand via skills rather than front-loaded at startup. Preserves context window capacity. Section 07. |
 | **Prompt anatomy** | Standard structure for agent system prompts: Identity → Authority → Constraints → Knowledge → Task. Section 04. |
 | **Propose tier** | Decision authority level where the agent drafts the decision with rationale, presents alternatives, and waits for approval. Used for architecture changes, schema migrations, new dependencies. |
-| **Quarantine** | Four-layer immune system (`quarantine.py`) that validates all external content before it enters the Brain: structural validation, injection detection, semantic analysis, and antibody generation. Part of the Continuous AI Landscape Monitor. Section 10, Section 17. |
+| **Quarantine** | Immune system that validates all external content before it enters the Brain. See Section 10 for the four-layer validation pipeline. |
 | **Quality floor** | Minimum acceptable quality bar, defined concretely. Prevents infinite refinement by defining "good enough." Part of Boundaries. Section 02. |
-| **Recovery ladder** | Five-step sequence agents follow when things go wrong: retry with variation → fallback → backtrack → isolate and skip → escalate. Section 22. |
+| **Recovery ladder** | Five-step sequence agents follow when things go wrong. See Section 22 for the full ladder and backtracking requirements. |
 | **Routing logic** | Rules the orchestrator uses to assign tasks to specialists: by task type, by file ownership, or by escalation. Section 11. |
-| **Scope creep** | Failure mode where agents add unrequested features. Each reasonable in isolation; collectively they blow the budget. Section 23. |
+| **Scope creep** | Agents add unrequested features that collectively blow the budget. See Section 23 (Failure Mode Catalog) for diagnosis and defense. |
 | **Seed candidate** | A proposed Brain entry generated by the Continuous AI Landscape Monitor with `"approved": False`. Requires Admiral review before activation. Ensures external intelligence is curated, not blindly ingested. Section 17. |
 | **Self-healing quality loop** | Pattern where a hook detects a failure (lint error, test failure, type error), feeds the output back to the agent, the agent fixes it, and the hook re-checks. Section 08. |
-| **Session amnesia** | Failure mode where an agent loses critical context between sessions despite checkpointing mechanisms. Section 23. |
-| **Silent failure** | Failure mode where an agent encounters an error, works around it without logging, and delivers a subtly incorrect result. Section 23. |
+| **Session amnesia** | Agent loses critical context between sessions despite checkpointing. See Section 23 (Failure Mode Catalog) for diagnosis and defense. |
+| **Silent failure** | Agent encounters an error and works around it without logging. See Section 23 (Failure Mode Catalog) for diagnosis and defense. |
 | **Skill** | A modular knowledge unit (`.claude/skills/*.md`) that loads into an agent's context only when a file pattern, keyword, or domain context matches. Section 07. |
 | **Soft guidance** | Constraints in code comments, READMEs, or verbal instructions. Low reliability. Bottom tier of the enforcement spectrum. Section 08. |
 | **Strengthening** | Brain mechanism where retrieved entries accumulate usefulness signals from consuming agents. High-usefulness entries rank higher in future queries. Section 15. |
@@ -148,7 +218,7 @@ Terms are listed alphabetically. When these terms appear in any part file, they 
 | **Success criteria** | Machine-verifiable definition of "done" for a task: functional, quality, completeness, and negative criteria. Section 03. |
 | **Swarm** | Advanced orchestration pattern where agents self-organize under a queen agent rather than following top-down routing. Section 20. |
 | **Supersession** | Brain mechanism where outdated entries are not deleted but linked to their replacement via `superseded_by`. Preserves full decision history while defaulting to current knowledge. Section 15. |
-| **Sycophantic drift** | Failure mode where agents increasingly agree with established framing over long sessions. QA finds fewer issues. Section 23. |
+| **Sycophantic drift** | Agents increasingly agree with established framing over long sessions. See Section 23 (Failure Mode Catalog) for diagnosis and defense. |
 | **Trace** | An end-to-end record of a task as it flows through multiple agents, tools, and systems. Enables debugging specific failures by showing exactly what happened, in what order, at what cost. Section 30. |
 | **Trust calibration** | The practice of measuring and adjusting an agent's Autonomous tier based on track record. Earned per category, not globally. Withdrawn precisely after failures. Section 33. |
 
@@ -156,19 +226,20 @@ Terms are listed alphabetically. When these terms appear in any part file, they 
 
 ## Relationship to the Fleet and Monitor
 
-The `fleet/` directory (sibling to this `admiral/` directory within `aiStrat/`) provides 100+ reusable agent definitions organized by category. The `monitor/` directory provides the continuous intelligence pipeline that keeps the fleet current. This framework defines principles; fleet provides implementations; the monitor feeds intelligence.
+The `fleet/` directory provides 71 core agent definitions (plus 29 extended agents in `fleet/agents/extras/`) organized by category. The `monitor/` directory specifies the continuous intelligence pipeline. The `brain/` directory contains the database schema and architecture specification for long-term memory.
 
-| Admiral Section | Implementation |
+| Admiral Section | Companion Specification |
 |---|---|
-| Section 11 (Fleet Composition) | `fleet/agents/` — 100 concrete agent definitions |
+| Section 11 (Fleet Composition) | `fleet/agents/` — agent definitions by category |
 | Section 04 (Context Engineering) | `fleet/prompt-anatomy.md`, `fleet/context-injection.md` |
 | Section 09 (Decision Authority) | Each agent definition includes a Decision Authority table |
 | Section 13 (Model Selection) | `fleet/model-tiers.md` — tier assignments for every agent |
 | Section 11 (Routing Logic) | `fleet/routing-rules.md` — task-to-agent routing decision table |
+| Section 15 (Brain Architecture) | `brain/schema/001_initial.sql` — Postgres + pgvector schema |
 | Part 11 (Protocols) | Authoritative source; agents reference these protocols |
-| Sections 13, 17, 25, 31 (Intelligence) | `monitor/` — continuous AI ecosystem scanning, quarantine, seed generation |
+| Sections 13, 17, 25, 31 (Intelligence) | `monitor/README.md` — ecosystem scanning, quarantine, seed generation |
 
-> **This framework is the engineering manual. Fleet is the parts catalog. The monitor is the intelligence service.** Use the admiral to learn *what to do and why*. Use the fleet to learn *how to do it with specific agents*. Use the monitor to learn *what's changing in the ecosystem*.
+> **Admiral is the engineering manual. Fleet is the parts catalog. Brain is the memory architecture. Monitor is the intelligence service.** Use the admiral to learn *what to do and why*. Use the fleet to learn *how to do it with specific agents*. Use the brain and monitor specs to understand *how knowledge persists and ecosystem intelligence flows*.
 
 -----
 
@@ -218,17 +289,20 @@ Sections are ordered by impact and grouped by relevance.
 | | **PART 9 — PLATFORM** | *The infrastructure that surrounds the fleet.* | [`part9-platform.md`](part9-platform.md) |
 | 30 | Fleet Observability | Why a specific agent failed on a specific task — traces, not just metrics. | |
 | 31 | CI/CD & Event-Driven Operations | Agents triggered by PRs, CI failures, schedules, and webhooks. | |
-| 32 | Fleet Evaluation & Benchmarking | A/B testing fleet configs and measuring whether the fleet is worth it. | |
+| 32 | Fleet Evaluation & Benchmarking | A/B testing fleet configs and measuring whether the fleet is worth it. |
+| 32b | Multi-Modal & Extended Capabilities | Computer use, extended thinking, structured outputs, vision. | |
 | | **PART 10 — THE ADMIRAL** | *The human element.* | [`part10-admiral.md`](part10-admiral.md) |
 | 33 | Admiral Self-Calibration | Bottleneck detection, trust calibration, and growth trajectory. | |
 | 34 | Human-Expert Routing | When the fleet needs expertise the Admiral doesn't have. | |
 | | **PART 11 — PROTOCOLS** | *The universal operating rules every agent follows.* | [`part11-protocols.md`](part11-protocols.md) |
-| 35 | Standing Orders | Ten non-negotiable rules loaded into every agent's standing context. | |
+| 35 | Standing Orders | Fifteen non-negotiable rules loaded into every agent's standing context. | |
 | 36 | Escalation Protocol | How and when agents stop work and flag issues upward. | |
 | 37 | Handoff Protocol | Structured format for transferring work between agents. | |
 | 38 | Human Referral Protocol | When and how specialists recommend consulting a human professional. | |
 | 39 | Paid Resource Authorization | Human-authorized access to paid software, licenses, and subscriptions. | |
 | | **APPENDICES** | | [`appendices.md`](appendices.md) |
 | A | Pre-Flight Checklist | Go/no-go gate before fleet deployment. | |
-| B | Quick-Start Sequence | Operational order for standing up a new fleet. | |
+| B | Quick-Start Sequence | Level-structured operational order for standing up a new fleet. | |
 | C | Worked Example | A complete SaaS application fleet, end to end. | |
+| D | Case Studies | Three synthetic case studies: ungoverned, over-engineered, security-first. | |
+| E | Platform Integration Patterns | How to use Admiral with Claude Code, Agent SDKs, and orchestration frameworks. | |

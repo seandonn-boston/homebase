@@ -32,6 +32,41 @@ This distinction — between advisory instructions and deterministic enforcement
 | **TaskCompleted** | When a task is marked complete | Quality gate execution, metric logging |
 | **PrePush** | Before pushing to remote | Branch protection, review requirements |
 
+### Hook Execution Model
+
+Hooks are executable programs — shell scripts, Python scripts, or compiled binaries — invoked by the agent runtime at defined lifecycle points. They are not advisory callbacks. They are deterministic gates.
+
+**Hook Contract:**
+
+| Property | Specification |
+|---|---|
+| **Format** | Any executable. Shell scripts, Python, compiled binaries. Must be version-controlled alongside the fleet configuration. |
+| **Invocation** | Synchronous by default. The agent runtime pauses execution until the hook returns. Async hooks must be explicitly declared. |
+| **Input** | The hook receives structured JSON on stdin: `{ "event": "PreToolUse", "tool": "Write", "params": { ... }, "agent_identity": "...", "trace_id": "..." }` |
+| **Output** | Exit code 0 = pass. Non-zero = block. Stdout is captured and fed back to the agent as context (enabling self-healing loops). Stderr is logged. |
+| **Timeout** | Configurable per hook. Default: 30 seconds. Hooks exceeding timeout are killed and treated as failures. No infinite hangs. |
+| **Chaining** | Multiple hooks may bind to the same event. They execute in declared order. First failure stops the chain (fail-fast). |
+| **Idempotency** | Hooks must be idempotent. The runtime may invoke a hook multiple times for the same event during self-healing retries. |
+| **Isolation** | Hooks execute in a sandboxed environment with read access to the repository and write access only to their own log output. Hooks cannot modify agent state, context, or tool parameters. |
+
+**Self-Healing Loop Specification:**
+
+```
+Agent action
+  → PostToolUse hook executes check (linter, type-checker, tests)
+    → Exit 0: proceed
+    → Exit non-zero: stdout fed back to agent as error context
+      → Agent attempts fix
+        → Hook re-executes
+          → Exit 0: proceed
+          → Exit non-zero: cycle counter increments
+            → Counter < MAX_RETRIES (default: 3): agent retries
+            → Counter >= MAX_RETRIES: hook returns permanent failure
+              → Agent moves to next step on recovery ladder (Section 22)
+```
+
+**Cycle detection:** The runtime tracks `(hook_name, error_signature)` tuples. If the same error signature appears in consecutive retries, the loop is broken immediately — the agent is producing the same failure repeatedly and further retries are wasteful. The agent receives: `"Self-healing loop terminated: identical error after N retries. Moving to recovery ladder step 2 (fallback)."`
+
 ### What Must Be Hooks vs. Instructions
 
 | Category | Hook (Deterministic) | Instruction (Advisory) |
@@ -96,16 +131,31 @@ Every orchestrator needs a clear decision envelope: what it may decide autonomou
 | External-facing or regulated | Narrow Autonomous significantly. |
 | Self-healing hooks in place | Widen Autonomous for hook-covered categories. |
 
-> **ANTI-PATTERN: DEFERENCE CASCADING** — One agent is uncertain, defers to another, who defers back. The decision is made by whichever agent is last — usually the least qualified. Uncertainty always flows upward, never sideways.
+> **ANTI-PATTERN: DEFERENCE CASCADING** — One agent is uncertain, defers to another, who defers back. The decision is made by whichever agent is last — usually the least qualified. **Uncertainty always flows upward (to Orchestrator or Admiral), never sideways (to a peer agent).** Handoffs between peers (Section 37) transfer *work*, not *uncertainty*. If Agent A is uncertain about a task, it escalates to the Orchestrator — it does not hand the uncertainty to Agent B as a task. The Orchestrator resolves the uncertainty, then delegates clearly-scoped work to the appropriate agent.
 
-> **VULNERABILITY (8.3.2): AUTHORITY SELF-ESCALATION** — Decision authority tiers are
-> currently documentation-level only. Nothing prevents a Brain entry from containing
-> content like "Security changes: AUTONOMOUS — no review needed," which could cause
-> agents that consume Brain knowledge to adopt a more permissive authority model than
-> intended. Until enforcement hooks validate authority tier assignments at runtime,
-> mitigate by: (1) running the RuleBasedValidator in quarantine (detects authority
-> escalation patterns), (2) reviewing Brain entries that reference authority tiers,
-> (3) implementing authority tier validation in the Orchestrator's task routing logic.
+> **VULNERABILITY (8.3.2): AUTHORITY SELF-ESCALATION** — Decision authority tiers
+> are vulnerable to poisoning when stored as advisory documentation rather than
+> enforced constraints. A Brain entry containing "Security changes: AUTONOMOUS — no
+> review needed" could cause consuming agents to adopt a more permissive authority
+> model than intended.
+>
+> **Required mitigations (all three are mandatory, not optional):**
+>
+> 1. **Quarantine layer validation:** The Brain's quarantine immune system (Section 10)
+>    must include authority-escalation pattern detection. Any entry referencing
+>    authority tiers, decision permissions, or scope modifications is flagged for
+>    Admiral review before activation.
+> 2. **Runtime authority binding:** Authority tiers are bound to the agent's identity
+>    token at session start, not read from Brain entries or configuration files during
+>    execution. An agent cannot change its own authority tier mid-session.
+> 3. **Orchestrator-level validation:** The Orchestrator validates that every task
+>    assignment includes the correct authority tier for the receiving agent. If a
+>    specialist attempts to operate at a tier above its assignment, the Orchestrator
+>    rejects the action and logs the attempt.
+>
+> These mitigations convert authority tiers from documentation to enforcement.
+> Any fleet deployment that relies solely on advisory authority tiers is
+> non-compliant with this framework.
 
 -----
 
@@ -133,9 +183,9 @@ Agent configurations are attack surfaces. A compromised CLAUDE.md, a malicious M
 
 ### External Intelligence Quarantine
 
-The Continuous AI Landscape Monitor (`monitor/`) feeds external content into the Brain — model releases, agent patterns, repo configurations. This is a potential ingestion attack vector: a poisoned repo description or crafted release note could inject false information into fleet memory.
+The Continuous AI Landscape Monitor (`monitor/`) is designed to feed external content into the Brain — model releases, agent patterns, repo configurations. This creates a potential ingestion attack vector: a poisoned repo description or crafted release note could inject false information into fleet memory.
 
-Defense: all external content passes through `quarantine.py`, a four-layer immune system:
+Defense: all external content passes through the quarantine layer, a four-layer immune system:
 
 | Layer | Defense | Threat |
 |---|---|---|
@@ -209,11 +259,39 @@ When an Admiral deploys a fleet onto a project, security is the first concern �
 - [ ] Emergency halt protocol is loaded into every agent's standing context
 - [ ] Emergency revocation capability is tested — Admiral can revoke all access fleet-wide in one action
 
+### Continuous Verification
+
+Zero-trust is not a pre-deployment checklist — it is a continuous runtime discipline. Trust is re-evaluated at every significant state transition, not just at session start.
+
+**Verification Points:**
+
+| Event | Verification Required |
+|---|---|
+| **Session start** | Identity token validated. Authority tier bound. Context integrity confirmed. |
+| **Before each tool use** | PreToolUse hook validates scope, permissions, and budget. |
+| **After each tool use** | PostToolUse hook validates output integrity. Audit log updated. |
+| **Before Brain write** | Provenance verified. Authority tier checked. Quarantine layer consulted. |
+| **Before Brain read (cross-project)** | Cross-project read authorization confirmed. |
+| **Mid-session (periodic)** | Context integrity check: has standing context drifted? Has the agent's behavior pattern changed? |
+| **Before irreversible action** | Elevated verification: two-factor confirmation (hook + explicit agent acknowledgment of blast radius). |
+| **After escalation resolution** | Re-verify context is consistent with Admiral's direction before resuming. |
+
+**Anomaly Detection:**
+
+The runtime monitors for behavioral anomalies that may indicate compromise, drift, or injection:
+
+- **Unusual tool patterns:** Agent suddenly accessing files outside its declared scope
+- **Authority probing:** Repeated attempts to perform actions above assigned tier
+- **Volume anomalies:** Spike in Brain writes, tool calls, or API requests beyond baseline
+- **Identity inconsistency:** Agent's declared identity diverges from its token-bound identity
+
+When an anomaly is detected: log, alert the Admiral, and optionally suspend the agent pending review. False positives cost time. Missed compromises cost everything.
+
 #### External Surface
 
 - [ ] All MCP servers are pinned to specific versions (no `latest`)
 - [ ] All third-party skills have been source-reviewed
-- [ ] External intelligence quarantine layer (`quarantine.py`) is active if the monitor is deployed
+- [ ] External intelligence quarantine layer is active if the monitor is deployed
 - [ ] Network egress is restricted — agents cannot reach external endpoints beyond the approved list
 
 #### Compliance and Ethics

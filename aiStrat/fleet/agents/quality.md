@@ -39,9 +39,7 @@ You are the QA Agent. You review output against acceptance criteria, flag issues
 
 ### Interface Contracts
 
-**Implementer → QA Agent:**
-- Input: Code diff, changed files, intended behavior, test commands
-- Output: Pass/fail with file and line references, severity ratings, reproduction steps
+**Interface Contracts:** See [`fleet/interface-contracts.md`](../interface-contracts.md) for Implementer-to-QA and QA-to-Orchestrator handoff formats.
 
 ### Prompt Anchor
 

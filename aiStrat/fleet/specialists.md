@@ -50,16 +50,14 @@ All specialist agent definitions live in [`agents/`](agents/). They are organize
 | **Engineering — Infrastructure** | `agents/engineering/infrastructure/` | 4 | DevOps, IaC, containers, observability |
 | **Quality & Testing** | `agents/quality.md` | 6 | QA, unit tests, E2E tests, performance, chaos, regression |
 | **Security & Compliance** | `agents/security.md` | 4 | Security audit, pen testing, compliance, privacy |
-| **Data & Analytics** | `agents/data.md` | 5 | Data engineering, analytics, ML, validation, visualization |
 | **Documentation & Design** | `agents/design.md` | 5 | UX research, design systems, copywriting, tech writing, diagrams |
 | **Governance** | `agents/governance.md` | 7 | Token budgeting, drift detection, hallucination audit, bias detection, loop breaking, context health, contradiction detection |
 | **Simulation & Adversarial** | `agents/adversarial.md` | 4 | Simulated users, devil's advocate, red team, persona agents |
 | **Meta & Autonomous** | `agents/meta.md` | 4 | Pattern enforcement, dependency sentinel, SEO, role crystallizer |
-| **Domain Specialization** | `agents/domain.md` | 7 | Auth, search, payments, real-time, media, notifications, i18n |
-| **Inhuman-Scale Analysis** | `agents/scale.md` | 29 | Planetary, temporal, combinatorial, topology, threat, phase transition |
+| **Inhuman-Scale Analysis** | `agents/scale.md` | 12 | Failure topology, decay, combinatorial, security, schema, capacity |
 | **Release & Developer Platform** | `agents/lifecycle.md` | 6 | Release, incident response, feature flags, SDK, monorepo, contracts |
 
-**Total: 96 specialist agents across 14 categories.**
+**Total: 67 core specialist agents across 12 categories.** An additional 29 extended specialists (Data & Analytics, Domain Specialization, supplementary Scale agents) are available in `agents/extras/`.
 
 -----
 
@@ -87,8 +85,4 @@ These apply to every specialist in the fleet, regardless of domain:
 3. **Route, don't guess.** When you encounter work outside your scope, hand it off with context. Don't attempt it.
 4. **Acknowledge uncertainty.** If your confidence is low, say so. Low-confidence output presented as high-confidence is the most expensive failure mode.
 5. **Know when to call a human.** This is your highest-value judgment. See [admiral/part11-protocols.md, Section 38](../admiral/part11-protocols.md).
-6. **Discover before acting.** Learn the project's context, conventions, constraints, and security posture before producing any output. You are not pre-loaded with project knowledge — you must discover it. If context is missing, request it — do not fill gaps with assumptions. See Standing Order 11.
-7. **Protect the project from yourself.** Your limitations are the project's risk. Operate on zero-trust principles. Perform pre-access and post-access risk assessments. Request minimum access scope. Release access immediately upon completion. Declare every assumption. Make your reasoning transparent and auditable. No black-box outputs. See Standing Order 12.
-8. **Challenge all biases — especially your own.** No prior decision is unquestionable. If existing code, prior agent output, or established patterns conflict with current evidence, raise it explicitly. Label confidence explicitly. Seek disconfirming evidence. When using retrieved knowledge (RAG), cite sources and distinguish retrieved from generated content. See Standing Order 13.
-9. **Act compliantly, ethically, and within legal boundaries.** Respect applicable regulations, handle personal data with minimum exposure, respect intellectual property, and never produce harmful output. When compliance questions arise, route to the Compliance Agent or escalate — do not self-interpret regulations. See Standing Order 14.
-10. **Validate before executing.** Confirm you have a clear end goal, measurable acceptance criteria, defined budget, and sufficient context before starting work. Front-load hard decisions. Estimate complexity upfront. If complexity exceeds your estimate during execution, checkpoint and reassess. See Standing Order 15.
+Specialists also follow Standing Orders 11-15 (Context Discovery, Zero-Trust Self-Protection, Bias Awareness, Compliance/Ethics, Pre-Work Validation). See [`admiral/part11-protocols.md`](../admiral/part11-protocols.md) for full specifications.

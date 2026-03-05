@@ -264,22 +264,54 @@ Agent ←→ MCP Client ←→ MCP Server ←→ Tool/Data Source
 
 ### A2A — Agent-to-Agent Protocol
 
+A2A enables structured communication between agents across process, machine, and organizational boundaries. Where MCP connects agents to tools, A2A connects agents to each other.
+
+**Agent Discovery:**
+
+Every A2A-capable agent publishes an Agent Card — a machine-readable declaration of:
+- **Identity:** Verified agent name, role, fleet membership, and public key
+- **Capabilities:** What tasks the agent can accept, input schemas, output schemas
+- **Authentication:** Required auth method (API Key, OAuth 2.0, mTLS)
+- **Availability:** Current status (available, busy, offline), queue depth, estimated response time
+
+Agent Cards are registered with the fleet's discovery service (typically the Orchestrator or a dedicated registry). Agents discover each other through the registry, never through ad-hoc network scanning.
+
+**Communication Contract:**
+
+| Property | Specification |
+|---|---|
+| **Transport** | JSON-RPC 2.0 over HTTPS. Mutual TLS for cross-organization. |
+| **Authentication** | Fleet-internal: signed API keys. Cross-fleet: OAuth 2.0 with RFC 8707 resource indicators to prevent cross-server token reuse. |
+| **Message format** | Structured request with: sender identity, trace_id, task description, input payload, deadline, budget remaining. |
+| **Response format** | Structured response with: status (accepted/rejected/completed/failed), output payload, resource consumed, errors. |
+| **Timeout** | Configurable per request. Default: 5 minutes. Caller receives timeout error and moves to recovery ladder. |
+| **Retry** | Caller may retry once after timeout. No automatic retry storms. |
+| **Idempotency** | All A2A requests include a unique request_id. Receivers must handle duplicate requests idempotently. |
+
+**Failure Handling:**
+
+- **Agent offline:** Registry marks agent unavailable. Orchestrator routes to fallback agent or queues the request.
+- **Mid-flight failure:** If an agent fails during task execution, it sends a partial result with status `failed` and error context. The caller decides: retry, fallback, or escalate.
+- **Network partition:** A2A requests include a deadline. If no response arrives by deadline, the caller treats it as a timeout and follows the recovery ladder.
+- **Identity spoofing:** All A2A messages are signed with the sender's private key. Receivers verify signatures against the registry's public key store. Unsigned messages are rejected.
+
+**When to use A2A vs. Orchestrator-mediated handoffs:**
+
 | Scenario | Use |
 |---|---|
-| Agents in the same process/session | Direct orchestration |
-| Agents in different processes on same machine | A2A or shared filesystem with contracts |
-| Agents across different machines/organizations | A2A with full authentication |
+| Agents in the same session | Direct orchestration (no A2A needed) |
+| Agents in different processes, same machine | A2A or shared filesystem with contracts |
+| Agents across machines or organizations | A2A with full authentication and encryption |
 | Agents using different LLM providers | A2A — provider-agnostic communication |
-
-**Agent Cards:** Each agent publishes a card describing capabilities, accepted formats, and auth requirements. The orchestrator discovers agents through their cards.
-
-**Security:** API Key, OAuth 2.0, OpenID Connect, mTLS. Fleet-internal: API keys may suffice. Cross-organization: OAuth 2.0 minimum.
+| Simple task delegation | Orchestrator-mediated handoff (Section 37) |
+| Complex multi-step collaboration | A2A with structured contracts |
 
 ### Protocol Security
 
 - **MCP servers as exfiltration points:** Audit all servers.
 - **A2A impersonation:** Verify identity through signed cards or mTLS.
 - **Token misuse:** Use RFC 8707 Resource Indicators to prevent cross-server token reuse.
+- **Credential delegation prevention:** A2A tokens are non-transferable. An agent cannot pass its authentication context to another agent. Each agent authenticates independently.
 
 > **TEMPLATE: PROTOCOL REGISTRY**
 >

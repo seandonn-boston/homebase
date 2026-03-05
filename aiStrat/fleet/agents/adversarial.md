@@ -3,7 +3,7 @@
 **Category:** Simulation & Adversarial
 **Model Tier:** Tier 1 — Flagship (for adversarial reasoning)
 
-These agents challenge the fleet's outputs through simulation, argumentation, and adversarial review. They are the fleet's immune system — they stress-test assumptions, validate designs, and catch failure modes that conventional QA misses.
+These agents challenge the fleet's outputs through simulation, argumentation, and adversarial review. They are the fleet's challenge layer — the agents that actively try to break assumptions, find weaknesses, and expose blind spots that conventional QA misses.
 
 -----
 

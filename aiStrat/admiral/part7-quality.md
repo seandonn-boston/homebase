@@ -21,6 +21,8 @@
 
 ### Self-Healing as Primary QA
 
+> **Note:** The self-healing loop is specified in Section 08 (Enforcement). This section covers its application to quality assurance.
+
 ```
 Agent completes implementation
   → Type checker → Failures fed back → Agent fixes → Recheck
@@ -30,6 +32,8 @@ Agent completes implementation
 ```
 
 QA focuses on what machines cannot check: logic correctness, design quality, edge case completeness, architectural alignment.
+
+**Cycle detection in self-healing loops:** The runtime tracks `(check_name, error_signature)` tuples across iterations. If the same error recurs after a fix attempt, the loop breaks immediately — the agent is producing the same failure and further retries are wasteful. Maximum iterations per loop: 3 (configurable). When the loop terminates without resolution, the agent moves to step 2 of the recovery ladder (fallback). See Section 08 for the full hook execution model.
 
 ### QA Feedback Loop
 
@@ -142,6 +146,40 @@ Effective backtracking requires:
 **Work from different agents doesn't integrate:**
 - Working in parallel? → **Optimistic Parallelism** → Parallel Execution (19): define contracts first.
 - Different naming for same concept? → **Invocation Inconsistency** → Ground Truth (05).
+
+### Remediation Playbook
+
+When a failure mode is diagnosed, follow these remediation steps:
+
+**Context Starvation** (most common)
+1. Check the agent's context profile against what was actually loaded (trace the Context Curator's assembly).
+2. Compare the agent's working context size against the 15-25% standing context budget — if standing context is overweight, it is crowding out task context.
+3. Identify the missing information. Is it in Ground Truth but not loaded? Is it in the Brain but not retrieved? Or does it not exist?
+4. Fix: Update the context profile, adjust the sacrifice order, or add the missing information to Ground Truth.
+
+**Sycophantic Drift**
+1. Check the agent's recent outputs for declining finding counts or softening language ("minor suggestion" where "blocking issue" is warranted).
+2. Compare against the Bias Sentinel's detection log — if no drift was flagged, the Bias Sentinel's thresholds may need tightening.
+3. Run the same task through a separate agent (Adversarial Review) to get an independent assessment.
+4. Fix: Reset the agent's session, tighten the quality floor in the task specification, or deploy the Devil's Advocate for the next cycle.
+
+**Completion Bias**
+1. Check whether the agent declared completion before all acceptance criteria were verified.
+2. Review the task specification — are acceptance criteria machine-verifiable? If not, the agent has no objective completion signal.
+3. Check the self-healing loop — did it run? Did the agent "pass" itself without meaningful verification?
+4. Fix: Add explicit acceptance criteria hooks (Section 08). Make criteria machine-checkable. Add a post-completion verification step to the self-healing loop.
+
+**Scope Creep via Helpfulness**
+1. Compare the agent's output against the task specification's Boundaries and Does NOT Do list.
+2. Identify the extra work — was it requested by another agent, self-initiated, or triggered by ambiguous requirements?
+3. Check whether the routing rules correctly scoped the task, or whether the Orchestrator's decomposition was too broad.
+4. Fix: Tighten the task specification boundaries, add a scope-check hook, or re-decompose with narrower chunks.
+
+**Hallucination (Fabricated Details)**
+1. Cross-reference the agent's claims against Ground Truth and Brain entries.
+2. Check the retrieval confidence level — did the agent cite sources, or did it generate without grounding?
+3. Determine the hallucination type: factual (wrong version number), structural (nonexistent API), or logical (invalid reasoning chain).
+4. Fix: Add RAG grounding requirements to the task context, tighten Standing Order 4 (Context Honesty) enforcement, or add a post-output fact-checking hook.
 
 -----
 

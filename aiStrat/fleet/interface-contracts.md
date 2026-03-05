@@ -191,6 +191,85 @@ These contracts specify exactly what the sender delivers and what the receiver r
 
 -----
 
+## Governance Handoffs
+
+### Drift Monitor → Orchestrator
+
+**Sender delivers:**
+- `agent_id` — the agent exhibiting drift
+- `drift_type` — category of drift detected (scope creep, style deviation, role confusion, etc.)
+- `evidence` — specific output or behavior demonstrating the drift
+- `severity` — Critical, High, Medium, Low
+- `recommended_action` — suggested corrective measure (re-prompt, constrain context, suspend, etc.)
+
+**Receiver returns:**
+- `acknowledged` — confirmation of receipt
+- `action_taken` — what the Orchestrator did in response (re-prompted agent, suspended agent, adjusted context, escalated to Admiral, etc.)
+
+### Hallucination Auditor → Orchestrator
+
+**Sender delivers:**
+- `agent_id` — the agent that produced the suspect output
+- `output_ref` — reference to the specific output under review
+- `claim` — the factual claim being evaluated
+- `verification_result` — Confirmed, Unverifiable, Contradicted, Fabricated
+- `confidence` — auditor's confidence in the verification result (0.0–1.0)
+
+**Receiver returns:**
+- `acknowledged` — confirmation of receipt
+- `action_taken` — what the Orchestrator did in response (rejected output, requested revision, flagged for human review, etc.)
+
+### Bias Sentinel → Orchestrator
+
+**Sender delivers:**
+- `agent_id` — the agent exhibiting bias
+- `bias_type` — category of bias detected (confirmation, anchoring, completion, sycophancy, etc.)
+- `evidence_pattern` — specific pattern or examples demonstrating the bias
+- `severity` — Critical, High, Medium, Low
+- `recommended_action` — suggested corrective measure (re-prompt with counter-perspective, add adversarial review, suspend, etc.)
+
+**Receiver returns:**
+- `acknowledged` — confirmation of receipt
+- `action_taken` — what the Orchestrator did in response
+
+### Loop Breaker → Orchestrator
+
+**Sender delivers:**
+- `agent_id` — the agent caught in a loop
+- `loop_signature` — pattern fingerprint identifying the repeated behavior
+- `iteration_count` — number of loop iterations detected
+- `resource_consumed` — tokens, time, or other resources consumed by the loop
+
+**Receiver returns:**
+- `acknowledged` — confirmation of receipt
+- `action_taken` — what the Orchestrator did in response (terminated loop, adjusted task decomposition, escalated, etc.)
+
+-----
+
+## Scale Agent Handoffs
+
+### Scale Agent → Orchestrator
+
+**Sender delivers** (common output schema per [scale.md](agents/scale.md)):
+- `analysis_type` — the kind of analysis performed
+- `scope` — what was analyzed and the boundaries of the analysis
+- `findings[]` — list of findings from the analysis
+- `confidence_level` — overall confidence in the analysis
+- `methodology` — approach and methods used
+- `limitations[]` — known limitations of the analysis
+- `recommendations[]` — actionable recommendations based on findings
+- `audit_trail` — provenance and reasoning chain for reproducibility
+
+**Receiver returns:**
+- `acknowledged` — confirmation of receipt
+- `action_items[]` — list of actions the Orchestrator will take based on the analysis
+
+-----
+
+> **Note:** Not all agent pairs require explicit contracts. Contracts are specified for handoffs where format ambiguity would cause failures.
+
+-----
+
 ## Contract Violations
 
 When a handoff doesn't match the expected contract:

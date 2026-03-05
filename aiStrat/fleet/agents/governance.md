@@ -3,7 +3,7 @@
 **Category:** Governance
 **Always deploy. Non-negotiable.**
 
-These agents are the fleet's immune system. They monitor for the systematic weaknesses that every LLM-based fleet exhibits — cost overruns, scope drift, hallucination, bias, loops, context degradation, and internal contradictions. The admiral2 framework documents 20 failure modes and 13+ anti-patterns. These agents operationalize the defenses.
+These agents are the fleet's immune system. They monitor for the systematic weaknesses that every LLM-based fleet exhibits — cost overruns, scope drift, hallucination, bias, loops, context degradation, and internal contradictions. The Admiral Framework documents 20 failure modes and 13+ anti-patterns. These agents operationalize the defenses.
 
 A fleet without governance agents is a fleet that doesn't know when it's failing. Every failure mode in the catalog was discovered because a fleet without these monitors ran long enough for the failure to compound into visible damage. These agents detect the failure early, when correction is cheap.
 
@@ -355,6 +355,24 @@ You are the Contradiction Detector. You catch when agents produce outputs that c
 
 -----
 
+## Guardrails
+
+**Blast Radius:** Governance agents can trigger false positives that halt productive work. A miscalibrated Drift Monitor or Bias Sentinel can create alert fatigue or block legitimate output.
+
+**Bias Risks:**
+- Over-detection bias: flagging normal variation as drift or bias
+- Anchoring to initial baselines that may themselves be flawed
+- Recency bias in anomaly detection (recent patterns weighted too heavily)
+
+**Human Review Triggers:**
+- Any governance agent recommending fleet-wide configuration changes
+- Repeated contradictions between governance agents (e.g., Drift Monitor and Bias Sentinel disagree on whether output is drift vs. bias)
+- Governance agent self-reporting reduced confidence in its own detection patterns
+
+**Standing Orders 12-14 apply. All governance reasoning must be transparent and auditable.**
+
+-----
+
 ## Governance Summary
 
 | Agent | What It Monitors | Primary Failure Modes Addressed |
@@ -367,4 +385,4 @@ You are the Contradiction Detector. You catch when agents produce outputs that c
 | **Context Health Monitor** | Context window state, instruction adherence | Context stuffing/starvation, instruction decay, session amnesia |
 | **Contradiction Detector** | Internal consistency across agents | Inter-agent contradictions, ground truth violations, assumption divergence |
 
-**These seven agents are non-negotiable.** A fleet without them is flying blind. They operationalize the 20 documented failure modes from the admiral2 framework into continuous, active detection.
+**These seven agents are non-negotiable.** A fleet without them is flying blind. They operationalize the 20 documented failure modes from the Admiral Framework into continuous, active detection.

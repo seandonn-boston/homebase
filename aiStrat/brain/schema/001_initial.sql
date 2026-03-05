@@ -31,10 +31,14 @@ CREATE TABLE entries (
     source_session  TEXT,
     authority_tier  TEXT CHECK (authority_tier IN ('enforced', 'autonomous', 'propose', 'escalate')),
 
+    -- Access control — determines visibility and handling requirements
+    sensitivity     TEXT NOT NULL DEFAULT 'standard'
+                    CHECK (sensitivity IN ('standard', 'elevated', 'restricted')),
+
     -- Strengthening
     access_count    INT NOT NULL DEFAULT 0,
     usefulness      INT NOT NULL DEFAULT 0,
-    superseded_by   UUID REFERENCES entries(id)
+    superseded_by   UUID REFERENCES entries(id) ON DELETE SET NULL
 );
 
 -- Semantic search index (HNSW for fast approximate nearest neighbor)
@@ -44,16 +48,37 @@ CREATE INDEX idx_entries_embedding ON entries USING hnsw (embedding vector_cosin
 CREATE INDEX idx_entries_project_category ON entries (project, category);
 CREATE INDEX idx_entries_created_at ON entries (created_at);
 CREATE INDEX idx_entries_authority_tier ON entries (authority_tier);
-CREATE INDEX idx_entries_metadata_tags ON entries ((metadata->>'tags')) USING gin;
+
+-- GIN index on metadata tags — uses jsonb_path_ops for efficient JSONB array containment queries
+CREATE INDEX idx_entries_metadata_tags ON entries USING gin ((metadata->'tags') jsonb_path_ops);
+
+-- Index on superseded_by for efficiently finding active (non-superseded) entries
+CREATE INDEX idx_entries_superseded_by ON entries (superseded_by);
 
 -- Relationships between entries
 CREATE TABLE entry_links (
-    source_id   UUID NOT NULL REFERENCES entries(id),
-    target_id   UUID NOT NULL REFERENCES entries(id),
+    source_id   UUID NOT NULL REFERENCES entries(id) ON DELETE CASCADE,
+    target_id   UUID NOT NULL REFERENCES entries(id) ON DELETE CASCADE,
     link_type   TEXT NOT NULL CHECK (link_type IN ('supports', 'contradicts', 'supersedes', 'elaborates', 'caused_by')),
     created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
     PRIMARY KEY (source_id, target_id, link_type)
 );
+
+-- Immutable, append-only audit log — tracks all Brain operations for traceability
+CREATE TABLE audit_log (
+    id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    timestamp   TIMESTAMPTZ NOT NULL DEFAULT now(),
+    operation   TEXT NOT NULL CHECK (operation IN ('record', 'query', 'retrieve', 'strengthen', 'supersede', 'audit')),
+    agent_id    TEXT NOT NULL,
+    session_id  TEXT NOT NULL,
+    entry_id    UUID REFERENCES entries(id) ON DELETE SET NULL,
+    details     JSONB NOT NULL DEFAULT '{}',
+    ip_or_source TEXT
+);
+
+-- Prevent any modification or deletion of audit records — append-only enforcement
+CREATE RULE audit_log_no_update AS ON UPDATE TO audit_log DO INSTEAD NOTHING;
+CREATE RULE audit_log_no_delete AS ON DELETE TO audit_log DO INSTEAD NOTHING;
 
 -- Auto-update updated_at on entry modification
 CREATE OR REPLACE FUNCTION update_updated_at()

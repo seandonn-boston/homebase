@@ -21,13 +21,7 @@ Before any agent writes a line of code or makes a single decision, the fleet nee
 
 ### The Spec-First Pipeline
 
-The Mission is the entry point to an automated pipeline. Each phase produces auditable artifacts that feed the next.
-
-```
-Mission → Requirements Spec → Design Spec → Task Decomposition → Implementation
-```
-
-Define at which pipeline stage the fleet takes over. For mature fleets, the fleet drives the pipeline from Requirements onward. For new fleets, the Admiral authors Requirements and Design, and the fleet takes over at Task Decomposition.
+The Mission is the entry point to the Spec-First Pipeline (Mission → Requirements → Design → Tasks → Implementation). Define at which pipeline stage the fleet takes over. See Section 18 for the full pipeline specification and chunking principles.
 
 > **TEMPLATE: MISSION STATEMENT**
 >

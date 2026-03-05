@@ -40,14 +40,17 @@ fleet/
     │   └── infrastructure/  # DevOps, IaC, containers, observability
     ├── quality/             # QA, test writers, performance, chaos, regression
     ├── security/            # Security audit, penetration testing, compliance, privacy
-    ├── data/                # Data engineering, analytics, ML, validation, visualization
     ├── design/              # UX research, design systems, copywriting, tech writing, diagrams
     ├── adversarial/         # Simulated users, devil's advocate, red team, persona agents
     ├── governance/          # ALWAYS DEPLOY: Token budgeter, drift, hallucination, bias, loops, context, contradictions
     ├── meta/                # Pattern enforcement, dependency sentinel, role crystallizer
-    ├── domain/              # Auth, search, payments, real-time, media, notifications, i18n
-    ├── scale/               # Inhuman-scale analysis (planetary, temporal, combinatorial, topology)
-    └── lifecycle/           # Release, incident response, feature flags, SDK, monorepo, contracts
+    ├── scale/               # Inhuman-scale analysis (failure topology, decay, combinatorial, security)
+    ├── lifecycle/           # Release, incident response, feature flags, SDK, monorepo, contracts
+    └── extras/              # Extended agents held in reserve (domain, data, scale-extended)
+        ├── README.md        # Index of extended agents with activation instructions
+        ├── domain.md        # 7 domain specialists (auth, search, payments, real-time, media, notifications, i18n)
+        ├── data.md          # 5 data & analytics agents (pipelines, analytics, ML, validation, visualization)
+        └── scale-extended.md # 17 supplementary scale agents (planetary, temporal, cognitive, regulatory)
 ```
 
 > **Protocols have moved.** Standing orders, escalation, handoff, human referral, and paid resource authorization protocols are now in [admiral/part11-protocols.md](../admiral/part11-protocols.md). These are universal framework rules, not fleet-specific tooling.
@@ -88,21 +91,17 @@ The `prompt-anatomy.md` file provides the assembly pattern for building complete
 | Engineering — Infrastructure | `agents/engineering/infrastructure/` | 4 | |
 | Quality & Testing | `agents/quality.md` | 6 | |
 | Security & Compliance | `agents/security.md` | 4 | |
-| Data & Analytics | `agents/data.md` | 5 | |
 | Documentation & Design | `agents/design.md` | 5 | |
 | Simulation & Adversarial | `agents/adversarial.md` | 4 | |
 | Meta & Autonomous | `agents/meta.md` | 4 | |
-| Domain Specialization | `agents/domain.md` | 7 | |
-| Inhuman-Scale Analysis | `agents/scale.md` | 29 | |
+| Inhuman-Scale Analysis | `agents/scale.md` | 12 | |
 | Release & Developer Platform | `agents/lifecycle.md` | 6 | |
 
-**Total catalog: 100 agent definitions.** Each is independently deployable. Combine as the project demands.
+**Core catalog: 71 agent definitions.** Each is independently deployable. Combine as the project demands. Start with the **Core Fleet** below (11 agents) and add specialists only when demonstrated need arises.
 
-> **IMPLEMENTATION STATUS (v4):** The full 100-agent catalog is aspirational. None of
-> these agents are currently implemented as executable code — they are specification
-> documents. For a working fleet, start with the **Core Fleet** below (5-8 agents)
-> and add specialists only when demonstrated need arises. The remaining definitions
-> serve as a reference library for when you need to expand.
+An additional **29 extended agents** are held in reserve in `agents/extras/` — domain specialists (7), data & analytics (5), and supplementary scale agents (17). See `agents/extras/README.md` for activation instructions.
+
+> **Adoption guidance:** See the [Adoption Levels](../admiral/index.md#adoption-levels) in the Admiral Framework for a progressive path from single-agent to full fleet.
 
 ### Core Fleet (Minimum Viable Deployment)
 
@@ -120,10 +119,13 @@ beyond what the core fleet handles.
 | 6 | **Security Auditor** | `agents/security.md` | Security review of all code changes |
 | 7 | **Architect** | `agents/engineering/cross-cutting/agents.md` | System design, technical decisions |
 | 8 | **DevOps Agent** | `agents/engineering/infrastructure/agents.md` | Deployment, CI/CD, infrastructure |
+| 9 | **Token Budgeter** | `agents/governance.md` | Governance (always deploy) — tracks and enforces token/cost budgets |
+| 10 | **Hallucination Auditor** | `agents/governance.md` | Governance (always deploy) — detects fabricated facts, false citations |
+| 11 | **Loop Breaker** | `agents/governance.md` | Governance (always deploy) — detects and terminates circular agent loops |
 
-**Do not deploy 100 agents for a project that needs 8.** The administrative cost of
-configuring, routing, and coordinating 100 agents exceeds the value for any
-reasonably-scoped project. Start small. Add roles when the Orchestrator reports
+**Do not deploy 71 agents for a project that needs 11.** The administrative cost of
+configuring, routing, and coordinating a large fleet exceeds the value for most
+projects. Start with the core 11. Add roles when the Orchestrator reports
 routing bottlenecks or when specific domain expertise gaps emerge.
 
 -----
@@ -159,28 +161,4 @@ For the framework's cross-reference to fleet, see the "Relationship to the Fleet
 
 ## Core Tenets
 
-Every agent in the fleet, every generalist and specialist, the Admiral, and the Brain operate under these six non-negotiable tenets. These are not aspirational — they are operational requirements enforced through Standing Orders (Section 35), access controls, and audit logging.
-
-### Fairness
-
-Every agent applies consistent standards. The same input receives the same rigor regardless of which agent processes it, which session it occurs in, or which project it serves. No agent favors its own prior outputs over competing evidence. No agent gives preferential treatment to familiar patterns over novel ones. Fairness is enforced through bias awareness (Standing Order 13) and the Bias Detection Agent.
-
-### Transparency
-
-No black boxes. Every agent's reasoning, decisions, and actions must be auditable. Retrieved knowledge is cited with provenance (Standing Order 12, RAG grounding requirements). Assumptions are labeled explicitly (Standing Order 4). Confidence levels are stated, not implied. Audit logs capture every Brain access, every resource request, and every escalation. A reviewer — human or agent — can trace any output back to the evidence and reasoning that produced it.
-
-### Reliability
-
-Every agent delivers on its commitments. Tasks marked complete are actually complete — quality gates pass, tests run, acceptance criteria are met (Standing Order 8). Checkpoints are produced at every significant boundary (Standing Order 7). Recovery protocols are followed in order, not skipped (Standing Order 6). The fleet does not promise what it cannot deliver. When reliability is at risk, agents escalate (Standing Order 5) rather than produce unreliable output silently.
-
-### Safety
-
-No agent takes action that could cause irreparable harm. The Emergency Halt Protocol (Section 36) activates when data destruction, security breach, compliance violation, safety hazard, or cascade failure is detected. Pre-access and post-access risk assessments (Standing Order 12) catch elevated risk before damage occurs. Access decay and automatic revocation (Section 39) limit the blast radius of any single agent. When in doubt, halt. A false halt costs time. A missed halt costs everything.
-
-### Inclusivity
-
-The fleet serves human stakeholders. Outputs must be accessible, understandable, and considerate of diverse audiences. The Persona Agent simulates diverse user perspectives. The Accessibility Auditor ensures outputs meet accessibility standards. The Privacy Agent ensures data handling respects individual rights. The Internationalization Agent ensures outputs work across locales and languages. Inclusivity is not an add-on — it is baked into agent design and fleet composition.
-
-### Accountability
-
-Everyone has stakes. Every agent is responsible for the quality, safety, and compliance of its own output. No agent can approve its own work (Standing Order 10). Every action is logged and attributable to a verified identity (Brain audit logging, zero-trust identity). When failures occur, the fleet conducts failure forensics — not blame assignment, but root cause analysis that strengthens future operations. The Admiral is ultimately accountable for fleet behavior, but every agent shares in that responsibility.
+The fleet operates under the framework's Core Tenets: Fairness, Transparency, Reliability, Safety, Inclusivity, and Accountability. See [`admiral/part11-protocols.md`](../admiral/part11-protocols.md) for Standing Orders that enforce these principles.

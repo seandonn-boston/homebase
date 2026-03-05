@@ -32,15 +32,7 @@ Each phase can be a separate session with clean context. The output of phase N b
 
 ### Self-Healing Quality Integration
 
-Every chunk includes automated quality gates:
-
-```
-Chunk complete
-  → Type checker → Fix if failures → Recheck
-  → Linter → Fix if failures → Recheck
-  → Tests → Fix if failures → Retest
-  → All pass → Checkpoint → Next chunk
-```
+Self-healing loops (specified in Section 08) integrate with execution through the chunking model. Each chunk passes through the self-healing cycle before the next chunk begins.
 
 > **TEMPLATE: TASK DECOMPOSITION**
 >
@@ -120,7 +112,50 @@ Queen Agent
 | Single point of coordination | Consensus mechanisms |
 | Failure requires orchestrator intervention | Self-heals around failed agents |
 
-**When to use swarms:** Tasks are numerous, similar, and parallelizable. The fleet needs to operate with minimal Admiral oversight for extended periods.
+**When to Use Swarms:**
+
+| Condition | Recommendation |
+|---|---|
+| Fewer than 10 similar tasks | Hierarchical fleet. Swarm overhead exceeds benefit. |
+| 10-100 similar, parallelizable tasks | Swarm with a queen coordinator. |
+| Tasks require shared state or sequential dependencies | Hierarchical fleet. Swarms assume independence. |
+| Fleet must operate for extended periods without Admiral oversight | Swarm with consensus and self-healing. |
+| Tasks require diverse specialist knowledge | Hierarchical fleet. Swarms work best with homogeneous workers. |
+
+### Swarm Failure Models
+
+Swarms introduce failure modes that hierarchical fleets avoid:
+
+**Queen failure:** If the queen agent fails (crash, budget exhaustion, context corruption):
+- Workers continue their current tasks to completion but do not accept new work.
+- A standby queen activates with the last-known task manifest and worker status.
+- If no standby exists, workers checkpoint and halt. The fleet enters recovery mode.
+
+**Worker failure:** If a worker fails:
+- The queen detects missing heartbeat after configurable timeout (default: 60 seconds).
+- Failed worker's incomplete task is reassigned to the next available worker.
+- The failed worker's partial output is preserved for the replacement to build on (if salvageable) or discarded (if corrupt).
+
+**Consensus failure:** When workers produce contradictory results:
+- The queen collects all results and identifies the contradiction.
+- If a majority agrees, the majority result is accepted and the minority result is flagged for review.
+- If no majority exists, the queen escalates to the Admiral with all results and the contradiction analysis.
+- Workers never resolve contradictions among themselves — consensus is the queen's responsibility.
+
+**Cascade failure prevention:**
+- Workers are isolated from each other. One worker's failure cannot propagate to others.
+- The queen monitors aggregate error rates. If more than 30% of workers fail on the same task type, the queen halts the swarm and escalates — the task specification is likely flawed.
+- Budget exhaustion in one worker does not affect other workers' budgets.
+
+### Swarm Consensus Mechanisms
+
+When multiple workers produce outputs that must be reconciled:
+
+**Majority vote:** For tasks with discrete outcomes (pass/fail, choice A/B/C), the queen takes the majority. Ties escalate.
+
+**Quality-weighted merge:** For tasks producing artifacts (code, text, analysis), the queen evaluates each output against acceptance criteria and selects the highest-quality result. If multiple pass, the queen merges non-conflicting improvements.
+
+**Adversarial reconciliation:** Each worker reviews another worker's output. Disagreements are surfaced to the queen. This catches errors that majority vote misses (when most workers make the same mistake).
 
 ### Multi-Model Orchestration
 

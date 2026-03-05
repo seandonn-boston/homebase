@@ -73,7 +73,7 @@ Chronological record of every non-trivial decision: timestamp, decision, alterna
 
 ### External Intelligence as Adaptation Trigger
 
-The Continuous AI Landscape Monitor (`monitor/`) surfaces ecosystem changes that may trigger adaptation. When the Admiral reviews monitor digests and approves seed candidates into the Brain, assess each finding against the change classification:
+The Continuous AI Landscape Monitor (`monitor/`) is designed to surface ecosystem changes that may trigger adaptation. When the Admiral reviews monitor digests and approves seed candidates into the Brain, assess each finding against the change classification:
 
 | Monitor Finding | Likely Classification | Cascade Target |
 |---|---|---|
@@ -83,7 +83,7 @@ The Continuous AI Landscape Monitor (`monitor/`) surfaces ecosystem changes that
 | New MCP server ecosystem emerges | Tactical or Strategic | Tool Registry (12) → Protocol Integration (14) |
 | Security vulnerability in tracked dependency | Strategic Shift | Configuration Security (10) → Tool Registry (12) |
 
-The monitor runs daily. The Admiral should review digests at matching cadence and classify findings before they accumulate into stale intelligence.
+The Monitor specification defines a daily scan cadence. The Admiral should review digests at matching cadence and classify findings before they accumulate into stale intelligence.
 
 ### The Cascade Map
 
@@ -150,11 +150,26 @@ Enforcement (08) ──→ Config Strategy (07) ──→ Config Security (10)
 | **Over-decomposition** | Consolidate small chunks | Medium. Each chunk pays context tax. |
 | **Tool call volume** | Cap calls per task | Lower but compounds at scale. |
 
+### Cost Dimensions
+
+Modern fleet costs break down into four distinct dimensions, each requiring separate tracking:
+
+| Dimension | What It Measures | Why Track Separately |
+|---|---|---|
+| **Input tokens** | Context loaded into the model (standing + session + working) | Reveals context bloat. Grows with stuffing, shrinks with progressive disclosure. |
+| **Output tokens** | Model-generated responses | Reveals verbosity. Should be proportional to task complexity. |
+| **Thinking tokens** | Extended reasoning tokens consumed before response begins | Reveals reasoning intensity. Can be 5-50x output volume. Must be budgeted separately. |
+| **Tool call costs** | API calls, MCP operations, external service invocations | Reveals tool efficiency. Brute-force solutions inflate this dimension. |
+
+**Per-agent cost attribution:** Track costs at the agent level, not just the task level. This reveals which agents are cost-efficient vs. wasteful. An agent consistently consuming 3x its tier peers on equivalent tasks needs investigation: wrong model tier, poor context profile, or systematic retry loops.
+
 ### Cost Budgets
 
 - **Per-session:** Maximum spend before pausing for review. Circuit breaker.
 - **Per-phase:** Total allocation for a project phase. Exceeding triggers Strategic Shift.
 - **Cost-per-chunk target:** Expected cost at each tier. Chunks exceeding 2x target warrant investigation.
+- **Per-agent ceiling:** Maximum cost per agent per session. Prevents runaway agents from consuming the fleet's budget.
+- **Extended thinking budget:** Separate allocation for thinking tokens. Default: 2x the output token budget. Enforce via model API parameters, not advisory instructions.
 
 ### Economy-Tier Strategy
 
@@ -209,6 +224,27 @@ Models like DeepSeek V3.2 at ~1/30th flagship cost change fleet economics:
 
 > **ANTI-PATTERN: METRIC THEATER** — Metrics collected but no adjustments result. Every review must end with action or explicit confirmation that no action is needed.
 
+### Error Budgets
+
+Complement threshold-based alerts with SRE-style error budgets to manage the velocity-quality trade-off:
+
+**Defining an Error Budget:**
+- Choose 2-3 key quality metrics (e.g., rework rate, hallucination rate, scope violations per session).
+- Set an acceptable failure rate per metric per evaluation period (e.g., "rework rate below 15% per week").
+- Track the budget burn rate: `(actual failures / budget allowance) × 100%`.
+
+**Budget Responses:**
+| Burn Rate | Response |
+|---|---|
+| < 50% | Normal operations. Fleet may experiment with wider Autonomous tiers or faster execution. |
+| 50-80% | Caution. No new experiments. Monitor closely. |
+| 80-100% | Tighten. Narrow Autonomous tiers, increase verification levels, slow execution pace. |
+| > 100% (exhausted) | Pause non-critical work. Root-cause analysis required before resuming normal operations. All new tasks default to Propose tier until budget recovers. |
+
+**Recalibration:** Error budgets should be recalibrated quarterly or after significant fleet changes (new agents, model upgrades, adoption level changes). Initial budgets for new fleets should be generous — tighten as baselines stabilize.
+
+Error budgets formalize what Section 27's metric interpretation already implies: "Throughput up, Quality down" means the fleet is burning its error budget faster than expected.
+
 -----
 
 ## 28 — FLEET SCALING & LIFECYCLE
@@ -234,6 +270,20 @@ Models like DeepSeek V3.2 at ~1/30th flagship cost change fleet economics:
 | **Dormant** | Maintenance mode. Minimal fleet preserved. | Orchestrator + Implementer + QA on standby. Artifacts preserved. |
 
 > **ANTI-PATTERN: PREMATURE DECOMMISSION** — Project enters maintenance, fleet decommissioned entirely. Six months later, a critical bug. Institutional memory gone. Maintain a dormant fleet.
+
+### Agent Retirement Protocol
+
+When removing an individual agent from a running fleet:
+
+1. **Complete in-flight work.** Allow the agent to finish current tasks or explicitly reassign them via the Orchestrator.
+2. **Update routing rules.** Remove the agent from `fleet/routing-rules.md` task mappings. Assign its tasks to the designated fallback agent or a replacement.
+3. **Update interface contracts.** Remove or reassign any handoff contracts in `fleet/interface-contracts.md` that reference the retired agent.
+4. **Archive Brain entries.** Do not delete the agent's Brain entries — they remain valuable as institutional memory. Tag them with `retired_agent: true` in metadata for filtering.
+5. **Reset trust calibration.** If a replacement agent takes over, its trust calibration starts fresh (Novice tier) regardless of the predecessor's earned trust.
+6. **Update fleet roster.** Remove from `fleet/README.md` and `fleet/model-tiers.md`.
+7. **Notify dependent agents.** Any agent whose "Output Goes To" includes the retired agent must be updated.
+
+**Anti-Pattern: Ghost Agents.** An agent removed from routing but still referenced in interface contracts or other agents' "Output Goes To" fields. The Drift Monitor should flag any references to agents not in the active roster.
 
 -----
 

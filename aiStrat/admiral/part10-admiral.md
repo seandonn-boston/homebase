@@ -39,11 +39,15 @@ Trust is not a feeling. It is a measurable parameter earned incrementally and wi
 
 ### The Admiral as Meta-Agent
 
-The Admiral may itself be an AI agent — a meta-orchestrator. In this configuration:
+The Admiral may itself be an AI agent — a meta-orchestrator. This does not make the Admiral autonomous. It means the meta-process is automated, not unsupervised.
 
-- The meta-agent's constraints must be the most heavily enforced (hooks on hooks).
-- A human must still hold Escalate-tier authority. No self-authorized scope expansion.
-- Trust calibration applies to the meta-agent just as it applies to any fleet member.
+**Hard constraints on meta-agent Admirals:**
+
+- The meta-agent's constraints must be the most heavily enforced — hooks on hooks. Every action the meta-agent takes must pass through the same enforcement layer it imposes on the fleet, plus an additional layer specific to meta-agent operations.
+- **A human holds ultimate Escalate-tier authority.** The meta-agent Admiral can resolve Propose-tier decisions and manage fleet operations, but it cannot authorize scope expansion, budget increases, new fleet deployments, or changes to its own constraints. These require human approval.
+- **The meta-agent cannot modify its own configuration.** No self-editing of CLAUDE.md, hooks, agent definitions, or authority tiers. All configuration changes require human review and approval.
+- Trust calibration applies to the meta-agent just as it applies to any fleet member — earned per category, withdrawn precisely after failures.
+- **The meta-agent's identity token is non-delegable and non-renewable without human authorization.** If the meta-agent's session expires, a human must re-authorize. No automatic session extension.
 
 > **ANTI-PATTERN: MICROMANAGEMENT SPIRAL** — After one bad outcome, Autonomous narrowed across all categories. Velocity plummets. Escalations flood. Review quality drops. More mistakes. Narrow precisely — only the failed category.
 
@@ -95,6 +99,44 @@ The Admiral may itself be an AI agent — a meta-orchestrator. In this configura
 > RESPONSE FORMAT: [What's needed back]
 
 > **ANTI-PATTERN: ADMIRAL AS UNIVERSAL EXPERT** — The Admiral answers every domain question personally. Privacy guidance misses a jurisdictional requirement. UX decision creates an accessibility failure. The Admiral's job is to know who knows, not to know everything.
+
+-----
+
+## 35 — MULTI-OPERATOR GOVERNANCE
+
+> **TL;DR** — When multiple humans operate the same fleet, define explicit tiers, conflict resolution rules, and handoff protocols. Without these, agents receive contradictory authority signals and fleet behavior becomes unpredictable.
+
+### Operator Roles
+
+When multiple humans operate the same fleet, define three operator tiers:
+
+| Role | Authority | Example Actions |
+|---|---|---|
+| **Owner** | Full framework authority | Modify Standing Orders, change adoption level, approve Strategic Shifts, grant/revoke Operator access |
+| **Operator** | Fleet operational authority | Approve Escalate-tier decisions, adjust trust calibration, deploy/retire agents, approve paid resource access |
+| **Observer** | Read-only with alert authority | Monitor fleet health, review traces, trigger Emergency Halt (observers can always halt) |
+
+### Conflict Resolution Between Operators
+
+When operators issue conflicting directives:
+
+1. **Higher tier wins.** Owner overrides Operator; Operator overrides Observer.
+2. **Same tier: conservative wins.** When two Operators disagree, the more restrictive directive applies until they align. An Operator who wants to widen Autonomous scope must get agreement from the Operator who narrowed it.
+3. **Emergency Halt is non-negotiable.** Any operator at any tier can halt the fleet. Resumption requires Owner or unanimous Operator agreement.
+
+### Operator Handoff
+
+When transferring Admiral responsibility:
+
+1. Export current fleet state: trust calibration per category, active agent roster, Brain health metrics, in-flight task manifest.
+2. Incoming operator reviews fleet state and acknowledges.
+3. Outgoing operator's identity tokens are revoked.
+4. Incoming operator establishes new identity tokens.
+5. Fleet operates under the incoming operator's trust calibration (which may differ — this is expected during the transition period).
+
+### Anti-Pattern: Authority Fragmentation
+
+When too many operators have Operator-tier access, directives conflict frequently and agents receive inconsistent authority signals. **Guideline: maximum 2-3 Operators per fleet.** More humans should be Observers who escalate to the designated Operators.
 
 -----
 

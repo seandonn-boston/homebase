@@ -135,3 +135,5 @@ Identity → Authority → Constraints → Knowledge → Task
 - **Constraints after Task:** Agent reads the task first, begins planning, and then encounters constraints that contradict its plan — producing confused, half-constrained output.
 - **Overloading Knowledge:** Stuffing every artifact into Knowledge "just in case" makes the agent shallow and unfocused. Load only what this specific task requires.
 - **Vague Task:** "Improve the login flow" produces scope creep. "Implement password reset email trigger per spec X, validate against criteria Y, route output to QA" produces focused work.
+
+> For a complete agent definition example, see [`agents/agent-example.md`](agents/agent-example.md).

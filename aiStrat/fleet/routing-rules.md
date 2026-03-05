@@ -45,11 +45,11 @@ The primary routing strategy. Match the task's nature to the agent whose scope c
 | **Penetration testing** | Penetration Tester | Security Auditor |
 | **Compliance validation** | Compliance Agent | Security Auditor |
 | **Privacy review** | Privacy Agent | Compliance Agent |
-| **Data pipeline** | Data Engineer | Backend Implementer |
-| **Analytics instrumentation** | Analytics Implementer | Frontend/Backend Implementer |
-| **ML pipeline** | ML Engineer | Data Engineer |
-| **Data validation** | Data Validator | Data Engineer |
-| **Data visualization** | Visualization Agent | Frontend Implementer |
+| **Data pipeline** | Data Engineer (extras) | Backend Implementer |
+| **Analytics instrumentation** | Analytics Implementer (extras) | Frontend/Backend Implementer |
+| **ML pipeline** | ML Engineer (extras) | Data Engineer (extras) |
+| **Data validation** | Data Validator (extras) | Data Engineer (extras) |
+| **Data visualization** | Visualization Agent (extras) | Frontend Implementer |
 | **UX analysis** | UX Researcher | Simulated User |
 | **Design system** | Design Systems Agent | Frontend Implementer |
 | **User-facing copy** | Copywriter | Technical Writer |
@@ -63,13 +63,13 @@ The primary routing strategy. Match the task's nature to the agent whose scope c
 | **Dependency monitoring** | Dependency Sentinel | Dependency Manager |
 | **SEO audit** | SEO Crawler | Frontend Implementer |
 | **Fleet roster evolution** | Role Crystallizer | Admiral |
-| **Internationalization** | Internationalization Agent | Frontend Implementer |
-| **Authentication** | Auth & Identity Specialist | Backend Implementer |
-| **Search** | Search & Relevance Agent | Backend Implementer |
-| **Payments / billing** | Payment & Billing Agent | Backend Implementer |
-| **Real-time / WebSocket** | Real-time Systems Agent | Backend Implementer |
-| **Media processing** | Media Processing Agent | Backend Implementer |
-| **Notifications** | Notification Orchestrator | Backend Implementer |
+| **Internationalization** | Internationalization Agent (extras) | Frontend Implementer |
+| **Authentication** | Auth & Identity Specialist (extras) | Backend Implementer |
+| **Search** | Search & Relevance Agent (extras) | Backend Implementer |
+| **Payments / billing** | Payment & Billing Agent (extras) | Backend Implementer |
+| **Real-time / WebSocket** | Real-time Systems Agent (extras) | Backend Implementer |
+| **Media processing** | Media Processing Agent (extras) | Backend Implementer |
+| **Notifications** | Notification Orchestrator (extras) | Backend Implementer |
 | **Token budget enforcement** | Token Budgeter | Orchestrator |
 | **Scope / mission drift detection** | Drift Monitor | Orchestrator |
 | **Hallucination audit** | Hallucination Auditor | Orchestrator |
@@ -138,3 +138,5 @@ Pipeline:
 ```
 
 Each step's output becomes the next step's input via the handoff protocol.
+
+> For handoff format specifications between routed agents, see [`interface-contracts.md`](interface-contracts.md).

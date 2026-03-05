@@ -158,11 +158,22 @@ Everything an agent can know, remember, and reason about must fit within the con
 | Session Context | Last checkpoint, current task spec, interface contracts, relevant code | 50–65% | Loaded at session start, refreshed at chunk boundaries |
 | Working Context | Active reasoning, tool outputs, intermediate results | 20–30% | Generated during execution, compressed as session grows |
 
+### Context Window Scaling
+
+The budget percentages above are reference points calibrated for 200K-token context windows. As models offer larger windows, apply these scaling principles:
+
+- **Percentages are soft guides, not hard rules.** At 2M tokens, 15% standing context is 300K tokens — far more than any agent needs. Apply absolute ceilings: standing context should rarely exceed 50K tokens regardless of window size.
+- **Larger windows do not eliminate context engineering.** Attention quality degrades in longer contexts even when capacity permits. The primacy/recency loading principles remain important at any window size.
+- **Larger windows enable richer task context, not bloated standing context.** The primary benefit of larger windows is carrying more project artifacts (full files, test suites, design docs) in the working context, not expanding the instruction payload.
+- **Revisit the 40% chunk sizing rule** (Section 18) when windows grow significantly. Larger windows may permit larger chunks, but the principle — leave headroom for reasoning — still applies. Scale the absolute chunk size, not the percentage.
+
 ### Loading Order Protocol
 
-1. **Load identity and constraints first.** Role definition, Decision Authority tier, Boundaries, Mission. Primacy ensures they function as foundational assumptions.
+1. **Load identity and constraints first.** Role definition, Decision Authority tier, Boundaries, Mission. Primacy ensures they function as foundational assumptions that frame all subsequent reasoning.
 2. **Load reference material in the middle.** Ground Truth details, historical decisions, naming conventions. Available for reference without dominating reasoning.
 3. **Load the current task last.** Task specification, acceptance criteria, relevant code. Recency ensures active reasoning is oriented toward immediate work.
+
+**Resolving primacy vs. recency tension:** These effects complement, not compete. Primacy establishes the *frame* (who am I, what are my constraints). Recency directs the *focus* (what am I doing right now). If a task instruction appears to conflict with a constraint loaded at the top, **the constraint wins** — constraints are hard boundaries, tasks are requests within those boundaries. When in doubt, the agent must treat earlier-loaded constraints as having higher authority than later-loaded task details.
 
 ### Progressive Disclosure
 

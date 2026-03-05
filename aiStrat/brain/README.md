@@ -1,81 +1,166 @@
-# The Brain
+# The Brain — Architecture Specification
 
 **Long-term fleet memory: Postgres + pgvector, accessible via MCP.**
 
-This directory is the reference implementation of the Brain architecture defined in [admiral/part5-brain.md](../admiral/part5-brain.md). It provides:
+This directory contains the architecture specification for the Brain — the fleet's durable knowledge system defined in [admiral/part5-brain.md](../admiral/part5-brain.md). It specifies:
 
 - A database schema for storing decisions, outcomes, lessons, failures, and patterns as vector embeddings
-- An MCP server exposing seven tools (`brain_record`, `brain_query`, `brain_retrieve`, `brain_strengthen`, `brain_supersede`, `brain_status`, `brain_audit`) that any AI agent can use
-- A ranked retrieval pipeline that combines eight signals: semantic similarity, project relevance, recency, usefulness, currency, category matching, provenance, and speculative discount
+- An MCP server interface exposing seven tools (`brain_record`, `brain_query`, `brain_retrieve`, `brain_strengthen`, `brain_supersede`, `brain_status`, `brain_audit`) that any AI agent can use
+- A ranked retrieval pipeline combining eight signals: semantic similarity, project relevance, recency, usefulness, currency, category matching, provenance weight, and speculative discount
+- A zero-trust access control model with identity token lifecycle, mandatory audit logging, and sensitivity classification
 - A pluggable embedding interface for generating vector representations
 
-## Directory Structure
+## MCP Tool Contracts
+
+Each tool exposed by the Brain MCP server has a defined contract. See [admiral/part5-brain.md](../admiral/part5-brain.md) Section 16 for full behavioral semantics.
+
+### brain_record
+
+Record a new entry in the Brain.
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `project` | string | yes | Project identifier |
+| `category` | string | yes | `decision` \| `outcome` \| `lesson` \| `context` \| `failure` \| `pattern` |
+| `title` | string | yes | One-line human-readable summary |
+| `content` | string | yes | Full detail: what, why, alternatives, rationale |
+| `metadata` | object | no | Tags, references, related sections (stored as JSONB) |
+| `links` | array | no | Array of `{target_id: UUID, link_type: string}` relationships |
+
+**Returns:** `{ id: UUID }` — the newly created entry's identifier.
+
+**Errors:** `INVALID_CATEGORY` if category not in allowed set. `PROJECT_SCOPE_VIOLATION` if agent not assigned to the target project. `IDENTITY_VERIFICATION_FAILED` if token is invalid or expired.
+
+### brain_query
+
+Semantic search across entries.
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `query` | string | yes | Natural language question or topic |
+| `project` | string | no | Filter to a specific project (omit for cross-project) |
+| `category` | string | no | Filter to a category |
+| `limit` | integer | no | Max results (default: 10) |
+| `min_score` | float | no | Minimum similarity threshold (default: 0.7) |
+| `current_only` | boolean | no | Exclude superseded entries (default: true) |
+
+**Returns:** `{ entries: [{ id, project, category, title, content, score, usefulness, created_at }] }` — ranked by composite score (similarity + usefulness + recency + other signals).
+
+**Errors:** `CROSS_PROJECT_DENIED` if non-orchestrator agent omits project filter. `IDENTITY_VERIFICATION_FAILED`.
+
+### brain_retrieve
+
+Fetch a specific entry by ID, including its link graph.
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `id` | UUID | yes | Entry UUID |
+| `depth` | integer | no | Link traversal depth (default: 1, max: 3) |
+
+**Returns:** `{ entry: { id, project, category, title, content, metadata, source_agent, authority_tier, access_count, usefulness, superseded_by, created_at, updated_at }, links: [{ id, link_type, direction, entry }] }`.
+
+**Errors:** `NOT_FOUND` if entry does not exist. `PROJECT_SCOPE_VIOLATION` if entry belongs to a project the agent cannot read.
+
+### brain_strengthen
+
+Signal that a retrieved entry was useful (or not).
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `id` | UUID | yes | Entry UUID |
+| `useful` | boolean | yes | Whether the entry was useful |
+| `context` | string | no | Brief note on why |
+
+**Returns:** `{ id, usefulness: integer }` — the updated usefulness score.
+
+**Errors:** `NOT_FOUND`. `IDENTITY_VERIFICATION_FAILED`.
+
+### brain_supersede
+
+Mark an entry as superseded by a new one. Restricted to orchestrator-level agents and Admiral.
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `old_id` | UUID | yes | Entry being superseded |
+| `new_id` | UUID | yes | Replacement entry |
+| `reason` | string | no | Why the old entry is no longer current |
+
+**Returns:** `{ old_id, new_id, status: "superseded" }`.
+
+**Errors:** `NOT_FOUND` if either entry does not exist. `AUTHORITY_INSUFFICIENT` if caller is below orchestrator tier. `ALREADY_SUPERSEDED` if old entry is already superseded.
+
+### brain_status
+
+Health and statistics for the Brain.
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `project` | string | no | Filter to a specific project |
+
+**Returns:** `{ entry_counts: { decision, outcome, lesson, context, failure, pattern }, avg_usefulness: float, total_entries: integer, storage_bytes: integer, oldest_entry: timestamp, newest_entry: timestamp }`.
+
+**Errors:** `IDENTITY_VERIFICATION_FAILED`.
+
+### brain_audit
+
+Query the audit log. Restricted to Admiral.
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `project` | string | no | Filter to a specific project |
+| `agent_id` | string | no | Filter to a specific agent |
+| `operation` | string | no | Filter by operation type (`record` \| `query` \| `retrieve` \| `strengthen` \| `supersede`) |
+| `since` | timestamp | no | Only entries after this time |
+| `limit` | integer | no | Max results (default: 50) |
+
+**Returns:** `{ logs: [{ timestamp, agent_id, operation, project, entry_ids, result, risk_flags }] }`.
+
+**Errors:** `AUTHORITY_INSUFFICIENT` if caller is not Admiral. `IDENTITY_VERIFICATION_FAILED`.
+
+> **Note:** The `audit_log` table now exists in the schema (`schema/001_initial.sql`). All seven MCP tools generate audit records on every invocation — see the Audit Logging section in Part 5, Section 16.
+
+## Design Artifacts
 
 ```
 brain/
-├── README.md               # This file
-├── schema/
-│   └── 001_initial.sql     # Postgres + pgvector schema (entries, entry_links, indexes)
-├── core/
-│   ├── models.py           # Data models (Entry, EntryLink, enums)
-│   ├── store.py            # Thread-safe storage layer (in-memory + Postgres adapter)
-│   ├── embeddings.py       # Pluggable embedding generation interface
-│   └── retrieval.py        # 8-signal ranked retrieval pipeline
-├── mcp/
-│   └── server.py           # MCP server exposing all 7 Brain tools
-├── services/
-│   └── bootstrap.py        # Wiring and initialization
-├── seeds/
-│   └── seed_research.py    # Initial knowledge base (50 entries from framework research)
-└── tests/
-    └── test_store.py        # Store and retrieval tests
+├── README.md               # This file — architecture overview
+└── schema/
+    └── 001_initial.sql     # Postgres + pgvector schema (entries, entry_links, audit_log, indexes)
 ```
 
 ## Relationship to the Admiral Framework
 
-| Part 5 Section | Implementation |
+| Part 5 Section | What It Specifies |
 |---|---|
-| Section 15 — Brain Architecture | `schema/001_initial.sql`, `core/models.py`, `core/store.py` |
-| Section 16 — Knowledge Protocol | `mcp/server.py` (all 7 MCP tools) |
-| Section 17 — Intelligence Lifecycle | `core/retrieval.py`, `core/embeddings.py` |
+| Section 15 — Brain Architecture | Schema design, entry categories, strengthening model, vector embeddings |
+| Section 16 — Knowledge Protocol | MCP server tools, access control, audit logging, identity token lifecycle, RAG security |
+| Section 17 — Intelligence Lifecycle | Retrieval pipeline, multi-hop retrieval, knowledge graph, cross-project intelligence |
 
-## Quick Start
+## Architecture Decisions
 
-### Prerequisites
+- **Postgres + pgvector** chosen for combined structured/unstructured/vector storage in a single transactional system. No vendor lock-in.
+- **MCP as the universal interface.** Any agent that speaks MCP speaks to the Brain — Claude Code, Agent SDK agents, third-party agents. Protocol-agnostic by design.
+- **Zero-trust access control.** Identity tokens are cryptographically signed, session-scoped, non-delegable. No caller-declared identity trusted.
+- **Embedding generation is pluggable.** The `EmbeddingProvider` interface accepts any implementation — OpenAI, local models, or future alternatives.
+- **Retrieval is multi-signal.** Vector similarity alone is insufficient. The pipeline applies eight ranking signals from Part 5, Section 17, including multi-hop traversal and contradiction awareness.
+- **All access is audited.** Immutable, append-only audit log captures every operation with verified identity, risk flags, and sensitivity classification.
 
-- Python 3.11+
-- PostgreSQL 16+ with pgvector extension (for production use)
-- An embedding model API key (OpenAI, or any compatible provider)
+## Schema Overview
 
-### In-Memory Mode (Development / Testing)
+The schema (`schema/001_initial.sql`) defines three tables:
 
-No database required. The in-memory store uses cosine similarity on Python lists:
+- **entries** — The atomic unit of knowledge: UUID, project, category, title, content, vector embedding (1536 dimensions), metadata (JSONB), provenance, authority tier, strengthening signals (access_count, usefulness), supersession chain, and `sensitivity` classification (`standard`, `elevated`, `restricted`).
+- **entry_links** — Typed relationships between entries: supports, contradicts, supersedes, elaborates, caused_by. Enables knowledge graph traversal and multi-hop retrieval.
+- **audit_log** — Append-only record of every MCP tool invocation: timestamp, agent identity, operation, project, affected entry IDs, result, and risk flags. Immutable by design — no UPDATE or DELETE permitted.
 
-```bash
-python -m brain.services.bootstrap --mode memory
-```
+Indexes: HNSW for approximate nearest neighbor vector search, composite indexes for filtered queries (project + category, created_at, authority_tier), GIN index for JSONB tag queries.
 
-### Postgres Mode (Production)
+## Security Model
 
-```bash
-# 1. Create the database and enable pgvector
-psql -c "CREATE DATABASE fleet_brain;"
-psql -d fleet_brain -c "CREATE EXTENSION IF NOT EXISTS vector;"
+See [admiral/part5-brain.md](../admiral/part5-brain.md) Section 16 for the full specification:
 
-# 2. Run the schema migration
-psql -d fleet_brain -f brain/schema/001_initial.sql
-
-# 3. Set environment variables
-export BRAIN_DATABASE_URL="postgresql://user:pass@localhost:5432/fleet_brain"
-export BRAIN_EMBEDDING_API_KEY="sk-..."
-
-# 4. Start the MCP server
-python -m brain.mcp.server
-```
-
-## Design Decisions
-
-- **In-memory store for development.** Matches broker/'s pattern. Swappable for Postgres without changing the interface.
-- **Embedding generation is pluggable.** The `EmbeddingProvider` protocol accepts any implementation — OpenAI, local models, or a mock for tests.
-- **Retrieval is multi-signal.** Vector similarity alone is insufficient. The pipeline applies eight ranking signals from Part 5, Section 17.
-- **Access control is caller-declared.** The MCP server trusts the caller's declared identity (agent role, project). Authentication is handled at the MCP transport layer, not in business logic.
+- **Identity tokens** with cryptographic signatures, session scoping, rotation, revocation, and non-delegation
+- **Permission matrix** enforced at runtime: read own project (all agents), read cross-project (orchestrators/Admiral only), write own project, supersede (orchestrator/Admiral only)
+- **Sensitivity classification** at write time: Standard, Elevated, Restricted
+- **Quarantine integration** for external intelligence (monitor findings pass through 4-layer immune system before Brain ingestion)
+- **RAG security** including retrieval poisoning prevention, grounding requirements, and pipeline integrity checks
