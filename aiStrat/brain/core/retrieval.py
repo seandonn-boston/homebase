@@ -181,7 +181,7 @@ def query(
     query_embedding = embedding_provider.embed(query_text)
 
     candidates = store.list_entries(
-        project=None,
+        project=project,
         category=category,
         current_only=current_only,
     )

@@ -184,6 +184,16 @@ class SQLiteBrainStore:
         self._init_db()
         self.audit = _SQLiteAuditLog(db_path)
 
+    def close(self) -> None:
+        """Release any resources. Safe to call multiple times."""
+        pass  # Connections are created per-operation; nothing to close.
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        self.close()
+
     def _conn(self) -> sqlite3.Connection:
         conn = sqlite3.connect(self._db_path)
         conn.execute("PRAGMA journal_mode=WAL")
@@ -404,7 +414,7 @@ class SQLiteBrainStore:
                     break
                 visited.add(current_id)
                 r = conn.execute("SELECT superseded_by FROM entries WHERE id = ?", (current_id,)).fetchone()
-                current_id = r[1] if r else None
+                current_id = r[0] if r else None
 
             # Backward from old_id
             visited_back = {old_id}
@@ -416,7 +426,7 @@ class SQLiteBrainStore:
                     break
                 visited_back.add(current_id)
                 r = conn.execute("SELECT superseded_by FROM entries WHERE id = ?", (current_id,)).fetchone()
-                current_id = r[1] if r else None
+                current_id = r[0] if r else None
 
             now = time.time()
             conn.execute(

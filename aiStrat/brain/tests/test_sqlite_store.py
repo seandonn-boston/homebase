@@ -28,8 +28,12 @@ class TestSQLitePersistence(unittest.TestCase):
         self.store, self.db_path = _make_store()
 
     def tearDown(self):
-        if os.path.exists(self.db_path):
-            os.unlink(self.db_path)
+        self.store.close()
+        try:
+            if os.path.exists(self.db_path):
+                os.unlink(self.db_path)
+        except OSError:
+            pass
 
     def test_entry_survives_restart(self):
         entry = Entry(
@@ -80,8 +84,12 @@ class TestSQLiteStoreOperations(unittest.TestCase):
         self.store, self.db_path = _make_store()
 
     def tearDown(self):
-        if os.path.exists(self.db_path):
-            os.unlink(self.db_path)
+        self.store.close()
+        try:
+            if os.path.exists(self.db_path):
+                os.unlink(self.db_path)
+        except OSError:
+            pass
 
     def test_add_and_get_entry(self):
         entry = Entry(
@@ -267,9 +275,14 @@ class TestSQLiteBootstrapIntegration(unittest.TestCase):
             )
             got = brain2.store.get_entry(result["id"])
             self.assertEqual(got.title, "Persisted")
+            brain2.store.close()
         finally:
-            if os.path.exists(db_path):
-                os.unlink(db_path)
+            brain.store.close()
+            try:
+                if os.path.exists(db_path):
+                    os.unlink(db_path)
+            except OSError:
+                pass
 
 
 if __name__ == "__main__":

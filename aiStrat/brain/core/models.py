@@ -29,6 +29,7 @@ ALLOWED_METADATA_KEYS: frozenset[str] = frozenset({
     "scan_source",
     "sanitized",
     "original_signals",
+    "_quarantine_bypassed",
 })
 
 

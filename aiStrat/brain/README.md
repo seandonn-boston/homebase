@@ -5,8 +5,8 @@
 This directory is the reference implementation of the Brain architecture defined in [admiral/part5-brain.md](../admiral/part5-brain.md). It provides:
 
 - A database schema for storing decisions, outcomes, lessons, failures, and patterns as vector embeddings
-- An MCP server exposing six tools (`brain_record`, `brain_query`, `brain_retrieve`, `brain_strengthen`, `brain_supersede`, `brain_status`) that any AI agent can use
-- A ranked retrieval pipeline that combines semantic similarity, project relevance, recency, usefulness, currency, and category matching
+- An MCP server exposing seven tools (`brain_record`, `brain_query`, `brain_retrieve`, `brain_strengthen`, `brain_supersede`, `brain_status`, `brain_audit`) that any AI agent can use
+- A ranked retrieval pipeline that combines eight signals: semantic similarity, project relevance, recency, usefulness, currency, category matching, provenance, and speculative discount
 - A pluggable embedding interface for generating vector representations
 
 ## Directory Structure
@@ -20,9 +20,9 @@ brain/
 │   ├── models.py           # Data models (Entry, EntryLink, enums)
 │   ├── store.py            # Thread-safe storage layer (in-memory + Postgres adapter)
 │   ├── embeddings.py       # Pluggable embedding generation interface
-│   └── retrieval.py        # 6-signal ranked retrieval pipeline
+│   └── retrieval.py        # 8-signal ranked retrieval pipeline
 ├── mcp/
-│   └── server.py           # MCP server exposing all 6 Brain tools
+│   └── server.py           # MCP server exposing all 7 Brain tools
 ├── services/
 │   └── bootstrap.py        # Wiring and initialization
 ├── seeds/
@@ -36,7 +36,7 @@ brain/
 | Part 5 Section | Implementation |
 |---|---|
 | Section 15 — Brain Architecture | `schema/001_initial.sql`, `core/models.py`, `core/store.py` |
-| Section 16 — Knowledge Protocol | `mcp/server.py` (all 6 MCP tools) |
+| Section 16 — Knowledge Protocol | `mcp/server.py` (all 7 MCP tools) |
 | Section 17 — Intelligence Lifecycle | `core/retrieval.py`, `core/embeddings.py` |
 
 ## Quick Start
@@ -77,5 +77,5 @@ python -m brain.mcp.server
 
 - **In-memory store for development.** Matches broker/'s pattern. Swappable for Postgres without changing the interface.
 - **Embedding generation is pluggable.** The `EmbeddingProvider` protocol accepts any implementation — OpenAI, local models, or a mock for tests.
-- **Retrieval is multi-signal.** Vector similarity alone is insufficient. The pipeline applies six ranking signals from Part 5, Section 17.
+- **Retrieval is multi-signal.** Vector similarity alone is insufficient. The pipeline applies eight ranking signals from Part 5, Section 17.
 - **Access control is caller-declared.** The MCP server trusts the caller's declared identity (agent role, project). Authentication is handled at the MCP transport layer, not in business logic.

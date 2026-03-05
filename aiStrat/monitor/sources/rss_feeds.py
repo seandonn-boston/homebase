@@ -17,6 +17,7 @@ installed, XML parsing is refused entirely (fail-closed).
 from __future__ import annotations
 
 import hashlib
+import html
 import logging
 import re
 import unicodedata
@@ -286,13 +287,8 @@ def _sanitize_text(text: str) -> str:
         return ""
     # Strip HTML tags
     text = re.sub(r"<[^>]+>", "", text)
-    # Decode common HTML entities
-    text = text.replace("&amp;", "&")
-    text = text.replace("&lt;", "<")
-    text = text.replace("&gt;", ">")
-    text = text.replace("&quot;", '"')
-    text = text.replace("&#39;", "'")
-    text = text.replace("&nbsp;", " ")
+    # Decode HTML entities
+    text = html.unescape(text)
     # Strip control characters
     text = re.sub(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]", "", text)
     # Collapse whitespace

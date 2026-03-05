@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(wc:*)",
+      "Bash(python:*)",
+      "Bash(grep:*)",
+      "Bash(xargs cat:*)",
+      "Bash(pip install:*)"
+    ]
+  }
+}

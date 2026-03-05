@@ -27,6 +27,8 @@ from .server import BrainServer
 
 logger = logging.getLogger(__name__)
 
+_MAX_MESSAGE_SIZE = 1_048_576  # 1MB
+
 # ── Tool definitions ──────────────────────────────────────────
 
 TOOL_DEFINITIONS = [
@@ -214,6 +216,11 @@ class MCPTransport:
             if not line:
                 continue
             try:
+                if len(line) > _MAX_MESSAGE_SIZE:
+                    err = _error(None, -32600, f"Message exceeds maximum size of {_MAX_MESSAGE_SIZE} bytes")
+                    sys.stdout.write(json.dumps(err) + "\n")
+                    sys.stdout.flush()
+                    continue
                 message = json.loads(line)
                 response = self.handle_message(message)
                 if response is not None:

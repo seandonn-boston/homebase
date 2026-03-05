@@ -13,7 +13,7 @@ from ..core.embeddings import MockEmbeddingProvider
 from ..core.store import BrainStore
 from ..mcp.auth import Scope
 from ..mcp.server import BrainServer
-from ..mcp.transport import MCPTransport, TOOL_DEFINITIONS
+from ..mcp.transport import MCPTransport, TOOL_DEFINITIONS, _MAX_MESSAGE_SIZE
 from ..services.bootstrap import bootstrap
 
 
@@ -181,6 +181,34 @@ class TestMCPErrorHandling(unittest.TestCase):
             "jsonrpc": "2.0", "id": 11, "method": "ping"
         })
         self.assertEqual(resp["result"], {})
+
+
+class TestMCPMessageSizeLimit(unittest.TestCase):
+    """Test that oversized messages are rejected."""
+
+    def test_max_message_size_constant_exists(self):
+        self.assertEqual(_MAX_MESSAGE_SIZE, 1_048_576)
+
+    def test_oversized_message_in_run_stdio(self):
+        """Verify the size limit is enforced during stdio processing."""
+        import io
+        t = _make_transport()
+        oversized = "x" * (_MAX_MESSAGE_SIZE + 1) + "\n"
+        fake_stdin = io.StringIO(oversized)
+        fake_stdout = io.StringIO()
+
+        import sys
+        old_stdin, old_stdout = sys.stdin, sys.stdout
+        sys.stdin, sys.stdout = fake_stdin, fake_stdout
+        try:
+            t.run_stdio()
+        finally:
+            sys.stdin, sys.stdout = old_stdin, old_stdout
+
+        output = fake_stdout.getvalue()
+        resp = json.loads(output.strip())
+        self.assertIn("error", resp)
+        self.assertEqual(resp["error"]["code"], -32600)
 
 
 if __name__ == "__main__":

@@ -336,6 +336,9 @@ class BrainServer:
                     "(caller=%s, title='%s')",
                     ctx.identity, title[:80],
                 )
+                if metadata is None:
+                    metadata = {}
+                metadata["_quarantine_bypassed"] = True
         else:
             candidate = {
                 "title": title,
@@ -411,7 +414,11 @@ class BrainServer:
         tier = AuthorityTier(authority_tier) if authority_tier else None
 
         # Generate embedding from title + content
-        embedding = self._embeddings.embed(f"{title} {content}")
+        try:
+            embedding = self._embeddings.embed(f"{title} {content}")
+        except Exception as e:
+            logger.error("Embedding generation failed for '%s': %s", title[:80], e)
+            return {"rejected": True, "reason": f"Embedding generation failed: {e}"}
 
         # Provenance derived from auth context — callers cannot self-declare
         # higher trust than their scope permits.
@@ -433,15 +440,23 @@ class BrainServer:
         entry_id = self._store.add_entry(entry, caller=ctx.identity)
 
         # Create any requested links
+        link_errors = []
         if links:
             for link_spec in links:
-                self._store.add_link(EntryLink(
-                    source_id=entry_id,
-                    target_id=link_spec["target_id"],
-                    link_type=LinkType(link_spec["link_type"]),
-                ))
+                try:
+                    self._store.add_link(EntryLink(
+                        source_id=entry_id,
+                        target_id=link_spec["target_id"],
+                        link_type=LinkType(link_spec["link_type"]),
+                    ))
+                except Exception as e:
+                    logger.warning("Failed to create link %s: %s", link_spec, e)
+                    link_errors.append({"link": link_spec, "error": str(e)})
 
-        return {"id": entry_id}
+        result: dict[str, Any] = {"id": entry_id}
+        if link_errors:
+            result["link_errors"] = link_errors
+        return result
 
     # ── brain_query ───────────────────────────────────────────
 

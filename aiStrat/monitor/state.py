@@ -17,12 +17,39 @@ star surges.
 from __future__ import annotations
 
 import copy
-import fcntl
 import json
 import logging
 import os
+import sys
 import tempfile
 from datetime import datetime, timezone, timedelta
+
+# Platform-portable file locking
+if sys.platform == "win32":
+    import msvcrt
+
+    def _lock_shared(fd: int) -> None:
+        msvcrt.locking(fd, msvcrt.LK_NBLCK, 1)
+
+    def _lock_exclusive(fd: int) -> None:
+        msvcrt.locking(fd, msvcrt.LK_NBLCK, 1)
+
+    def _unlock(fd: int) -> None:
+        try:
+            msvcrt.locking(fd, msvcrt.LK_UNLCK, 1)
+        except OSError:
+            pass
+else:
+    import fcntl
+
+    def _lock_shared(fd: int) -> None:
+        fcntl.flock(fd, fcntl.LOCK_SH)
+
+    def _lock_exclusive(fd: int) -> None:
+        fcntl.flock(fd, fcntl.LOCK_EX)
+
+    def _unlock(fd: int) -> None:
+        fcntl.flock(fd, fcntl.LOCK_UN)
 
 logger = logging.getLogger(__name__)
 
@@ -59,11 +86,11 @@ class MonitorState:
                 lock_path = self.state_file + ".lock"
                 fd_lock = os.open(lock_path, os.O_CREAT | os.O_RDWR)
                 try:
-                    fcntl.flock(fd_lock, fcntl.LOCK_SH)
+                    _lock_shared(fd_lock)
                     with open(self.state_file) as f:
                         data = json.load(f)
                 finally:
-                    fcntl.flock(fd_lock, fcntl.LOCK_UN)
+                    _unlock(fd_lock)
                     os.close(fd_lock)
 
                 # Schema validation — reset invalid types to defaults
@@ -105,7 +132,7 @@ class MonitorState:
         lock_path = self.state_file + ".lock"
         fd_lock = os.open(lock_path, os.O_CREAT | os.O_RDWR)
         try:
-            fcntl.flock(fd_lock, fcntl.LOCK_EX)
+            _lock_exclusive(fd_lock)
             fd, tmp_path = tempfile.mkstemp(dir=state_dir, suffix=".tmp")
             try:
                 with os.fdopen(fd, "w") as f:
@@ -118,7 +145,7 @@ class MonitorState:
                     pass
                 raise
         finally:
-            fcntl.flock(fd_lock, fcntl.LOCK_UN)
+            _unlock(fd_lock)
             os.close(fd_lock)
 
     def _prune(self) -> None:
