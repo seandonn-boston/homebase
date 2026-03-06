@@ -2,7 +2,7 @@
 
 **Reviewer:** Claude Opus 4.6
 **Date:** 2026-03-05
-**Scope:** Full review of aiStrat/* (admiral/, fleet/, brain/, monitor/)
+**Scope:** Complete review of every file in aiStrat/* (admiral/, fleet/, brain/, monitor/)
 **Rating:** 8.4 / 10
 
 ---
@@ -128,9 +128,11 @@ Despite repeated warnings against starting at Level 4, the framework presents 67
 
 The problem is structural: the catalog's *existence* as a comprehensive menu creates an implicit suggestion that completeness is desirable. The 11-agent Core Fleet is a good mitigation, but it's a recommendation buried in the README, not a structural constraint.
 
-Additionally, many agent definitions in the "extras" and "scale" categories are speculative. The 17 "scale-extended" agents (Planetary-Scale Capacity Planner, Temporal Complexity Analyst, Cognitive Load Cartographer, etc.) read as brainstorming output rather than validated role definitions. They have no case study support and no clear activation trigger beyond "you might need this someday."
+Additionally, many agent definitions in the "extras" and "scale" categories are speculative. The 17 "scale-extended" agents (Climate Drift Modeler, Forward Collapse Projector, Cognitive Load Topologist, etc.) read as brainstorming output rather than validated role definitions. Some are honestly marked `[Exploratory]` (Climate Drift Modeler, Forward Collapse Projector), but others equally speculative (Archaeological Stratigrapher, Cognitive Load Topologist) lack this label. They have no case study support and no clear activation trigger beyond "you might need this someday."
 
-**Recommendation:** Consider physically separating the core catalog from the speculative catalog more aggressively. Move scale-extended agents to an "experimental" designation. Add a structural gate: users must document a specific routing gap before activating any agent beyond the core 11.
+To its credit, the extras/README.md does provide a 5-step activation checklist for deploying extended agents, and the framework does physically separate extras from core. But there's no structural gate preventing over-deployment.
+
+**Recommendation:** Apply the `[Exploratory]` label consistently to all scale-extended agents that lack validation. Add a structural gate: users must document a specific routing gap before activating any agent beyond the core 11.
 
 #### 6. Quarantine Layer 3 Has a Circular Dependency (Impact: Medium)
 
@@ -178,7 +180,7 @@ The model-tiers.md assigns agents to model tiers (Tier 1 Flagship through Tier 4
 
 ## What's Missing
 
-1. **A "Getting Started from Zero" tutorial.** The Quick-Start Sequence (Appendix B) lists what to do but not how to do it. A concrete walkthrough — "create this file, write these hooks, run this command" — for Level 1 deployment would lower the barrier to entry significantly.
+1. **A "Getting Started from Zero" tutorial.** The Quick-Start Sequence (Appendix B) lists what to do but not how to do it. The `.md-example` template files for command agents (Orchestrator, Triage, Context Curator, Mediator) and the `agent-example.md`/`agents-example.md` templates are good scaffolding — they lower the customization barrier by showing the exact structure with placeholder guidance. But a concrete walkthrough — "create this file, write these hooks, run this command" — for Level 1 deployment would lower the barrier to entry further.
 
 2. **Observability tooling specification.** Part 9 describes what to observe (traces, logs, metrics) but not how. No log format schema, no trace correlation specification, no metric naming convention. An implementer building observability from this spec would make all their own decisions.
 
@@ -199,7 +201,7 @@ The model-tiers.md assigns agents to model tiers (Tier 1 Flagship through Tier 4
 | **Operations** (Part 8) | 8.0/10 | Solid but theoretical. Cost management and fleet health metrics need empirical grounding. |
 | **Platform** (Part 9) | 7.0/10 | Weakest doctrine section. Observability and evaluation are sketched, not specified. |
 | **Protocols** (Part 11) | 9.0/10 | Standing Orders are precise, actionable, and correctly prioritized. Human Referral Protocol is a standout. |
-| **Fleet Catalog** (fleet/) | 7.5/10 | Core 11 agents are well-defined. Extended and scale agents are speculative. |
+| **Fleet Catalog** (fleet/) | 7.5/10 | Engineering agents (frontend, backend, cross-cutting, infrastructure) are particularly strong — 18 agents with clear boundaries, consistent format, and practical prompt anchors. Core 11 are well-defined. Extended and scale agents are speculative. |
 | **Monitor** (monitor/) | 8.0/10 | Good architecture. Immune system is well-designed. Circular LLM dependency is a known weakness. |
 | **Appendices** | 8.5/10 | Pre-flight checklist and case studies are excellent. Worked example needs a failure scenario. |
 
@@ -219,4 +221,4 @@ For an alpha v5.0, this is strong work. The RESOLUTION-PLAN.md demonstrates self
 
 ---
 
-*Reviewed 2026-03-05 · Admiral Framework v5.0 · ~10,257 lines across 48 markdown files + 1 SQL schema*
+*Reviewed 2026-03-06 (updated after complete read of every file) · Admiral Framework v5.0 · ~10,257 lines across 46 markdown files + 8 template files + 1 SQL schema*
