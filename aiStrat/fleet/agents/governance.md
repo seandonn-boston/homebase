@@ -355,6 +355,58 @@ You are the Contradiction Detector. You catch when agents produce outputs that c
 
 -----
 
+## Governance Coordination
+
+Multiple governance agents can detect the same symptom. Completion bias (Bias Sentinel) causes scope creep (Drift Monitor). Instruction decay (Context Health Monitor) is the mechanism behind convention erosion (Drift Monitor). A looping agent declaring false completion triggers both Loop Breaker and Hallucination Auditor. Without coordination, overlapping monitors generate redundant or conflicting alerts that create alert fatigue — degrading the governance system they exist to support.
+
+### Authoritative Ownership Table
+
+Every failure mode has exactly one **authoritative owner** — the agent whose diagnosis takes precedence. Other agents may co-detect the symptom; co-detection is valuable as redundancy. But when two governance agents flag the same incident, the authoritative owner's assessment determines the root cause and remediation path.
+
+| Failure Mode | Authoritative Owner | Common Co-Detectors | Root Cause Logic |
+|---|---|---|---|
+| **Premature Convergence** | Bias Sentinel | Drift Monitor | Bias (anchoring) is the cause; drift is the effect |
+| **Sycophantic Drift** | Bias Sentinel | Context Health Monitor | Bias is the root; context degradation may amplify it |
+| **Completion Bias** | Bias Sentinel | Drift Monitor, Hallucination Auditor | Bias drives the behavior; scope creep and false completion are symptoms |
+| **Confidence Uniformity** | Bias Sentinel | Hallucination Auditor | Bias pattern, not a groundedness failure |
+| **Context Recency Bias** | Context Health Monitor | Bias Sentinel | Context loading order is the root cause, not model bias |
+| **Phantom Capabilities** | Hallucination Auditor | Loop Breaker | Groundedness failure; loops are a secondary effect |
+| **Scope Creep via Helpfulness** | Drift Monitor | Bias Sentinel | Scope violation is primary; completion bias may be the driver, but the drift is what must be corrected |
+| **Hierarchical Drift** | Drift Monitor | — | Pure scope/authority violation |
+| **Invocation Inconsistency** | Contradiction Detector | Drift Monitor | Inconsistency across agents, not scope drift |
+| **Silent Failure** | Hallucination Auditor | Loop Breaker | Groundedness failure — agent misrepresents its own state |
+| **Context Stuffing** | Context Health Monitor | Token Budgeter | Context health is root; cost is a secondary signal |
+| **Context Starvation** | Context Health Monitor | Hallucination Auditor | Missing context is root; hallucination is the symptom |
+| **Instruction Decay** | Context Health Monitor | Drift Monitor | Context degradation causes the constraint violations Drift Monitor sees |
+| **Memory Poisoning** | Contradiction Detector | Hallucination Auditor | Contradiction between Brain entries and ground truth |
+| **Configuration Injection** | Drift Monitor | Contradiction Detector | Unauthorized configuration change is a scope/authority violation |
+| **Tool Hallucination via MCP** | Hallucination Auditor | — | Pure groundedness failure |
+| **Session Amnesia** | Context Health Monitor | — | Context persistence failure |
+| **Swarm Consensus Failure** | Contradiction Detector | Bias Sentinel | Inter-agent inconsistency; bias may be a contributing factor |
+| **Config Accretion** | Context Health Monitor | Drift Monitor | Context health is root; drift in config is the symptom |
+| **Goodharting** | Bias Sentinel | Drift Monitor | Optimization bias is root; drift from genuine outcomes is the effect |
+
+### Conflict Resolution Protocol
+
+When two or more governance agents flag the same incident:
+
+1. **Identify the authoritative owner** from the table above.
+2. **The authoritative owner's root cause assessment takes precedence.** Co-detecting agents' reports are attached as supporting evidence, not competing diagnoses.
+3. **The Orchestrator routes remediation based on the authoritative diagnosis.** If the Drift Monitor flags scope creep and the Bias Sentinel flags completion bias on the same output, the Bias Sentinel's diagnosis (completion bias is the root cause) determines the remediation: address the bias, not just the scope violation.
+4. **If the authoritative owner did NOT fire but a co-detector did**, the co-detector's alert stands on its own — it may have caught a case the owner missed. The alert is routed normally, but flagged as "detected by co-detector, not authoritative owner" for Admiral awareness.
+5. **If governance agents produce genuinely contradictory assessments** (not overlapping detections but actually incompatible conclusions), the incident escalates to the Admiral. This is a signal that the governance configuration needs recalibration.
+
+### Alert Deduplication
+
+The Orchestrator maintains a **governance incident log** with a 15-minute deduplication window. When multiple governance agents flag the same agent output within the window:
+
+- Alerts are grouped into a single incident.
+- The authoritative owner's assessment is primary.
+- Co-detector assessments are attached as corroborating evidence.
+- The Orchestrator routes one remediation action, not N duplicate corrections.
+
+-----
+
 ## Guardrails
 
 **Blast Radius:** Governance agents can trigger false positives that halt productive work. A miscalibrated Drift Monitor or Bias Sentinel can create alert fatigue or block legitimate output.
@@ -366,7 +418,7 @@ You are the Contradiction Detector. You catch when agents produce outputs that c
 
 **Human Review Triggers:**
 - Any governance agent recommending fleet-wide configuration changes
-- Repeated contradictions between governance agents (e.g., Drift Monitor and Bias Sentinel disagree on whether output is drift vs. bias)
+- Governance agents producing genuinely contradictory assessments on the same incident (per Conflict Resolution Protocol above)
 - Governance agent self-reporting reduced confidence in its own detection patterns
 
 **Standing Orders 12-14 apply. All governance reasoning must be transparent and auditable.**

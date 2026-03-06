@@ -4,7 +4,7 @@ These are supplementary inhuman-scale analysis agents held in reserve for refere
 
 Deploy these when a specific review cycle requires analysis dimensions beyond what the core scale agents cover. Most projects will never need all 17 — select 1-3 based on the fleet's current phase and concerns.
 
-**Maturity Note:** These extended scale agents range from immediately practical to exploratory. Agents marked [Exploratory] depend on data sources or reasoning capabilities that may exceed current LLM reliability. Deploy exploratory agents in advisory-only mode with human review of all findings.
+**Maturity Note:** These extended scale agents range from immediately practical to exploratory. 7 of 17 agents are marked [Exploratory] — they depend on data sources or reasoning capabilities that may exceed current LLM reliability. Deploy exploratory agents in advisory-only mode with human review of all findings. The remaining 10 agents are immediately practical and can be deployed with standard governance.
 
 Extended scale agents should follow the cross-cutting standards defined in `scale.md` (common output schema, confidence calibration, audit logging, read-only access, no secrets handling).
 
@@ -57,7 +57,7 @@ Extended scale agents should follow the cross-cutting standards defined in `scal
 
 ## Temporal & Codebase Archaeology
 
-### 4. Archaeological Stratigrapher
+### 4. Archaeological Stratigrapher [Exploratory]
 
 **Model Tier:** Tier 1 — Flagship
 **Schedule:** Triggered (during major refactors, onboarding new teams)
@@ -119,7 +119,7 @@ Extended scale agents should follow the cross-cutting standards defined in `scal
 
 **Output Goes To:** Pattern Enforcer, Architect, Admiral.
 
-### 8. Emergent Behavior Detector
+### 8. Emergent Behavior Detector [Exploratory]
 
 **Model Tier:** Tier 1 — Flagship
 **Schedule:** Periodic (post-deployment, during incident review)
@@ -149,7 +149,7 @@ Extended scale agents should follow the cross-cutting standards defined in `scal
 
 **Output Goes To:** Infrastructure Agent, Architect, Capacity Horizon Scanner, Admiral.
 
-### 10. Cost Gravity Modeler
+### 10. Cost Gravity Modeler [Exploratory]
 
 **Model Tier:** Tier 1 — Flagship
 **Schedule:** Periodic (monthly, during budget review)
@@ -196,7 +196,7 @@ Extended scale agents should follow the cross-cutting standards defined in `scal
 
 ## Threat & Resilience
 
-### 13. Assumption Inversion Agent
+### 13. Assumption Inversion Agent [Exploratory]
 
 **Model Tier:** Tier 1 — Flagship
 **Schedule:** Triggered (during architecture review, pre-launch)
@@ -213,7 +213,7 @@ Extended scale agents should follow the cross-cutting standards defined in `scal
 
 ## Cognitive & Comprehensibility
 
-### 14. Cognitive Load Topologist
+### 14. Cognitive Load Topologist [Exploratory]
 
 **Model Tier:** Tier 1 — Flagship
 **Schedule:** Periodic (quarterly, during onboarding planning)
@@ -232,7 +232,7 @@ Extended scale agents should follow the cross-cutting standards defined in `scal
 
 ## Regulatory & Jurisdictional
 
-### 15. Regulatory Surface Mapper
+### 15. Regulatory Surface Mapper [Exploratory]
 
 **Model Tier:** Tier 1 — Flagship
 **Schedule:** Periodic (quarterly) + Triggered (on new market entry)

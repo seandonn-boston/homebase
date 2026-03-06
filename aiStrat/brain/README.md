@@ -162,5 +162,5 @@ See [admiral/part5-brain.md](../admiral/part5-brain.md) Section 16 for the full 
 - **Identity tokens** with cryptographic signatures, session scoping, rotation, revocation, and non-delegation
 - **Permission matrix** enforced at runtime: read own project (all agents), read cross-project (orchestrators/Admiral only), write own project, supersede (orchestrator/Admiral only)
 - **Sensitivity classification** at write time: Standard, Elevated, Restricted
-- **Quarantine integration** for external intelligence (monitor findings pass through 4-layer immune system before Brain ingestion)
+- **Quarantine integration** for external intelligence (monitor findings pass through 5-layer immune system — 3 LLM-airgapped deterministic layers + 1 LLM advisory layer + antibody — before Brain ingestion)
 - **RAG security** including retrieval poisoning prevention, grounding requirements, and pipeline integrity checks

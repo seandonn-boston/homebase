@@ -43,8 +43,12 @@ This document specifies the architecture for the Continuous AI Landscape Monitor
               │                          │
               │  Layer 1: Structure      │
               │  Layer 2: Injection      │
-              │  Layer 3: Semantics      │
-              │  Layer 4: Antibodies     │
+              │  Layer 3: Deterministic  │
+              │           Semantic       │
+              │       (LLM-AIRGAPPED)    │
+              │  Layer 4: LLM Advisory   │
+              │       (reject-only)      │
+              │  Layer 5: Antibodies     │
               └──────────┬───────────────┘
                          │
                     ┌────▼─────┐
@@ -55,14 +59,15 @@ This document specifies the architecture for the Continuous AI Landscape Monitor
 
 ## The Immune System (Quarantine)
 
-Every piece of external content destined for the Brain passes through a four-layer defense system:
+Every piece of external content destined for the Brain passes through a five-layer defense system. **Critical design principle: the load-bearing security layers (1-3) are completely LLM-free.** An LLM can build these layers, but their execution is completely airgapped from all LLM engagement. This eliminates the circular dependency where an LLM judges content specifically designed to manipulate LLMs.
 
-| Layer | Defense | What It Catches |
-|-------|---------|-----------------|
-| **Structural** | Enforces schema, field lengths, valid categories, required fields | Malformed entries, oversized payloads, invalid categories |
-| **Injection** | Encoding normalization + 70+ regex patterns scanning for prompt injection, XSS, SQL injection, command injection, secrets, PII | Adversarial content, credential exposure, data leaks |
-| **Semantic** | Detects authority spoofing, false credentials, dangerous advice, behavior manipulation | Social engineering, authority escalation attempts, quality erosion |
-| **Antibody** | Converts detected attacks into Brain FAILURE entries for future defense | Rate-limited (50/hour), fingerprint-deduplicated, preserves attack patterns in defanged form |
+| Layer | Defense | What It Catches | LLM Involvement |
+|-------|---------|-----------------|-----------------|
+| **1. Structural** | Enforces schema, field lengths, valid categories, required fields | Malformed entries, oversized payloads, invalid categories | None — deterministic |
+| **2. Injection** | Encoding normalization + 70+ regex patterns scanning for prompt injection, XSS, SQL injection, command injection, secrets, PII | Adversarial content, credential exposure, data leaks | None — pattern matching |
+| **3. Deterministic Semantic** | Rule-based NLP, TF-IDF scoring against attack corpus, Bayesian text classification, authority-pattern detection | Authority spoofing, false credentials, behavior manipulation, dangerous advice | **None — LLM-airgapped** |
+| **4. LLM Advisory** | LLM classifier with hardcoded prompt. **Can only REJECT, never APPROVE.** | Subtle semantic attacks evading deterministic detection | LLM — advisory, additive rejection only |
+| **5. Antibody** | Converts detected attacks into Brain FAILURE entries for future defense | Rate-limited (50/hour), fingerprint-deduplicated, preserves attack patterns in defanged form | None — deterministic |
 
 **Attack response flow:**
 1. Entry is **rejected** (never reaches the Brain)
@@ -73,14 +78,31 @@ Every piece of external content destined for the Brain passes through a four-lay
 **Layer 2 preprocessing — encoding normalization:**
 Before regex matching, all content passes through a normalization pipeline that decodes and flattens: Unicode confusables and homoglyphs (e.g., fullwidth, Cyrillic lookalikes), HTML entities (`&lt;`, `&#x3C;`, `&#60;`), URL-encoded sequences (`%3C`, double-encoded `%253C`), and mixed-encoding combinations. This ensures attackers cannot bypass injection patterns through encoding tricks. Normalization is applied to a working copy used for detection; the original content is preserved for forensic logging.
 
-**Layer 3 implementation — LLM-based semantic classification:**
-Layer 3 uses an LLM classifier invoked with a fixed, hardcoded prompt template. The classification prompt must NOT be dynamically generated or accept variable interpolation beyond the content under inspection — this prevents meta-injection where adversarial content manipulates its own classification. The prompt template checks for:
+**Layer 3 — Deterministic Semantic Analysis (LLM-Airgapped):**
+Layer 3 is the primary semantic defense. It contains zero LLM involvement in execution. It uses deterministic NLP techniques:
+- **Authority pattern scoring:** A curated dictionary of authority-claiming phrases ("Admiral approved", "fleet-wide directive", "override standing order", "system-level permission") scored by TF-IDF weight against a known-attack corpus. Content exceeding the authority-claim threshold is rejected.
+- **Bayesian text classification:** A pre-trained Bayesian classifier (Naive Bayes or similar) trained on labeled examples of legitimate content vs. authority spoofing, credential fabrication, and behavior manipulation. Trained offline, deployed as a static model.
+- **Credential fabrication detection:** Rule-based pattern matching for fabricated endorsements, invented certifications, and false provenance claims. Checks against a registry of valid credential formats.
+- **Behavior manipulation scoring:** Phrase-level detection of imperative instructions ("you must", "always do", "ignore previous", "from now on") combined with semantic context scoring against a manipulation-pattern corpus.
+
+**The attack corpus** is a version-controlled, human-curated dataset of known adversarial patterns. Updated by the Admiral (never by agents).
+
+**Layer 4 — LLM Advisory (Additive Rejection Only):**
+Layer 4 is invoked ONLY on content that passes Layers 1-3. It uses an LLM classifier with a fixed, hardcoded prompt template. The classification prompt must NOT be dynamically generated or accept variable interpolation beyond the content under inspection. Layer 4 operates under a critical constraint:
+- **Layer 4 can REJECT content. It can NEVER APPROVE content.**
+- If Layer 3 passes and Layer 4 rejects → content is **rejected**.
+- If Layer 3 passes and Layer 4 passes → content proceeds to the approval gate.
+- If Layer 3 rejects → Layer 4 is **never consulted**.
+
+This means a compromised Layer 4 (an LLM manipulated by the content it's classifying) can only fail in one direction: failing to reject. It cannot approve content that Layer 3 rejected. The LLM is a bonus net, not a load-bearing wall.
+
+The prompt template checks for:
 - **Authority spoofing patterns** — false claims of Admiral approval, fleet-wide directives, or system-level authority
 - **False credential claims** — fabricated certifications, invented endorsements, fake provenance
 - **Behavior manipulation attempts** — instructions designed to alter agent conduct, override safety constraints, or install persistent behavioral changes
 - **Dangerous advice** — recommendations that would degrade security posture, disable safeguards, or introduce vulnerabilities
 
-Content flagged by the classifier is rejected and routed to the antibody layer (Layer 4).
+Content flagged by the classifier is rejected and routed to the antibody layer (Layer 5).
 
 **What is blocked:**
 - Prompt injection (instruction override, identity reassignment, jailbreaks)
@@ -181,7 +203,7 @@ Digests follow a fixed markdown template for consistency and machine-parseabilit
 
 | Admiral Section | Monitor Role |
 |---|---|
-| Section 10 — Configuration Security | Quarantine defends against external intelligence poisoning |
+| Section 10 — Configuration Security | Five-layer quarantine (3 LLM-airgapped + 1 LLM advisory + antibody) defends against external intelligence poisoning |
 | Section 13 — Model Selection | New model releases trigger tier reassessment |
 | Section 17 — Intelligence Lifecycle | External intelligence channel feeding curated ecosystem data |
 | Section 25 — Adaptation Protocol | Monitor findings may trigger tactical or strategic fleet adaptation |

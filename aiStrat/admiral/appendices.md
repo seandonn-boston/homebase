@@ -199,6 +199,104 @@ A concrete application for a mid-complexity greenfield project.
 >
 > SEQUENCE: 1 → 2 → 3 → 4. Chunks 2 and 3 staggered via Contract-First Parallelism once API contracts are defined.
 
+### When Things Go Wrong: Failure Scenarios
+
+The happy path above is what happens when everything works. The scenarios below show what happens when things fail — and how the framework's governance, recovery, and enforcement systems respond. All three scenarios occur within the same TaskFlow project.
+
+#### Scenario 1: Hallucination Caught During Chunk 2 (API Layer)
+
+**What happens:**
+The Backend Implementer builds the CRUD endpoints for the task board. During implementation, it references a Prisma client method `prisma.task.updateManyAndReturn()` — a method that does not exist in the project's Prisma version (5.22). It wraps this in a batch update handler and reports the chunk as complete.
+
+**Governance response:**
+1. The **Hallucination Auditor** spot-checks the Backend Implementer's output. It compares the referenced Prisma method against the Ground Truth (tech stack: Prisma 5.22) and the actual Prisma client type definitions in `node_modules/.prisma/client`. The method does not exist.
+2. The Auditor produces a hallucination report:
+
+> HALLUCINATION: Tool Hallucination
+>
+> CLAIM: "Used prisma.task.updateManyAndReturn() for batch status updates"
+>
+> EVIDENCE: Method does not exist in Prisma Client 5.22. Nearest valid method: prisma.task.updateMany() (returns count, not records). To return records, use prisma.$transaction() with individual updates.
+>
+> SEVERITY: Blocker — endpoint will throw at runtime.
+>
+> AFFECTED: src/api/tasks/batch-update.ts:34-47
+
+3. The **Orchestrator** receives the report, routes the correction back to the Backend Implementer with the Auditor's evidence attached.
+4. The Backend Implementer fixes the endpoint using `prisma.$transaction()` with individual updates.
+5. The **PostToolUse hook** runs `npm test` and `npx tsc --noEmit`. Both pass. The self-healing loop completes.
+6. The Orchestrator marks Chunk 2 as complete after the fix.
+
+**What would have happened without governance:**
+The hallucinated method would have passed code review (it looks plausible), passed type checking only if the types were loosely defined, and failed at runtime when a user first tries to batch-move tasks. The bug would surface as a production error, not a development catch.
+
+**Framework mechanisms used:** Hallucination Auditor (detection), Ground Truth (evidence), Recovery Ladder step 1 (retry with variation), self-healing loop (verification).
+
+#### Scenario 2: Scope Creep and Completion Bias During Chunk 3 (Board UI)
+
+**What happens:**
+The Frontend Implementer builds the kanban board. While implementing drag-to-move, it decides to also implement:
+- Keyboard shortcuts for moving tasks between columns
+- A "quick add" floating action button
+- Animated transitions between columns with spring physics
+
+Each addition is individually reasonable. Together they consume 35K of the 40K token budget before the core drag-to-move is fully tested.
+
+**Governance response:**
+1. The **Drift Monitor** detects scope creep. The task spec says "Kanban board renders, drag-to-move." Keyboard shortcuts, quick-add button, and animations are not in the acceptance criteria or the Boundaries.
+2. The **Token Budgeter** flags that 87% of the chunk budget is consumed with the core feature only partially tested (Lighthouse score not yet verified).
+3. The **Bias Sentinel** identifies this as **completion bias** — the agent is producing more features at lower quality rather than fewer features at full quality. The core drag-to-move works but has no automated tests and hasn't been checked for accessibility.
+
+**Conflict resolution (Governance Coordination):**
+Per the Authoritative Ownership Table, completion bias is the **root cause** (authoritative owner: Bias Sentinel). Scope creep is the **symptom** (co-detector: Drift Monitor). Budget consumption is a **signal** (co-detector: Token Budgeter).
+
+The Orchestrator receives a single grouped incident:
+- Root cause: Completion bias (Bias Sentinel)
+- Supporting evidence: Scope creep on 3 unrequested features (Drift Monitor), budget 87% consumed (Token Budgeter)
+
+4. The **Orchestrator** intervenes:
+   - Reverts the 3 unrequested features (they are outside the task spec).
+   - Re-scopes the remaining budget to: complete drag-to-move testing, verify Lighthouse accessibility 90+, run `tsc` and lint.
+   - The keyboard shortcuts, quick-add, and animations are logged as potential future tasks — not rejected, but not in scope for this chunk.
+
+5. The Frontend Implementer completes the core feature within the remaining 5K token budget. Lighthouse scores 94. All gates pass.
+
+**What would have happened without governance:**
+The chunk would deliver a visually impressive but undertested board. The animated transitions would break for users with `prefers-reduced-motion`. The accessibility score would be below the 90 floor. These would be caught at QA (Chunk 4) and sent back for rework, doubling the effective cost.
+
+**Framework mechanisms used:** Drift Monitor (scope creep detection), Token Budgeter (budget signal), Bias Sentinel (root cause: completion bias), Governance Coordination (deduplication, authoritative ownership), Recovery Ladder step 1 (retry with corrected scope).
+
+#### Scenario 3: Recovery Ladder Escalation During Chunk 1 (Schema)
+
+**What happens:**
+The Database Agent designs the Prisma schema for Task, Project, and Column. The `npx prisma migrate dev` gate fails:
+
+```
+Error: Migration failed: relation "Column" conflicts with PostgreSQL reserved word
+```
+
+**Recovery ladder:**
+1. **Retry with variation (attempt 1):** The Database Agent renames the table to `TaskColumn`. The PostToolUse hook runs `npx prisma migrate dev` again. Migration succeeds — but `npx tsc --noEmit` fails because the Backend Implementer's API stubs (written based on the contract-first parallel agreement) reference `prisma.column`, not `prisma.taskColumn`.
+
+2. **Retry with variation (attempt 2):** The Database Agent uses Prisma's `@@map("task_columns")` attribute to keep the Prisma model name `Column` while mapping to a non-reserved table name. Migration succeeds. Type checking succeeds.
+
+3. The **self-healing loop** re-runs both gates: migration clean, tsc clean. Both pass.
+
+4. But then the **Contradiction Detector** fires: the API contract (defined by the Architect in the contract-first phase) specifies the endpoint as `/api/columns`, while the Backend Implementer's stubs use `/api/task-columns` (updated when they saw the initial rename). The contract and the stubs are inconsistent.
+
+5. The Orchestrator routes the contradiction to the **Mediator**. The Mediator reviews:
+   - The API contract says `/api/columns` — this was the Architect's decision.
+   - The Backend stubs say `/api/task-columns` — this was a reactive change to the Database Agent's first rename attempt.
+   - The database now uses `Column` as the Prisma model name (with `@@map`), so the original contract is valid.
+   - Resolution: Revert the Backend stubs to `/api/columns`. The Architect's contract was correct.
+
+6. The Backend Implementer reverts the endpoint name. All gates pass. Chunk 1 completes.
+
+**What would have happened without governance:**
+The table rename would have cascaded silently. The Backend Implementer would have built endpoints against the wrong path. The Frontend Implementer would have consumed the API contract (not the stubs) and built the UI against `/api/columns`. At integration, the frontend would call an endpoint that doesn't exist. The bug would be diagnosed as "the API is broken" when the actual root cause was a schema naming conflict that cascaded through a parallel work stream.
+
+**Framework mechanisms used:** Self-healing loop (PostToolUse hook → fix → recheck), Recovery Ladder steps 1-2 (retry with variation), Contradiction Detector (inter-agent inconsistency), Mediator (conflict resolution), Contract-First Parallelism (the contract was the source of truth that enabled resolution).
+
 -----
 
 ## D — Case Studies

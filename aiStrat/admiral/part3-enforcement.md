@@ -185,18 +185,41 @@ Agent configurations are attack surfaces. A compromised CLAUDE.md, a malicious M
 
 The Continuous AI Landscape Monitor (`monitor/`) is designed to feed external content into the Brain — model releases, agent patterns, repo configurations. This creates a potential ingestion attack vector: a poisoned repo description or crafted release note could inject false information into fleet memory.
 
-Defense: all external content passes through the quarantine layer, a four-layer immune system:
+Defense: all external content passes through the quarantine layer, a five-layer immune system. **Critical design principle: the load-bearing security layers (1-3) are completely LLM-free.** An LLM can build these layers, but their execution must be completely airgapped from all LLM engagement. This eliminates the circular dependency where an LLM judges content specifically designed to manipulate LLMs.
 
-| Layer | Defense | Threat |
-|---|---|---|
-| **Structural** | Enforces schema, field lengths, valid categories | Malformed entries |
-| **Injection** | Scans for prompt injection, XSS, SQL injection, command injection, secrets, PII | Adversarial content |
-| **Semantic** | Detects authority spoofing, false credentials, behavior manipulation | Social engineering |
-| **Antibody** | Converts detected attacks into Brain FAILURE entries | Future defense learning |
+| Layer | Defense | Threat | LLM Involvement |
+|---|---|---|---|
+| **1. Structural** | Enforces schema, field lengths, valid categories | Malformed entries | None — deterministic validation |
+| **2. Injection** | Encoding normalization + 70+ regex patterns for prompt injection, XSS, SQL injection, command injection, secrets, PII | Adversarial content | None — pattern matching |
+| **3. Deterministic Semantic** | Rule-based NLP, TF-IDF scoring against attack corpus, Bayesian text classification, keyword/phrase authority-pattern detection | Authority spoofing, false credentials, behavior manipulation | **None — completely LLM-airgapped** |
+| **4. LLM Advisory** | LLM classifier with hardcoded prompt template. **Can only REJECT, never APPROVE.** | Subtle semantic attacks that evade deterministic detection | LLM — advisory only, additive rejection |
+| **5. Antibody** | Converts detected attacks into Brain FAILURE entries | Future defense learning | None — deterministic write |
+
+**Layer 3 — Deterministic Semantic Analysis (LLM-Airgapped):**
+
+Layer 3 is the primary semantic defense and contains zero LLM involvement. It uses well-understood, deterministic NLP techniques:
+
+- **Authority pattern scoring:** A curated dictionary of authority-claiming phrases ("Admiral approved", "fleet-wide directive", "override standing order", "system-level permission") scored by TF-IDF weight against a known-attack corpus. Content exceeding the authority-claim threshold is rejected.
+- **Bayesian text classification:** A pre-trained Bayesian classifier (Naive Bayes or similar) trained on labeled examples of legitimate content vs. authority spoofing, credential fabrication, and behavior manipulation. The classifier is trained offline and deployed as a static model — no LLM in the training pipeline or in execution.
+- **Credential fabrication detection:** Rule-based pattern matching for fabricated endorsements, invented certifications, and false provenance claims. Checks against a registry of valid credential formats.
+- **Behavior manipulation scoring:** Phrase-level detection of imperative instructions ("you must", "always do", "ignore previous", "from now on") combined with semantic context (do these phrases target agent behavior?). Scored against a manipulation-pattern corpus.
+
+**The attack corpus** is a version-controlled, human-curated dataset of known adversarial patterns. It is updated by the Admiral (never by agents) and is the ground truth for Layer 3's scoring models.
+
+**Layer 4 — LLM Advisory (Additive Rejection Only):**
+
+Layer 4 is invoked ONLY on content that passes Layers 1-3. It uses an LLM classifier with a fixed, hardcoded prompt template (no dynamic generation, no variable interpolation beyond the content under inspection). Layer 4 operates under a critical constraint:
+
+- **Layer 4 can REJECT content. It can NEVER APPROVE content.**
+- If Layer 3 passes and Layer 4 rejects → content is **rejected**.
+- If Layer 3 passes and Layer 4 passes → content **proceeds** (Layer 4's pass is not what grants approval — survival through all layers is what grants passage).
+- If Layer 3 rejects → Layer 4 is **never consulted**. The rejection stands.
+
+This constraint means a compromised Layer 4 (an LLM manipulated by the content it's classifying) can only fail in one direction: failing to reject content that should have been rejected. It cannot approve content that Layer 3 rejected. The LLM is a bonus net, not a load-bearing wall.
 
 Hostile content is rejected before it can reach the Brain. Attack patterns are preserved in defanged form as antibody entries, teaching future agents to recognize similar threats.
 
-Additionally, all monitor findings arrive as seed candidates with `"approved": False` — requiring Admiral review before Brain activation. This two-layer defense (quarantine + approval gate) prevents both automated and subtle poisoning.
+Additionally, all monitor findings arrive as seed candidates with `"approved": False` — requiring Admiral review before Brain activation. This three-layer defense (deterministic quarantine + LLM advisory + approval gate) prevents automated, subtle, and sophisticated poisoning.
 
 ### Configuration Hygiene
 

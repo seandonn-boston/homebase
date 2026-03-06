@@ -287,6 +287,75 @@ When removing an individual agent from a running fleet:
 
 -----
 
+## 28b — ORCHESTRATOR HEALTH PROTOCOL
+
+> **TL;DR** — The Orchestrator is the fleet's single coordination point. If it degrades, everything downstream degrades silently. This section defines how to detect Orchestrator degradation using existing governance agents and what to do when it's detected.
+
+The Orchestrator processes more information than any other agent. It routes every task, validates every handoff, and tracks all parallel work streams. This makes it the most vulnerable to context degradation, and the most dangerous when it fails — because routing errors cascade to every downstream agent.
+
+The Orchestrator cannot QA its own routing decisions (it says so in its own "Does NOT Do"). This section specifies who does.
+
+### Orchestrator-Specific Monitoring
+
+Existing governance agents carry Orchestrator-specific monitoring responsibilities. These are not new agents — they are targeted detection patterns added to the existing governance roster.
+
+| Governance Agent | Orchestrator-Specific Signal | What It Catches |
+|---|---|---|
+| **Drift Monitor** | Routing decisions that send tasks to agents outside the task's domain (e.g., database work → Frontend Implementer) | Routing drift — the Orchestrator's own scope/role boundaries degrading |
+| **Token Budgeter** | Orchestrator overhead exceeding 25% of session token budget | Coordination bloat — the fleet is spending more on routing than on work (Case Study 2 threshold: 60%) |
+| **Context Health Monitor** | Orchestrator dropping standing context (fleet roster, routing rules, interface contracts) as its session lengthens | Context degradation — the Orchestrator losing awareness of its own fleet |
+| **Loop Breaker** | Tasks bouncing between Orchestrator and the same specialist without state change (decompose → route → reject → re-decompose → re-route → reject) | Decomposition loops — the Orchestrator unable to produce viable task specs |
+| **Hallucination Auditor** | Routing to agents not in the active fleet roster, or referencing interface contracts that don't exist | Orchestrator hallucination — fabricating routing paths |
+| **Contradiction Detector** | Orchestrator routing the same type of task to different agents in the same session without rationale | Routing inconsistency — decisions that contradict the Orchestrator's own prior routing |
+
+### Degradation Detection Signals
+
+The following signals indicate the Orchestrator is degrading. Any single signal is a warning. Two or more concurrent signals trigger the Orchestrator Degradation Response.
+
+| Signal | Detection Method | Threshold |
+|---|---|---|
+| **Routing error rate rising** | Handoff rejection rate (Section 27) increasing within session | >15% rejection rate (healthy baseline: <5%) |
+| **Overhead ratio climbing** | Orchestrator token consumption / total fleet token consumption | >25% of session budget on coordination |
+| **Decomposition quality dropping** | Specialist agents requesting re-decomposition or reporting unclear acceptance criteria | 3+ re-decomposition requests in a single session |
+| **Context amnesia** | Orchestrator re-routing tasks it already routed, or losing track of in-flight parallel work | Any duplicate routing within a session |
+| **Fleet roster drift** | Orchestrator referencing agents not in the active roster or missing agents that are active | Any phantom agent reference |
+
+### Orchestrator Degradation Response
+
+When degradation is detected, the response is graduated:
+
+**Level 1 — Session Reset (automatic):**
+- Triggered by: 2+ concurrent degradation signals.
+- Action: Checkpoint all in-flight work. Reset the Orchestrator session. Reload standing context from ground truth (fleet roster, routing rules, contracts). Resume from checkpoint.
+- Who triggers: Context Health Monitor recommends to Admiral; Admiral approves.
+
+**Level 2 — Reduced Scope (Admiral-directed):**
+- Triggered by: Level 1 reset fails to resolve signals, or signals recur within 2 sessions.
+- Action: Reduce parallel work streams to serial execution. Orchestrator handles one task chain at a time, reducing context pressure. Governance agents continue monitoring.
+- Who triggers: Admiral, based on governance agent reports.
+
+**Level 3 — Orchestrator Rotation (Admiral-directed):**
+- Triggered by: Persistent degradation across multiple session resets.
+- Action: Stand up a fresh Orchestrator instance with clean context. Transfer the checkpoint state and fleet roster. The degraded Orchestrator's decision log is preserved for forensic review. The new instance starts with full standing context and the decision log loaded as reference (not as binding state).
+- Who triggers: Admiral.
+
+**No Level 4.** If Orchestrator rotation doesn't resolve the issue, the problem is not the Orchestrator — it's the fleet configuration (too many agents, too much parallel work, unclear routing rules). The Admiral should audit the fleet configuration per Section 28 (Scaling Signals: "Over-specialized" or "Should split").
+
+### Routing Audit
+
+The Orchestrator's routing decisions are spot-checked, not comprehensively reviewed (comprehensive review would cost more than the routing itself).
+
+**Audit mechanism:** At every chunk boundary, the Drift Monitor samples the most recent 3 routing decisions and checks:
+1. Did the task go to an agent whose Scope includes this task type?
+2. Did the routing follow the routing rules in `fleet/routing-rules.md`?
+3. Was the acceptance criteria in the task spec machine-verifiable?
+
+**Audit failures** are logged and reported to the Admiral. They do not automatically override the routing — they surface the error for correction.
+
+**Routing audit is not a new agent.** It is a periodic responsibility of the Drift Monitor, whose existing scope already includes detecting hierarchical drift and scope violations. Routing errors are scope violations by the Orchestrator.
+
+-----
+
 ## 29 — INTER-FLEET GOVERNANCE
 
 > **TL;DR** — Multiple fleets are isolated by default. Sharing happens through Admiral Relay (manual) or A2A (automated). Review across fleets regularly for promotable patterns, systemic failures, and resource imbalances.

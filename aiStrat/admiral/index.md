@@ -201,7 +201,7 @@ Terms are listed alphabetically. When these terms appear in any part file, they 
 | **Progressive disclosure** | Loading strategy where knowledge is provided on-demand via skills rather than front-loaded at startup. Preserves context window capacity. Section 07. |
 | **Prompt anatomy** | Standard structure for agent system prompts: Identity → Authority → Constraints → Knowledge → Task. Section 04. |
 | **Propose tier** | Decision authority level where the agent drafts the decision with rationale, presents alternatives, and waits for approval. Used for architecture changes, schema migrations, new dependencies. |
-| **Quarantine** | Immune system that validates all external content before it enters the Brain. See Section 10 for the four-layer validation pipeline. |
+| **Quarantine** | Five-layer immune system that validates all external content before it enters the Brain. Layers 1-3 are completely LLM-airgapped; Layer 4 is LLM advisory (reject-only); Layer 5 generates antibodies. See Section 10. |
 | **Quality floor** | Minimum acceptable quality bar, defined concretely. Prevents infinite refinement by defining "good enough." Part of Boundaries. Section 02. |
 | **Recovery ladder** | Five-step sequence agents follow when things go wrong. See Section 22 for the full ladder and backtracking requirements. |
 | **Routing logic** | Rules the orchestrator uses to assign tasks to specialists: by task type, by file ownership, or by escalation. Section 11. |
