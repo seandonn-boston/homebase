@@ -3,7 +3,7 @@
 **Reviewer:** Claude Opus 4.6
 **Date:** 2026-03-05
 **Scope:** Complete review of every file in aiStrat/* (admiral/, fleet/, brain/, monitor/)
-**Rating:** 9.0 / 10 (revised from 8.4 after resolution of 6 identified issues)
+**Rating:** 8.8 / 10 (revised from 9.0 after second-pass review surfaced additional issues)
 
 ---
 
@@ -20,12 +20,12 @@ This is a spec, not a runtime. That is both its greatest strength and its most s
 | Dimension | Score | Weight | Weighted | Change |
 |---|---|---|---|---|
 | Conceptual Integrity | 9.5 / 10 | 25% | 2.375 | — |
-| Completeness | 9.5 / 10 | 20% | 1.900 | +0.5 (token format, governance coordination, Orchestrator health, failure scenarios) |
-| Practical Usability | 8.0 / 10 | 20% | 1.600 | +1.0 (worked failure examples, governance coordination makes the system operable) |
-| Internal Consistency | 9.0 / 10 | 10% | 0.900 | +1.0 (quarantine references aligned, Exploratory labels consistent, governance overlap resolved) |
-| Security Model | 9.5 / 10 | 15% | 1.425 | +0.5 (LLM-airgapped quarantine, token format specified) |
+| Completeness | 9.0 / 10 | 20% | 1.800 | -0.5 (second pass: protocol gaps, infrastructure failure modes absent, schema gaps) |
+| Practical Usability | 8.0 / 10 | 20% | 1.600 | — |
+| Internal Consistency | 8.0 / 10 | 10% | 0.800 | -1.0 (second pass: cross-ref errors, agent count mismatch, governance detection pattern gaps, template drift) |
+| Security Model | 9.5 / 10 | 15% | 1.425 | — |
 | Production Readiness | 7.0 / 10 | 10% | 0.700 | — (still a spec, not yet implemented) |
-| **Total** | | **100%** | **8.900** |
+| **Total** | | **100%** | **8.700** |
 
 ---
 
@@ -148,6 +148,160 @@ The model-tiers.md assigns agents to model tiers (Tier 1 Flagship through Tier 4
 
 ---
 
+## Second-Pass Review — Different Angle
+
+A second comprehensive review of every file, approaching from a different angle, looking for the same classes of issues in different instances or forms, and for issues not visible on the first pass. Findings are organized by severity tier.
+
+### Tier 1: Factual Errors
+
+These are objectively wrong and should be corrected.
+
+#### 12. Cross-Reference Error: Emergency Halt Protocol (Impact: Low, Fix: Trivial)
+
+`admiral/part5-brain.md` states "The Emergency Halt Protocol (Section 38) can revoke ALL active tokens fleet-wide." But Section 38 is the Handoff Protocol. The Emergency Halt Protocol is in Section 37 (within the Escalation Protocol, `admiral/part11-protocols.md`).
+
+#### 13. Section 35 Missing from Table of Contents (Impact: Low, Fix: Trivial)
+
+Section 35 (Multi-Operator Governance) exists in `admiral/part10-admiral.md` but is absent from the Table of Contents in `admiral/index.md`. The ToC jumps from Section 34 directly to Part 11. Section 35 also has no glossary entries for its key concepts (Operator, Owner/Observer tiers).
+
+#### 14. Agent Count Mismatch: 67 Claimed, 71 Cataloged (Impact: Low, Fix: Trivial)
+
+`fleet/README.md` states "Core catalog: 67 agent definitions." But the catalog table in the same file sums to 71 (4+7+5+5+5+4+6+4+5+4+4+12+6). Either the count or the table is stale.
+
+#### 15. Phantom Agent References (Impact: Medium)
+
+`admiral/part9-platform.md` Section 31 references three scheduled agent roles — "Docs Sync," "Quality Review," and "Dependency Audit" — and states they are "cataloged in Section 11." These three agents do not exist in Section 11 (part4-fleet.md), the fleet catalog, or model-tiers.md. They appear to have been renamed, removed, or never created, leaving dangling references.
+
+#### 16. `brain_status` Operation Missing from Audit Log CHECK Constraint (Impact: Medium)
+
+The Brain schema (`brain/schema/001_initial.sql`) defines the audit_log CHECK as `operation IN ('record', 'query', 'retrieve', 'strengthen', 'supersede', 'audit')` — six values. But `brain/README.md` documents seven MCP tools including `brain_status`. The `status` operation cannot be logged. Either add `'status'` to the CHECK constraint or document why status calls are exempt from auditing.
+
+#### 17. Duplicate Escalation Report Templates (Impact: Low)
+
+Section 22 (`part7-quality.md`) defines a 7-field ESCALATION REPORT template. Section 37 (`part11-protocols.md`) defines an 8-field ESCALATION REPORT template (adds AGENT, TASK, SEVERITY). Both are labeled "ESCALATION REPORT" but are not identical. Which is authoritative is unstated.
+
+### Tier 2: Structural Issues
+
+These are design gaps that represent the same classes of problems found in the first pass, now surfaced in different locations.
+
+#### 18. "Who Watches the Watchers?" — Governance Agents Have No Self-Monitoring (Impact: High)
+
+The Orchestrator now has a Health Protocol (Section 28b). But the seven governance agents — the system's immune system — have no equivalent. If the Loop Breaker enters a loop, or the Hallucination Auditor hallucinates, or the Bias Sentinel develops anchoring bias, or the Context Health Monitor exhausts its own context window, there is no specified detection or recovery. Governance agents monitor everyone else, but nobody monitors them.
+
+This is the same class of issue as the Orchestrator SPOF — a component that can degrade silently because its failure removes the mechanism that would detect the failure. The Orchestrator fix used existing governance agents as monitors. Governance agents need an analogous second-order monitoring strategy (cross-monitoring among governance agents, periodic self-diagnostics, or Admiral spot-checks).
+
+#### 19. The Brain Is a Single Point of Failure (Impact: High)
+
+The Brain (Postgres + pgvector) is the sole knowledge store for the entire fleet and across fleets. There is no specification for: database failover, what agents should do when `brain_query` fails, read replicas, backup/restore, or disaster recovery. Every agent that queries before deciding (Pattern 1) and every agent that records at chunk boundaries (Pattern 2) stalls when the Brain is unreachable. The recovery ladder (Section 22) covers agent-level failures but never addresses infrastructure-level Brain unavailability.
+
+This is the same class of issue as the Orchestrator SPOF but at the infrastructure layer. The Brain is described as "One database. One schema. Any project. Any agent. Any time horizon." — which is simultaneously its architectural elegance and its single point of failure.
+
+#### 20. The Identity Authority Is a Single Point of Failure (Impact: Medium)
+
+Token issuance, rotation, and revocation all depend on "the fleet's identity authority (Admiral or automated identity service)." If this service is unavailable: no new tokens issued, expired tokens can't be rotated, and emergency revocation broadcasting fails. The identity authority's availability, redundancy, and failure behavior are never specified.
+
+#### 21. Context Curator and Triage Agent Have No Degradation Protocols (Impact: Medium)
+
+The Orchestrator now has a graduated degradation response. The Context Curator (assembles all agent context) and the Triage Agent (classifies and routes all incoming work) are equally critical command agents with zero failover specification. If the Context Curator's own context fills up (it must hold "all agent context profiles" and "artifact inventory" as standing context), no agent receives properly assembled context. If the Triage Agent hallucinates classifications, all work is misrouted. No fallback routing path exists.
+
+#### 22. Governance "Non-Negotiable" Contradicts Core Fleet Minimum (Impact: Medium)
+
+`fleet/agents/governance.md` states all 7 governance agents are "Always deploy. Non-negotiable." But the Core Fleet minimum (fleet/README.md) lists only 3 governance agents (Token Budgeter, Hallucination Auditor, Loop Breaker) as the minimum viable deployment. Level 1 and Level 2 adoption include zero governance agents. This is a direct contradiction. Either "non-negotiable" needs qualification by adoption level, or the Core Fleet needs to include all 7.
+
+#### 23. 8 of 20 Failure Modes Missing from Authoritative Owner's Detection Patterns (Impact: Medium)
+
+The Authoritative Ownership Table assigns each of the 20 failure modes to an authoritative governance agent. But 8 of those failure modes do not appear in their assigned owner's Detection Patterns table:
+
+| Failure Mode | Assigned Owner | Gap |
+|---|---|---|
+| Memory Poisoning | Contradiction Detector | Not in Detection Patterns |
+| Configuration Injection | Drift Monitor | Not in Detection Patterns |
+| Swarm Consensus Failure | Contradiction Detector | Not in Detection Patterns |
+| Config Accretion | Context Health Monitor | Not in Detection Patterns |
+| Goodharting | Bias Sentinel | Not in Detection Patterns |
+| Silent Failure | Hallucination Auditor | Only partially covered by "False completion" |
+| Invocation Inconsistency | Contradiction Detector | Not in Detection Patterns |
+| Tool Hallucination via MCP | Hallucination Auditor | Only partially covered by "Phantom capabilities" |
+
+The ownership table says these agents are responsible, but the agents' own specifications don't list the failure modes they are supposed to detect. This is the same class of issue as the original governance overlap — coordination exists in principle but not in the agent definitions themselves.
+
+#### 24. Domain Agents Missing Completion Routing (Impact: Medium)
+
+All engineering agents include "Orchestrator on completion" as an output target. None of the 7 domain agents (`fleet/agents/extras/domain.md`) do. This breaks the coordination loop — the Orchestrator has no way to know when a domain agent finishes its work. Same gap exists for the 5 data agents.
+
+#### 25. Governance Agents Route Through the Orchestrator They Monitor (Impact: Medium)
+
+Governance agents detect Orchestrator degradation (Section 28b), but their output routes to the Orchestrator. If the Orchestrator is degraded, it is the entity receiving and acting on reports about its own degradation. Level 1 response has a workaround (Context Health Monitor recommends to Admiral directly), but Levels 2-3 still flow through the Orchestrator. This is a residual circular dependency in the Orchestrator Health Protocol itself.
+
+### Tier 3: Consistency Issues
+
+#### 26. Agent Template Compliance Is Low Across the Fleet (Impact: Medium)
+
+The agent templates (`agent-example.md`, `agents-example.md`) mark Prompt Anchor as **Required**. But:
+- 10 of 12 core scale agents lack a Prompt Anchor
+- 15 of 17 extended scale agents lack a Prompt Anchor
+- All governance agents lack Context Discovery (despite the template stating it is "included in governance agents by default")
+- All domain and data agents lack Guardrails (despite containing high-blast-radius agents like Payment & Billing, Authentication & Identity)
+- Command agent templates omit Decision Authority (despite making classification, resolution, and curation decisions)
+- Scale agents have an "Output Format" section not present in any template
+
+The templates define a contract; the fleet catalog does not consistently honor it.
+
+#### 27. Missing Reverse Index on `entry_links.target_id` (Impact: Low)
+
+The `entry_links` table supports knowledge graph traversal, but only has a primary key index on `(source_id, target_id, link_type)`. There is no reverse index on `target_id` for "what links TO this entry" queries. Multi-hop retrieval traversing backward requires a sequential scan.
+
+#### 28. Standing Order 11 Creates an Adoption-Level Dependency (Impact: Low)
+
+Standing Orders are "loaded into every agent's standing context" and are "non-negotiable." Standing Order 11 tells agents to request context "from the Orchestrator or Context Curator." At Level 1 (single agent), neither exists. The Standing Orders should work at all adoption levels or scope per level.
+
+### Tier 4: Protocol & Specification Gaps
+
+These are protocols referenced but never formally specified. Each follows the same pattern as the identity token gap (resolved): a concept is described in prose but lacks the machine-parseable contract needed for implementation.
+
+#### 29. Handoff Protocol Has No Schema (Impact: Medium)
+
+The Handoff Protocol (Section 38) defines a human-readable template but no formal JSON schema. Section 32b says "enforce the HANDOFF schema at generation time" using structured outputs — but the schema it references does not exist. Same gap for the Session Checkpoint format (read by SessionStart hooks, but no parseable schema) and Session Handoff format.
+
+#### 30. Hook Configuration Format Is Never Specified (Impact: Medium)
+
+Hooks are the framework's most critical enforcement mechanism, described extensively (lifecycle events, execution model, self-healing loops). But the actual configuration format for registering a hook — the file format, the schema, the registration mechanism — is never defined. The appendix shows hooks in prose ("PreToolUse (Write/Edit): Block modifications outside src/") but never the actual configuration.
+
+#### 31. MCP Tool Schemas Are Narrative, Not Formal (Impact: Low)
+
+The Brain MCP server tools are described with parameter names and types in prose, but no formal MCP tool declarations, JSON schemas, or OpenAPI specs are provided.
+
+#### 32. Observability Formats Are Absent (Impact: Low)
+
+Fleet Health Metrics (Section 27) defines metric names in prose ("First-Pass Quality Rate," "Rework Ratio") but never specifies machine-readable metric names, namespacing, or mapping to observability systems. Trace correlation IDs are referenced but format (UUID? OpenTelemetry?) and propagation mechanism are unspecified.
+
+#### 33. Attack Corpus Has No Bootstrapping Procedure (Impact: Low)
+
+The quarantine Layer 3 depends on "a version-controlled, human-curated dataset of known adversarial patterns." No initial corpus is provided, no minimum viable corpus size is specified, and no guidance is given for bootstrapping before first deployment. A fleet deploying the quarantine on day one has an empty attack corpus and therefore an inert Layer 3.
+
+#### 34. Embedding Model Versioning Is Unaddressed (Impact: Low)
+
+If the embedding model changes versions, all existing Brain embeddings become incompatible with new queries (different vector spaces). No specification for embedding model versioning, re-embedding strategy, or fallback.
+
+#### 35. Cost Enforcement Does Not Distinguish Token Types (Impact: Low)
+
+Section 26 identifies four cost dimensions (input, output, thinking, tool calls) and specifies separate thinking token budgets. But hook-based enforcement ("Kill session after token budget exceeded") does not distinguish between token types. The cost specification and the enforcement specification are misaligned.
+
+### Tier 5: Uncataloged Failure Modes
+
+These are failure scenarios not covered by the 20 documented failure modes:
+
+- **Governance agent degradation** — a governance agent itself hallucinating, drifting, or exhausting context. No detection signals, no recovery.
+- **Brain infrastructure failure** — the Brain (Postgres) becoming unreachable. Not an agent failure, not a model failure — an infrastructure failure with no documented response.
+- **Model API outage** — the underlying model provider being unavailable. The recovery ladder assumes the agent can retry. If the model API is down, no ladder step works.
+- **Cross-project knowledge poisoning** — Fleet A writes a misleading "lesson" that degrades Fleet B's results when both share the Brain. Access control exists but cross-project interference is not in the failure catalog.
+- **Internal Brain poisoning** — a trusted, authenticated agent writing subtly incorrect entries (not malicious, but through hallucination or completion bias). The quarantine only guards external content. Internal write validation at ingestion time is absent.
+- **Admiral degradation** — "Abdication" and "Micromanagement Spiral" are anti-patterns, but Admiral fatigue/judgment degradation under workload is not a failure mode with detection signals.
+- **Governance signal overload** — Case Study 2 describes this ("Governance agents produce more reports than the Admiral can review"), but it is not in the 20-mode catalog.
+- **Emergency Halt has no test/drill procedure** — the most critical safety protocol has no fire drill specification to verify it actually works.
+
+---
+
 ## What's Missing
 
 1. **A "Getting Started from Zero" tutorial.** The Quick-Start Sequence (Appendix B) lists what to do but not how to do it. The `.md-example` template files for command agents (Orchestrator, Triage, Context Curator, Mediator) and the `agent-example.md`/`agents-example.md` templates are good scaffolding — they lower the customization barrier by showing the exact structure with placeholder guidance. But a concrete walkthrough — "create this file, write these hooks, run this command" — for Level 1 deployment would lower the barrier to entry further.
@@ -164,16 +318,16 @@ The model-tiers.md assigns agents to model tiers (Tier 1 Flagship through Tier 4
 
 | Component | Rating | Verdict |
 |---|---|---|
-| **Admiral Doctrine** (Parts 1-3) | 9.5/10 | Exceptional. Strategy, context, and enforcement are the heart of the framework. The 5-layer LLM-airgapped quarantine is now a standout security design. |
-| **Fleet Architecture** (Parts 4, 6) | 8.5/10 | Strong. Fleet composition, routing, execution, and parallel coordination are well-designed. |
-| **Brain** (Part 5 + brain/) | 9.0/10 | Sound architecture, clean schema, good retrieval design. Token format contract with JWT reference format closes the identity gap. |
-| **Quality & Failure Modes** (Part 7) | 9.5/10 | Best-in-class. The failure mode catalog, recovery ladder, and now the governance coordination system are the framework's most valuable artifacts. |
-| **Operations** (Part 8) | 8.5/10 | Solid. Orchestrator Health Protocol addresses the SPOF concern with graduated degradation response. Cost management still needs empirical grounding. |
-| **Platform** (Part 9) | 7.0/10 | Weakest doctrine section. Observability and evaluation are sketched, not specified. |
-| **Protocols** (Part 11) | 9.0/10 | Standing Orders are precise, actionable, and correctly prioritized. Human Referral Protocol is a standout. |
-| **Fleet Catalog** (fleet/) | 8.0/10 | Engineering agents (frontend, backend, cross-cutting, infrastructure) are particularly strong. Governance agents now include coordination protocol. Extended scale agents properly labeled with [Exploratory] where warranted. |
-| **Monitor** (monitor/) | 9.0/10 | 5-layer immune system with LLM-airgapped deterministic semantic analysis resolves the circular dependency. Architecture diagram updated. |
-| **Appendices** | 9.0/10 | Pre-flight checklist and case studies are excellent. Worked example now includes three failure scenarios demonstrating governance, recovery, and coordination. |
+| **Admiral Doctrine** (Parts 1-3) | 9.5/10 | Exceptional. Strategy, context, and enforcement are the heart of the framework. The 5-layer LLM-airgapped quarantine is a standout security design. |
+| **Fleet Architecture** (Parts 4, 6) | 8.0/10 | Strong design, but Context Curator and Triage Agent are SPOFs without degradation protocols. Swarm queen failover underspecified. |
+| **Brain** (Part 5 + brain/) | 8.5/10 | Sound architecture but is itself a SPOF. Schema has minor gaps (missing `status` in audit CHECK, no reverse index on entry_links). No backup/DR specification. Identity authority is also a SPOF. |
+| **Quality & Failure Modes** (Part 7) | 9.0/10 | Still best-in-class. But 8 of 20 failure modes are missing from their assigned owner's Detection Patterns, and ~8 real failure scenarios are absent from the catalog entirely. Duplicate escalation report templates. |
+| **Operations** (Part 8) | 8.5/10 | Orchestrator Health Protocol is solid. But governance agents have no equivalent self-monitoring. Cost enforcement doesn't distinguish token types. |
+| **Platform** (Part 9) | 6.5/10 | Weakest section. Phantom agent references ("Docs Sync," "Quality Review," "Dependency Audit"). Observability still unspecified. |
+| **Protocols** (Part 11) | 8.5/10 | Standing Orders are strong but SO 11 creates adoption-level dependency. Handoff Protocol has no schema despite being referenced as enforceable. Cross-reference error (Section 38 vs 37). |
+| **Fleet Catalog** (fleet/) | 7.5/10 | Engineering agents remain strong. But template compliance is low (missing Prompt Anchors, Guardrails, Decision Authority across categories). Agent count is wrong (67 vs 71). Domain agents missing completion routing. "Non-negotiable" governance contradicts Core Fleet minimum. |
+| **Monitor** (monitor/) | 9.0/10 | 5-layer immune system is well-designed. Attack corpus bootstrapping is the main gap. |
+| **Appendices** | 9.0/10 | Pre-flight checklist and case studies are excellent. Worked example demonstrates governance, recovery, and coordination under failure. |
 
 ---
 
@@ -181,22 +335,20 @@ The model-tiers.md assigns agents to model tiers (Tier 1 Flagship through Tier 4
 
 The Admiral Framework is the most comprehensive and thoughtful AI agent governance specification I have encountered. Its core insights — the enforcement spectrum, governance agents as first-class citizens, the failure mode catalog, progressive adoption — are original and valuable. The writing quality is high, the architecture is coherent, and the security model is serious.
 
-Its primary remaining weakness is that it is a specification without a reference implementation. Production Readiness holds at 7.0 until that changes. The A2A protocol integration, observability tooling specification, and fleet lifecycle state machine remain gaps.
+The first-pass issues (governance overlap, Orchestrator SPOF, token format, quarantine circular dependency, worked example, Exploratory labels) have been resolved well. The resolutions are structurally sound and internally consistent.
 
-The critical design issues from the initial review have been resolved:
-- Governance agent overlap now has an authoritative ownership table and conflict resolution protocol
-- The Orchestrator SPOF now has health monitoring, degradation detection, and a graduated response ladder
-- Identity tokens now have a concrete format contract with JWT reference implementation
-- The quarantine circular dependency is eliminated by making the load-bearing layers completely LLM-free
-- The worked example now demonstrates the framework under realistic failure conditions
-- Extended agent labeling is now consistent
+The second-pass review, approaching from a different angle, surfaced issues that the first pass did not:
 
-For an alpha v5.0, this is strong work. The progressive adoption model means users can extract value immediately (Level 1) without buying into the full vision. The conceptual foundation — that agent fleets fail predictably, that governance must be structural not advisory, and that enforcement must be deterministic not hopeful — is correct, well-articulated, and now operationally specified.
+**The pattern that emerged:** The framework is excellent at specifying *what agents do* but inconsistent at specifying *what happens when infrastructure fails*. Agent-level failure modes are world-class (20 cataloged, with defenses and playbooks). Infrastructure-level failure modes (Brain down, identity authority unreachable, model API outage, governance agent degradation) are either absent or implicit. The Orchestrator Health Protocol (Section 28b) was the right fix for one SPOF, but the same pattern — "critical component with no degradation specification" — recurs in the Brain, the identity authority, the Context Curator, the Triage Agent, and the governance agents themselves.
 
-**The product is sound.**
+**The second pattern:** Internal consistency degrades at the edges. The doctrine core (Parts 1-3, 5, 7) is tight. But cross-references drift at the boundary between doctrine and fleet catalog — phantom agent references, stale counts, missing ToC entries, detection patterns that don't match the ownership table, templates that the actual agents don't follow. This is normal for a 10K+ line specification in alpha, but it means a consistency audit is needed before v5.1.
 
-**Rating: 9.0 / 10**
+**What has not changed:** The conceptual foundation is correct. The enforcement spectrum, the failure mode catalog, the 5-layer quarantine, the progressive adoption model — these are the framework's core contributions, and they hold up under a second review. The product is sound at the conceptual level. The specification-level consistency and infrastructure-level failure coverage need work.
+
+**The product is sound. The spec needs a consistency pass.**
+
+**Rating: 8.8 / 10**
 
 ---
 
-*Reviewed 2026-03-06 (revised after resolving 6 identified issues) · Admiral Framework v5.0 · ~11,500 lines across 46 markdown files + 8 template files + 1 SQL schema*
+*Reviewed 2026-03-06 (second-pass review) · Admiral Framework v5.0 · ~11,500 lines across 46 markdown files + 8 template files + 1 SQL schema · 6 issues resolved, 24 new issues identified across 5 severity tiers*
