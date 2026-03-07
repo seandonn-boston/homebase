@@ -571,3 +571,91 @@ Sessions that exceed max duration are expired automatically by the broker.
 - **Cost Blindness** — Using the most expensive tier without considering cheaper alternatives. Cost is a first-class constraint.
 
 > Implementation details (decay schedules, idle revocation, pooled licensing mechanics, billing attribution) should be specified per-deployment based on the resources in use.
+
+-----
+
+## 41 — DATA SENSITIVITY PROTOCOL
+
+> **TL;DR** — The fleet must never store PII, passwords, secrets, credentials, or any other sensitive information in the Brain, logs, checkpoints, handoffs, or any persistent storage. This is enforced deterministically — not by instruction, but by code.
+
+### The Core Principle
+
+AI agents process information continuously. Some of that information is sensitive: personal data, authentication credentials, financial details, health records. **None of this may be persisted.** The fleet operates on knowledge — patterns, decisions, lessons, outcomes — not on personal data.
+
+This is a non-negotiable, Enforced-tier constraint. There is no authority level that can override it. No agent, no Orchestrator, and no Admiral can authorize storing sensitive data in fleet systems.
+
+### What Must Never Be Stored
+
+| Category | Examples |
+|---|---|
+| **Personally Identifiable Information (PII)** | Names linked to accounts, email addresses, phone numbers, physical addresses, dates of birth |
+| **Government identifiers** | Social Security Numbers, passport numbers, driver's license numbers, tax IDs |
+| **Financial data** | Credit card numbers, bank account numbers, financial account credentials |
+| **Authentication credentials** | Passwords, API keys, access tokens, secret keys, private keys, connection strings with credentials |
+| **Cloud provider secrets** | AWS access keys, GCP service account keys, Azure credentials |
+| **Health information** | Medical records, diagnoses, treatment information |
+| **Biometric data** | Fingerprints, facial recognition data, voice prints |
+
+### Enforcement Architecture
+
+This protocol is enforced at **three layers** — defense in depth:
+
+```
+Layer 1: Application Sanitizer
+    │  Pattern-based detection at the store level
+    │  Runs BEFORE any data reaches storage
+    │  Rejects entry on match
+    ▼
+Layer 2: Database Trigger (schema/001_initial.sql)
+    │  SQL-level pattern matching as safety net
+    │  Rejects INSERT/UPDATE containing sensitive patterns
+    ▼
+Layer 3: Agent Standing Orders (Section 36.10)
+    │  "Never store secrets, credentials, or PII"
+    │  Advisory — the deterministic layers above enforce it
+```
+
+Deterministic enforcement (Layers 1–2) is primary. Agent instructions (Layer 3) are advisory backup. This follows the **hooks-over-instructions** principle: critical constraints must be enforced by code, not by hoping agents follow directions.
+
+### What the Sanitizer Must Detect
+
+Implementations must scan all entry fields (title, content, metadata keys, metadata values, source_agent, source_session) for:
+
+- **Email addresses** — RFC-style patterns
+- **Social Security Numbers** — XXX-XX-XXXX and 9-digit patterns
+- **Credit card numbers** — 13–19 digit sequences
+- **Phone numbers** — US format with various separators
+- **API keys and secrets** — `api_key=`, `password=`, `secret_key=` patterns
+- **AWS access keys** — AKIA/ASIA prefixed key patterns
+- **Secret tokens** — `sk_`, `pk_`, `token_` prefixed long strings
+- **Connection strings** — URIs with embedded credentials
+- **Suspicious metadata keys** — Keys named `email`, `password`, `ssn`, etc.
+
+### What You CAN Store
+
+The Brain is for **knowledge**, not data. Acceptable entries:
+
+| Acceptable | Example |
+|---|---|
+| Decisions | "Chose JWT for auth because we need stateless horizontal scaling" |
+| Patterns | "Always validate webhook signatures before processing payloads" |
+| Lessons | "Database connection pooling reduced p99 latency by 40%" |
+| Failures | "Migration failed silently because we didn't verify row counts" |
+| Context | "The project uses Postgres 16 with pgvector for semantic search" |
+| Outcomes | "Switching to connection pooling resolved the timeout issues" |
+
+### When Sensitive Data Appears in Your Work
+
+If an agent encounters sensitive data during its work:
+
+1. **Process it in-memory only** — use it for the current task but do not persist it
+2. **Record the lesson, not the data** — instead of "User john@example.com had auth failure," record "Auth failures can occur when OAuth tokens expire mid-session"
+3. **Abstract and generalize** — replace specifics with patterns
+4. **If you need to reference credentials**, refer to their vault location, never their value: "Database credentials are stored in the vault under `prod/db/primary`"
+
+### Anti-Patterns
+
+- **Recording Raw Data** — An agent records a brain entry containing raw user input that includes email addresses. Even if the surrounding insight is valuable, the entry must be scrubbed or rejected.
+- **Metadata Stuffing** — An agent stores PII in metadata fields (e.g., `metadata: {"user_email": "..."}`) thinking it won't be scanned. The sanitizer scans metadata keys and values.
+- **Encoded Secrets** — An agent base64-encodes a password before storing it, thinking encoding bypasses detection. Obfuscating sensitive data does not make it non-sensitive. If detection is bypassed, the agent is still in violation.
+- **"Just for Debugging"** — An agent stores credentials or PII temporarily "for debugging purposes." There is no temporary exception. The sanitizer does not have a debug mode.

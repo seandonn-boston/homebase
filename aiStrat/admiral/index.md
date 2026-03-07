@@ -109,7 +109,7 @@ This framework is split across thirteen files. This index is the entry point. Ea
 | [`part8-operations.md`](part8-operations.md) | Sections 24–29: Institutional Memory, Adaptation Protocol, Cost Management, Fleet Health Metrics, Fleet Scaling & Lifecycle, Inter-Fleet Governance |
 | [`part9-platform.md`](part9-platform.md) | Sections 30–32: Fleet Observability, CI/CD & Event-Driven Operations, Fleet Evaluation & Benchmarking |
 | [`part10-admiral.md`](part10-admiral.md) | Sections 33–35: Admiral Self-Calibration, Human-Expert Routing, Multi-Operator Governance |
-| [`part11-protocols.md`](part11-protocols.md) | Sections 36–40: Standing Orders, Escalation, Handoffs, Human Referral, Paid Resource Authorization |
+| [`part11-protocols.md`](part11-protocols.md) | Sections 36–41: Standing Orders, Escalation, Handoffs, Human Referral, Paid Resource Authorization, Data Sensitivity |
 | [`appendices.md`](appendices.md) | Pre-Flight Checklist, Quick-Start Sequence, Worked Example |
 
 -----
