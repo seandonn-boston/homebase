@@ -104,6 +104,13 @@ The prompt template checks for:
 
 Content flagged by the classifier is rejected and routed to the antibody layer (Layer 5).
 
+**Layer 3 limitations and mitigations:**
+
+- **Probabilistic, not deterministic.** Layer 3 is an LLM-based classifier. Unlike Layers 1-2 (structural validation and regex patterns), Layer 3 can be bypassed by sufficiently novel adversarial inputs. It should never be treated as a deterministic guarantee.
+- **Fail-closed confidence threshold.** The classifier must return a confidence score. Content scoring below 0.8 confidence on the "safe" classification is rejected. Ambiguity resolves to rejection, consistent with the Monitor's fail-closed principle (see Failure Modes below).
+- **Isolation requirement.** The classifier operates with minimal context: the fixed prompt template and the content under inspection. No fleet state, no Brain contents, no agent context is loaded into the classification call. This minimizes the attack surface for meta-injection where adversarial content attempts to manipulate its own classification.
+- **Defense-in-depth positioning.** Layer 3 is a defense-in-depth addition to Layers 1-2, not a standalone guarantee. Layers 1 (structural) and 2 (injection patterns) are the primary deterministic boundary. Layer 3 catches what regex cannot — semantic manipulation — but its probabilistic nature means it supplements rather than replaces deterministic checks. The approval gate (`approved: false`) provides a final human checkpoint.
+
 **What is blocked:**
 - Prompt injection (instruction override, identity reassignment, jailbreaks)
 - XSS (script tags, event handlers, protocol handlers)

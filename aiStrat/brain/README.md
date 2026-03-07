@@ -5,7 +5,7 @@
 This directory contains the architecture specification for the Brain — the fleet's durable knowledge system defined in [admiral/part5-brain.md](../admiral/part5-brain.md). It specifies:
 
 - A database schema for storing decisions, outcomes, lessons, failures, and patterns as vector embeddings
-- An MCP server interface exposing seven tools (`brain_record`, `brain_query`, `brain_retrieve`, `brain_strengthen`, `brain_supersede`, `brain_status`, `brain_audit`) that any AI agent can use
+- An MCP server interface exposing eight tools (`brain_record`, `brain_query`, `brain_retrieve`, `brain_strengthen`, `brain_supersede`, `brain_status`, `brain_audit`, `brain_purge`) that any AI agent can use
 - A ranked retrieval pipeline combining eight signals: semantic similarity, project relevance, recency, usefulness, currency, category matching, provenance weight, and speculative discount
 - A zero-trust access control model with identity token lifecycle, mandatory audit logging, and sensitivity classification
 - A pluggable embedding interface for generating vector representations
@@ -109,7 +109,7 @@ Query the audit log. Restricted to Admiral.
 |---|---|---|---|
 | `project` | string | no | Filter to a specific project |
 | `agent_id` | string | no | Filter to a specific agent |
-| `operation` | string | no | Filter by operation type (`record` \| `query` \| `retrieve` \| `strengthen` \| `supersede`) |
+| `operation` | string | no | Filter by operation type (`record` \| `query` \| `retrieve` \| `strengthen` \| `supersede` \| `purge`) |
 | `since` | timestamp | no | Only entries after this time |
 | `limit` | integer | no | Max results (default: 50) |
 
@@ -117,13 +117,31 @@ Query the audit log. Restricted to Admiral.
 
 **Errors:** `AUTHORITY_INSUFFICIENT` if caller is not Admiral. `IDENTITY_VERIFICATION_FAILED`.
 
-> **Note:** The `audit_log` table now exists in the schema (`schema/001_initial.sql`). All seven MCP tools generate audit records on every invocation — see the Audit Logging section in Part 5, Section 16.
+### brain_purge
+
+Permanently delete a Brain entry for regulatory compliance (right-to-erasure). Restricted to Admiral.
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `id` | UUID | yes | Entry UUID to purge |
+| `regulation` | string | yes | Regulatory basis (e.g., "GDPR Art. 17", "CCPA", "internal-policy") |
+| `reason` | string | yes | Human-readable justification for the purge |
+
+**Behavior:** The entry's content, title, metadata, and embedding are permanently deleted. A tombstone record remains (entry ID, `purged_at` timestamp, `purge_reason`, and `regulation`) for audit trail completeness. The tombstone is not retrievable via `brain_query` or `brain_retrieve`. All `entry_links` referencing the purged entry are removed. An `audit_log` entry records the purge event without the purged content.
+
+**Returns:** `{ id, status: "purged", purged_at: timestamp }`.
+
+**Errors:** `AUTHORITY_INSUFFICIENT` if caller is not Admiral. `NOT_FOUND` if entry does not exist. `ALREADY_PURGED` if entry was previously purged.
+
+> **Note:** The `audit_log` table now exists in the schema (`schema/001_initial.sql`). All eight MCP tools generate audit records on every invocation — see the Audit Logging section in Part 5, Section 16.
 
 ## Design Artifacts
 
 ```
 brain/
 ├── README.md               # This file — architecture overview
+├── level1-spec.md          # Level 1 (file-based) specification
+├── level2-spec.md          # Level 2 (SQLite + embeddings) specification
 └── schema/
     └── 001_initial.sql     # Postgres + pgvector schema (entries, entry_links, audit_log, indexes)
 ```
