@@ -4,7 +4,7 @@
 
 *Parts 1–10 define principles, architecture, and strategy. This part consolidates the concrete, non-negotiable protocols that every agent must follow during execution. These are the "how" — structured formats, decision ladders, and behavioral contracts that turn framework principles into repeatable agent behavior.*
 
-<!-- Five protocol areas: 36 Standing Orders | 37 Escalation | 38 Handoff | 39 Human Referral | 40 Paid Resources -->
+<!-- Six protocol areas: 36 Standing Orders | 37 Escalation | 38 Handoff | 39 Human Referral | 40 Paid Resources | 41 Data Sensitivity -->
 
 -----
 

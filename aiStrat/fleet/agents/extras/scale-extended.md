@@ -4,7 +4,7 @@ These are supplementary inhuman-scale analysis agents held in reserve for refere
 
 Deploy these when a specific review cycle requires analysis dimensions beyond what the core scale agents cover. Most projects will never need all 17 — select 1-3 based on the fleet's current phase and concerns.
 
-**Maturity Note:** These extended scale agents range from immediately practical to exploratory. 7 of 17 agents are marked [Exploratory] — they depend on data sources or reasoning capabilities that may exceed current LLM reliability. Deploy exploratory agents in advisory-only mode with human review of all findings. The remaining 10 agents are immediately practical and can be deployed with standard governance.
+**Maturity Note:** These extended scale agents range from immediately practical to exploratory. 8 of 17 agents are marked [Exploratory] — they depend on data sources or reasoning capabilities that may exceed current LLM reliability. Deploy exploratory agents in advisory-only mode with human review of all findings. The remaining 9 agents are immediately practical and can be deployed with standard governance.
 
 Extended scale agents should follow the cross-cutting standards defined in `scale.md` (common output schema, confidence calibration, audit logging, read-only access, no secrets handling).
 

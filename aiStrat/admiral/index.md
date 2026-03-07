@@ -22,7 +22,7 @@ You don't need to read 200 pages before deploying your first agent. Start at Lev
 |---|---|---|---|
 | **Level 1: Disciplined Solo** | CLAUDE.md with enforcement spectrum (Section 08). Hooks for safety-critical constraints (including token budget, loop detection, and context health hooks from Section 08). Standing Orders (Section 36). One agent with clear Identity/Scope/Boundaries. | 30 minutes | When you need multiple specialists coordinating on a single task. |
 | **Level 2: Core Fleet** | Everything in Level 1 plus Fleet Composition (Section 11) with 5–8 agents, routing rules, interface contracts, and the recovery ladder. Hook-based enforcement for budget, loops, and context health (no governance agents required). File-based checkpoints for session persistence. | 2–4 hours | When convention drift, scope creep, or hallucination compound across sessions and you can't catch them manually. |
-| **Level 3: Governed Fleet** | Everything in Level 2 plus 3–7 governance agents (Drift Monitor, Hallucination Auditor, Bias Sentinel minimum). Token Budgeter, Loop Breaker, and Context Health Monitor add trend analysis and calibration on top of Level 1-2 hooks. Decision authority tiers enforced. Brain at Level 1–2 (file-based or SQLite). | 1–2 days | When cross-session knowledge reuse is critical, or when fleet size exceeds what one Orchestrator can effectively govern. |
+| **Level 3: Governed Fleet** | Everything in Level 2 plus 3–7 governance agents (Token Budgeter, Hallucination Auditor, Loop Breaker minimum — matching the Core Fleet "always deploy" set). Add Drift Monitor, Bias Sentinel, Context Health Monitor, and Contradiction Detector as fleet size and risk warrant. Decision authority tiers enforced. Brain at Level 1–2 (file-based or SQLite). | 1–2 days | When cross-session knowledge reuse is critical, or when fleet size exceeds what one Orchestrator can effectively govern. |
 | **Level 4: Full Framework** | Everything in Level 3 plus full Brain (Postgres + pgvector + MCP), Continuous Monitor, scale agents for review cycles, identity tokens, zero-trust access control, fleet observability. | 1–2 weeks | This is the target state for production fleets operating continuously. |
 
 **The most common mistake is starting at Level 4.** The administrative overhead of 40+ agents, a full Brain, and 7 governance agents exceeds the value for any project that hasn't yet validated its fleet's core workflow. Start at Level 1. Each level builds on the previous one. Skip nothing.
@@ -106,8 +106,8 @@ This framework is split across thirteen files. This index is the entry point. Ea
 | [`part5-brain.md`](part5-brain.md) | Sections 15–17: Brain Architecture, Knowledge Protocol, Intelligence Lifecycle |
 | [`part6-execution.md`](part6-execution.md) | Sections 18–20: Work Decomposition, Parallel Execution Strategy, Swarm Patterns |
 | [`part7-quality.md`](part7-quality.md) | Sections 21–23: Quality Assurance, Failure Recovery, Known Agent Failure Modes |
-| [`part8-operations.md`](part8-operations.md) | Sections 24–29: Institutional Memory, Adaptation Protocol, Cost Management, Fleet Health Metrics, Fleet Scaling & Lifecycle, Inter-Fleet Governance |
-| [`part9-platform.md`](part9-platform.md) | Sections 30–32: Fleet Observability, CI/CD & Event-Driven Operations, Fleet Evaluation & Benchmarking |
+| [`part8-operations.md`](part8-operations.md) | Sections 24–29 + 28b: Institutional Memory, Adaptation Protocol, Cost Management, Fleet Health Metrics, Orchestrator Health Protocol, Fleet Scaling & Lifecycle, Inter-Fleet Governance |
+| [`part9-platform.md`](part9-platform.md) | Sections 30–32 + 32b: Fleet Observability, CI/CD & Event-Driven Operations, Fleet Evaluation & Benchmarking, Multi-Modal & Extended Capabilities |
 | [`part10-admiral.md`](part10-admiral.md) | Sections 33–35: Admiral Self-Calibration, Human-Expert Routing, Multi-Operator Governance |
 | [`part11-protocols.md`](part11-protocols.md) | Sections 36–41: Standing Orders, Escalation, Handoffs, Human Referral, Paid Resource Authorization, Data Sensitivity |
 | [`appendices.md`](appendices.md) | Pre-Flight Checklist, Quick-Start Sequence, Worked Example |
@@ -301,6 +301,7 @@ Sections are ordered by impact and grouped by relevance.
 | 38 | Handoff Protocol | Structured format for transferring work between agents. | |
 | 39 | Human Referral Protocol | When and how specialists recommend consulting a human professional. | |
 | 40 | Paid Resource Authorization | Human-authorized access to paid software, licenses, and subscriptions. | |
+| 41 | Data Sensitivity Protocol | Deterministic enforcement preventing PII, secrets, and credentials from entering persistent storage. | |
 | | **APPENDICES** | | [`appendices.md`](appendices.md) |
 | A | Pre-Flight Checklist | Go/no-go gate before fleet deployment. | |
 | B | Quick-Start Sequence | Level-structured operational order for standing up a new fleet. | |

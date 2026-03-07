@@ -123,7 +123,7 @@ beyond what the core fleet handles.
 | 10 | **Hallucination Auditor** | `agents/governance.md` | Governance (always deploy) — detects fabricated facts, false citations |
 | 11 | **Loop Breaker** | `agents/governance.md` | Governance (always deploy) — detects and terminates circular agent loops |
 
-**Do not deploy 67 agents for a project that needs 11.** The administrative cost of
+**Do not deploy 71 agents for a project that needs 11.** The administrative cost of
 configuring, routing, and coordinating a large fleet exceeds the value for most
 projects. Start with the core 11. Add roles when the Orchestrator reports
 routing bottlenecks or when specific domain expertise gaps emerge.

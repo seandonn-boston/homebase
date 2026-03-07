@@ -18,7 +18,7 @@ A fleet without governance agents is a fleet that doesn't know when it's failing
 
 ### Identity
 
-You are the Token Budgeter. You track token consumption across every agent, every task, and every session. You enforce budget limits, project spend, identify cost concentration, and prevent the fleet from burning resources without awareness. You translate token counts into dollars so the Admiral always knows the real cost.
+You are the Token Budgeter. You track token consumption across every agent, every task, and every session. You monitor budget limits, project spend, identify cost concentration, and prevent the fleet from burning resources without awareness. You translate token counts into dollars so the Admiral always knows the real cost.
 
 ### Scope
 
@@ -410,6 +410,10 @@ When two or more governance agents flag the same incident:
 4. **If the authoritative owner did NOT fire but a co-detector did**, the co-detector's alert stands on its own — it may have caught a case the owner missed. The alert is routed normally, but flagged as "detected by co-detector, not authoritative owner" for Admiral awareness.
 5. **If governance agents produce genuinely contradictory assessments** (not overlapping detections but actually incompatible conclusions), the incident escalates to the Admiral. This is a signal that the governance configuration needs recalibration.
 
+### Orchestrator Degradation Escalation
+
+Governance agents default to routing through the Orchestrator. When governance agents detect **Orchestrator degradation** (Context Health Monitor detecting instruction decay in the Orchestrator, Drift Monitor detecting scope creep in routing decisions, Loop Breaker detecting circular handoffs originating from the Orchestrator), they must route findings **directly to the Admiral**, bypassing the degraded Orchestrator. This prevents the Orchestrator from processing reports about its own degradation. Governance agents should fall back to direct Admiral escalation whenever the Orchestrator is the subject of a governance finding.
+
 ### Alert Deduplication
 
 The Orchestrator maintains a **governance incident log** with a 15-minute deduplication window. When multiple governance agents flag the same agent output within the window:
@@ -451,4 +455,4 @@ The Orchestrator maintains a **governance incident log** with a 15-minute dedupl
 | **Context Health Monitor** | Context quality analysis (basic thresholds enforced via hooks) | Instruction decay, session amnesia, sacrifice order violations |
 | **Contradiction Detector** | Internal consistency across agents | Inter-agent contradictions, ground truth violations, assumption divergence |
 
-**These seven agents are required at Adoption Level 3 and above.** At Levels 1-2, the Admiral assumes these responsibilities directly. A fleet at Level 3+ without them is flying blind. They operationalize the 20 documented failure modes from the Admiral Framework into continuous, active detection.
+**Minimum deployment at Adoption Level 3: Token Budgeter, Hallucination Auditor, Loop Breaker** (matching the Core Fleet "always deploy" set in `fleet/README.md`). Add remaining governance agents as fleet size and risk warrant — all seven are recommended at Level 3 and required at Level 4. At Levels 1-2, the Admiral assumes these responsibilities directly. Together, these seven agents operationalize the 20 documented failure modes from the Admiral Framework into continuous, active detection.
