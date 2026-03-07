@@ -239,7 +239,7 @@ Result routing:
   - Seed candidates (Python file with brain_record calls, approved: False) → Admiral reviews and approves
   - High-priority findings → automatic GitHub Issue creation
   - State (JSON) → committed to repo for persistence across runs
-Security: All external content passes through the quarantine layer (4-layer immune system)
+Security: All external content passes through the quarantine layer (5-layer immune system — 3 LLM-airgapped + 1 LLM advisory + antibody)
   before reaching seed candidates. See Section 10 and Part 5, Section 17.
 Cost cap: GitHub API rate limits only — no LLM token costs (deterministic scanning)
 ```

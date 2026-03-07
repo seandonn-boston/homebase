@@ -276,11 +276,75 @@ The Brain operates on zero-trust principles. **Caller-declared identity is never
 
 ### Identity Token Lifecycle
 
-Tokens are the atomic unit of trust in the Brain's zero-trust model. Their lifecycle is fully specified:
+Tokens are the atomic unit of trust in the Brain's zero-trust model. Their lifecycle is fully specified.
+
+#### Token Format Contract
+
+Every identity token implementation — regardless of format — MUST satisfy this contract. The contract defines what a token must contain and how it must behave. Implementations that satisfy the contract are compliant; those that do not are non-compliant regardless of their underlying technology.
+
+**Required claims (every token MUST contain all of these):**
+
+| Claim | Type | Description |
+|---|---|---|
+| `token_id` | UUID | Unique identifier for this specific token instance. Used for revocation tracking. |
+| `agent_id` | string | Verified identity of the agent (e.g., `orchestrator`, `frontend-implementer`). Must match the fleet roster. |
+| `project` | string | Project scope. Exactly one project, or `_global` for cross-project orchestrators. |
+| `role` | string | Agent's role in the fleet. Maps to fleet roster entry. |
+| `authority_tier` | enum | One of: `enforced`, `autonomous`, `propose`, `escalate`. Bound at issuance, immutable for the token's lifetime. |
+| `session_id` | UUID | The session this token is valid for. Tokens are session-scoped. |
+| `issued_at` | ISO 8601 timestamp | When the token was issued. |
+| `expires_at` | ISO 8601 timestamp | When the token expires. Default lifetime: 1 hour. Maximum lifetime: 4 hours. |
+| `issuer` | string | Identity of the issuing authority (Admiral or identity service). |
+
+**Signing requirements:**
+- Tokens MUST be cryptographically signed by the issuing authority.
+- The signing algorithm MUST use asymmetric cryptography (the verifier should not need the signing key) OR HMAC with a key known only to the issuer and the verifier (Brain MCP server).
+- The signing key MUST NOT be accessible to any agent. Agents receive tokens; they cannot forge them.
+- The Brain MCP server MUST verify the signature before processing any request. Invalid signatures are rejected with no fallback.
+
+**Verification requirements:**
+- The Brain MCP server maintains a verification key (public key for asymmetric, shared secret for HMAC).
+- Verification checks: signature validity, expiration (`expires_at` > now), session validity (`session_id` is active), and revocation status (`token_id` not in revocation list).
+- All four checks MUST pass. Failure of any single check rejects the request.
+
+#### Reference Format: JWT
+
+The reference implementation format is JSON Web Token (RFC 7519). Implementations MAY use alternative formats (PASETO, custom) provided they satisfy the token format contract above.
+
+**JWT header:**
+```json
+{
+  "alg": "ES256",
+  "typ": "JWT"
+}
+```
+
+**Algorithm:** ES256 (ECDSA with P-256 and SHA-256) is the RECOMMENDED signing algorithm. It provides asymmetric signing (the verification key cannot forge tokens) with compact signatures. RS256 (RSA with SHA-256) is ACCEPTABLE. HS256 (HMAC-SHA256) is ACCEPTABLE for single-server deployments where the Brain MCP server and identity authority share infrastructure.
+
+**Prohibited:** The `none` algorithm MUST NOT be accepted. The `alg` header MUST be validated against an allowlist, not parsed dynamically. This prevents algorithm confusion attacks.
+
+**JWT payload (maps to required claims):**
+```json
+{
+  "jti": "550e8400-e29b-41d4-a716-446655440000",
+  "sub": "frontend-implementer",
+  "project": "taskflow",
+  "role": "specialist",
+  "authority_tier": "autonomous",
+  "session_id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+  "iat": 1709712000,
+  "exp": 1709715600,
+  "iss": "admiral-identity-service"
+}
+```
+
+**Claim mapping:** `jti` → `token_id`, `sub` → `agent_id`, `iat` → `issued_at`, `exp` → `expires_at`, `iss` → `issuer`. Custom claims (`project`, `role`, `authority_tier`, `session_id`) are namespaced under the JWT payload directly.
+
+#### Lifecycle
 
 **Issuance:**
 - Tokens are issued by the fleet's identity authority (Admiral or automated identity service) at session start.
-- Each token binds: agent identity, project scope, role, authority tier, session ID, and expiration time.
+- Each token binds: agent identity, project scope, role, authority tier, session ID, and expiration time per the claims schema above.
 - Tokens are cryptographically signed. The Brain MCP server verifies the signature before processing any request.
 
 **Scope:**
@@ -289,20 +353,27 @@ Tokens are the atomic unit of trust in the Brain's zero-trust model. Their lifec
 - A token grants exactly one role. An agent cannot claim a different role than its token specifies.
 
 **Rotation:**
-- Long-running sessions must rotate tokens at a configurable interval (default: 1 hour).
-- Rotation requires re-authentication with the identity authority. Stale tokens are rejected.
+- Long-running sessions must rotate tokens at a configurable interval (default: 1 hour, matching the default `expires_at` lifetime).
+- Rotation requires re-authentication with the identity authority. The identity authority issues a new token with a fresh `token_id`, new `issued_at`/`expires_at`, and the same `session_id`. The old token is added to the revocation list.
+- Stale tokens (past `expires_at`) are rejected without consulting the revocation list.
 - The Brain logs token rotation events in the audit trail.
 
 **Revocation:**
 - Any token can be revoked immediately by the Admiral or the Emergency Halt Protocol.
 - Revocation is propagated to the Brain MCP server within one heartbeat interval (default: 10 seconds).
-- A revoked token is permanently invalid. No re-issuance of the same token.
+- The revocation list is an in-memory set of `token_id` values. It is append-only during a session. Expired tokens are pruned from the list automatically (they would fail the `expires_at` check regardless).
+- A revoked token is permanently invalid. No re-issuance of the same `token_id`.
 - When a token is revoked mid-operation, the in-flight operation completes but no subsequent operations are accepted.
 
 **Delegation:**
 - Tokens cannot be delegated. An agent cannot pass its token to another agent.
 - If Agent A needs Agent B to access the Brain on its behalf, Agent B must obtain its own token from the identity authority with appropriate scope.
 - This prevents privilege escalation through token sharing.
+
+**Emergency Revocation:**
+- The Emergency Halt Protocol (Section 38) can revoke ALL active tokens fleet-wide in a single action.
+- Implementation: the identity authority broadcasts a revocation epoch. The Brain MCP server rejects all tokens issued before the revocation epoch timestamp, regardless of their individual `expires_at`.
+- This provides O(1) fleet-wide revocation without enumerating individual tokens.
 
 #### Mandatory Enforcement
 
@@ -519,7 +590,7 @@ The Brain does not only learn from the fleet's own experience. The Continuous AI
 | Fleet-relevant repos discovered via search | PATTERN | 13 targeted GitHub queries + 8 topic scans |
 | Trending repos gaining traction | PATTERN | Star-surge detection with quality filtering |
 
-**The quarantine layer:** Per the Monitor specification, all external content passes through the quarantine layer — a four-layer immune system (structural validation, injection detection, semantic analysis, antibody generation) — before reaching the Brain. Hostile content is rejected and converted into FAILURE entries that teach the fleet what adversarial patterns look like.
+**The quarantine layer:** Per the Monitor specification, all external content passes through the quarantine layer — a five-layer immune system (structural validation, injection detection, deterministic semantic analysis [LLM-airgapped], LLM advisory [reject-only], antibody generation) — before reaching the Brain. The load-bearing layers (1-3) are completely LLM-free; the LLM layer can only reject, never approve. Hostile content is rejected and converted into FAILURE entries that teach the fleet what adversarial patterns look like.
 
 **The approval gate:** When deployed, Monitor findings arrive as seed candidates with `"approved": False`. Nothing enters the Brain without Admiral review. This prevents automated poisoning while keeping the intelligence pipeline flowing.
 
@@ -575,7 +646,5 @@ For fleets already operating with file-based persistence (Institutional Memory, 
 > **ANTI-PATTERN: BRAIN HOARDING** — Recording everything "just in case." Every routine task completion, every minor code change, every passing test. The Brain fills with noise. Retrieval quality degrades. Signal-to-noise ratio collapses. Be selective: capture what a future agent would need to make a better decision, not what happened in exhaustive detail.
 
 -----
-
-*The Fleet Admiral Framework · v5.0*
 
 *Context is the currency of autonomous AI. The Brain is where that currency compounds.*

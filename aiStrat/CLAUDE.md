@@ -30,6 +30,15 @@ aiStrat is the **Admiral Framework** — a comprehensive specification for AI ag
 | Start adopting the framework | `admiral/index.md` → Adoption Levels |
 | Integrate with a platform | `admiral/appendices.md` → Appendix E |
 
+## Versioning
+
+- **Current version: v0.1.0-alpha** (pre-release, not yet published)
+- The framework uses [semantic versioning](https://semver.org/) with pre-release labels: `MAJOR.MINOR.PATCH[-label]`
+- The authoritative version string lives in `admiral/index.md` (line 5). All other version references must match it.
+- **Version appears in exactly 2 places in source files:** `admiral/index.md` and `admiral/appendices.md` (Appendix F — Version Policy). Do not add version labels to other files.
+- Review artifacts (`REVIEW.md`, `RESOLUTION-PLAN.md`) reference the version they reviewed. Keep these in sync when the version bumps.
+- When making changes, verify no stale version strings exist: `grep -r "v[0-9]\+\.[0-9]" aiStrat/ --include="*.md"` should show only the current version.
+
 ## Working With This Repository
 
 - **All content is markdown specification.** There is no code to run, test, or lint.
