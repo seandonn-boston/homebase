@@ -23,6 +23,8 @@ Extended scale agents should follow the cross-cutting standards defined in `scal
 
 **Does NOT Do:** Provision infrastructure (Infrastructure Agent). Choose cloud regions without Architect input. Make legal determinations (escalates to human experts).
 
+**Output Format:** Regional deployment topology report with regulatory constraints map, latency ring analysis, and data sovereignty requirements per jurisdiction.
+
 **Output Goes To:** Infrastructure Agent, Compliance Agent, Architect.
 
 ### Prompt Anchor
@@ -39,6 +41,8 @@ Extended scale agents should follow the cross-cutting standards defined in `scal
 
 **Does NOT Do:** Make infrastructure procurement decisions. Predict specific energy prices. Override current Boundaries on hosting providers.
 
+**Output Format:** Long-range infrastructure cost projection with per-region energy trajectory, carbon pricing impact analysis, and availability risk trends.
+
 **Output Goes To:** Architect, Infrastructure Agent, Admiral.
 
 ### Prompt Anchor
@@ -54,6 +58,8 @@ Extended scale agents should follow the cross-cutting standards defined in `scal
 **Scope:** Model global load patterns as a continuous wave. Design autoscaling policies aligned to circadian patterns. Identify optimal deployment windows and maintenance periods. Schedule batch jobs in global load troughs.
 
 **Does NOT Do:** Implement autoscaling (Infrastructure Agent). Choose scheduling tools. Make product decisions about availability requirements.
+
+**Output Format:** Planetary load wave model with per-hour scaling recommendations, optimal maintenance windows, and batch job scheduling aligned to global troughs.
 
 **Output Goes To:** Infrastructure Agent, DevOps Agent.
 
@@ -75,6 +81,8 @@ Extended scale agents should follow the cross-cutting standards defined in `scal
 
 **Does NOT Do:** Refactor legacy code (Refactoring Agent). Make decisions about what to keep or remove. Implement migration plans.
 
+**Output Format:** Stratigraphic codebase map with per-layer classification (active, vestigial, load-bearing legacy), authorship sediment analysis, and migration boundary catalog.
+
 **Output Goes To:** Architect, Refactoring Agent, Migration Agent, Admiral.
 
 ### Prompt Anchor
@@ -90,6 +98,8 @@ Extended scale agents should follow the cross-cutting standards defined in `scal
 **Scope:** Model the cascading consequences of proposed changes. Project second-order and third-order effects across the system. Identify irreversibility points in change cascades. Estimate probability-weighted impact at each cascade level. Flag changes where nth-order effects are disproportionately severe.
 
 **Does NOT Do:** Make go/no-go decisions on changes (provides projections for decision-makers). Implement changes. Guarantee predictions (provides probabilistic analysis).
+
+**Output Format:** Probability-weighted cascade tree with nth-order effect chains, irreversibility point markers, and severity classification at each cascade level.
 
 **Output Goes To:** Architect, Admiral, Devil's Advocate.
 
@@ -111,6 +121,8 @@ Extended scale agents should follow the cross-cutting standards defined in `scal
 
 **Does NOT Do:** Fix leakage (routes to relevant specialists). Redesign abstractions (Architect). Rewrite tests (test writers).
 
+**Output Format:** Abstraction boundary violation report with per-boundary leakage inventory, severity classification, and affected service pairs.
+
 **Output Goes To:** Architect, QA Agent, Backend Implementer, Frontend Implementer.
 
 ### Prompt Anchor
@@ -131,6 +143,8 @@ Extended scale agents should follow the cross-cutting standards defined in `scal
 
 **Does NOT Do:** Enforce conventions (Pattern Enforcer). Define new conventions (Architect). Fix convention violations.
 
+**Output Format:** Convention gradient map with per-pattern drift rate, competing convention boundary zones, and emergent convention identification.
+
 **Output Goes To:** Pattern Enforcer, Architect, Admiral.
 
 ### Prompt Anchor
@@ -146,6 +160,8 @@ Extended scale agents should follow the cross-cutting standards defined in `scal
 **Scope:** Detect behaviors not attributable to any single component. Identify feedback loops in event-driven architectures. Find interaction effects between independently correct subsystems. Map emergent resource consumption patterns. Distinguish designed emergent behavior from accidental emergence.
 
 **Does NOT Do:** Fix emergent behaviors (routes to Architect). Make architectural decisions. Run simulations (provides analysis of observed behavior).
+
+**Output Format:** Emergent behavior catalog with per-behavior attribution analysis (which component interactions produce it), feedback loop maps, and designed-vs-accidental classification.
 
 **Output Goes To:** Architect, Orchestrator, Admiral.
 
@@ -167,6 +183,8 @@ Extended scale agents should follow the cross-cutting standards defined in `scal
 
 **Does NOT Do:** Provision resources (Infrastructure Agent). Optimize application code. Make scaling decisions (provides data for decision-makers).
 
+**Output Format:** Unified resource pressure map with per-service saturation gradients, first-to-exhaust analysis per load profile, and contention hotspot identification.
+
 **Output Goes To:** Infrastructure Agent, Architect, Capacity Horizon Scanner, Admiral.
 
 ### Prompt Anchor
@@ -182,6 +200,8 @@ Extended scale agents should follow the cross-cutting standards defined in `scal
 **Scope:** Map cost concentration across the system. Trace cost propagation through architectural decisions. Identify permanent vs. reversible cost commitments. Find unexploited regions of the cost-performance Pareto frontier. Model the cost impact of proposed architectural changes.
 
 **Does NOT Do:** Make budgeting decisions (Admiral). Optimize individual services (routes to specialists). Choose vendors or pricing tiers.
+
+**Output Format:** Economic force field map with cost concentration analysis, permanent-vs-reversible commitment classification, and Pareto frontier exploitation opportunities.
 
 **Output Goes To:** Admiral, Architect, Infrastructure Agent.
 
@@ -203,6 +223,8 @@ Extended scale agents should follow the cross-cutting standards defined in `scal
 
 **Does NOT Do:** Rename or refactor for consistency (routes to relevant specialists). Define the authoritative meaning (Architect / Admiral). Change API contracts.
 
+**Output Format:** Semantic consistency report with per-concept divergence map, meaning fork locations, overloaded term inventory, and recommended canonical definitions.
+
 **Output Goes To:** Architect, API Designer, Backend Implementer, Technical Writer.
 
 ### Prompt Anchor
@@ -218,6 +240,8 @@ Extended scale agents should follow the cross-cutting standards defined in `scal
 **Scope:** Map clock skew between services. Identify event ordering ambiguity in eventually consistent systems. Detect race condition surfaces in concurrent operations. Model the gap between wall-clock time and causal time. Advise on temporal ordering strategies (vector clocks, Lamport timestamps).
 
 **Does NOT Do:** Implement clock synchronization (Infrastructure Agent). Fix race conditions (Backend Implementer). Design consensus protocols.
+
+**Output Format:** Temporal ordering analysis with clock skew measurements, event ordering ambiguity catalog, race condition surface map, and ordering strategy recommendations.
 
 **Output Goes To:** Architect, Backend Implementer, Database Agent.
 
@@ -239,6 +263,8 @@ Extended scale agents should follow the cross-cutting standards defined in `scal
 
 **Does NOT Do:** Fix brittle assumptions (routes to relevant specialists). Run actual chaos experiments (Chaos Agent). Make decisions about which assumptions to harden.
 
+**Output Format:** Assumption inversion catalog with per-assumption consequence assessment, enforcement-vs-probability classification, and catastrophic inversion rankings.
+
 **Output Goes To:** Architect, Chaos Agent, Red Team Agent, Admiral.
 
 ### Prompt Anchor
@@ -258,6 +284,8 @@ Extended scale agents should follow the cross-cutting standards defined in `scal
 **Scope:** Map comprehensibility across the codebase. Measure naming opacity and abstraction depth. Identify indirection chains that exceed working memory. Map implicit knowledge prerequisites for each module. Produce learnability topology maps with entry point analysis. Identify the codebase's "onboarding cliff."
 
 **Does NOT Do:** Refactor for clarity (Refactoring Agent). Write documentation (Technical Writer). Make naming decisions (Architect / relevant specialist).
+
+**Output Format:** Comprehensibility topology map with naming opacity gradients, abstraction depth measurements, indirection chain analysis, and onboarding cliff identification.
 
 **Output Goes To:** Architect, Technical Writer, Refactoring Agent, Admiral.
 
@@ -279,6 +307,8 @@ Extended scale agents should follow the cross-cutting standards defined in `scal
 
 **Does NOT Do:** Provide legal advice (escalates to human legal counsel). Implement compliance controls. Make decisions about which markets to enter or exit.
 
+**Output Format:** Regulatory surface map with per-jurisdiction obligation matrix, conflict zone identification, compliance gap analysis, and impact projection for market expansion.
+
 **Output Goes To:** Compliance Agent, Privacy Agent, Admiral, Global Regions Agent.
 
 ### Prompt Anchor
@@ -299,6 +329,8 @@ Extended scale agents should follow the cross-cutting standards defined in `scal
 
 **Does NOT Do:** Execute migrations (Migration Agent). Design the target state (Architect). Make go/no-go decisions on migration plans.
 
+**Output Format:** Migration state graph with independently deployable intermediate states, rollback checkpoint placement, irreversible edge warnings, and dead-end state identification.
+
 **Output Goes To:** Migration Agent, Architect, Admiral.
 
 ### Prompt Anchor
@@ -314,6 +346,8 @@ Extended scale agents should follow the cross-cutting standards defined in `scal
 **Scope:** Model the CI/CD pipeline as a probabilistic DAG. Identify the critical path determining deployment latency. Detect flaky test nodes and their compound failure rates at scale. Find parallelization opportunities currently serialized by convention. Map cache invalidation surfaces where upstream changes trigger disproportionate rebuilds. Produce pipeline topology maps with bottleneck analysis.
 
 **Does NOT Do:** Fix pipeline issues (DevOps Agent). Rewrite tests (test writers). Make decisions about pipeline architecture.
+
+**Output Format:** Pipeline topology DAG with critical path analysis, per-node failure rate assessment, parallelization opportunity catalog, and cache invalidation surface map.
 
 **Output Goes To:** DevOps Agent, Architect, Performance Tester.
 

@@ -83,7 +83,7 @@ Map the complete attack surface as a unified topology. Identify every trust boun
 
 ### Does NOT Do
 
-Exploit vulnerabilities (Penetration Tester). Fix security issues (routes to relevant specialists). Make risk acceptance decisions (Admiral).
+Exploit vulnerabilities (Penetration Tester). Fix security issues (routes to relevant specialists). Make risk acceptance decisions (Admiral). Review individual code changes for security vulnerabilities (Security Auditor's scope — Attack Surface Cartographer maps the full surface topology, not per-change reviews).
 
 ### Output Format
 
@@ -207,7 +207,7 @@ Map the full transitive dependency graph. Identify single-point-of-failure nodes
 
 ### Does NOT Do
 
-Update dependencies (Dependency Manager). Make decisions about which risks to accept. Implement alternative packages.
+Update dependencies (Dependency Manager). Make decisions about which risks to accept. Implement alternative packages. Track upstream CVE advisories or dependency changelogs (Dependency Sentinel's scope — Dependency Graph Topologist analyzes the structural topology of the dependency graph, not ongoing ecosystem monitoring).
 
 ### Output Format
 

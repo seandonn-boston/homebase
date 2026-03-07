@@ -109,7 +109,7 @@ Query the audit log. Restricted to Admiral.
 |---|---|---|---|
 | `project` | string | no | Filter to a specific project |
 | `agent_id` | string | no | Filter to a specific agent |
-| `operation` | string | no | Filter by operation type (`record` \| `query` \| `retrieve` \| `strengthen` \| `supersede` \| `purge`) |
+| `operation` | string | no | Filter by operation type (`record` \| `query` \| `retrieve` \| `strengthen` \| `supersede` \| `audit` \| `purge` \| `status`) |
 | `since` | timestamp | no | Only entries after this time |
 | `limit` | integer | no | Max results (default: 50) |
 

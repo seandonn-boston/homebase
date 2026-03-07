@@ -1,6 +1,7 @@
 # Admiral Framework v0.1.0-alpha — Resolution Plan
 
 **Date:** 2026-03-05
+**Status:** Substantially complete as of 2026-03-07 (see completion notes per item below)
 **Source:** Adversarial review of entire codebase (46 markdown files + 1 SQL schema)
 **Scope:** Spec-internal issues only. Excludes "battle-tested valor" concerns (production validation, competitive benchmarking, adoption proof).
 
@@ -10,20 +11,14 @@
 
 No design decisions needed. Grep, fix, verify.
 
-### 1.1 Fix agent count: 71 → 67
+### 1.1 Fix agent count ~~71 → 67~~ — RESOLVED
 
-- **Files:** `fleet/README.md:100`, `CLAUDE.md:14`, `admiral/index.md:229`
-- **Root cause:** `fleet/specialists.md:60` correctly says 67. README and CLAUDE.md say 71. The 71 is stale — likely from before a category restructure.
-- **Action:** Change all instances of "71 core" to "67 core". Grep the entire repo for "71" near "agent" or "core" to catch any others. Update the total (71+29=100) to (67+29=96) everywhere it appears.
-- **Verification:** Count every agent definition across all fleet/agents/ files. Confirm sum matches.
+- **Status:** ✅ Resolved. The correct count is **71** (67 specialists + 4 command = 71 core). All references now say 71.
+- **Note:** The original plan's diagnosis was inverted — 71 was correct, 67 was the stale count. Fixed in fleet/README.md, part4-fleet.md, and CLAUDE.md.
 
-### 1.2 Fix section numbering collision (two Section 35s)
+### 1.2 Fix section numbering collision (two Section 35s) — RESOLVED
 
-- **Files:** `admiral/part10-admiral.md`, `admiral/part11-protocols.md`, `admiral/index.md`
-- **Root cause:** Multi-Operator Governance was added to Part 10 as Section 35 without updating the numbering cascade. Part 11 already owned Section 35 (Standing Orders).
-- **Action (recommended):** Renumber Part 10 to contain Sections 33, 34, 35 (Multi-Operator Governance). Renumber Part 11 to Sections 36–40 (Standing Orders through Paid Resource Authorization). Update the index.md table of contents. Grep all cross-references to Sections 35–39 and increment by 1.
-- **Alternative:** Move Multi-Operator Governance into Part 11 as the first section (before Standing Orders) and renumber accordingly.
-- **Verification:** Confirm no section number appears in more than one part file.
+- **Status:** ✅ Resolved. Part 10 contains Sections 33-35, Part 11 contains Sections 36-41. No collision.
 
 ### 1.3 Fix appendices.md wrong section reference
 
@@ -39,12 +34,9 @@ No design decisions needed. Grep, fix, verify.
 - **Fix:** "Standing Order 4 (Context Honesty) and Standing Order 5 (Decision Authority)"
 - **Verification:** Grep for "Section 35." to find any other instances of this notation pattern.
 
-### 1.5 Fix adversarial.md header tier claim
+### 1.5 Fix adversarial.md header tier claim — RESOLVED
 
-- **File:** `fleet/agents/adversarial.md:4`
-- **Current:** Header says "Model Tier: Tier 1 — Flagship" but Simulated User and Persona Agent are Tier 2.
-- **Fix:** Remove the category-level tier claim. Each agent already declares its own tier. Replace with "Model Tier: Varies by agent (see individual definitions below)".
-- **Verification:** Confirm all 4 agent definitions in the file have their own tier declarations.
+- **Status:** ✅ Resolved. Header now reads "Model Tier: Varies by agent (see individual definitions below)".
 
 ### 1.6 Add brain_audit to part5-brain.md
 
@@ -55,7 +47,9 @@ No design decisions needed. Grep, fix, verify.
 
 ---
 
-## Pass 2 — Schema Alignment
+## Pass 2 — Schema Alignment — ALL RESOLVED
+
+All items in Pass 2 are implemented in the current schema (`brain/schema/001_initial.sql`). The schema includes: audit_log fields (2.1), approved field (2.2), non-nullable provenance (2.3), REVOKE TRUNCATE (2.4), embedding_model tracking (2.5), last_accessed_at decay tracking (2.6).
 
 Update `brain/schema/001_initial.sql` to match what the spec promises. Kill the inline schema duplication in part5-brain.md.
 
@@ -178,8 +172,8 @@ Passes 1 and 2 can run in parallel. Pass 3 depends on Pass 1.1.
 These are real issues identified in the adversarial review that require design decisions or production validation, not spec text fixes:
 
 - Identity token format specification (needs architecture decision)
-- Quarantine Layer 3 circular LLM dependency (needs security design)
-- Governance agent overlap boundaries (needs decision rules — may be addressed during project application)
+- ~~Quarantine Layer 3 circular LLM dependency (needs security design)~~ — **Resolved:** Layer 3 callout in part3-enforcement.md was stale, not a design issue. Fixed to correctly describe Layer 3 as deterministic and LLM-airgapped.
+- ~~Governance agent overlap boundaries (needs decision rules)~~ — **Resolved:** Mutual boundary acknowledgments added to 6 overlapping agent pairs' Does NOT Do sections.
 - Enforcement tooling for the spec itself (CI pipeline for cross-reference validation — worth building but separate effort)
 - Performance benchmark sourcing (needs real data from a real project)
 - Scale agent validation (needs production proof)

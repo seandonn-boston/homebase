@@ -266,6 +266,163 @@ These contracts specify exactly what the sender delivers and what the receiver r
 
 -----
 
+## Lifecycle Handoffs
+
+### Release Orchestrator → DevOps Agent
+
+**Sender delivers:**
+- Release candidate identifier (version, commit SHA, branch)
+- Release checklist status (tests passing, security audit clear, changelog updated)
+- Deployment target (staging, production, rollback if needed)
+- Feature flags to enable/disable with the release
+- Rollback criteria (what conditions trigger automatic rollback)
+
+**Receiver returns:**
+- Deployment status (success, failed, rolled back)
+- Environment health checks post-deployment
+- Any configuration changes applied
+- Rollback instructions if manual intervention needed
+
+### Incident Response Agent → Orchestrator
+
+**Sender delivers:**
+- Incident classification (severity, affected systems, blast radius)
+- Root cause hypothesis with confidence level
+- Immediate mitigation actions taken or recommended
+- Affected agents and tasks (what fleet work should pause)
+- Communication summary for Admiral
+
+**Receiver returns:**
+- Acknowledgment with routing decisions (which agents to pause, resume, or redirect)
+- Authorization for mitigation actions above autonomous tier
+
+### Contract Test Writer → QA Agent
+
+**Sender delivers:**
+- Contract test suite covering API agreements between services
+- Consumer expectations documented per endpoint
+- Provider verification results
+- Breaking change detection results
+
+**Receiver returns:**
+- Integration verification against broader test suite
+- Conflicts with existing E2E or unit tests
+- Coverage assessment for the contract surface
+
+-----
+
+## Meta & Autonomous Handoffs
+
+### Pattern Enforcer → Orchestrator
+
+**Sender delivers:**
+- Convention violation type (naming, structure, architecture pattern)
+- Location (file, line, specific pattern)
+- Expected convention (reference to Ground Truth)
+- Severity (mandatory convention vs. recommended practice)
+- Suggested fix
+
+**Receiver returns:**
+- Routing decision (send back to original agent for correction, or defer)
+
+### Dependency Sentinel → Orchestrator
+
+**Sender delivers:**
+- Vulnerability report (CVE ID, severity, affected package, version range)
+- Update recommendation with breaking change risk assessment
+- License compliance findings
+- Maintenance health assessment (abandoned packages, declining activity)
+
+**Receiver returns:**
+- Routing decision (assign to relevant implementer, defer, escalate to Admiral)
+- Priority assignment for remediation
+
+### Role Crystallizer → Admiral
+
+**Sender delivers:**
+- Proposed fleet composition change (new agent, merged roles, deprecated agent)
+- Evidence supporting the change (repeated routing failures, scope overlap metrics, unmet capability gaps)
+- Impact assessment (which existing agents affected, routing rule changes needed)
+- Reversibility assessment
+
+**Receiver returns:**
+- Approval, rejection, or modification of the proposal
+- Implementation constraints if approved
+
+-----
+
+## Adversarial Handoffs
+
+### Simulated User / Persona Agent → QA Agent
+
+**Sender delivers:**
+- User scenario tested (persona, task flow, edge case)
+- Issues discovered (usability failures, error handling gaps, confusing flows)
+- Severity per issue (blocking, degraded, cosmetic)
+- Steps to reproduce
+
+**Receiver returns:**
+- Acknowledgment with routing to relevant implementer
+- Integration into test suite (if the scenario should become a regression test)
+
+### Devil's Advocate / Red Team Agent → Orchestrator
+
+**Sender delivers:**
+- Challenge report (assumption questioned, weakness found, alternative proposed)
+- Evidence supporting the challenge
+- Impact if the challenge is valid (what breaks, what needs rework)
+- Confidence level in the finding
+
+**Receiver returns:**
+- Routing decision (assign to original agent for response, escalate to Architect/Admiral, accept and adapt)
+
+-----
+
+## Domain & Data Handoffs
+
+### Domain Specialist → Backend Implementer
+
+**Sender delivers:**
+- Domain-specific implementation specification (e.g., payment flow, auth scheme, i18n rules)
+- Integration points with existing application code
+- Domain constraints and validation rules
+- Compliance or regulatory requirements (PCI, GDPR, accessibility)
+- Test scenarios specific to the domain
+
+**Receiver returns:**
+- Implemented integration
+- Compliance verification results
+- Any deviations from spec with rationale
+- Request for domain specialist re-review
+
+### Data Engineer → Analytics Implementer
+
+**Sender delivers:**
+- Pipeline specification (data sources, transformations, output schema)
+- Data quality constraints and validation rules
+- Performance requirements (latency, throughput)
+- Schema documentation for downstream consumers
+
+**Receiver returns:**
+- Analytics instrumentation integrated with the pipeline
+- Dashboard or visualization specifications
+- Data quality validation results
+
+### Data Validator → Data Engineer (Rejection)
+
+**Sender delivers:**
+- Data quality failures (schema violations, anomalies, completeness gaps)
+- Affected pipeline stage and data sample
+- Severity (blocking, warning, informational)
+- Suggested remediation
+
+**Receiver returns:**
+- Pipeline fix addressing the quality failures
+- Updated validation rules if needed
+- Request for re-validation
+
+-----
+
 > **Note:** Not all agent pairs require explicit contracts. Contracts are specified for handoffs where format ambiguity would cause failures.
 
 -----
