@@ -1,4 +1,4 @@
-# Admiral Framework v5.0 — Product Review & Assessment
+# Admiral Framework v0.1.0-alpha — Product Review & Assessment
 
 **Reviewer:** Claude Opus 4.6
 **Date:** 2026-03-05
@@ -75,7 +75,7 @@ The prose is precise, opinionated, and wastes no words. The anti-patterns are vi
 
 ## Weaknesses & Flaws
 
-### Resolved Issues (v5.0 revisions)
+### Resolved Issues (v0.1.0-alpha revisions)
 
 The following issues were identified during initial review and have been resolved with specification additions:
 
@@ -341,7 +341,7 @@ The second-pass review, approaching from a different angle, surfaced issues that
 
 **The pattern that emerged:** The framework is excellent at specifying *what agents do* but inconsistent at specifying *what happens when infrastructure fails*. Agent-level failure modes are world-class (20 cataloged, with defenses and playbooks). Infrastructure-level failure modes (Brain down, identity authority unreachable, model API outage, governance agent degradation) are either absent or implicit. The Orchestrator Health Protocol (Section 28b) was the right fix for one SPOF, but the same pattern — "critical component with no degradation specification" — recurs in the Brain, the identity authority, the Context Curator, the Triage Agent, and the governance agents themselves.
 
-**The second pattern:** Internal consistency degrades at the edges. The doctrine core (Parts 1-3, 5, 7) is tight. But cross-references drift at the boundary between doctrine and fleet catalog — phantom agent references, stale counts, missing ToC entries, detection patterns that don't match the ownership table, templates that the actual agents don't follow. This is normal for a 10K+ line specification in alpha, but it means a consistency audit is needed before v5.1.
+**The second pattern:** Internal consistency degrades at the edges. The doctrine core (Parts 1-3, 5, 7) is tight. But cross-references drift at the boundary between doctrine and fleet catalog — phantom agent references, stale counts, missing ToC entries, detection patterns that don't match the ownership table, templates that the actual agents don't follow. This is normal for a 10K+ line specification in alpha, but it means a consistency audit is needed before v0.2.0.
 
 **What has not changed:** The conceptual foundation is correct. The enforcement spectrum, the failure mode catalog, the 5-layer quarantine, the progressive adoption model — these are the framework's core contributions, and they hold up under a second review. The product is sound at the conceptual level. The specification-level consistency and infrastructure-level failure coverage need work.
 
@@ -351,4 +351,4 @@ The second-pass review, approaching from a different angle, surfaced issues that
 
 ---
 
-*Reviewed 2026-03-06 (second-pass review) · Admiral Framework v5.0 · ~11,500 lines across 46 markdown files + 8 template files + 1 SQL schema · 6 issues resolved, 24 new issues identified across 5 severity tiers*
+*Reviewed 2026-03-06 (second-pass review) · Admiral Framework v0.1.0-alpha · ~11,500 lines across 46 markdown files + 8 template files + 1 SQL schema · 6 issues resolved, 24 new issues identified across 5 severity tiers*

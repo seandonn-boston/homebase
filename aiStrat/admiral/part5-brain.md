@@ -647,6 +647,4 @@ For fleets already operating with file-based persistence (Institutional Memory, 
 
 -----
 
-*The Fleet Admiral Framework · v5.0*
-
 *Context is the currency of autonomous AI. The Brain is where that currency compounds.*

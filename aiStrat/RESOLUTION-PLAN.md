@@ -1,4 +1,4 @@
-# Admiral Framework v5.0 — Resolution Plan
+# Admiral Framework v0.1.0-alpha — Resolution Plan
 
 **Date:** 2026-03-05
 **Source:** Adversarial review of entire codebase (46 markdown files + 1 SQL schema)
