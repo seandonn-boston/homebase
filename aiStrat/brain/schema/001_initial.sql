@@ -93,7 +93,10 @@ CREATE TABLE audit_log (
     agent_id    TEXT NOT NULL,
     session_id  TEXT NOT NULL,
     project     TEXT NOT NULL,
-    entry_id    UUID REFERENCES entries(id) ON DELETE SET NULL,
+    -- No FK constraint: the audit log is append-only (rules block UPDATE/DELETE),
+    -- which conflicts with ON DELETE SET NULL cascades. The UUID is retained as a
+    -- historical reference — entries may be purged via decay without breaking audit.
+    entry_id    UUID,
     entry_ids   UUID[],
     result      TEXT NOT NULL CHECK (result IN ('success', 'denied', 'error')),
     risk_flags  JSONB NOT NULL DEFAULT '[]',
@@ -111,6 +114,47 @@ CREATE INDEX idx_audit_log_operation ON audit_log (operation);
 CREATE RULE audit_log_no_update AS ON UPDATE TO audit_log DO INSTEAD NOTHING;
 CREATE RULE audit_log_no_delete AS ON DELETE TO audit_log DO INSTEAD NOTHING;
 REVOKE TRUNCATE ON audit_log FROM PUBLIC;
+
+-- ── Sensitive Data Guard ─────────────────────────────────────────
+-- Defense-in-depth: reject entries containing obvious PII/secret patterns
+-- at the database level. The application sanitizer is the primary
+-- enforcement point; this trigger is a safety net.
+-- Reference: admiral/part11-protocols.md, Section 41.
+
+CREATE OR REPLACE FUNCTION reject_sensitive_data()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Email addresses
+    IF NEW.content ~* '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'
+       OR NEW.title ~* '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}' THEN
+        RAISE EXCEPTION 'Sensitive data rejected: content contains email address';
+    END IF;
+    -- SSN pattern
+    IF NEW.content ~ '\d{3}-\d{2}-\d{4}' OR NEW.title ~ '\d{3}-\d{2}-\d{4}' THEN
+        RAISE EXCEPTION 'Sensitive data rejected: content contains SSN pattern';
+    END IF;
+    -- Connection strings with credentials
+    IF NEW.content ~* '(postgresql|mysql|mongodb|redis)://[^@\s]+:[^@\s]+@'
+       OR NEW.title ~* '(postgresql|mysql|mongodb|redis)://[^@\s]+:[^@\s]+@' THEN
+        RAISE EXCEPTION 'Sensitive data rejected: content contains connection string with credentials';
+    END IF;
+    -- AWS keys
+    IF NEW.content ~ '(AKIA|ASIA)[A-Z0-9]{16}' OR NEW.title ~ '(AKIA|ASIA)[A-Z0-9]{16}' THEN
+        RAISE EXCEPTION 'Sensitive data rejected: content contains AWS key';
+    END IF;
+    -- Metadata keys suggesting PII
+    IF NEW.metadata ?| ARRAY['email', 'phone', 'ssn', 'password', 'secret',
+                              'api_key', 'credit_card', 'private_key'] THEN
+        RAISE EXCEPTION 'Sensitive data rejected: metadata contains PII/secret keys';
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER entries_reject_sensitive
+    BEFORE INSERT OR UPDATE ON entries
+    FOR EACH ROW
+    EXECUTE FUNCTION reject_sensitive_data();
 
 -- Auto-update updated_at on entry modification
 CREATE OR REPLACE FUNCTION update_updated_at()

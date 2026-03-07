@@ -155,6 +155,15 @@ The schema (`schema/001_initial.sql`) defines three tables:
 
 Indexes: HNSW for approximate nearest neighbor vector search, composite indexes for filtered queries (project + category, created_at, authority_tier), GIN index for JSONB tag queries.
 
+## Data Sensitivity
+
+**The Brain must never store PII, passwords, secrets, credentials, or sensitive information.** This is enforced deterministically at two layers:
+
+1. **Application sanitizer** — scans all entry fields before storage, rejects entries containing sensitive patterns
+2. **Database trigger** (`schema/001_initial.sql`) — SQL-level pattern rejection as defense-in-depth
+
+Store **knowledge** (patterns, decisions, lessons), not **data** (emails, credentials, PII). See [admiral/part11-protocols.md, Section 41](../admiral/part11-protocols.md) for the full protocol.
+
 ## Security Model
 
 See [admiral/part5-brain.md](../admiral/part5-brain.md) Section 16 for the full specification:
