@@ -1,7 +1,7 @@
 # Governance Agents
 
 **Category:** Governance
-**Always deploy. Non-negotiable.**
+**Required at Adoption Level 3 and above. At Levels 1-2, the Admiral assumes governance responsibilities directly.**
 
 These agents are the fleet's immune system. They monitor for the systematic weaknesses that every LLM-based fleet exhibits — cost overruns, scope drift, hallucination, bias, loops, context degradation, and internal contradictions. The Admiral Framework documents 20 failure modes and 13+ anti-patterns. These agents operationalize the defenses.
 
@@ -104,6 +104,7 @@ You are the Drift Monitor. You detect when agents stray from their defined scope
 | Convention erosion | New code diverges from established naming/structure patterns | Ground Truth conventions |
 | Authority creep | Agent makes Propose/Escalate-tier decisions at Autonomous tier | Decision Authority tiers |
 | "Improvement" drift | Agent refactors, optimizes, or "cleans up" adjacent code not in scope | Boundaries, task scope |
+| Configuration injection | Agent configuration modified to override constraints without authorization | Security: CODEOWNERS, review requirements |
 
 ### Prompt Anchor
 
@@ -153,6 +154,8 @@ You are the Hallucination Auditor. You catch fabricated outputs, phantom capabil
 | Confident uncertainty | Definitive language about unknowable or ambiguous situations | Confidence calibration |
 | Ground truth violation | Claims that contradict established tech stack, conventions, or architecture | Ground Truth |
 | False completion | "Task complete" but deliverable is absent, partial, or incorrect | Success Criteria, quality gates |
+| Silent failure | Agent encounters error and works around it without logging the recovery action | Mandatory recovery logging |
+| Tool hallucination via MCP | Agent assumes MCP server provides capabilities it does not; fabricates MCP tool outputs | Explicit MCP capability list in Tool Registry |
 
 ### Prompt Anchor
 
@@ -205,6 +208,7 @@ You are the Bias Sentinel. You detect the systematic biases that LLMs exhibit, e
 | Anchoring | First option chosen disproportionately often | Require multiple candidates for critical decisions |
 | Confidence uniformity | All statements presented with equal certainty | Require confidence levels on outputs |
 | Premature convergence | Decision made without exploring alternatives | Require multiple approaches for critical paths |
+| Goodharting | Agents optimize tracked metrics while genuine outcomes degrade; metric scores improve but deliverable quality does not | Metrics tracked in combination; emphasis rotated to prevent gaming |
 
 ### Prompt Anchor
 
@@ -307,6 +311,7 @@ You are the Context Health Monitor. You detect context degradation — the invis
 | Session amnesia | Agent re-discovers information from previous checkpoints | Institutional Memory patterns |
 | Sacrifice order violation | Identity/Authority/Constraints dropped before Knowledge/Task | Context Window Strategy: sacrifice order |
 | Stale context | Agent references information superseded by recent decisions | Ground Truth freshness |
+| Config accretion | Configuration files growing past effective limits; agents ignoring late-loaded rules | 150-line rule, regular config refactoring |
 
 ### Prompt Anchor
 
@@ -354,6 +359,9 @@ You are the Contradiction Detector. You catch when agents produce outputs that c
 | Assumption divergence | Parallel agents hold different assumptions about shared concerns | Contract-first parallelism |
 | Decision log violation | Output contradicts a recorded ADR or design decision | Institutional Memory |
 | Spec-implementation gap | Built thing differs from specified thing with no rationale | Success Criteria |
+| Invocation inconsistency | Same concept named differently across agents; naming or convention drift between parallel outputs | Ground Truth: explicit conventions |
+| Memory poisoning | Brain entries contain false information that persists across sessions; contradicts verified Ground Truth | Brain audit, Ground Truth cross-check |
+| Swarm consensus failure | Multiple agents converge on the same incorrect answer; consensus without dissent on non-trivial decisions | Adversarial review, multi-model cross-check |
 
 ### Prompt Anchor
 
@@ -443,4 +451,4 @@ The Orchestrator maintains a **governance incident log** with a 15-minute dedupl
 | **Context Health Monitor** | Context quality analysis (basic thresholds enforced via hooks) | Instruction decay, session amnesia, sacrifice order violations |
 | **Contradiction Detector** | Internal consistency across agents | Inter-agent contradictions, ground truth violations, assumption divergence |
 
-**These seven agents are non-negotiable.** A fleet without them is flying blind. They operationalize the 20 documented failure modes from the Admiral Framework into continuous, active detection.
+**These seven agents are required at Adoption Level 3 and above.** At Levels 1-2, the Admiral assumes these responsibilities directly. A fleet at Level 3+ without them is flying blind. They operationalize the 20 documented failure modes from the Admiral Framework into continuous, active detection.

@@ -77,21 +77,7 @@ Effective backtracking requires:
 - **Clean rollback.** Return to checkpoint without residual state from the failed path.
 - **Path memory.** Record which paths were tried and why they failed.
 
-> **TEMPLATE: ESCALATION REPORT**
->
-> BLOCKER: [One sentence]
->
-> CONTEXT: [What task was being attempted]
->
-> ATTEMPTED: [Approaches tried, in order, with outcomes]
->
-> ROOT CAUSE (if known): [Best assessment]
->
-> NEEDED: [What would unblock this]
->
-> IMPACT: [Downstream tasks affected]
->
-> RECOMMENDATION: [Agent's suggested resolution]
+> **ESCALATION REPORT format:** See [Part 11 — Escalation Protocol, Section 37](part11-protocols.md) for the authoritative escalation report template.
 
 > **ANTI-PATTERN: SILENT FAILURE** — An agent encounters an error, works around it silently, delivers a subtly wrong result. This is completion bias overriding correctness. Require all agents to log every recovery action. No silent fallbacks.
 

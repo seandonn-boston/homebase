@@ -106,10 +106,10 @@ Content flagged by the classifier is rejected and routed to the antibody layer (
 
 **Layer 3 limitations and mitigations:**
 
-- **Probabilistic, not deterministic.** Layer 3 is an LLM-based classifier. Unlike Layers 1-2 (structural validation and regex patterns), Layer 3 can be bypassed by sufficiently novel adversarial inputs. It should never be treated as a deterministic guarantee.
-- **Fail-closed confidence threshold.** The classifier must return a confidence score. Content scoring below 0.8 confidence on the "safe" classification is rejected. Ambiguity resolves to rejection, consistent with the Monitor's fail-closed principle (see Failure Modes below).
-- **Isolation requirement.** The classifier operates with minimal context: the fixed prompt template and the content under inspection. No fleet state, no Brain contents, no agent context is loaded into the classification call. This minimizes the attack surface for meta-injection where adversarial content attempts to manipulate its own classification.
-- **Defense-in-depth positioning.** Layer 3 is a defense-in-depth addition to Layers 1-2, not a standalone guarantee. Layers 1 (structural) and 2 (injection patterns) are the primary deterministic boundary. Layer 3 catches what regex cannot — semantic manipulation — but its probabilistic nature means it supplements rather than replaces deterministic checks. The approval gate (`approved: false`) provides a final human checkpoint.
+- **Deterministic but not omniscient.** Layer 3 uses pre-trained statistical models and rule-based patterns, not LLMs. It is deterministic (the same input always produces the same output), but it can only detect patterns present in its training corpus. Sufficiently novel adversarial inputs that don't match known authority-spoofing, credential-fabrication, or manipulation patterns will pass through undetected.
+- **Fail-closed scoring threshold.** The Bayesian classifier returns a confidence score. Content scoring below 0.8 confidence on the "safe" classification is rejected. Ambiguity resolves to rejection, consistent with the Monitor's fail-closed principle (see Failure Modes below).
+- **Corpus dependency.** Detection quality is bounded by the attack corpus. The corpus must be regularly updated by the Admiral with newly discovered adversarial patterns. Stale corpora create blind spots.
+- **Defense-in-depth positioning.** Layer 3 extends Layers 1-2 with semantic-level detection that regex cannot achieve. Layer 4 (LLM advisory) provides an additional probabilistic net beyond Layer 3's deterministic checks. The approval gate (`approved: false`) provides a final human checkpoint.
 
 **What is blocked:**
 - Prompt injection (instruction override, identity reassignment, jailbreaks)

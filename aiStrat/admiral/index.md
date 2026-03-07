@@ -226,7 +226,7 @@ Terms are listed alphabetically. When these terms appear in any part file, they 
 
 ## Relationship to the Fleet and Monitor
 
-The `fleet/` directory provides 67 core agent definitions (plus 29 extended agents in `fleet/agents/extras/`) organized by category. The `monitor/` directory specifies the continuous intelligence pipeline. The `brain/` directory contains the database schema and architecture specification for long-term memory.
+The `fleet/` directory provides 71 core agent definitions (plus 29 extended agents in `fleet/agents/extras/`) organized by category. The `monitor/` directory specifies the continuous intelligence pipeline. The `brain/` directory contains the database schema and architecture specification for long-term memory.
 
 | Admiral Section | Companion Specification |
 |---|---|
@@ -294,6 +294,7 @@ Sections are ordered by impact and grouped by relevance.
 | | **PART 10 — THE ADMIRAL** | *The human element.* | [`part10-admiral.md`](part10-admiral.md) |
 | 33 | Admiral Self-Calibration | Bottleneck detection, trust calibration, and growth trajectory. | |
 | 34 | Human-Expert Routing | When the fleet needs expertise the Admiral doesn't have. | |
+| 35 | Multi-Operator Governance | Isolation, shared resources, and cross-fleet review across multiple Admirals. | |
 | | **PART 11 — PROTOCOLS** | *The universal operating rules every agent follows.* | [`part11-protocols.md`](part11-protocols.md) |
 | 36 | Standing Orders | Fifteen non-negotiable rules loaded into every agent's standing context. | |
 | 37 | Escalation Protocol | How and when agents stop work and flag issues upward. | |

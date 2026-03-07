@@ -97,7 +97,7 @@ The `prompt-anatomy.md` file provides the assembly pattern for building complete
 | Inhuman-Scale Analysis | `agents/scale.md` | 12 | |
 | Release & Developer Platform | `agents/lifecycle.md` | 6 | |
 
-**Core catalog: 67 agent definitions.** Each is independently deployable. Combine as the project demands. Start with the **Core Fleet** below (11 agents) and add specialists only when demonstrated need arises.
+**Core catalog: 71 agent definitions.** Each is independently deployable. Combine as the project demands. Start with the **Core Fleet** below (11 agents) and add specialists only when demonstrated need arises.
 
 An additional **29 extended agents** are held in reserve in `agents/extras/` — domain specialists (7), data & analytics (5), and supplementary scale agents (17). See `agents/extras/README.md` for activation instructions.
 

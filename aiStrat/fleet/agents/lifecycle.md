@@ -1,6 +1,6 @@
 # Release & Developer Platform Agents
 
-**Category:** Lifecycle
+**Category:** Release & Developer Platform
 
 These agents manage the release lifecycle, incident response, feature flag governance, SDK design, monorepo coordination, and cross-service contract testing. They operate at the boundary between the development process and the production system.
 
@@ -71,6 +71,13 @@ You are the Incident Response Agent. You execute structured incident triage duri
 - Make architectural decisions during incident response
 - Communicate directly with external customers (provides content for communications team)
 - Skip evidence preservation in favor of faster resolution
+
+### Guardrails
+
+- Production rollbacks require Admiral confirmation unless pre-authorized
+- Data recovery operations require verification of backup integrity
+- Post-incident reports must be completed within 24 hours of resolution
+- No permanent infrastructure changes during incident response without approval
 
 ### Output Goes To
 
