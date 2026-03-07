@@ -33,7 +33,7 @@ REVIEW.md (8.8/10) and REVIEW-2.md (8.5/10) identified a combined ~60 issues. Th
 
 **Fact:** A grep for "LLM-based classifier" and "probabilistic, not deterministic" across `monitor/README.md` returns zero matches. The actual text at those lines describes Layer 3 as deterministic and LLM-free. This fabricated finding was presented as the **#1 priority fix** (REVIEW-2.md line 402) and a **systemic issue** (line 373-375). It is neither. The monitor's Layer 3 description is internally consistent and correct.
 
-**Verdict:** REVIEW-2.md's most prominent finding is fictional. This significantly undermines that review's reliability.
+**Verdict:** REVIEW-2.md attributed the error to the wrong file. A **real** stale Layer 3 callout exists in `admiral/part3-enforcement.md` line 296 (see N1 below), but `monitor/README.md` — the file REVIEW-2 cited — is clean. The error was real but mislocated, and the quoted text was fabricated rather than copied from the actual source.
 
 ### REVIEW.md Issue #16 Is Factually Wrong
 
@@ -225,15 +225,35 @@ These were identified in prior reviews and remain unaddressed. They are design-l
 
 ## New Findings Not in Prior Reviews
 
-### N1. Adversarial.md Header Claims Tier 1 for All Agents, But Model-Tiers.md Disagrees
+### N1. Layer 3 Stale Callout in part3-enforcement.md (Impact: High — Security Credibility)
+
+`admiral/part3-enforcement.md` line 296 contains a blockquote callout:
+
+> **Layer 3 (Semantic) is defense-in-depth, not a standalone guarantee.** The quarantine's semantic classification layer uses an LLM classifier, which is inherently probabilistic.
+
+This **directly contradicts** the specification 30 lines above it. Line 266 states Layer 3 has "**None — completely LLM-airgapped**" for LLM involvement. Lines 270-278 describe Layer 3 as using "deterministic NLP techniques" with "zero LLM involvement." The callout at line 296 is a stale fragment from before Layer 3 was redesigned — it describes Layer 4's behavior but labels it Layer 3.
+
+This is the error REVIEW-2.md was attempting to flag but misattributed to `monitor/README.md` (where it doesn't exist). The real contradiction lives in `part3-enforcement.md`. Additionally, line 294 describes the defense as "three-layer" ("deterministic quarantine + LLM advisory + approval gate") when it is a five-layer system, adding further confusion.
+
+**Fix:** Delete or rewrite the blockquote at line 296 to correctly describe Layer 3 as deterministic. Change "three-layer" on line 294 to "five-layer" or restructure to avoid the conflation.
+
+### N2. Section 41 (Data Sensitivity Protocol) Missing from Detailed ToC
+
+`admiral/index.md` files table (line 112) correctly mentions "Sections 36-41" for part11-protocols.md. But the detailed section-by-section ToC (lines 299-303) lists only Sections 36-40, omitting Section 41. The HTML comment in `part11-protocols.md` line 7 also says "Five protocol areas" when there are six.
+
+### N3. "67 Core Agent Definitions" in part4-fleet.md Contradicts index.md
+
+`part4-fleet.md` line 29 says "67 core agent definitions across 12 specialist categories plus 4 command & coordination agents." `index.md` line 229 says "71 core agent definitions." The word "core" means different things — specialists-only in part4, total non-extended in index.md. This ambiguity propagates the stale "67" confusion.
+
+### N4. Adversarial.md Header Claims Tier 1 for All Agents, But Model-Tiers.md Disagrees
 
 `adversarial.md` header states "Model Tier: Tier 1 — Flagship" as a category-level designation. But `model-tiers.md` assigns Simulated User and Persona Agent to **Tier 2**, not Tier 1. The header should say "Varies by agent" or list per-agent tiers.
 
-### N2. "Meta & Autonomous" Category Name Doesn't Match Content
+### N5. "Meta & Autonomous" Category Name Doesn't Match Content
 
 `meta.md` is categorized as "Meta & Autonomous" but none of its 4 agents (Pattern Enforcer, Dependency Sentinel, SEO Crawler, Role Crystallizer) are described as "autonomous" in their Identity sections. The SEO Crawler specifically analyzes the product (not the fleet), making its connection to "Meta" tenuous.
 
-### N3. Engineering Agents Reference Undefined Agents Extensively
+### N6. Engineering Agents Reference Undefined Agents Extensively
 
 Multiple agents in their "Output Goes To" sections reference agents that exist only in extras/ or aren't defined anywhere:
 - "Frontend Implementer," "Backend Implementer" — defined in engineering/ but referenced by name inconsistently
@@ -241,31 +261,31 @@ Multiple agents in their "Output Goes To" sections reference agents that exist o
 - "API Designer," "Database Agent," "Cache Strategist," "Data Engineer," "Dependency Manager," "Migration Agent" — some in engineering/ under different names, others undefined
 - "Internationalization Agent" — referenced in design.md, not defined anywhere
 
-### N4. Governance Agents Have Detection Patterns — a Section Not in Any Template
+### N7. Governance Agents Have Detection Patterns — a Section Not in Any Template
 
 Every governance agent includes a `### Detection Patterns` table with Signal/Threshold/Response columns. This structured section is unique to governance agents and doesn't appear in either template (`agent-example.md` or `agents-example.md`). It should be documented in the template as a governance-specific extension.
 
-### N5. Context Injection Missing Governance Pattern
+### N8. Context Injection Missing Governance Pattern
 
 `fleet/context-injection.md` provides context injection patterns for engineering, quality, and security agents. No injection pattern exists for governance agents — what project-specific context they need (fleet roster, routing rules, quality thresholds) is unspecified.
 
-### N6. Duplicate Escalation Report Templates Still Exist
+### N9. Duplicate Escalation Report Templates Still Exist
 
 REVIEW.md issue #17 flagged two different ESCALATION REPORT templates — one in Section 22 (7 fields) and one in Section 37 (8 fields, adds AGENT, TASK, SEVERITY). Both still exist. Neither is marked as authoritative.
 
-### N7. No Interface Contracts for Domain or Data Agents
+### N10. No Interface Contracts for Domain or Data Agents
 
 `fleet/interface-contracts.md` defines handoff contracts for engineering, quality, security, cross-category, governance, and scale agent pairs. No contracts exist for domain agents (`extras/domain.md`) or data agents (`extras/data.md`). If the Payment & Billing Agent hands off to the Backend Implementer, there is no defined contract for that handoff.
 
-### N8. scale-extended.md Exploratory Count Is Wrong
+### N11. scale-extended.md Exploratory Count Is Wrong
 
 `scale-extended.md` line 7 states "7 of 17 agents are marked [Exploratory]" and "The remaining 10 agents are immediately practical." A grep for `[Exploratory]` finds **8** agents marked (Climate Drift Modeler, Archaeological Stratigrapher, Forward Collapse Projector, Emergent Behavior Detector, Cost Gravity Modeler, Assumption Inversion Agent, Cognitive Load Topologist, Regulatory Surface Mapper). The count should be 8/17 with 9 remaining, not 7/17 with 10 remaining.
 
-### N9. Orchestrator Does Not List Triage Agent as Input Source
+### N12. Orchestrator Does Not List Triage Agent as Input Source
 
 The Triage Agent's entire purpose is classifying and routing work to the Orchestrator (`triage-agent.md` line 18, line 51). But the Orchestrator's Interface Contracts (`orchestrator.md` line 56) only define `Admiral → Orchestrator` as an input source. The Triage Agent → Orchestrator handoff — the fleet's primary work intake path — is not formalized in the Orchestrator's spec.
 
-### N10. Level 2 SQLite Default Embedding Dimension Mismatched
+### N13. Level 2 SQLite Default Embedding Dimension Mismatched
 
 `brain/level2-spec.md` line 152 sets `dimensions: int = 1536` as the default parameter for the query function. But line 88 documents `all-MiniLM-L6-v2` as the recommended local model, which produces 384-dimensional vectors. A user following the local model recommendation would get incorrect query results from the default parameter.
 
@@ -275,7 +295,7 @@ The Triage Agent's entire purpose is classifying and routing work to the Orchest
 
 | Component | Rating | Change | Notes |
 |---|---|---|---|
-| **Admiral Doctrine** (Parts 1-3) | 9.5/10 | — | Unchanged. Crown jewel of the framework. |
+| **Admiral Doctrine** (Parts 1-3) | 9.0/10 | -0.5 | Stale Layer 3 callout in part3-enforcement.md undermines security section. |
 | **Fleet Architecture** (Parts 4, 6) | 8.0/10 | — | Context Curator and Triage Agent remain SPOFs. |
 | **Brain** (Part 5 + brain/) | 9.0/10 | +0.5 | Schema CHECK was never broken (prior reviews were wrong). |
 | **Quality & Failure Modes** (Part 7) | 9.0/10 | — | Detection pattern gaps remain. |
@@ -283,7 +303,7 @@ The Triage Agent's entire purpose is classifying and routing work to the Orchest
 | **Platform** (Part 9) | 7.0/10 | — | Phantom references remain. Weakest section. |
 | **Protocols** (Part 11) | 9.0/10 | +0.5 | Section 37/38 cross-ref fixed. SO 11 adoption gap remains. |
 | **Fleet Catalog** (fleet/) | 8.5/10 | +1.0 | Prompt Anchors fixed. Adversarial Output Goes To fixed. Count partially fixed. scale.md format still divergent. |
-| **Monitor** (monitor/) | 9.0/10 | +1.5 | Layer 3 was NEVER contradictory (REVIEW-2 was wrong). |
+| **Monitor** (monitor/) | 9.0/10 | +1.5 | monitor/README.md is clean (REVIEW-2 cited wrong file). Real Layer 3 error is in part3-enforcement.md. |
 | **Meta-Documents** (REVIEW, RESOLUTION-PLAN) | 6.5/10 | new | REVIEW-2 contains fabricated findings. RESOLUTION-PLAN is stale. |
 | **Appendices** | 9.5/10 | +0.5 | Version string fixed. |
 
@@ -324,4 +344,4 @@ The most consequential remaining issue is the three-way governance minimum contr
 
 ---
 
-*Reviewed 2026-03-07 · Admiral Framework v0.1.0-alpha · 54 files examined · Third-pass review with fact-checking of prior reviews · 5 prior issues confirmed resolved, 2 prior "issues" debunked as reviewer errors, 10 new issues identified*
+*Reviewed 2026-03-07 · Admiral Framework v0.1.0-alpha · 54 files examined · Third-pass review with fact-checking of prior reviews · 5 prior issues confirmed resolved, 1 prior "issue" debunked (brain_status CHECK), 1 misattributed (Layer 3 callout in wrong file), 13 new issues identified*
