@@ -257,7 +257,15 @@ REVIEW.md issue #17 flagged two different ESCALATION REPORT templates — one in
 
 `fleet/interface-contracts.md` defines handoff contracts for engineering, quality, security, cross-category, governance, and scale agent pairs. No contracts exist for domain agents (`extras/domain.md`) or data agents (`extras/data.md`). If the Payment & Billing Agent hands off to the Backend Implementer, there is no defined contract for that handoff.
 
-### N8. Level 2 SQLite Default Embedding Dimension Mismatched
+### N8. scale-extended.md Exploratory Count Is Wrong
+
+`scale-extended.md` line 7 states "7 of 17 agents are marked [Exploratory]" and "The remaining 10 agents are immediately practical." A grep for `[Exploratory]` finds **8** agents marked (Climate Drift Modeler, Archaeological Stratigrapher, Forward Collapse Projector, Emergent Behavior Detector, Cost Gravity Modeler, Assumption Inversion Agent, Cognitive Load Topologist, Regulatory Surface Mapper). The count should be 8/17 with 9 remaining, not 7/17 with 10 remaining.
+
+### N9. Orchestrator Does Not List Triage Agent as Input Source
+
+The Triage Agent's entire purpose is classifying and routing work to the Orchestrator (`triage-agent.md` line 18, line 51). But the Orchestrator's Interface Contracts (`orchestrator.md` line 56) only define `Admiral → Orchestrator` as an input source. The Triage Agent → Orchestrator handoff — the fleet's primary work intake path — is not formalized in the Orchestrator's spec.
+
+### N10. Level 2 SQLite Default Embedding Dimension Mismatched
 
 `brain/level2-spec.md` line 152 sets `dimensions: int = 1536` as the default parameter for the query function. But line 88 documents `all-MiniLM-L6-v2` as the recommended local model, which produces 384-dimensional vectors. A user following the local model recommendation would get incorrect query results from the default parameter.
 
@@ -316,4 +324,4 @@ The most consequential remaining issue is the three-way governance minimum contr
 
 ---
 
-*Reviewed 2026-03-07 · Admiral Framework v0.1.0-alpha · 54 files examined · Third-pass review with fact-checking of prior reviews · 5 prior issues confirmed resolved, 2 prior "issues" debunked as reviewer errors, 8 new issues identified*
+*Reviewed 2026-03-07 · Admiral Framework v0.1.0-alpha · 54 files examined · Third-pass review with fact-checking of prior reviews · 5 prior issues confirmed resolved, 2 prior "issues" debunked as reviewer errors, 10 new issues identified*
