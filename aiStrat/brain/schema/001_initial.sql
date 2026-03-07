@@ -93,7 +93,10 @@ CREATE TABLE audit_log (
     agent_id    TEXT NOT NULL,
     session_id  TEXT NOT NULL,
     project     TEXT NOT NULL,
-    entry_id    UUID REFERENCES entries(id) ON DELETE SET NULL,
+    -- No FK constraint: the audit log is append-only (rules block UPDATE/DELETE),
+    -- which conflicts with ON DELETE SET NULL cascades. The UUID is retained as a
+    -- historical reference — entries may be purged via decay without breaking audit.
+    entry_id    UUID,
     entry_ids   UUID[],
     result      TEXT NOT NULL CHECK (result IN ('success', 'denied', 'error')),
     risk_flags  JSONB NOT NULL DEFAULT '[]',
