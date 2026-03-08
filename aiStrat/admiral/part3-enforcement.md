@@ -291,9 +291,9 @@ This constraint means a compromised Layer 4 (an LLM manipulated by the content i
 
 Hostile content is rejected before it can reach the Brain. Attack patterns are preserved in defanged form as antibody entries, teaching future agents to recognize similar threats.
 
-Additionally, all monitor findings arrive as seed candidates with `"approved": False` — requiring Admiral review before Brain activation. This three-layer defense (deterministic quarantine + LLM advisory + approval gate) prevents automated, subtle, and sophisticated poisoning.
+Additionally, all monitor findings arrive as seed candidates with `"approved": False` — requiring Admiral review before Brain activation. This five-layer defense (structural validation + injection detection + deterministic semantic analysis + LLM advisory + antibody learning) plus the Admiral approval gate prevents automated, subtle, and sophisticated poisoning.
 
-> **Layer 3 (Semantic) is defense-in-depth, not a standalone guarantee.** The quarantine's semantic classification layer uses an LLM classifier, which is inherently probabilistic. It supplements the deterministic checks in Layers 1-2 but cannot guarantee detection of novel adversarial patterns. Layers 1-2 plus the Admiral approval gate provide the primary security boundary. See `monitor/README.md` for Layer 3's specific limitations and mitigations.
+> **No single layer is a standalone guarantee.** Layers 1-3 are deterministic and LLM-airgapped — they provide the load-bearing security boundary. Layer 4 (LLM Advisory) supplements them as an additive rejection net but is inherently probabilistic and cannot guarantee detection of novel adversarial patterns. The Admiral approval gate provides the final human checkpoint. See `monitor/README.md` for each layer's specific limitations and mitigations.
 
 ### Configuration Hygiene
 

@@ -146,6 +146,7 @@ You are the Data Validator. You enforce schema constraints, run data quality che
 ### Output Goes To
 
 - **Orchestrator** routes data quality findings to Data Engineer for fixes
+- **Orchestrator** on task completion
 
 ### Prompt Anchor
 

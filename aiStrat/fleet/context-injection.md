@@ -74,6 +74,26 @@ Before an agent can operate on a project, inject these into Layer 2:
 | Auth architecture | Ground truth | How identity and access work |
 | Data classification | Privacy requirements | What data sensitivity levels exist |
 
+### For Governance Agents (additionally)
+
+| Context Item | Source | Purpose |
+|---|---|---|
+| Fleet roster | `fleet/README.md` + project config | Which agents are deployed, their roles and routing |
+| Agent definitions | Agent definition files | Each agent's Identity, Scope, Does NOT Do — needed to detect drift |
+| Quality thresholds | Boundaries / project config | Acceptable error rates, review pass rates, budget limits |
+| Ground truth conventions | Ground truth | Baseline conventions against which drift is measured |
+| Decision log | Brain / ADRs | Prior decisions that agents must not contradict |
+| Failure mode priorities | `governance.md` ownership table | Which failure modes to prioritize for this project |
+
+### For Domain & Data Agents (additionally)
+
+| Context Item | Source | Purpose |
+|---|---|---|
+| Domain-specific regulations | Legal / compliance docs | PCI, HIPAA, GDPR, accessibility standards applicable to this project |
+| Domain model | Architecture / Ground truth | Business entities, relationships, invariants |
+| Data sources and schemas | Data pipelines / Ground truth | Where data comes from, what shape it has |
+| Integration points | Architecture overview | External APIs, third-party services, vendor contracts |
+
 -----
 
 ## Injection Patterns

@@ -95,7 +95,7 @@ CREATE TABLE entry_links (
 CREATE TABLE audit_log (
     id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     timestamp   TIMESTAMPTZ NOT NULL DEFAULT now(),
-    operation   TEXT NOT NULL CHECK (operation IN ('record', 'query', 'retrieve', 'strengthen', 'supersede', 'audit', 'purge')),
+    operation   TEXT NOT NULL CHECK (operation IN ('record', 'query', 'retrieve', 'strengthen', 'supersede', 'audit', 'purge', 'status')),
     agent_id    TEXT NOT NULL,
     session_id  TEXT NOT NULL,
     project     TEXT NOT NULL,

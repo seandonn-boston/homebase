@@ -276,7 +276,7 @@ Interactive agents receive context from the Admiral in real time. Headless agent
 
 ### Scheduled Agent Operations
 
-Section 11 catalogs three scheduled agent roles (Docs Sync, Quality Review, Dependency Audit) but does not operationalize them. Scheduled agents need:
+Some deployments may include scheduled agent roles (Docs Sync, Quality Review, Dependency Audit). These are not part of the core fleet catalog but represent common operational patterns. Scheduled agents need:
 
 **Trigger configuration:**
 

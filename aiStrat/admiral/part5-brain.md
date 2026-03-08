@@ -386,7 +386,7 @@ The reference implementation format is JSON Web Token (RFC 7519). Implementation
 - This prevents privilege escalation through token sharing.
 
 **Emergency Revocation:**
-- The Emergency Halt Protocol (Section 38) can revoke ALL active tokens fleet-wide in a single action.
+- The Emergency Halt Protocol (Section 37) can revoke ALL active tokens fleet-wide in a single action.
 - Implementation: the identity authority broadcasts a revocation epoch. The Brain MCP server rejects all tokens issued before the revocation epoch timestamp, regardless of their individual `expires_at`.
 - This provides O(1) fleet-wide revocation without enumerating individual tokens.
 

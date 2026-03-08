@@ -97,7 +97,7 @@ The `prompt-anatomy.md` file provides the assembly pattern for building complete
 | Inhuman-Scale Analysis | `agents/scale.md` | 12 | |
 | Release & Developer Platform | `agents/lifecycle.md` | 6 | |
 
-**Core catalog: 67 agent definitions.** Each is independently deployable. Combine as the project demands. Start with the **Core Fleet** below (11 agents) and add specialists only when demonstrated need arises.
+**Core catalog: 71 agent definitions.** Each is independently deployable. Combine as the project demands. Start with the **Core Fleet** below (11 agents) and add specialists only when demonstrated need arises.
 
 An additional **29 extended agents** are held in reserve in `agents/extras/` — domain specialists (7), data & analytics (5), and supplementary scale agents (17). See `agents/extras/README.md` for activation instructions.
 
@@ -123,7 +123,7 @@ beyond what the core fleet handles.
 | 10 | **Hallucination Auditor** | `agents/governance.md` | Governance (always deploy) — detects fabricated facts, false citations |
 | 11 | **Loop Breaker** | `agents/governance.md` | Governance (always deploy) — detects and terminates circular agent loops |
 
-**Do not deploy 67 agents for a project that needs 11.** The administrative cost of
+**Do not deploy 71 agents for a project that needs 11.** The administrative cost of
 configuring, routing, and coordinating a large fleet exceeds the value for most
 projects. Start with the core 11. Add roles when the Orchestrator reports
 routing bottlenecks or when specific domain expertise gaps emerge.
