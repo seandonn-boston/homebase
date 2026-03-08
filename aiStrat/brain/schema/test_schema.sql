@@ -1,3 +1,4 @@
+-- Admiral Framework v0.1.1-alpha
 -- Test-adapted schema: omits pgvector (embedding column + HNSW index)
 -- Everything else is identical to 001_initial.sql
 

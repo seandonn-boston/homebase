@@ -1,7 +1,8 @@
+<!-- Admiral Framework v0.1.1-alpha -->
 # Admiral Framework v0.1.0-alpha — Resolution Plan
 
 **Date:** 2026-03-05
-**Status:** Substantially complete as of 2026-03-07 (see completion notes per item below)
+**Status:** All items resolved as of 2026-03-08. Version bumped to v0.1.1-alpha.
 **Source:** Adversarial review of entire codebase (46 markdown files + 1 SQL schema)
 **Scope:** Spec-internal issues only. Excludes "battle-tested valor" concerns (production validation, competitive benchmarking, adoption proof).
 
@@ -20,30 +21,21 @@ No design decisions needed. Grep, fix, verify.
 
 - **Status:** ✅ Resolved. Part 10 contains Sections 33-35, Part 11 contains Sections 36-41. No collision.
 
-### 1.3 Fix appendices.md wrong section reference
+### 1.3 Fix appendices.md wrong section reference — RESOLVED
 
-- **File:** `admiral/appendices.md:267`
-- **Current:** "Part 7 Configuration File Strategy"
-- **Fix:** Change to "Section 07, Configuration File Strategy (Part 2 — Context)"
-- **Verification:** Read the surrounding context to confirm no other Part/Section conflations.
+- **Status:** ✅ Resolved. References now correctly use "Configuration File Strategy (07)" and "Section 07, Configuration File Strategy (Part 2 — Context)".
 
-### 1.4 Fix Standing Order cross-reference notation
+### 1.4 Fix Standing Order cross-reference notation — RESOLVED
 
-- **File:** `admiral/part11-protocols.md:482`
-- **Current:** "Standing Orders Section 35.4 (Context Honesty) and Section 35.5 (Decision Authority)"
-- **Fix:** "Standing Order 4 (Context Honesty) and Standing Order 5 (Decision Authority)"
-- **Verification:** Grep for "Section 35." to find any other instances of this notation pattern.
+- **Status:** ✅ Resolved. References now use "Standing Order 4 (Context Honesty) and Standing Order 5 (Decision Authority)".
 
 ### 1.5 Fix adversarial.md header tier claim — RESOLVED
 
 - **Status:** ✅ Resolved. Header now reads "Model Tier: Varies by agent (see individual definitions below)".
 
-### 1.6 Add brain_audit to part5-brain.md
+### 1.6 Add brain_audit to part5-brain.md — RESOLVED
 
-- **Files:** `admiral/part5-brain.md` (Section 16), `brain/README.md:8`
-- **Current:** brain/README.md lists 7 MCP tools including `brain_audit`. Part 5 Section 16 lists only 6.
-- **Fix:** Add `brain_audit` tool contract to part5-brain.md Section 16 using the same format as the other six tools. Copy the contract from brain/README.md lines 106-118.
-- **Verification:** Count tools in both files. Must match.
+- **Status:** ✅ Resolved. Part 5 Section 16 now lists all 8 MCP tools (brain_record, brain_query, brain_retrieve, brain_strengthen, brain_supersede, brain_status, brain_audit, brain_purge), matching brain/README.md.
 
 ---
 
@@ -142,16 +134,13 @@ Update `brain/schema/001_initial.sql` to match what the spec promises. Kill the 
 
 ## Pass 3 — Structural Deduplication
 
-### 3.1 Resolve part4-fleet.md roster duplication
+### 3.1 Resolve part4-fleet.md roster duplication — RESOLVED
 
-- **File:** `admiral/part4-fleet.md` (Section 11)
-- **Current:** Lists 31 agents in a "Practical Role Catalog" that is a stale subset of the 67 agents in fleet/.
-- **Action:** Remove the full roster enumeration from part4. Replace with:
-  - A reference to `fleet/README.md` as the canonical agent catalog
-  - The Core Fleet table (11 agents for minimum viable deployment) — this is useful context that belongs in doctrine
-  - The Agent Roster template and principles (role definition format, "Does NOT Do" pattern, routing logic)
-- **Rationale:** Part4 should define how to compose a fleet (principles). Fleet/ should define what's in the catalog (inventory). Currently both try to do both and disagree.
-- **Verification:** Confirm part4 no longer contains agent counts that could go stale. Confirm fleet/README.md is the sole source for the catalog.
+- **Status:** ✅ Resolved. Part 4 Section 11 now contains:
+  - A reference to `fleet/README.md` as the canonical agent catalog (line 29)
+  - The Core Fleet table (11 agents for minimum viable deployment)
+  - Agent Roster template and principles (role definition format, "Does NOT Do" pattern, routing logic)
+  - No stale agent counts — dynamic count deferred to fleet/README.md.
 
 ---
 

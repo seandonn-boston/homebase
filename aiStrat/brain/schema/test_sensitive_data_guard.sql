@@ -1,3 +1,4 @@
+-- Admiral Framework v0.1.1-alpha
 -- ============================================================================
 -- Comprehensive test suite for the Fleet Brain schema
 -- Focus: Sensitive Data Guard trigger + schema constraints + normal operations
