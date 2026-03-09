@@ -44,8 +44,8 @@ part2-context.md - admiral/doctrine - 2026-03-08:
 Four sections: Context Engineering (04) — five dimensions of context (structural,
 temporal, relational, authority, absence); Ground Truth (05) — ontology, naming, tech
 stack; Context Window Strategy (06) — profiles, loading/sacrifice order, progressive
-disclosure; Configuration File Strategy (07) — CLAUDE.md under 150 lines, skills, path
-rules.
+disclosure; Configuration File Strategy (07) — AGENTS.md as canonical source, 150-line
+rule, cross-tool portability, skills, path rules.
 aiStrat/admiral/part2-context.md
 ```
 
