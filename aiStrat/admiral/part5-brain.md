@@ -610,7 +610,7 @@ The Brain does not only learn from the fleet's own experience. The Continuous AI
 | Model/SDK releases | CONTEXT | GitHub Releases API across 11 providers |
 | Official docs, blog posts, RSS announcements | CONTEXT | Provider blogs, RSS feeds, release content URLs |
 | Exemplar tool updates (Claude Code, Aider, Cline, etc.) | PATTERN | 20 tracked repos with watch-for criteria |
-| Agent configuration files (CLAUDE.md, .cursorrules, etc.) | PATTERN | Direct extraction from exemplar repos |
+| Agent configuration files (AGENTS.md, CLAUDE.md, .cursorrules, etc.) | PATTERN | Direct extraction from exemplar repos |
 | Fleet-relevant repos discovered via search | PATTERN | 13 targeted GitHub queries + 8 topic scans |
 | Trending repos gaining traction | PATTERN | Star-surge detection with quality filtering |
 

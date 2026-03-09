@@ -1,0 +1,631 @@
+<!-- Admiral Framework v0.1.1-alpha -->
+# Admiral Framework — File Manifest
+
+**58 files across 14 groups | Last modified: 2026-03-09**
+
+This is the semantic catalog of every file in the Admiral Framework. Each entry describes what the file contains, verified against the source. Update this manifest when files are added, removed, renamed, or when their content changes materially.
+
+---
+
+## Admiral Doctrine (13 files)
+
+```
+index.md - admiral/doctrine - 2026-03-08:
+Master index and entry point. Subtitled "A Workforce Toolkit for Autonomous AI Agent
+Fleets." Defines four adoption levels (Disciplined Solo → Core Fleet → Governed Fleet
+→ Full Framework) with time-to-value and graduation criteria. Links all 11 parts.
+
+Minimum Viable Reading Path (~800 lines total):
+  1. index.md — Glossary + Adoption Levels (shared vocabulary and roadmap)
+  2. part1-strategy.md — Full file (Mission, Boundaries, Success Criteria)
+  3. part3-enforcement.md — Full file (enforcement spectrum: hooks over instructions)
+  4. part11-protocols.md — Section 36 only (Standing Orders: 15 non-negotiable rules)
+  5. appendices.md — Appendix A only (Pre-Flight Checklist: go/no-go gate)
+
+Also includes: operating model ("You are the Admiral"), glossary (~90 terms),
+competitive comparison table (CrewAI/AutoGen/LangGraph, OpenAI Swarm, Anthropic Agent
+SDK, custom orchestration), five unique contributions, three-audience reading guide
+(humans, LLM agents, machines), full table of contents (41 sections + 7 appendices),
+and relationship map to fleet/brain/monitor directories.
+aiStrat/admiral/index.md
+```
+
+```
+part1-strategy.md - admiral/doctrine - 2026-03-08:
+Three sections forming a closed triangle: Mission (01) — project identity, success
+state, stakeholders, phase, and Spec-First Pipeline entry point; Boundaries (02) —
+non-goals, hard constraints, resource budgets, LLM-Last boundary; Success Criteria
+(03) — machine-verifiable definition of done.
+aiStrat/admiral/part1-strategy.md
+```
+
+```
+part2-context.md - admiral/doctrine - 2026-03-08:
+Four sections: Context Engineering (04) — five dimensions of context (structural,
+temporal, relational, authority, absence); Ground Truth (05) — ontology, naming, tech
+stack; Context Window Strategy (06) — profiles, loading/sacrifice order, progressive
+disclosure; Configuration File Strategy (07) — AGENTS.md as canonical source, 150-line
+rule, cross-tool portability, skills, path rules.
+aiStrat/admiral/part2-context.md
+```
+
+```
+part3-enforcement.md - admiral/doctrine - 2026-03-08:
+Three sections: Deterministic Enforcement (08) — the enforcement spectrum (hook /
+instruction / guidance), hook lifecycle events, hook execution model, self-healing
+loops; Decision Authority (09) — four tiers (Enforced, Autonomous, Propose, Escalate);
+Configuration Security (10) — threat model, MCP server auditing, CODEOWNERS.
+aiStrat/admiral/part3-enforcement.md
+```
+
+```
+part4-fleet.md - admiral/doctrine - 2026-03-08:
+Four sections: Fleet Composition (11) — agent roster, Core Fleet, "Does NOT Do"
+boundaries, 5-12 agents; Tool & Capability Registry (12) — per-agent tool lists
+including negative tool list; Model Selection (13) — tier assignment with rationale;
+Protocol Integration (14) — MCP servers, A2A configuration.
+aiStrat/admiral/part4-fleet.md
+```
+
+```
+part5-brain.md - admiral/doctrine - 2026-03-08:
+Three sections: Brain Architecture (15) — three maturity levels (file → SQLite →
+Postgres+pgvector), "Start Simple" principle; Knowledge Protocol (16) — MCP tools,
+zero-trust access control, identity tokens; Intelligence Lifecycle (17) — capture
+triggers, review cadence, cross-project namespace.
+aiStrat/admiral/part5-brain.md
+```
+
+```
+part6-execution.md - admiral/doctrine - 2026-03-08:
+Three sections: Work Decomposition (18) — 40% token budget rule, Spec-First Pipeline,
+chunk entry/exit states; Parallel Execution Strategy (19) — coordination patterns,
+divergence detection; Swarm Patterns (20) — advanced multi-agent topologies beyond
+hierarchical fleet.
+aiStrat/admiral/part6-execution.md
+```
+
+```
+part7-quality.md - admiral/doctrine - 2026-03-08:
+Three sections: Quality Assurance (21) — verification levels, self-healing loops;
+Failure Recovery (22) — recovery ladder with max retries and escalation; Known Agent
+Failure Modes (23) — comprehensive catalog of systematic fleet failure patterns.
+aiStrat/admiral/part7-quality.md
+```
+
+```
+part8-operations.md - admiral/doctrine - 2026-03-08:
+Seven sections: Institutional Memory (24) — five session persistence patterns
+(checkpoint, ledger, handoff, git-based, continuous); Adaptation Protocol (25) — three
+change tiers (Tactical/Strategic/Full Pivot); Cost Management (26); Fleet Health
+Metrics (27); Fleet Scaling & Lifecycle (28); Orchestrator Health Protocol (28b); Inter-
+Fleet Governance (29).
+aiStrat/admiral/part8-operations.md
+```
+
+```
+part9-platform.md - admiral/doctrine - 2026-03-08:
+Four sections: Fleet Observability (30) — four pillars (logs, metrics, traces, agent
+telemetry) with trace visualization examples; CI/CD & Event-Driven Operations (31) —
+event-driven agent definitions, context bootstrapping; Fleet Evaluation & Benchmarking
+(32) — A/B testing, baseline metrics, evaluation cadence; Multi-Modal & Extended
+Capabilities (32b) — computer use, extended thinking, structured outputs, vision.
+aiStrat/admiral/part9-platform.md
+```
+
+```
+part10-admiral.md - admiral/doctrine - 2026-03-08:
+Three sections: Admiral Self-Calibration (33) — bottleneck detection, trust calibration
+per category, growth stages; Human-Expert Routing (34) — expert roster, routing
+triggers, consultation template; Multi-Operator Governance (35) — three operator tiers
+(Owner/Operator/Observer), conflict resolution, operator handoff.
+aiStrat/admiral/part10-admiral.md
+```
+
+```
+part11-protocols.md - admiral/doctrine - 2026-03-08:
+Six protocol areas: Standing Orders (36) — 15 non-negotiable rules; Escalation
+Protocol (37); Handoff Protocol (38); Human Referral Protocol (39); Paid Resource
+Authorization Protocol (40); Data Sensitivity Protocol (41). Concrete formats and
+decision ladders for each.
+aiStrat/admiral/part11-protocols.md
+```
+
+```
+appendices.md - admiral/doctrine - 2026-03-08:
+Seven appendices: Pre-Flight Checklist (A) — per-section verification; Quick-Start
+Sequence (B) — four adoption levels with step-by-step; Worked Example: SaaS Task
+Manager (C) — mission through fleet roster with three governance failure scenarios;
+Case Studies (D) — ungoverned sprint, over-engineered fleet, security-first fleet;
+Platform Integration Patterns (E) — Claude Code, Agent SDK, LangGraph/CrewAI/AutoGen;
+Framework Versioning (F); Implementation Status Map (G) — three implementation
+categories mapped to every component.
+aiStrat/admiral/appendices.md
+```
+
+---
+
+## Fleet Infrastructure (8 files)
+
+```
+README.md - fleet/infrastructure - 2026-03-08:
+Fleet catalog index. 71 core agents (67 specialists + 4 command) plus 29 extended in
+extras/. Organized into generalists and 12 specialist categories. Core Fleet minimum
+of 11 agents. Quick-reference table. Core tenet: "Admiral is the engineering manual.
+Fleet is the parts catalog."
+aiStrat/fleet/README.md
+```
+
+```
+prompt-anatomy.md - fleet/infrastructure - 2026-03-08:
+Five-section system prompt assembly pattern: Identity → Authority → Constraints →
+Knowledge → Task. Ordering rationale (identity primes behavior, task last for recency
+bias). Assembly template and anti-patterns (skipping identity, constraints after task,
+overloading knowledge, vague tasks).
+aiStrat/fleet/prompt-anatomy.md
+```
+
+```
+routing-rules.md - fleet/infrastructure - 2026-03-08:
+Task routing decision tree for the Orchestrator. Three strategies in priority order:
+route by task type (~80 task types mapped to primary/fallback agents), route by file
+ownership (project-specific), escalate ambiguous. Routing constraints (no self-review,
+always include acceptance criteria). Multi-agent pipeline patterns.
+aiStrat/fleet/routing-rules.md
+```
+
+```
+interface-contracts.md - fleet/infrastructure - 2026-03-08:
+Sender-delivers/receiver-returns contracts for all major agent-to-agent handoff
+patterns: engineering, quality, security, cross-category, governance, scale, lifecycle,
+meta/autonomous, adversarial, and domain/data. Contract violation protocol (receiver
+rejects, routes through Orchestrator). Longest fleet file (439 lines).
+aiStrat/fleet/interface-contracts.md
+```
+
+```
+model-tiers.md - fleet/infrastructure - 2026-03-08:
+Four model tiers: Flagship (Tier 1, deepest reasoning), Workhorse (Tier 2, solid code
+gen), Utility (Tier 3, fast/cheap), Economy (Tier 4, batch). Every agent assigned with
+rationale. Promotion/demotion signals. Monitor external signal. Multi-model patterns
+(economy draft + flagship review, cross-model adversarial review).
+aiStrat/fleet/model-tiers.md
+```
+
+```
+context-injection.md - fleet/infrastructure - 2026-03-08:
+Three-layer context stack: Fleet Context (stable), Project Context (per-project), Task
+Context (per-task). Per-category checklists (all agents, engineering, quality, security,
+governance, domain/data). Three injection patterns: configuration file,
+skills/progressive disclosure, ground truth registry. Context budget guidelines with
+priority allocation percentages.
+aiStrat/fleet/context-injection.md
+```
+
+```
+generalists.md - fleet/infrastructure - 2026-03-08:
+Defines the 4 generalist agents: Orchestrator, Triage Agent, Context Curator, Mediator.
+Defines what makes a generalist: system-level view, routing authority, no domain
+execution, escalation receiver. ASCII flow diagram showing generalist interactions.
+aiStrat/fleet/generalists.md
+```
+
+```
+specialists.md - fleet/infrastructure - 2026-03-08:
+Defines the 67 specialist agents across 12 categories. Three defining traits: domain
+depth with complementary awareness, collaborative instinct, and human professional
+referral (with detailed analogies from plumbing, chemistry, electrical, and software).
+Five operating principles.
+aiStrat/fleet/specialists.md
+```
+
+---
+
+## Agent Definitions — Command (4 files)
+
+```
+orchestrator.md - fleet/agents/command - 2026-03-08:
+Full standalone definition for the Orchestrator. Tier 1 Flagship, continuous schedule.
+Context profile, interface contracts (Admiral, Triage, Specialist, QA), decision
+authority table (9 decisions across autonomous/propose/escalate), guardrails.
+aiStrat/fleet/agents/command/orchestrator.md
+```
+
+```
+triage-agent.md - fleet/agents/command - 2026-03-08:
+Full standalone definition for the Triage Agent. Tier 3 Utility, continuous schedule.
+Classifies incoming work by type/priority/complexity and routes to Orchestrator only.
+Confidence-based decision authority (80%+ autonomous, 60-80% propose, <60% escalate).
+aiStrat/fleet/agents/command/triage-agent.md
+```
+
+```
+context-curator.md - fleet/agents/command - 2026-03-08:
+Full standalone definition for the Context Curator. Tier 2 Workhorse, triggered.
+Manages context payloads: compression, load order, sacrifice order. Escalates when
+sacrificing Authority/Constraints sections or loading context for security-sensitive
+agents.
+aiStrat/fleet/agents/command/context-curator.md
+```
+
+```
+mediator.md - fleet/agents/command - 2026-03-08:
+Full standalone definition for the Mediator. Tier 1 Flagship, triggered on conflicts.
+Resolves conflicting outputs between agents. Autonomous for clear Mission alignment,
+escalates security vs. functionality trade-offs and recurring conflicts.
+aiStrat/fleet/agents/command/mediator.md
+```
+
+---
+
+## Agent Definitions — Command Templates (4 files)
+
+```
+orchestrator.md-example - fleet/agents/command/templates - 2026-03-07:
+Project-customization template for the Orchestrator. Same structure as orchestrator.md
+with curly-brace placeholders for project-specific values. Includes expanded guardrails
+with RAG grounding requirements.
+aiStrat/fleet/agents/command/orchestrator.md-example
+```
+
+```
+triage-agent.md-example - fleet/agents/command/templates - 2026-03-07:
+Project-customization template for the Triage Agent. Placeholders for project-specific
+taxonomies and classification concerns.
+aiStrat/fleet/agents/command/triage-agent.md-example
+```
+
+```
+context-curator.md-example - fleet/agents/command/templates - 2026-03-07:
+Project-customization template for the Context Curator. Placeholders for project-
+specific artifact registries and context sources.
+aiStrat/fleet/agents/command/context-curator.md-example
+```
+
+```
+mediator.md-example - fleet/agents/command/templates - 2026-03-07:
+Project-customization template for the Mediator. Placeholders for project-specific
+mediation concerns and conflict resolution priorities.
+aiStrat/fleet/agents/command/mediator.md-example
+```
+
+---
+
+## Agent Definitions — Category Templates (2 files)
+
+```
+agent-example.md - fleet/agents/templates - 2026-03-08:
+Template for creating a single standalone agent definition. Full section structure:
+Context Profile, Interface Contracts, Decision Authority, Context Discovery, Guardrails.
+Placeholder guidance for each section.
+aiStrat/fleet/agents/agent-example.md
+```
+
+```
+agents-example.md - fleet/agents/templates - 2026-03-08:
+Template for creating a multi-agent category file. Lighter structure: identity, scope,
+does-not-do, output routing, context discovery, guardrails, prompt anchor. Optional
+summary table for 5+ agents.
+aiStrat/fleet/agents/agents-example.md
+```
+
+---
+
+## Agent Definitions — Engineering (4 files)
+
+```
+agents.md - fleet/agents/engineering/frontend - 2026-03-08:
+5 Frontend agents: Frontend Implementer, Interaction Designer, Accessibility Auditor,
+Responsive Layout Agent, State Management Agent. All Tier 2. Covers UI components,
+a11y, responsive breakpoints, and client-side state.
+aiStrat/fleet/agents/engineering/frontend/agents.md
+```
+
+```
+agents.md - fleet/agents/engineering/backend - 2026-03-08:
+5 Backend agents: Backend Implementer, API Designer, Database Agent, Queue & Messaging
+Agent, Cache Strategist. All Tier 2. Database Agent has guardrails for DDL review and
+destructive migration prevention.
+aiStrat/fleet/agents/engineering/backend/agents.md
+```
+
+```
+agents.md - fleet/agents/engineering/infrastructure - 2026-03-08:
+4 Infrastructure agents: DevOps Agent, Infrastructure Agent, Containerization Agent,
+Observability Agent. All Tier 2. Infrastructure Agent has guardrails requiring human
+approval for production changes.
+aiStrat/fleet/agents/engineering/infrastructure/agents.md
+```
+
+```
+agents.md - fleet/agents/engineering/cross-cutting - 2026-03-08:
+5 Cross-Cutting agents: Architect (Tier 1), Integration Agent, Migration Agent,
+Refactoring Agent, Dependency Manager. Architect is the only Tier 1 in engineering,
+making structural decisions that constrain all downstream implementation.
+aiStrat/fleet/agents/engineering/cross-cutting/agents.md
+```
+
+---
+
+## Agent Definitions — Specialist Categories (8 files)
+
+```
+quality.md - fleet/agents/specialists - 2026-03-08:
+6 Quality & Testing agents: QA Agent, Unit Test Writer, E2E Test Writer, Performance
+Tester, Chaos Agent, Regression Guardian. All Tier 2. Chaos Agent requires Admiral
+approval for production runs.
+aiStrat/fleet/agents/quality.md
+```
+
+```
+security.md - fleet/agents/specialists - 2026-03-08:
+4 Security & Compliance agents: Security Auditor, Penetration Tester, Compliance Agent,
+Privacy Agent. All Tier 2. Privacy Agent handles GDPR/CCPA data classification, consent
+flows, and data residency.
+aiStrat/fleet/agents/security.md
+```
+
+```
+governance.md - fleet/agents/specialists - 2026-03-08:
+7 Governance agents: Token Budgeter, Drift Monitor, Hallucination Auditor, Bias
+Sentinel, Loop Breaker, Context Health Monitor, Contradiction Detector. Includes
+Authoritative Ownership Table mapping ~20 failure modes to their authoritative owner,
+conflict resolution protocol, and alert deduplication. Marked "always deploy." Largest
+agent file (461 lines).
+aiStrat/fleet/agents/governance.md
+```
+
+```
+design.md - fleet/agents/specialists - 2026-03-08:
+5 Documentation & Design agents: UX Researcher, Design Systems Agent, Copywriter,
+Technical Writer, Diagram Agent. All Tier 2. Covers non-code creative and documentation
+concerns.
+aiStrat/fleet/agents/design.md
+```
+
+```
+lifecycle.md - fleet/agents/specialists - 2026-03-08:
+6 Release & Developer Platform agents: Release Orchestrator, Incident Response Agent
+(Tier 1), Feature Flag Strategist, SDK & Dev Experience Agent, Monorepo Coordinator,
+Contract Test Writer. All Tier 2 except Incident Response (Tier 1 due to production
+pressure).
+aiStrat/fleet/agents/lifecycle.md
+```
+
+```
+meta.md - fleet/agents/specialists - 2026-03-08:
+4 Meta & Autonomous agents: Pattern Enforcer (Tier 3), Dependency Sentinel (Tier 3),
+SEO Crawler (Tier 3), Role Crystallizer (Tier 1). Operate on the fleet/codebase itself,
+not product features. Role Crystallizer detects roster gaps and proposes new agents
+backed by evidence.
+aiStrat/fleet/agents/meta.md
+```
+
+```
+adversarial.md - fleet/agents/specialists - 2026-03-08:
+4 Simulation & Adversarial agents: Simulated User (Tier 2), Devil's Advocate (Tier 1),
+Red Team Agent (Tier 1), Persona Agent (Tier 2). The fleet's challenge layer — stress-
+tests assumptions, surfaces weaknesses, provides adversarial review.
+aiStrat/fleet/agents/adversarial.md
+```
+
+```
+scale.md - fleet/agents/specialists - 2026-03-08:
+12 Inhuman-Scale Analysis agents across 6 sub-categories: Failure & Resilience (3),
+Temporal & Decay (2), Combinatorial (2), Signal Propagation (2), Schema & Semantic (2),
+Capacity (1). All Tier 1 except Capacity Horizon Scanner (Tier 2). Cross-cutting
+standards: confidence calibration, common output JSON schema, audit logging, read-only
+access, secrets handling.
+aiStrat/fleet/agents/scale.md
+```
+
+---
+
+## Agent Definitions — Extras / Reserve (4 files)
+
+```
+README.md - fleet/agents/extras - 2026-03-08:
+Index for reserve agent definitions. Lists 3 extras files with agent counts and 5-step
+activation checklist (copy, update README counts, add routing rules, assign tier,
+register in Orchestrator).
+aiStrat/fleet/agents/extras/README.md
+```
+
+```
+domain.md - fleet/agents/extras - 2026-03-08:
+7 Domain Specialization agents: Internationalization, Authentication & Identity
+Specialist, Search & Relevance, Payment & Billing, Real-time Systems, Media Processing,
+Notification Orchestrator. All Tier 2. Payment & Billing has PCI compliance guardrails.
+Held in reserve for domain-specific projects.
+aiStrat/fleet/agents/extras/domain.md
+```
+
+```
+data.md - fleet/agents/extras - 2026-03-08:
+5 Data & Analytics agents: Data Engineer, Analytics Implementer, ML Engineer, Data
+Validator (Tier 3), Visualization Agent. Held in reserve for projects with data
+pipeline, ML, or analytics requirements.
+aiStrat/fleet/agents/extras/data.md
+```
+
+```
+scale-extended.md - fleet/agents/extras - 2026-03-08:
+17 supplementary scale agents across 7+ sub-categories: Planetary (3),
+Temporal/Archaeology (2), Signal/Boundary (1), Emergent Behavior (2),
+Resource/Economic (2), Schema/Semantic (2), Threat/Resilience (1), Cognitive (1),
+Regulatory (1), Transformation/Pipeline (2). 8 of 17 marked [Exploratory].
+aiStrat/fleet/agents/extras/scale-extended.md
+```
+
+---
+
+## Brain / Knowledge System (6 files)
+
+```
+README.md - brain/architecture - 2026-03-08:
+Architecture overview for the Brain — the fleet's durable semantic memory. Postgres +
+pgvector. MCP server with 8 tools (brain_record, brain_query, brain_retrieve,
+brain_strengthen, brain_supersede, brain_status, brain_audit, brain_purge) with full
+parameter/return/error contracts. Zero-trust access control, sensitivity classification,
+pluggable embedding interface.
+aiStrat/brain/README.md
+```
+
+```
+level1-spec.md - brain/maturity-levels - 2026-03-08:
+Level 1 Brain: file-based JSON knowledge store. Filesystem + git only, no
+infrastructure. Entry format (7 required fields), directory structure (.brain/project/),
+naming convention (timestamp-category-slug.json), shell wrapper, grep-based retrieval.
+Graduate to Level 2 when missed retrievals exceed 30% over 2 weeks. Includes
+compatibility mapping to Level 3 Postgres columns.
+aiStrat/brain/level1-spec.md
+```
+
+```
+level2-spec.md - brain/maturity-levels - 2026-03-08:
+Level 2 Brain: SQLite + embeddings. Vector similarity search without infrastructure.
+Full SQLite schema (entries, entry_links, audit_log), embedding generation examples
+(OpenAI text-embedding-3-small or local MiniLM), cosine similarity retrieval, Level 1
+migration script. Graduate on concurrent access contention, cross-project needs,
+>500ms retrieval latency, or access control requirements.
+aiStrat/brain/level2-spec.md
+```
+
+```
+001_initial.sql - brain/schema - 2026-03-08:
+Production Postgres + pgvector schema. Three tables: entries (UUID PK, project,
+category, title, content, vector(1536), JSONB metadata, provenance, sensitivity,
+strengthening signals, purge support), entry_links (typed: supports/contradicts/
+supersedes/elaborates/caused_by), audit_log (append-only with rules blocking
+UPDATE/DELETE). HNSW index, GIN index, sensitive data guard trigger (rejects emails,
+SSNs, AWS keys, connection strings, PII metadata keys), updated_at trigger.
+aiStrat/brain/schema/001_initial.sql
+```
+
+```
+test_schema.sql - brain/schema - 2026-03-08:
+Test-adapted schema without pgvector (no embedding column or HNSW index). Everything
+else identical to 001_initial.sql including sensitive data guard trigger. For
+environments without the pgvector extension installed.
+aiStrat/brain/schema/test_schema.sql
+```
+
+```
+test_sensitive_data_guard.sql - brain/schema - 2026-03-08:
+Comprehensive test suite for the Brain schema. ~60 tests across 12 parts: normal use
+cases (17 should-succeed), sensitive data rejection (17 should-fail for emails/SSNs/AWS
+keys/connection strings/metadata keys), edge cases (false positives, special
+characters), update path, schema constraints (invalid category/sensitivity/
+authority_tier, nulls), entry links, audit log immutability, supersession chains,
+cascade behavior, updated_at trigger, defaults, and purge support. Uses helper
+functions for structured pass/fail tracking. (920 lines.)
+aiStrat/brain/schema/test_sensitive_data_guard.sql
+```
+
+---
+
+## Monitor / Ecosystem Intelligence (1 file)
+
+```
+README.md - monitor/architecture - 2026-03-08:
+Architecture spec for the Continuous AI Landscape Monitor. Automated ecosystem
+surveillance with a five-layer immune system (quarantine): Structural (schema
+enforcement), Injection (70+ regex patterns with encoding normalization), Deterministic
+Semantic (TF-IDF + Bayesian classifier, LLM-airgapped), LLM Advisory (can only REJECT,
+never approve), Antibodies (converts attacks into Brain FAILURE entries). Intelligence
+sources: 11+ model providers, 20+ tracked repos, RSS feeds. Fail-closed semantics.
+Daily/weekly/manual scan cadence.
+aiStrat/monitor/README.md
+```
+
+---
+
+## Review & Governance Artifacts (6 files)
+
+```
+REVIEW.md - project/review - 2026-03-08:
+First independent review by Claude Opus 4.6. Rated 8.8/10 (revised from 9.0). Weighted
+scoring across 7 dimensions (Conceptual Integrity 9.5, Completeness 9.0, Practical
+Usability 8.0, Internal Consistency 8.0, Security Model 9.5, Production Readiness 7.0).
+35 issues identified across 5 severity tiers. Reviewed against v0.1.0-alpha.
+aiStrat/REVIEW.md
+```
+
+```
+REVIEW-2.md - project/review - 2026-03-08:
+Second independent file-by-file review by Claude Opus 4.6. Rated 8.5/10. Granular
+per-file scores across all 54 files. Contains a supersession warning: includes a
+fabricated critical finding (Layer 3 LLM contradiction attributed to monitor/README.md
+where no such text exists). Reviewed against v0.1.0-alpha. Superseded by REVIEW-3.md.
+aiStrat/REVIEW-2.md
+```
+
+```
+REVIEW-3.md - project/review - 2026-03-08:
+Third-pass review by Claude Opus 4.6. Rated 8.9/10. Verifies every claim in prior
+reviews against actual files, flags factually incorrect prior claims, identifies
+resolved issues, and surfaces new issues. Authoritative review — fact-checked against
+source files. Reviewed against v0.1.0-alpha.
+aiStrat/REVIEW-3.md
+```
+
+```
+RESOLUTION-PLAN.md - project/review - 2026-03-08:
+Resolution tracker for all issues from adversarial review (46 markdown + 1 SQL schema).
+Spec-internal issues only. All items resolved as of 2026-03-08. Version bumped from
+v0.1.0-alpha to v0.1.1-alpha. Multi-pass structure: Pass 1 (data integrity), onward
+through design decisions.
+aiStrat/RESOLUTION-PLAN.md
+```
+
+```
+CAPITALIZATION-PLAN.md - project/review - 2026-03-08:
+Strategic plan for extracting value from the Admiral Framework. Evaluates greenfield vs.
+existing project adoption — recommends existing-first then greenfield. Phase 1 retrofit
+timeline: Week 1 Level 1 (Mission + Boundaries + hooks + Standing Orders), Weeks 2-3
+Level 2 (5-8 agents, routing rules, interface contracts, file-based checkpoints), Weeks
+4+ Level 3 (governance agents, Brain Level 1). Phase 2 greenfield path. Three-tier
+success criteria: minimum proof, strong proof, full validation.
+aiStrat/CAPITALIZATION-PLAN.md
+```
+
+```
+v0.2.0-alpha-architecture.md - project/roadmap - 2026-03-08:
+Architecture decision document for v0.2.0-alpha. Seven open design questions from the
+v0.1.x audit: Orchestrator failover (1), Identity authority SPOF (2), Governance self-
+monitoring (3), Hook configuration format spec (4), Attack corpus bootstrapping (5),
+Handoff protocol JSON schema (6), Model API outage recovery (7). Three candidate
+solutions per item with [Recommended] marked.
+aiStrat/v0.2.0-alpha-architecture.md
+```
+
+---
+
+## Configuration (3 files)
+
+```
+AGENTS.md - project/config - 2026-03-09:
+Canonical, model-agnostic instruction file for any AI coding agent. Contains project
+overview, three-pillar repository structure, key entry points table (12 use-case → file
+mappings), versioning rules, working conventions, and 7 design principles (hooks over
+instructions, zero-trust, defense in depth, context is currency, progressive adoption,
+specification as product, tool-agnostic by default). This is the single source of truth
+for project instructions — tool-specific files (CLAUDE.md, etc.) point here.
+aiStrat/AGENTS.md
+```
+
+```
+CLAUDE.md - project/config - 2026-03-09:
+Claude Code entry point. Slim pointer to AGENTS.md plus Claude Code-specific
+configuration: .claude/ directory conventions, skills, path-scoped rules, agent
+definitions, hooks, and subagent usage. Exists because Claude Code does not natively
+read AGENTS.md (as of March 2026). ~20 lines.
+aiStrat/CLAUDE.md
+```
+
+```
+settings.local.json - project/config - 2026-03-05:
+Claude Code local settings. Whitelists bash commands: wc, python, grep, xargs cat, pip
+install, pytest, quality_check, find, rm, mv.
+aiStrat/.claude/settings.local.json
+```

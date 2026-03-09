@@ -128,7 +128,7 @@ Content flagged by the classifier is rejected and routed to the antibody layer (
 |---|---|---|
 | **Model/SDK releases** | New versions from 11+ providers (Anthropic, OpenAI, Google, Meta, Mistral, DeepSeek, xAI, etc.) | CONTEXT |
 | **Exemplar tool updates** | Changes to 20+ tracked repos (Claude Code, Aider, Cline, Cursor, etc.) | PATTERN |
-| **Agent configuration files** | CLAUDE.md, .cursorrules, and equivalent configs extracted from exemplar repos | PATTERN |
+| **Agent configuration files** | AGENTS.md, CLAUDE.md, .cursorrules, and equivalent configs extracted from exemplar repos | PATTERN |
 | **Trending repos** | Star-surge detection with quality filtering across targeted GitHub searches | PATTERN |
 | **RSS/blog feeds** | Provider blogs, announcement feeds, documentation updates | CONTEXT |
 | **Web content** | Full-text extraction from release notes, blog posts, documentation pages | CONTEXT |

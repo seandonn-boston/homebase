@@ -63,7 +63,7 @@ One sentence: what the project is. One sentence: what success looks like. This a
 Non-goals. Hard constraints. Tech stack with versions. File scope boundaries. Quality floor. LLM-Last boundary. This is the highest-value artifact — it prevents every future instance of scope creep.
 
 **Step 3: Classify your constraints (Section 08)**
-Go through your existing CLAUDE.md (or create one). For each rule, ask: "If this is violated, does it matter?" If yes → it should be a hook. If no → it can stay as an instruction. Implement the hooks.
+Go through your existing AGENTS.md (or create one). For each rule, ask: "If this is violated, does it matter?" If yes → it should be a hook. If no → it can stay as an instruction. Implement the hooks.
 
 **Step 4: Load Standing Orders (Section 35)**
 The 15 non-negotiable rules. Pick the 5 most relevant to your project and add them to your agent's standing context. Don't load all 15 on day one — that's context stuffing.
@@ -112,7 +112,7 @@ Once Phase 1 has proven the framework, start a new project with Admiral from day
 ### Greenfield adoption path:
 
 1. Mission + Boundaries + Success Criteria (30 min)
-2. CLAUDE.md + hooks (30 min)
+2. AGENTS.md + hooks (30 min)
 3. Fleet composition + routing (2 hours)
 4. First task decomposition using spec-first pipeline (1 hour)
 5. Execute Level 2. Graduate to Level 3 when evidence supports it.
