@@ -1,3 +1,4 @@
+<!-- Admiral Framework v0.1.1-alpha -->
 # Brain Level 2: SQLite + Embeddings
 
 **Semantic search without infrastructure overhead.**

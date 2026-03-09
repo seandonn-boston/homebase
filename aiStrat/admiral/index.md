@@ -1,8 +1,9 @@
+<!-- Admiral Framework v0.1.1-alpha -->
 # THE FLEET ADMIRAL FRAMEWORK
 
 **A Workforce Toolkit for Autonomous AI Agent Fleets**
 
-v0.1.0-alpha · March 2026
+v0.1.1-alpha · March 2026
 
 -----
 

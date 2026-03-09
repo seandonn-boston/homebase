@@ -1,3 +1,4 @@
+<!-- Admiral Framework v0.1.1-alpha -->
 # PART 6 — EXECUTION
 
 *How work gets planned, parallelized, and completed.*

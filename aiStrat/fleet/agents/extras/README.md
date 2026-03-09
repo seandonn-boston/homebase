@@ -1,3 +1,4 @@
+<!-- Admiral Framework v0.1.1-alpha -->
 # Extended Agent Catalog
 
 These agent specifications are stashed here for reference. They are available for deployment when specific project needs arise but are not part of the core fleet catalog. Each is a fully specified agent definition — move it back to the main `agents/` directory when your project needs it.

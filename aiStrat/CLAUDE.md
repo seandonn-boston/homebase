@@ -1,3 +1,4 @@
+<!-- Admiral Framework v0.1.1-alpha -->
 # CLAUDE.md
 
 This file provides guidance to Claude Code (claude.ai/code) when working with this repository.
@@ -32,12 +33,12 @@ aiStrat is the **Admiral Framework** — a comprehensive specification for AI ag
 
 ## Versioning
 
-- **Current version: v0.1.0-alpha** (pre-release, not yet published)
+- **Current version: v0.1.1-alpha** (pre-release, not yet published)
 - The framework uses [semantic versioning](https://semver.org/) with pre-release labels: `MAJOR.MINOR.PATCH[-label]`
-- The authoritative version string lives in `admiral/index.md` (line 5). All other version references must match it.
-- **Version appears in exactly 2 places in source files:** `admiral/index.md` and `admiral/appendices.md` (Appendix F — Version Policy). Do not add version labels to other files.
-- Review artifacts (`REVIEW.md`, `RESOLUTION-PLAN.md`) reference the version they reviewed. Keep these in sync when the version bumps.
-- When making changes, verify no stale version strings exist: `grep -r "v[0-9]\+\.[0-9]" aiStrat/ --include="*.md"` should show only the current version.
+- The authoritative version string lives in `admiral/index.md` (line 6). All other version references must match it.
+- **Version appears in 3 locations:** `admiral/index.md` (line 6, display version), `admiral/appendices.md` (Appendix F footer), and as an HTML comment `<!-- Admiral Framework vX.Y.Z-label -->` on line 1 of every `.md` file (or SQL comment `-- Admiral Framework vX.Y.Z-label` on line 1 of every `.sql` file).
+- When bumping versions, update all markers: `grep -rn "v0\.[0-9]" aiStrat/ --include="*.md" --include="*.sql"` should show only the current version (except review artifacts which reference the version they reviewed).
+- Review artifacts (`REVIEW.md`, `REVIEW-2.md`, `REVIEW-3.md`, `RESOLUTION-PLAN.md`) reference the version they reviewed in their body text. Their line-1 HTML comment carries the current framework version; their body text preserves the reviewed version for historical accuracy.
 
 ## Working With This Repository
 

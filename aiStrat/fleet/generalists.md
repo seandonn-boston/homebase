@@ -1,3 +1,4 @@
+<!-- Admiral Framework v0.1.1-alpha -->
 # Generalists
 
 **Overhead and coordination agents that keep the fleet operational.**

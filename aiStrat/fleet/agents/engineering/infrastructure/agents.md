@@ -1,3 +1,4 @@
+<!-- Admiral Framework v0.1.1-alpha -->
 # Infrastructure Engineering Agents
 
 **Category:** Engineering — Infrastructure

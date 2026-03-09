@@ -1,3 +1,4 @@
+<!-- Admiral Framework v0.1.1-alpha -->
 # Admiral Framework v0.1.0-alpha — Third-Pass Review & Assessment
 
 **Reviewer:** Claude Opus 4.6
