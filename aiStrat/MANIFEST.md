@@ -1,7 +1,7 @@
-<!-- Admiral Framework v0.1.1-alpha -->
+<!-- Admiral Framework v0.2.0-alpha -->
 # Admiral Framework — File Manifest
 
-**58 files across 14 groups | Last modified: 2026-03-09**
+**62 files across 17 groups | Last modified: 2026-03-09**
 
 This is the semantic catalog of every file in the Admiral Framework. Each entry describes what the file contains, verified against the source. Update this manifest when files are added, removed, renamed, or when their content changes materially.
 
@@ -590,13 +590,66 @@ aiStrat/CAPITALIZATION-PLAN.md
 ```
 
 ```
-v0.2.0-alpha-architecture.md - project/roadmap - 2026-03-08:
-Architecture decision document for v0.2.0-alpha. Seven open design questions from the
-v0.1.x audit: Orchestrator failover (1), Identity authority SPOF (2), Governance self-
-monitoring (3), Hook configuration format spec (4), Attack corpus bootstrapping (5),
-Handoff protocol JSON schema (6), Model API outage recovery (7). Three candidate
-solutions per item with [Recommended] marked.
+v0.2.0-alpha-architecture.md - project/roadmap - 2026-03-09:
+Architecture decision document for v0.2.0-alpha. Seven design questions from the v0.1.x
+audit — all resolved in v0.2.0-alpha: Orchestrator failover (1, Option B+A heartbeat),
+Identity authority SPOF (2, Option B+A separation), Governance self-monitoring (3, A+B
+two-layer), Hook configuration format (4, Option B manifest+A future registry), Attack
+corpus bootstrapping (5, Option B feedback+A seed), Handoff protocol schema (6, Option B
+dual-format), Model API outage recovery (7, Option B tiered+A abstraction).
 aiStrat/v0.2.0-alpha-architecture.md
+```
+
+---
+
+## Handoff Schema (1 file)
+
+```
+handoff/v1.schema.json - handoff/schema - 2026-03-09:
+Canonical JSON Schema for the handoff protocol (Section 38). Defines required fields
+(from, to, via, task, deliverable, acceptance_criteria) and optional fields (context_files,
+constraints, assumptions, open_questions, metadata for domain extensions, session_handoff).
+Dual-format: JSON is canonical for validation; text rendering for human/agent consumption.
+Interface contracts extend the base schema via the metadata field using $ref.
+aiStrat/handoff/v1.schema.json
+```
+
+---
+
+## Attack Corpus (1 file)
+
+```
+attack-corpus/README.md - attack-corpus/specification - 2026-03-09:
+Attack corpus specification and seed scenarios. Entry schema for corpus entries with fields:
+id, category, source, trigger, expected/actual behavior, severity, defenses, testing
+metadata. 15 seed scenarios covering authority spoofing (4), credential fabrication (3),
+behavior manipulation (3), failure scenarios (3), and chaos scenarios (2). Three-source
+feedback pipeline (Red Team Agent, Incident Response Agent, Chaos Agent). Storage strategy
+for Level 1 (file-based) and Level 2+ (Brain ATTACK_CORPUS category).
+aiStrat/attack-corpus/README.md
+```
+
+---
+
+## Hook Ecosystem (2 files)
+
+```
+hooks/README.md - hooks/specification - 2026-03-09:
+Hook ecosystem specification. Manifest-first design: every hook ships with
+hook.manifest.json. Directory convention (hooks/[hook-name]/), runtime lifecycle
+(discovery, dependency resolution, execution order), contract versioning, future
+extension path to schema registry (v0.3.0+). Reference manifests for 7 core hooks.
+aiStrat/hooks/README.md
+```
+
+```
+hooks/manifest.schema.json - hooks/schema - 2026-03-09:
+JSON Schema for hook manifest files. Validates name (lowercase alphanumeric), version
+(semver), events (PreToolUse, PostToolUse, PreCommit, PostCommit, SessionStart,
+TaskCompleted, PrePush, Periodic), timeout_ms (100-300000), requires (dependency list),
+input_contract (version string), description, and async flag. Used by runtime for hook
+discovery and dependency resolution at SessionStart.
+aiStrat/hooks/manifest.schema.json
 ```
 
 ---

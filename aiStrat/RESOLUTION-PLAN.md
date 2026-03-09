@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.1.1-alpha -->
+<!-- Admiral Framework v0.2.0-alpha -->
 # Admiral Framework v0.1.0-alpha — Resolution Plan
 
 **Date:** 2026-03-05

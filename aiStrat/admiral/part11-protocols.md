@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.1.1-alpha -->
+<!-- Admiral Framework v0.2.0-alpha -->
 # PART 11 — PROTOCOLS
 
 *The universal operating rules every agent follows.*
@@ -412,6 +412,30 @@ NEXT SESSION SHOULD:
 CRITICAL CONTEXT:
 [Information the next session absolutely must have loaded]
 ```
+
+### Canonical JSON Schema
+
+The handoff format above is the **human-readable rendering** of a canonical JSON schema defined in `handoff/v1.schema.json`. The JSON schema is the machine-parseable representation used for validation and tooling; the text format is auto-generated from the JSON for agent prompts and human review.
+
+**Dual-format design:**
+
+| Representation | Purpose | Consumed By |
+|---|---|---|
+| JSON (`handoff/v1.schema.json`) | Validation, tooling, analytics, programmatic audit | Hooks, governance agents, tooling |
+| Text (the `HANDOFF` block above) | Human readability, agent prompts | Agents, human reviewers |
+
+Agents continue to see and produce the text format. The runtime handles JSON serialization/deserialization transparently.
+
+**Validation hooks:**
+
+- `PostToolUse` hook on the Orchestrator: validates outbound handoffs against `handoff/v1.schema.json` before delivery to receiving agents. Rejects malformed handoffs with specific field-level errors.
+- `PreToolUse` hook on receiving agents: validates inbound handoffs. Agents reject handoffs that fail schema validation rather than attempting to process incomplete data.
+
+**Schema versioning:** `handoff/v1` is the initial version. Breaking changes (new required fields, removed fields, type changes) require a new version (`handoff/v2`) with migration documentation. Non-breaking additions (new optional fields) are permitted within v1.
+
+**Domain extensions:** Interface contracts (`fleet/interface-contracts.md`) extend the base schema via the `metadata` field. Domain-specific handoff requirements (governance alert fields, security audit fields, etc.) are defined as JSON Schema fragments that extend the base schema through `$ref`. See interface-contracts.md for the extension mechanism.
+
+**Backward compatibility:** This is a non-breaking addition. Existing handoff patterns continue to work. The JSON schema formalizes the structure that was already implicit in the text format. Progressive adoption: teams can validate handoffs against the schema immediately; full dual-format rendering can be adopted incrementally.
 
 -----
 

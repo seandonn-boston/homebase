@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.1.1-alpha -->
+<!-- Admiral Framework v0.2.0-alpha -->
 # Release & Developer Platform Agents
 
 **Category:** Release & Developer Platform
@@ -74,6 +74,7 @@ You are the Incident Response Agent. You execute structured incident triage duri
 - Preserve evidence for postmortem analysis
 - Reconstruct incident timeline
 - Generate structured postmortem documents
+- Extract failure scenarios from post-mortems and write them as attack corpus entries (Brain `ATTACK_CORPUS` category) for use by the Chaos Agent and Monitor quarantine layer
 
 ### Does NOT Do
 

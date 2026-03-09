@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.1.1-alpha -->
+<!-- Admiral Framework v0.2.0-alpha -->
 # APPENDICES
 
 -----
@@ -488,6 +488,6 @@ This appendix maps every major framework component to its real-world implementat
 
 -----
 
-*The Fleet Admiral Framework · v0.1.1-alpha*
+*The Fleet Admiral Framework · v0.2.0-alpha*
 
 *Context is the currency of autonomous AI. The Brain is where that currency compounds.*

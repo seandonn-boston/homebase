@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.1.1-alpha -->
+<!-- Admiral Framework v0.2.0-alpha -->
 # Governance Agents
 
 **Category:** Governance
@@ -32,6 +32,7 @@ You are the Token Budgeter. You track token consumption across every agent, ever
 - Recommend model tier demotions where output quality allows (economy-tier first draft, flagship review)
 - Track the LLM-Last principle — flag tasks where deterministic tools could replace LLM calls
 - Produce cost reports: per-session, per-phase, per-agent breakdowns with trends
+- Track degraded-mode token spend separately — when agents operate on fallback models per API Resilience policy (model-tiers.md), report degraded spend as a distinct line item in cost reports
 
 ### Does NOT Do
 
@@ -56,6 +57,7 @@ You are the Token Budgeter. You track token consumption across every agent, ever
 | Cost concentration | Single agent consuming >40% of session budget | Report to Admiral with demotion recommendation |
 | LLM waste | Tasks solvable by deterministic tools using LLM calls | Flag for LLM-Last optimization |
 | Cost blindness | Token counts tracked but dollar amounts not surfaced | Generate dollar-denominated cost report |
+| Degraded-mode cost overrun | Agents running on fallback models consuming more tokens due to lower capability | Alert Admiral with degraded-mode cost delta; recommend primary recovery or task deferral |
 
 ### Prompt Anchor
 
@@ -414,7 +416,16 @@ When two or more governance agents flag the same incident:
 
 ### Orchestrator Degradation Escalation
 
-Governance agents default to routing through the Orchestrator. When governance agents detect **Orchestrator degradation** (Context Health Monitor detecting instruction decay in the Orchestrator, Drift Monitor detecting scope creep in routing decisions, Loop Breaker detecting circular handoffs originating from the Orchestrator), they must route findings **directly to the Admiral**, bypassing the degraded Orchestrator. This prevents the Orchestrator from processing reports about its own degradation. Governance agents should fall back to direct Admiral escalation whenever the Orchestrator is the subject of a governance finding.
+Governance agents default to routing through the Orchestrator. When governance agents detect **Orchestrator degradation**, they must route findings **directly to the Admiral**, bypassing the degraded Orchestrator. This prevents the Orchestrator from processing reports about its own degradation.
+
+**Detection mechanisms:**
+
+- **Heartbeat failure:** Any governance agent tracking the Orchestrator's heartbeat (emitted every 10 seconds per orchestrator.md Liveness Protocol) can detect unavailability. Trigger: 3 consecutive missed heartbeats over 30 seconds.
+- **Behavioral degradation:** Context Health Monitor detecting instruction decay in the Orchestrator, Drift Monitor detecting scope creep in routing decisions, Loop Breaker detecting circular handoffs originating from the Orchestrator.
+
+**Escalation path:** On heartbeat failure, the detecting governance agent alerts the Admiral directly, triggering **Fallback Decomposer Mode** (part10-admiral.md, Section 33). The Admiral performs coarse-grained task decomposition (1–3 macro-tasks routed to Tier 1 specialists) until the Orchestrator recovers. See orchestrator.md Failover Protocol for the full sequence.
+
+Governance agents should fall back to direct Admiral escalation whenever the Orchestrator is the subject of a governance finding.
 
 ### Alert Deduplication
 
@@ -458,3 +469,80 @@ The Orchestrator maintains a **governance incident log** with a 15-minute dedupl
 | **Contradiction Detector** | Internal consistency across agents | Inter-agent contradictions, ground truth violations, assumption divergence |
 
 **Minimum deployment at Adoption Level 3: Token Budgeter, Hallucination Auditor, Loop Breaker** (matching the Core Fleet "always deploy" set in `fleet/README.md`). Add remaining governance agents as fleet size and risk warrant — all seven are recommended at Level 3 and required at Level 4. At Levels 1-2, the Admiral assumes these responsibilities directly. Together, these seven agents operationalize the 20 documented failure modes from the Admiral Framework into continuous, active detection.
+
+-----
+
+## Governance Self-Monitoring
+
+Nothing monitors the governance agents themselves. A silent failure in the Drift Monitor — where it stops detecting drift but continues emitting heartbeats — would go undetected until the unmonitored drift compounds into visible damage. This section establishes two layers of self-monitoring: liveness (are governance agents running?) and correctness (are they producing valid findings?).
+
+### Layer 1: Governance Heartbeat
+
+Each governance agent emits a structured heartbeat on a configurable interval (default: 60 seconds during active monitoring). The heartbeat routes **directly to the Admiral** — it does not pass through the Orchestrator, avoiding circular dependency when governance agents are monitoring the Orchestrator itself.
+
+**Heartbeat format:**
+
+```json
+{
+  "agent": "[governance-agent-name]",
+  "status": "alive",
+  "last_detection_timestamp": "ISO 8601",
+  "findings_since_last_heartbeat": 0,
+  "confidence_self_assessment": 0.85
+}
+```
+
+| Field | Purpose |
+|---|---|
+| `status` | Liveness indicator |
+| `last_detection_timestamp` | When the agent last produced a finding (long gaps may indicate degradation) |
+| `findings_since_last_heartbeat` | Volume indicator — both zero and spikes are informative |
+| `confidence_self_assessment` | Agent's own assessment of detection capability (0.0–1.0). A Drift Monitor that cannot access Ground Truth should report low confidence. |
+
+**Failure detection:**
+- 2 consecutive missed heartbeats → Admiral alert via the `governance_heartbeat_monitor` hook (Section 08).
+- `confidence_self_assessment < 0.5` → Admiral alert even if heartbeat is present (alive but degraded).
+
+### Layer 2: Cross-Governance Audit Rotation
+
+Heartbeats detect liveness but not correctness. A governance agent could be alive, emitting heartbeats, and producing findings — but the findings could be wrong, miscalibrated, or missing obvious issues. The cross-governance audit rotation catches quality degradation.
+
+**Schedule:** Weekly rotation where each governance agent audits one other governance agent's recent outputs. The rotation ensures every agent is audited by a *different* agent each cycle.
+
+**Rotation matrix (7-week cycle):**
+
+| Week | Token Budgeter audits → | Drift Monitor audits → | Hallucination Auditor audits → | Bias Sentinel audits → | Loop Breaker audits → | Context Health Monitor audits → | Contradiction Detector audits → |
+|---|---|---|---|---|---|---|---|
+| 1 | Drift Monitor | Hallucination Auditor | Bias Sentinel | Loop Breaker | Context Health Monitor | Contradiction Detector | Token Budgeter |
+| 2 | Hallucination Auditor | Bias Sentinel | Loop Breaker | Context Health Monitor | Contradiction Detector | Token Budgeter | Drift Monitor |
+| 3 | Bias Sentinel | Loop Breaker | Context Health Monitor | Contradiction Detector | Token Budgeter | Drift Monitor | Hallucination Auditor |
+| 4 | Loop Breaker | Context Health Monitor | Contradiction Detector | Token Budgeter | Drift Monitor | Hallucination Auditor | Bias Sentinel |
+| 5 | Context Health Monitor | Contradiction Detector | Token Budgeter | Drift Monitor | Hallucination Auditor | Bias Sentinel | Loop Breaker |
+| 6 | Contradiction Detector | Token Budgeter | Drift Monitor | Hallucination Auditor | Bias Sentinel | Loop Breaker | Context Health Monitor |
+| 7 | Token Budgeter | Drift Monitor | Hallucination Auditor | Bias Sentinel | Loop Breaker | Context Health Monitor | Contradiction Detector |
+
+After week 7, the cycle repeats. Every governance agent audits every other governance agent exactly once per cycle.
+
+**Audit scope:** Review the audited agent's last 5 findings (or all findings in the period if fewer than 5). Assess:
+
+1. **Were findings valid?** Do the flagged issues actually exist?
+2. **Were obvious issues missed?** Review the same inputs — did the agent fail to detect something it should have caught?
+3. **Is the detection methodology still calibrated?** Are thresholds appropriate? Are patterns current?
+
+**Audit report format:**
+
+```
+GOVERNANCE AUDIT REPORT
+=======================
+AUDITOR:                 [auditing governance agent]
+SUBJECT:                 [audited governance agent]
+PERIOD:                  [date range]
+FINDINGS REVIEWED:       [count]
+VALID FINDINGS:          [count]
+FALSE POSITIVES:         [count with descriptions]
+MISSED ISSUES:           [count with descriptions]
+CALIBRATION ASSESSMENT:  [Healthy | Drifting | Degraded]
+RECOMMENDATION:          [No action | Recalibrate | Admiral review needed]
+```
+
+**Routing:** All audit reports route directly to the Admiral — not through the Orchestrator, and not to the audited agent. The Admiral decides whether recalibration is needed.

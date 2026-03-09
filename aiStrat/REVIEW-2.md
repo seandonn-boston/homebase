@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.1.1-alpha -->
+<!-- Admiral Framework v0.2.0-alpha -->
 # Admiral Framework v0.1.0-alpha — Independent File-by-File Review
 
 > **⚠ Superseded by REVIEW-3.md** — This review contains a fabricated critical finding (Layer 3 LLM contradiction attributed to `monitor/README.md` where no such text exists; the real error was in `admiral/part3-enforcement.md`). It also contains several claims that were factually incorrect at time of writing (`brain_status` CHECK, Prompt Anchor counts). See `REVIEW-3.md` for the fact-checked third-pass review.

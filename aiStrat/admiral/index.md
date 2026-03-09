@@ -1,9 +1,9 @@
-<!-- Admiral Framework v0.1.1-alpha -->
+<!-- Admiral Framework v0.2.0-alpha -->
 # THE FLEET ADMIRAL FRAMEWORK
 
 **A Workforce Toolkit for Autonomous AI Agent Fleets**
 
-v0.1.1-alpha · March 2026
+v0.2.0-alpha · March 2026
 
 -----
 
@@ -240,6 +240,9 @@ The `fleet/` directory provides 71 core agent definitions (plus 29 extended agen
 | Part 11 (Protocols) | Authoritative source; agents reference these protocols |
 | Sections 13, 17, 25, 31 (Intelligence) | `monitor/README.md` — ecosystem scanning, quarantine, seed generation |
 | Section 07 (Configuration File Strategy) | `AGENTS.md` — canonical model-agnostic instruction file; `CLAUDE.md` — Claude Code pointer |
+| Section 08 (Deterministic Enforcement) | `hooks/README.md` — hook ecosystem spec; `hooks/manifest.schema.json` — hook manifest schema |
+| Section 38 (Handoff Protocol) | `handoff/v1.schema.json` — canonical JSON Schema for handoff validation |
+| Section 10 (Configuration Security) | `attack-corpus/README.md` — attack corpus spec and seed scenarios for Layer 3 |
 
 > **Admiral is the engineering manual. Fleet is the parts catalog. Brain is the memory architecture. Monitor is the intelligence service.** Use the admiral to learn *what to do and why*. Use the fleet to learn *how to do it with specific agents*. Use the brain and monitor specs to understand *how knowledge persists and ecosystem intelligence flows*.
 

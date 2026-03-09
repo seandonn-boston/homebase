@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.1.1-alpha -->
+<!-- Admiral Framework v0.2.0-alpha -->
 # Interface Contracts
 
 **Defined formats for handoffs between specific agent pairs.**
@@ -436,3 +436,40 @@ When a handoff doesn't match the expected contract:
 2. **Rejection routes through the Orchestrator** (not directly back to sender)
 3. **Orchestrator determines** whether to route back to sender for correction or to decompose differently
 4. **Repeated contract violations** for the same agent pair signal a process issue — the Orchestrator flags it for review
+
+-----
+
+## Schema Extensions for Domain-Specific Contracts
+
+The canonical handoff schema (`handoff/v1.schema.json`) defines the base structure for all handoffs. Interface contracts defined in this file extend the base schema through the `metadata` field — the designated extension point for domain-specific fields.
+
+### Extension Mechanism
+
+The `metadata` field in the handoff schema accepts `additionalProperties: true`, allowing any domain-specific fields. Interface contracts formalize these fields for specific agent pairs:
+
+**Example: Governance handoff extension**
+
+When a governance agent (e.g., Drift Monitor) hands off a finding to the Orchestrator, the `metadata` field carries governance-specific fields:
+
+```json
+{
+  "metadata": {
+    "governance": {
+      "agent_id": "Drift Monitor",
+      "finding_type": "scope_creep",
+      "evidence": ["file:src/auth.ts:45 — unrequested refactoring"],
+      "severity": "medium",
+      "failure_mode": "Scope Creep via Helpfulness",
+      "authoritative_owner": "Drift Monitor",
+      "recommended_action": "Route correction to originating agent"
+    }
+  }
+}
+```
+
+### Convention
+
+- Domain-specific schema fragments live alongside the base schema in `handoff/` if they are reusable across multiple agent pairs.
+- One-off extensions can be defined inline in this file alongside the relevant contract.
+- This does NOT require rewriting all existing contracts — it provides the mechanism for progressive formalization. Contracts can be formalized into schema fragments as the need for automated validation grows.
+- Governance agents can programmatically audit handoff quality by validating the `metadata` fields against the relevant extension schema.

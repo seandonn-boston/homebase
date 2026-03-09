@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.1.1-alpha -->
+<!-- Admiral Framework v0.2.0-alpha -->
 # Admiral Framework v0.1.0-alpha — Product Review & Assessment
 
 **Reviewer:** Claude Opus 4.6
