@@ -20,6 +20,7 @@ aiStrat is the **Admiral Framework** — a comprehensive specification for AI ag
 | I need to... | Start here |
 |---|---|
 | Understand the full framework | `admiral/index.md` |
+| See every file at a glance | `MANIFEST.md` |
 | See how agents are defined | `fleet/prompt-anatomy.md` |
 | Understand the fleet catalog | `fleet/README.md` |
 | Route a task to the right agent | `fleet/routing-rules.md` |
@@ -37,6 +38,7 @@ aiStrat is the **Admiral Framework** — a comprehensive specification for AI ag
 - The framework uses [semantic versioning](https://semver.org/) with pre-release labels: `MAJOR.MINOR.PATCH[-label]`
 - The authoritative version string lives in `admiral/index.md` (line 6). All other version references must match it.
 - **Version appears in 3 locations:** `admiral/index.md` (line 6, display version), `admiral/appendices.md` (Appendix F footer), and as an HTML comment `<!-- Admiral Framework vX.Y.Z-label -->` on line 1 of every `.md` file (or SQL comment `-- Admiral Framework vX.Y.Z-label` on line 1 of every `.sql` file).
+- **MANIFEST.md** is the semantic file catalog. Update it when files are added, removed, renamed, or when their content changes materially (new sections, restructured scope, changed agent counts). It should also be updated on version bumps.
 - When bumping versions, update all markers: `grep -rn "v0\.[0-9]" aiStrat/ --include="*.md" --include="*.sql"` should show only the current version (except review artifacts which reference the version they reviewed).
 - Review artifacts (`REVIEW.md`, `REVIEW-2.md`, `REVIEW-3.md`, `RESOLUTION-PLAN.md`) reference the version they reviewed in their body text. Their line-1 HTML comment carries the current framework version; their body text preserves the reviewed version for historical accuracy.
 
