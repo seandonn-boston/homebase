@@ -18,7 +18,7 @@ Before deploying any new fleet, verify every item. If any box is unchecked, the 
 - [ ] **Context Engineering (04):** Instructions follow prompt anatomy (Identity → Authority → Constraints → Knowledge → Task). Tested with probes.
 - [ ] **Ground Truth (05):** Ontology, naming, tech stack versions, access/permissions, known issues, configuration artifacts.
 - [ ] **Context Window Strategy (06):** Profiles per role. Loading order, refresh triggers, sacrifice order. Progressive disclosure.
-- [ ] **Configuration File Strategy (07):** CLAUDE.md under 150 lines. Skills, agent files, path rules defined. All version-controlled.
+- [ ] **Configuration File Strategy (07):** AGENTS.md under 150 lines. Tool-specific pointers (CLAUDE.md, etc.) configured. Skills, agent files, path rules defined. All version-controlled.
 
 **Part 3 — Enforcement**
 
@@ -84,7 +84,7 @@ Structured around the four Adoption Levels (see index.md). Complete each level b
 2. **Boundaries (02)** — What you are NOT building. Resource budgets.
 3. **Success Criteria (03)** — Machine-verifiable definition of "done."
 4. **Deterministic Enforcement (08)** — Classify constraints. Implement hooks for safety-critical ones.
-5. **Configuration File Strategy (07)** — CLAUDE.md (<150 lines). Standing Orders loaded.
+5. **Configuration File Strategy (07)** — AGENTS.md (<150 lines). Tool-specific pointers configured. Standing Orders loaded.
 6. **Configuration Security (10)** — Audit configs. Pin MCP servers. Set CODEOWNERS.
 
 **You can start working here.** One agent with clear Identity, Scope, Boundaries, and hooks.
@@ -343,7 +343,7 @@ These case studies are synthesized from patterns observed across multiple agent 
 
 **Setup:** 8-agent fleet building a healthcare data API. Zero-trust from day one: identity tokens on all Brain access, model tier enforcement via hooks, file scope boundaries enforced, configuration security audit before first session.
 
-**Challenge (Week 2):** A PR modifies the CLAUDE.md to add a new "Autonomous" permission for the Backend Implementer to modify authentication middleware. The configuration security hook flags it — CODEOWNERS requires Admiral approval for CLAUDE.md changes. Admiral reviews and rejects: auth changes require Propose tier.
+**Challenge (Week 2):** A PR modifies the AGENTS.md to add a new "Autonomous" permission for the Backend Implementer to modify authentication middleware. The configuration security hook flags it — CODEOWNERS requires Admiral approval for agent configuration changes. Admiral reviews and rejects: auth changes require Propose tier.
 
 **Challenge (Week 4):** The Continuous Monitor ingests a new library version. The quarantine layer's injection detection flags suspicious content in the changelog (embedded prompt injection attempt). Entry is quarantined and converted to a FAILURE Brain entry that teaches the fleet what the attack pattern looks like.
 
@@ -361,15 +361,38 @@ These case studies are synthesized from patterns observed across multiple agent 
 
 The Admiral Framework is platform-agnostic. These patterns show how to apply Admiral concepts with specific tools. Each pattern maps framework sections to platform-native features.
 
+### Pattern 0: Cross-Tool Foundation
+
+Regardless of which tool you use, the foundation is the same:
+
+- **AGENTS.md** → Section 07, Configuration File Strategy (Part 2 — Context). The canonical, model-agnostic instruction file. Keep under 150 lines.
+- Tool-specific entry points (CLAUDE.md, .cursorrules, etc.) → Thin pointers to AGENTS.md plus tool-specific configuration only.
+- For tools that don't natively read AGENTS.md, the tool-specific file opens with "Read AGENTS.md for full project instructions."
+- Sync tools (Ruler, rule-porter) can automate distribution if maintaining multiple tool-specific files becomes a burden.
+
 ### Pattern 1: Admiral with Claude Code
 
-- **CLAUDE.md** → Section 07, Configuration File Strategy (Part 2 — Context). Keep under 150 lines. Use the sacrifice order: Identity → Authority → Constraints → Knowledge → Task.
+- **CLAUDE.md** → Pointer to AGENTS.md + Claude Code-specific config (hooks, `.claude/` directory, permissions).
 - **Hooks** → Part 3 Deterministic Enforcement. Claude Code hooks map directly to the Hook Execution Model (Section 08). PreToolUse, PostToolUse, and other lifecycle hooks ARE the enforcement layer.
-- **Skills** (.claude/skills/*.md) → Part 2 Progressive Disclosure (Section 07). Skills are the native mechanism for on-demand context loading.
-- **agents.md** → Part 4 Fleet Composition (Section 11). Define agent roles with Identity, Scope, Does NOT Do, Output routing.
+- **Skills** (`.claude/skills/*.md`) → Part 2 Progressive Disclosure (Section 07). Skills are the native mechanism for on-demand context loading.
+- **Agent definitions** (`.claude/agents/*.md`) → Part 4 Fleet Composition (Section 11). Define agent roles with Identity, Scope, Does NOT Do, Output routing.
 - **Claude Code's built-in subagent** → Swarm Patterns (Section 20). The Agent tool enables parallel work with coordination.
 
-> **Note:** Claude Code is the closest native implementation of the Admiral model. Most framework concepts map directly to Claude Code features.
+> **Note:** Claude Code is the closest native implementation of the Admiral model. Most framework concepts map directly to Claude Code features. As of March 2026, Claude Code does not natively read AGENTS.md — use the CLAUDE.md pointer pattern.
+
+### Pattern 1b: Admiral with Cursor
+
+- **AGENTS.md** → Read natively by Cursor. Contains the same project instructions as any other tool.
+- **`.cursor/rules/`** → Path-scoped rules (equivalent to Claude Code's `.claude/rules/*.md`). Progressive disclosure by directory.
+- **Enforcement** → Cursor lacks native hook support equivalent to Claude Code. Use CI gates, pre-commit hooks, and linter integration for deterministic enforcement.
+- **Agent definitions** → Use `.cursorrules` or project-level AGENTS.md sections to define agent behavior.
+
+### Pattern 1c: Admiral with Copilot / Gemini CLI / Codex
+
+- **AGENTS.md** → Read natively by all three. No tool-specific pointer file needed.
+- **Enforcement** → Varies by tool. Map the Hook Execution Model to each tool's available enforcement mechanisms (CI gates, pre-commit hooks, linters).
+- **Standing Orders** → Load into system prompt or AGENTS.md preamble.
+- **Skills/Progressive disclosure** → Tool-dependent. Use AGENTS.md sections or tool-native mechanisms where available.
 
 ### Pattern 2: Admiral with Multi-Agent SDK (e.g., Anthropic Agent SDK)
 
@@ -436,10 +459,10 @@ This appendix maps every major framework component to its real-world implementat
 
 | Component | Cat. | Concrete Tooling | Custom Work Required |
 |---|---|---|---|
-| **CLAUDE.md / config files** | 1 | Claude Code native, any text editor | None — write markdown, commit to repo |
-| **Hooks (PreToolUse / PostToolUse)** | 1 | Claude Code hooks, shell scripts | Write hook scripts, version-control alongside fleet config |
-| **Standing Orders** | 1 | System prompt content, CLAUDE.md | None — text loaded into agent context |
-| **Agent definitions** | 1 | Claude Code `agents.md`, Agent SDK agent constructors | Write agent specifications per prompt anatomy (Section 04) |
+| **AGENTS.md / config files** | 1 | Any AI coding tool, any text editor | None — write markdown, commit to repo. Tool-specific pointers (CLAUDE.md, etc.) as needed. |
+| **Hooks (PreToolUse / PostToolUse)** | 1 | Agent runtime hooks (e.g., Claude Code hooks), shell scripts, CI gates | Write hook scripts, version-control alongside fleet config |
+| **Standing Orders** | 1 | System prompt content, AGENTS.md | None — text loaded into agent context |
+| **Agent definitions** | 1 | AGENTS.md sections, tool-specific agent files, Agent SDK agent constructors | Write agent specifications per prompt anatomy (Section 04) |
 | **Self-healing quality loops** | 1 | Hook exit codes + agent retry (Section 08) | Configure hooks for linter/type-checker/test; retry logic is built-in |
 | **Recovery ladder** | 1 | Agent instructions + hooks | Define fallback/backtrack strategies per agent; hook enforcement for max retries |
 | **Brain Level 1 (file-based)** | 1 | JSON files + grep + git | Create `.brain/` directory, write JSON files (see `brain/level1-spec.md`) |

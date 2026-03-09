@@ -127,6 +127,7 @@ The most common pattern. Create a project-specific configuration file that agent
 For context too large to fit in standing context, use skill files that load on demand when relevant file patterns or keywords are encountered:
 
 ```
+# Example: Claude Code skill files (other tools have equivalent mechanisms)
 .claude/skills/database-patterns.md    → Loads when touching db/ files
 .claude/skills/auth-architecture.md    → Loads when touching auth/ files
 .claude/skills/api-conventions.md      → Loads when touching api/ files

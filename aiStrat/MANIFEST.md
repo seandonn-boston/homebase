@@ -1,7 +1,7 @@
 <!-- Admiral Framework v0.1.1-alpha -->
 # Admiral Framework — File Manifest
 
-**57 files across 14 groups | Last modified: 2026-03-08**
+**58 files across 14 groups | Last modified: 2026-03-09**
 
 This is the semantic catalog of every file in the Admiral Framework. Each entry describes what the file contains, verified against the source. Update this manifest when files are added, removed, renamed, or when their content changes materially.
 
@@ -601,15 +601,25 @@ aiStrat/v0.2.0-alpha-architecture.md
 
 ---
 
-## Configuration (2 files)
+## Configuration (3 files)
 
 ```
-CLAUDE.md - project/config - 2026-03-08:
-Claude Code configuration file. Project overview (pure specification, no code), three-
-pillar repository structure (Doctrine, Fleet, Design Artifacts), key entry points table
-(11 use-case → file mappings), versioning rules (version in 3 locations), working
-conventions, and 6 design principles (hooks over instructions, zero-trust, defense in
-depth, context is currency, progressive adoption, specification as product).
+AGENTS.md - project/config - 2026-03-09:
+Canonical, model-agnostic instruction file for any AI coding agent. Contains project
+overview, three-pillar repository structure, key entry points table (12 use-case → file
+mappings), versioning rules, working conventions, and 7 design principles (hooks over
+instructions, zero-trust, defense in depth, context is currency, progressive adoption,
+specification as product, tool-agnostic by default). This is the single source of truth
+for project instructions — tool-specific files (CLAUDE.md, etc.) point here.
+aiStrat/AGENTS.md
+```
+
+```
+CLAUDE.md - project/config - 2026-03-09:
+Claude Code entry point. Slim pointer to AGENTS.md plus Claude Code-specific
+configuration: .claude/ directory conventions, skills, path-scoped rules, agent
+definitions, hooks, and subagent usage. Exists because Claude Code does not natively
+read AGENTS.md (as of March 2026). ~20 lines.
 aiStrat/CLAUDE.md
 ```
 

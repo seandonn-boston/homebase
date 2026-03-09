@@ -125,11 +125,11 @@ The monitor does not update Ground Truth automatically. It surfaces intelligence
 
 | Artifact | Purpose | Location | Review Cadence |
 |---|---|---|---|
-| `CLAUDE.md` | Project identity, critical conventions | Repository root | Every phase |
-| `agents.md` | Cross-tool agent instructions | Repository root | Every phase |
-| `.claude/settings.json` | Hooks, permissions, MCP config | `.claude/` directory | When enforcement changes |
-| `.claude/agents/*.md` | Per-agent definitions | `.claude/agents/` | When fleet composition changes |
-| `.claude/skills/*.md` | On-demand knowledge | `.claude/skills/` | When domain knowledge changes |
+| `AGENTS.md` | Canonical project instructions (model-agnostic) | Repository root | Every phase |
+| `CLAUDE.md` / tool-specific | Pointer to AGENTS.md + tool-specific config | Repository root | When tool config changes |
+| Agent tool settings (e.g., `.claude/settings.json`) | Hooks, permissions, MCP config | Tool config directory | When enforcement changes |
+| Agent definition files (e.g., `.claude/agents/*.md`) | Per-agent definitions | Tool config directory | When fleet composition changes |
+| Skill files (e.g., `.claude/skills/*.md`) | On-demand knowledge | Tool config directory | When domain knowledge changes |
 
 > **TEMPLATE: GROUND TRUTH DOCUMENT**
 >
@@ -139,7 +139,7 @@ The monitor does not update Ground Truth automatically. It surfaces intelligence
 >
 > ENVIRONMENT: Stack: [Exact versions]. Infra: [Topology]. Access: [Per-role list]. Known issues: [List]. External deps: [Service, limits, quirks].
 >
-> CONFIGURATION: CLAUDE.md: [lines/date]. Hooks: [count/last audit]. Skills: [count/domains]. MCP servers: [list/versions].
+> CONFIGURATION: AGENTS.md: [lines/date]. Tool pointers: [CLAUDE.md / .cursorrules / etc.]. Hooks: [count/last audit]. Skills: [count/domains]. MCP servers: [list/versions].
 
 > **ANTI-PATTERN: PHANTOM CAPABILITIES** — Agents will confidently assume tools and access they do not have. An orchestrator might delegate a task assuming the specialist can query a database directly, when it can only read files. The specialist produces plausible-looking output grounded in fabricated data.
 
@@ -210,27 +210,46 @@ The budget percentages above are reference points calibrated for 200K-token cont
 
 ## 07 — CONFIGURATION FILE STRATEGY
 
-> **TL;DR** — CLAUDE.md under 150 lines. Move enforcement to hooks, reference material to skills, per-agent rules to agent files. Version all config files like code.
+> **TL;DR** — AGENTS.md under 150 lines. Move enforcement to hooks, reference material to skills, per-agent rules to agent files. Version all config files like code. Use AGENTS.md as the canonical source of truth; tool-specific files (CLAUDE.md, .cursorrules) should be thin pointers.
 
 Configuration files are how the fleet receives its instructions. They are as important as source code — version them, review them, test them.
+
+### AGENTS.md as Canonical Source
+
+**AGENTS.md** is the model-agnostic instruction file standard, stewarded by the Agentic AI Foundation under the Linux Foundation. As of early 2026, it is supported by 20+ tools including Codex, Cursor, Copilot, Gemini CLI, Windsurf, Aider, Zed, Warp, Jules, Devin, and others.
+
+**The recommended pattern:**
+
+| File | Role | Who reads it |
+|---|---|---|
+| `AGENTS.md` | Canonical project instructions | Most AI coding tools natively |
+| `CLAUDE.md` | Pointer to AGENTS.md + Claude Code-specific config | Claude Code |
+| `.cursorrules` | Pointer to AGENTS.md + Cursor-specific config (if needed) | Cursor |
+| Tool-specific files | Thin pointers with tool-only overrides | Their respective tools |
+
+Tools that do not yet natively read AGENTS.md (e.g., Claude Code as of March 2026) use their tool-specific file as a pointer: `CLAUDE.md` opens with "Read AGENTS.md for full project instructions" and adds only tool-specific configuration (hook references, directory conventions, permissions). When the tool adds native support, the pointer file reduces to overrides only.
+
+**Alternative for simple setups:** Symlink (`ln -s AGENTS.md CLAUDE.md`) works when no tool-specific configuration is needed.
 
 ### The Configuration Hierarchy
 
 Configuration flows from broad to narrow, with narrower scopes overriding broader ones.
 
-| Scope | File | Purpose |
+| Scope | Example (Claude Code) | Purpose |
 |---|---|---|
 | **Personal** | `~/.claude/settings.json` | User-level defaults, model preferences |
 | **Organization** | Organization-level config | Shared standards across all repos |
-| **Repository** | `CLAUDE.md`, `agents.md`, `.cursorrules` | Project-specific instructions |
+| **Repository** | `AGENTS.md`, `CLAUDE.md`, `.cursorrules` | Project-specific instructions |
 | **Path-specific** | `.claude/rules/*.md` | Rules that apply only to certain directories |
 | **Role-specific** | `.claude/agents/*.md`, `.agent.md` | Per-agent identity, authority, constraints |
 | **On-demand** | `.claude/skills/*.md` | Knowledge loaded only when context matches |
 | **Enforcement** | `.claude/settings.json` (hooks), CI configs | Deterministic constraints |
 
+Path-specific, role-specific, on-demand, and enforcement scopes are tool-dependent. The examples above use Claude Code conventions. Other tools provide equivalent mechanisms (e.g., Cursor uses `.cursor/rules/` for path-scoped rules).
+
 ### The 150-Line Rule
 
-Official guidance: CLAUDE.md should not exceed 150 lines. For each line, ask "Would removing this cause mistakes?" If not, remove it.
+AGENTS.md should not exceed 150 lines. For each line, ask "Would removing this cause mistakes?" If not, remove it. Research (ETH Zurich, Feb 2026) confirms: over-detailed instruction files hinder agent performance. Human-written, minimal instructions targeting non-inferable details show the best results.
 
 **How to stay under 150 lines:**
 
@@ -238,11 +257,11 @@ Official guidance: CLAUDE.md should not exceed 150 lines. For each line, ask "Wo
 - Move enforcement constraints to hooks (deterministic, not occupying context).
 - Move per-agent instructions to agent-specific files (each agent loads only its own).
 - Move path-specific rules to path-scoped files (loaded only when working in that directory).
-- What remains in CLAUDE.md: project identity, tech stack, critical conventions, workflow essentials.
+- What remains in AGENTS.md: project identity, tech stack, critical conventions, workflow essentials.
 
 ### Cross-Tool Portability
 
-`agents.md` works across Copilot, Claude Code, Cursor, and Gemini CLI. Analysis of 2,500+ agents.md files shows the best share six characteristics:
+Analysis of 2,500+ AGENTS.md files shows the best share six characteristics:
 
 1. **Clear persona** — who the agent is and what it's responsible for.
 2. **Executable commands** — exact shell commands, not descriptions.
@@ -251,9 +270,12 @@ Official guidance: CLAUDE.md should not exceed 150 lines. For each line, ask "Wo
 5. **Tech stack specifics** — exact versions and configurations.
 6. **Coverage across six areas** — commands, testing, project structure, code style, git workflow, boundaries.
 
+Sync tools exist for teams managing multiple configuration files from one source: Ruler (`@intellectronica/ruler`) distributes from a `.ruler/` directory to 30+ agent config formats; rule-porter converts bidirectionally between formats. For simple projects, the pointer pattern (tool-specific files reference AGENTS.md) is sufficient.
+
 ### Progressive Disclosure via Skills
 
 ```
+# Example: Claude Code skill file
 # .claude/skills/database-patterns.md
 ---
 match: "prisma/**" OR "database" OR "migration" OR "schema"
@@ -265,19 +287,17 @@ Database conventions for this project:
 - [Specific patterns...]
 ```
 
-The agent receives database knowledge only when working on database tasks. For all other tasks, that context is not loaded, preserving working memory.
+The agent receives database knowledge only when working on database tasks. For all other tasks, that context is not loaded, preserving working memory. Other tools implement equivalent progressive disclosure mechanisms (e.g., Cursor rules with glob patterns).
 
 > **TEMPLATE: CONFIGURATION AUDIT**
 >
-> CLAUDE.md: [X] lines (target: <150). Last reviewed: [date].
+> AGENTS.md: [X] lines (target: <150). Last reviewed: [date]. Tool pointers: [CLAUDE.md / .cursorrules / etc.].
 >
 > Skills: [N] skill files covering [domains]. Hooks: [N] hooks covering [categories].
 >
 > Agent files: [N] agent definitions. Path rules: [N] path-specific rule files.
->
-> Cross-tool: agents.md [exists/absent]. Compatible with: [tools].
 
-> **ANTI-PATTERN: CONFIGURATION ACCRETION** — After every incident, a new line is added to CLAUDE.md. The file grows from 80 to 400 lines over three months. Instruction-following degrades with each addition. Treat config files like code: refactor regularly. When a constraint is critical enough to add, ask whether it should be a hook instead.
+> **ANTI-PATTERN: CONFIGURATION ACCRETION** — After every incident, a new line is added to AGENTS.md. The file grows from 80 to 400 lines over three months. Instruction-following degrades with each addition. Treat config files like code: refactor regularly. When a constraint is critical enough to add, ask whether it should be a hook instead.
 
 -----
 

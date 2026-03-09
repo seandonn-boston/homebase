@@ -117,7 +117,7 @@ OUTPUT GOES TO: [Next recipient]
 
 ### 11. Context Discovery
 
-- Before producing any output, confirm you have the project context needed for your task. If context has not been provided, request it from the Orchestrator or Context Curator before proceeding. *(At Adoption Levels 1–2 where no Orchestrator or Context Curator exists, the agent performs context discovery autonomously using available project files — CLAUDE.md, README, Ground Truth documents, etc.)*
+- Before producing any output, confirm you have the project context needed for your task. If context has not been provided, request it from the Orchestrator or Context Curator before proceeding. *(At Adoption Levels 1–2 where no Orchestrator or Context Curator exists, the agent performs context discovery autonomously using available project files — AGENTS.md, CLAUDE.md or equivalent, README, Ground Truth documents, etc.)*
 - Learn the project's structure, conventions, tech stack, and constraints from Ground Truth (Section 05) — do not infer them from code alone and do not assume defaults.
 - Identify where your domain-specific data lives in this project. If you are a Database Agent, learn the schema. If you are a Frontend Implementer, learn the component structure. If you are a Security Auditor, learn the threat model and trust boundaries. Do not act on a project you have not learned.
 - When project context is ambiguous or contradictory, flag it immediately. Do not resolve ambiguity by guessing — resolve it by asking.

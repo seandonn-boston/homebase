@@ -293,7 +293,7 @@ Some deployments may include scheduled agent roles (Docs Sync, Quality Review, D
 
 **Result routing for scheduled agents:**
 
-- **Report artifact:** Written to a known location in the repository (e.g., `.claude/reports/`).
+- **Report artifact:** Written to a known location in the repository (e.g., `.reports/` or tool-specific directory).
 - **Issue creation:** Findings above a severity threshold become issues.
 - **Brain recording:** Every scheduled run records a summary entry for trend analysis.
 - **Notification:** Summary sent to Slack, email, or dashboard.
@@ -322,7 +322,7 @@ jobs:
         with:
           model: claude-sonnet-4-6
           max_tokens: 50000
-          # Agent loads CLAUDE.md and .claude/ config automatically
+          # Agent loads AGENTS.md / CLAUDE.md and config automatically
 ```
 
 **Pipeline stage patterns:**

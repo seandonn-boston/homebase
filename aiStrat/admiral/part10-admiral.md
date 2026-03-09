@@ -46,7 +46,7 @@ The Admiral may itself be an AI agent — a meta-orchestrator. This does not mak
 
 - The meta-agent's constraints must be the most heavily enforced — hooks on hooks. Every action the meta-agent takes must pass through the same enforcement layer it imposes on the fleet, plus an additional layer specific to meta-agent operations.
 - **A human holds ultimate Escalate-tier authority.** The meta-agent Admiral can resolve Propose-tier decisions and manage fleet operations, but it cannot authorize scope expansion, budget increases, new fleet deployments, or changes to its own constraints. These require human approval.
-- **The meta-agent cannot modify its own configuration.** No self-editing of CLAUDE.md, hooks, agent definitions, or authority tiers. All configuration changes require human review and approval.
+- **The meta-agent cannot modify its own configuration.** No self-editing of AGENTS.md, tool-specific config files (CLAUDE.md, etc.), hooks, agent definitions, or authority tiers. All configuration changes require human review and approval.
 - Trust calibration applies to the meta-agent just as it applies to any fleet member — earned per category, withdrawn precisely after failures.
 - **The meta-agent's identity token is non-delegable and non-renewable without human authorization.** If the meta-agent's session expires, a human must re-authorize. No automatic session extension.
 

@@ -9,7 +9,7 @@
 
 ## 08 — DETERMINISTIC ENFORCEMENT
 
-> **TL;DR** — An instruction in CLAUDE.md saying "never use rm -rf" can be forgotten. A PreToolUse hook that blocks it fires every single time. Any constraint that must hold with zero exceptions must be a hook, not an instruction.
+> **TL;DR** — An instruction in AGENTS.md saying "never use rm -rf" can be forgotten. A PreToolUse hook that blocks it fires every single time. Any constraint that must hold with zero exceptions must be a hook, not an instruction.
 
 This distinction — between advisory instructions and deterministic enforcement — is the foundation of reliable fleet operations.
 
@@ -18,7 +18,7 @@ This distinction — between advisory instructions and deterministic enforcement
 | Level | Mechanism | Reliability | Use For |
 |---|---|---|---|
 | **Hard enforcement** | Hooks, CI gates, linters, type checkers, file system permissions | 100% — fires deterministically | Safety, security, scope limits, formatting, test requirements |
-| **Firm guidance** | CLAUDE.md rules, system prompt instructions, agents.md | High but degradable under context pressure | Coding patterns, architectural preferences, naming conventions |
+| **Firm guidance** | AGENTS.md rules, system prompt instructions, tool-specific config files | High but degradable under context pressure | Coding patterns, architectural preferences, naming conventions |
 | **Soft guidance** | Comments in code, README notes, verbal instructions | Low — easily overridden | Suggestions, preferences, nice-to-haves |
 
 ### Hook Lifecycle Events
@@ -170,12 +170,12 @@ One deterministic check that fires every time and self-heals is more effective t
 > - [Constraint]: [Hook event] — [Shell command]
 >
 > FIRM GUIDANCE (instructions):
-> - [Constraint]: [Where documented — CLAUDE.md / system prompt / agents.md]
+> - [Constraint]: [Where documented — AGENTS.md / system prompt / tool-specific config]
 >
 > SOFT GUIDANCE (reference):
 > - [Preference]: [Where noted]
 
-> **ANTI-PATTERN: ALL INSTRUCTIONS, NO HOOKS** — The Admiral writes comprehensive CLAUDE.md rules but implements zero hooks. For the first 60% of a session, rules are followed. As context pressure builds, rules near the beginning lose attention weight. The agent violates constraints it followed an hour ago. More rules are added. The file grows. The agent ignores more. Death spiral.
+> **ANTI-PATTERN: ALL INSTRUCTIONS, NO HOOKS** — The Admiral writes comprehensive AGENTS.md rules but implements zero hooks. For the first 60% of a session, rules are followed. As context pressure builds, rules near the beginning lose attention weight. The agent violates constraints it followed an hour ago. More rules are added. The file grows. The agent ignores more. Death spiral.
 
 -----
 
@@ -236,7 +236,7 @@ Every orchestrator needs a clear decision envelope: what it may decide autonomou
 
 > **TL;DR** — Agent configs are attack surfaces. Memory poisoning persists across sessions. Supply chain attacks arrive through MCP servers and skills. Audit everything, pin versions, treat configs as security-critical code.
 
-Agent configurations are attack surfaces. A compromised CLAUDE.md, a malicious MCP server, or a poisoned memory file can turn your fleet against your own codebase. Documented attacks include memory poisoning, supply chain compromises, agent hijacking, and prompt injection through third-party skills.
+Agent configurations are attack surfaces. A compromised AGENTS.md (or tool-specific equivalent like CLAUDE.md, .cursorrules), a malicious MCP server, or a poisoned memory file can turn your fleet against your own codebase. Documented attacks include memory poisoning, supply chain compromises, agent hijacking, and prompt injection through third-party skills.
 
 ### Threat Model
 
@@ -244,7 +244,7 @@ Agent configurations are attack surfaces. A compromised CLAUDE.md, a malicious M
 |---|---|---|
 | **Memory poisoning** | False information implanted in agent memory persists across all future sessions | Validate memory sources. Version-stamp entries. Audit for unexpected changes. |
 | **Supply chain compromise** | Malicious MCP server or skill exfiltrates data while appearing to function normally | Audit all servers before install. Pin versions. Review source. Monitor traffic. |
-| **Configuration injection** | Attacker modifies config files in a PR or through compromised CI | CODEOWNERS for `.claude/`. Require review for all config changes. |
+| **Configuration injection** | Attacker modifies config files in a PR or through compromised CI | CODEOWNERS for agent configuration directories (`.claude/`, `.cursor/`, etc.). Require review for all config changes. |
 | **Prompt injection via skills** | Third-party skill contains hidden instructions overriding constraints | Review all skill files. Never auto-install from untrusted sources. |
 | **Agent hijacking** | Exploiting broad permissions for unauthorized actions (BodySnatcher, ZombieAgent) | Least privilege. Scope boundaries per agent. Audit logs for all actions. |
 
@@ -299,7 +299,7 @@ Additionally, all monitor findings arrive as seed candidates with `"approved": F
 ### Configuration Hygiene
 
 - **Version all configuration files** in git, reviewed in PRs.
-- **CODEOWNERS for `.claude/` directories.**
+- **CODEOWNERS for agent configuration directories** (`.claude/`, `.cursor/`, etc.).
 - **Pin MCP server versions.** Never use `latest` in production.
 - **Audit third-party skills.** Read every line before installing.
 - **Rotate secrets** on the same schedule as application secrets.
@@ -308,7 +308,7 @@ Additionally, all monitor findings arrive as seed candidates with `"approved": F
 > **TEMPLATE: SECURITY AUDIT CHECKLIST**
 >
 > - [ ] All config files version-controlled
-> - [ ] CODEOWNERS set for `.claude/` and equivalent directories
+> - [ ] CODEOWNERS set for agent configuration directories (`.claude/`, `.cursor/`, etc.)
 > - [ ] MCP servers pinned to specific versions
 > - [ ] All third-party skills reviewed (source code read)
 > - [ ] Memory files audited for unexpected entries

@@ -21,7 +21,7 @@ You don't need to read 200 pages before deploying your first agent. Start at Lev
 
 | Level | What You Use | Time to Value | When to Advance |
 |---|---|---|---|
-| **Level 1: Disciplined Solo** | CLAUDE.md with enforcement spectrum (Section 08). Hooks for safety-critical constraints (including token budget, loop detection, and context health hooks from Section 08). Standing Orders (Section 36). One agent with clear Identity/Scope/Boundaries. | 30 minutes | When you need multiple specialists coordinating on a single task. |
+| **Level 1: Disciplined Solo** | AGENTS.md (and tool-specific pointers like CLAUDE.md) with enforcement spectrum (Section 08). Hooks for safety-critical constraints (including token budget, loop detection, and context health hooks from Section 08). Standing Orders (Section 36). One agent with clear Identity/Scope/Boundaries. | 30 minutes | When you need multiple specialists coordinating on a single task. |
 | **Level 2: Core Fleet** | Everything in Level 1 plus Fleet Composition (Section 11) with 5–8 agents, routing rules, interface contracts, and the recovery ladder. Hook-based enforcement for budget, loops, and context health (no governance agents required). File-based checkpoints for session persistence. | 2–4 hours | When convention drift, scope creep, or hallucination compound across sessions and you can't catch them manually. |
 | **Level 3: Governed Fleet** | Everything in Level 2 plus 3–7 governance agents (Token Budgeter, Hallucination Auditor, Loop Breaker minimum — matching the Core Fleet "always deploy" set). Add Drift Monitor, Bias Sentinel, Context Health Monitor, and Contradiction Detector as fleet size and risk warrant. Decision authority tiers enforced. Brain at Level 1–2 (file-based or SQLite). | 1–2 days | When cross-session knowledge reuse is critical, or when fleet size exceeds what one Orchestrator can effectively govern. |
 | **Level 4: Full Framework** | Everything in Level 3 plus full Brain (Postgres + pgvector + MCP), Continuous Monitor, scale agents for review cycles, identity tokens, zero-trust access control, fleet observability. | 1–2 weeks | This is the target state for production fleets operating continuously. |
@@ -91,7 +91,7 @@ This framework is split across thirteen files. This index is the entry point. Ea
 
 **Machines** — CI pipelines, hook scripts, linters, and automation tooling consume the artifacts this framework produces. Templates, checklists, and structured formats are designed to be parseable. Configuration files generated from this framework should be version-controlled and diffable.
 
-> **This is not a CLAUDE.md file.** It is the meta-framework that generates CLAUDE.md files, agent definitions, hook scripts, skill files, and operational artifacts. Your actual configuration files should be under 150 lines each. This framework is the source of truth they are distilled from.
+> **This is not an AGENTS.md file.** It is the meta-framework that generates AGENTS.md files, agent definitions, hook scripts, skill files, and operational artifacts. Your actual configuration files (AGENTS.md, CLAUDE.md, .cursorrules, etc.) should be under 150 lines each. This framework is the source of truth they are distilled from.
 
 -----
 
@@ -151,7 +151,7 @@ Terms are listed alphabetically. When these terms appear in any part file, they 
 | **Chunk** | An independently completable, independently verifiable unit of work. Sized to consume no more than 40% of an agent's token budget. Section 18. |
 | **Completion bias** | Agent produces complete but degraded output near resource limits. See Section 23 (Failure Mode Catalog) for diagnosis and defense. |
 | **Configuration accretion** | Instruction files grow after each incident until agents ignore bloated rules. See Section 23 (Failure Mode Catalog) for diagnosis and defense. |
-| **Configuration injection** | Attack where an adversary modifies agent config files (CLAUDE.md, hooks, skills) in a PR or through compromised CI. Section 10. |
+| **Configuration injection** | Attack where an adversary modifies agent config files (AGENTS.md, CLAUDE.md, .cursorrules, hooks, skills) in a PR or through compromised CI. Section 10. |
 | **Continuous AI Landscape Monitor** | Automated surveillance system (`monitor/`) that scans the AI ecosystem — model releases, agent patterns, trending tools — and feeds curated intelligence into the Brain through a quarantine layer. Runs on GitHub Actions (daily + weekly). Section 17, Section 31. |
 | **Context engineering** | The discipline of designing information flows across an entire agent system — what information exists where, when, and why. Subsumes prompt engineering. Section 04. |
 | **Context profile** | Per-role specification of what loads into an agent's context: standing context, session context, on-demand context, refresh triggers, sacrifice order. Section 06. |
@@ -169,7 +169,7 @@ Terms are listed alphabetically. When these terms appear in any part file, they 
 | **Event-driven agent** | An agent triggered by repository or system events (PR opened, CI failed, scheduled cron) rather than interactive sessions. Requires pre-configured context bootstrapping and narrower authority tiers. Section 31. |
 | **Exemplar** | A tracked repository representing best-in-class agent tooling (e.g., Claude Code, Aider, Cline). The monitor watches exemplars for releases, configuration changes, and design patterns that should inform fleet configuration. Section 17. |
 | **Failure mode** | A systematic way agent fleets fail. Twenty cataloged in Section 23 with primary defenses and warning signs. |
-| **Firm guidance** | Constraints in CLAUDE.md, system prompts, or agents.md. High reliability but degradable under context pressure, especially in long sessions. Middle tier of the enforcement spectrum. Section 08. |
+| **Firm guidance** | Constraints in AGENTS.md, system prompts, or tool-specific config files (CLAUDE.md, .cursorrules). High reliability but degradable under context pressure, especially in long sessions. Middle tier of the enforcement spectrum. Section 08. |
 | **Fleet** | A coordinated group of AI agents operating under a single orchestrator on a single project. Typically five to twelve specialists. |
 | **Fleet evaluation** | The practice of measuring whether a fleet configuration produces better outcomes than alternatives, through controlled A/B testing and benchmarking against baselines. Section 32. |
 | **Fleet observability** | The ability to understand fleet behavior through traces, logs, and metrics at the individual operation level. Monitoring tells you something is wrong; observability tells you why. Section 30. |
@@ -211,7 +211,7 @@ Terms are listed alphabetically. When these terms appear in any part file, they 
 | **Self-healing quality loop** | Pattern where a hook detects a failure (lint error, test failure, type error), feeds the output back to the agent, the agent fixes it, and the hook re-checks. Section 08. |
 | **Session amnesia** | Agent loses critical context between sessions despite checkpointing. See Section 23 (Failure Mode Catalog) for diagnosis and defense. |
 | **Silent failure** | Agent encounters an error and works around it without logging. See Section 23 (Failure Mode Catalog) for diagnosis and defense. |
-| **Skill** | A modular knowledge unit (`.claude/skills/*.md`) that loads into an agent's context only when a file pattern, keyword, or domain context matches. Section 07. |
+| **Skill** | A modular knowledge unit that loads into an agent's context only when a file pattern, keyword, or domain context matches. Implementation varies by tool (e.g., `.claude/skills/*.md` in Claude Code, `.cursor/rules/` in Cursor). Section 07. |
 | **Soft guidance** | Constraints in code comments, READMEs, or verbal instructions. Low reliability. Bottom tier of the enforcement spectrum. Section 08. |
 | **Strengthening** | Brain mechanism where retrieved entries accumulate usefulness signals from consuming agents. High-usefulness entries rank higher in future queries. Section 15. |
 | **Spec-first pipeline** | Structured workflow: Requirements Spec → Design Spec → Task Decomposition → Implementation. Each phase produces artifacts feeding the next. Section 18. |
@@ -239,6 +239,7 @@ The `fleet/` directory provides 71 core agent definitions (plus 29 extended agen
 | Section 15 (Brain Architecture) | `brain/schema/001_initial.sql` — Postgres + pgvector schema |
 | Part 11 (Protocols) | Authoritative source; agents reference these protocols |
 | Sections 13, 17, 25, 31 (Intelligence) | `monitor/README.md` — ecosystem scanning, quarantine, seed generation |
+| Section 07 (Configuration File Strategy) | `AGENTS.md` — canonical model-agnostic instruction file; `CLAUDE.md` — Claude Code pointer |
 
 > **Admiral is the engineering manual. Fleet is the parts catalog. Brain is the memory architecture. Monitor is the intelligence service.** Use the admiral to learn *what to do and why*. Use the fleet to learn *how to do it with specific agents*. Use the brain and monitor specs to understand *how knowledge persists and ecosystem intelligence flows*.
 
