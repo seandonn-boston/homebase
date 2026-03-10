@@ -161,3 +161,17 @@ So the real picture is not two games. It is three:
 **The builder's game** — the new one, the one that did not exist before. What would you build if the only constraint was your own clarity about what is worth building? Because that is approximately the constraint you are now operating under. Not zero cost, not zero effort, but close enough that the bottleneck has moved from *capability* to *vision.*
 
 The people who will define this era are not the ones who best adapt to what AI takes away. They are the ones who see what AI makes possible and have the taste to do it well, the judgment to do it right, and the conviction to do it at all.
+
+-----
+
+## The Fourth Game
+
+There is actually a fourth game that emerges from the builder's game. The moment you go from directing one AI agent to directing fifty, you discover something nobody warned you about: **agents are not employees and they are not code.**
+
+You cannot manage them with HR policies — they have no loyalty, no institutional memory (unless you build it), no cultural norms, no self-preservation instinct. They do not respond to incentives. They do not learn from being told something twice.
+
+You cannot validate them with traditional software tests — they are non-deterministic, their failure modes are novel (hallucination, sycophantic drift, scope creep, context starvation), and the same agent given the same input will behave differently depending on what else is in its context window.
+
+They are an entirely new category of resource. And the people building ambitious things with AI hit this wall fast: the builder's game requires not just vision and taste, but a *governance framework designed from first principles for how agents actually behave.*
+
+This is the game behind the builder's game — not just "what would you build?" but "how do you govern the fleet that builds it?" The answer cannot be borrowed from people-management or software-testing. It must be invented. And the people who recognize this early have a massive head start over those still trying to make old frameworks fit a new reality.

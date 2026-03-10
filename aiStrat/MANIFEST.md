@@ -1,7 +1,7 @@
 <!-- Admiral Framework v0.2.0-alpha -->
 # Admiral Framework — File Manifest
 
-**69 files across 15 groups | Last modified: 2026-03-10**
+**70 files across 14 groups | Last modified: 2026-03-10**
 
 This is the semantic catalog of every file in the Admiral Framework. Each entry describes what the file contains, verified against the source. Update this manifest when files are added, removed, renamed, or when their content changes materially.
 
@@ -576,79 +576,6 @@ aiStrat/monitor/README.md
 
 ---
 
-## Review & Governance Artifacts (6 files)
-
-```
-REVIEW.md - project/review - 2026-03-08:
-First independent review by Claude Opus 4.6. Rated 8.8/10 (revised from 9.0). Weighted
-scoring across 6 dimensions (Conceptual Integrity 9.5, Completeness 9.0, Practical
-Usability 8.0, Internal Consistency 8.0, Security Model 9.5, Production Readiness 7.0).
-35 issues identified across 5 severity tiers. Reviewed against v0.1.0-alpha.
-aiStrat/REVIEW.md
-```
-
-```
-REVIEW-2.md - project/review - 2026-03-08:
-Second independent file-by-file review by Claude Opus 4.6. Rated 8.5/10. Granular
-per-file scores across all 54 files. Contains a supersession warning: includes a
-fabricated critical finding (Layer 3 LLM contradiction attributed to monitor/README.md
-where no such text exists). Reviewed against v0.1.0-alpha. Superseded by REVIEW-3.md.
-aiStrat/REVIEW-2.md
-```
-
-```
-REVIEW-3.md - project/review - 2026-03-08:
-Third-pass review by Claude Opus 4.6. Rated 8.9/10. Verifies every claim in prior
-reviews against actual files, flags factually incorrect prior claims, identifies
-resolved issues, and surfaces new issues. Authoritative review — fact-checked against
-source files. Reviewed against v0.1.0-alpha.
-aiStrat/REVIEW-3.md
-```
-
-```
-RESOLUTION-PLAN.md - project/review - 2026-03-08:
-Resolution tracker for all issues from adversarial review (46 markdown + 1 SQL schema).
-Spec-internal issues only. All items resolved as of 2026-03-08. Version bumped from
-v0.1.0-alpha to v0.1.1-alpha. Multi-pass structure: Pass 1 (data integrity), onward
-through design decisions.
-aiStrat/RESOLUTION-PLAN.md
-```
-
-```
-CAPITALIZATION-PLAN.md - project/review - 2026-03-08:
-Strategic plan for extracting value from the Admiral Framework. Evaluates greenfield vs.
-existing project adoption — recommends existing-first then greenfield. Phase 1 retrofit
-timeline: Week 1 Level 1 (Mission + Boundaries + hooks + Standing Orders), Weeks 2-3
-Level 2 (5-8 agents, routing rules, interface contracts, file-based checkpoints), Weeks
-4+ Level 3 (governance agents, Brain Level 1). Phase 2 greenfield path. Three-tier
-success criteria: minimum proof, strong proof, full validation.
-aiStrat/CAPITALIZATION-PLAN.md
-```
-
-```
-REVIEW-4.md - project/review - 2026-03-10:
-Fourth-pass review by Claude Opus 4.6. Cross-system integrity audit: seven independent
-audit passes examining cross-file consistency, spec-implementation alignment, broken
-promises, and MANIFEST accuracy. 31 issues found (10 fixed, 21 documented with priority
-tiers). Key fixes: phantom "Design Agent" references, schema regulation column, brain_record
-implicit fields, governance minimum disagreement, stale agent counts. Reviewed against
-v0.2.0-alpha.
-aiStrat/REVIEW-4.md
-```
-
-```
-v0.2.0-alpha-architecture.md - project/roadmap - 2026-03-09:
-Architecture decision document for v0.2.0-alpha. Seven design questions from the v0.1.x
-audit — all resolved in v0.2.0-alpha: Orchestrator failover (1, Option B+A heartbeat),
-Identity authority SPOF (2, Option B+A separation), Governance self-monitoring (3, A+B
-two-layer), Hook configuration format (4, Option B manifest+A future registry), Attack
-corpus bootstrapping (5, Option B feedback+A seed), Handoff protocol schema (6, Option B
-dual-format), Model API outage recovery (7, Option B tiered+A abstraction).
-aiStrat/v0.2.0-alpha-architecture.md
-```
-
----
-
 ## Handoff Schema (1 file)
 
 ```
@@ -700,6 +627,71 @@ TaskCompleted, PrePush, Periodic), timeout_ms (100-300000), requires (dependency
 input_contract (version string), description, and async flag. Used by runtime for hook
 discovery and dependency resolution at SessionStart.
 aiStrat/hooks/manifest.schema.json
+```
+
+---
+
+## Hook Manifests (8 files)
+
+```
+hook.manifest.json - hooks/context_baseline - 2026-03-10:
+Manifest for context_baseline hook. SessionStart event. Measures initial context window
+utilization and records baseline metrics for comparison. No dependencies. 10s timeout.
+aiStrat/hooks/context_baseline/hook.manifest.json
+```
+
+```
+hook.manifest.json - hooks/context_health_check - 2026-03-10:
+Manifest for context_health_check hook. PostToolUse event. Monitors context health by
+checking utilization thresholds and critical context presence. Requires context_baseline.
+10s timeout.
+aiStrat/hooks/context_health_check/hook.manifest.json
+```
+
+```
+hook.manifest.json - hooks/governance_heartbeat_monitor - 2026-03-10:
+Manifest for governance_heartbeat_monitor hook. Periodic event (async). Tracks governance
+agent heartbeats and alerts Admiral on missed beats or low confidence. No dependencies.
+10s timeout.
+aiStrat/hooks/governance_heartbeat_monitor/hook.manifest.json
+```
+
+```
+hook.manifest.json - hooks/identity_validation - 2026-03-10:
+Manifest for identity_validation hook. SessionStart event. Validates agent identity token
+and auth configuration artifact at session start. Independent of Auth & Identity
+Specialist availability. No dependencies. 10s timeout.
+aiStrat/hooks/identity_validation/hook.manifest.json
+```
+
+```
+hook.manifest.json - hooks/loop_detector - 2026-03-10:
+Manifest for loop_detector hook. PostToolUse event. Detects retry loops by tracking error
+signature recurrence across invocations. No dependencies. 5s timeout.
+aiStrat/hooks/loop_detector/hook.manifest.json
+```
+
+```
+hook.manifest.json - hooks/tier_validation - 2026-03-10:
+Manifest for tier_validation hook. SessionStart event. Validates instantiated model
+against agent tier assignment and consults degradation policy on failure. No dependencies.
+10s timeout.
+aiStrat/hooks/tier_validation/hook.manifest.json
+```
+
+```
+hook.manifest.json - hooks/token_budget_gate - 2026-03-10:
+Manifest for token_budget_gate hook. PreToolUse event. Blocks tool invocations that would
+exceed the session token budget. Requires token_budget_tracker. 5s timeout.
+aiStrat/hooks/token_budget_gate/hook.manifest.json
+```
+
+```
+hook.manifest.json - hooks/token_budget_tracker - 2026-03-10:
+Manifest for token_budget_tracker hook. PostToolUse event. Tracks cumulative token
+consumption per session and emits warnings at 80% and 90% utilization. No dependencies.
+5s timeout.
+aiStrat/hooks/token_budget_tracker/hook.manifest.json
 ```
 
 ---
