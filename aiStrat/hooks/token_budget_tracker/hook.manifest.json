@@ -1,0 +1,9 @@
+{
+  "name": "token_budget_tracker",
+  "version": "1.0.0",
+  "events": ["PostToolUse"],
+  "timeout_ms": 5000,
+  "requires": [],
+  "input_contract": "v1",
+  "description": "Tracks cumulative token consumption per session and emits warnings at 80% and 90% utilization."
+}

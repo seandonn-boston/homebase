@@ -1,0 +1,9 @@
+{
+  "name": "tier_validation",
+  "version": "1.0.0",
+  "events": ["SessionStart"],
+  "timeout_ms": 10000,
+  "requires": [],
+  "input_contract": "v1",
+  "description": "Validates instantiated model against agent tier assignment and consults degradation policy on failure."
+}

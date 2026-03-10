@@ -1,0 +1,9 @@
+{
+  "name": "context_health_check",
+  "version": "1.0.0",
+  "events": ["PostToolUse"],
+  "timeout_ms": 10000,
+  "requires": ["context_baseline"],
+  "input_contract": "v1",
+  "description": "Monitors context health by checking utilization thresholds and critical context presence."
+}

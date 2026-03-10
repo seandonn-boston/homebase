@@ -1,0 +1,9 @@
+{
+  "name": "loop_detector",
+  "version": "1.0.0",
+  "events": ["PostToolUse"],
+  "timeout_ms": 5000,
+  "requires": [],
+  "input_contract": "v1",
+  "description": "Detects retry loops by tracking error signature recurrence across invocations."
+}

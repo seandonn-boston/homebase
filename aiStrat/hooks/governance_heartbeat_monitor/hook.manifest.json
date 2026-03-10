@@ -1,0 +1,10 @@
+{
+  "name": "governance_heartbeat_monitor",
+  "version": "1.0.0",
+  "events": ["Periodic"],
+  "timeout_ms": 10000,
+  "requires": [],
+  "input_contract": "v1",
+  "description": "Tracks governance agent heartbeats and alerts Admiral on missed beats or low confidence.",
+  "async": true
+}
