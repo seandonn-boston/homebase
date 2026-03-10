@@ -545,7 +545,7 @@ aiStrat/monitor/README.md
 ```
 REVIEW.md - project/review - 2026-03-08:
 First independent review by Claude Opus 4.6. Rated 8.8/10 (revised from 9.0). Weighted
-scoring across 7 dimensions (Conceptual Integrity 9.5, Completeness 9.0, Practical
+scoring across 6 dimensions (Conceptual Integrity 9.5, Completeness 9.0, Practical
 Usability 8.0, Internal Consistency 8.0, Security Model 9.5, Production Readiness 7.0).
 35 issues identified across 5 severity tiers. Reviewed against v0.1.0-alpha.
 aiStrat/REVIEW.md
