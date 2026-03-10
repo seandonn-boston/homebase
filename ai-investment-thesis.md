@@ -178,6 +178,18 @@ The thesis has identifiable confirmation and disconfirmation signals:
 
 ---
 
+## IX. Where This Thesis Becomes a Product
+
+Every dollar of the $660 billion creates a downstream problem: **who governs the agents that run on this infrastructure?**
+
+AI agents are not employees and they are not code. They cannot be managed with HR policies and they cannot be validated with traditional software tests. They are an entirely new category of resource — one that makes decisions, fails in novel ways, hands off work between peers, and forgets everything between sessions. The companies deploying fleets of these agents need governance built from scratch for how agents actually behave.
+
+This is the gap Admiral fills. It is the first framework designed for that reality — model-agnostic, progressive (start with one agent, scale to seventy-one), and built around the insight that deterministic enforcement always outperforms advisory instructions. Every major infrastructure buildout creates not just the infrastructure itself but the operational layer that makes the infrastructure usable. Railroads needed scheduling and signaling. Electrification needed the grid and the building code. The internet needed DNS, HTTP, and eventually cloud orchestration.
+
+The AI infrastructure buildout needs agent governance. That is what Admiral is.
+
+---
+
 ## Summary
 
 The market calls it a bubble because it sees $660 billion in annual capex and asks "where are the returns?" February 2026 answered that question — violently. The returns are a $2 trillion repricing of legacy software, the emergence of autonomous AI agents that compress the human-to-software ratio, and an enterprise adoption curve that has gone from 55% to 94% in three years.

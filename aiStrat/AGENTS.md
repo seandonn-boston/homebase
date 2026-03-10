@@ -7,6 +7,8 @@ This file provides guidance to any AI coding agent working with this repository.
 
 aiStrat is the **Admiral Framework** — a comprehensive specification for AI agent fleet orchestration. It is a pure specification project: no executable code, no runtime dependencies. Every artifact is a design document defining how autonomous AI agent systems should be structured, secured, coordinated, and governed.
 
+**Why this exists:** AI agents are not employees and they are not code. You cannot manage them with HR policies and you cannot validate them with traditional software tests. They are an entirely new category of resource — one that makes decisions, fails in novel ways, and forgets everything between sessions. Admiral is governance and operations designed from scratch for how agents actually behave. Model-agnostic, progressively adoptable, and built around the insight that deterministic enforcement always outperforms advisory instructions.
+
 ## Repository Structure
 
 ### Three Pillars
@@ -39,8 +41,7 @@ aiStrat is the **Admiral Framework** — a comprehensive specification for AI ag
 - The authoritative version string lives in `admiral/index.md` (line 6). All other version references must match it.
 - **Version appears in 3 locations:** `admiral/index.md` (line 6, display version), `admiral/appendices.md` (Appendix F footer), and as an HTML comment `<!-- Admiral Framework vX.Y.Z-label -->` on line 1 of every `.md` file (or SQL comment `-- Admiral Framework vX.Y.Z-label` on line 1 of every `.sql` file).
 - **MANIFEST.md** is the semantic file catalog. Update it when files are added, removed, renamed, or when their content changes materially (new sections, restructured scope, changed agent counts). It should also be updated on version bumps.
-- When bumping versions, update all markers: `grep -rn "v0\.[0-9]" aiStrat/ --include="*.md" --include="*.sql"` should show only the current version (except review artifacts which reference the version they reviewed).
-- Review artifacts (`REVIEW.md`, `REVIEW-2.md`, `REVIEW-3.md`, `RESOLUTION-PLAN.md`) reference the version they reviewed in their body text. Their line-1 HTML comment carries the current framework version; their body text preserves the reviewed version for historical accuracy.
+- When bumping versions, update all markers: `grep -rn "v0\.[0-9]" aiStrat/ --include="*.md" --include="*.sql"` should show only the current version.
 
 ## Working With This Repository
 

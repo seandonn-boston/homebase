@@ -9,7 +9,9 @@ v0.2.0-alpha · March 2026
 
 ## What This Is
 
-This is a **Swiss army knife for AI agent orchestration** — a reusable toolkit of patterns, agent definitions, enforcement strategies, and operational knowledge. It is the workforce itself, not overhead for building a specific product.
+AI agents are not employees and they are not code. You cannot manage them with HR policies and you cannot validate them with traditional software tests. They are an entirely new category of resource — non-deterministic, amnesiac between sessions, prone to novel failure modes (hallucination, sycophantic drift, scope creep, context starvation), and incapable of learning from being told something twice. The people deploying agent fleets who recognize this have a massive head start over those still trying to make old frameworks fit.
+
+This is a **Swiss army knife for that reality** — a reusable toolkit of patterns, agent definitions, enforcement strategies, and operational knowledge designed from scratch for how agents actually behave. It is the workforce itself, not overhead for building a specific product.
 
 Pick the parts you need. A two-person team might use only the enforcement spectrum (Part 3) and five agent definitions. A platform team might deploy the full Brain, Monitor, and Fleet. The framework scales to what you need — you don't adopt all of it to use any of it.
 
@@ -83,7 +85,7 @@ Admiral is complementary to agent SDKs and orchestration frameworks. They provid
 
 ## How to Read This Document
 
-This framework is split across thirteen files. This index is the entry point. Each part is a self-contained module that can be loaded into an agent's context independently.
+This framework is split across fourteen files. This index is the entry point. Each part is a self-contained module that can be loaded into an agent's context independently.
 
 **Humans** — You are the Admiral. Start here. Read the operating model and glossary, then work through parts in order or jump to whichever part addresses your current need. The prose, anti-patterns, and worked example are for you.
 
@@ -293,6 +295,7 @@ Sections are ordered by impact and grouped by relevance.
 | 26 | Cost Management | Token economics, model tier optimization, and budget controls. | |
 | 27 | Fleet Health Metrics | What to measure, what healthy looks like, and what to do when it doesn't. | |
 | 28 | Fleet Scaling & Lifecycle | How fleets grow, shrink, and transition across project phases. | |
+| 28b | Orchestrator Health Protocol | Heartbeat monitoring, failover, and recovery for the Orchestrator. | |
 | 29 | Inter-Fleet Governance | Isolation, controlled sharing, and cross-fleet review across projects. | |
 | | **PART 9 — PLATFORM** | *The infrastructure that surrounds the fleet.* | [`part9-platform.md`](part9-platform.md) |
 | 30 | Fleet Observability | Why a specific agent failed on a specific task — traces, not just metrics. | |
