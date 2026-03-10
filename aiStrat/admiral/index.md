@@ -111,13 +111,14 @@ This framework is split across thirteen files. This index is the entry point. Ea
 | [`part9-platform.md`](part9-platform.md) | Sections 30–32 + 32b: Fleet Observability, CI/CD & Event-Driven Operations, Fleet Evaluation & Benchmarking, Multi-Modal & Extended Capabilities |
 | [`part10-admiral.md`](part10-admiral.md) | Sections 33–35: Admiral Self-Calibration, Human-Expert Routing, Multi-Operator Governance |
 | [`part11-protocols.md`](part11-protocols.md) | Sections 36–41: Standing Orders, Escalation, Handoffs, Human Referral, Paid Resource Authorization, Data Sensitivity |
+| [`intent-engineering.md`](intent-engineering.md) | Intent Engineering: the shared dialect between Admirals and Brains |
 | [`appendices.md`](appendices.md) | Pre-Flight Checklist, Quick-Start Sequence, Worked Example |
 
 -----
 
 ## The Operating Model
 
-You are the Admiral. You provide the strategic context, constraints, and clarity that no AI can generate for itself. You may be a human operator, a meta-agent orchestrating other agents, or a hybrid of both. What matters is not whether you write code — it is whether the fleet has the context it needs to operate autonomously within defined boundaries.
+You are the Admiral. You provide the strategic context, constraints, and clarity that no AI can generate for itself. You may be a human operator, a meta-agent orchestrating other agents, or a hybrid of both. What matters is not whether you write code — it is whether the fleet has the context it needs to operate autonomously within defined boundaries. Your primary communication skill is **intent engineering** — structuring instructions around outcomes, values, constraints, failure modes, and judgment boundaries so that agents encountering unexpected situations can either make the right call or know that they cannot. See [`intent-engineering.md`](intent-engineering.md).
 
 Every autonomous AI system, regardless of intelligence, operates within the boundaries of what it has been told and what has been enforced. The quality of those boundaries — and the reliability of their enforcement — determines whether a fleet self-organizes into productive work or spirals into hallucination, scope creep, and wasted tokens.
 
@@ -183,11 +184,13 @@ Terms are listed alphabetically. When these terms appear in any part file, they 
 | **Instruction decay** | Rules followed initially but ignored as session lengthens and context pressure builds. See Section 23 (Failure Mode Catalog) for diagnosis and defense. |
 | **Interface contract** | The defined format for handoffs between agents: what the sender delivers, what the receiver returns. Section 11. |
 | **Knowledge graph** | The network of linked Brain entries. Entries connected by relationship types (supports, contradicts, supersedes, elaborates, caused_by) that agents can traverse for reasoning chains. Section 17. |
-| **Knowledge protocol** | The MCP server interface that exposes the Brain to any AI agent. Tools: brain_record, brain_query, brain_retrieve, brain_strengthen, brain_supersede, brain_status, brain_audit. Section 16. |
+| **Knowledge protocol** | The MCP server interface that exposes the Brain to any AI agent. Tools: brain_record, brain_query, brain_retrieve, brain_strengthen, brain_supersede, brain_status, brain_audit, brain_purge. Section 16. |
 | **LLM-Last** | Design principle: if a deterministic tool (linter, type checker, formatter, regex) can do it, the LLM should not. Highest-impact cost and reliability lever. Section 02. |
 | **Computer use** | Agent capability to interact with graphical user interfaces — clicking, typing, scrolling, reading screen content. Requires sandboxed environment, strict time limits, and narrow Autonomous tier. Section 32b. |
 | **Extended thinking** | Dedicated reasoning tokens consumed before the model's response begins. Deeper reasoning, not longer output. 5-50x output volume. Must be budgeted separately. Section 32b. |
+| **Human inflection point** | A moment during execution where the correct action requires human judgment, taste, ethics, or strategic context that an LLM cannot derive from training data. The agent must stop and ask. See `admiral/intent-engineering.md`. |
 | **Identity token** | Cryptographically signed, session-scoped, non-delegable credential binding an agent to a specific project, role, authority tier, and session. Verified by the Brain MCP server on every request. Section 16. |
+| **Intent engineering** | The practice of structuring instructions around outcomes, values, constraints, failure modes, and judgment boundaries — not just outputs. The evolution beyond prompt engineering and context engineering. The shared dialect between Admirals and Brains. See `admiral/intent-engineering.md`. |
 | **MCP** | Model Context Protocol. Open standard (Anthropic, now Linux Foundation) for connecting agents to tools and data sources. Supports streaming, subscriptions, and discovery with trust signals. "USB-C for AI." |
 | **Multi-hop retrieval** | Brain retrieval pattern that follows entry links to return full reasoning chains — cause → decision → outcome → consequence — not just the directly matching entry. Maximum depth: 3. Section 17. |
 | **MCP server** | A tool provider implementing the MCP standard. Extends agent capabilities. Must be registered, scoped, version-pinned, and audited. Section 12, Section 14. |
@@ -294,12 +297,12 @@ Sections are ordered by impact and grouped by relevance.
 | | **PART 9 — PLATFORM** | *The infrastructure that surrounds the fleet.* | [`part9-platform.md`](part9-platform.md) |
 | 30 | Fleet Observability | Why a specific agent failed on a specific task — traces, not just metrics. | |
 | 31 | CI/CD & Event-Driven Operations | Agents triggered by PRs, CI failures, schedules, and webhooks. | |
-| 32 | Fleet Evaluation & Benchmarking | A/B testing fleet configs and measuring whether the fleet is worth it. |
+| 32 | Fleet Evaluation & Benchmarking | A/B testing fleet configs and measuring whether the fleet is worth it. | |
 | 32b | Multi-Modal & Extended Capabilities | Computer use, extended thinking, structured outputs, vision. | |
 | | **PART 10 — THE ADMIRAL** | *The human element.* | [`part10-admiral.md`](part10-admiral.md) |
 | 33 | Admiral Self-Calibration | Bottleneck detection, trust calibration, and growth trajectory. | |
 | 34 | Human-Expert Routing | When the fleet needs expertise the Admiral doesn't have. | |
-| 35 | Multi-Operator Governance | Isolation, shared resources, and cross-fleet review across multiple Admirals. | |
+| 35 | Multi-Operator Governance | Multiple operators governing a single fleet: tiers, conflict resolution, handoff. | |
 | | **PART 11 — PROTOCOLS** | *The universal operating rules every agent follows.* | [`part11-protocols.md`](part11-protocols.md) |
 | 36 | Standing Orders | Fifteen non-negotiable rules loaded into every agent's standing context. | |
 | 37 | Escalation Protocol | How and when agents stop work and flag issues upward. | |
@@ -307,6 +310,10 @@ Sections are ordered by impact and grouped by relevance.
 | 39 | Human Referral Protocol | When and how specialists recommend consulting a human professional. | |
 | 40 | Paid Resource Authorization | Human-authorized access to paid software, licenses, and subscriptions. | |
 | 41 | Data Sensitivity Protocol | Deterministic enforcement preventing PII, secrets, and credentials from entering persistent storage. | |
+| | **INTENT ENGINEERING** | *The shared dialect between Admirals and Brains.* | [`intent-engineering.md`](intent-engineering.md) |
+| — | Intent Engineering | Structuring instructions around outcomes, values, constraints, failure modes, and judgment boundaries. | |
+| — | The Six Elements of Intent | Goal, Priority, Constraints, Failure Modes, Judgment Boundaries, Values. | |
+| — | The Human Inflection Point | Where the agent's authority ends and the human's begins. This shall not be worked around. | |
 | | **APPENDICES** | | [`appendices.md`](appendices.md) |
 | A | Pre-Flight Checklist | Go/no-go gate before fleet deployment. | |
 | B | Quick-Start Sequence | Level-structured operational order for standing up a new fleet. | |

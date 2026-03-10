@@ -55,7 +55,7 @@ CREATE TABLE entry_links (
 CREATE TABLE audit_log (
     id          TEXT PRIMARY KEY,
     timestamp   TEXT NOT NULL,
-    operation   TEXT NOT NULL CHECK (operation IN ('record', 'query', 'retrieve', 'strengthen', 'supersede', 'audit', 'purge')),
+    operation   TEXT NOT NULL CHECK (operation IN ('record', 'query', 'retrieve', 'strengthen', 'supersede', 'audit', 'purge', 'status')),
     agent_id    TEXT NOT NULL,
     project     TEXT NOT NULL,
     entry_id    TEXT,
@@ -134,6 +134,8 @@ def blob_to_embedding(blob: bytes, dimensions: int) -> list[float]:
 
 Cosine similarity between the query embedding and all stored embeddings. This is a full table scan — no index acceleration — which is acceptable up to approximately 10,000 entries.
 
+**Why the 0.7 default threshold (`min_score`):** Below 0.7, results are typically false positives — entries that share surface-level vocabulary but address different concerns. A query about "authentication" at 0.5 similarity might return entries about "authorization" or "certificates" that are related but not relevant to the specific decision at hand. The 0.7 threshold prevents agents from acting on shallow matches. **Judgment boundary:** If a query returns no results above 0.7 but the agent believes relevant entries exist, it should try reformulating the query before lowering the threshold. Lowering the threshold is a last resort, not a first response.
+
 ```python
 import math
 import sqlite3
@@ -150,7 +152,7 @@ def cosine_similarity(a: list[float], b: list[float]) -> float:
 def brain_query(db_path: str, query_embedding: list[float],
                 project: str = None, category: str = None,
                 limit: int = 10, min_score: float = 0.7,
-                dimensions: int = 384) -> list[dict]:
+                dimensions: int = 1536) -> list[dict]:
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
 

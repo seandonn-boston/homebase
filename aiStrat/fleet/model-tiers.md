@@ -112,16 +112,18 @@ No default assignments. Use for high-volume batch variations of Tier 2/3 tasks w
 ### Promote (move to higher tier) when:
 
 - First-pass quality rate for the role drops below acceptable threshold
-- Rework cost exceeds the cost difference between tiers
+- Rework cost exceeds the cost difference between tiers — *this is the economic signal: if rework from wrong-tier output costs more than the tier upgrade, the upgrade pays for itself*
 - The agent consistently requires human correction on judgment calls
-- Error patterns indicate reasoning limitations rather than knowledge gaps
+- Error patterns indicate reasoning limitations rather than knowledge gaps — *knowledge gaps are fixed with better context (Section 04); reasoning gaps require a more capable model*
 
 ### Demote (move to lower tier) when:
 
 - Output quality at the higher tier is indistinguishable from the lower tier
 - A/B testing shows no meaningful quality difference between tiers
-- The role's tasks have become more routine and well-defined over time
+- The role's tasks have become more routine and well-defined over time — *as tasks become routine, the judgment required drops and a less capable model suffices*
 - Cost pressure requires optimization and the role's error tolerance allows it
+
+**Failure mode: Silent quality erosion.** Demotion without measurement produces gradual quality decline that isn't visible in any single output but compounds across sessions. Always A/B test before demoting — "seems fine" is not evidence.
 
 ### External signal: the Continuous Monitor
 

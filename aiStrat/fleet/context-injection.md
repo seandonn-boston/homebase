@@ -162,4 +162,6 @@ Context windows are finite. Budget context allocation by priority:
 | **Low** | Nice-to-have reference material | 0–10% |
 | **Reserved** | Working space for agent reasoning and output | 30–40% |
 
-When context pressure builds, sacrifice from the bottom up. Never sacrifice Identity, Authority, or Constraints — those produce the most expensive failures when lost.
+When context pressure builds, sacrifice from the bottom up. **Never sacrifice Identity, Authority, or Constraints** — these are the agent's intent foundation. They produce the most expensive failures when lost because the agent continues operating without knowing who it is, what it may decide, or what lines it must not cross. Reference material can be re-fetched; identity and constraints cannot be reconstructed from first principles.
+
+**Judgment boundary for context sufficiency:** If an agent cannot answer "what is my role?", "what may I decide without asking?", and "what must I not do?" from its loaded context alone, the context is insufficient regardless of how much task detail is present. These three questions are the minimum viable intent.

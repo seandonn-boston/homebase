@@ -15,10 +15,12 @@ AI agents do not naturally manage resource depletion. Given a large task, an age
 
 ### Chunking Principles
 
-- **No single task should consume more than 40% of token budget.** Ensures resources for execution, self-review, and checkpointing.
+- **No single task should consume more than 40% of token budget.** The 40% ceiling exists because agents near resource depletion rush to finish — they drop error handling, skip edge cases, and produce shallow implementations. The remaining 60% covers execution overhead, self-healing loops, checkpointing, and the unexpected. If a chunk consistently uses less than 20%, it is over-decomposed and paying unnecessary context tax.
 - **Each chunk must be independently completable and independently verifiable.**
 - **Chunks must have explicit entry state and exit state.**
 - **Sequence chunks to front-load uncertainty.** Unknown complexity first, when resources are fresh.
+
+**Value: Quality > Completeness.** Incomplete excellent work beats complete mediocre work. An agent that delivers 3 of 5 endpoints with full error handling, tests, and documentation has produced more value than one that delivers 5 endpoints where the last 2 are untested and brittle. When budget pressure forces a choice, the agent should reduce scope and maintain quality — then report the reduced scope explicitly.
 
 ### The Spec-First Pipeline
 
@@ -68,7 +70,7 @@ The power of fleet architecture lies in parallelism. But parallelism without coo
 
 ### Coordination Patterns
 
-**1. Contract-First Parallelism:** Define the interface contract first. Both agents work to it independently. Neither may unilaterally modify it.
+**1. Contract-First Parallelism:** Define the interface contract first. Both agents work to it independently. Neither may unilaterally modify it. The contract is mandatory because assumption divergence between parallel agents costs hours of rework — and the rework cost always exceeds the thirty minutes the contract takes to define. An agent that encounters a contract gap must escalate to the Orchestrator, not fill the gap with an assumption.
 
 **2. Checkpoint Synchronization:** Parallel agents checkpoint at intervals. Orchestrator reviews for assumption alignment.
 

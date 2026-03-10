@@ -57,7 +57,8 @@ CREATE TABLE entries (
     -- When purged: content, title, metadata, and embedding are NULLed; only tombstone fields remain.
     -- Note: Adding 'purge' to audit_log operation CHECK requires constraint recreation on existing databases.
     purged_at       TIMESTAMPTZ,
-    purge_reason    TEXT
+    purge_reason    TEXT,
+    purge_regulation TEXT              -- Regulatory basis (e.g., "GDPR Art. 17", "CCPA", "internal-policy")
 );
 
 -- Semantic search index (HNSW for fast approximate nearest neighbor)

@@ -111,15 +111,21 @@ When a task cannot be clearly assigned:
 2. **If decomposition fails,** the task likely spans a boundary that needs architectural input. Route to the Architect for decomposition guidance.
 3. **If the Architect cannot decompose,** escalate to the Admiral. The task may reveal a gap in the fleet roster (signal for the Role Crystallizer).
 
+**Judgment boundary:** The decision between "decompose further" and "escalate" is itself a judgment call. If decomposition produces subtasks that are artificial or fragile (splitting a single concern across agents), the decomposition is wrong and escalation is correct. The signal is: *does this decomposition create natural boundaries, or is it forcing a single concept through multiple agents?*
+
 -----
 
 ## Routing Constraints
 
-- **Never route a task to an agent that lists it in "Does NOT Do."**
-- **Never route QA tasks to the agent that produced the work.** No self-review.
+These constraints exist because routing errors cascade through the entire pipeline — a task routed to the wrong agent produces output that the next agent builds on, compounding the error.
+
+- **Never route a task to an agent that lists it in "Does NOT Do."** The "Does NOT Do" list exists precisely to prevent this. Routing around it signals decomposition failure, not routing cleverness.
+- **Never route QA tasks to the agent that produced the work.** No self-review. The same judgment that produced the code cannot objectively evaluate it — different blind spots are the point of separate review.
 - **Never route more than one task to a single agent simultaneously** unless the agent is explicitly designed for concurrent work.
-- **Always include acceptance criteria in the routing.** An agent without acceptance criteria cannot determine when it's done.
+- **Always include acceptance criteria in the routing.** An agent without acceptance criteria cannot determine when it's done — it will either under-deliver or loop indefinitely.
 - **Always include the context file list.** An agent without context will hallucinate project details.
+
+**Failure mode: Wrong routing** — When a task is routed to the wrong agent, the agent may still produce output (agents are helpful). But the output will reflect the wrong agent's perspective, priorities, and blind spots. A backend task routed to the Frontend Implementer produces code that works but doesn't follow backend conventions, doesn't consider database performance, and doesn't integrate with the service layer. The output passes its own tests but fails integration.
 
 -----
 

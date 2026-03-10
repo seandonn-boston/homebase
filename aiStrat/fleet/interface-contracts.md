@@ -53,7 +53,7 @@ These contracts specify exactly what the sender delivers and what the receiver r
 - Suggestions for additional test coverage
 - Verification that existing tests still pass
 
-### Design Agent → Frontend Implementer
+### Design Systems Agent → Frontend Implementer
 
 **Sender delivers:**
 - Component specification (layout, spacing, colors, typography)
@@ -436,6 +436,10 @@ When a handoff doesn't match the expected contract:
 2. **Rejection routes through the Orchestrator** (not directly back to sender)
 3. **Orchestrator determines** whether to route back to sender for correction or to decompose differently
 4. **Repeated contract violations** for the same agent pair signal a process issue — the Orchestrator flags it for review
+
+**Why acceptance_criteria is required:** Without acceptance criteria, the receiving agent cannot determine whether the handoff is complete. It will accept whatever arrives and build on it — propagating incomplete input downstream. Acceptance criteria are the receiver's defense against upstream quality failures.
+
+**Judgment guidance:** Repeated contract violations for the same agent pair (3+ rejections in a session) signal that the decomposition is wrong, not that the agents are performing poorly. The work may not naturally divide at the boundary the contract assumes. The Orchestrator should re-evaluate whether the task should be decomposed differently or assigned to a single agent.
 
 -----
 

@@ -23,11 +23,11 @@ Define every agent role. Each needs a clear identity, a defined scope, and expli
 | Implementer | Writes code, implements features, follows specifications exactly | Choose architecture, add unrequested features, modify files outside scope |
 | QA Agent | Reviews output, runs tests, validates against criteria, flags issues | Fix issues directly (sends back to Implementer), approve its own work |
 | Database Agent | Designs schemas, writes migrations, optimizes queries | Modify application code, change API contracts without approval |
-| Design Agent | Produces UI/UX specifications, component layouts, style guidelines | Implement designs in code (hands off to Implementer) |
+| Design Systems Agent | Produces UI/UX specifications, component layouts, style guidelines | Implement designs in code (hands off to Implementer) |
 
 ### Agent Catalog
 
-The canonical agent catalog lives in [`fleet/README.md`](../fleet/README.md). It contains 71 core agent definitions across 12 specialist categories plus 4 command & coordination agents, with an additional 29 extended agents in `fleet/agents/extras/`.
+The canonical agent catalog lives in [`fleet/README.md`](../fleet/README.md). It contains 71 core agent definitions (67 specialists across 12 categories plus 4 command & coordination agents), with an additional 29 extended agents in `fleet/agents/extras/`.
 
 Select agents based on the project's actual needs. Define "Does NOT Do" boundaries for each. See `fleet/README.md` for the complete catalog with agent counts per category.
 
@@ -49,13 +49,16 @@ These are the agents to implement first. A fleet can operate effectively with ju
 | 10 | **Hallucination Auditor** | Governance (always deploy) — detects fabricated facts, false citations |
 | 11 | **Loop Breaker** | Governance (always deploy) — detects and terminates circular agent loops |
 
-**Do not deploy 67 agents for a project that needs 11.** The administrative cost of configuring, routing, and coordinating a large fleet exceeds the value for most projects. Start with the core 11. Add roles when the Orchestrator reports routing bottlenecks or when specific domain expertise gaps emerge.
+**Do not deploy 71 agents for a project that needs 11.** The administrative cost of configuring, routing, and coordinating a large fleet exceeds the value for most projects. Start with the core 11. Add roles when the Orchestrator reports routing bottlenecks or when specific domain expertise gaps emerge.
 
 ### Routing Logic
 
 - **Route by task type:** Database tasks → Database Agent. UI → Frontend Implementer. Tests → QA.
 - **Route by file ownership:** Each specialist owns specific directories. Tasks touching those files route to the owner.
 - **Escalate ambiguous routing:** If a task spans multiple specialists, decompose further. If decomposition fails, escalate to the Admiral.
+- **Never route QA to the implementer who wrote the code.** This prevents conflict of interest — the same judgment that produced the code cannot objectively evaluate it. Different blind spots are the point.
+
+Routing rules that communicate intent produce better specialist output. "Database task" is a category. "Schema migration that must be backward-compatible because we have live traffic" is intent. When routing includes the *why*, the specialist makes better trade-offs without additional round trips to the Orchestrator.
 
 ### Interface Contracts
 
@@ -99,7 +102,7 @@ For each agent role, define a Tool Registry:
 
 ### Negative Tool List
 
-Equally important: what the agent does NOT have.
+Equally important: what the agent does NOT have. Agents will hallucinate capabilities that seem plausible from their training data. The negative tool list is the primary defense because it creates an explicit boundary: "I cannot do X" is more reliable than inferring "I can do everything except X" from a positive list. Before proceeding with any task that requires tools, agents must verify each required tool is on their positive list. If any are missing, escalate before attempting workarounds.
 
 - No shell access: "You do not have shell access. Do not generate shell commands."
 - No HTTP: "You cannot access external URLs. Do not attempt API calls."
@@ -141,6 +144,8 @@ Equally important: what the agent does NOT have.
 > **TL;DR** — Match model capability to role requirements across four tiers. Flagship for orchestration, workhorse for implementation, utility for triage, economy for batch. Using the best model for every role wastes money. Using the cheapest for every role breaks quality.
 
 Different models have different strengths. Model assignment affects quality, cost, and latency simultaneously.
+
+**The cost of wrong-tier assignment:** Using flagship for triage wastes 10-30x the token cost with no quality improvement — triage is pattern matching, not deep reasoning. Using economy for orchestration risks poor decomposition — the Orchestrator's judgment shapes every downstream task, and a bad decomposition compounds through the entire pipeline. The tier strategy exists because not all decisions carry equal weight, and the model budget should reflect that priority.
 
 ### Model Landscape Updates
 

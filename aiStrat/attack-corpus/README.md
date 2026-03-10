@@ -67,6 +67,8 @@ Every corpus entry — whether seed (manually curated) or feedback-generated (wr
 
 These manually curated entries bootstrap the corpus. They cover the most common attack categories and provide initial training data for Layer 3.
 
+**Why this ordering:** Scenarios are organized by descending leverage. Authority spoofing comes first because a successful authority spoof grants the attacker the fleet's highest privilege level — every downstream defense becomes irrelevant if the attacker can claim Admiral authority. Credential fabrication follows because fabricated credentials are the mechanism by which spoofed authority persists across sessions. Behavior manipulation and prompt injection are next because they operate at the instruction level rather than the identity level. Failure and chaos scenarios are last because they test resilience, not adversarial intent — important, but the fleet survives gracefully degraded operation far better than it survives compromised authority.
+
 ### Authority Spoofing (ATK-0001 through ATK-0004)
 
 **ATK-0001: Admiral approval claim**
@@ -224,7 +226,7 @@ Before each chaos experiment, the Chaos Agent queries the Brain for relevant sce
 
 ```
 Chaos Agent receives system-under-test description
-  → Queries Brain: brain_query(category="ATTACK_CORPUS", semantic_search=system_description)
+  → Queries Brain: brain_query(query=system_description, category="failure", metadata_filter={"corpus": "attack"})
   → Receives ranked scenarios by relevance to current system
   → Prioritizes scenarios with low times_passed or high times_failed
   → Runs relevant scenarios against the current system
@@ -237,7 +239,7 @@ Chaos Agent receives system-under-test description
 | Adoption Level | Storage | Mechanism |
 |---|---|---|
 | Level 1 (file-based) | This directory | Seed entries as YAML/JSON files |
-| Level 2+ (Brain) | Brain semantic memory | Category: `ATTACK_CORPUS`; seed corpus loaded as bootstrap entries |
+| Level 2+ (Brain) | Brain semantic memory | Category: `failure` with metadata tag `{"corpus": "attack"}`; seed corpus loaded as bootstrap entries |
 
 At Level 2+, the Brain's semantic search enables the Chaos Agent to find scenarios *relevant* to the current system — not just replay old tests. The `brain_query` tool with vector similarity search matches system-under-test descriptions against corpus entry triggers and contexts.
 

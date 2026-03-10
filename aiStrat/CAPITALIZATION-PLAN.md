@@ -73,7 +73,7 @@ The 15 non-negotiable rules. Pick the 5 most relevant to your project and add th
 ### Weeks 2–3 — Level 2: Core Fleet
 
 **Step 5: Define 5–8 agent roles**
-Pull from fleet/ catalog. Start with: Orchestrator, Backend Implementer, Frontend Implementer (if applicable), QA Agent, and 1–2 governance agents (Token Budgeter + Hallucination Auditor minimum).
+Pull from fleet/ catalog. Start with: Orchestrator, Backend Implementer, Frontend Implementer (if applicable), QA Agent, and governance agents (Token Budgeter + Hallucination Auditor + Loop Breaker minimum).
 
 **Step 6: Write routing rules**
 Which agent handles which task type. Which agent owns which directories. What happens when routing is ambiguous.
