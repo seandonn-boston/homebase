@@ -1,7 +1,7 @@
 <!-- Admiral Framework v0.2.0-alpha -->
 # Admiral Framework — File Manifest
 
-**68 files across 15 groups | Last modified: 2026-03-10**
+**69 files across 15 groups | Last modified: 2026-03-10**
 
 This is the semantic catalog of every file in the Admiral Framework. Each entry describes what the file contains, verified against the source. Update this manifest when files are added, removed, renamed, or when their content changes materially.
 
@@ -623,6 +623,17 @@ Level 2 (5-8 agents, routing rules, interface contracts, file-based checkpoints)
 4+ Level 3 (governance agents, Brain Level 1). Phase 2 greenfield path. Three-tier
 success criteria: minimum proof, strong proof, full validation.
 aiStrat/CAPITALIZATION-PLAN.md
+```
+
+```
+REVIEW-4.md - project/review - 2026-03-10:
+Fourth-pass review by Claude Opus 4.6. Cross-system integrity audit: seven independent
+audit passes examining cross-file consistency, spec-implementation alignment, broken
+promises, and MANIFEST accuracy. 31 issues found (10 fixed, 21 documented with priority
+tiers). Key fixes: phantom "Design Agent" references, schema regulation column, brain_record
+implicit fields, governance minimum disagreement, stale agent counts. Reviewed against
+v0.2.0-alpha.
+aiStrat/REVIEW-4.md
 ```
 
 ```
