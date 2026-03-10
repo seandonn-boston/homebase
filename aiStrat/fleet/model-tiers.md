@@ -87,6 +87,8 @@ Agents that implement, review, and produce concrete deliverables:
 | Context Health Monitor | Must assess context window utilization and instruction decay |
 | Contradiction Detector | Must identify inconsistencies across multi-agent outputs |
 
+> **Note on collective tier assignments:** Entries like "All Data & Analytics agents (extras/)" assign the same tier to an entire agent category. This is a default — individual agents within a category may be promoted or demoted based on observed output quality per the Promotion and Demotion Signals below. The collective assignment provides a starting point; calibrate individually as rework data accumulates.
+
 ### Tier 3 — Utility
 
 Agents with well-defined inputs, simple decision logic, and structured outputs:

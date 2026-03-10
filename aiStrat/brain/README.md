@@ -165,7 +165,7 @@ brain/
 - **Postgres + pgvector** chosen for combined structured/unstructured/vector storage in a single transactional system. No vendor lock-in.
 - **MCP as the universal interface.** Any agent that speaks MCP speaks to the Brain — Claude Code, Agent SDK agents, third-party agents. Protocol-agnostic by design.
 - **Zero-trust access control.** Identity tokens are cryptographically signed, session-scoped, non-delegable. No caller-declared identity trusted.
-- **Embedding generation is pluggable.** The `EmbeddingProvider` interface accepts any implementation — OpenAI, local models, or future alternatives.
+- **Embedding generation is pluggable.** The `EmbeddingProvider` interface accepts any implementation — OpenAI, local models, or future alternatives. The `embedding_model` column tracks which model produced each entry's embedding for migration purposes, but no MCP tool exposes embedding model selection or re-embedding. Embedding generation is an infrastructure concern managed at the MCP server configuration level, not an agent-facing operation. At Level 2 (SQLite), the embedding model is configured at deployment time. Agents interact with embeddings indirectly through `brain_query` (semantic search) and `brain_record` (automatic embedding on write).
 - **Retrieval is multi-signal.** Vector similarity alone is insufficient. The pipeline applies eight ranking signals from Part 5, Section 17, including multi-hop traversal and contradiction awareness.
 - **All access is audited.** Immutable, append-only audit log captures every operation with verified identity, risk flags, and sensitivity classification.
 
