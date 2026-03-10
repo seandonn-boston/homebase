@@ -166,6 +166,50 @@ class TestHookEngine:
         assert len(post) == 1
         assert post[0].name == "post_hook"
 
+    def test_discover_from_spec_hooks(self, tmp_path):
+        """HookEngine.discover() should find hook manifests in a directory tree."""
+        import json
+        # Create a temp hook directory with a manifest and executable
+        hook_dir = tmp_path / "test_hook"
+        hook_dir.mkdir()
+        manifest_data = {
+            "name": "test_hook",
+            "version": "1.0.0",
+            "events": ["PostToolUse"],
+            "timeout_ms": 5000,
+            "input_contract": "v1",
+            "description": "A test hook for discovery testing.",
+        }
+        (hook_dir / "hook.manifest.json").write_text(json.dumps(manifest_data))
+        (hook_dir / "test_hook.py").write_text("#!/usr/bin/env python3\npass\n")
+
+        engine = HookEngine()
+        discovered = engine.discover(tmp_path)
+        assert discovered == ["test_hook"]
+        assert "test_hook" in engine.registered_hooks
+
+    def test_discover_spec_manifests_parse(self):
+        """All 8 aiStrat/hooks/ manifests should parse as valid HookManifest objects."""
+        spec_hooks_dir = Path(__file__).resolve().parent.parent.parent / "aiStrat" / "hooks"
+        manifest_files = sorted(spec_hooks_dir.rglob("hook.manifest.json"))
+        assert len(manifest_files) == 8
+        expected_names = {
+            "token_budget_tracker", "token_budget_gate", "loop_detector",
+            "context_baseline", "context_health_check", "tier_validation",
+            "identity_validation", "governance_heartbeat_monitor",
+        }
+        discovered_names = set()
+        for mf in manifest_files:
+            manifest = HookManifest.from_file(mf)
+            discovered_names.add(manifest.name)
+        assert discovered_names == expected_names
+
+    def test_discover_nonexistent_dir(self):
+        """discover() with a nonexistent directory should return empty list."""
+        engine = HookEngine()
+        discovered = engine.discover(Path("/nonexistent/path"))
+        assert discovered == []
+
 
 # === Hook Manifest Tests ===
 

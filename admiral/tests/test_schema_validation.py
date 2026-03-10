@@ -262,3 +262,43 @@ class TestProtocolStructure:
             impact="Integration tests blocked",
         )
         assert medium.route_to() == "Orchestrator"
+
+    def test_emergency_halt_report_renders(self) -> None:
+        """EmergencyHaltReport should render in the Section 37 format."""
+        from admiral.protocols.escalation import EmergencyHaltReport, EmergencyHaltTrigger
+        report = EmergencyHaltReport(
+            agent="Security Auditor",
+            trigger=EmergencyHaltTrigger.SECURITY_BREACH,
+            what_happened="Discovered credentials in application logs during routine audit",
+            current_state="Logs contain plaintext API keys from last 48 hours of requests",
+            evidence="grep found 247 instances of Authorization headers in access.log",
+        )
+        rendered = report.render()
+        assert "EMERGENCY HALT" in rendered
+        assert "CRITICAL — EMERGENCY HALT" in rendered
+        assert "Security Auditor" in rendered
+        assert "security_breach" in rendered
+        assert "Admiral direction" in rendered
+
+    def test_emergency_halt_all_triggers(self) -> None:
+        """All 6 EmergencyHaltTrigger values should be valid."""
+        from admiral.protocols.escalation import EmergencyHaltTrigger
+        triggers = list(EmergencyHaltTrigger)
+        assert len(triggers) == 6
+        expected = {
+            "data_destruction", "security_breach", "compliance_violation",
+            "safety_hazard", "cascade_failure", "access_risk_exceeded",
+        }
+        assert {t.value for t in triggers} == expected
+
+    def test_all_escalation_triggers(self) -> None:
+        """All 8 EscalationTrigger values should match Section 37."""
+        from admiral.protocols.escalation import EscalationTrigger
+        triggers = list(EscalationTrigger)
+        assert len(triggers) == 8
+        expected = {
+            "scope_change", "budget_exceeded", "security_concern",
+            "contradictory_requirements", "authority_exceeded",
+            "recovery_exhausted", "blocking_dependency", "safety_concern",
+        }
+        assert {t.value for t in triggers} == expected
