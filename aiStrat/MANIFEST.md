@@ -1,7 +1,7 @@
 <!-- Admiral Framework v0.2.0-alpha -->
 # Admiral Framework — File Manifest
 
-**70 files across 14 groups | Last modified: 2026-03-10**
+**70 files across 15 groups | Last modified: 2026-03-10**
 
 This is the semantic catalog of every file in the Admiral Framework. Each entry describes what the file contains, verified against the source. Update this manifest when files are added, removed, renamed, or when their content changes materially.
 

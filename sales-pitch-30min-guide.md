@@ -72,7 +72,7 @@ Start here. He needs to feel the ground shift before the product makes sense.
 ### The Three Things Admiral Provides
 
 **1. The Org Chart — "Who does what"**
-- 71 pre-defined specialist agent roles across 12 categories
+- 71 pre-defined agent roles (67 specialists across 12 categories + 4 command agents for orchestration, triage, context, and conflict resolution)
 - Like having a staffing agency that already has job descriptions, skill requirements, and role boundaries written for every AI position you'd need
 - Routing rules that match tasks to the right agent automatically
 

@@ -85,7 +85,7 @@ Admiral is complementary to agent SDKs and orchestration frameworks. They provid
 
 ## How to Read This Document
 
-This framework is split across thirteen files. This index is the entry point. Each part is a self-contained module that can be loaded into an agent's context independently.
+This framework is split across fourteen files. This index is the entry point. Each part is a self-contained module that can be loaded into an agent's context independently.
 
 **Humans** — You are the Admiral. Start here. Read the operating model and glossary, then work through parts in order or jump to whichever part addresses your current need. The prose, anti-patterns, and worked example are for you.
 
@@ -295,6 +295,7 @@ Sections are ordered by impact and grouped by relevance.
 | 26 | Cost Management | Token economics, model tier optimization, and budget controls. | |
 | 27 | Fleet Health Metrics | What to measure, what healthy looks like, and what to do when it doesn't. | |
 | 28 | Fleet Scaling & Lifecycle | How fleets grow, shrink, and transition across project phases. | |
+| 28b | Orchestrator Health Protocol | Heartbeat monitoring, failover, and recovery for the Orchestrator. | |
 | 29 | Inter-Fleet Governance | Isolation, controlled sharing, and cross-fleet review across projects. | |
 | | **PART 9 — PLATFORM** | *The infrastructure that surrounds the fleet.* | [`part9-platform.md`](part9-platform.md) |
 | 30 | Fleet Observability | Why a specific agent failed on a specific task — traces, not just metrics. | |
