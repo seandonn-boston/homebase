@@ -109,7 +109,7 @@ This extension is planned for v0.3.0+. For v0.2.0, the simple version string is 
 
 ## Reference Manifests
 
-The following hooks are specified in `admiral/part3-enforcement.md` (Section 08). Their manifests would be:
+The following 8 hooks are specified in `admiral/part3-enforcement.md` (Section 08). Their manifests would be:
 
 **token_budget_tracker:**
 ```json
@@ -187,6 +187,19 @@ The following hooks are specified in `admiral/part3-enforcement.md` (Section 08)
   "requires": [],
   "input_contract": "v1",
   "description": "Validates instantiated model against agent tier assignment and consults degradation policy on failure."
+}
+```
+
+**identity_validation:**
+```json
+{
+  "name": "identity_validation",
+  "version": "1.0.0",
+  "events": ["SessionStart"],
+  "timeout_ms": 10000,
+  "requires": [],
+  "input_contract": "v1",
+  "description": "Validates agent identity token and auth configuration artifact at session start. Independent of Auth & Identity Specialist availability."
 }
 ```
 

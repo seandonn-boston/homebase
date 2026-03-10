@@ -509,7 +509,7 @@ Heartbeats detect liveness but not correctness. A governance agent could be aliv
 
 **Schedule:** Weekly rotation where each governance agent audits one other governance agent's recent outputs. The rotation ensures every agent is audited by a *different* agent each cycle.
 
-**Rotation matrix (7-week cycle):**
+**Rotation matrix (6-week cycle):**
 
 | Week | Token Budgeter audits → | Drift Monitor audits → | Hallucination Auditor audits → | Bias Sentinel audits → | Loop Breaker audits → | Context Health Monitor audits → | Contradiction Detector audits → |
 |---|---|---|---|---|---|---|---|
@@ -519,9 +519,8 @@ Heartbeats detect liveness but not correctness. A governance agent could be aliv
 | 4 | Loop Breaker | Context Health Monitor | Contradiction Detector | Token Budgeter | Drift Monitor | Hallucination Auditor | Bias Sentinel |
 | 5 | Context Health Monitor | Contradiction Detector | Token Budgeter | Drift Monitor | Hallucination Auditor | Bias Sentinel | Loop Breaker |
 | 6 | Contradiction Detector | Token Budgeter | Drift Monitor | Hallucination Auditor | Bias Sentinel | Loop Breaker | Context Health Monitor |
-| 7 | Token Budgeter | Drift Monitor | Hallucination Auditor | Bias Sentinel | Loop Breaker | Context Health Monitor | Contradiction Detector |
 
-After week 7, the cycle repeats. Every governance agent audits every other governance agent exactly once per cycle.
+After week 6, the cycle repeats. With 7 agents, each agent audits 6 others — every other governance agent exactly once per cycle.
 
 **Audit scope:** Review the audited agent's last 5 findings (or all findings in the period if fewer than 5). Assess:
 

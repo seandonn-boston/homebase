@@ -178,7 +178,7 @@ SessionStart: tier_validation
 Periodic: governance_heartbeat_monitor
   Format:     Shell script or Python. Version-controlled.
   Invocation: Asynchronous. Runs on a configurable interval (default: 60 seconds).
-  Input:      { "event": "GovernanceHeartbeat",
+  Input:      { "event": "Periodic",
                 "expected_agents": ["Token Budgeter", "Drift Monitor",
                 "Hallucination Auditor", "Bias Sentinel", "Loop Breaker",
                 "Context Health Monitor", "Contradiction Detector"],

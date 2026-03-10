@@ -179,7 +179,7 @@ interface-contracts.md - fleet/infrastructure - 2026-03-08:
 Sender-delivers/receiver-returns contracts for all major agent-to-agent handoff
 patterns: engineering, quality, security, cross-category, governance, scale, lifecycle,
 meta/autonomous, adversarial, and domain/data. Contract violation protocol (receiver
-rejects, routes through Orchestrator). Longest fleet file (439 lines).
+rejects, routes through Orchestrator). 475 lines.
 aiStrat/fleet/interface-contracts.md
 ```
 
@@ -371,7 +371,7 @@ governance.md - fleet/agents/specialists - 2026-03-08:
 Sentinel, Loop Breaker, Context Health Monitor, Contradiction Detector. Includes
 Authoritative Ownership Table mapping ~20 failure modes to their authoritative owner,
 conflict resolution protocol, and alert deduplication. Marked "always deploy." Largest
-agent file (461 lines).
+agent file (547 lines).
 aiStrat/fleet/agents/governance.md
 ```
 
@@ -518,7 +518,7 @@ keys/connection strings/metadata keys), edge cases (false positives, special
 characters), update path, schema constraints (invalid category/sensitivity/
 authority_tier, nulls), entry links, audit log immutability, supersession chains,
 cascade behavior, updated_at trigger, defaults, and purge support. Uses helper
-functions for structured pass/fail tracking. (920 lines.)
+functions for structured pass/fail tracking. (919 lines.)
 aiStrat/brain/schema/test_sensitive_data_guard.sql
 ```
 
@@ -638,7 +638,7 @@ hooks/README.md - hooks/specification - 2026-03-09:
 Hook ecosystem specification. Manifest-first design: every hook ships with
 hook.manifest.json. Directory convention (hooks/[hook-name]/), runtime lifecycle
 (discovery, dependency resolution, execution order), contract versioning, future
-extension path to schema registry (v0.3.0+). Reference manifests for 7 core hooks.
+extension path to schema registry (v0.3.0+). Reference manifests for 8 core hooks.
 aiStrat/hooks/README.md
 ```
 
