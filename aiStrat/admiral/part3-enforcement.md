@@ -13,6 +13,8 @@
 
 This distinction — between advisory instructions and deterministic enforcement — is the foundation of reliable fleet operations.
 
+> **Co-requirement:** Standing Orders (Section 36, Part 11) define the *content* that hooks enforce. Both are Level 1 requirements — read Section 36 before implementing hooks. Hooks are the mechanism; Standing Orders are the policy.
+
 ### The Enforcement Spectrum
 
 | Level | Mechanism | Reliability | Use For |

@@ -90,6 +90,8 @@ Structured around the four Adoption Levels (see index.md). Complete each level b
 
 **You can start working here.** One agent with clear Identity, Scope, Boundaries, and hooks.
 
+> **Note on Identity Tokens:** At Level 1, simplified identity (agent-id + role, no cryptographic signing) is sufficient. Full HMAC-SHA256 token signing with expiry and cross-project access control is a Level 4 concern (Section 09, vulnerability 8.3.2). However, the identity *model* should be defined at Level 1 so it can be progressively hardened.
+
 ### Level 2: Core Fleet (2-4 hours)
 
 7. **Ground Truth (05)** — Tech stack, tools, access, vocabulary.
@@ -405,6 +407,8 @@ Regardless of which tool you use, the foundation is the same:
 - **Standing Orders** → Prepended to every agent's system prompt as binding constraints.
 
 > **Note:** SDKs provide the runtime; Admiral provides the operational doctrine. The SDK handles message passing; Admiral defines what messages should say, who should receive them, and what constraints govern the exchange.
+
+> **Implementation Note — `platform` naming conflict:** In Python, `platform` is a stdlib module. If your implementation uses a `platform/` package (matching Part 9's "Platform" category), the name will shadow the stdlib and cause import failures (e.g., `platform.system()` becomes unavailable). Use an alternative name such as `platform_ops/` for the implementation package. This applies to any language where "platform" conflicts with a standard library module.
 
 ### Pattern 3: Admiral with LangGraph / CrewAI / AutoGen
 
