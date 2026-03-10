@@ -203,7 +203,7 @@ Terms are listed alphabetically. When these terms appear in any part file, they 
 | **Orchestrator** | The coordinating agent that decomposes goals into tasks, routes to specialists, manages progress, and enforces standards. Does not write production code. |
 | **Phantom capabilities** | Agent assumes tools or access it does not have. See Section 23 (Failure Mode Catalog) for diagnosis and defense. |
 | **Progressive disclosure** | Loading strategy where knowledge is provided on-demand via skills rather than front-loaded at startup. Preserves context window capacity. Section 07. |
-| **Prompt anatomy** | Standard structure for agent system prompts: Identity → Authority → Constraints → Knowledge → Task. Section 04. |
+| **Prompt anatomy** | Standard structure for agent system prompts: Identity → Authority → Constraints → Knowledge → Task. Section 04. See also: [`fleet/prompt-anatomy.md`](../fleet/prompt-anatomy.md) for the full reference specification. |
 | **Propose tier** | Decision authority level where the agent drafts the decision with rationale, presents alternatives, and waits for approval. Used for architecture changes, schema migrations, new dependencies. |
 | **Quarantine** | Five-layer immune system that validates all external content before it enters the Brain. Layers 1-3 are completely LLM-airgapped; Layer 4 is LLM advisory (reject-only); Layer 5 generates antibodies. See Section 10. |
 | **Quality floor** | Minimum acceptable quality bar, defined concretely. Prevents infinite refinement by defining "good enough." Part of Boundaries. Section 02. |

@@ -1,0 +1,9 @@
+{
+  "name": "context_baseline",
+  "version": "1.0.0",
+  "events": ["SessionStart"],
+  "timeout_ms": 10000,
+  "requires": [],
+  "input_contract": "v1",
+  "description": "Measures initial context window utilization and records baseline metrics for comparison."
+}

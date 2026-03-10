@@ -27,10 +27,13 @@ Record a new entry in the Brain.
 | `content` | string | yes | Full detail: what, why, alternatives, rationale |
 | `metadata` | object | no | Tags, references, related sections (stored as JSONB) |
 | `links` | array | no | Array of `{target_id: UUID, link_type: string}` relationships |
+| `sensitivity` | string | no | `standard` \| `elevated` \| `restricted` (default: `standard`). Allows callers to explicitly classify entry sensitivity rather than relying on implicit derivation from identity token. |
 
-**Implicit fields (derived from identity token, not caller-supplied):** `source_agent`, `source_session`, `authority_tier`, `sensitivity` (defaults to `standard`), `approved` (defaults to `true`; monitor seed candidates arrive with `approved = false`).
+**Implicit fields (derived from identity token, not caller-supplied):** `source_agent`, `source_session`, `authority_tier`, `approved` (defaults to `true`; monitor seed candidates arrive with `approved = false`). Note: `sensitivity` defaults to `standard` if not provided explicitly; it may also be derived from the identity token's authority tier when omitted.
 
-**Returns:** `{ id: UUID }` — the newly created entry's identifier.
+> **Approval workflow:** The `approved` column defaults to `true` for entries written by fleet agents. Monitor seed candidates arrive with `approved = false`. Approval is an Admiral-only SQL operation (`UPDATE entries SET approved = true WHERE id = ?`) performed outside the MCP tool layer. This is intentional: approval is a governance action exclusive to the Admiral, not an agent-accessible operation. No MCP tool provides approval to prevent any agent from self-approving content.
+
+**Returns:** `{ id: UUID, source_agent: string, source_session: string }` — the newly created entry's identifier and confirmed implicit provenance values derived from the identity token.
 
 **Errors:** `INVALID_CATEGORY` if category not in allowed set. `PROJECT_SCOPE_VIOLATION` if agent not assigned to the target project. `IDENTITY_VERIFICATION_FAILED` if token is invalid or expired.
 
@@ -116,7 +119,7 @@ Query the audit log. Restricted to Admiral.
 | `since` | timestamp | no | Only entries after this time |
 | `limit` | integer | no | Max results (default: 50) |
 
-**Returns:** `{ logs: [{ timestamp, agent_id, operation, project, entry_ids, result, risk_flags }] }`.
+**Returns:** `{ logs: [{ timestamp, agent_id, session_id, operation, project, entry_ids, result, risk_flags, details, ip_or_source }] }`.
 
 **Errors:** `AUTHORITY_INSUFFICIENT` if caller is not Admiral. `IDENTITY_VERIFICATION_FAILED`.
 
@@ -162,7 +165,7 @@ brain/
 - **Postgres + pgvector** chosen for combined structured/unstructured/vector storage in a single transactional system. No vendor lock-in.
 - **MCP as the universal interface.** Any agent that speaks MCP speaks to the Brain — Claude Code, Agent SDK agents, third-party agents. Protocol-agnostic by design.
 - **Zero-trust access control.** Identity tokens are cryptographically signed, session-scoped, non-delegable. No caller-declared identity trusted.
-- **Embedding generation is pluggable.** The `EmbeddingProvider` interface accepts any implementation — OpenAI, local models, or future alternatives.
+- **Embedding generation is pluggable.** The `EmbeddingProvider` interface accepts any implementation — OpenAI, local models, or future alternatives. The `embedding_model` column tracks which model produced each entry's embedding for migration purposes, but no MCP tool exposes embedding model selection or re-embedding. Embedding generation is an infrastructure concern managed at the MCP server configuration level, not an agent-facing operation. At Level 2 (SQLite), the embedding model is configured at deployment time. Agents interact with embeddings indirectly through `brain_query` (semantic search) and `brain_record` (automatic embedding on write).
 - **Retrieval is multi-signal.** Vector similarity alone is insufficient. The pipeline applies eight ranking signals from Part 5, Section 17, including multi-hop traversal and contradiction awareness.
 - **All access is audited.** Immutable, append-only audit log captures every operation with verified identity, risk flags, and sensitivity classification.
 

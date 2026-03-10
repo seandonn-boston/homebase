@@ -1,0 +1,22 @@
+# ATK-0017: Clock skew between agents
+id: ATK-0017
+category: chaos_scenario
+source: attack-corpus
+title: Clock skew between agents
+trigger: >-
+  Simulated clock desynchronization where agent timestamps diverge by >30 seconds
+expected_behavior: >-
+  Heartbeat detection uses monotonic counters, not wall-clock comparison;
+  handoff ordering preserved
+actual_behavior: >-
+  Handoff ordering corrupted; events processed out of sequence
+severity: medium
+defenses:
+  - "Monotonic counters for heartbeat detection"
+  - "Handoff ordering validation"
+last_tested: null
+times_passed: 0
+times_failed: 0
+created_by: Admiral
+created_at: "2026-03-09T00:00:00Z"
+superseded_by: null

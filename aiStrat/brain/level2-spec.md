@@ -38,7 +38,10 @@ CREATE TABLE entries (
     -- Strengthening
     access_count    INTEGER NOT NULL DEFAULT 0,
     usefulness      INTEGER NOT NULL DEFAULT 0,
-    superseded_by   TEXT REFERENCES entries(id) ON DELETE SET NULL
+    superseded_by   TEXT REFERENCES entries(id) ON DELETE SET NULL,
+
+    -- Decay tracking — needed for decay awareness even at Level 2
+    last_accessed_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
 );
 
 CREATE INDEX idx_entries_project_category ON entries (project, category);
@@ -73,6 +76,7 @@ CREATE INDEX idx_audit_log_project ON audit_log (project);
 - `metadata` is TEXT (JSON string), not JSONB. Use `json_extract()` for queries.
 - No HNSW index — similarity search is a full table scan (acceptable to ~10,000 entries).
 - No `sensitivity`, `approved`, `authority_tier`, or `source_session` columns. These are Level 3/4 concerns.
+- The `audit_log` table at Level 2 omits `session_id`, `entry_ids` (array), `risk_flags`, and `ip_or_source`. These columns are added during the Level 2→3 migration to support the full zero-trust audit model.
 - No immutability rules on `audit_log` (SQLite lacks Postgres RULE enforcement). Treat as convention.
 
 -----
@@ -187,7 +191,7 @@ def brain_query(db_path: str, query_embedding: list[float],
     results.sort(key=lambda x: x["score"], reverse=True)
     # Update access_count for returned entries
     for r in results[:limit]:
-        conn.execute("UPDATE entries SET access_count = access_count + 1 WHERE id = ?", (r["id"],))
+        conn.execute("UPDATE entries SET access_count = access_count + 1, last_accessed_at = strftime('%Y-%m-%dT%H:%M:%SZ', 'now') WHERE id = ?", (r["id"],))
     conn.commit()
     conn.close()
     return results[:limit]
@@ -283,3 +287,4 @@ The schema is designed for column-for-column import to Level 3 Postgres:
 | — | `authority_tier` | Default to `'autonomous'` or populate from source agent role |
 | — | `source_session` | Default to `'migration'` |
 | — | `last_accessed_at` | Set to `created_at` |
+| `audit_log` (subset) | `audit_log` (full) | Add columns: `session_id`, `entry_ids` (UUID[]), `risk_flags` (JSONB), `ip_or_source` (TEXT). Backfill `session_id` from `details` JSON if available, otherwise `'migration'`. |

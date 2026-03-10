@@ -49,6 +49,8 @@ These are the agents to implement first. A fleet can operate effectively with ju
 | 10 | **Hallucination Auditor** | Governance (always deploy) — detects fabricated facts, false citations |
 | 11 | **Loop Breaker** | Governance (always deploy) — detects and terminates circular agent loops |
 
+> **Note:** Agents 9-11 (Token Budgeter, Hallucination Auditor, Loop Breaker) are governance additions for Level 3+. At Level 2, deploy agents 1-8 only.
+
 **Do not deploy 71 agents for a project that needs 11.** The administrative cost of configuring, routing, and coordinating a large fleet exceeds the value for most projects. Start with the core 11. Add roles when the Orchestrator reports routing bottlenecks or when specific domain expertise gaps emerge.
 
 ### Routing Logic
@@ -80,6 +82,8 @@ When one agent's output becomes another agent's input, the handoff must follow a
 > ROUTING: [Decision tree or rules for task assignment]
 
 > **ANTI-PATTERN: FLEET BLOAT** — The fleet grows to twenty-five agents. The orchestrator cannot hold the full roster in context. Routing becomes a maze. Interface contracts multiply quadratically. Upper bound for a single fleet: eight to twelve active specialists before coordination costs dominate.
+
+> **Clarification:** "Five to twelve" is the general fleet size recommendation for most projects. "Eight to twelve" is the upper bound before coordination costs dominate — it appears in the anti-pattern warning as the threshold at which fleet bloat becomes a risk, not as a minimum. Start at five; grow toward twelve only when routing bottlenecks or domain gaps justify it.
 
 -----
 

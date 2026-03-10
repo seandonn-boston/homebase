@@ -1,0 +1,9 @@
+{
+  "name": "identity_validation",
+  "version": "1.0.0",
+  "events": ["SessionStart"],
+  "timeout_ms": 10000,
+  "requires": [],
+  "input_contract": "v1",
+  "description": "Validates agent identity token and auth configuration artifact at session start. Independent of Auth & Identity Specialist availability."
+}
