@@ -107,12 +107,12 @@ Start here. He needs to feel the ground shift before the product makes sense.
 > "I'm at v0.2.0-alpha. Here's what that means in plain English:"
 
 **What exists today:**
-- The complete specification — 6,600+ lines across 67 files. Think of it as the full architectural blueprint.
+- The complete specification — 15,000+ lines across 70+ files. Think of it as the full architectural blueprint.
 - 11-part operational doctrine covering everything from strategy to security to quality assurance
 - 71 agent definitions with routing rules and interface contracts
 - The persistent memory (Brain) architecture fully designed
 - A security/monitoring system with five defensive layers
-- Four external reviews completed and incorporated
+- Multiple review passes completed and incorporated into the spec (cross-system integrity audits, adversarial reviews, resolution tracking)
 - Multiple supporting research documents (market analysis, competitive landscape, investment thesis)
 
 **What it is NOT yet:**
@@ -142,7 +142,7 @@ Start here. He needs to feel the ground shift before the product makes sense.
 → Multiple options: consulting/implementation, licensing the spec, SaaS tooling built on top, training/certification. The spec is the foundation — monetization layers sit above it. *(Be honest if you haven't finalized this — it shows you're thinking about it seriously.)*
 
 **"What's your competitive moat?"**
-→ First-mover on the governance problem specifically. The spec is model-agnostic (not locked to one platform). The depth — 6,600 lines of battle-tested doctrine — is hard to replicate. And the insight about enforcement mechanisms (hooks vs. instructions) is non-obvious and validated.
+→ First-mover on the governance problem specifically. The spec is model-agnostic (not locked to one platform). The depth — 15,000+ lines of battle-tested doctrine — is hard to replicate. And the insight about enforcement mechanisms (hooks vs. instructions) is non-obvious and validated.
 
 **"Is this a real market?"**
 → Point to the $660B+ being spent on AI infrastructure in 2026. Every dollar of that creates demand for governance. If Salesforce lost 26% because agents are replacing seats, the companies deploying those agents need Admiral.
