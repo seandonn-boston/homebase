@@ -263,6 +263,20 @@ Agent writes code
 
 One deterministic check that fires every time and self-heals is more effective than three manual review passes that may or may not happen. Apply the same pattern to type checking, tests, and formatting.
 
+**Self-healing implementation parameters** (not specified above — implementers must design these):
+
+| Parameter | Recommended Default | Rationale |
+|---|---|---|
+| Max retries per hook per error | 3 | Prevents infinite loops while allowing genuine variation |
+| Max session-wide retries | 10 | Caps total self-healing cost across all hooks |
+| Error signature format | `(hook_name, hash(error_output))` | Enables cycle detection — same error recurring means fix didn't work |
+| Cycle detection | Track `(hook_name, error_signature)` tuples | If same tuple recurs after fix attempt, break immediately |
+| On max retries exceeded | Move to recovery ladder step 2 (fallback) | Matches SO 6 escalation sequence |
+
+> **Implementation lesson (Admiral-builds-Admiral):** The spec describes self-healing conceptually but leaves implementation parameters to the implementer. The reference implementation (`admiral/hooks/self_healing.py`) uses the defaults above. The cycle detection via `(hook_name, error_signature)` tuples was the key insight — without it, agents retry the same broken fix indefinitely.
+
+> **Two retry mechanisms, different layers:** Hook self-healing retries (max 3, automatic, deterministic) operate at the enforcement layer. The recovery ladder retries in Standing Order 6 and Section 22 ("2-3 attempts, each genuinely different") operate at the task layer and are agent-driven. These are complementary, not competing: hooks catch mechanical failures; the recovery ladder handles strategic dead ends. When hook retries are exhausted, escalation flows to the recovery ladder (step 2: fallback).
+
 > **TEMPLATE: ENFORCEMENT CLASSIFICATION**
 >
 > HARD ENFORCEMENT (hooks):
@@ -274,7 +288,7 @@ One deterministic check that fires every time and self-heals is more effective t
 > SOFT GUIDANCE (reference):
 > - [Preference]: [Where noted]
 
-> **ANTI-PATTERN: ALL INSTRUCTIONS, NO HOOKS** — The Admiral writes comprehensive AGENTS.md rules but implements zero hooks. For the first 60% of a session, rules are followed. As context pressure builds, rules near the beginning lose attention weight. The agent violates constraints it followed an hour ago. More rules are added. The file grows. The agent ignores more. Death spiral.
+> **ANTI-PATTERN: ALL INSTRUCTIONS, NO HOOKS** — The Admiral writes comprehensive AGENTS.md rules but implements zero hooks. For the first 60% of a session, rules are followed. As context pressure builds, rules near the beginning lose attention weight. The agent violates constraints it followed an hour ago. More rules are added. The file grows. The agent ignores more. Death spiral. **Defense:** Standing Order 6 (Recovery Protocol) — when rules aren't being followed, convert to hooks. The Admiral-builds-Admiral reference implementation (Case Study 4, Appendix D) made this exact error by deferring hooks in favor of instructions.
 
 -----
 

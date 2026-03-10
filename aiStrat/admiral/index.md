@@ -23,12 +23,14 @@ You don't need to read 200 pages before deploying your first agent. Start at Lev
 
 | Level | What You Use | Time to Value | When to Advance |
 |---|---|---|---|
-| **Level 1: Disciplined Solo** | AGENTS.md (and tool-specific pointers like CLAUDE.md) with enforcement spectrum (Section 08). Hooks for safety-critical constraints (including token budget, loop detection, and context health hooks from Section 08). Standing Orders (Section 36). One agent with clear Identity/Scope/Boundaries. | 30 minutes | When you need multiple specialists coordinating on a single task. |
+| **Level 1: Disciplined Solo** | AGENTS.md (and tool-specific pointers like CLAUDE.md) with enforcement spectrum (Section 08). Hooks for safety-critical constraints (including token budget, loop detection, and context health hooks from Section 08). Standing Orders (Section 36). One agent with clear Identity/Scope/Boundaries. | 30 min (config) / 1-2 days (build) | When you need multiple specialists coordinating on a single task. |
 | **Level 2: Core Fleet** | Everything in Level 1 plus Fleet Composition (Section 11) with 5–8 agents, routing rules, interface contracts, and the recovery ladder. Hook-based enforcement for budget, loops, and context health (no governance agents required). File-based checkpoints for session persistence. | 2–4 hours | When convention drift, scope creep, or hallucination compound across sessions and you can't catch them manually. |
 | **Level 3: Governed Fleet** | Everything in Level 2 plus 3–7 governance agents (Token Budgeter, Hallucination Auditor, Loop Breaker minimum — matching the Core Fleet "always deploy" set). Add Drift Monitor, Bias Sentinel, Context Health Monitor, and Contradiction Detector as fleet size and risk warrant. Decision authority tiers enforced. Brain at Level 1–2 (file-based or SQLite). | 1–2 days | When cross-session knowledge reuse is critical, or when fleet size exceeds what one Orchestrator can effectively govern. |
 | **Level 4: Full Framework** | Everything in Level 3 plus full Brain (Postgres + pgvector + MCP), Continuous Monitor, scale agents for review cycles, identity tokens, zero-trust access control, fleet observability. | 1–2 weeks | This is the target state for production fleets operating continuously. |
 
 **The most common mistake is starting at Level 4.** The administrative overhead of 40+ agents, a full Brain, and 7 governance agents exceeds the value for any project that hasn't yet validated its fleet's core workflow. Start at Level 1. Each level builds on the previous one. Skip nothing.
+
+> **Config time vs. build time:** The "Time to Value" column has two meanings depending on your context. If you are **configuring** Admiral on an existing platform (e.g., writing AGENTS.md and hooks for Claude Code), the time estimates are for configuration. If you are **implementing** Admiral as code (building a hook engine, data models, test suites), multiply by roughly 10x. The reference implementation needed ~5,000 lines of Python, 126 tests, and 2 days to reach verified Level 1 completion. See Case Study 4 in Appendix D for the full account.
 
 ### What Each Level Adds
 

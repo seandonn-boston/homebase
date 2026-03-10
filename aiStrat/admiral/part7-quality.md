@@ -72,7 +72,7 @@ The ladder preserves agent autonomy for as long as possible and escalates only w
 2. **Fallback to simpler approach.** Known-safe fallback producing lesser but acceptable result. Defined in advance.
 3. **Backtrack.** Roll back to last known-good state. Try a different path entirely. Distinct from retry — abandons the current approach.
 4. **Isolate and skip.** Mark task as blocked with structured report. Move to next task. Surface at checkpoint.
-5. **Escalate to Admiral.** Structured escalation report. No further creative solutions.
+5. **Escalate to Admiral.** Structured escalation report per [Section 37](part11-protocols.md) format. No further creative solutions.
 
 ### Backtracking
 

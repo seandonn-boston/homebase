@@ -306,7 +306,7 @@ Existing governance agents carry Orchestrator-specific monitoring responsibiliti
 |---|---|---|
 | **Drift Monitor** | Routing decisions that send tasks to agents outside the task's domain (e.g., database work → Frontend Implementer) | Routing drift — the Orchestrator's own scope/role boundaries degrading |
 | **Token Budgeter** | Orchestrator overhead exceeding 25% of session token budget | Coordination bloat — the fleet is spending more on routing than on work (Case Study 2 threshold: 60%) |
-| **Context Health Monitor** | Orchestrator dropping standing context (fleet roster, routing rules, interface contracts) as its session lengthens | Context degradation — the Orchestrator losing awareness of its own fleet |
+| **Context Health Monitor** | Orchestrator dropping standing context (Standing Orders, fleet roster, routing rules, interface contracts) as its session lengthens | Context degradation — the Orchestrator losing awareness of its own fleet. Standing Orders loss is the highest-severity signal: if the Orchestrator forgets its non-negotiable rules, all downstream behavior is ungoverned. |
 | **Loop Breaker** | Tasks bouncing between Orchestrator and the same specialist without state change (decompose → route → reject → re-decompose → re-route → reject) | Decomposition loops — the Orchestrator unable to produce viable task specs |
 | **Hallucination Auditor** | Routing to agents not in the active fleet roster, or referencing interface contracts that don't exist | Orchestrator hallucination — fabricating routing paths |
 | **Contradiction Detector** | Orchestrator routing the same type of task to different agents in the same session without rationale | Routing inconsistency — decisions that contradict the Orchestrator's own prior routing |
@@ -320,7 +320,7 @@ The following signals indicate the Orchestrator is degrading. Any single signal 
 | **Routing error rate rising** | Handoff rejection rate (Section 27) increasing within session | >15% rejection rate (healthy baseline: <5%) |
 | **Overhead ratio climbing** | Orchestrator token consumption / total fleet token consumption | >25% of session budget on coordination |
 | **Decomposition quality dropping** | Specialist agents requesting re-decomposition or reporting unclear acceptance criteria | 3+ re-decomposition requests in a single session |
-| **Context amnesia** | Orchestrator re-routing tasks it already routed, or losing track of in-flight parallel work | Any duplicate routing within a session |
+| **Context amnesia** | Orchestrator re-routing tasks it already routed, losing track of in-flight parallel work, or dropping Standing Orders from standing context | Any duplicate routing within a session, or Standing Orders absent from context check |
 | **Fleet roster drift** | Orchestrator referencing agents not in the active roster or missing agents that are active | Any phantom agent reference |
 
 ### Orchestrator Degradation Response

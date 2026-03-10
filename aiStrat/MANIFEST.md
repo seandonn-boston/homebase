@@ -47,17 +47,21 @@ Four sections: Context Engineering (04) — five dimensions of context with inte
 rationale per dimension, lineage table extended to intent engineering, cross-reference
 to intent-engineering.md; Ground Truth (05) — ontology, naming, tech stack; Context
 Window Strategy (06) — profiles, loading/sacrifice order with intent foundation
-rationale, progressive disclosure; Configuration File Strategy (07) — AGENTS.md as
-canonical source, 150-line rule, cross-tool portability, skills, path rules.
+rationale, progressive disclosure, context stuffing defense via SO 11;
+Configuration File Strategy (07) — AGENTS.md as canonical source, 150-line rule,
+cross-tool portability, skills, path rules, Standing Orders loading precedence note.
 aiStrat/admiral/part2-context.md
 ```
 
 ```
-part3-enforcement.md - admiral/doctrine - 2026-03-08:
+part3-enforcement.md - admiral/doctrine - 2026-03-10:
 Three sections: Deterministic Enforcement (08) — the enforcement spectrum (hook /
 instruction / guidance), hook lifecycle events, hook execution model, self-healing
-loops; Decision Authority (09) — four tiers (Enforced, Autonomous, Propose, Escalate);
-Configuration Security (10) — threat model, MCP server auditing, CODEOWNERS.
+loops with implementation parameters table (max retries, cycle detection, error
+signatures), two-layer retry mechanism clarification (hook vs recovery ladder),
+co-requirement note linking to Standing Orders (Section 36); Decision Authority (09) —
+four tiers (Enforced, Autonomous, Propose, Escalate); Configuration Security (10) —
+threat model, MCP server auditing, CODEOWNERS.
 aiStrat/admiral/part3-enforcement.md
 ```
 
@@ -84,9 +88,9 @@ aiStrat/admiral/part5-brain.md
 part6-execution.md - admiral/doctrine - 2026-03-10:
 Three sections: Work Decomposition (18) — 40% token budget rule with failure mode
 rationale, "Quality > Completeness" value, Spec-First Pipeline, chunk entry/exit
-states; Parallel Execution Strategy (19) — coordination patterns with contract-first
-rationale, divergence detection; Swarm Patterns (20) — advanced multi-agent topologies
-beyond hierarchical fleet.
+states, completion bias defense via SO 8; Parallel Execution Strategy (19) —
+coordination patterns with contract-first rationale, divergence detection; Swarm
+Patterns (20) — advanced multi-agent topologies beyond hierarchical fleet.
 aiStrat/admiral/part6-execution.md
 ```
 
@@ -94,8 +98,10 @@ aiStrat/admiral/part6-execution.md
 part7-quality.md - admiral/doctrine - 2026-03-10:
 Three sections: Quality Assurance (21) — verification levels with "What It Catches"
 rationale, self-healing loops; Failure Recovery (22) — recovery ladder with intent
-framing (preserve autonomy, escalate only when exhausted, no skipping rungs); Known
-Agent Failure Modes (23) — comprehensive catalog of systematic fleet failure patterns.
+framing (preserve autonomy, escalate only when exhausted, no skipping rungs), forward
+reference to Section 37 escalation report format; Known Agent Failure Modes (23) —
+comprehensive catalog of systematic fleet failure patterns with framework-level failure
+modes and diagnostic decision tree.
 aiStrat/admiral/part7-quality.md
 ```
 
@@ -106,7 +112,8 @@ Seven sections: Institutional Memory (24) — five session persistence patterns 
 Protocol (25) — three change tiers with "Consistency > Velocity" cascade constraint;
 Cost Management (26) — with cost transparency value; Fleet Health Metrics (27) — with
 threshold rationale (why 75% first-pass quality); Fleet Scaling & Lifecycle (28);
-Orchestrator Health Protocol (28b); Inter-Fleet Governance (29).
+Orchestrator Health Protocol (28b) — Standing Orders loss as highest-severity context
+degradation signal, context amnesia detection expanded; Inter-Fleet Governance (29).
 aiStrat/admiral/part8-operations.md
 ```
 
@@ -132,11 +139,13 @@ aiStrat/admiral/part10-admiral.md
 ```
 
 ```
-part11-protocols.md - admiral/doctrine - 2026-03-08:
-Six protocol areas: Standing Orders (36) — 15 non-negotiable rules; Escalation
-Protocol (37); Handoff Protocol (38); Human Referral Protocol (39); Paid Resource
-Authorization Protocol (40); Data Sensitivity Protocol (41). Concrete formats and
-decision ladders for each.
+part11-protocols.md - admiral/doctrine - 2026-03-10:
+Six protocol areas: Standing Orders (36) — 15 non-negotiable rules with Level 1
+sequencing note (Standing Orders are Level 1 requirements despite Part 11 position);
+Escalation Protocol (37) with forward reference from SO 6; Handoff Protocol (38);
+Human Referral Protocol (39); Paid Resource Authorization Protocol (40); Data
+Sensitivity Protocol (41). Concrete formats and decision ladders for each. Includes
+implementation lesson from Admiral-builds-Admiral about Standing Orders deferral.
 aiStrat/admiral/part11-protocols.md
 ```
 
@@ -158,12 +167,15 @@ aiStrat/admiral/intent-engineering.md
 appendices.md - admiral/doctrine - 2026-03-10:
 Seven appendices: Pre-Flight Checklist (A) — per-section verification with intent
 completeness check; Quick-Start Sequence (B) — four adoption levels with intent
-framing (foundation → operational → governance → persistent); Worked Example: SaaS
-Task Manager (C) — mission through fleet roster with three governance failure
-scenarios; Case Studies (D) — ungoverned sprint, over-engineered fleet, security-first
-fleet; Platform Integration Patterns (E) — Claude Code, Agent SDK,
-LangGraph/CrewAI/AutoGen; Framework Versioning (F); Implementation Status Map (G) —
-three implementation categories mapped to every component.
+framing (foundation → operational → governance → persistent), Level 1 time estimate
+clarification (30 min config / 1-2 days build), config-first sequencing insight;
+Worked Example: SaaS Task Manager (C) — mission through fleet roster with three
+governance failure scenarios; Case Studies (D) — ungoverned sprint, over-engineered
+fleet, security-first fleet, Admiral-builds-Admiral (Case Study 4: Phase 1 lessons);
+Platform Integration Patterns (E) — Claude Code, Agent SDK, LangGraph/CrewAI/AutoGen,
+Implementation Pitfalls section (build-order, Python-specific, general agent framework
+pitfalls from reference implementation); Framework Versioning (F); Implementation
+Status Map (G) — three implementation categories mapped to every component.
 aiStrat/admiral/appendices.md
 ```
 

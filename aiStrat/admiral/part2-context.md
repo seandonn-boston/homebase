@@ -206,7 +206,7 @@ The budget percentages above are reference points calibrated for 200K-token cont
 >
 > SACRIFICE ORDER: [When full, what gets compressed first]
 
-> **ANTI-PATTERN: CONTEXT STUFFING** — Loading every artifact "just in case." Standing context consumes 60% of the window. Output becomes shallow and unfocused. More context is not better context. Curate ruthlessly.
+> **ANTI-PATTERN: CONTEXT STUFFING** — Loading every artifact "just in case." Standing context consumes 60% of the window. Output becomes shallow and unfocused. More context is not better context. Curate ruthlessly. **Defense:** Standing Order 11 (Context Discovery) — agents must verify context source and relevance before loading.
 
 -----
 
@@ -260,6 +260,7 @@ AGENTS.md should not exceed 150 lines. For each line, ask "Would removing this c
 - Move per-agent instructions to agent-specific files (each agent loads only its own).
 - Move path-specific rules to path-scoped files (loaded only when working in that directory).
 - What remains in AGENTS.md: project identity, tech stack, critical conventions, workflow essentials.
+- **Standing Orders (Section 36) must be referenced or loaded from AGENTS.md.** Standing Orders are Level 1 requirements — they define what hooks enforce. Load them before hooks, before infrastructure code. See the co-requirement note in Section 08.
 
 ### Cross-Tool Portability
 

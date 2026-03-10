@@ -48,7 +48,7 @@ Self-healing loops (specified in Section 08) integrate with execution through th
 >
 > SEQUENCE: [Ordered by uncertainty descending]
 
-> **ANTI-PATTERN: COMPLETION BIAS** — Agents would rather produce complete but mediocre output than incomplete but excellent output. If running low on budget, an agent silently drops quality. You get all 12 endpoints but the last 4 have no error handling. Define quality floor per chunk. Fewer chunks at full quality beats all chunks at degraded quality.
+> **ANTI-PATTERN: COMPLETION BIAS** — Agents would rather produce complete but mediocre output than incomplete but excellent output. If running low on budget, an agent silently drops quality. You get all 12 endpoints but the last 4 have no error handling. Define quality floor per chunk. Fewer chunks at full quality beats all chunks at degraded quality. **Defense:** Standing Order 8 (Quality Standards) — never lower quality to meet a deadline or token budget.
 
 -----
 
