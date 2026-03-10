@@ -1,7 +1,7 @@
 <!-- Admiral Framework v0.2.0-alpha -->
 # Admiral Framework — File Manifest
 
-**67 files across 15 groups | Last modified: 2026-03-10**
+**68 files across 15 groups | Last modified: 2026-03-10**
 
 This is the semantic catalog of every file in the Admiral Framework. Each entry describes what the file contains, verified against the source. Update this manifest when files are added, removed, renamed, or when their content changes materially.
 
@@ -567,6 +567,16 @@ reviews against actual files, flags factually incorrect prior claims, identifies
 resolved issues, and surfaces new issues. Authoritative review — fact-checked against
 source files. Reviewed against v0.1.0-alpha.
 aiStrat/REVIEW-3.md
+```
+
+```
+REVIEW-4.md - project/review - 2026-03-10:
+Fourth review by Claude Opus 4.6. Rated 5.8/10 (revised to 6.2 after v0.2.1 changes).
+Honest assessment correcting sycophantic drift in prior reviews. 23 issues across 3
+severity levels (5 critical, 7 major, 11 notable), 5 abuse vectors, and 7
+acknowledged strengths. Identifies the core self-contradiction: framework relies on
+instructions while arguing instructions are unreliable. Reviewed against v0.2.0-alpha.
+aiStrat/REVIEW-4.md
 ```
 
 ```

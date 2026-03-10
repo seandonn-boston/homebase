@@ -1,9 +1,9 @@
-<!-- Admiral Framework v0.2.0-alpha -->
+<!-- Admiral Framework v0.2.1-alpha -->
 # THE FLEET ADMIRAL FRAMEWORK
 
 **A Workforce Toolkit for Autonomous AI Agent Fleets**
 
-v0.2.0-alpha · March 2026
+v0.2.1-alpha · March 2026
 
 -----
 
@@ -49,6 +49,32 @@ If you are starting at Level 1, you do not need to read the entire framework. Th
 | 5 | [`appendices.md`](appendices.md) | Appendix A (Pre-Flight Checklist) | Go/no-go gate — confirms you have not missed anything critical. |
 
 Start here. Graduate to the full framework when you hit the limits of Level 1.
+
+-----
+
+## Framework Success Criteria
+
+The framework requires Success Criteria (Section 03) for every task but must also hold itself to the same standard. These criteria define when the framework is working, when it is not, and when it should be abandoned.
+
+### Per-Level Success Criteria
+
+| Level | The Framework Is Working When | The Framework Is Failing When |
+|---|---|---|
+| **Level 1** | Hooks catch constraint violations that instructions alone would miss. Agent stays within scope boundaries. Quality gates fire deterministically. | Agent violates scope boundaries despite hooks. Hook overhead exceeds 10% of session time. Framework setup takes >2 hours (target: 30 min). |
+| **Level 2** | Multi-agent coordination produces higher first-pass quality than a single agent. Handoff rejection rate is <20% (handoffs are well-formed). Orchestrator overhead is <20% of total fleet tokens. | Agents routinely produce work that other agents reject. Orchestrator spends >40% of budget on routing. Rework rate exceeds 25%. |
+| **Level 3** | Governance agents detect failures that would otherwise ship (hallucination, drift, scope creep). False positive rate on governance alerts is <30%. Cross-session knowledge retrieval improves task quality. | Governance overhead exceeds the cost of the failures it catches. Brain entries are written but never retrieved (>70% write-only). Admiral spends more time reviewing governance reports than doing productive work. |
+| **Level 4** | Fleet operates continuously with minimal Admiral intervention. Identity and access control prevent unauthorized actions without blocking legitimate work. Monitor surfaces actionable intelligence. | Zero-trust infrastructure blocks legitimate work more often than it prevents threats. Monitor produces noise, not signal. Infrastructure maintenance exceeds productive fleet output. |
+
+### Framework Abandonment Criteria
+
+Stop using the framework if any of the following hold after a good-faith 4-week trial at Level 2+:
+
+1. **Net negative ROI:** Total fleet overhead (orchestration + governance + context loading + framework maintenance) consistently exceeds the value of the fleet's output.
+2. **Governance theater:** Governance agents are deployed and producing reports, but no report has led to a concrete quality improvement in 3+ weeks.
+3. **Instruction bloat death spiral:** Framework context loading consumes >40% of every agent's context window, leaving insufficient capacity for actual work.
+4. **Admiral bottleneck without resolution:** The Admiral cannot keep up with Propose/Escalate decisions despite trust calibration adjustments, and the resulting delays exceed the cost of ungoverned operation.
+
+These are not aspirational limits — they are tripwires. If you hit them, the framework is not providing value at your current adoption level. Either drop back to a lower level or discontinue.
 
 -----
 
@@ -314,4 +340,5 @@ Sections are ordered by impact and grouped by relevance.
 | D | Case Studies | Three synthetic case studies: ungoverned, over-engineered, security-first. | |
 | E | Platform Integration Patterns | How to use Admiral with Claude Code, Agent SDKs, and orchestration frameworks. | |
 | F | Framework Versioning | Version policy, migration between versions, agent definition versioning. | |
-| G | Implementation Status Map | Category 1/2/3 implementability for every framework component. | |
+| G | Implementation Status Map | Category 1/2/3 implementability and honest implementation status for every framework component. | |
+| H | Framework Validation Protocol | How to measure whether the framework improves fleet outcomes. | |

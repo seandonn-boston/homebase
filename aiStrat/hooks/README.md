@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.2.0-alpha -->
+<!-- Admiral Framework v0.2.1-alpha -->
 # Hook Ecosystem
 
 **Manifest-first hook management for the Admiral Framework.**
@@ -214,5 +214,139 @@ The following 8 hooks are specified in `admiral/part3-enforcement.md` (Section 0
   "input_contract": "v1",
   "description": "Tracks governance agent heartbeats and alerts Admiral on missed beats or low confidence.",
   "async": true
+}
+```
+
+-----
+
+## Standing Order Enforcement Hooks
+
+The following 3 hooks enforce the Standing Orders classified as HOOK-REQUIRED in Section 36. These are the highest-priority hooks for any fleet deployment — they enforce SO 3 (Scope Boundaries), SO 8 (Quality Standards), and SO 10 (Prohibitions).
+
+See `admiral/part11-protocols.md` (Section 36, Enforcement Classification) for the full classification of all 15 Standing Orders.
+
+### SO 3: Scope Boundary Enforcement
+
+**Purpose:** Prevents agents from modifying files outside their assigned scope. This is the most common fleet violation and the easiest to prevent deterministically.
+
+```
+PreToolUse: scope_boundary_gate
+  Format:     Shell script or Python. Version-controlled.
+  Invocation: Synchronous. Fires before Write, Edit, and Delete tool invocations.
+  Input:      { "event": "PreToolUse", "tool": "Write|Edit|Delete",
+                "params": { "file_path": "..." },
+                "agent_identity": "...",
+                "scope": { "allowed_paths": ["src/", "prisma/"],
+                           "denied_paths": [".env", "*.secret"] } }
+  Output:     Exit 0: file path is within allowed scope.
+              Exit non-zero (block): "Scope violation: agent [identity] attempted to
+              modify [path], which is outside allowed paths [allowed_paths].
+              Reroute this task to the agent that owns [path]."
+  Behavior:   Matches the target file path against the agent's declared scope
+              (allowed_paths from the agent definition's "Owns" field).
+              Denied paths take precedence over allowed paths.
+              Glob patterns are supported (e.g., "src/**/*.ts").
+              Path traversal attempts (../) are rejected unconditionally.
+  Timeout:    5 seconds.
+```
+
+**Manifest:**
+```json
+{
+  "name": "scope_boundary_gate",
+  "version": "1.0.0",
+  "events": ["PreToolUse"],
+  "timeout_ms": 5000,
+  "requires": [],
+  "input_contract": "v1",
+  "description": "Blocks file modifications outside the agent's declared scope. Enforces Standing Order 3."
+}
+```
+
+### SO 8: Quality Gate Enforcement
+
+**Purpose:** Ensures every code change passes automated quality checks (linter, type checker, tests) before being marked complete. Prevents the "disable quality gates to make a task pass" violation.
+
+```
+PostToolUse: quality_gate
+  Format:     Shell script or Python. Version-controlled.
+  Invocation: Synchronous. Fires after Write and Edit tool invocations on code files.
+  Input:      { "event": "PostToolUse", "tool": "Write|Edit",
+                "params": { "file_path": "..." },
+                "result": { "success": true },
+                "agent_identity": "...",
+                "quality_checks": {
+                  "lint": { "command": "npx eslint {file}", "required": true },
+                  "typecheck": { "command": "npx tsc --noEmit", "required": true },
+                  "test": { "command": "npm test", "required": false }
+                } }
+  Output:     Exit 0: all required quality checks pass.
+              Exit non-zero: "Quality gate failed: [check_name] returned errors:\n
+              [stdout from failing check]\nFix the errors and retry."
+              Stdout includes the failing check's output for self-healing.
+  Behavior:   Runs each quality check marked "required": true.
+              Checks execute in declaration order; first failure stops the chain.
+              File extension filtering: only runs on code files (.ts, .js, .py, etc.).
+              Configuration files, markdown, and JSON are excluded.
+              The "test" check is optional by default — enable per-project.
+              Self-healing: the agent receives the error output and retries.
+  Timeout:    60 seconds (quality checks may involve compilation).
+```
+
+**Manifest:**
+```json
+{
+  "name": "quality_gate",
+  "version": "1.0.0",
+  "events": ["PostToolUse"],
+  "timeout_ms": 60000,
+  "requires": [],
+  "input_contract": "v1",
+  "description": "Runs linter, type checker, and optionally tests after code changes. Enforces Standing Order 8."
+}
+```
+
+### SO 10: Prohibition Enforcement
+
+**Purpose:** Deterministically prevents the most dangerous violations from Standing Order 10: modifying files outside scope (overlaps with SO 3), bypassing enforcement mechanisms, and storing secrets in code.
+
+```
+PreToolUse: prohibition_gate
+  Format:     Shell script or Python. Version-controlled.
+  Invocation: Synchronous. Fires before all tool invocations.
+  Input:      { "event": "PreToolUse", "tool": "...",
+                "params": { ... },
+                "agent_identity": "...",
+                "session_state": { "budget_remaining": N } }
+  Output:     Exit 0: no prohibition violated.
+              Exit non-zero (block): "PROHIBITION VIOLATION: [violation_type].
+              [description]. This action is blocked unconditionally."
+  Behavior:   Checks for the following violations:
+              1. Dangerous commands: blocks rm -rf /, DROP DATABASE, and other
+                 destructive operations via pattern matching on Bash tool params.
+              2. Hook bypass: blocks any attempt to modify files in hooks/ directory
+                 or to run commands containing --no-verify, --no-hooks, or equivalent
+                 hook-bypass flags.
+              3. Secret detection: scans Write/Edit content for API keys, passwords,
+                 private keys, connection strings, and AWS credentials using the same
+                 patterns as the Brain's sensitive data guard (brain/schema/001_initial.sql).
+              4. Budget enforcement: blocks tool use when budget_remaining <= 0
+                 (complementary to token_budget_gate, but at the prohibition level
+                 this is a hard stop, not a warning).
+              All violations are logged to the audit trail with agent identity and
+              attempted action.
+  Timeout:    5 seconds.
+```
+
+**Manifest:**
+```json
+{
+  "name": "prohibition_gate",
+  "version": "1.0.0",
+  "events": ["PreToolUse"],
+  "timeout_ms": 5000,
+  "requires": [],
+  "input_contract": "v1",
+  "description": "Blocks dangerous commands, hook bypasses, secret storage, and budget violations. Enforces Standing Order 10."
 }
 ```

@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.2.0-alpha -->
+<!-- Admiral Framework v0.2.1-alpha -->
 # PART 3 — ENFORCEMENT
 
 *The gap between "should" and "must."*
@@ -273,6 +273,25 @@ One deterministic check that fires every time and self-heals is more effective t
 > - [Preference]: [Where noted]
 
 > **ANTI-PATTERN: ALL INSTRUCTIONS, NO HOOKS** — The Admiral writes comprehensive AGENTS.md rules but implements zero hooks. For the first 60% of a session, rules are followed. As context pressure builds, rules near the beginning lose attention weight. The agent violates constraints it followed an hour ago. More rules are added. The file grows. The agent ignores more. Death spiral.
+
+### Framework Self-Compliance
+
+**This framework does not yet follow its own core insight.** The enforcement spectrum establishes that critical constraints must be hooks, not instructions. But the framework itself — including the Standing Orders, governance protocols, and decision authority tiers — is ~7,900 lines of advisory text with only 8 reference hook *specifications* (no executable implementations).
+
+This is the framework's most important gap. If the enforcement spectrum insight is correct (and production experience confirms it is), then the framework's own constraints will degrade under context pressure. An agent given the Standing Orders as instructions will follow them reliably for the first 60% of a session and increasingly drift as the session lengthens — exactly the failure mode Section 08 warns about.
+
+**Current status (v0.2.1-alpha):**
+
+| Layer | What Exists | What's Missing |
+|---|---|---|
+| **Hook specifications** | 8 reference specs in Section 08, manifests in `hooks/README.md` | No executable implementations |
+| **Standing Order enforcement** | 15 orders as advisory text (Part 11) | Classification of which orders MUST be hooks vs. which CAN be instructions (see Section 36) |
+| **Governance agents** | 7 agent definitions with detection patterns | No executable monitoring — definitions are specifications, not running code |
+| **Quarantine immune system** | 5-layer architecture (monitor/README.md) | No regex patterns, no trained classifier, no attack corpus beyond 18 seeds |
+
+**What this means for adopters:** Until executable hooks exist for safety-critical Standing Orders, the enforcement spectrum is a design principle, not an operational reality. Adopters should prioritize writing hooks for their highest-risk constraints before expanding fleet size. Three working hooks provide more protection than fifteen advisory Standing Orders.
+
+**Remediation path:** See Section 36 for the enforcement classification of each Standing Order, and `hooks/README.md` for reference hook specifications covering the three highest-priority Standing Orders (SO 3, SO 8, SO 10).
 
 -----
 

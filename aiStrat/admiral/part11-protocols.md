@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.2.0-alpha -->
+<!-- Admiral Framework v0.2.1-alpha -->
 # PART 11 — PROTOCOLS
 
 *The universal operating rules every agent follows.*
@@ -26,6 +26,30 @@ When Standing Orders conflict, the higher-priority category prevails:
 5. **Scope** (SO 1: Identity Discipline, SO 3: Scope Boundaries, SO 11: Context Discovery, SO 13: Bias Awareness) — governs what the agent addresses
 
 In practice, conflicts are rare because the orders are designed to be complementary. When uncertainty arises, escalate per SO 5.
+
+### Enforcement Classification
+
+Each Standing Order is classified by its enforcement requirement. HOOK-REQUIRED orders must be backed by deterministic hooks to be reliably enforced. INSTRUCTION-ACCEPTABLE orders operate effectively as advisory text because their violation is detectable through other means (e.g., output review, governance agents) or because they govern reasoning patterns that hooks cannot enforce.
+
+| SO | Name | Classification | Rationale |
+|---|---|---|---|
+| 1 | Identity Discipline | INSTRUCTION-ACCEPTABLE | Governs reasoning behavior; detectable by Drift Monitor |
+| 2 | Output Routing | INSTRUCTION-ACCEPTABLE | Governs output format; detectable in handoff validation |
+| **3** | **Scope Boundaries** | **HOOK-REQUIRED** | File scope violations are deterministic and preventable via PreToolUse hooks |
+| 4 | Context Honesty | INSTRUCTION-ACCEPTABLE | Governs reasoning transparency; not mechanically enforceable |
+| 5 | Decision Authority | HOOK-REQUIRED | Authority tier violations are enforceable at tool-use boundaries |
+| 6 | Recovery Protocol | INSTRUCTION-ACCEPTABLE | Governs multi-step behavior; loop detection hook covers the critical path |
+| 7 | Checkpointing | INSTRUCTION-ACCEPTABLE | Governs output behavior; detectable by Context Health Monitor |
+| **8** | **Quality Standards** | **HOOK-REQUIRED** | Linting, type-checking, and test gates are deterministic; must fire every time |
+| 9 | Communication Format | INSTRUCTION-ACCEPTABLE | Output format; validatable in handoff schema |
+| **10** | **Prohibitions** | **HOOK-REQUIRED** | "Never modify files outside scope," "never bypass hooks" — must be deterministic |
+| 11 | Context Discovery | INSTRUCTION-ACCEPTABLE | Governs pre-work reasoning; not mechanically enforceable |
+| 12 | Zero-Trust Self-Protection | HOOK-REQUIRED | Access control and risk assessment require deterministic gates |
+| 13 | Bias Awareness | INSTRUCTION-ACCEPTABLE | Governs internal reasoning; detectable by Bias Sentinel |
+| 14 | Compliance/Ethics | HOOK-REQUIRED | Legal constraints are hard boundaries; sensitive data rejection must be deterministic |
+| 15 | Pre-Work Validation | INSTRUCTION-ACCEPTABLE | Governs pre-work reasoning; budget enforcement covered by token budget hooks |
+
+**6 of 15 Standing Orders require hook enforcement.** Reference hook specifications for SO 3, SO 8, and SO 10 are provided in `hooks/README.md`. SO 5, SO 12, and SO 14 require project-specific hook implementations (decision authority hooks depend on the project's authority model; zero-trust hooks depend on the identity infrastructure; compliance hooks depend on jurisdiction).
 
 ### 1. Identity Discipline
 

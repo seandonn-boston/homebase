@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.2.0-alpha -->
+<!-- Admiral Framework v0.2.1-alpha -->
 # APPENDICES
 
 -----
@@ -450,44 +450,122 @@ Agent definitions do not carry individual version numbers. They are versioned co
 
 **Current as of March 2026. Re-assess quarterly or when the Monitor surfaces relevant ecosystem changes.**
 
-This appendix maps every major framework component to its real-world implementation difficulty. Use this to plan adoption timelines, allocate engineering resources, and avoid over-investing in infrastructure before the lighter approaches hit their limits.
+This appendix maps every major framework component to its real-world implementation difficulty **and its current implementation status within this framework**. Use this to understand what exists today, what requires custom engineering, and what remains purely aspirational.
 
-**Categories:**
+**Implementation categories:**
 - **Category 1 — Available today.** Native platform features or existing tools. No custom engineering required.
 - **Category 2 — Moderate custom work.** Days to weeks of standard engineering. No specialized infrastructure skills needed.
 - **Category 3 — Significant infrastructure.** Weeks to months. Requires specialized skills (database administration, security engineering, distributed systems).
 
-| Component | Cat. | Concrete Tooling | Custom Work Required |
-|---|---|---|---|
-| **AGENTS.md / config files** | 1 | Any AI coding tool, any text editor | None — write markdown, commit to repo. Tool-specific pointers (CLAUDE.md, etc.) as needed. |
-| **Hooks (PreToolUse / PostToolUse)** | 1 | Agent runtime hooks (e.g., Claude Code hooks), shell scripts, CI gates | Write hook scripts, version-control alongside fleet config |
-| **Standing Orders** | 1 | System prompt content, AGENTS.md | None — text loaded into agent context |
-| **Agent definitions** | 1 | AGENTS.md sections, tool-specific agent files, Agent SDK agent constructors | Write agent specifications per prompt anatomy (Section 04) |
-| **Self-healing quality loops** | 1 | Hook exit codes + agent retry (Section 08) | Configure hooks for linter/type-checker/test; retry logic is built-in |
-| **Recovery ladder** | 1 | Agent instructions + hooks | Define fallback/backtrack strategies per agent; hook enforcement for max retries |
-| **Brain Level 1 (file-based)** | 1 | JSON files + grep + git | Create `.brain/` directory, write JSON files (see `brain/level1-spec.md`) |
-| **Routing rules** | 2 | Custom orchestrator logic, Agent SDK handoffs | Implement routing decision tree; map task types to agent roles |
-| **Brain Level 2 (SQLite + embeddings)** | 2 | SQLite + embedding API or local model | Set up SQLite schema, embedding generation, cosine similarity search (see `brain/level2-spec.md`) |
-| **Governance agents** | 2 | Agent definitions + monitoring hooks | Write agent definitions, configure detection patterns, wire outputs to Orchestrator |
-| **Quarantine immune system** | 2 | Regex patterns + LLM classifier | Implement 4-layer validation pipeline (structural, injection, semantic, antibody) |
-| **Continuous Monitor** | 2–3 | GitHub API + scheduler (cron/Actions) + quarantine | Implement scanner, state persistence, digest generation, seed writing |
-| **Fleet observability / metrics** | 2–3 | Custom dashboards + structured logging | Define trace format, implement log aggregation, build or configure dashboards |
-| **Brain Level 3 (Postgres + pgvector)** | 3 | Postgres 16 + pgvector extension + MCP server | Database deployment, schema creation, HNSW index tuning, MCP server implementation |
-| **Brain Level 4 (full specification)** | 3 | Everything in Level 3 + identity service + quarantine integration | Full MCP server with zero-trust access control, sensitivity classification, audit logging |
-| **Identity tokens / zero-trust** | 3 | Custom identity service, cryptographic signing | Token issuance, validation, rotation, revocation infrastructure |
-| **Cross-project intelligence** | 3 | Brain Level 3-4 + MCP + `_global` namespace | Multi-project Brain deployment, cross-project query authorization, knowledge promotion workflow |
+**Implementation status (honest assessment):**
+- **SPECIFIED** — Architecture and behavior are documented. No executable code exists.
+- **PARTIAL** — Some implementation exists (e.g., SQL schema, JSON Schema) but the component is not operational.
+- **OPERATIONAL** — The component can be used as-is with no additional engineering.
 
-**Reading this table:**
+| Component | Cat. | Status | What Exists | What's Missing |
+|---|---|---|---|---|
+| **AGENTS.md / config files** | 1 | OPERATIONAL | AGENTS.md, CLAUDE.md, templates | Nothing — usable today |
+| **Hooks (PreToolUse / PostToolUse)** | 1 | SPECIFIED | 11 hook specifications, manifest schema, 11 manifests | Zero executable hook implementations |
+| **Standing Orders** | 1 | OPERATIONAL | 15 orders with enforcement classification | Nothing — text loaded into context |
+| **Agent definitions** | 1 | OPERATIONAL | 100 agent definitions (71 core + 29 extended) | Nothing — usable as specifications |
+| **Self-healing quality loops** | 1 | SPECIFIED | Pattern described in Section 08 | Requires hook implementations to function |
+| **Recovery ladder** | 1 | OPERATIONAL | 5-step ladder with templates | Nothing — advisory, works as instructions |
+| **Brain Level 1 (file-based)** | 1 | SPECIFIED | File format spec (`brain/level1-spec.md`) | No `.brain/` directory, no shell wrappers |
+| **Routing rules** | 2 | SPECIFIED | Decision tree (`fleet/routing-rules.md`) | No orchestrator implementation |
+| **Brain Level 2 (SQLite + embeddings)** | 2 | SPECIFIED | SQLite schema spec (`brain/level2-spec.md`) | No database, no embedding pipeline |
+| **Governance agents** | 2 | SPECIFIED | 7 agent definitions, ownership table | No executable monitoring |
+| **Quarantine immune system** | 2 | SPECIFIED | 5-layer architecture, 18 seed attack scenarios | No regex patterns, no trained classifier, no TF-IDF dictionary |
+| **Continuous Monitor** | 2–3 | SPECIFIED | Architecture spec (`monitor/README.md`) | No scanner, no state persistence, no digest generator |
+| **Fleet observability / metrics** | 2–3 | SPECIFIED | Instrumentation strategy (Section 30) | No trace format, no dashboards |
+| **Brain Level 3 (Postgres + pgvector)** | 3 | PARTIAL | SQL schema (`001_initial.sql`), test suite (919 lines) | No Postgres deployment, no MCP server, no embedding model |
+| **Brain Level 4 (full specification)** | 3 | SPECIFIED | Architecture in `brain/README.md` | Everything beyond the SQL schema |
+| **Identity tokens / zero-trust** | 3 | SPECIFIED | Architecture in Sections 10, 16 | No token service, no key management, no validation |
+| **Handoff protocol** | 1 | PARTIAL | JSON Schema (`handoff/v1.schema.json`), text templates | No runtime translation layer |
+| **Attack corpus** | 2 | PARTIAL | Specification + 18 seed scenarios | 18 seeds insufficient for classifier training; need 500+ |
+| **Cross-project intelligence** | 3 | SPECIFIED | Architecture in Section 17 | Everything |
 
-- **Level 1 adoption** (Appendix B) uses only Category 1 components. Zero custom infrastructure.
-- **Level 2 adoption** adds some Category 2 components (routing rules, file-based checkpoints). Moderate engineering effort.
-- **Level 3 adoption** adds governance agents (Category 2) and Brain Level 1-2 (Category 1-2). Still no heavy infrastructure.
-- **Level 4 adoption** requires Category 3 components. This is where infrastructure investment is justified by proven fleet value at lower levels.
+**Honest summary:** Of the 19 major components, **4 are operational** (config files, Standing Orders, agent definitions, recovery ladder), **3 are partially implemented** (Brain L3 schema, handoff schema, attack corpus seeds), and **12 are specification-only**. The framework is a comprehensive design document, not a toolkit. This is appropriate for v0.2.1-alpha but must be understood by adopters.
+
+**What breaks if each component fails:**
+
+| Missing Component | Impact if Absent |
+|---|---|
+| **Hooks** | All safety constraints degrade to advisory. Context pressure will erode compliance. This is the highest-risk gap. |
+| **Brain** | No cross-session learning. Each session starts from scratch. Acceptable at Level 1-2. |
+| **Governance agents** | Silent quality degradation over multi-session projects. Acceptable for short projects (<1 week). |
+| **Quarantine** | External intelligence cannot be safely ingested. Do not deploy the Monitor without quarantine. |
+| **Identity tokens** | All identity is self-declared. Any agent can claim any role. Acceptable for single-operator fleets; unacceptable for multi-operator. |
+| **Handoff runtime** | Agents use text-format handoffs (which work). JSON validation is unavailable. Acceptable — text format is sufficient for most fleets. |
 
 > **ANTI-PATTERN: CATEGORY 3 BEFORE CATEGORY 1** — Deploying Postgres + pgvector + identity tokens before implementing hooks and standing orders. The highest-impact, lowest-cost improvements are all Category 1. A fleet with comprehensive hooks and no Brain outperforms a fleet with a full Brain and no hooks.
 
 -----
 
-*The Fleet Admiral Framework · v0.2.0-alpha*
+## H — Framework Validation Protocol
+
+**How to measure whether the Admiral Framework improves fleet outcomes.**
+
+The framework demands Success Criteria for every task (Section 03) but must validate itself with the same rigor. This protocol defines how to measure framework effectiveness, what to measure, and when to conclude the framework is not providing value.
+
+### Baseline Measurement (Before Framework Adoption)
+
+Before applying the framework, measure baseline performance on 3-5 representative tasks:
+
+| Metric | How to Measure | Baseline Value |
+|---|---|---|
+| **First-pass quality rate** | % of tasks passing all quality gates on first attempt | Record per-task |
+| **Rework rate** | % of completed tasks requiring correction after acceptance | Record per-task |
+| **Constraint violation rate** | Count of scope violations, secret exposures, unauthorized changes | Record per-session |
+| **Token efficiency** | Useful output tokens / total tokens consumed | Record per-session |
+| **Time to completion** | Wall-clock time from task assignment to acceptance | Record per-task |
+
+### Framework Measurement (After Adoption)
+
+Measure the same metrics after adopting each level for at least 2 weeks:
+
+**Level 1 validation (hooks + Standing Orders):**
+- Constraint violation rate should decrease measurably vs. baseline
+- Hook-prevented violations should be logged (each log entry is evidence the hook caught something instructions would have missed)
+- If constraint violation rate does not decrease after 2 weeks, the hooks are not targeting the right constraints — recalibrate
+
+**Level 2 validation (multi-agent coordination):**
+- First-pass quality rate should improve over baseline
+- Orchestrator overhead should be <20% of total fleet tokens
+- Handoff rejection rate should be <20% (well-formed handoffs)
+- If orchestrator overhead exceeds 40%, the fleet is over-sized — reduce agent count
+
+**Level 3 validation (governance agents):**
+- Governance agents should produce at least 1 actionable finding per week that would not have been caught otherwise
+- False positive rate on governance alerts should be <30%
+- If no actionable findings emerge after 3 weeks, governance agents are theater — remove or reconfigure
+
+**Level 4 validation (Brain + Monitor + zero-trust):**
+- Brain retrieval hit rate should exceed 30% (entries written are later retrieved and used)
+- Monitor should surface at least 1 finding per month that changes fleet behavior
+- Zero-trust overhead should not block legitimate work more than 5% of the time
+
+### Validation Cadence
+
+| Event | Action |
+|---|---|
+| **After each adoption level** | Compare metrics to baseline. Document delta. Decide whether to advance, hold, or retreat. |
+| **Monthly (Level 2+)** | Review governance findings. Calculate ROI: cost of governance vs. cost of failures caught. |
+| **Quarterly** | Full framework review. Are the metrics improving, stable, or degrading? Is the framework earning its overhead? |
+| **After any framework change** | Re-measure affected metrics for 1 week to detect regressions. |
+
+### What "Not Providing Value" Looks Like
+
+The framework is not providing value if, after a good-faith trial:
+
+1. Metrics are flat or worse than baseline after 4 weeks at the current level
+2. The Admiral spends more time on framework maintenance than on productive decisions
+3. Agents produce lower-quality output with framework context loaded (context stuffing)
+4. The team routes around the framework rather than through it (governance bypass)
+
+When this happens: drop to a lower adoption level, not to zero. Level 1 (hooks + Standing Orders) has the highest ROI-to-effort ratio and should be the last thing abandoned.
+
+-----
+
+*The Fleet Admiral Framework · v0.2.1-alpha*
 
 *Context is the currency of autonomous AI. The Brain is where that currency compounds.*
