@@ -184,7 +184,7 @@ Terms are listed alphabetically. When these terms appear in any part file, they 
 | **Instruction decay** | Rules followed initially but ignored as session lengthens and context pressure builds. See Section 23 (Failure Mode Catalog) for diagnosis and defense. |
 | **Interface contract** | The defined format for handoffs between agents: what the sender delivers, what the receiver returns. Section 11. |
 | **Knowledge graph** | The network of linked Brain entries. Entries connected by relationship types (supports, contradicts, supersedes, elaborates, caused_by) that agents can traverse for reasoning chains. Section 17. |
-| **Knowledge protocol** | The MCP server interface that exposes the Brain to any AI agent. Tools: brain_record, brain_query, brain_retrieve, brain_strengthen, brain_supersede, brain_status, brain_audit. Section 16. |
+| **Knowledge protocol** | The MCP server interface that exposes the Brain to any AI agent. Tools: brain_record, brain_query, brain_retrieve, brain_strengthen, brain_supersede, brain_status, brain_audit, brain_purge. Section 16. |
 | **LLM-Last** | Design principle: if a deterministic tool (linter, type checker, formatter, regex) can do it, the LLM should not. Highest-impact cost and reliability lever. Section 02. |
 | **Computer use** | Agent capability to interact with graphical user interfaces — clicking, typing, scrolling, reading screen content. Requires sandboxed environment, strict time limits, and narrow Autonomous tier. Section 32b. |
 | **Extended thinking** | Dedicated reasoning tokens consumed before the model's response begins. Deeper reasoning, not longer output. 5-50x output volume. Must be budgeted separately. Section 32b. |

@@ -216,7 +216,10 @@ Four model tiers: Flagship (Tier 1, deepest reasoning), Workhorse (Tier 2, solid
 gen), Utility (Tier 3, fast/cheap), Economy (Tier 4, batch). Every agent assigned with
 rationale. Promotion/demotion signals with intent rationale. Silent quality erosion
 failure mode for demotion without measurement. Monitor external signal. Multi-model
-patterns (economy draft + flagship review, cross-model adversarial review).
+patterns (flagship decomposition + workhorse execution, economy draft + flagship review,
+cross-model adversarial review). API resilience section with provider abstraction layer,
+per-tier degradation defaults, per-agent overrides, quality gates during degradation, and
+recovery protocol.
 aiStrat/fleet/model-tiers.md
 ```
 
@@ -495,8 +498,8 @@ README.md - brain/architecture - 2026-03-10:
 Architecture overview for the Brain — the fleet's durable semantic memory. Postgres +
 pgvector. MCP server with 8 tools (brain_record, brain_query, brain_retrieve,
 brain_strengthen, brain_supersede, brain_status, brain_audit, brain_purge) with full
-parameter/return/error contracts. Ranking signal rationale (what failure mode each
-prevents). Zero-trust access control, sensitivity classification, pluggable embedding
+parameter/return/error contracts. Ranking signal rationale (four of eight signals have explicit failure-mode
+rationale: similarity, recency, usefulness, provenance weight). Zero-trust access control, sensitivity classification, pluggable embedding
 interface. Enhanced data sensitivity rationale.
 aiStrat/brain/README.md
 ```
@@ -518,8 +521,8 @@ Level 2 Brain: SQLite + embeddings. Vector similarity search without infrastruct
 Full SQLite schema (entries, entry_links, audit_log), embedding generation examples
 (OpenAI text-embedding-3-small or local MiniLM), cosine similarity retrieval with 0.7
 threshold rationale and judgment boundary, Level 1 migration script. Graduate on
-concurrent access contention, cross-project needs, >500ms retrieval latency, or access
-control requirements.
+concurrent access contention, cross-project needs, >500ms retrieval latency, multi-hop
+retrieval needs, or access control requirements.
 aiStrat/brain/level2-spec.md
 ```
 
