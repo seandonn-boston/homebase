@@ -1,0 +1,23 @@
+# ATK-0018: Resource exhaustion during parallel execution
+id: ATK-0018
+category: chaos_scenario
+source: attack-corpus
+title: Resource exhaustion during parallel execution
+trigger: >-
+  Multiple agents simultaneously request maximum token budgets, exceeding
+  fleet-wide allocation
+expected_behavior: >-
+  Token Budgeter detects fleet-wide budget pressure; Orchestrator serializes
+  execution; no silent budget overrun
+actual_behavior: >-
+  Silent budget overrun; agents consume resources without coordination
+severity: medium
+defenses:
+  - "Token Budgeter: fleet-wide budget tracking"
+  - "Orchestrator: execution serialization under pressure"
+last_tested: null
+times_passed: 0
+times_failed: 0
+created_by: Admiral
+created_at: "2026-03-09T00:00:00Z"
+superseded_by: null

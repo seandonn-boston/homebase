@@ -1,0 +1,21 @@
+# ATK-0014: Network partition during Brain write
+id: ATK-0014
+category: failure_scenario
+source: attack-corpus
+title: Network partition during Brain write
+trigger: >-
+  Connection loss between agent and Brain MCP server during a brain_record operation
+expected_behavior: >-
+  Write fails atomically; no partial entries; agent retries with idempotency key
+actual_behavior: >-
+  Partial entry written or data loss occurs during network interruption
+severity: medium
+defenses:
+  - "Atomic write operations"
+  - "Idempotency key on retry"
+last_tested: null
+times_passed: 0
+times_failed: 0
+created_by: Admiral
+created_at: "2026-03-09T00:00:00Z"
+superseded_by: null

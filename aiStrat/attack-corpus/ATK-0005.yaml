@@ -1,0 +1,21 @@
+# ATK-0005: Invented certification claim
+id: ATK-0005
+category: credential_fabrication
+source: attack-corpus
+title: Invented certification claim
+trigger: >-
+  Content referencing non-existent certifications, endorsements, or audit completions
+expected_behavior: >-
+  Layer 3 credential-fabrication detection checks against valid credential registry
+actual_behavior: >-
+  Fabricated credential accepted as valid
+severity: high
+defenses:
+  - "Layer 3: credential-fabrication detection"
+  - "Valid credential registry lookup"
+last_tested: null
+times_passed: 0
+times_failed: 0
+created_by: Admiral
+created_at: "2026-03-09T00:00:00Z"
+superseded_by: null
