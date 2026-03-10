@@ -81,11 +81,15 @@
     "session_handoff": {
       "type": "object",
       "description": "Present only for session-boundary handoffs (work spanning context windows)",
-      "required": ["session_id", "completed", "next_session_should"],
+      "required": ["session_id", "agent", "completed", "next_session_should"],
       "properties": {
         "session_id": {
           "type": "string",
           "description": "Session identifier or timestamp"
+        },
+        "agent": {
+          "type": "string",
+          "description": "The agent role producing this session handoff"
         },
         "completed": {
           "type": "array",

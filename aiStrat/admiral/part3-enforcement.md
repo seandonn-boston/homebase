@@ -32,6 +32,7 @@ This distinction — between advisory instructions and deterministic enforcement
 | **SessionStart** | When an agent session begins | Context loading, environment validation, staleness checks |
 | **TaskCompleted** | When a task is marked complete | Quality gate execution, metric logging |
 | **PrePush** | Before pushing to remote | Branch protection, review requirements |
+| **Periodic** | On a configurable interval (not tied to tool use or task lifecycle) | Governance heartbeat monitoring, scheduled health checks |
 
 ### Hook Execution Model
 

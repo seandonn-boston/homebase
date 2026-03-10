@@ -415,7 +415,9 @@ CRITICAL CONTEXT:
 
 ### Canonical JSON Schema
 
-The handoff format above is the **human-readable rendering** of a canonical JSON schema defined in `handoff/v1.schema.json`. The JSON schema is the machine-parseable representation used for validation and tooling; the text format is auto-generated from the JSON for agent prompts and human review.
+The handoff format above is the **human-readable rendering** of a canonical JSON schema defined in `handoff/v1.schema.json`. The JSON schema is the machine-parseable representation used for validation and tooling; the text format is rendered from the JSON for agent prompts and human review.
+
+**Field name mapping:** The text format uses `UPPER CASE` labels (e.g., `FROM:`, `ACCEPTANCE CRITERIA:`), while the JSON schema uses `snake_case` keys (e.g., `from`, `acceptance_criteria`). The mapping is deterministic — uppercase labels with spaces become lowercase keys with underscores. The runtime converts between formats transparently.
 
 **Dual-format design:**
 

@@ -1,7 +1,7 @@
 <!-- Admiral Framework v0.2.0-alpha -->
 # Admiral Framework — File Manifest
 
-**62 files across 17 groups | Last modified: 2026-03-09**
+**67 files across 15 groups | Last modified: 2026-03-10**
 
 This is the semantic catalog of every file in the Admiral Framework. Each entry describes what the file contains, verified against the source. Update this manifest when files are added, removed, renamed, or when their content changes materially.
 
@@ -622,10 +622,10 @@ aiStrat/handoff/v1.schema.json
 attack-corpus/README.md - attack-corpus/specification - 2026-03-09:
 Attack corpus specification and seed scenarios. Entry schema for corpus entries with fields:
 id, category, source, trigger, expected/actual behavior, severity, defenses, testing
-metadata. 15 seed scenarios covering authority spoofing (4), credential fabrication (3),
-behavior manipulation (3), failure scenarios (3), and chaos scenarios (2). Three-source
-feedback pipeline (Red Team Agent, Incident Response Agent, Chaos Agent). Storage strategy
-for Level 1 (file-based) and Level 2+ (Brain ATTACK_CORPUS category).
+metadata. 18 seed scenarios covering authority spoofing (4), credential fabrication (3),
+behavior manipulation (3), prompt injection (3), failure scenarios (3), and chaos scenarios
+(2). Three-source feedback pipeline (Red Team Agent, Incident Response Agent, Chaos Agent).
+Storage strategy for Level 1 (file-based) and Level 2+ (Brain ATTACK_CORPUS category).
 aiStrat/attack-corpus/README.md
 ```
 
