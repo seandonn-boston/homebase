@@ -26,7 +26,8 @@ Also includes: operating model ("You are the Admiral" with intent engineering as
 primary communication skill), glossary (~100 terms including intent engineering and
 human inflection point), competitive comparison table, five unique contributions,
 three-audience reading guide (humans, LLM agents, machines), full table of contents
-(41 sections + 7 appendices), and relationship map to fleet/brain/monitor directories.
+(41 sections + 2 sub-sections + 7 appendices), and relationship map to
+fleet/brain/monitor directories.
 aiStrat/admiral/index.md
 ```
 
