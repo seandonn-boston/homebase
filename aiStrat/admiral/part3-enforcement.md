@@ -13,7 +13,7 @@
 
 This distinction — between advisory instructions and deterministic enforcement — is the foundation of reliable fleet operations.
 
-> **Co-requirement:** Standing Orders (Section 36, Part 11) define the *content* that hooks enforce. Both are Level 1 requirements — read Section 36 before implementing hooks. Hooks are the mechanism; Standing Orders are the policy.
+> **PREREQUISITE: Read Standing Orders (Section 36, Part 11) before implementing hooks.** Standing Orders define the *policy* that hooks enforce. Both are Level 1 requirements. Implementing hooks without Standing Orders produces enforcement without governance — the hooks enforce nothing meaningful. Hooks are the mechanism; Standing Orders are the policy.
 
 ### The Enforcement Spectrum
 
@@ -244,7 +244,7 @@ Every hook must ship with a `hook.manifest.json` conforming to `hooks/manifest.s
 
 - **Dependency resolution:** The `requires` field lists hooks that must be active in the session. The runtime validates all dependencies at `SessionStart` and rejects sessions with unsatisfied or circular dependencies.
 - **Version compatibility:** The `input_contract` field is a simple version string. Hooks with the same version are wire-compatible. Breaking input changes require a new version string.
-- **Registration:** All hook manifests are discovered from the `hooks/` directory tree at `SessionStart`. Invalid manifests block session start.
+- **Registration:** All hook manifests are discovered from the project's hook directory tree at `SessionStart`. Invalid manifests block session start. **Note:** The `aiStrat/hooks/` directory contains specification-only manifests (no executables) — see `hooks/README.md`. Your project's hook directory should contain both manifests and their corresponding executables. A manifest without a corresponding executable is an incomplete hook and should be rejected at discovery time.
 - **Event types:** Manifests support the standard lifecycle events (`PreToolUse`, `PostToolUse`, `PreCommit`, `PostCommit`, `SessionStart`, `TaskCompleted`, `PrePush`) plus `Periodic` for interval-based hooks like the governance heartbeat monitor.
 
 See `hooks/README.md` for the full ecosystem specification, directory conventions, and reference manifests.
@@ -287,6 +287,16 @@ One deterministic check that fires every time and self-heals is more effective t
 >
 > SOFT GUIDANCE (reference):
 > - [Preference]: [Where noted]
+
+> **CLASSIFICATION DECISION PROCESS:**
+>
+> For each constraint, ask in order:
+> 1. **Is it safety/security-critical?** (secrets, auth, data loss) → **Hook.** No exceptions.
+> 2. **Does a deterministic tool exist to check it?** (linter, type checker, test) → **Hook.** Automate what can be automated.
+> 3. **Is it an important convention that requires judgment?** (architecture patterns, naming, design) → **Firm guidance** (AGENTS.md).
+> 4. **Is it a preference with acceptable exceptions?** (line length, comment style) → **Soft guidance** (reference docs).
+>
+> Example: "Never commit secrets" → safety-critical → Hook (pre-commit scanner). "Use TypeScript strict mode" → deterministic tool exists (`tsc --strict`) → Hook. "Prefer composition over inheritance" → judgment-dependent → Firm guidance. "Keep functions under 50 lines" → preference with exceptions → Soft guidance.
 
 > **ANTI-PATTERN: ALL INSTRUCTIONS, NO HOOKS** — The Admiral writes comprehensive AGENTS.md rules but implements zero hooks. For the first 60% of a session, rules are followed. As context pressure builds, rules near the beginning lose attention weight. The agent violates constraints it followed an hour ago. More rules are added. The file grows. The agent ignores more. Death spiral. **Defense:** Standing Order 6 (Recovery Protocol) — when rules aren't being followed, convert to hooks. The Admiral-builds-Admiral reference implementation (Case Study 4, Appendix D) made this exact error by deferring hooks in favor of instructions.
 

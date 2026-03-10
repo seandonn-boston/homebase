@@ -83,12 +83,13 @@ Structured around the four Adoption Levels (see index.md). Complete each level b
 
 > **Time estimate clarification:** "30 minutes" is for **configuring** an existing tool (writing AGENTS.md, setting up hooks in Claude Code or your platform). If you are **building a framework implementation** (writing the hook engine, data models, etc.), expect 1-2 days for Level 1. The reference implementation (Admiral-builds-Admiral) took ~4,200 lines of Python and 89 tests to reach Level 1 completion. See Case Study 4 (Appendix D).
 
-1. **Mission (01)** — What you are building. What success looks like.
-2. **Boundaries (02)** — What you are NOT building. Resource budgets.
-3. **Success Criteria (03)** — Machine-verifiable definition of "done."
-4. **Configuration File Strategy (07)** — AGENTS.md (<150 lines). Tool-specific pointers configured. **Standing Orders loaded (Section 36).** This should be created early — without AGENTS.md and Standing Orders, your project is not governed by Admiral even if you've built all the infrastructure.
-5. **Deterministic Enforcement (08)** — Classify constraints. Implement hooks for safety-critical ones. Standing Orders (Section 36) define the *content* that hooks enforce — read them first.
-6. **Configuration Security (10)** — Audit configs. Pin MCP servers (if applicable at this level). Set CODEOWNERS.
+1. **Standing Orders (36)** — Load the 15 non-negotiable rules into agent context. These govern everything that follows. Despite their Part 11 position, Standing Orders are a Level 1 prerequisite — read them before implementing anything else.
+2. **Mission (01)** — What you are building. What success looks like.
+3. **Boundaries (02)** — What you are NOT building. Resource budgets.
+4. **Success Criteria (03)** — Machine-verifiable definition of "done."
+5. **Configuration File Strategy (07)** — Create AGENTS.md (<150 lines). Tool-specific pointers configured. Reference Standing Orders from AGENTS.md.
+6. **Deterministic Enforcement (08)** — Classify constraints (see classification decision process in Section 08). Implement hooks for safety-critical ones. Standing Orders define the *content* that hooks enforce.
+7. **Configuration Security (10)** — Audit configs. Pin MCP servers (if applicable at this level). Set CODEOWNERS.
 
 > **Critical sequencing insight (from implementation):** Implementers naturally organize work by *code architecture* (data models → engine → tests). Admiral organizes by *operational maturity*. These are different orderings. If you build the hook engine before creating AGENTS.md and loading Standing Orders, you have infrastructure without governance — the dogfooding loop is broken. **Create AGENTS.md and Standing Orders first**, then build the infrastructure to enforce them.
 
@@ -130,6 +131,8 @@ Structured around the four Adoption Levels (see index.md). Complete each level b
 -----
 
 ## C — Worked Example: SaaS Task Manager
+
+> **Adoption level note:** This example deploys a Level 3 fleet (8 agents including governance agents). The Mission, Boundaries, Success Criteria, and Enforcement sections apply at Level 1. The Fleet Roster and governance failure scenarios demonstrate Level 3 capabilities — if you are at Level 1-2, they show where you are headed, not what you need now.
 
 A concrete application for a mid-complexity greenfield project.
 
@@ -471,7 +474,7 @@ These pitfalls were discovered during the reference implementation (Case Study 4
 
 | Pitfall | What Happens | Fix |
 |---|---|---|
-| **`platform` stdlib shadow** | `import platform` resolves to your package, not the stdlib. `platform.system()` fails. CI may pass locally but fail in different environments. | Name it `platform_ops/` or similar. Check all category names against your language's stdlib before creating packages. |
+| **`platform` stdlib shadow** | `import platform` resolves to your package, not the stdlib. `platform.system()` fails. Especially pernicious under `pytest`, which manipulates `sys.path` — your tests may shadow stdlib modules even when production code does not. | Name it `platform_ops/` or similar. Check all category names against your language's stdlib before creating packages. Test your import paths under pytest specifically. |
 | **`from __future__ import annotations`** | Deferred annotation evaluation masks import errors at definition time. A model referencing a non-existent type appears to work until runtime. Tests pass until you actually instantiate the model. | Run type-checking (`mypy` or `pyright`) in CI. Don't rely solely on runtime tests to catch import/type issues. |
 | **Pydantic model ↔ JSON Schema divergence** | Your Pydantic model replicates a JSON Schema's fields, but the two drift silently over time. Fields added to the schema don't appear in the model. | Add a validation test: load the canonical JSON Schema, generate instances from your Pydantic model, validate instances against the schema. The Admiral reference implementation does this for `v1.schema.json` and `manifest.schema.json`. |
 | **Hook manifest without executable** | Spec hook directories contain `hook.manifest.json` but no executable. The hook engine discovers manifests but has nothing to run. | Spec manifests are specification-only artifacts. Implementations live in the consuming project. Document this clearly (see `hooks/README.md` implementation note). |
@@ -558,6 +561,7 @@ This appendix maps every major framework component to its real-world implementat
 
 **Reading this table:**
 
+- **Time-to-value vs. implementation effort:** The adoption time estimates in the Adoption Levels table (index.md) assume you are *configuring existing tools*. These categories describe effort to *build custom tooling*. Category 1 components can be adopted in minutes but implementing them as custom code is a separate engineering effort. See the "Config time vs. build time" note in index.md.
 - **Level 1 adoption** (Appendix B) uses only Category 1 components. Zero custom infrastructure.
 - **Level 2 adoption** adds some Category 2 components (routing rules, file-based checkpoints). Moderate engineering effort.
 - **Level 3 adoption** adds governance agents (Category 2) and Brain Level 1-2 (Category 1-2). Still no heavy infrastructure.

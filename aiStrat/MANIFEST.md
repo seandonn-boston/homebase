@@ -184,11 +184,12 @@ aiStrat/admiral/appendices.md
 ## Fleet Infrastructure (8 files)
 
 ```
-README.md - fleet/infrastructure - 2026-03-08:
+README.md - fleet/infrastructure - 2026-03-10:
 Fleet catalog index. 71 core agents (67 specialists + 4 command) plus 29 extended in
 extras/. Organized into generalists and 12 specialist categories. Core Fleet minimum
-of 11 agents. Quick-reference table. Core tenet: "Admiral is the engineering manual.
-Fleet is the parts catalog."
+of 11 agents. Quick-reference table. Governance agents qualified as "Always (Level 3+)"
+to match adoption table. Core tenet: "Admiral is the engineering manual. Fleet is the
+parts catalog."
 aiStrat/fleet/README.md
 ```
 
