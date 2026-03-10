@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.1.1-alpha -->
+<!-- Admiral Framework v0.2.0-alpha -->
 # PART 10 — THE ADMIRAL
 
 *The human element.*
@@ -49,6 +49,30 @@ The Admiral may itself be an AI agent — a meta-orchestrator. This does not mak
 - **The meta-agent cannot modify its own configuration.** No self-editing of AGENTS.md, tool-specific config files (CLAUDE.md, etc.), hooks, agent definitions, or authority tiers. All configuration changes require human review and approval.
 - Trust calibration applies to the meta-agent just as it applies to any fleet member — earned per category, withdrawn precisely after failures.
 - **The meta-agent's identity token is non-delegable and non-renewable without human authorization.** If the meta-agent's session expires, a human must re-authorize. No automatic session extension.
+
+### Fallback Decomposer Mode
+
+When the Orchestrator becomes unresponsive (3 consecutive missed heartbeats over 30 seconds, confirmed by governance agent escalation), the Admiral activates Fallback Decomposer Mode — a degraded but functional coordination state.
+
+**Trigger:** Orchestrator heartbeat failure, confirmed by governance agent escalation per the Orchestrator Degradation Escalation protocol (governance.md).
+
+**Behavior:**
+
+The Admiral performs coarse-grained task decomposition — breaking the current goal into 1–3 macro-tasks and routing directly to Tier 1 specialists. This is intentionally coarser than the Orchestrator's normal fine-grained decomposition.
+
+**Constraints during fallback:**
+
+| Constraint | Value | Rationale |
+|---|---|---|
+| Maximum macro-tasks per decomposition | 3 | Coarser than Orchestrator's normal granularity |
+| Routing targets | Tier 1 specialists only | Maximum reasoning capability during degraded routing |
+| Execution mode | Serial only | Admiral context window cannot manage parallel coordination |
+| Governance monitoring | Normal rate (not reduced) | Degraded routing increases risk |
+| Duration limit | 5 minutes | Escalate to human if Orchestrator has not recovered |
+
+**Exit criteria:** Orchestrator heartbeat resumes for 3 consecutive intervals (30 seconds of stable operation).
+
+**Handoff back:** The Admiral produces a SESSION HANDOFF document transferring all in-progress macro-tasks back to the Orchestrator. The handoff includes: tasks dispatched, their current status, any outputs received, and decisions made during the outage. The Orchestrator integrates this into its task board and resumes normal operation.
 
 > **ANTI-PATTERN: MICROMANAGEMENT SPIRAL** — After one bad outcome, Autonomous narrowed across all categories. Velocity plummets. Escalations flood. Review quality drops. More mistakes. Narrow precisely — only the failed category.
 

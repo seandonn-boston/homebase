@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "hooks/manifest",
+  "title": "Admiral Framework Hook Manifest",
+  "description": "Schema for hook.manifest.json files. Every hook in the Admiral Framework must ship with a manifest conforming to this schema.",
+  "type": "object",
+  "required": ["name", "version", "events", "timeout_ms", "input_contract", "description"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$",
+      "description": "Hook identifier. Lowercase alphanumeric with underscores. Must match the directory name under hooks/."
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version of the hook implementation."
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "PreToolUse",
+          "PostToolUse",
+          "PreCommit",
+          "PostCommit",
+          "SessionStart",
+          "TaskCompleted",
+          "PrePush",
+          "Periodic"
+        ]
+      },
+      "minItems": 1,
+      "uniqueItems": true,
+      "description": "Lifecycle events this hook binds to."
+    },
+    "timeout_ms": {
+      "type": "integer",
+      "minimum": 100,
+      "maximum": 300000,
+      "description": "Maximum execution time in milliseconds."
+    },
+    "requires": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": [],
+      "uniqueItems": true,
+      "description": "Names of hooks that must be active in the session for this hook to function."
+    },
+    "input_contract": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Contract version string (e.g., 'v1'). Hooks with the same version are wire-compatible."
+    },
+    "description": {
+      "type": "string",
+      "minLength": 10,
+      "description": "Human-readable description of what this hook does."
+    },
+    "async": {
+      "type": "boolean",
+      "default": false,
+      "description": "If true, hook executes asynchronously and does not block the agent."
+    }
+  },
+  "additionalProperties": false
+}

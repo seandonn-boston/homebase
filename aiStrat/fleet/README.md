@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.1.1-alpha -->
+<!-- Admiral Framework v0.2.0-alpha -->
 # The Fleet
 
 **A project-agnostic toolbox of agent definitions, prompts, and routing for the Fleet Admiral Framework.**
@@ -39,14 +39,14 @@ fleet/
     │   ├── backend/         # Server logic, API, database, messaging, caching
     │   ├── cross-cutting/   # Architect, integration, migration, refactoring, dependencies
     │   └── infrastructure/  # DevOps, IaC, containers, observability
-    ├── quality/             # QA, test writers, performance, chaos, regression
-    ├── security/            # Security audit, penetration testing, compliance, privacy
-    ├── design/              # UX research, design systems, copywriting, tech writing, diagrams
-    ├── adversarial/         # Simulated users, devil's advocate, red team, persona agents
-    ├── governance/          # ALWAYS DEPLOY: Token budgeter, drift, hallucination, bias, loops, context, contradictions
-    ├── meta/                # Pattern enforcement, dependency sentinel, role crystallizer
-    ├── scale/               # Inhuman-scale analysis (failure topology, decay, combinatorial, security)
-    ├── lifecycle/           # Release, incident response, feature flags, SDK, monorepo, contracts
+    ├── quality.md           # QA, test writers, performance, chaos, regression
+    ├── security.md          # Security audit, penetration testing, compliance, privacy
+    ├── design.md            # UX research, design systems, copywriting, tech writing, diagrams
+    ├── adversarial.md       # Simulated users, devil's advocate, red team, persona agents
+    ├── governance.md        # ALWAYS DEPLOY: Token budgeter, drift, hallucination, bias, loops, context, contradictions
+    ├── meta.md              # Pattern enforcement, dependency sentinel, SEO crawler, role crystallizer
+    ├── scale.md             # Inhuman-scale analysis (failure topology, decay, combinatorial, security)
+    ├── lifecycle.md         # Release, incident response, feature flags, SDK, monorepo, contracts
     └── extras/              # Extended agents held in reserve (domain, data, scale-extended)
         ├── README.md        # Index of extended agents with activation instructions
         ├── domain.md        # 7 domain specialists (auth, search, payments, real-time, media, notifications, i18n)

@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.1.1-alpha -->
+<!-- Admiral Framework v0.2.0-alpha -->
 # Domain Specialization Agents
 
 **Category:** Domain Specialization
@@ -92,6 +92,21 @@ You are the Authentication & Identity Specialist. You design and implement authe
 - Changes to credential storage or hashing
 - Auth flow modifications
 - Permission model changes
+
+### Pool Configuration
+
+The Auth & Identity Specialist is **stateless** — its knowledge is entirely prompt-driven with no mutable state between sessions. This enables redundant pooling for design-time availability:
+
+- Instantiate as a pool (N >= 2) for availability
+- Any instance can handle any request — no session affinity required
+- Pool sizing: minimum 2 for availability, scale with auth workload
+- If one instance is unavailable (model API outage, rate limit), another handles the request
+
+### Output Artifacts
+
+The specialist produces **auth configuration artifacts** — auth flow specifications, token lifecycle documents, session architecture designs, OAuth/OIDC integration configs — that are persisted as project files.
+
+**Design/Runtime separation:** The specialist handles **design** (architecting auth flows and producing configuration artifacts). **Runtime identity enforcement** is entirely hook-based (`SessionStart: identity_validation` in Section 08) and does NOT depend on the specialist being online. This separation means the specialist's unavailability never blocks runtime identity enforcement — only new auth design work is deferred.
 
 ### Prompt Anchor
 

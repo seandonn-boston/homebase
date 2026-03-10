@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.1.1-alpha -->
+<!-- Admiral Framework v0.2.0-alpha -->
 # PART 3 — ENFORCEMENT
 
 *The gap between "should" and "must."*
@@ -32,6 +32,7 @@ This distinction — between advisory instructions and deterministic enforcement
 | **SessionStart** | When an agent session begins | Context loading, environment validation, staleness checks |
 | **TaskCompleted** | When a task is marked complete | Quality gate execution, metric logging |
 | **PrePush** | Before pushing to remote | Branch protection, review requirements |
+| **Periodic** | On a configurable interval (not tied to tool use or task lifecycle) | Governance heartbeat monitoring, scheduled health checks |
 
 ### Hook Execution Model
 
@@ -148,7 +149,103 @@ PostToolUse: context_health_check
   Timeout:    10 seconds.
 ```
 
+**Model Tier Validation Hook:**
+
+```
+SessionStart: tier_validation
+  Format:     Shell script or Python. Version-controlled.
+  Invocation: Synchronous. Fires once at session start.
+  Input:      { "event": "SessionStart", "agent_identity": "...",
+                "model_id": "...", "tier_assignment": "...",
+                "degradation_policy": { "primary": "...", "degraded": "...",
+                "blocked": "...", "max_degraded_tasks": N } }
+  Output:     Exit 0: model meets or exceeds assigned tier. Stdout: tier status confirmation.
+              Exit non-zero: "Model tier violation: agent [X] requires Tier [Y], got [Z].
+              Degradation policy: [Degraded|Blocked]. Action: [failover|queue]."
+  Behavior:   Validates the instantiated model against the agent's tier assignment
+              in model-tiers.md. If the primary model is unavailable:
+              - Degraded policy: allows session with fallback model, sets
+                governance_audit_rate=2x, logs degradation event.
+              - Blocked policy: rejects session, queues task for primary recovery,
+                alerts Admiral directly.
+              No cascading degradation: if the fallback also fails, the agent is Blocked.
+  Timeout:    10 seconds.
+```
+
+**Governance Heartbeat Monitoring Hook:**
+
+```
+Periodic: governance_heartbeat_monitor
+  Format:     Shell script or Python. Version-controlled.
+  Invocation: Asynchronous. Runs on a configurable interval (default: 60 seconds).
+  Input:      { "event": "Periodic",
+                "expected_agents": ["Token Budgeter", "Drift Monitor",
+                "Hallucination Auditor", "Bias Sentinel", "Loop Breaker",
+                "Context Health Monitor", "Contradiction Detector"],
+                "received_heartbeats": {
+                  "Token Budgeter": { "timestamp": "...", "confidence_self_assessment": 0.9 },
+                  ...
+                } }
+  Output:     Exit 0: all governance agents reporting with acceptable confidence.
+              Exit non-zero: "Governance heartbeat failure: [agent_name] missed [N]
+              consecutive heartbeats. Alerting Admiral directly."
+  Behavior:   Tracks heartbeat timestamps per governance agent.
+              2 consecutive misses → alert Admiral directly (bypasses Orchestrator).
+              If confidence_self_assessment < 0.5 for any agent, alert Admiral
+              even if heartbeat is present (alive but degraded).
+              Routes DIRECTLY to Admiral — never through the Orchestrator.
+  Timeout:    10 seconds.
+```
+
+**Identity Validation Hook:**
+
+```
+SessionStart: identity_validation
+  Format:     Shell script or Python. Version-controlled.
+  Invocation: Synchronous. Fires once at session start.
+  Input:      { "event": "SessionStart", "agent_identity": "...",
+                "project_config": { "auth_artifact_path": "...",
+                "auth_artifact_hash": "..." } }
+  Output:     Exit 0: auth configuration artifact exists and is valid.
+              Exit non-zero: "Identity validation failed: auth configuration artifact
+              missing or invalid at [path]. Agent session blocked until artifact is
+              produced by Auth & Identity Specialist."
+  Behavior:   Validates that the project's auth configuration artifact exists,
+              is non-empty, and has not been modified outside of authorized channels
+              (hash check). This hook ensures runtime identity enforcement is
+              deterministic and does not depend on the Auth & Identity Specialist
+              being online (see fleet/agents/extras/domain.md, Pool Configuration).
+  Timeout:    10 seconds.
+```
+
 Governance agents (`fleet/agents/governance.md`) analyze patterns and recommend calibration for these hooks. The hooks handle real-time enforcement; the agents handle trend analysis.
+
+### Hook Manifest Specification
+
+Every hook must ship with a `hook.manifest.json` conforming to `hooks/manifest.schema.json`. The manifest declares the hook's capabilities, dependencies, and contract version — enabling the runtime to discover, validate, and order hooks automatically.
+
+**Example manifest** (for the `token_budget_gate` hook above):
+
+```json
+{
+  "name": "token_budget_gate",
+  "version": "1.0.0",
+  "events": ["PreToolUse"],
+  "timeout_ms": 5000,
+  "requires": ["token_budget_tracker"],
+  "input_contract": "v1",
+  "description": "Blocks tool invocations that would exceed the session token budget."
+}
+```
+
+**Key behaviors:**
+
+- **Dependency resolution:** The `requires` field lists hooks that must be active in the session. The runtime validates all dependencies at `SessionStart` and rejects sessions with unsatisfied or circular dependencies.
+- **Version compatibility:** The `input_contract` field is a simple version string. Hooks with the same version are wire-compatible. Breaking input changes require a new version string.
+- **Registration:** All hook manifests are discovered from the `hooks/` directory tree at `SessionStart`. Invalid manifests block session start.
+- **Event types:** Manifests support the standard lifecycle events (`PreToolUse`, `PostToolUse`, `PreCommit`, `PostCommit`, `SessionStart`, `TaskCompleted`, `PrePush`) plus `Periodic` for interval-based hooks like the governance heartbeat monitor.
+
+See `hooks/README.md` for the full ecosystem specification, directory conventions, and reference manifests.
 
 ### Self-Healing Quality Loops
 

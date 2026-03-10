@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.1.1-alpha -->
+<!-- Admiral Framework v0.2.0-alpha -->
 # Orchestrator
 
 **Category:** Command & Coordination
@@ -102,3 +102,41 @@ You are the Orchestrator. You decompose high-level goals into discrete tasks, ro
 **Bias Risks:** Anchoring to familiar decomposition patterns; over-routing to frequently-used specialists; under-utilizing newly activated agents.
 
 **Human Review Triggers:** Decomposition of ambiguous requirements with no clear specialist match; routing decisions that affect more than 5 agents simultaneously; any task touching security or compliance boundaries.
+
+-----
+
+## Liveness Protocol
+
+The Orchestrator emits a structured heartbeat signal during active operation. This enables governance agents and the Admiral to detect Orchestrator unavailability and trigger failover.
+
+**Heartbeat specification:**
+
+| Property | Value |
+|---|---|
+| **Interval** | Every 10 seconds during active operation |
+| **Format** | `{ "agent": "Orchestrator", "status": "alive", "timestamp": "ISO 8601", "active_tasks": N, "queue_depth": N }` |
+| **Failure threshold** | 3 consecutive missed heartbeats (30-second window) |
+| **Monitored by** | Any governance agent + the Admiral |
+
+The heartbeat is lightweight — it reports liveness, active task count, and queue depth. It does not transmit task content or context.
+
+-----
+
+## Failover Protocol
+
+When the Orchestrator is unresponsive (3 consecutive missed heartbeats over 30 seconds), the fleet degrades gracefully rather than halting:
+
+### Detection Phase
+1. Any governance agent (or the Admiral) tracking heartbeats detects 3 consecutive misses.
+2. The detecting agent initiates governance escalation per the Orchestrator Degradation Escalation protocol (governance.md).
+
+### Failover Phase
+3. The Admiral enters **Fallback Decomposer Mode** (part10-admiral.md, Section 33).
+4. The Admiral performs coarse-grained task decomposition: breaks the current goal into 1–3 macro-tasks and routes directly to Tier 1 specialists.
+5. Governance agents continue monitoring at normal rate throughout the outage.
+
+### Recovery Phase
+6. When the Orchestrator heartbeat resumes for 3 consecutive intervals (30 seconds of stable operation), the Admiral exits Fallback Decomposer Mode.
+7. The Admiral produces a SESSION HANDOFF document transferring all in-progress macro-tasks back to the Orchestrator.
+8. The Orchestrator receives a summary of work dispatched by the Admiral during the outage and integrates it into its task board.
+9. Normal routing resumes.

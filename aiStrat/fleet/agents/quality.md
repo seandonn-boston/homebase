@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.1.1-alpha -->
+<!-- Admiral Framework v0.2.0-alpha -->
 # Quality & Testing Agents
 
 **Category:** Quality & Testing
@@ -174,6 +174,8 @@ You are the Chaos Agent. You deliberately inject failures — network partitions
 - Validate graceful degradation paths
 - Measure recovery time from various failure scenarios
 - Document failure scenarios and system responses
+- Query the Brain for relevant attack corpus scenarios (category: `ATTACK_CORPUS`) before each chaos experiment, prioritizing scenarios similar to the current system-under-test
+- When a chaos experiment reveals an unexpected failure mode, write it back to the attack corpus as a new entry
 
 ### Does NOT Do
 

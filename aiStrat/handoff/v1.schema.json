@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "handoff/v1",
+  "title": "Admiral Framework Handoff Protocol v1",
+  "description": "Canonical JSON Schema for inter-agent handoffs. The text-based handoff format (Section 38) is a human-readable rendering of this schema. Hooks validate against this schema; agents see the text rendering.",
+  "type": "object",
+  "required": ["from", "to", "via", "task", "deliverable", "acceptance_criteria"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "handoff/v1",
+      "description": "Schema version identifier"
+    },
+    "from": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Sending agent role (e.g., 'API Designer', 'QA Agent')"
+    },
+    "to": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Receiving agent role"
+    },
+    "via": {
+      "type": "string",
+      "enum": ["Orchestrator", "Direct"],
+      "description": "Routing path. Direct handoffs require explicit authorization in routing rules."
+    },
+    "task": {
+      "type": "string",
+      "minLength": 1,
+      "description": "What the receiving agent should do with this handoff"
+    },
+    "deliverable": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The actual output — code diff, specification, audit report, etc."
+    },
+    "acceptance_criteria": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1,
+      "description": "How the receiving agent knows they have successfully processed this handoff"
+    },
+    "context_files": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "File paths, documents, or artifacts the receiving agent needs loaded"
+    },
+    "constraints": {
+      "type": "object",
+      "properties": {
+        "token_budget_remaining": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Remaining token budget for this task"
+        },
+        "deadline": {
+          "type": "string",
+          "description": "Deadline — 'session', 'next_session', or ISO 8601 timestamp"
+        }
+      },
+      "additionalProperties": true,
+      "description": "Budget, deadline, and scope constraints specific to this handoff. Domain-specific constraints may be added via additionalProperties."
+    },
+    "assumptions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Assumptions the sending agent made that the receiver should validate"
+    },
+    "open_questions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Unresolved issues the receiver should be aware of"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Extension point for domain-specific fields. Interface contracts (fleet/interface-contracts.md) define metadata schemas for specific agent pairs via $ref."
+    },
+    "session_handoff": {
+      "type": "object",
+      "description": "Present only for session-boundary handoffs (work spanning context windows)",
+      "required": ["session_id", "agent", "completed", "next_session_should"],
+      "properties": {
+        "session_id": {
+          "type": "string",
+          "description": "Session identifier or timestamp"
+        },
+        "agent": {
+          "type": "string",
+          "description": "The agent role producing this session handoff"
+        },
+        "completed": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "What was finished this session"
+        },
+        "in_progress": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "What was started but not completed, with current state"
+        },
+        "blocked": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "What could not proceed and why"
+        },
+        "decisions_made": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Key decisions with rationale"
+        },
+        "next_session_should": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "description": "Prioritized list of what to do next"
+        },
+        "critical_context": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Information the next session absolutely must have loaded"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
