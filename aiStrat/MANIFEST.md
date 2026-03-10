@@ -1,13 +1,13 @@
 <!-- Admiral Framework v0.2.0-alpha -->
 # Admiral Framework — File Manifest
 
-**67 files across 15 groups | Last modified: 2026-03-10**
+**68 files across 15 groups | Last modified: 2026-03-10**
 
 This is the semantic catalog of every file in the Admiral Framework. Each entry describes what the file contains, verified against the source. Update this manifest when files are added, removed, renamed, or when their content changes materially.
 
 ---
 
-## Admiral Doctrine (13 files)
+## Admiral Doctrine (14 files)
 
 ```
 index.md - admiral/doctrine - 2026-03-08:
@@ -129,6 +129,22 @@ Protocol (37); Handoff Protocol (38); Human Referral Protocol (39); Paid Resourc
 Authorization Protocol (40); Data Sensitivity Protocol (41). Concrete formats and
 decision ladders for each.
 aiStrat/admiral/part11-protocols.md
+```
+
+```
+
+```
+intent-engineering.md - admiral/doctrine - 2026-03-10:
+The shared dialect between Admirals and Brains. Defines intent engineering as the
+evolution beyond prompt engineering (single call-and-response) and context engineering
+(information flows): structuring instructions around outcomes, values, constraints,
+failure modes, and judgment boundaries. Six elements of intent: Goal, Priority,
+Constraints, Failure Modes, Judgment Boundaries, Values. Maps intent engineering to
+every framework component (hooks, Brain, fleet routing, monitoring, token brokerage,
+attack corpus). Defines human inflection points — moments requiring human judgment,
+taste, ethics, or strategic context that agents must not work around. Includes full
+worked example of an intent-engineered task assignment.
+aiStrat/admiral/intent-engineering.md
 ```
 
 ```

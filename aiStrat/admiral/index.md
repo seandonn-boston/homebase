@@ -111,6 +111,7 @@ This framework is split across thirteen files. This index is the entry point. Ea
 | [`part9-platform.md`](part9-platform.md) | Sections 30–32 + 32b: Fleet Observability, CI/CD & Event-Driven Operations, Fleet Evaluation & Benchmarking, Multi-Modal & Extended Capabilities |
 | [`part10-admiral.md`](part10-admiral.md) | Sections 33–35: Admiral Self-Calibration, Human-Expert Routing, Multi-Operator Governance |
 | [`part11-protocols.md`](part11-protocols.md) | Sections 36–41: Standing Orders, Escalation, Handoffs, Human Referral, Paid Resource Authorization, Data Sensitivity |
+| [`intent-engineering.md`](intent-engineering.md) | Intent Engineering: the shared dialect between Admirals and Brains |
 | [`appendices.md`](appendices.md) | Pre-Flight Checklist, Quick-Start Sequence, Worked Example |
 
 -----
@@ -187,7 +188,9 @@ Terms are listed alphabetically. When these terms appear in any part file, they 
 | **LLM-Last** | Design principle: if a deterministic tool (linter, type checker, formatter, regex) can do it, the LLM should not. Highest-impact cost and reliability lever. Section 02. |
 | **Computer use** | Agent capability to interact with graphical user interfaces — clicking, typing, scrolling, reading screen content. Requires sandboxed environment, strict time limits, and narrow Autonomous tier. Section 32b. |
 | **Extended thinking** | Dedicated reasoning tokens consumed before the model's response begins. Deeper reasoning, not longer output. 5-50x output volume. Must be budgeted separately. Section 32b. |
+| **Human inflection point** | A moment during execution where the correct action requires human judgment, taste, ethics, or strategic context that an LLM cannot derive from training data. The agent must stop and ask. See `admiral/intent-engineering.md`. |
 | **Identity token** | Cryptographically signed, session-scoped, non-delegable credential binding an agent to a specific project, role, authority tier, and session. Verified by the Brain MCP server on every request. Section 16. |
+| **Intent engineering** | The practice of structuring instructions around outcomes, values, constraints, failure modes, and judgment boundaries — not just outputs. The evolution beyond prompt engineering and context engineering. The shared dialect between Admirals and Brains. See `admiral/intent-engineering.md`. |
 | **MCP** | Model Context Protocol. Open standard (Anthropic, now Linux Foundation) for connecting agents to tools and data sources. Supports streaming, subscriptions, and discovery with trust signals. "USB-C for AI." |
 | **Multi-hop retrieval** | Brain retrieval pattern that follows entry links to return full reasoning chains — cause → decision → outcome → consequence — not just the directly matching entry. Maximum depth: 3. Section 17. |
 | **MCP server** | A tool provider implementing the MCP standard. Extends agent capabilities. Must be registered, scoped, version-pinned, and audited. Section 12, Section 14. |
@@ -307,6 +310,10 @@ Sections are ordered by impact and grouped by relevance.
 | 39 | Human Referral Protocol | When and how specialists recommend consulting a human professional. | |
 | 40 | Paid Resource Authorization | Human-authorized access to paid software, licenses, and subscriptions. | |
 | 41 | Data Sensitivity Protocol | Deterministic enforcement preventing PII, secrets, and credentials from entering persistent storage. | |
+| | **INTENT ENGINEERING** | *The shared dialect between Admirals and Brains.* | [`intent-engineering.md`](intent-engineering.md) |
+| — | Intent Engineering | Structuring instructions around outcomes, values, constraints, failure modes, and judgment boundaries. | |
+| — | The Six Elements of Intent | Goal, Priority, Constraints, Failure Modes, Judgment Boundaries, Values. | |
+| — | The Human Inflection Point | Where the agent's authority ends and the human's begins. This shall not be worked around. | |
 | | **APPENDICES** | | [`appendices.md`](appendices.md) |
 | A | Pre-Flight Checklist | Go/no-go gate before fleet deployment. | |
 | B | Quick-Start Sequence | Level-structured operational order for standing up a new fleet. | |
