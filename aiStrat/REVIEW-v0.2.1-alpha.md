@@ -198,11 +198,9 @@ The following pairs have overlapping responsibilities where neither agent's "Doe
 
 The RESOLUTION-PLAN.md notes that mutual boundary acknowledgments were added to 6 overlapping agent pairs' "Does NOT Do" sections. This was partially implemented — routing rules provide some disambiguation, but explicit mutual references in the agent specs themselves would be clearer.
 
-#### 7. Orchestrator Does Not List Triage Agent as Input Source (Impact: Low)
+#### 7. Domain Agent Duplicate Routing Lines (Impact: Trivial)
 
-The Triage Agent's purpose is classifying and routing work to the Orchestrator. But the Orchestrator's Interface Contracts only define `Admiral → Orchestrator` as an input source. The Triage Agent → Orchestrator handoff — the fleet's primary work intake path — is not formalized in the Orchestrator's spec.
-
-**Recommendation:** Add `Triage Agent → Orchestrator` to the Orchestrator's Interface Contracts.
+All 7 domain agents in `extras/domain.md` list both "Orchestrator on completion" and "Orchestrator on task completion" as separate bullets. These are redundant and should be collapsed into a single line.
 
 #### 8. `scale-extended.md` Exploratory Count (Impact: Trivial)
 
