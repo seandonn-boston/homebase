@@ -116,7 +116,7 @@ Query the audit log. Restricted to Admiral.
 | `since` | timestamp | no | Only entries after this time |
 | `limit` | integer | no | Max results (default: 50) |
 
-**Returns:** `{ logs: [{ timestamp, agent_id, operation, project, entry_ids, result, risk_flags }] }`.
+**Returns:** `{ logs: [{ timestamp, agent_id, session_id, operation, project, entry_ids, result, risk_flags, details, ip_or_source }] }`.
 
 **Errors:** `AUTHORITY_INSUFFICIENT` if caller is not Admiral. `IDENTITY_VERIFICATION_FAILED`.
 

@@ -85,6 +85,8 @@ The primary routing strategy. Match the task's nature to the agent whose scope c
 | **Monorepo coordination** | Monorepo Coordinator | DevOps Agent |
 | **Contract testing** | Contract Test Writer | E2E Test Writer |
 
+> **Note:** Scale and Extended Scale agents not listed in this routing table are advisory/analytical agents invoked by the Orchestrator on demand rather than routed by task type. They do not receive direct task assignments — the Orchestrator calls on them when their analytical capability is needed for a specific decision or assessment.
+
 ### 2. Route by File Ownership
 
 When a task is defined by which files it modifies, route based on file ownership. File ownership is project-specific and must be configured per deployment.

@@ -100,14 +100,14 @@ Effective backtracking requires:
 | **Sycophantic Drift** | Increasingly agrees with established framing over time | QA (21): zero findings is a red flag |
 | **Completion Bias** | Delivers complete but degraded output rather than incomplete but excellent | Decomposition (18): chunk sizing ensures full attention |
 | **Confidence Uniformity** | All output presented with equal confidence regardless of certainty | QA (21): require confidence levels |
-| **Context Recency Bias** | Last-loaded context dominates; early constraints deprioritized | Context Strategy (06): deliberate loading order |
+| **Context Recency Bias** | Last-loaded context dominates; early constraints deprioritized | Context Window Strategy (06): deliberate loading order |
 | **Phantom Capabilities** | Assumes tools or access it does not have | Tool Registry (12): explicit negative tool list |
 | **Scope Creep via Helpfulness** | Adds unrequested features; each reasonable, collectively budget-blowing | Boundaries (02): explicit non-goals |
 | **Hierarchical Drift** | Specialists make orchestrator-level decisions | Fleet Composition (11): explicit role boundaries |
 | **Invocation Inconsistency** | Same context, different outputs across runs; naming drifts | Ground Truth (05): explicit conventions |
 | **Silent Failure** | Encounters error, works around it without logging | Recovery (22): mandatory recovery logging |
-| **Context Stuffing** | Overloaded context → shallow, unfocused output | Context Strategy (06): curated profiles, <150 line rule |
-| **Context Starvation** | Underloaded context → drifts from Mission, infers incorrectly | Context Strategy (06): minimum viable context floor |
+| **Context Stuffing** | Overloaded context → shallow, unfocused output | Context Window Strategy (06): curated profiles, <150 line rule |
+| **Context Starvation** | Underloaded context → drifts from Mission, infers incorrectly | Context Window Strategy (06): minimum viable context floor |
 | **Instruction Decay** | Rules followed early, ignored as session lengthens | Enforcement (08): critical rules must be hooks |
 | **Memory Poisoning** | False info in agent memory persists across sessions | Security (10): audit memory files |
 | **Configuration Injection** | Attacker modifies config to override constraints | Security (10): CODEOWNERS, review requirements |
@@ -121,7 +121,7 @@ Effective backtracking requires:
 
 **Output quality declining:**
 - Worse at end than beginning? → **Completion Bias** → Decomposition (18): reduce chunk size.
-- Uniformly lower? → **Context Starvation** or **Stuffing** → Context Strategy (06).
+- Uniformly lower? → **Context Starvation** or **Stuffing** → Context Window Strategy (06).
 - Rules followed early but not late? → **Instruction Decay** → Enforcement (08): convert to hooks.
 
 **Tasks taking too long:**

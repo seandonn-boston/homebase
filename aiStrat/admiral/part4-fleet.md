@@ -49,6 +49,8 @@ These are the agents to implement first. A fleet can operate effectively with ju
 | 10 | **Hallucination Auditor** | Governance (always deploy) — detects fabricated facts, false citations |
 | 11 | **Loop Breaker** | Governance (always deploy) — detects and terminates circular agent loops |
 
+> **Note:** Agents 9-11 (Token Budgeter, Hallucination Auditor, Loop Breaker) are governance additions for Level 3+. At Level 2, deploy agents 1-8 only.
+
 **Do not deploy 71 agents for a project that needs 11.** The administrative cost of configuring, routing, and coordinating a large fleet exceeds the value for most projects. Start with the core 11. Add roles when the Orchestrator reports routing bottlenecks or when specific domain expertise gaps emerge.
 
 ### Routing Logic
