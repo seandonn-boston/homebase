@@ -55,7 +55,7 @@ CREATE TABLE entry_links (
 CREATE TABLE audit_log (
     id          TEXT PRIMARY KEY,
     timestamp   TEXT NOT NULL,
-    operation   TEXT NOT NULL CHECK (operation IN ('record', 'query', 'retrieve', 'strengthen', 'supersede', 'audit', 'purge')),
+    operation   TEXT NOT NULL CHECK (operation IN ('record', 'query', 'retrieve', 'strengthen', 'supersede', 'audit', 'purge', 'status')),
     agent_id    TEXT NOT NULL,
     project     TEXT NOT NULL,
     entry_id    TEXT,
@@ -152,7 +152,7 @@ def cosine_similarity(a: list[float], b: list[float]) -> float:
 def brain_query(db_path: str, query_embedding: list[float],
                 project: str = None, category: str = None,
                 limit: int = 10, min_score: float = 0.7,
-                dimensions: int = 384) -> list[dict]:
+                dimensions: int = 1536) -> list[dict]:
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
 

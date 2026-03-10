@@ -7,7 +7,7 @@
 
 ## What Intent Engineering Is
 
-**Intent engineering** is the practice of structuring instructions around outcomes, values, constraints, and failure modes — not just outputs. It is the evolution beyond prompt engineering (crafting a single call-and-response) and beyond context engineering (designing information flows across a system). Intent engineering ensures that every instruction communicates *why* the work matters, *what lines must not be crossed*, and *what to do when things go wrong*.
+**Intent engineering** is the practice of structuring instructions around outcomes, values, constraints, failure modes, and judgment boundaries — not just outputs. It is the evolution beyond prompt engineering (crafting a single call-and-response) and beyond context engineering (designing information flows across a system). Intent engineering ensures that every instruction communicates *why* the work matters, *what lines must not be crossed*, and *what to do when things go wrong*.
 
 An output-oriented prompt says: **"Deploy this code to production."**
 
@@ -95,9 +95,9 @@ Intent engineering is not a single document's concern. It is the shared dialect 
 
 | Component | How Intent Engineering Applies |
 |---|---|
-| **Admiral communication** (Part 10) | Intent fluency is the Admiral's primary skill. Every mission statement, boundary, and escalation trigger is an exercise in intent engineering. |
+| **Admiral self-calibration** (Section 33) | Intent fluency is the Admiral's primary skill. Every mission statement, boundary, and escalation trigger is an exercise in intent engineering. |
 | **Agent hooks** (Section 08) | Hooks enforce constraints, but the *rationale* in the hook manifest communicates intent. An agent that understands why a hook exists is less likely to fight it. |
-| **Brain interpretability** (Part 5) | Brain entries that capture intent — not just facts — are more useful for future retrieval. "We chose Postgres over MongoDB" is a fact. "We chose Postgres over MongoDB because we valued transactional consistency over schema flexibility for this domain" is intent. |
+| **Brain knowledge protocol** (Section 16) | Brain entries that capture intent — not just facts — are more useful for future retrieval. "We chose Postgres over MongoDB" is a fact. "We chose Postgres over MongoDB because we valued transactional consistency over schema flexibility for this domain" is intent. |
 | **Fleet routing** (Section 11) | Routing rules that communicate intent ("this task requires security expertise because it touches authentication") produce better specialist output than routing rules that communicate only category ("security task"). |
 | **Input channel listeners** (Section 31) | Event-driven agents need intent-rich context bootstrapping. A CI failure trigger that says "the build broke" is less useful than one that says "the build broke on the authentication module, which is release-blocking." |
 | **Monitoring** (Section 30) | Observability is more useful when you know what the intent was. A trace that shows "agent called API 47 times" becomes diagnostic only when paired with "the intent was to call it once." |
@@ -129,12 +129,12 @@ The Standing Orders (Section 36) encode many of these inflection points as escal
 ### The Pattern
 
 ```
-[GOAL]      — What outcome we are trying to achieve.
-[PRIORITY]  — How this ranks against competing work.
-[CONSTRAINTS] — What must not happen.
-[FAILURE]   — What to do when it goes wrong.
-[JUDGMENT]  — Where to stop and ask a human.
-[VALUES]    — What principles guide ambiguous decisions.
+[GOAL]               — What outcome we are trying to achieve.
+[PRIORITY]           — How this ranks against competing work.
+[CONSTRAINTS]        — What must not happen.
+[FAILURE MODES]      — What to do when it goes wrong.
+[JUDGMENT BOUNDARIES] — Where to stop and ask a human.
+[VALUES]             — What principles guide ambiguous decisions.
 ```
 
 ### Example: Full Intent-Engineered Task Assignment

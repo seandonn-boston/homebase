@@ -23,7 +23,7 @@ Minimum Viable Reading Path (~800 lines total):
   5. appendices.md — Appendix A only (Pre-Flight Checklist: go/no-go gate)
 
 Also includes: operating model ("You are the Admiral" with intent engineering as
-primary communication skill), glossary (~90 terms including intent engineering and
+primary communication skill), glossary (~100 terms including intent engineering and
 human inflection point), competitive comparison table, five unique contributions,
 three-audience reading guide (humans, LLM agents, machines), full table of contents
 (41 sections + 7 appendices), and relationship map to fleet/brain/monitor directories.
@@ -140,8 +140,6 @@ aiStrat/admiral/part11-protocols.md
 ```
 
 ```
-
-```
 intent-engineering.md - admiral/doctrine - 2026-03-10:
 The shared dialect between Admirals and Brains. Defines intent engineering as the
 evolution beyond prompt engineering (single call-and-response) and context engineering
@@ -194,7 +192,7 @@ aiStrat/fleet/prompt-anatomy.md
 ```
 routing-rules.md - fleet/infrastructure - 2026-03-10:
 Task routing decision tree for the Orchestrator. Three strategies in priority order:
-route by task type (~80 task types mapped to primary/fallback agents), route by file
+route by task type (~67 task types mapped to primary/fallback agents), route by file
 ownership (project-specific), escalate ambiguous. Routing constraints with failure mode
 reasoning (no self-review = conflict of interest prevention), judgment boundary for
 ambiguous routing (decompose vs. escalate). Multi-agent pipeline patterns.
@@ -207,7 +205,7 @@ Sender-delivers/receiver-returns contracts for all major agent-to-agent handoff
 patterns: engineering, quality, security, cross-category, governance, scale, lifecycle,
 meta/autonomous, adversarial, and domain/data. Contract violation protocol with intent
 rationale (why acceptance_criteria prevents scope drift, repeated violations signal
-decomposition errors). 475 lines.
+decomposition errors). 479 lines.
 aiStrat/fleet/interface-contracts.md
 ```
 
@@ -660,7 +658,7 @@ metadata. 18 seed scenarios covering authority spoofing (4), credential fabricat
 behavior manipulation (3), prompt injection (3), failure scenarios (3), and chaos scenarios
 (2) — ordered by descending leverage with rationale. Three-source feedback pipeline (Red
 Team Agent, Incident Response Agent, Chaos Agent). Storage strategy for Level 1 (file-based)
-and Level 2+ (Brain ATTACK_CORPUS category).
+and Level 2+ (Brain `failure` category with attack corpus metadata tag).
 aiStrat/attack-corpus/README.md
 ```
 

@@ -226,7 +226,7 @@ Before each chaos experiment, the Chaos Agent queries the Brain for relevant sce
 
 ```
 Chaos Agent receives system-under-test description
-  → Queries Brain: brain_query(category="ATTACK_CORPUS", semantic_search=system_description)
+  → Queries Brain: brain_query(query=system_description, category="failure", metadata_filter={"corpus": "attack"})
   → Receives ranked scenarios by relevance to current system
   → Prioritizes scenarios with low times_passed or high times_failed
   → Runs relevant scenarios against the current system
@@ -239,7 +239,7 @@ Chaos Agent receives system-under-test description
 | Adoption Level | Storage | Mechanism |
 |---|---|---|
 | Level 1 (file-based) | This directory | Seed entries as YAML/JSON files |
-| Level 2+ (Brain) | Brain semantic memory | Category: `ATTACK_CORPUS`; seed corpus loaded as bootstrap entries |
+| Level 2+ (Brain) | Brain semantic memory | Category: `failure` with metadata tag `{"corpus": "attack"}`; seed corpus loaded as bootstrap entries |
 
 At Level 2+, the Brain's semantic search enables the Chaos Agent to find scenarios *relevant* to the current system — not just replay old tests. The `brain_query` tool with vector similarity search matches system-under-test descriptions against corpus entry triggers and contexts.
 

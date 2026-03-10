@@ -297,12 +297,12 @@ Sections are ordered by impact and grouped by relevance.
 | | **PART 9 — PLATFORM** | *The infrastructure that surrounds the fleet.* | [`part9-platform.md`](part9-platform.md) |
 | 30 | Fleet Observability | Why a specific agent failed on a specific task — traces, not just metrics. | |
 | 31 | CI/CD & Event-Driven Operations | Agents triggered by PRs, CI failures, schedules, and webhooks. | |
-| 32 | Fleet Evaluation & Benchmarking | A/B testing fleet configs and measuring whether the fleet is worth it. |
+| 32 | Fleet Evaluation & Benchmarking | A/B testing fleet configs and measuring whether the fleet is worth it. | |
 | 32b | Multi-Modal & Extended Capabilities | Computer use, extended thinking, structured outputs, vision. | |
 | | **PART 10 — THE ADMIRAL** | *The human element.* | [`part10-admiral.md`](part10-admiral.md) |
 | 33 | Admiral Self-Calibration | Bottleneck detection, trust calibration, and growth trajectory. | |
 | 34 | Human-Expert Routing | When the fleet needs expertise the Admiral doesn't have. | |
-| 35 | Multi-Operator Governance | Isolation, shared resources, and cross-fleet review across multiple Admirals. | |
+| 35 | Multi-Operator Governance | Multiple operators governing a single fleet: tiers, conflict resolution, handoff. | |
 | | **PART 11 — PROTOCOLS** | *The universal operating rules every agent follows.* | [`part11-protocols.md`](part11-protocols.md) |
 | 36 | Standing Orders | Fifteen non-negotiable rules loaded into every agent's standing context. | |
 | 37 | Escalation Protocol | How and when agents stop work and flag issues upward. | |

@@ -70,7 +70,7 @@ Before deploying any new fleet, verify every item. If any box is unchecked, the 
 **Part 10 — The Admiral**
 
 - [ ] **Admiral Self-Calibration (33):** Bottleneck signals known. Trust log initialized. Growth stage assessed. Intent fluency self-assessed.
-- [ ] **Intent completeness:** Task assignments communicate goal, priority, constraints, failure modes, and judgment boundaries. See [`intent-engineering.md`](intent-engineering.md).
+- [ ] **Intent completeness:** Task assignments communicate goal, priority, constraints, failure modes, judgment boundaries, and values. See [`intent-engineering.md`](intent-engineering.md).
 - [ ] **Human-Expert Routing (34):** Expert Roster defined. Routing triggers documented. Consultation template ready.
 
 -----
