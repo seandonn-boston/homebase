@@ -2,6 +2,8 @@
 
 A proof-of-concept platform for metered, fair-split access to pooled service subscriptions.
 
+> **Framework link:** This PoC implements the Resource Broker pattern described in [Admiral Section 40 — Paid Resource Authorization](../aiStrat/admiral/part11-protocols.md) (credential vaulting, session management, fair-split billing).
+
 ## What This Is
 
 An experiment in the **infrastructure** required to broker shared access to subscription services
