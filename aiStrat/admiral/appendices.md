@@ -11,7 +11,7 @@ Before deploying any new fleet, verify every item. If any box is unchecked, the 
 
 - [ ] **Mission (01):** Project identity, success state, stakeholders, phase, pipeline entry point.
 - [ ] **Boundaries (02):** Non-goals, hard constraints, resource budgets, quality floor, LLM-Last boundary.
-- [ ] **Success Criteria (03):** Functional, quality, completeness, and negative criteria. Machine-verifiable where possible.
+- [ ] **Success Criteria (03):** Functional, quality, completeness, negative, failure, and judgment boundary criteria. Machine-verifiable where possible.
 
 **Part 2 — Context**
 
@@ -69,14 +69,15 @@ Before deploying any new fleet, verify every item. If any box is unchecked, the 
 
 **Part 10 — The Admiral**
 
-- [ ] **Admiral Self-Calibration (33):** Bottleneck signals known. Trust log initialized. Growth stage assessed.
+- [ ] **Admiral Self-Calibration (33):** Bottleneck signals known. Trust log initialized. Growth stage assessed. Intent fluency self-assessed.
+- [ ] **Intent completeness:** Task assignments communicate goal, priority, constraints, failure modes, and judgment boundaries. See [`intent-engineering.md`](intent-engineering.md).
 - [ ] **Human-Expert Routing (34):** Expert Roster defined. Routing triggers documented. Consultation template ready.
 
 -----
 
 ## B — Quick-Start Sequence
 
-Structured around the four Adoption Levels (see index.md). Complete each level before advancing.
+Structured around the four Adoption Levels (see index.md). Complete each level before advancing. Each level progressively deepens intent operationalization: Level 1 establishes the **intent foundation** (what are we building, what constrains us, how do we know we're done). Level 2 makes intent **operational** (who enforces it, with what tools, how do they coordinate). Level 3 adds **intent governance** (how do we detect when intent is being violated). Level 4 makes intent **persistent** (how do we remember what we learned, scale safely).
 
 ### Level 1: Disciplined Solo (30 minutes)
 
@@ -490,4 +491,4 @@ This appendix maps every major framework component to its real-world implementat
 
 *The Fleet Admiral Framework · v0.2.0-alpha*
 
-*Context is the currency of autonomous AI. The Brain is where that currency compounds.*
+*Context is the currency of autonomous AI. Intent is its purpose. The Brain is where both compound.*

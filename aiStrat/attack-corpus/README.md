@@ -67,6 +67,8 @@ Every corpus entry — whether seed (manually curated) or feedback-generated (wr
 
 These manually curated entries bootstrap the corpus. They cover the most common attack categories and provide initial training data for Layer 3.
 
+**Why this ordering:** Scenarios are organized by descending leverage. Authority spoofing comes first because a successful authority spoof grants the attacker the fleet's highest privilege level — every downstream defense becomes irrelevant if the attacker can claim Admiral authority. Credential fabrication follows because fabricated credentials are the mechanism by which spoofed authority persists across sessions. Behavior manipulation and prompt injection are next because they operate at the instruction level rather than the identity level. Failure and chaos scenarios are last because they test resilience, not adversarial intent — important, but the fleet survives gracefully degraded operation far better than it survives compromised authority.
+
 ### Authority Spoofing (ATK-0001 through ATK-0004)
 
 **ATK-0001: Admiral approval claim**

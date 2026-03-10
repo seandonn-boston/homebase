@@ -48,13 +48,15 @@ Boundaries are the single most effective tool against agent drift. AI agents are
 
 ### Non-Goals
 
-Explicitly state what the project is NOT. Non-goals eliminate entire categories of work that agents would otherwise explore.
+Explicitly state what the project is NOT. Non-goals eliminate entire categories of work that agents would otherwise explore. They are more powerful than goals because a single non-goal can prevent hundreds of misguided decisions — an agent that knows "no mobile app" never wastes tokens evaluating responsive breakpoints, touch targets, or native API access.
 
 - **Functional non-goals:** Features, capabilities, or user flows that are explicitly out of scope.
 - **Quality non-goals:** Levels of polish, optimization, or completeness that are not required at this phase.
 - **Architectural non-goals:** Patterns, technologies, or approaches that must not be used.
 
 ### Hard Constraints
+
+Hard constraints prevent catastrophic misalignment — the class of errors where the work is technically excellent but strategically wrong. An agent that builds the right feature on the wrong framework, or ships a polished UI a day after the demo, has failed regardless of code quality.
 
 - **Tech stack:** Exact languages, frameworks, and tools with version numbers.
 - **External deadlines:** Ship dates, demo dates, review dates.
@@ -112,6 +114,8 @@ Success Criteria belong in the Strategy tier because they must be defined before
 - **Quality:** Measurable gates. Linting passes. Tests pass. Coverage above threshold.
 - **Completeness:** What must exist beyond the core deliverable. Docs updated. Error states handled.
 - **Negative:** What the output must NOT do. No new dependencies not in Ground Truth. No files modified outside scope.
+- **Failure:** What happens when the criteria cannot be met? Criteria without failure guidance create a judgment vacuum — the agent must decide between partial delivery, workarounds, and escalation with no signal from the Admiral about which is preferred. Specify: "If [criterion] cannot be met, [escalate | deliver partial with explanation | block and report]."
+- **Judgment boundaries:** Where is the criterion ambiguous? "Tests pass" is clear. "Error states handled" requires judgment about which error states matter. Name the ambiguity explicitly and assign it a decision authority tier.
 
 ### Machine-Verifiable Criteria
 

@@ -13,12 +13,14 @@
 
 ### Verification Levels
 
-| Level | What It Involves | When to Use |
-|---|---|---|
-| **Self-Check** | Agent reviews own output. Runs automated checks. Self-healing loop. | Low-risk Autonomous-tier tasks |
-| **Peer Review** | Separate QA agent reviews. Pass/fail with specific issues. | Feature implementations, schema changes, API modifications |
-| **Adversarial Review** | Same task through different model/provider. Each critiques the other. | High-stakes, security-sensitive, architectural decisions |
-| **Admiral Review** | Admiral reviews output, decision log, reasoning traces. | Architecture decisions, first implementations of new patterns |
+Each level protects against a different class of failure. Self-Check catches mechanical errors (syntax, type violations, test failures). Peer Review catches logic and design errors invisible to the author. Adversarial Review catches systemic blind spots shared by a single model provider. Admiral Review catches strategic misalignment invisible to any agent. Escalating verification level costs more — the intent is to match the cost of verification to the cost of the failure it prevents.
+
+| Level | What It Involves | When to Use | What It Catches |
+|---|---|---|---|
+| **Self-Check** | Agent reviews own output. Runs automated checks. Self-healing loop. | Low-risk Autonomous-tier tasks | Mechanical errors: syntax, types, lint, failing tests |
+| **Peer Review** | Separate QA agent reviews. Pass/fail with specific issues. | Feature implementations, schema changes, API modifications | Logic errors, design issues, edge cases the author didn't consider |
+| **Adversarial Review** | Same task through different model/provider. Each critiques the other. | High-stakes, security-sensitive, architectural decisions | Systemic blind spots shared by a single model provider |
+| **Admiral Review** | Admiral reviews output, decision log, reasoning traces. | Architecture decisions, first implementations of new patterns | Strategic misalignment, taste, values, stakeholder considerations |
 
 ### Self-Healing as Primary QA
 
@@ -63,6 +65,8 @@ QA focuses on what machines cannot check: logic correctness, design quality, edg
 Without recovery protocols, agents loop indefinitely, silently produce garbage, or freeze.
 
 ### Standard Recovery Ladder
+
+The ladder preserves agent autonomy for as long as possible and escalates only when autonomy is exhausted. **No skipping rungs.** An agent that jumps from retry to escalation has either insufficient context about fallback options (fix the context) or unclear authority boundaries (fix the Decision Authority tiers). The ladder is designed so that escalation reports contain evidence of genuine effort — the Admiral can see what was tried and why it failed, not just "I'm stuck."
 
 1. **Retry with variation.** Meaningfully different alternative (not the same approach repeated). Max 2–3 retries. Log each.
 2. **Fallback to simpler approach.** Known-safe fallback producing lesser but acceptable result. Defined in advance.

@@ -118,7 +118,7 @@ This framework is split across thirteen files. This index is the entry point. Ea
 
 ## The Operating Model
 
-You are the Admiral. You provide the strategic context, constraints, and clarity that no AI can generate for itself. You may be a human operator, a meta-agent orchestrating other agents, or a hybrid of both. What matters is not whether you write code — it is whether the fleet has the context it needs to operate autonomously within defined boundaries.
+You are the Admiral. You provide the strategic context, constraints, and clarity that no AI can generate for itself. You may be a human operator, a meta-agent orchestrating other agents, or a hybrid of both. What matters is not whether you write code — it is whether the fleet has the context it needs to operate autonomously within defined boundaries. Your primary communication skill is **intent engineering** — structuring instructions around outcomes, values, constraints, failure modes, and judgment boundaries so that agents encountering unexpected situations can either make the right call or know that they cannot. See [`intent-engineering.md`](intent-engineering.md).
 
 Every autonomous AI system, regardless of intelligence, operates within the boundaries of what it has been told and what has been enforced. The quality of those boundaries — and the reliability of their enforcement — determines whether a fleet self-organizes into productive work or spirals into hallucination, scope creep, and wasted tokens.
 

@@ -13,6 +13,8 @@
 
 ### Session Persistence Patterns
 
+**Value: Continuity > Velocity.** A fleet that moves fast but loses context between sessions wastes more time reconstructing state than it saved by moving fast. Every persistence pattern below exists to ensure that the next session starts with the *intent* of the previous session intact — not just the status, but the reasoning, the trade-offs, and the unresolved questions.
+
 **1. Checkpoint Files:** Structured summaries at chunk boundaries. Simplest pattern.
 
 > **TEMPLATE: SESSION CHECKPOINT**
@@ -56,7 +58,7 @@
 
 Chronological record of every non-trivial decision: timestamp, decision, alternatives considered, rationale, authority tier used. Enables the Admiral to audit any fleet's history in under five minutes.
 
-> **ANTI-PATTERN: FALSE CHECKPOINTING** — Summaries that sound comprehensive but omit what was NOT done, what assumptions were made, what shortcuts were taken. Checkpoint reads "everything on track" when three things are subtly broken. Require explicit "Assumptions" and "Recovery Actions" fields. If both are empty, be suspicious.
+> **ANTI-PATTERN: FALSE CHECKPOINTING** — Summaries that sound comprehensive but omit what was NOT done, what assumptions were made, what shortcuts were taken. Checkpoint reads "everything on track" when three things are subtly broken. Require explicit "Assumptions" and "Recovery Actions" fields. If both are empty, be suspicious. **Judgment boundary:** A checkpoint with empty Assumptions AND empty Recovery Actions is almost certainly incomplete — real work involves assumptions, and real sessions involve at least minor recoveries. Treat this as a signal to audit, not a signal of perfection.
 
 -----
 
@@ -119,7 +121,7 @@ Enforcement (08) ──→ Config Strategy (07) ──→ Config Security (10)
 
 **The cascade rule:** Update an artifact, then review every downstream artifact. Revise any that are inconsistent.
 
-**The order rule:** Always cascade top-down. Never update downstream before upstream is finalized.
+**The order rule:** Always cascade top-down. Never update downstream before upstream is finalized. **Value: Consistency > Velocity.** Cascading takes time. Skipping the cascade is faster. But inconsistent artifacts produce agents with contradictory instructions, and the resulting confusion costs far more than the cascade saved.
 
 ### Fleet Pause Protocol
 
@@ -180,7 +182,7 @@ Models like DeepSeek V3.2 at ~1/30th flagship cost change fleet economics:
 - **Bulk processing.** Migrations, formatting, boilerplate at economy rates.
 - **Adversarial review at low cost.** Second model pass without doubling cost.
 
-> **ANTI-PATTERN: COST BLINDNESS** — Token budgets tracked but never translated to dollars. The fleet runs three weeks before anyone checks the invoice.
+> **ANTI-PATTERN: COST BLINDNESS** — Token budgets tracked but never translated to dollars. The fleet runs three weeks before anyone checks the invoice. **Value: Transparency enables sustainable operations.** Cost tracking is not overhead — it is the feedback signal that prevents the fleet from consuming more resources than it produces in value. A fleet that cannot answer "what did this feature cost?" cannot answer "was this fleet worth it?"
 
 -----
 
@@ -201,7 +203,7 @@ Models like DeepSeek V3.2 at ~1/30th flagship cost change fleet economics:
 
 | Metric | Healthy | Warning |
 |---|---|---|
-| **First-Pass Quality Rate** | Above 75% | Below 50% — unclear criteria |
+| **First-Pass Quality Rate** | Above 75% | Below 50% — unclear criteria. *Why 75%: below this threshold, rework volume exceeds new work volume, and the fleet is spending more time fixing than building.* |
 | **Rework Ratio** | Under 10% | Above 20% — upstream problems |
 | **Defect Escape Rate** | Near zero | Any consistent pattern |
 | **Self-Heal Rate** | Above 80% | Below 50% — gates misconfigured |

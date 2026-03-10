@@ -154,7 +154,7 @@ grep -rl "prisma" .brain/
 
 Level 1 is deliberately minimal. These limitations are features, not bugs — they define exactly when to graduate.
 
-- **No semantic search.** "How did we handle user authentication?" will not find entries about "JWT" or "login flow" unless those exact keywords appear. This is the primary limitation.
+- **No semantic search.** "How did we handle user authentication?" will not find entries about "JWT" or "login flow" unless those exact keywords appear. This is the primary limitation. **Failure mode: silent knowledge loss.** The fleet has the answer but cannot find it — the agent makes a decision without consulting relevant precedent, potentially contradicting a prior decision that used different terminology. This compounds: each undiscovered precedent is a missed opportunity to learn from past work.
 - **No concurrency model.** Two agents writing to `.brain/` simultaneously could create race conditions. Acceptable for single-agent or low-concurrency fleets.
 - **No cross-project queries** without filesystem traversal. Querying across projects requires searching multiple directories manually.
 - **No structured relationships** between entries. No `entry_links`, no knowledge graph, no multi-hop retrieval.

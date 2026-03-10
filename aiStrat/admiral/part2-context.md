@@ -13,26 +13,28 @@
 
 Context engineering is the discipline of designing information flows across an entire agent system — not just crafting individual prompts, but architecting how the right information reaches the right agent at the right time in the right format.
 
-### From Prompt Engineering to Context Engineering
+Context engineering is the *mechanism*. Intent engineering is the *purpose*. Context engineering answers "what information exists where, when, and why." Intent engineering answers "what matters, what must not happen, and when must the human decide." You need both: intent without context produces agents that understand the goal but lack the information to achieve it; context without intent produces agents that have the information but don't know what matters. See [`intent-engineering.md`](intent-engineering.md) for the full specification of intent engineering and its six elements.
 
-| Prompt Engineering | Context Engineering |
-|---|---|
-| Crafting a single prompt for a single agent | Designing information flows across a fleet |
-| Optimizing one agent's output quality | Optimizing the system's collective output |
-| Focus: word choice, instruction ordering | Focus: what information exists where, when, and why |
-| Operates at the prompt level | Operates at the system level |
+### From Prompt Engineering to Context Engineering to Intent Engineering
+
+| Prompt Engineering | Context Engineering | Intent Engineering |
+|---|---|---|
+| Crafting a single prompt for a single agent | Designing information flows across a fleet | Structuring instructions around outcomes, values, constraints, and failure modes |
+| Optimizing one agent's output quality | Optimizing the system's collective output | Ensuring the system makes the right decisions when plans break down |
+| Focus: word choice, instruction ordering | Focus: what information exists where, when, and why | Focus: what matters, what must not happen, when must a human decide |
+| Operates at the prompt level | Operates at the system level | Operates at the judgment level |
 
 ### The Five Dimensions of Context
 
-1. **Structural context:** How information is organized — file hierarchy, configuration layering, skill triggers, hook placement. Determines what the agent can access.
+1. **Structural context:** How information is organized — file hierarchy, configuration layering, skill triggers, hook placement. Determines what the agent can access. *Why it matters:* An agent cannot act on information it cannot find. Structural context determines the ceiling of what the agent can reason about.
 
-2. **Temporal context:** When information is loaded — at session start, on match, on request, at refresh points. Loading order affects primacy/recency weighting and attention distribution.
+2. **Temporal context:** When information is loaded — at session start, on match, on request, at refresh points. Loading order affects primacy/recency weighting and attention distribution. *Why it matters:* Information loaded early frames all subsequent reasoning. Constraints must arrive before tasks, or the agent reasons about the task unconstrained and retrofits boundaries later — by which point it has already committed to an approach that may violate them.
 
-3. **Relational context:** How pieces of information relate to each other — dependency graphs, cascade maps, interface contracts. An agent that knows its task but not the contract with the adjacent agent produces incompatible output.
+3. **Relational context:** How pieces of information relate to each other — dependency graphs, cascade maps, interface contracts. An agent that knows its task but not the contract with the adjacent agent produces incompatible output. *Why it matters:* Isolated facts without relationships produce locally correct but globally incoherent work.
 
-4. **Authority context:** What weight each piece of information carries — enforced constraints vs. firm guidance vs. soft preferences. An agent that treats all instructions as equal will violate critical constraints when they compete with suggestions for attention.
+4. **Authority context:** What weight each piece of information carries — enforced constraints vs. firm guidance vs. soft preferences. An agent that treats all instructions as equal will violate critical constraints when they compete with suggestions for attention. *Why it matters:* Without authority differentiation, the agent has no way to resolve conflicts between instructions. It will default to whichever instruction is most recent or most specific, which may not be the most important.
 
-5. **Absence context:** What the agent explicitly does not know and must not assume. Negative tool lists, non-goals, and "does not have access to" declarations. Without absence context, agents fill gaps with hallucinated capabilities.
+5. **Absence context:** What the agent explicitly does not know and must not assume. Negative tool lists, non-goals, and "does not have access to" declarations. Without absence context, agents fill gaps with hallucinated capabilities. *Why it matters:* Agents are trained to be helpful. Helpfulness without absence context produces confident fabrication — the agent invents plausible capabilities rather than admitting a gap.
 
 ### Writing Effective Agent Instructions
 
@@ -178,7 +180,7 @@ The budget percentages above are reference points calibrated for 200K-token cont
 
 ### Progressive Disclosure
 
-- **Always loaded:** Mission (1-2 sentences), role identity, authority tier, critical constraints. Under 150 lines total.
+- **Always loaded:** Mission (1-2 sentences), role identity, authority tier, critical constraints. Under 150 lines total. *These load first because they are the agent's intent foundation — who it is, what matters, and what lines must not be crossed. Every subsequent decision is framed by this context.*
 - **Loaded on match:** Skills triggered by file patterns, task keywords, or domain context.
 - **Loaded on request:** Full architectural history, cross-system diagrams, comprehensive reference.
 - **Never loaded:** Other agents' internal context, other projects' artifacts, historical sessions older than the last checkpoint.

@@ -7,7 +7,7 @@ This directory contains the architecture specification for the Brain — the fle
 
 - A database schema for storing decisions, outcomes, lessons, failures, and patterns as vector embeddings
 - An MCP server interface exposing eight tools (`brain_record`, `brain_query`, `brain_retrieve`, `brain_strengthen`, `brain_supersede`, `brain_status`, `brain_audit`, `brain_purge`) that any AI agent can use
-- A ranked retrieval pipeline combining eight signals: semantic similarity, project relevance, recency, usefulness, currency, category matching, provenance weight, and speculative discount
+- A ranked retrieval pipeline combining eight signals: semantic similarity, project relevance, recency, usefulness, currency, category matching, provenance weight, and speculative discount. *Each signal prevents a specific failure mode: similarity prevents keyword-miss; recency prevents stale advice; usefulness prevents noise; provenance weight prevents trusting unverified entries as authoritative.*
 - A zero-trust access control model with identity token lifecycle, mandatory audit logging, and sensitivity classification
 - A pluggable embedding interface for generating vector representations
 
@@ -176,7 +176,7 @@ Indexes: HNSW for approximate nearest neighbor vector search, composite indexes 
 
 ## Data Sensitivity
 
-**The Brain must never store PII, passwords, secrets, credentials, or sensitive information.** This is enforced deterministically at two layers:
+**The Brain must never store PII, passwords, secrets, credentials, or sensitive information.** The Brain is a knowledge system, not a data warehouse. Secrets are liabilities, not knowledge — they create attack surface, require rotation tracking, and violate the principle that Brain entries should be freely queryable by any authorized agent. This is enforced deterministically at two layers:
 
 1. **Application sanitizer** — scans all entry fields before storage, rejects entries containing sensitive patterns
 2. **Database trigger** (`schema/001_initial.sql`) — SQL-level pattern rejection as defense-in-depth

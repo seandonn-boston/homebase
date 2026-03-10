@@ -62,6 +62,8 @@ This document specifies the architecture for the Continuous AI Landscape Monitor
 
 Every piece of external content destined for the Brain passes through a five-layer defense system. **Critical design principle: the load-bearing security layers (1-3) are completely LLM-free.** An LLM can build these layers, but their execution is completely airgapped from all LLM engagement. This eliminates the circular dependency where an LLM judges content specifically designed to manipulate LLMs.
 
+**Why this layer ordering matters:** Layers 1-3 are deterministic and LLM-free because they must be trustworthy against adversarial content specifically crafted to manipulate LLMs. If the primary defense relied on an LLM, an attacker could craft content that simultaneously attacks the fleet *and* disarms the defense. Layer 4 (LLM advisory) is additive only — it can reject but never approve — so even a compromised Layer 4 can only fail in one direction. **Principle: fail-open for discovery (the Monitor finds everything), fail-closed for ingestion (nothing enters the Brain without passing all layers).**
+
 | Layer | Defense | What It Catches | LLM Involvement |
 |-------|---------|-----------------|-----------------|
 | **1. Structural** | Enforces schema, field lengths, valid categories, required fields | Malformed entries, oversized payloads, invalid categories | None — deterministic |

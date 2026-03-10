@@ -3,7 +3,9 @@
 
 **Manifest-first hook management for the Admiral Framework.**
 
-Hooks are the deterministic enforcement layer — they fire every time, regardless of context pressure. This document specifies the hook ecosystem: how hooks declare their capabilities, how the runtime discovers and validates them, and how hook dependencies are resolved.
+Hooks are the deterministic enforcement layer — they fire every time, regardless of context pressure. "Deterministic" means: an instruction in AGENTS.md can be forgotten as the session lengthens and context pressure builds; a hook fires on every invocation regardless of what the agent has or hasn't remembered. This is the fundamental insight of the enforcement spectrum (Section 08) — any constraint that must hold with zero exceptions must be a hook, not an instruction.
+
+This document specifies the hook ecosystem: how hooks declare their capabilities, how the runtime discovers and validates them, and how hook dependencies are resolved.
 
 For hook lifecycle events, execution model, and contract specification, see `admiral/part3-enforcement.md` (Section 08).
 
@@ -64,6 +66,8 @@ Every hook manifest must conform to `hooks/manifest.schema.json`. Example:
 At `SessionStart`, the runtime scans the `hooks/` directory tree for `hook.manifest.json` files. Each manifest is validated against `hooks/manifest.schema.json`. Invalid manifests are rejected with a descriptive error; the session does not start with invalid hooks.
 
 ### Dependency Resolution
+
+**Why manifest-first:** The manifest is the hook's declaration of intent — what it does, when it fires, what it depends on. Without manifests, hooks are opaque scripts that the runtime loads blindly. With manifests, the runtime can validate the hook ecosystem *before* the session starts, preventing mid-session failures from missing dependencies or incompatible contracts.
 
 After discovery, the runtime builds a dependency graph from the `requires` fields:
 

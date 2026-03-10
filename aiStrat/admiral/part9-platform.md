@@ -29,6 +29,8 @@ Observability answers a different question: "why did Agent B fail on chunk 3 of 
 
 Traditional observability has three pillars — logs, metrics, traces. Agent fleets add a fourth.
 
+**Constraint: Every operation must have a trace.** Untraced operations are invisible — they cannot be debugged, attributed, or optimized. If you cannot reconstruct what happened from the telemetry alone, the observability is insufficient. **Failure mode:** A metric dashboard shows "fleet healthy" while a specific agent silently retries 15 times per task because its context profile is misconfigured. Metrics see aggregate throughput; traces see the individual pathology.
+
 **1. Logs.** Per-agent, per-session text records of what happened.
 
 - Tool calls and their results (success, failure, duration).
@@ -254,7 +256,7 @@ Interactive agents receive context from the Admiral in real time. Headless agent
 1. **Event payload.** The trigger event provides the immediate context — which PR, which CI failure, which issue.
 2. **Ground Truth loading.** SessionStart hook loads project Ground Truth from the repository.
 3. **Brain query.** Agent queries the Brain for relevant precedent based on the event context.
-4. **Scope constraints.** Pre-configured boundaries limit the agent's authority. Headless agents should have narrower Autonomous tiers than interactive agents — no Admiral is present to catch mistakes.
+4. **Scope constraints.** Pre-configured boundaries limit the agent's authority. **Headless agents default to narrower authority than interactive agents** — this is a hard constraint, not a suggestion. No Admiral is present to catch mistakes. Actions that would be Autonomous in interactive mode should be Propose in headless mode. The cost of false caution (creating an issue instead of acting) is always lower than the cost of unreviewed autonomous action in an unattended context.
 5. **Result routing configuration.** Where does the output go? PR comment, issue update, Slack notification, commit, or file artifact.
 
 > **TEMPLATE: EVENT-DRIVEN AGENT DEFINITION**

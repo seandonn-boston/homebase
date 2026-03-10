@@ -134,6 +134,8 @@ def blob_to_embedding(blob: bytes, dimensions: int) -> list[float]:
 
 Cosine similarity between the query embedding and all stored embeddings. This is a full table scan — no index acceleration — which is acceptable up to approximately 10,000 entries.
 
+**Why the 0.7 default threshold (`min_score`):** Below 0.7, results are typically false positives — entries that share surface-level vocabulary but address different concerns. A query about "authentication" at 0.5 similarity might return entries about "authorization" or "certificates" that are related but not relevant to the specific decision at hand. The 0.7 threshold prevents agents from acting on shallow matches. **Judgment boundary:** If a query returns no results above 0.7 but the agent believes relevant entries exist, it should try reformulating the query before lowering the threshold. Lowering the threshold is a last resort, not a first response.
+
 ```python
 import math
 import sqlite3

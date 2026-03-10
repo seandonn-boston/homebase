@@ -9,7 +9,7 @@
 
 ## 33 — ADMIRAL SELF-CALIBRATION
 
-> **TL;DR** — If you're rubber-stamping approvals, widen Autonomous. If agents escalate constantly, narrow your review scope or improve context. Trust is earned per category, not globally, and withdrawn precisely.
+> **TL;DR** — If you're rubber-stamping approvals, widen Autonomous. If agents escalate constantly, narrow your review scope or improve context. Trust is earned per category, not globally, and withdrawn precisely. Intent fluency — the skill of writing instructions that communicate purpose, constraints, failure modes, and judgment boundaries — is the Admiral's primary communication skill. See [`intent-engineering.md`](intent-engineering.md).
 
 ### Bottleneck Detection
 
@@ -31,12 +31,12 @@ Trust is not a feeling. It is a measurable parameter earned incrementally and wi
 
 ### The Admiral's Growth Trajectory
 
-| Stage | Characteristics | Focus |
-|---|---|---|
-| **Novice** | Narrow Autonomous. Reviews everything. | Learn failure modes. Build intuition. |
-| **Practitioner** | Moderate Autonomous. Reviews strategically. | Refine trust calibration per category. |
-| **Expert** | Wide Autonomous. Rare interventions. | Framework evolution, cross-fleet governance. |
-| **Master** | Fleet sustains quality autonomously. | Extend the framework. Mentor new Admirals. |
+| Stage | Characteristics | Focus | Why This Stage Exists |
+|---|---|---|---|
+| **Novice** | Narrow Autonomous. Reviews everything. | Learn failure modes. Build intuition. | The Admiral doesn't yet know which failures are common, which are catastrophic, and which are noise. Narrow Autonomous prevents delegation of decisions the Admiral doesn't yet understand. |
+| **Practitioner** | Moderate Autonomous. Reviews strategically. | Refine trust calibration per category. Develop intent fluency. | The Admiral now recognizes patterns and can write intent-rich instructions that anticipate agent behavior. Trust widens because the Admiral can write better constraints. |
+| **Expert** | Wide Autonomous. Rare interventions. | Framework evolution, cross-fleet governance. | Intent fluency is mature — instructions communicate purpose, constraints, and failure modes so effectively that agents rarely encounter unguided ambiguity. Interventions address genuinely novel situations. |
+| **Master** | Fleet sustains quality autonomously. | Extend the framework. Mentor new Admirals. | The Admiral's intent engineering has been internalized into the framework artifacts — hooks, standing orders, Brain entries — and the system sustains itself. |
 
 ### The Admiral as Meta-Agent
 

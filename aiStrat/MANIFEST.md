@@ -10,7 +10,7 @@ This is the semantic catalog of every file in the Admiral Framework. Each entry 
 ## Admiral Doctrine (14 files)
 
 ```
-index.md - admiral/doctrine - 2026-03-08:
+index.md - admiral/doctrine - 2026-03-10:
 Master index and entry point. Subtitled "A Workforce Toolkit for Autonomous AI Agent
 Fleets." Defines four adoption levels (Disciplined Solo → Core Fleet → Governed Fleet
 → Full Framework) with time-to-value and graduation criteria. Links all 11 parts.
@@ -22,30 +22,32 @@ Minimum Viable Reading Path (~800 lines total):
   4. part11-protocols.md — Section 36 only (Standing Orders: 15 non-negotiable rules)
   5. appendices.md — Appendix A only (Pre-Flight Checklist: go/no-go gate)
 
-Also includes: operating model ("You are the Admiral"), glossary (~90 terms),
-competitive comparison table (CrewAI/AutoGen/LangGraph, OpenAI Swarm, Anthropic Agent
-SDK, custom orchestration), five unique contributions, three-audience reading guide
-(humans, LLM agents, machines), full table of contents (41 sections + 7 appendices),
-and relationship map to fleet/brain/monitor directories.
+Also includes: operating model ("You are the Admiral" with intent engineering as
+primary communication skill), glossary (~90 terms including intent engineering and
+human inflection point), competitive comparison table, five unique contributions,
+three-audience reading guide (humans, LLM agents, machines), full table of contents
+(41 sections + 7 appendices), and relationship map to fleet/brain/monitor directories.
 aiStrat/admiral/index.md
 ```
 
 ```
-part1-strategy.md - admiral/doctrine - 2026-03-08:
+part1-strategy.md - admiral/doctrine - 2026-03-10:
 Three sections forming a closed triangle: Mission (01) — project identity, success
 state, stakeholders, phase, and Spec-First Pipeline entry point; Boundaries (02) —
-non-goals, hard constraints, resource budgets, LLM-Last boundary; Success Criteria
-(03) — machine-verifiable definition of done.
+non-goals, hard constraints, resource budgets, LLM-Last boundary with intent rationale
+for each category; Success Criteria (03) — machine-verifiable definition of done with
+failure scenario and judgment boundary criteria.
 aiStrat/admiral/part1-strategy.md
 ```
 
 ```
-part2-context.md - admiral/doctrine - 2026-03-08:
-Four sections: Context Engineering (04) — five dimensions of context (structural,
-temporal, relational, authority, absence); Ground Truth (05) — ontology, naming, tech
-stack; Context Window Strategy (06) — profiles, loading/sacrifice order, progressive
-disclosure; Configuration File Strategy (07) — AGENTS.md as canonical source, 150-line
-rule, cross-tool portability, skills, path rules.
+part2-context.md - admiral/doctrine - 2026-03-10:
+Four sections: Context Engineering (04) — five dimensions of context with intent
+rationale per dimension, lineage table extended to intent engineering, cross-reference
+to intent-engineering.md; Ground Truth (05) — ontology, naming, tech stack; Context
+Window Strategy (06) — profiles, loading/sacrifice order with intent foundation
+rationale, progressive disclosure; Configuration File Strategy (07) — AGENTS.md as
+canonical source, 150-line rule, cross-tool portability, skills, path rules.
 aiStrat/admiral/part2-context.md
 ```
 
@@ -59,11 +61,12 @@ aiStrat/admiral/part3-enforcement.md
 ```
 
 ```
-part4-fleet.md - admiral/doctrine - 2026-03-08:
+part4-fleet.md - admiral/doctrine - 2026-03-10:
 Four sections: Fleet Composition (11) — agent roster, Core Fleet, "Does NOT Do"
-boundaries, 5-12 agents; Tool & Capability Registry (12) — per-agent tool lists
-including negative tool list; Model Selection (13) — tier assignment with rationale;
-Protocol Integration (14) — MCP servers, A2A configuration.
+boundaries, 5-12 agents, routing intent rationale; Tool & Capability Registry (12) —
+per-agent tool lists including negative tool list with hallucination prevention
+rationale; Model Selection (13) — tier assignment with failure mode reasoning for
+mismatches; Protocol Integration (14) — MCP servers, A2A configuration.
 aiStrat/admiral/part4-fleet.md
 ```
 
@@ -77,47 +80,52 @@ aiStrat/admiral/part5-brain.md
 ```
 
 ```
-part6-execution.md - admiral/doctrine - 2026-03-08:
-Three sections: Work Decomposition (18) — 40% token budget rule, Spec-First Pipeline,
-chunk entry/exit states; Parallel Execution Strategy (19) — coordination patterns,
-divergence detection; Swarm Patterns (20) — advanced multi-agent topologies beyond
-hierarchical fleet.
+part6-execution.md - admiral/doctrine - 2026-03-10:
+Three sections: Work Decomposition (18) — 40% token budget rule with failure mode
+rationale, "Quality > Completeness" value, Spec-First Pipeline, chunk entry/exit
+states; Parallel Execution Strategy (19) — coordination patterns with contract-first
+rationale, divergence detection; Swarm Patterns (20) — advanced multi-agent topologies
+beyond hierarchical fleet.
 aiStrat/admiral/part6-execution.md
 ```
 
 ```
-part7-quality.md - admiral/doctrine - 2026-03-08:
-Three sections: Quality Assurance (21) — verification levels, self-healing loops;
-Failure Recovery (22) — recovery ladder with max retries and escalation; Known Agent
-Failure Modes (23) — comprehensive catalog of systematic fleet failure patterns.
+part7-quality.md - admiral/doctrine - 2026-03-10:
+Three sections: Quality Assurance (21) — verification levels with "What It Catches"
+rationale, self-healing loops; Failure Recovery (22) — recovery ladder with intent
+framing (preserve autonomy, escalate only when exhausted, no skipping rungs); Known
+Agent Failure Modes (23) — comprehensive catalog of systematic fleet failure patterns.
 aiStrat/admiral/part7-quality.md
 ```
 
 ```
-part8-operations.md - admiral/doctrine - 2026-03-08:
-Seven sections: Institutional Memory (24) — five session persistence patterns
-(checkpoint, ledger, handoff, git-based, continuous); Adaptation Protocol (25) — three
-change tiers (Tactical/Strategic/Full Pivot); Cost Management (26); Fleet Health
-Metrics (27); Fleet Scaling & Lifecycle (28); Orchestrator Health Protocol (28b); Inter-
-Fleet Governance (29).
+part8-operations.md - admiral/doctrine - 2026-03-10:
+Seven sections: Institutional Memory (24) — five session persistence patterns with
+"Continuity > Velocity" value and false checkpointing judgment boundary; Adaptation
+Protocol (25) — three change tiers with "Consistency > Velocity" cascade constraint;
+Cost Management (26) — with cost transparency value; Fleet Health Metrics (27) — with
+threshold rationale (why 75% first-pass quality); Fleet Scaling & Lifecycle (28);
+Orchestrator Health Protocol (28b); Inter-Fleet Governance (29).
 aiStrat/admiral/part8-operations.md
 ```
 
 ```
-part9-platform.md - admiral/doctrine - 2026-03-08:
+part9-platform.md - admiral/doctrine - 2026-03-10:
 Four sections: Fleet Observability (30) — four pillars (logs, metrics, traces, agent
-telemetry) with trace visualization examples; CI/CD & Event-Driven Operations (31) —
-event-driven agent definitions, context bootstrapping; Fleet Evaluation & Benchmarking
+telemetry) with observability constraint and silent-retry failure mode; CI/CD &
+Event-Driven Operations (31) — event-driven agent definitions, context bootstrapping
+with headless authority narrowing as hard constraint; Fleet Evaluation & Benchmarking
 (32) — A/B testing, baseline metrics, evaluation cadence; Multi-Modal & Extended
 Capabilities (32b) — computer use, extended thinking, structured outputs, vision.
 aiStrat/admiral/part9-platform.md
 ```
 
 ```
-part10-admiral.md - admiral/doctrine - 2026-03-08:
+part10-admiral.md - admiral/doctrine - 2026-03-10:
 Three sections: Admiral Self-Calibration (33) — bottleneck detection, trust calibration
-per category, growth stages; Human-Expert Routing (34) — expert roster, routing
-triggers, consultation template; Multi-Operator Governance (35) — three operator tiers
+per category, intent fluency as explicit skill, growth stages with "Why This Stage
+Exists" rationale; Human-Expert Routing (34) — expert roster, routing triggers,
+consultation template; Multi-Operator Governance (35) — three operator tiers
 (Owner/Operator/Observer), conflict resolution, operator handoff.
 aiStrat/admiral/part10-admiral.md
 ```
@@ -148,14 +156,15 @@ aiStrat/admiral/intent-engineering.md
 ```
 
 ```
-appendices.md - admiral/doctrine - 2026-03-08:
-Seven appendices: Pre-Flight Checklist (A) — per-section verification; Quick-Start
-Sequence (B) — four adoption levels with step-by-step; Worked Example: SaaS Task
-Manager (C) — mission through fleet roster with three governance failure scenarios;
-Case Studies (D) — ungoverned sprint, over-engineered fleet, security-first fleet;
-Platform Integration Patterns (E) — Claude Code, Agent SDK, LangGraph/CrewAI/AutoGen;
-Framework Versioning (F); Implementation Status Map (G) — three implementation
-categories mapped to every component.
+appendices.md - admiral/doctrine - 2026-03-10:
+Seven appendices: Pre-Flight Checklist (A) — per-section verification with intent
+completeness check; Quick-Start Sequence (B) — four adoption levels with intent
+framing (foundation → operational → governance → persistent); Worked Example: SaaS
+Task Manager (C) — mission through fleet roster with three governance failure
+scenarios; Case Studies (D) — ungoverned sprint, over-engineered fleet, security-first
+fleet; Platform Integration Patterns (E) — Claude Code, Agent SDK,
+LangGraph/CrewAI/AutoGen; Framework Versioning (F); Implementation Status Map (G) —
+three implementation categories mapped to every component.
 aiStrat/admiral/appendices.md
 ```
 
@@ -173,48 +182,53 @@ aiStrat/fleet/README.md
 ```
 
 ```
-prompt-anatomy.md - fleet/infrastructure - 2026-03-08:
+prompt-anatomy.md - fleet/infrastructure - 2026-03-10:
 Five-section system prompt assembly pattern: Identity → Authority → Constraints →
-Knowledge → Task. Ordering rationale (identity primes behavior, task last for recency
-bias). Assembly template and anti-patterns (skipping identity, constraints after task,
-overloading knowledge, vague tasks).
+Knowledge → Task. Expanded ordering rationale with per-section intent reasoning and
+cross-reference to intent-engineering.md. Assembly template and anti-patterns (skipping
+identity, constraints after task with drift explanation, overloading knowledge, vague
+tasks).
 aiStrat/fleet/prompt-anatomy.md
 ```
 
 ```
-routing-rules.md - fleet/infrastructure - 2026-03-08:
+routing-rules.md - fleet/infrastructure - 2026-03-10:
 Task routing decision tree for the Orchestrator. Three strategies in priority order:
 route by task type (~80 task types mapped to primary/fallback agents), route by file
-ownership (project-specific), escalate ambiguous. Routing constraints (no self-review,
-always include acceptance criteria). Multi-agent pipeline patterns.
+ownership (project-specific), escalate ambiguous. Routing constraints with failure mode
+reasoning (no self-review = conflict of interest prevention), judgment boundary for
+ambiguous routing (decompose vs. escalate). Multi-agent pipeline patterns.
 aiStrat/fleet/routing-rules.md
 ```
 
 ```
-interface-contracts.md - fleet/infrastructure - 2026-03-08:
+interface-contracts.md - fleet/infrastructure - 2026-03-10:
 Sender-delivers/receiver-returns contracts for all major agent-to-agent handoff
 patterns: engineering, quality, security, cross-category, governance, scale, lifecycle,
-meta/autonomous, adversarial, and domain/data. Contract violation protocol (receiver
-rejects, routes through Orchestrator). 475 lines.
+meta/autonomous, adversarial, and domain/data. Contract violation protocol with intent
+rationale (why acceptance_criteria prevents scope drift, repeated violations signal
+decomposition errors). 475 lines.
 aiStrat/fleet/interface-contracts.md
 ```
 
 ```
-model-tiers.md - fleet/infrastructure - 2026-03-08:
+model-tiers.md - fleet/infrastructure - 2026-03-10:
 Four model tiers: Flagship (Tier 1, deepest reasoning), Workhorse (Tier 2, solid code
 gen), Utility (Tier 3, fast/cheap), Economy (Tier 4, batch). Every agent assigned with
-rationale. Promotion/demotion signals. Monitor external signal. Multi-model patterns
-(economy draft + flagship review, cross-model adversarial review).
+rationale. Promotion/demotion signals with intent rationale. Silent quality erosion
+failure mode for demotion without measurement. Monitor external signal. Multi-model
+patterns (economy draft + flagship review, cross-model adversarial review).
 aiStrat/fleet/model-tiers.md
 ```
 
 ```
-context-injection.md - fleet/infrastructure - 2026-03-08:
+context-injection.md - fleet/infrastructure - 2026-03-10:
 Three-layer context stack: Fleet Context (stable), Project Context (per-project), Task
 Context (per-task). Per-category checklists (all agents, engineering, quality, security,
 governance, domain/data). Three injection patterns: configuration file,
 skills/progressive disclosure, ground truth registry. Context budget guidelines with
-priority allocation percentages.
+priority allocation percentages. Enhanced sacrifice order rationale and context
+sufficiency judgment boundary.
 aiStrat/fleet/context-injection.md
 ```
 
@@ -478,32 +492,35 @@ aiStrat/fleet/agents/extras/scale-extended.md
 ## Brain / Knowledge System (6 files)
 
 ```
-README.md - brain/architecture - 2026-03-08:
+README.md - brain/architecture - 2026-03-10:
 Architecture overview for the Brain — the fleet's durable semantic memory. Postgres +
 pgvector. MCP server with 8 tools (brain_record, brain_query, brain_retrieve,
 brain_strengthen, brain_supersede, brain_status, brain_audit, brain_purge) with full
-parameter/return/error contracts. Zero-trust access control, sensitivity classification,
-pluggable embedding interface.
+parameter/return/error contracts. Ranking signal rationale (what failure mode each
+prevents). Zero-trust access control, sensitivity classification, pluggable embedding
+interface. Enhanced data sensitivity rationale.
 aiStrat/brain/README.md
 ```
 
 ```
-level1-spec.md - brain/maturity-levels - 2026-03-08:
+level1-spec.md - brain/maturity-levels - 2026-03-10:
 Level 1 Brain: file-based JSON knowledge store. Filesystem + git only, no
 infrastructure. Entry format (7 required fields), directory structure (.brain/project/),
 naming convention (timestamp-category-slug.json), shell wrapper, grep-based retrieval.
-Graduate to Level 2 when missed retrievals exceed 30% over 2 weeks. Includes
-compatibility mapping to Level 3 Postgres columns.
+Silent knowledge loss failure mode for no semantic search. Graduate to Level 2 when
+missed retrievals exceed 30% over 2 weeks. Includes compatibility mapping to Level 3
+Postgres columns.
 aiStrat/brain/level1-spec.md
 ```
 
 ```
-level2-spec.md - brain/maturity-levels - 2026-03-08:
+level2-spec.md - brain/maturity-levels - 2026-03-10:
 Level 2 Brain: SQLite + embeddings. Vector similarity search without infrastructure.
 Full SQLite schema (entries, entry_links, audit_log), embedding generation examples
-(OpenAI text-embedding-3-small or local MiniLM), cosine similarity retrieval, Level 1
-migration script. Graduate on concurrent access contention, cross-project needs,
->500ms retrieval latency, or access control requirements.
+(OpenAI text-embedding-3-small or local MiniLM), cosine similarity retrieval with 0.7
+threshold rationale and judgment boundary, Level 1 migration script. Graduate on
+concurrent access contention, cross-project needs, >500ms retrieval latency, or access
+control requirements.
 aiStrat/brain/level2-spec.md
 ```
 
@@ -543,14 +560,15 @@ aiStrat/brain/schema/test_sensitive_data_guard.sql
 ## Monitor / Ecosystem Intelligence (1 file)
 
 ```
-README.md - monitor/architecture - 2026-03-08:
+README.md - monitor/architecture - 2026-03-10:
 Architecture spec for the Continuous AI Landscape Monitor. Automated ecosystem
-surveillance with a five-layer immune system (quarantine): Structural (schema
-enforcement), Injection (70+ regex patterns with encoding normalization), Deterministic
-Semantic (TF-IDF + Bayesian classifier, LLM-airgapped), LLM Advisory (can only REJECT,
-never approve), Antibodies (converts attacks into Brain FAILURE entries). Intelligence
-sources: 11+ model providers, 20+ tracked repos, RSS feeds. Fail-closed semantics.
-Daily/weekly/manual scan cadence.
+surveillance with a five-layer immune system (quarantine) with layer ordering rationale
+(load-bearing defenses must be LLM-free): Structural (schema enforcement), Injection
+(70+ regex patterns with encoding normalization), Deterministic Semantic (TF-IDF +
+Bayesian classifier, LLM-airgapped), LLM Advisory (can only REJECT, never approve),
+Antibodies (converts attacks into Brain FAILURE entries). "Fail-open for discovery,
+fail-closed for ingestion" principle. Intelligence sources: 11+ model providers, 20+
+tracked repos, RSS feeds. Daily/weekly/manual scan cadence.
 aiStrat/monitor/README.md
 ```
 
@@ -635,13 +653,14 @@ aiStrat/handoff/v1.schema.json
 ## Attack Corpus (1 file)
 
 ```
-attack-corpus/README.md - attack-corpus/specification - 2026-03-09:
+attack-corpus/README.md - attack-corpus/specification - 2026-03-10:
 Attack corpus specification and seed scenarios. Entry schema for corpus entries with fields:
 id, category, source, trigger, expected/actual behavior, severity, defenses, testing
 metadata. 18 seed scenarios covering authority spoofing (4), credential fabrication (3),
 behavior manipulation (3), prompt injection (3), failure scenarios (3), and chaos scenarios
-(2). Three-source feedback pipeline (Red Team Agent, Incident Response Agent, Chaos Agent).
-Storage strategy for Level 1 (file-based) and Level 2+ (Brain ATTACK_CORPUS category).
+(2) — ordered by descending leverage with rationale. Three-source feedback pipeline (Red
+Team Agent, Incident Response Agent, Chaos Agent). Storage strategy for Level 1 (file-based)
+and Level 2+ (Brain ATTACK_CORPUS category).
 aiStrat/attack-corpus/README.md
 ```
 
@@ -650,11 +669,13 @@ aiStrat/attack-corpus/README.md
 ## Hook Ecosystem (2 files)
 
 ```
-hooks/README.md - hooks/specification - 2026-03-09:
-Hook ecosystem specification. Manifest-first design: every hook ships with
+hooks/README.md - hooks/specification - 2026-03-10:
+Hook ecosystem specification. Manifest-first design with rationale (deterministic
+enforcement fires every time regardless of context pressure): every hook ships with
 hook.manifest.json. Directory convention (hooks/[hook-name]/), runtime lifecycle
-(discovery, dependency resolution, execution order), contract versioning, future
-extension path to schema registry (v0.3.0+). Reference manifests for 8 core hooks.
+(discovery, dependency resolution with manifest-first rationale, execution order),
+contract versioning, future extension path to schema registry (v0.3.0+). Reference
+manifests for 8 core hooks.
 aiStrat/hooks/README.md
 ```
 

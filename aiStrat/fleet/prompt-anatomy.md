@@ -98,10 +98,12 @@ Identity → Authority → Constraints → Knowledge → Task
 
 **Why this order matters:**
 
-- **Identity first** because it colors how everything else is interpreted.
-- **Authority and Constraints next** because they must be established before the agent encounters any context or task that might tempt it to exceed them.
+- **Identity first** because it establishes the agent's self-model before any other information arrives. An agent that encounters a task before knowing who it is will default to "helpful general assistant" — and helpful general assistants drift into adjacent roles, make decisions above their tier, and expand scope without constraint. Identity prevents this by framing all subsequent reasoning through a specific role lens.
+- **Authority and Constraints next** because they must be established before the agent encounters any context or task that might tempt it to exceed them. If an agent reads the task first and begins planning, encountering constraints afterward produces confused, half-constrained output — the plan is already formed and the constraints feel like objections to an existing approach rather than walls of a corridor.
 - **Knowledge before Task** because the agent needs context before it can meaningfully act on an assignment.
 - **Task last** because it's the most variable element and sits at the position of highest attention in many models.
+
+This order reflects the intent engineering principle: establish *why* and *what matters* before *what to do*. The agent that knows its identity, authority, and constraints before receiving a task will interpret the task through those lenses. The agent that receives a task first will retrofit constraints onto an already-formed plan. See [`admiral/intent-engineering.md`](../admiral/intent-engineering.md).
 
 -----
 
@@ -133,7 +135,7 @@ Identity → Authority → Constraints → Knowledge → Task
 ## Anti-Patterns
 
 - **Skipping Identity:** Agent behaves as a generic assistant and drifts into adjacent roles.
-- **Constraints after Task:** Agent reads the task first, begins planning, and then encounters constraints that contradict its plan — producing confused, half-constrained output.
+- **Constraints after Task:** Agent reads the task first, begins planning, and then encounters constraints that contradict its plan — producing confused, half-constrained output. This is the most common assembly error and the most expensive to debug, because the output *looks* plausible but subtly violates boundaries.
 - **Overloading Knowledge:** Stuffing every artifact into Knowledge "just in case" makes the agent shallow and unfocused. Load only what this specific task requires.
 - **Vague Task:** "Improve the login flow" produces scope creep. "Implement password reset email trigger per spec X, validate against criteria Y, route output to QA" produces focused work.
 
