@@ -6,9 +6,9 @@
 
 ## ELEVATOR PITCH (30 seconds)
 
-> "AI agents can now do real work autonomously — not just answer questions, but actually execute complex tasks for hours without supervision. Every company is about to deploy fleets of these agents. But right now, there's no playbook for managing them — no org chart, no rules of engagement, no quality control, no security model. It's like hiring fifty new employees with no HR department.
+> "AI agents can now do real work autonomously — not just answer questions, but actually execute complex tasks for hours without supervision. Every company is about to deploy fleets of these agents. But here's what nobody's talking about: agents are not employees and they're not code. You can't manage them with HR policies and you can't validate them with traditional software tests. They're an entirely new category of resource — and the people who recognize that have a massive head start.
 >
-> Admiral is that playbook. It's the governance and operations framework that tells organizations how to deploy AI agent teams safely at scale — who does what, who can decide what, what happens when something goes wrong, and how the whole system gets smarter over time. Model-agnostic, works with any AI platform, and designed so you can start small and scale up.
+> Admiral is the first framework built for that reality. It's governance and operations designed from scratch for how agents actually behave — how they make decisions, how they fail, how they hand off work, how the whole system learns over time. Model-agnostic, works with any AI platform, and designed so you can start small and scale up.
 >
 > Every dollar of the $660 billion being poured into AI infrastructure this year creates demand for what I'm building."
 
