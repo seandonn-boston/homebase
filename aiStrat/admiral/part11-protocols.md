@@ -363,7 +363,7 @@ OPEN QUESTIONS:
 - **Context:** Intended behavior description, test commands to run
 - **Returns:** Pass/fail with file and line references, severity ratings
 
-#### Design Agent → Frontend Implementer
+#### Design Systems Agent → Frontend Implementer
 - **Deliverable:** Component spec (layout, spacing, colors, states, interactions)
 - **Context:** Design system tokens, existing component patterns
 - **Returns:** Implemented component with preview/screenshot

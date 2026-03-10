@@ -23,11 +23,11 @@ Define every agent role. Each needs a clear identity, a defined scope, and expli
 | Implementer | Writes code, implements features, follows specifications exactly | Choose architecture, add unrequested features, modify files outside scope |
 | QA Agent | Reviews output, runs tests, validates against criteria, flags issues | Fix issues directly (sends back to Implementer), approve its own work |
 | Database Agent | Designs schemas, writes migrations, optimizes queries | Modify application code, change API contracts without approval |
-| Design Agent | Produces UI/UX specifications, component layouts, style guidelines | Implement designs in code (hands off to Implementer) |
+| Design Systems Agent | Produces UI/UX specifications, component layouts, style guidelines | Implement designs in code (hands off to Implementer) |
 
 ### Agent Catalog
 
-The canonical agent catalog lives in [`fleet/README.md`](../fleet/README.md). It contains 71 core agent definitions across 12 specialist categories plus 4 command & coordination agents, with an additional 29 extended agents in `fleet/agents/extras/`.
+The canonical agent catalog lives in [`fleet/README.md`](../fleet/README.md). It contains 71 core agent definitions (67 specialists across 12 categories plus 4 command & coordination agents), with an additional 29 extended agents in `fleet/agents/extras/`.
 
 Select agents based on the project's actual needs. Define "Does NOT Do" boundaries for each. See `fleet/README.md` for the complete catalog with agent counts per category.
 
@@ -49,7 +49,7 @@ These are the agents to implement first. A fleet can operate effectively with ju
 | 10 | **Hallucination Auditor** | Governance (always deploy) — detects fabricated facts, false citations |
 | 11 | **Loop Breaker** | Governance (always deploy) — detects and terminates circular agent loops |
 
-**Do not deploy 67 agents for a project that needs 11.** The administrative cost of configuring, routing, and coordinating a large fleet exceeds the value for most projects. Start with the core 11. Add roles when the Orchestrator reports routing bottlenecks or when specific domain expertise gaps emerge.
+**Do not deploy 71 agents for a project that needs 11.** The administrative cost of configuring, routing, and coordinating a large fleet exceeds the value for most projects. Start with the core 11. Add roles when the Orchestrator reports routing bottlenecks or when specific domain expertise gaps emerge.
 
 ### Routing Logic
 

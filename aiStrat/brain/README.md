@@ -28,6 +28,8 @@ Record a new entry in the Brain.
 | `metadata` | object | no | Tags, references, related sections (stored as JSONB) |
 | `links` | array | no | Array of `{target_id: UUID, link_type: string}` relationships |
 
+**Implicit fields (derived from identity token, not caller-supplied):** `source_agent`, `source_session`, `authority_tier`, `sensitivity` (defaults to `standard`), `approved` (defaults to `true`; monitor seed candidates arrive with `approved = false`).
+
 **Returns:** `{ id: UUID }` — the newly created entry's identifier.
 
 **Errors:** `INVALID_CATEGORY` if category not in allowed set. `PROJECT_SCOPE_VIOLATION` if agent not assigned to the target project. `IDENTITY_VERIFICATION_FAILED` if token is invalid or expired.

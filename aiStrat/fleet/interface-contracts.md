@@ -53,7 +53,7 @@ These contracts specify exactly what the sender delivers and what the receiver r
 - Suggestions for additional test coverage
 - Verification that existing tests still pass
 
-### Design Agent → Frontend Implementer
+### Design Systems Agent → Frontend Implementer
 
 **Sender delivers:**
 - Component specification (layout, spacing, colors, typography)

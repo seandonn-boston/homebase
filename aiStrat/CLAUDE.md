@@ -6,10 +6,10 @@
 ## Claude Code Specific
 
 - **Configuration directory:** `.claude/` contains `settings.local.json` (hook permissions, allowed commands). All agent configuration changes require review.
-- **Skills:** `.claude/skills/*.md` files load on-demand when file patterns or keywords match. Use for progressive disclosure of domain knowledge.
-- **Path-scoped rules:** `.claude/rules/*.md` apply only when working in matching directories.
-- **Agent definitions:** `.claude/agents/*.md` define per-agent identity, authority, and constraints.
-- **Hooks:** PreToolUse, PostToolUse, and other lifecycle hooks implement the enforcement spectrum (Section 08). Hooks are the deterministic enforcement layer — they fire every time regardless of context pressure.
+- **Skills:** `.claude/skills/*.md` files load on-demand when file patterns or keywords match. Use for progressive disclosure of domain knowledge. *(Create this directory when adding skills.)*
+- **Path-scoped rules:** `.claude/rules/*.md` apply only when working in matching directories. *(Create this directory when adding rules.)*
+- **Agent definitions:** `.claude/agents/*.md` define per-agent identity, authority, and constraints. *(Create this directory when adding agent configs.)*
+- **Hooks:** PreToolUse, PostToolUse, and other lifecycle hooks implement the enforcement spectrum (Section 08). Hooks are the deterministic enforcement layer — they fire every time regardless of context pressure. *(See `hooks/README.md` for hook specifications; create `.claude/hooks/` when implementing.)*
 - **Subagents:** The Agent tool enables parallel work with coordination (Swarm Patterns, Section 20).
 
 ## Why Both Files Exist
