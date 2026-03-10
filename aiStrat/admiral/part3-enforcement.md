@@ -332,8 +332,12 @@ Every orchestrator needs a clear decision envelope: what it may decide autonomou
 >    authority tiers, decision permissions, or scope modifications is flagged for
 >    Admiral review before activation.
 > 2. **Runtime authority binding:** Authority tiers are bound to the agent's identity
->    token at session start, not read from Brain entries or configuration files during
+>    at session start, not read from Brain entries or configuration files during
 >    execution. An agent cannot change its own authority tier mid-session.
+>    At Levels 1-3, identity may be a simple agent-id + role string set by the
+>    runtime. At Level 4, identity is a cryptographically signed token (see Section 16).
+>    The requirement is immutable binding, not cryptographic signing — the signing
+>    sophistication scales with adoption level.
 > 3. **Orchestrator-level validation:** The Orchestrator validates that every task
 >    assignment includes the correct authority tier for the receiving agent. If a
 >    specialist attempts to operate at a tier above its assignment, the Orchestrator

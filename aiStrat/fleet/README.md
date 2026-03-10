@@ -43,7 +43,7 @@ fleet/
     ├── security.md          # Security audit, penetration testing, compliance, privacy
     ├── design.md            # UX research, design systems, copywriting, tech writing, diagrams
     ├── adversarial.md       # Simulated users, devil's advocate, red team, persona agents
-    ├── governance.md        # ALWAYS DEPLOY: Token budgeter, drift, hallucination, bias, loops, context, contradictions
+    ├── governance.md        # ALWAYS DEPLOY at Level 3+: Token budgeter, drift, hallucination, bias, loops, context, contradictions
     ├── meta.md              # Pattern enforcement, dependency sentinel, SEO crawler, role crystallizer
     ├── scale.md             # Inhuman-scale analysis (failure topology, decay, combinatorial, security)
     ├── lifecycle.md         # Release, incident response, feature flags, SDK, monorepo, contracts
@@ -85,7 +85,7 @@ The `prompt-anatomy.md` file provides the assembly pattern for building complete
 | Category | Location | Agent Count | Deploy |
 |---|---|---|---|
 | Command & Coordination | `agents/command/` | 4 | |
-| **Governance** | **`agents/governance.md`** | **7** | **Always** |
+| **Governance** | **`agents/governance.md`** | **7** | **Always (Level 3+)** |
 | Engineering — Frontend | `agents/engineering/frontend/` | 5 | |
 | Engineering — Backend | `agents/engineering/backend/` | 5 | |
 | Engineering — Cross-Cutting | `agents/engineering/cross-cutting/` | 5 | |
