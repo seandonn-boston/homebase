@@ -158,3 +158,29 @@ class TestStandingOrderRendering:
         assert "SO 10:" in rendered
         assert "SO 12:" in rendered
         assert "SO 1:" not in rendered
+
+
+class TestStandingOrderCompleteness:
+    """Verify Standing Orders match spec rule counts."""
+
+    def test_so11_has_6_rules(self) -> None:
+        """SO 11 (Context Discovery) must have 6 rules per spec Section 36.
+        The 5th rule about Context Profile was missing in the original
+        implementation."""
+        so11 = get_standing_order(11)
+        assert len(so11.rules) == 6, (
+            f"SO 11 should have 6 rules (spec Section 36), got {len(so11.rules)}"
+        )
+
+    def test_so11_includes_context_profile_rule(self) -> None:
+        """SO 11 must include the Context Profile rule."""
+        so11 = get_standing_order(11)
+        context_profile_rule = [r for r in so11.rules if "Context Profile" in r]
+        assert len(context_profile_rule) == 1, "SO 11 must mention Context Profile"
+
+    def test_so12_has_7_rules(self) -> None:
+        """SO 12 (Zero-Trust Self-Protection) should have 7 rules."""
+        so12 = get_standing_order(12)
+        assert len(so12.rules) == 7, (
+            f"SO 12 should have 7 rules, got {len(so12.rules)}"
+        )

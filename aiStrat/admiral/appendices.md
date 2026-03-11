@@ -473,12 +473,23 @@ These case studies are synthesized from patterns observed across multiple agent 
 
 **Second lesson:** Spec documents read sequentially can mislead about priority. Standing Orders are in Part 11 but required at Level 1. Cross-references and the Minimum Viable Reading Path help, but implementers who read parts in order will naturally defer Part 11 content. The spec now includes explicit sequencing warnings.
 
+**Phase 1 review (post-completion):**
+
+A review of the completed Phase 1 against the Level 1 spec found three categories of issues:
+
+1. **Over-engineering beyond Level 1:** HMAC-SHA256 identity tokens (Level 4), governance heartbeat monitor (Level 3), tier validation hook (Level 2), escalation/handoff protocols (Level 2+), and 15 empty placeholder packages for future levels. Root causes traced to spec structure: reading path said "Full file" for part3-enforcement.md (Sections 08-10), SO 6 hyperlinked directly to Section 37. Spec patched: reading path narrowed to "Section 08 only," SO 6 made self-contained, level tags added to hook specs, Pre-Flight Checklist restructured by level with negative checklist.
+
+2. **Implementation bugs:** Standing Order 11 missing its 6th rule (Context Profile). `HookEngine.discover()` warned on incomplete manifests instead of rejecting per spec. Error signatures used full stdout instead of first-line-plus-exit-code per glossary. All fixed.
+
+3. **Test gaps:** Boundary conditions at exact thresholds (80%, 90%, 100%). Self-healing cycle detection (consecutive identical signatures). Partial critical sections. Hook timeout. Subprocess execution (all prior tests used handler injection). 22 new tests added.
+
 **Metrics:**
 - Phase 1 first commit: 47 files, 4,227 lines, 89 tests (80% Level 1 complete — missing governance artifacts).
 - Phase 1 corrective commit: +10 files, +1,016 lines, 31 new tests (100% Level 1 complete).
 - Post-review commit: +124 lines, 6 new tests (126 total tests, all coverage gaps closed).
-- Total Phase 1: ~5,300 lines of Python, 126 passing tests, 35 implementation files.
-- Time: ~2 days (not 30 minutes — that estimate is for configuration, not implementation).
+- Post-review edge case commit: 3 bug fixes, 22 new tests (148 total). 8 spec patches.
+- Total Phase 1: ~5,500 lines of Python, 148 passing tests, 35 implementation files.
+- Time: ~2 days implementation + review cycle.
 
 -----
 

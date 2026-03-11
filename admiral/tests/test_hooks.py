@@ -599,3 +599,255 @@ class TestGovernanceHeartbeatMonitor:
         })
         assert code == 1
         assert "low_confidence" in stdout
+
+
+# === Edge Case Tests (Phase 1 Review) ===
+
+
+@pytest.mark.phase1
+class TestTokenBudgetBoundaryConditions:
+    """Boundary conditions at exact threshold values."""
+
+    def test_exactly_at_80_percent(self):
+        """Exactly 80% utilization should trigger warning."""
+        code, stdout, _ = token_budget_tracker.execute({
+            "session_state": {"tokens_used": 80_000, "token_budget": 100_000}
+        })
+        assert code == 0
+        assert "WARNING" in stdout
+
+    def test_just_below_80_percent(self):
+        """79.99% utilization should NOT trigger warning."""
+        code, stdout, _ = token_budget_tracker.execute({
+            "session_state": {"tokens_used": 79_999, "token_budget": 100_000}
+        })
+        assert code == 0
+        assert "WARNING" not in stdout
+        assert '"status": "ok"' in stdout
+
+    def test_exactly_at_90_percent(self):
+        """Exactly 90% utilization should trigger escalation."""
+        code, stdout, _ = token_budget_tracker.execute({
+            "session_state": {"tokens_used": 90_000, "token_budget": 100_000}
+        })
+        assert code == 0
+        assert "ESCALATION" in stdout
+
+    def test_just_below_90_percent(self):
+        """89.99% should trigger warning but NOT escalation."""
+        code, stdout, _ = token_budget_tracker.execute({
+            "session_state": {"tokens_used": 89_999, "token_budget": 100_000}
+        })
+        assert code == 0
+        assert "WARNING" in stdout
+        assert "ESCALATION" not in stdout
+
+    def test_gate_exactly_at_100_percent(self):
+        """Gate should block at exactly 100% utilization."""
+        code, stdout, _ = token_budget_gate.execute({
+            "session_state": {"tokens_used": 100_000, "token_budget": 100_000}
+        })
+        assert code == 1
+        assert "exhausted" in stdout.lower()
+
+    def test_gate_just_below_100_percent(self):
+        """Gate should allow at 99.99% utilization."""
+        code, stdout, _ = token_budget_gate.execute({
+            "session_state": {"tokens_used": 99_999, "token_budget": 100_000}
+        })
+        assert code == 0
+
+
+@pytest.mark.phase1
+class TestSelfHealingCycleDetection:
+    """Tests for the cycle detection mechanism in the self-healing loop."""
+
+    def test_consecutive_identical_signature_breaks_immediately(self):
+        """When the same error recurs immediately after a fix attempt,
+        break the loop right away — don't wait for max_retries."""
+        loop = SelfHealingLoop(max_retries=5, max_session_retries=20)
+
+        # First failure: should retry
+        r1 = loop.record_failure("hook_a", "Error: cannot parse")
+        assert r1.should_retry is True
+
+        # Same error again (consecutive identical): should break immediately
+        r2 = loop.record_failure("hook_a", "Error: cannot parse")
+        assert r2.should_retry is False
+        assert "identical error recurred" in r2.message
+
+    def test_different_errors_dont_trigger_cycle_detection(self):
+        """Different errors between retries should not break the loop early."""
+        loop = SelfHealingLoop(max_retries=5, max_session_retries=20)
+
+        r1 = loop.record_failure("hook_a", "Error: type mismatch")
+        assert r1.should_retry is True
+
+        r2 = loop.record_failure("hook_a", "Error: null reference")
+        assert r2.should_retry is True
+
+    def test_success_resets_cycle_detection(self):
+        """A success between failures should reset cycle tracking."""
+        loop = SelfHealingLoop(max_retries=5, max_session_retries=20)
+
+        r1 = loop.record_failure("hook_a", "Error: timeout")
+        assert r1.should_retry is True
+
+        loop.record_success("hook_a")
+
+        # Same error again after success — should retry, not break
+        r2 = loop.record_failure("hook_a", "Error: timeout")
+        assert r2.should_retry is True
+
+    def test_error_signature_includes_exit_code(self):
+        """Different exit codes for same message should produce different signatures."""
+        sig1 = SelfHealingLoop.compute_error_signature("hook", "Error: foo", exit_code=1)
+        sig2 = SelfHealingLoop.compute_error_signature("hook", "Error: foo", exit_code=2)
+        assert sig1 != sig2
+
+    def test_error_signature_uses_first_line_only(self):
+        """Multi-line errors should use only the first line for signature."""
+        sig1 = SelfHealingLoop.compute_error_signature(
+            "hook", "Error: foo\nline 2\nline 3"
+        )
+        sig2 = SelfHealingLoop.compute_error_signature(
+            "hook", "Error: foo\ndifferent line 2"
+        )
+        assert sig1 == sig2
+
+
+@pytest.mark.phase1
+class TestContextHealthCheckPartialSections:
+    """Tests for partial critical section coverage."""
+
+    def test_two_of_three_critical_sections(self):
+        """Missing one critical section should fail."""
+        code, stdout, _ = context_health_check.execute({
+            "context": {
+                "current_utilization": 0.5,
+                "standing_context_present": ["Identity", "Authority"],
+            }
+        })
+        assert code == 1
+        assert "Constraints" in stdout
+
+    def test_non_critical_sections_dont_matter(self):
+        """Having extra non-critical sections doesn't affect the check."""
+        code, stdout, _ = context_health_check.execute({
+            "context": {
+                "current_utilization": 0.5,
+                "standing_context_present": [
+                    "Identity", "Authority", "Constraints",
+                    "Knowledge", "Task", "Ground Truth",
+                ],
+            }
+        })
+        assert code == 0
+
+    def test_both_utilization_and_missing_sections(self):
+        """Both problems should appear in the output."""
+        import json
+        code, stdout, _ = context_health_check.execute({
+            "context": {
+                "current_utilization": 0.95,
+                "standing_context_present": ["Identity"],
+            }
+        })
+        assert code == 1
+        data = json.loads(stdout)
+        assert len(data["issues"]) == 2  # Both utilization AND missing sections
+
+
+@pytest.mark.phase1
+class TestHookTimeout:
+    """Tests for hook timeout enforcement."""
+
+    def test_timeout_sets_timed_out_flag(self):
+        """A timed-out hook should have timed_out=True and not pass."""
+        result = HookResult(
+            hook_name="slow_hook",
+            event=HookEvent.POST_TOOL_USE,
+            exit_code=1,
+            stdout="",
+            stderr="Hook timed out after 5000ms",
+            duration_ms=5000.0,
+            timed_out=True,
+        )
+        assert not result.passed
+        assert result.timed_out
+
+    def test_timeout_treated_as_failure_in_chain(self):
+        """A timed-out hook should abort the chain like any other failure."""
+        engine = HookEngine()
+
+        def timeout_handler(payload):
+            return HookResult(
+                hook_name="slow",
+                event=HookEvent.POST_TOOL_USE,
+                exit_code=1,
+                stdout="",
+                stderr="timed out",
+                duration_ms=30000.0,
+                timed_out=True,
+            )
+
+        manifest = _make_manifest("slow", events=[HookEvent.POST_TOOL_USE])
+        engine.register(manifest, handler=timeout_handler)
+
+        after = _make_manifest("after", events=[HookEvent.POST_TOOL_USE])
+        engine.register(after, handler=_make_handler(exit_code=0))
+
+        chain = engine.execute(HookEvent.POST_TOOL_USE, {})
+        assert not chain.passed
+        assert chain.aborted
+        assert len(chain.results) == 1  # 'after' never ran
+
+
+@pytest.mark.phase1
+class TestHookSubprocessExecution:
+    """Tests for subprocess hook execution path."""
+
+    def test_execute_python_hook_via_subprocess(self, tmp_path):
+        """Execute a hook as an actual subprocess."""
+        hook_script = tmp_path / "test_hook.py"
+        hook_script.write_text(
+            'import json, sys\n'
+            'payload = json.loads(sys.stdin.read())\n'
+            'result = {"status": "ok", "received": payload.get("event")}\n'
+            'print(json.dumps(result))\n'
+            'sys.exit(0)\n'
+        )
+
+        engine = HookEngine()
+        manifest = _make_manifest("subprocess_test", events=[HookEvent.SESSION_START])
+        engine.register(manifest, executable_path=hook_script)
+
+        chain = engine.execute(HookEvent.SESSION_START, {"test": True})
+        assert chain.passed
+        assert len(chain.results) == 1
+        assert chain.results[0].exit_code == 0
+        assert "ok" in chain.results[0].stdout
+
+    def test_subprocess_hook_failure(self, tmp_path):
+        """A subprocess hook returning non-zero should fail the chain."""
+        hook_script = tmp_path / "fail_hook.py"
+        hook_script.write_text(
+            'import sys\n'
+            'print("Validation failed: missing required field")\n'
+            'sys.exit(1)\n'
+        )
+
+        engine = HookEngine()
+        manifest = _make_manifest("fail_test", events=[HookEvent.SESSION_START])
+        engine.register(manifest, executable_path=hook_script)
+
+        chain = engine.execute(HookEvent.SESSION_START, {})
+        assert not chain.passed
+        assert chain.results[0].exit_code == 1
+
+    def test_incomplete_manifest_rejected(self):
+        """A manifest with no executable should raise FileNotFoundError."""
+        engine = HookEngine()
+        manifest = _make_manifest("orphan", events=[HookEvent.SESSION_START])
+        with pytest.raises(ValueError):
+            engine.register(manifest)  # No executable_path, no handler

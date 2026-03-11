@@ -179,14 +179,12 @@ class HookEngine:
                     executable = impl_candidate
 
             if executable is None:
-                import warnings
-
-                warnings.warn(
+                raise FileNotFoundError(
                     f"Hook '{manifest.name}' has a manifest at {manifest_path} "
-                    f"but no executable was found — skipping registration.",
-                    stacklevel=2,
+                    f"but no executable was found. A manifest without a "
+                    f"corresponding executable is an incomplete hook and must "
+                    f"be rejected at discovery time."
                 )
-                continue
 
             self.register(
                 manifest=manifest,
@@ -342,7 +340,7 @@ class HookEngine:
         failed = chain_result.failed_hook
         if failed:
             healing = self._self_healing.record_failure(
-                failed.hook_name, failed.stdout
+                failed.hook_name, failed.stdout, failed.exit_code
             )
             return chain_result, healing
 
