@@ -9,9 +9,9 @@ Revised: March 2026
 
 ## The Two Axioms
 
-**AI is the stupidest it will ever be.**
+**AI capabilities are improving with no known ceiling.**
 
-Right now, today, this is the worst it gets. Every six months the thing that was impossible becomes a demo, and the thing that was a demo becomes a commodity. If you are making plans based on what AI cannot do today, the ground is moving under you.
+Nobody has identified a hard limit. The trajectory may slow, the path may be uneven, but no one credibly working on this technology has been able to point to a wall and say "it stops here." Every six months the thing that was impossible becomes a demo, and the thing that was a demo becomes a commodity. If you are making plans based on what AI cannot do today, the ground is moving under you.
 
 GPT-4 came out in March 2023. It could not reliably write a working web app. Three years later, Claude Code and Codex agents generate production-grade applications with test suites. [41% of all code written globally is now AI-generated](https://github.blog/news-insights/octoverse/octoverse-2025/). [92% of U.S. developers use AI coding tools daily](https://survey.stackoverflow.co/2025/). SWE-Bench Verified scores went from 0% to [80.8% for Claude Opus 4.6](https://www.anthropic.com/claude) in under three years. GPT-5.4 surpassed human performance on OSWorld ([75.0% vs. 72.4% human baseline](https://openai.com/index/gpt-5-4/)). DeepSeek won [gold medals at the International Mathematical Olympiad and International Olympiad in Informatics](https://arxiv.org/abs/2501.12948).
 
