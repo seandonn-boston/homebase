@@ -851,3 +851,168 @@ class TestHookSubprocessExecution:
         manifest = _make_manifest("orphan", events=[HookEvent.SESSION_START])
         with pytest.raises(ValueError):
             engine.register(manifest)  # No executable_path, no handler
+
+
+@pytest.mark.phase1
+class TestHookStatePersistence:
+    """Tests that hook state flows between hooks in a chain."""
+
+    def test_hook_state_merges_into_payload(self):
+        """When a hook returns hook_state in stdout JSON, it should be
+        available to subsequent hooks in the chain."""
+        import json
+
+        def baseline_handler(payload):
+            state = {"context_baseline": {"initial_utilization": 0.42}}
+            return HookResult(
+                hook_name="context_baseline",
+                event=HookEvent.SESSION_START,
+                exit_code=0,
+                stdout=json.dumps({"hook_state": state}),
+                stderr="",
+                duration_ms=1.0,
+            )
+
+        received_payload = {}
+
+        def health_handler(payload):
+            received_payload.update(payload)
+            return HookResult(
+                hook_name="context_health_check",
+                event=HookEvent.SESSION_START,
+                exit_code=0,
+                stdout="",
+                stderr="",
+                duration_ms=1.0,
+            )
+
+        engine = HookEngine()
+        m1 = _make_manifest("context_baseline", events=[HookEvent.SESSION_START])
+        m2 = _make_manifest(
+            "context_health_check",
+            events=[HookEvent.SESSION_START],
+            requires=["context_baseline"],
+        )
+        engine.register(m1, handler=baseline_handler)
+        engine.register(m2, handler=health_handler)
+
+        result = engine.execute(HookEvent.SESSION_START, {})
+        assert result.passed
+        assert "hook_state" in received_payload
+        assert received_payload["hook_state"]["context_baseline"]["initial_utilization"] == 0.42
+
+    def test_hook_state_not_lost_on_non_json_stdout(self):
+        """Hooks that output non-JSON should not break state propagation."""
+        def plain_handler(payload):
+            return HookResult(
+                hook_name="plain",
+                event=HookEvent.POST_TOOL_USE,
+                exit_code=0,
+                stdout="all good",
+                stderr="",
+                duration_ms=1.0,
+            )
+
+        def second_handler(payload):
+            return HookResult(
+                hook_name="second",
+                event=HookEvent.POST_TOOL_USE,
+                exit_code=0,
+                stdout="",
+                stderr="",
+                duration_ms=1.0,
+            )
+
+        engine = HookEngine()
+        engine.register(
+            _make_manifest("plain", events=[HookEvent.POST_TOOL_USE]),
+            handler=plain_handler,
+        )
+        engine.register(
+            _make_manifest("second", events=[HookEvent.POST_TOOL_USE]),
+            handler=second_handler,
+        )
+        # Should not raise
+        result = engine.execute(HookEvent.POST_TOOL_USE, {})
+        assert result.passed
+
+    def test_failed_hook_state_still_merges(self):
+        """Even when a hook fails, its hook_state should be captured
+        (the failure stdout is fed back to the agent which needs the state)."""
+        import json
+
+        def failing_handler(payload):
+            state = {"loop_detector": {"total_errors": 3}}
+            return HookResult(
+                hook_name="loop_detector",
+                event=HookEvent.POST_TOOL_USE,
+                exit_code=1,
+                stdout=json.dumps({"hook_state": state, "loop_detected": True}),
+                stderr="",
+                duration_ms=1.0,
+            )
+
+        engine = HookEngine()
+        engine.register(
+            _make_manifest("loop_detector", events=[HookEvent.POST_TOOL_USE]),
+            handler=failing_handler,
+        )
+
+        payload: dict = {}
+        result = engine.execute(HookEvent.POST_TOOL_USE, payload)
+        assert not result.passed
+        # State should still be merged even on failure
+        assert payload.get("hook_state", {}).get("loop_detector", {}).get("total_errors") == 3
+
+
+@pytest.mark.phase1
+class TestDependencyValidationOnDiscovery:
+    """Tests that discover() validates dependencies after registration."""
+
+    def test_discover_validates_dependencies(self, tmp_path):
+        """discover() should raise ValueError if hook dependencies are unmet."""
+        # Create a manifest that requires a non-existent hook
+        import json
+
+        hook_dir = tmp_path / "broken_hook"
+        hook_dir.mkdir()
+        manifest = {
+            "name": "broken_hook",
+            "version": "1.0.0",
+            "events": ["PreToolUse"],
+            "timeout_ms": 5000,
+            "requires": ["nonexistent_hook"],
+            "input_contract": "v1",
+            "description": "Hook with unmet dependency",
+        }
+        (hook_dir / "hook.manifest.json").write_text(json.dumps(manifest))
+        (hook_dir / "broken_hook.py").write_text("import sys; sys.exit(0)\n")
+
+        engine = HookEngine()
+        with pytest.raises(ValueError, match="dependency validation failed"):
+            engine.discover(tmp_path)
+
+    def test_discover_accepts_satisfied_dependencies(self, tmp_path):
+        """discover() should succeed when all dependencies are satisfied."""
+        import json
+
+        # Create two hooks where hook_b depends on hook_a
+        for name, deps in [("hook_a", []), ("hook_b", ["hook_a"])]:
+            hook_dir = tmp_path / name
+            hook_dir.mkdir()
+            manifest = {
+                "name": name,
+                "version": "1.0.0",
+                "events": ["PreToolUse"],
+                "timeout_ms": 5000,
+                "requires": deps,
+                "input_contract": "v1",
+                "description": f"Test hook {name}",
+            }
+            (hook_dir / "hook.manifest.json").write_text(json.dumps(manifest))
+            (hook_dir / f"{name}.py").write_text("import sys; sys.exit(0)\n")
+
+        engine = HookEngine()
+        discovered = engine.discover(tmp_path)
+        assert "hook_a" in discovered
+        assert "hook_b" in discovered

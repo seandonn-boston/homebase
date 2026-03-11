@@ -192,6 +192,15 @@ class HookEngine:
             )
             discovered.append(manifest.name)
 
+        # Validate dependencies after all hooks are discovered.
+        # Per Section 08: runtime validates dependencies at SessionStart.
+        errors = self.validate_dependencies()
+        if errors:
+            raise ValueError(
+                f"Hook dependency validation failed after discovery: "
+                + "; ".join(errors)
+            )
+
         return discovered
 
     def validate_dependencies(self) -> list[str]:
@@ -301,6 +310,10 @@ class HookEngine:
         """Execute all hooks for an event in dependency order.
 
         Fail-fast: first failure stops the chain.
+        Hook state persistence: if a hook returns JSON with a "hook_state" key,
+        those values are merged into the payload for subsequent hooks in the chain.
+        This allows hooks like loop_detector and context_baseline to persist state
+        across invocations within a chain.
         """
         order = self.resolve_execution_order(event)
         chain_result = HookChainResult(event=event)
@@ -309,6 +322,18 @@ class HookEngine:
             hook = self._hooks[hook_name]
             result = self._execute_single(hook, event, payload)
             chain_result.results.append(result)
+
+            # Merge hook_state from stdout back into the payload so
+            # downstream hooks in the chain can see upstream state.
+            if result.stdout:
+                try:
+                    output = json.loads(result.stdout)
+                    if isinstance(output, dict) and "hook_state" in output:
+                        existing = payload.get("hook_state", {})
+                        existing.update(output["hook_state"])
+                        payload["hook_state"] = existing
+                except (json.JSONDecodeError, TypeError):
+                    pass
 
             if not result.passed:
                 chain_result.aborted = True
