@@ -22,22 +22,25 @@ The economic value of pure execution — writing code, producing copy, generatin
 
 The value of judgment, taste, problem identification, relationships, and conviction is appreciating. These resist automation because they require accountability, commitment, and a point of view rooted in lived experience. AI generates options. It does not bet the company on one of them and take the consequences.
 
-### What we're uncertain about
+### FAQ
 
-**The timeline.** The company-level evidence (Spotify, Anthropic, Cursor) is dramatic. The macro evidence is not. [U.S. productivity data](https://www.bls.gov/news.release/prod2.nr0.htm) shows no AI-driven spike. [Goldman Sachs found](https://www.goldmansachs.com/insights/articles/generative-ai-could-raise-global-gdp-by-7-percent) AI added "basically zero" to GDP in 2025. The [CBO projects](https://www.cbo.gov/) 0.1% annual productivity gains. [89% of C-suite executives](https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai) report no measurable productivity impact.
+**If AI is so transformative, why isn't it showing up in the productivity data?**
+
+It isn't. [U.S. productivity data](https://www.bls.gov/news.release/prod2.nr0.htm) shows no AI-driven spike. [Goldman Sachs found](https://www.goldmansachs.com/insights/articles/generative-ai-could-raise-global-gdp-by-7-percent) AI added "basically zero" to GDP in 2025. The [CBO projects](https://www.cbo.gov/) 0.1% annual productivity gains. [89% of C-suite executives](https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai) report no measurable productivity impact. The company-level evidence (Spotify, Anthropic, Cursor) is dramatic. The macro evidence is not.
 
 The [Solow paradox](https://en.wikipedia.org/wiki/Productivity_paradox) likely explains the gap — electrification took 30+ years to show up in productivity stats. But that analogy implies the transformation takes **15–25 years, not 3–5.** The factory floor had to be physically redesigned for electricity. Organizations will need to be redesigned for AI. That redesign has barely started.
 
-**The depth of the disruption.** The [METR study](https://metr.org/) found experienced open-source developers were actually *slower* with AI tools on real-world tasks. This contradicts the narrative that AI automatically makes everyone more productive. Bolting AI onto existing workflows produces friction, not gains. The real productivity comes after workflows are redesigned around AI from scratch — which means the disruption requires deep organizational change, not just tool adoption.
+**Didn't the METR study show AI actually makes experienced developers *slower*?**
 
-**Whether "taste" stays human.** We believe taste and judgment are durable human advantages. We held similar beliefs about chess judgment, medical diagnosis, and legal reasoning — and AI made significant inroads in all three. RLHF-trained models are getting better at curation. The [ICSE 2026 JAWs study](https://conf.researchr.org/home/icse-2026) found human-written agent configs still outperform LLM-generated ones, but the gap is narrowing. Taste remains human for now. We hold that position loosely.
+Yes. The [METR study](https://metr.org/) found experienced open-source developers were slower with AI tools on real-world tasks. Bolting AI onto existing workflows produces friction, not gains. The real productivity comes after workflows are redesigned around AI from scratch — which means the disruption requires deep organizational change, not just tool adoption. If METR-style results replicate consistently, the disruption thesis weakens. If they turn out to reflect a transition cost that disappears with redesigned workflows, the thesis holds but the timeline extends.
 
-### What would change our mind
+**Won't AI eventually automate taste and judgment too?**
 
-- Macro productivity data showing a clear AI-driven acceleration (would shorten our timeline)
-- METR-style studies consistently showing AI makes experienced practitioners slower (would weaken the disruption thesis)
-- AI systems that reliably identify novel, valuable problems without human framing — not just answering questions but knowing which questions to ask (would weaken the "taste is human" thesis)
-- Widespread organizational redesign around AI producing measurable results at companies that are not AI-native (would confirm the direction and compress the timeline)
+Maybe. We held similar beliefs about chess judgment, medical diagnosis, and legal reasoning — and AI made significant inroads in all three. RLHF-trained models are getting better at curation. The [ICSE 2026 JAWs study](https://conf.researchr.org/home/icse-2026) found human-written agent configs still outperform LLM-generated ones, but the gap is narrowing. The thing that would change our mind: AI systems that reliably identify novel, valuable problems without human framing — not just answering questions but knowing which questions to ask. We have not seen that yet. We are watching for it.
+
+**What would make you revise this thesis?**
+
+Shorten the timeline: macro productivity data showing clear AI-driven acceleration, or widespread organizational redesign producing measurable results at companies that are not AI-native. Weaken the thesis: METR-style studies consistently showing AI makes experienced practitioners slower across domains. Undermine the "taste is human" claim: AI systems that identify which problems matter, not just solve the ones humans frame.
 
 ### Our position, plainly stated
 
@@ -51,25 +54,27 @@ Execution value is declining. Judgment value is rising. The full transformation 
 
 AI adoption is faster than any prior technology wave because AI inherits the internet's distribution infrastructure. Connectivity, cloud compute, digitized knowledge, software-eaten industries, payment rails, app stores, API ecosystems — built over 30 years for internet-era reasons, exploited by AI without rebuilding any of it. [ChatGPT reached 100M users in two months](https://www.reuters.com/technology/chatgpt-sets-record-fastest-growing-user-base-analyst-note-2023-02-01/); the internet took seven years. [Enterprise AI revenue went from $1.7B to $37B in three years](https://menlovc.com/perspective/2025-the-state-of-generative-ai-in-the-enterprise/). This velocity is only possible because the distribution problem was already solved.
 
-### What we got wrong, or at least overstated
+### FAQ
 
-**Calling AI "the internet's exploitation stage" is likely the wrong category.** The internet was a communication technology. AI targets cognition. These are different categories. [AlphaFold predicting 200 million protein structures](https://www.nature.com/articles/s41586-024-07487-w) depends on internet infrastructure, but calling it "internet exploitation" strains the framework past usefulness. AI without the internet is a brain without a body — but brains are not the exploitation phase of bodies.
+**Isn't calling AI "the internet's exploitation stage" just a convenient narrative?**
 
-**The two-stage pattern is retroactive, not predictive.** We cited electricity, railroads, and the printing press. We did not cite nuclear power (massive infrastructure, no exploitation stage), VR (three infrastructure cycles, no payoff), or [fiber optics (85–95% unused)](https://en.wikipedia.org/wiki/Dot-com_bubble). The pattern holds for some technologies and fails for others. Whether AI is electricity or nuclear power is a judgment call, not a law.
+Yes, and we are retiring it. The internet was a communication technology. AI targets cognition. These are different categories. [AlphaFold predicting 200 million protein structures](https://www.nature.com/articles/s41586-024-07487-w) depends on internet infrastructure, but calling it "internet exploitation" strains the framework past usefulness. AI without the internet is a brain without a body — but brains are not the exploitation phase of bodies. The useful claim is narrower: AI inherits internet distribution infrastructure, and that inheritance explains the adoption speed.
 
-**The productivity data contradicts "the revolution is finishing."** [Goldman Sachs:](https://www.goldmansachs.com/insights/articles/generative-ai-could-raise-global-gdp-by-7-percent) AI added zero to GDP in 2025. [89% of executives:](https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai) no measurable productivity impact. [95% of AI pilots](https://www.gartner.com/en/newsroom/press-releases/2024-11-18-gartner-says-more-than-30-percent-of-generative-ai-projects-will-be-abandoned-after-proof-of-concept-by-end-of-2025) fail to reach production. Adoption is wide (94%) and shallow. The technology works in demos and at AI-native companies. The organizational transformation required to capture value at scale has barely started.
+**Your two-stage pattern only cites winners. What about the failures?**
+
+Correct. We cited electricity, railroads, and the printing press. We did not cite nuclear power (massive infrastructure, no exploitation stage), VR (three infrastructure cycles, no payoff), or [fiber optics (85–95% unused)](https://en.wikipedia.org/wiki/Dot-com_bubble). The pattern holds for some technologies and fails for others. Whether AI is electricity or nuclear power is a judgment call, not a law.
+
+**If the revolution is happening, why does the productivity data show nothing?**
+
+[Goldman Sachs:](https://www.goldmansachs.com/insights/articles/generative-ai-could-raise-global-gdp-by-7-percent) AI added zero to GDP in 2025. [89% of executives:](https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai) no measurable productivity impact. [95% of AI pilots](https://www.gartner.com/en/newsroom/press-releases/2024-11-18-gartner-says-more-than-30-percent-of-generative-ai-projects-will-be-abandoned-after-proof-of-concept-by-end-of-2025) fail to reach production. Adoption is wide (94%) and shallow. The technology works in demos and at AI-native companies. The organizational transformation required to capture value at scale has barely started. Our answer is that the revolution is real and slow — not that the data is wrong.
+
+**What would make you revise this thesis?**
+
+Disprove inheritance: AI applications generating massive value without depending on internet infrastructure. Support the fast timeline: sustained productivity gains showing up in macro data within 2–3 years. Disprove distribution as the bottleneck: AI adoption stalling despite available infrastructure, suggesting the real constraint is organizational capacity, trust, regulation, or actual usefulness.
 
 ### What we still believe
 
-AI's adoption speed is explained by inheriting internet infrastructure. That is the useful insight, regardless of what you call it.
-
-The strategic implication holds: winners will use AI to be dramatically better at something the internet already enabled, scaling on existing distribution — not building from scratch.
-
-### What would change our mind
-
-- AI applications that generate massive value without depending on internet infrastructure (would disprove the inheritance thesis)
-- Sustained productivity gains showing up in macro data within 2–3 years (would support the fast-timeline version we've backed away from)
-- AI adoption stalling despite available infrastructure — which would suggest the bottleneck was never distribution but something else (organizational capacity, trust, regulation, actual usefulness)
+AI's adoption speed is explained by inheriting internet infrastructure. Winners will use AI to be dramatically better at something the internet already enabled, scaling on existing distribution — not building from scratch.
 
 ### Our position, plainly stated
 
@@ -91,31 +96,27 @@ This is not a bubble in the structural sense.
 
 **The entities making the bet can absorb a timing miss.** $400B+ in trailing FCF. Amazon ran negative FCF for years while building AWS. The question is not survival but whether the timeline to return is 3 years or 10.
 
-### What we're uncertain about — and honest about
+### FAQ
 
-**The revenue gap is real, growing, and unproven to close.** [Sequoia's "$600B Question"](https://www.sequoiacap.com/article/ais-600b-question/): ~$500B gap between AI infrastructure spend and AI revenue. That gap *tripled* in 12 months even as [revenue went from $1.7B to $37B](https://menlovc.com/perspective/2025-the-state-of-generative-ai-in-the-enterprise/). Spending is growing faster than revenue. Calling this gap "temporal, not structural" is the central bull assertion. **Every bubble investor in history believed the gap was temporal.** Sometimes they were right (AWS). Sometimes they were wrong (fiber optics). The AI gap has fewer structural blockers than dotcom. That is not proof it closes at the necessary rate.
+**How is this not a bubble when spending outpaces revenue by $500B+?**
 
-**Circular financing inflates headline revenue.** Nvidia invests in OpenAI. OpenAI buys Nvidia chips. Microsoft invests in OpenAI. OpenAI runs on Azure. Amazon invests in Anthropic. Anthropic runs on AWS. Some of this revenue is money going in circles. Third-party enterprise revenue — from companies with no investment relationship to AI providers — is the cleanest demand signal. It is growing. It is smaller than the headlines.
+[Sequoia's "$600B Question"](https://www.sequoiacap.com/article/ais-600b-question/): ~$500B gap between AI infrastructure spend and AI revenue. That gap *tripled* in 12 months even as [revenue went from $1.7B to $37B](https://menlovc.com/perspective/2025-the-state-of-generative-ai-in-the-enterprise/). Calling this gap "temporal, not structural" is the central bull assertion. We lean temporal — but **every bubble investor in history believed the gap was temporal.** Sometimes they were right (AWS). Sometimes they were wrong (fiber optics). The AI gap has fewer structural blockers than dotcom. That is not proof it closes at the necessary rate. What we watch: the *ratio* of spend-to-revenue, not just the absolute numbers. If that ratio improves, the bull case strengthens. If it widens through 2027, it weakens.
 
-**Adoption is wide and shallow.** 94% of organizations use AI. [89% of executives report no measurable productivity impact](https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai). Adoption and value capture are different things. The organizational transformation required to convert AI capability into productivity takes 15–25 years historically. Current capex assumes 3–5 years. That mismatch is the thesis's biggest risk.
+**Isn't the revenue circular — companies investing in each other and calling it growth?**
 
-**The AWS analogy has limits.** AWS was demand-proven — it served Amazon's own e-commerce first. Today's AI capex is speculative build-ahead at [$660–690 billion in 2026](https://futurumgroup.com/insights/ai-capex-2026-the-690b-infrastructure-sprint/), with [Barclays projecting](https://www.barclays.com/insights/) negative FCF for some hyperscalers through 2027–2028. "Premature in magnitude" is different from "fundamentally wrong" — but for investors with a 3-year horizon, the distinction is academic.
+Partially. Nvidia invests in OpenAI. OpenAI buys Nvidia chips. Microsoft invests in OpenAI. OpenAI runs on Azure. Amazon invests in Anthropic. Anthropic runs on AWS. Some of this is money going in circles. The cleanest demand signal is third-party enterprise revenue from companies with no investment relationship to AI providers. That signal is growing. It is smaller than the headlines suggest.
 
-### What would change our mind
+**89% of executives see no productivity impact. How do you justify this capex?**
 
-**Toward more bullish:**
-- Revenue gap narrowing (not just revenue growing, but the *ratio* of spend-to-revenue improving)
-- Third-party enterprise AI revenue growing independently of ecosystem cross-investment
-- Macro productivity data showing a clear AI-driven acceleration
-- [Data center vacancy rates](https://www.cbre.com/insights/reports/us-data-center-trends-2025) staying below 3%
+We don't fully justify it — we note the mismatch. 94% of organizations use AI. [89% of executives report no measurable productivity impact](https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai). Adoption and value capture are different things. The organizational transformation required to convert capability into productivity takes 15–25 years historically. Current capex assumes 3–5. That mismatch is the thesis's biggest risk.
 
-**Toward more bearish:**
-- Revenue gap continuing to widen through 2027
-- Data center vacancy rates rising above 5%
-- Hyperscaler capex guidance being cut
-- OpenAI IPO triggering a wave of frothy AI equity issuance (the "fourth horseman" arriving)
-- Enterprise AI pilot failure rates staying above 85% through 2027
-- A major AI security incident that slows enterprise adoption
+**You keep citing AWS. Isn't that a fundamentally different situation?**
+
+Yes, in important ways. AWS was demand-proven — it served Amazon's own e-commerce first. Today's AI capex is speculative build-ahead at [$660–690 billion in 2026](https://futurumgroup.com/insights/ai-capex-2026-the-690b-infrastructure-sprint/), with [Barclays projecting](https://www.barclays.com/insights/) negative FCF for some hyperscalers through 2027–2028. "Premature in magnitude" is different from "fundamentally wrong" — but for investors with a 3-year horizon, the distinction is academic.
+
+**What would make you more bullish or more bearish?**
+
+More bullish: revenue gap ratio improving, third-party enterprise AI revenue growing independently of cross-investment, macro productivity acceleration, [data center vacancy rates](https://www.cbre.com/insights/reports/us-data-center-trends-2025) staying below 3%. More bearish: revenue gap widening through 2027, vacancy rates above 5%, hyperscaler capex cuts, OpenAI IPO triggering a wave of frothy AI equity issuance, pilot failure rates above 85% through 2027, a major AI security incident slowing enterprise adoption.
 
 ### Our position, plainly stated
 
