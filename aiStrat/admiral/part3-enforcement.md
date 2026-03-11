@@ -85,7 +85,9 @@ Agent action
 
 The enforcement classifications above (e.g., "Kill session after token budget exceeded") require concrete hook specifications. The following hooks implement the deterministic enforcement for token budgets, loop detection, and context health — three areas where advisory instructions are insufficient and hook-based enforcement is mandatory.
 
-**Token Budget Enforcement Hooks:**
+> **Adoption level annotations:** Each hook below is tagged with the adoption level at which it should be **deployed**. Hooks tagged **Level 1** are part of the Disciplined Solo checklist. Hooks tagged **Level 2+** or **Level 3+** should not be implemented until their consumers exist (e.g., do not deploy `governance_heartbeat_monitor` until governance agents are running, do not deploy `tier_validation` until a fleet roster with multiple agents exists). Reading ahead is fine; building ahead wastes effort and adds complexity with no consumer.
+
+**Token Budget Enforcement Hooks:** `Level 1`
 
 ```
 PostToolUse: token_budget_tracker
@@ -108,7 +110,7 @@ PreToolUse: token_budget_gate
   Timeout:    5 seconds.
 ```
 
-**Retry Loop Detection Hook:**
+**Retry Loop Detection Hook:** `Level 1`
 
 ```
 PostToolUse: loop_detector
@@ -126,7 +128,7 @@ PostToolUse: loop_detector
   Timeout:    5 seconds.
 ```
 
-**Context Health Monitoring Hooks:**
+**Context Health Monitoring Hooks:** `Level 1`
 
 ```
 SessionStart: context_baseline
@@ -151,7 +153,7 @@ PostToolUse: context_health_check
   Timeout:    10 seconds.
 ```
 
-**Model Tier Validation Hook:**
+**Model Tier Validation Hook:** `Level 2` — requires fleet roster with multiple agents and model tier assignments
 
 ```
 SessionStart: tier_validation
@@ -174,7 +176,7 @@ SessionStart: tier_validation
   Timeout:    10 seconds.
 ```
 
-**Governance Heartbeat Monitoring Hook:**
+**Governance Heartbeat Monitoring Hook:** `Level 3` — requires governance agents to be deployed
 
 ```
 Periodic: governance_heartbeat_monitor
@@ -199,7 +201,7 @@ Periodic: governance_heartbeat_monitor
   Timeout:    10 seconds.
 ```
 
-**Identity Validation Hook:**
+**Identity Validation Hook:** `Level 2` — at Level 1, identity is agent-id + role without cryptographic validation; deploy this hook when hardening identity at Level 2+
 
 ```
 SessionStart: identity_validation
