@@ -1,6 +1,6 @@
 # AI IS THE INTERNET'S SECOND STAGE
 
-**The AI Era Is Not a New Revolution. It Is the Completion of the Last One.**
+**Why AI Adoption Is Faster Than Any Prior Technology Wave — and Why the Timeline Still Matters**
 
 Created: February 2026
 Revised: March 2026
@@ -43,7 +43,7 @@ The pattern is always the same: the infrastructure stage gets named as the revol
 
 The strongest argument that it does: AI is a *network technology* — its value scales with the data, users, and systems it can access. Electricity, railroads, the printing press, and the internet are all network technologies, and the two-stage pattern holds for each. AI fits this category. But intellectual honesty demands noting that this categorization is itself a judgment call, not a proven law.
 
-The timeline dimension is critical: the electricity exploitation stage took 30–40 years to fully materialize. But each successive wave has accelerated. The internet's exploitation of existing telecom infrastructure happened in ~15 years. AI's exploitation of internet infrastructure is happening in ~3–5 years. The acceleration is itself accelerating — because each new exploitation layer inherits not just the prior infrastructure, but the accumulated learnings about how to exploit infrastructure quickly.
+The timeline dimension is important: the electricity exploitation stage took 30–40 years to fully materialize. Each successive wave has accelerated somewhat. The internet's exploitation of existing telecom infrastructure happened in ~15 years. AI's exploitation of internet infrastructure appears to be moving faster still — though how much faster is genuinely uncertain. The acceleration is plausible because each new exploitation layer inherits not just the prior infrastructure, but the accumulated learnings about how to deploy technology at scale. But "plausible" is not "proven," and even optimistic adoption timelines measured in years are different from the quarter-by-quarter disruption narrative that dominates the conversation.
 
 -----
 

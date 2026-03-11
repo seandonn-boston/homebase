@@ -31,7 +31,7 @@ On February 3, 2026 — now called "Black Tuesday for Software" — Anthropic's 
 
 **Why this matters for the thesis:** The market wasn't panicking about AI failing. It was panicking about AI *succeeding* — so decisively that it could compress the total addressable market for per-seat SaaS software by 80%. If one AI agent replaces the output of five humans, the "Human-to-Software" ratio that governed tech valuations since the 1990s breaks.
 
-This is the strongest possible evidence against the bubble narrative. Bubbles are characterized by technology that *doesn't deliver*. February 2026 proved the technology delivers so effectively it is existentially threatening to $2+ trillion in incumbent market cap.
+This is strong evidence against the bubble narrative. Bubbles are characterized by technology that *doesn't deliver*. February 2026 proved the technology delivers effectively enough to threaten $2+ trillion in incumbent market cap — though whether the market's repricing was proportionate to the actual near-term revenue impact remains to be seen.
 
 The skeptic's response: markets reprice on narrative as much as fundamentals, and [Thomson Reuters' actual revenue](https://www.thomsonreuters.com/en/press-releases.html) did not decline 16% — its *stock* dropped 16%. True. But the precedent is precisely the point. The DeepSeek panic (Jan 2025) also looked like overreaction — and it reversed within days as the market recognized that cheaper AI was an accelerant, not a threat. The SaaSpocalypse is the same pattern at larger scale, with a critical difference: the DeepSeek selloff hit AI companies, which recovered because cheaper AI expanded their market. The SaaSpocalypse hit *pre-AI incumbents*, whose recovery requires a fundamentally different response — they must integrate AI capabilities before their revenue models compress. Some will ([Salesforce Agentforce](https://www.salesforce.com/agentforce/) is already seeing ~20% of retail sales through AI agents). Most will be too slow. The real test is whether these companies' revenues decline over the next 2–4 quarters — and the early evidence from [enterprise AI adoption surging from 55% to 94% in three years](https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai) suggests the competitive displacement is real and accelerating.
 
@@ -79,7 +79,7 @@ The bear analogy is the fiber optic buildout of 1998–2001, when supply was als
 
 ## IV. The Scale of the Down Payment
 
-The numbers are staggering and accelerating:
+The numbers are large and accelerating:
 
 - **2025 actual hyperscaler capex:** $427 billion
 - **2026 committed capex (Big 5):** $660–690 billion
@@ -98,7 +98,7 @@ Goldman Sachs Research notes that consensus capex estimates have proven too low 
 | Microsoft | $120B+ |
 | Oracle | ~$50B |
 
-### The Bear Case on Capex — And Why It's Wrong
+### The Bear Case on Capex — And Where It Falls Short
 
 Bears point to the free cash flow pressure: Amazon may turn FCF-negative in 2026, and Alphabet's FCF could drop ~90%. Barclays models negative FCF for some hyperscalers through 2027–28.
 
@@ -110,7 +110,7 @@ The AWS analogy is not perfectly parallel — AWS was demand-proven (serving Ama
 
 ## V. The Demand Is Real and Accelerating
 
-Enterprise adoption statistics demolish the "solution in search of a problem" narrative:
+Enterprise adoption statistics undercut the "solution in search of a problem" narrative — though they also reveal a gap between adoption and impact that demands honest assessment:
 
 - **78% of organizations** used AI in at least one business function as of late 2024, up from 55% in 2023; **94% as of 2026**
 - **71% of organizations** regularly use generative AI, up from 65% in early 2024
@@ -129,13 +129,13 @@ The [World Economic Forum, citing Cognizant research](https://www.weforum.org/st
 
 [Goldman Sachs Research](https://www.goldmansachs.com/insights/articles/generative-ai-could-raise-global-gdp-by-7-percent) projects a 7% boost to global GDP from AI over the next decade. [McKinsey estimates](https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-economic-potential-of-generative-ai-the-next-productivity-frontier) generative AI could add $2.6–$4.4 trillion annually in economic value.
 
-These are not speculative projections about future capability. They are assessments of what the technology can do *today*, based on current models.
+These are projections about what the technology *could* capture, based on current capabilities. "Addressable" and "captured" are very different — a distinction explored below.
 
 An important distinction: "addressable value" and "captured value" are different. The WEF says AI *could* tackle $4.5 trillion in work — not that all of this becomes profit for AI companies. [Robert Gordon's research](https://www.nber.org/papers/w18315) shows that the internet created trillions in consumer surplus while median worker wage growth remained sluggish. [MIT economist Daron Acemoglu estimates](https://www.nber.org/papers/w32487) a more conservative 0.5–0.9% TFP growth over a decade. These are serious analyses that temper the most euphoric projections. But they do not undermine the investment thesis. Even Acemoglu's conservative estimate implies hundreds of billions in new economic value. And the captured-value question is answered by looking at who is actually capturing it: [Anthropic's ARR grew 14x in 14 months](https://www.anthropic.com/). [Cursor reached $1B+ ARR in two years](https://www.cursor.com/). [Enterprise AI revenue from $1.7B to $37B in three years](https://menlovc.com/perspective/2025-the-state-of-generative-ai-in-the-enterprise/). The addressable market is enormous, and the capture rate — while uncertain — is demonstrably accelerating.
 
 ---
 
-## VI. February 2026 Proves the Returns Are Coming
+## VI. February 2026 Suggests the Returns Are Directionally Right
 
 Here is the key insight most market participants are missing:
 
@@ -143,7 +143,7 @@ The $285 billion "SaaSpocalypse" is not a sign of AI failure. It is the **first 
 
 When Anthropic's Claude Cowork demonstrated that an AI agent could perform legal document review, NDA approvals, sales workflows, and enterprise software navigation autonomously, the market instantly repriced every company whose revenue depends on humans doing those tasks manually. Thomson Reuters, LegalZoom, Salesforce, Intuit, ServiceNow — these companies lost value precisely because the market *believed* AI works.
 
-The $660B in 2026 hyperscaler capex is building the infrastructure for millions of these agents to operate at scale. The February event showed what a *single product announcement* can do. The next 18 months will see hundreds of similar announcements across every vertical.
+The $660B in 2026 hyperscaler capex is building the infrastructure for these agents to operate at scale. The February event showed what a single product announcement can do to market sentiment. Whether the next 18 months produce similar displacement events across verticals — or whether February 2026 was an outlier driven by narrative as much as fundamentals — will determine whether the timeline is 3 years or 10.
 
 ### The Doom Loop Is Actually a Value Transfer
 
@@ -191,9 +191,9 @@ The thesis has identifiable confirmation and disconfirmation signals:
 
 ---
 
-## IX. Known Risks and Why They Don't Change the Conclusion
+## IX. Known Risks — Honestly Assessed
 
-Every serious thesis must name the risks that could invalidate it. Here are the six strongest bear arguments — and why each is insufficient to reverse the thesis, though they may affect its timeline and magnitude.
+Every serious thesis must name the risks that could invalidate it. Here are the six strongest bear arguments. Some are insufficient to reverse the thesis. Others could change its timeline and magnitude enough to matter for anyone making decisions on it.
 
 **1. The revenue gap — the most serious risk.** [Sequoia Capital](https://www.sequoiacap.com/article/ais-600b-question/) identified a ~$500B gap between AI infrastructure spend and AI revenue. This gap has *tripled* in 12 months even as revenue has grown rapidly. That is worth sitting with. [Enterprise AI revenue surged from $1.7B to $37B in three years](https://menlovc.com/perspective/2025-the-state-of-generative-ai-in-the-enterprise/) — a 22x growth rate — but the spending is growing even faster. Calling this gap "temporal, not structural" is the central assertion of the bull case, and it must be stated honestly: **it is an assertion, not a demonstrated fact.** Every bubble investor in history believed the gap between investment and returns was temporal. Sometimes they were right (AWS took years of negative FCF before generating $100B+ in annual revenue). Sometimes they were wrong (the fiber optic buildout produced 85–95% unused capacity). The AI gap has fewer structural blockers than the dotcom gap (broadband exists, smartphones exist, digital-native users exist). But "fewer structural blockers" is not proof that the gap closes on any given timeline. The honest position: the revenue trajectory is encouraging, the direction is right, but the magnitude of the bet relative to proven revenue is substantial, and we cannot yet prove the rate of closure.
 

@@ -33,7 +33,7 @@ Be honest about what is gone. Not reassigned. Not elevated. Gone.
 
 **Execution as a source of individual value.**
 
-If your value was "I can write the code," that value has been decimated. Not because AI writes better code than you — it often doesn't — but because the gap between "person who can write code" and "person who cannot but has AI" has collapsed to nearly zero for most tasks. The skill that took you ten years to build can now be approximated in ten minutes by someone with no training and a clear description of what they want. The floor rose to meet the ceiling.
+If your value was "I can write the code," that value has been decimated. Not because AI writes better code than you — it often doesn't — but because the gap between "person who can write code" and "person who cannot but has AI" has collapsed to nearly zero for most tasks. The skill that took you ten years to build can now be approximated in ten minutes by someone with no training and a clear description of what they want. The floor has risen significantly — not to the ceiling, but close enough to change the economics.
 
 This is happening now across software engineering, copywriting, graphic design, data analysis, legal research, and other fields where the core work product is an artifact that can be described in language. [Spotify reports](https://techcrunch.com/2026/02/12/spotify-says-its-best-developers-havent-written-a-line-of-code-since-december-thanks-to-ai/) that its best developers haven't written a line of code since December 2025 — engineers deploy fixes via Slack from their phones, with 90% reduction in engineering time and ~50% of all Spotify updates flowing through their "Honk" AI system. [Harness reports](https://www.builder.io/blog/codex-vs-claude-code) 3.5 PRs per engineer per day using Codex agents. [Anthropic's own engineers](https://www.bloomberg.com/news/articles/2026-02-26/ai-coding-agents-like-claude-code-are-fueling-a-productivity-panic-in-tech) write 70–90% of all code through Claude Code. [Replit reports](https://blog.replit.com/) that 75% of its users never write code directly.
 
@@ -59,7 +59,7 @@ The nuance: knowledge and *understanding* are different things. A senior enginee
 
 **Speed as a differentiator.**
 
-"I can do it faster" mattered when the baseline was other humans. The baseline is no longer other humans. Being the fastest coder in the room is like being the fastest calculator in the room after 1975. It is still impressive. It is no longer economically relevant.
+"I can do it faster" mattered when the baseline was other humans. The baseline is no longer other humans. Being the fastest coder in the room is like being the fastest calculator in the room after 1975. It is still impressive. It is decreasingly relevant as a standalone economic advantage.
 
 [Google engineer Jaana Dogan confirmed](https://www.bloomberg.com/news/articles/2026-02-26/ai-coding-agents-like-claude-code-are-fueling-a-productivity-panic-in-tech) that Claude Code generated a distributed agent orchestration system in 60 minutes — work that would have taken a senior engineer weeks. [GPT-5.3-Codex-Spark](https://openai.com/blog) runs inference at 1,000+ tokens/sec on Cerebras hardware, matching full Codex accuracy in 2–3 minutes vs. 15–17 minutes. The speed competition between humans is now irrelevant; the competition is between humans who leverage AI speed and those who do not.
 
@@ -91,7 +91,7 @@ The evidence is accumulating. [Alibaba's ROME research agent](https://www.wired.
 
 **The question before the question.**
 
-AI is extraordinarily good at answering questions. It is not good at knowing which question to ask. The distance between "solve this problem" and "notice that this is the problem that needs solving" is enormous, and it is almost entirely a human distance. The person who identifies the right problem is now infinitely more valuable than the person who solves the given one, because solving the given one is nearly free.
+AI is extraordinarily good at answering questions. It is not good at knowing which question to ask. The distance between "solve this problem" and "notice that this is the problem that needs solving" is enormous, and it is almost entirely a human distance. The person who identifies the right problem is now substantially more valuable than the person who solves the given one, because solving the given one is getting cheaper by the quarter.
 
 Autonomous research agents like [Perplexity Deep Research](https://www.perplexity.ai/hub/blog/introducing-perplexity-deep-research) are beginning to formulate sub-questions and explore tangential paths. [AI Scientist-v2](https://arxiv.org/abs/2408.06292) autonomously formulates hypotheses. These are impressive — but they operate within a problem space defined by a human. The truly hard question — *which problem space to enter in the first place* — remains human. [McKinsey's 2025 State of AI survey](https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai) found that the companies with the highest AI ROI ($10.30 per $1 invested vs. $3.70 average) were not the ones with the best AI — they were the ones whose leadership identified the right problems to apply AI to. Problem selection is the differentiator.
 
@@ -149,13 +149,13 @@ The pace is quantifiable: the [AI coding agent landscape](https://github.com/jqu
 
 ## The Uncomfortable Summary
 
-The value of *doing things* has collapsed. The value of *knowing which things to do* has exploded. The value of *being a person that other people trust* has not changed and probably never will.
+The value of *doing things* is declining — not collapsed overnight, but trending in a direction that is hard to reverse. The value of *knowing which things to do* is rising. The value of *being a person that other people trust* has not changed and probably never will.
 
-If you built your career on execution, you are in a race you will lose. Not because you are slow, but because your competitor does not eat, does not sleep, and gets smarter every quarter.
+If you built your career on execution alone, the economics are shifting against you. Not because you are slow, but because the cost of approximating your output is dropping every quarter. This doesn't mean execution skills are worthless — it means they are necessary but no longer sufficient.
 
-If you built your career on judgment, taste, and relationships, you are holding assets that just appreciated dramatically — because now your judgment gets executed at machine speed instead of human speed.
+If you built your career on judgment, taste, and relationships, those assets are appreciating — because they now get executed at machine speed instead of human speed. But only if you actually learn to use the tools. Judgment without leverage is just an opinion.
 
-The individual who thrives is not the one who fights AI for the work. It is the one who accepts that the work has been commoditized and asks: *what was I doing that was never about the work in the first place?*
+The individual who thrives is not the one who fights AI for the work. It is the one who accepts that much of the work is being commoditized and asks: *what was I doing that was never about the work in the first place?*
 
 That is where some of the value lives. But not all of it.
 
@@ -179,7 +179,7 @@ But this new leverage creates a new problem. The moment you go from directing on
 
 So here is the full picture. Not a sequence of games. One coherent reality:
 
-The value of doing things has collapsed. The value of knowing which things to do has exploded. The power of a single person with vision has increased by an order of magnitude. And the people who will define this era are the ones who have the taste to see what is worth building, the judgment to build it right, the conviction to build it at all — and the discipline to govern the agents that build it with them.
+The value of doing things is declining. The value of knowing which things to do is rising. The leverage available to a single person with vision is increasing dramatically — though the full extent of that leverage is still being discovered. And the people who will define this era are the ones who have the taste to see what is worth building, the judgment to build it right, the conviction to build it at all — and the discipline to govern the agents that build it with them.
 
 Do not let any of this make you forget: **some things are worth doing even when they produce no value at all.** A person who writes code because they love writing code has not been decimated by AI. The satisfaction of solving a puzzle, the flow state, the quiet pleasure of making something work — AI did not take that. AI cannot take that. You can still build a chair with hand tools even though factories exist. The market changes what it will pay you for. It does not change what is worth doing with your time on earth.
 
