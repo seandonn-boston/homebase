@@ -6,7 +6,7 @@ A comprehensive research dossier of the most impressive configurations, prompt l
 
 ## CATEGORY 1: Claude Code Full Configuration Suites
 
-### 1. everything-claude-code (affaan-m)
+### 1. everything-claude-code (~45K stars) (affaan-m)
 - **What:** Complete Claude Code configuration collection — 13 agents, 48 skills, 32 commands, hooks, rules, MCPs
 - **Why it's #1:** Battle-tested at the Claude Code Hackathon (Cerebral Valley x Anthropic, Feb 2026). 1,282 tests, 98% coverage, 102 static analysis rules. Includes **AgentShield** — a security scanner that audits CLAUDE.md, settings.json, MCP configs, hooks, agent definitions, and skills for vulnerabilities, misconfigurations, and injection risks. The `--opus` flag runs three Claude Opus 4.6 agents in a red-team/blue-team/auditor pipeline.
 - **What sets it apart:** The only config suite with built-in adversarial red-team security testing of your own agent setup.
@@ -25,9 +25,9 @@ A comprehensive research dossier of the most impressive configurations, prompt l
 - [github.com/trailofbits/claude-code-config](https://github.com/trailofbits/claude-code-config)
 
 ### 4. Claude-Command-Suite (qdhenry)
-- **What:** 148+ slash commands, 54 AI agents, Claude Code Skills, and automated workflows
-- **Why chosen:** Covers code review, testing, deployment, business scenario modeling, and GitHub-Linear synchronization. Professional-grade structured workflows for security auditing and architectural analysis.
-- **What sets it apart:** 148+ slash commands — the largest single command library. Business scenario modeling alongside technical workflows.
+- **What:** 216+ slash commands, 12 skills, 54 AI agents, Claude Code Skills, and automated workflows
+- **Why chosen:** Covers code review, testing, deployment, business scenario modeling, and GitHub-Linear synchronization. Includes formula engine, semantic memory, hallucination prevention, and reasoning validation. Professional-grade structured workflows for security auditing and architectural analysis.
+- **What sets it apart:** 216+ slash commands — the largest single command library. Business scenario modeling alongside technical workflows.
 - [github.com/qdhenry/Claude-Command-Suite](https://github.com/qdhenry/Claude-Command-Suite)
 
 ### 5. Claude Code Showcase (ChrisWiles)
@@ -87,10 +87,10 @@ A comprehensive research dossier of the most impressive configurations, prompt l
 - **What sets it apart:** Stateful orchestration surviving context window boundaries — the "long-running agent" problem solved.
 - [github.com/jqueryscript/awesome-claude-code](https://github.com/jqueryscript/awesome-claude-code)
 
-### 14. Crystal / Nimbalyst (2.7K+ stars)
-- **What:** Run multiple Claude Code sessions in parallel git worktrees. Nimbalyst is the evolution with enhanced coordination.
+### 14. Nimbalyst (formerly Crystal) (2.7K+ stars)
+- **What:** Run multiple Claude Code sessions in parallel git worktrees. Crystal deprecated Feb 2026; replaced by Nimbalyst desktop app with enhanced coordination.
 - **Why chosen:** Parallel execution across isolated worktrees — multiple agents work on different features simultaneously without merge conflicts. Each agent gets a clean copy of the repo.
-- **What sets it apart:** Git worktree isolation for true parallel multi-agent development.
+- **What sets it apart:** Git worktree isolation for true parallel multi-agent development. Desktop app upgrade from the original CLI.
 - [github.com/jqueryscript/awesome-claude-code](https://github.com/jqueryscript/awesome-claude-code)
 
 ### 15. Agent Farm
@@ -238,9 +238,9 @@ A comprehensive research dossier of the most impressive configurations, prompt l
 - [github.com/github/awesome-copilot](https://github.com/github/awesome-copilot)
 
 ### 37. GitHub AGENTS.md Standard — 4.7% Adoption
-- **What:** Project instruction file shareable across Copilot, Claude Code, Cursor, Gemini CLI
-- **Why chosen:** Analysis of 2,500+ agents.md files shows best agents have: clear persona, executable commands, concrete code examples, explicit boundaries, tech stack specifics across 6 areas. ICSE study shows 28.64% runtime reduction when AGENTS.md is well-written. 4.7% of active GitHub repos now include AGENTS.md.
-- **What sets it apart:** The emerging universal standard across all major AI tools.
+- **What:** Project instruction file shareable across Copilot, Claude Code, Cursor, Gemini CLI. Note: Claude Code reads CLAUDE.md natively; AGENTS.md requires a symlink (`ln -s AGENTS.md CLAUDE.md`).
+- **Why chosen:** Analysis of 2,500+ agents.md files shows best agents have: clear persona, executable commands, concrete code examples, explicit boundaries, tech stack specifics across 6 areas. ICSE JAWs 2026 study shows 28.64% runtime reduction and 16.58% token savings — **but only when hand-written** (LLM-generated files actually hurt performance). 4.7% of active GitHub repos now include agent config files.
+- **What sets it apart:** The emerging universal standard, with empirical proof that human-authored instructions outperform auto-generated ones.
 - [github.blog](https://github.blog/ai-and-ml/github-copilot/how-to-write-a-great-agents-md-lessons-from-over-2500-repositories/)
 
 ### 38. GitHub Copilot Custom Instructions Hierarchy
@@ -318,10 +318,10 @@ A comprehensive research dossier of the most impressive configurations, prompt l
 - **What sets it apart:** Quality curation with architectural workflow documentation.
 - [github.com/hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/awesome-claude-code)
 
-### 50. awesome-agent-skills (~18.5K stars) (heilcheng)
-- **What:** Skills, tools, tutorials for AI coding agents (Claude, Codex, Copilot, VS Code)
-- **Why chosen:** Cross-tool skills catalog with tutorials alongside definitions. One of the highest-starred agent skill resources.
-- **What sets it apart:** Cross-platform skill portability documentation.
+### 50. awesome-agent-skills (~18.5K stars) (VoltAgent/heilcheng)
+- **What:** 500+ skills from Anthropic, Google Labs, Vercel, Stripe, Cloudflare, Netlify. Cross-tool compatible.
+- **Why chosen:** Cross-tool skills catalog with tutorials alongside definitions. One of the highest-starred agent skill resources. The ecosystem has grown from ~50 skills in mid-2025 to **85,000+ indexed skills** across all platforms by March 2026.
+- **What sets it apart:** Cross-platform skill portability documentation. Academic backing: references SkillNet (2026) and SkillsBench (2026) research.
 - [github.com/heilcheng/awesome-agent-skills](https://github.com/heilcheng/awesome-agent-skills)
 
 ### 51. awesome-slash (avifenesh)
