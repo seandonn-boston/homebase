@@ -8,7 +8,7 @@ Most Level 2 deliverables are **models + configuration**, not runtime enforcemen
 
 ## Existing Foundation (Level 1)
 
-Already built and tested (133 tests):
+Already built and tested (34 admiral tests):
 - `AgentDefinition` with scope, tools, authority, guardrails, context discovery
 - `DecisionAuthority` with 4 tiers + calibration rules
 - `ConstraintClassification` with enforcement spectrum
@@ -32,7 +32,7 @@ Grouped by implementation type:
 
 2. **`admiral/models/handoff.py`** — Handoff Protocol (Sec 38)
    - `HandoffDocument`: from_agent, to_agent, via, task, deliverable, acceptance_criteria, context_files, constraints, assumptions, open_questions
-   - `HandoffValidation`: validate completeness, reject with specifics
+   - `validate_handoff()`: validate completeness, reject with specifics
    - `render()` method matching Section 38 template
 
 3. **`admiral/models/checkpoint.py`** — Institutional Memory (Sec 24)
@@ -71,9 +71,8 @@ Grouped by implementation type:
 
 ### New Protocol (1 file)
 
-9. **`admiral/protocols/handoff_protocol.py`** — Handoff validation logic
+9. **`admiral/models/handoff.py`** — Handoff validation logic
    - `validate_handoff(doc: HandoffDocument) → list[str]` — returns missing fields
-   - `validate_acceptance(doc, receiver_role) → bool` — receiver pre-check
 
 ### Tests (1 file)
 
@@ -89,8 +88,8 @@ Grouped by implementation type:
 
 ### Documentation Updates (2 files)
 
-11. **`admiral/LEVEL1_STATUS.md` → rename `admiral/STATUS.md`**
-    - Update to cover both Level 1 (complete) and Level 2 (in progress → complete)
+11. **`admiral/LEVEL1_STATUS.md`**
+    - Keep level-specific status tracking until a cross-level status document is introduced
 
 12. **`admiral/__init__.py`**
     - Update docstring to reflect Level 2 architecture
