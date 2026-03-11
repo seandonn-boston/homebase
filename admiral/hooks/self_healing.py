@@ -75,7 +75,7 @@ class SelfHealingLoop:
         Returns:
             SelfHealingResult indicating whether to retry or break.
         """
-        signature = self.compute_error_signature(hook_name, error_output)
+        signature = self.compute_error_signature(hook_name, error_output, exit_code)
         key = f"{hook_name}:{signature}"
         self._total_retries += 1
 

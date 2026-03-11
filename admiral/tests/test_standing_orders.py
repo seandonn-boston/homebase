@@ -184,3 +184,13 @@ class TestStandingOrderCompleteness:
         assert len(so12.rules) == 7, (
             f"SO 12 should have 7 rules, got {len(so12.rules)}"
         )
+
+    def test_rendered_output_contains_all_rule_text(self) -> None:
+        """All rule text must appear in rendered output for context injection."""
+        rendered = render_standing_orders()
+        orders = load_standing_orders()
+        for so in orders:
+            for rule in so.rules:
+                assert rule in rendered, (
+                    f"SO {so.number} rule missing from rendered output: {rule[:60]}..."
+                )
