@@ -6,7 +6,7 @@
 
 ## ELEVATOR PITCH (30 seconds)
 
-> "AI agents can now do real work autonomously — not just answer questions, but actually execute complex tasks for hours without supervision. Every company is about to deploy fleets of these agents. But here's what nobody's talking about: agents are not employees and they're not code. You can't manage them with HR policies and you can't validate them with traditional software tests. They're an entirely new category of resource — and the people who recognize that have a massive head start.
+> "AI agents can now do real work autonomously — not just answer questions, but actually execute complex tasks for hours without supervision. Every company is about to deploy fleets of these agents. But here's what nobody's talking about: governing these agents requires something new. They exhibit characteristics of both employees and software but fit neatly into neither category. You can't manage them with HR policies and you can't validate them with traditional software tests. They're an entirely new category of resource — and the people who recognize that have a massive head start.
 >
 > Admiral is the first framework built for that reality. It's governance and operations designed from scratch for how agents actually behave — how they make decisions, how they fail, how they hand off work, how the whole system learns over time. Model-agnostic, works with any AI platform, and designed so you can start small and scale up.
 >
@@ -22,7 +22,7 @@
 - Anthropic shipped autonomous agents that could execute real enterprise workflows end-to-end — not copilots, not chat assistants, but autonomous execution.
 - Enterprise software stocks lost $285 billion in a single day. ~$2 trillion in market cap evaporated by mid-February.
 - The per-seat SaaS model broke overnight. When one agent replaces five seats, the math is obvious.
-- The market wasn't panicking because AI failed — it panicked because **AI succeeded** so decisively that the entire pricing model for enterprise software became obsolete.
+- The market repriced because it believed AI capability had reached a threshold where existing software business models were vulnerable. The market wasn't panicking because AI failed — it panicked because **AI succeeded** so decisively that the entire pricing model for enterprise software became obsolete.
 
 **Where the capability bar sits now:**
 
@@ -115,7 +115,7 @@
 
 ### The Market Timing Argument
 
-> "February 2026 proved the agents work. Now every enterprise is asking 'how do I do this safely at scale?' I have the answer already built. The question is how to get it into their hands."
+> "February 2026 demonstrated agent capability at a level the market hadn't priced in. Now every enterprise is asking 'how do I do this safely at scale?' I have the answer already built. The question is how to get it into their hands."
 
 ---
 
