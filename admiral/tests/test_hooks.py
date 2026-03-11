@@ -372,52 +372,63 @@ class TestTokenBudgetGate:
 @pytest.mark.phase1
 class TestLoopDetector:
     def setup_method(self):
-        loop_detector.reset()
+        self._state = loop_detector.reset()
+
+    def _make_payload(self, exit_code, error, agent_id="agent-1", state=None):
+        payload = {
+            "result": {"exit_code": exit_code, "error": error},
+            "agent_identity": agent_id,
+            "hook_state": {"loop_detector": state or self._state},
+        }
+        return payload
+
+    def _update_state(self, stdout):
+        """Extract updated state from hook stdout."""
+        if stdout:
+            import json
+            data = json.loads(stdout)
+            hs = data.get("hook_state", {}).get("loop_detector")
+            if hs:
+                self._state = hs
 
     def test_no_error_passes(self):
-        code, stdout, stderr = loop_detector.execute({
-            "result": {"exit_code": 0, "error": ""},
-            "agent_identity": "agent-1",
-        })
+        code, stdout, stderr = loop_detector.execute(
+            self._make_payload(0, "")
+        )
         assert code == 0
 
     def test_repeated_errors_detected(self):
         for _ in range(2):
-            code, _, _ = loop_detector.execute({
-                "result": {"exit_code": 1, "error": "TypeError: foo is not a function"},
-                "agent_identity": "agent-1",
-            })
+            code, stdout, _ = loop_detector.execute(
+                self._make_payload(1, "TypeError: foo is not a function")
+            )
             assert code == 0
+            self._update_state(stdout)
 
-        code, stdout, _ = loop_detector.execute({
-            "result": {"exit_code": 1, "error": "TypeError: foo is not a function"},
-            "agent_identity": "agent-1",
-        })
+        code, stdout, _ = loop_detector.execute(
+            self._make_payload(1, "TypeError: foo is not a function")
+        )
         assert code == 1
         assert "Loop detected" in stdout
 
     def test_total_error_threshold(self):
-        loop_detector.reset(max_same=100, max_total=5)
+        self._state = loop_detector.reset(max_same=100, max_total=5)
         for i in range(4):
-            code, _, _ = loop_detector.execute({
-                "result": {"exit_code": 1, "error": f"Different error {i}"},
-                "agent_identity": "agent-1",
-            })
+            code, stdout, _ = loop_detector.execute(
+                self._make_payload(1, f"Different error {i}")
+            )
             assert code == 0
+            self._update_state(stdout)
 
-        code, stdout, _ = loop_detector.execute({
-            "result": {"exit_code": 1, "error": "Yet another error"},
-            "agent_identity": "agent-1",
-        })
+        code, stdout, _ = loop_detector.execute(
+            self._make_payload(1, "Yet another error")
+        )
         assert code == 1
         assert "total error count" in stdout.lower()
 
 
 @pytest.mark.phase1
 class TestContextBaseline:
-    def setup_method(self):
-        context_baseline.reset()
-
     def test_records_baseline(self):
         code, stdout, stderr = context_baseline.execute({
             "context": {
@@ -426,10 +437,17 @@ class TestContextBaseline:
             }
         })
         assert code == 0
-        baseline = context_baseline.get_baseline()
+        import json
+        data = json.loads(stdout)
+        baseline = data.get("hook_state", {}).get("context_baseline")
         assert baseline is not None
         assert baseline["initial_utilization"] == 0.1
         assert baseline["available_capacity"] == 180_000
+
+        # Verify get_baseline() can extract from a payload carrying the state
+        payload_with_state = {"hook_state": {"context_baseline": baseline}}
+        retrieved = context_baseline.get_baseline(payload_with_state)
+        assert retrieved == baseline
 
 
 @pytest.mark.phase1
