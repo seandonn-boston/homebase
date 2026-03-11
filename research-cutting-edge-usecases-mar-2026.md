@@ -43,11 +43,18 @@ A comprehensive research dossier of the best projects and products that are **no
 ### 6. Ocado Smart Platform
 - **What:** Online grocery fulfillment technology platform
 - **How it uses AI agents:** 3,000+ robots per fulfillment center operating as a coordinated swarm. AI agents manage traffic flow, order picking, collision avoidance, and packing optimization. Central orchestrator assigns tasks in real-time.
-- **Scale:** 100,000+ grocery orders/week at 99.99% accuracy. Robots move within 5mm of each other at 4 m/sec. 3-minute pick-to-pack times. 50% cost reduction since 2020. Licensed to Kroger, Sobeys, Coles, and others. Exclusivity contracts expired — now selling to multiple retailers per market.
+- **Scale:** 100,000+ grocery orders/week at 99.99% accuracy. Robots move within 5mm of each other at 4 m/sec (8.9 mph). 3-minute pick-to-pack times. 50% cost reduction since 2020. 600 series robot one-third the weight of predecessor with 3D-printed parts. 6 River Systems "Chuck" AMRs with fleet-wide position sharing. Licensed to Kroger, Sobeys, Coles, and others. Exclusivity contracts expired — now selling to multiple retailers per market. North American hub opened in Dallas.
 - **Why it's here:** The most sophisticated bot-swarm logistics system in commercial grocery — 3,000 agents coordinating in a confined space.
 - [AI Magazine](https://aimagazine.com/technology/how-ai-is-redefining-ocados-robotic-fulfilment-system)
 
-### 7. DHL Robotics Fleet
+### 7. XPENG (Flying Cars + Humanoid Robots + L4 Autonomous Fleet)
+- **What:** Chinese EV maker building autonomous vehicles, flying cars, and humanoid robots simultaneously
+- **How it uses AI agents:** Multi-domain AI fleet spanning three form factors — ground vehicles with L4 autonomy, eVTOL flying cars, and IRON humanoid robot (5 years development, 6 generations) training in factory environments. Each domain runs independent agent stacks that share perception and planning capabilities.
+- **Scale:** Preparing mass production across all three platforms in 2026. L4 autonomous fleet planned for Europe — first Chinese company targeting European autonomous driving.
+- **Why it's here:** The only company building AI agent fleets across ground, air, AND humanoid robotics simultaneously.
+- [Technology.org](https://www.technology.org/2025/09/08/xpengs-wild-ai-vision-flying-cars-robot-workers-and-europes-first-l4-autonomous-fleet-by-2026/)
+
+### 8. DHL Robotics Fleet
 - **What:** AI-powered logistics and delivery robots across DHL's global operations
 - **How it uses AI agents:** 7,500+ robots across facilities. Multi-agent coordination for sorting, palletizing, and last-mile delivery. Fleet management AI optimizes robot deployment based on package volume predictions.
 - **Scale:** 7,500+ robots. DHL is the world's largest logistics company.
@@ -57,25 +64,33 @@ A comprehensive research dossier of the best projects and products that are **no
 
 ## CATEGORY 2: Drug Discovery & Life Sciences
 
-### 8. Recursion Pharmaceuticals
+### 9. Recursion Pharmaceuticals
 - **What:** Biotech company using AI to decode biology and discover new medicines
 - **How it uses AI agents:** Multi-agent pipeline — image analysis agents process millions of cellular images, biological relationship agents map disease pathways, chemistry agents design drug candidates, and optimization agents refine molecular properties. The entire discovery pipeline is an agent workflow.
 - **Scale:** $2.5B+ market cap. 10+ clinical programs, 10 partnership projects. Revenue: $53M (2024), projected $100M+ (2026). Merged with Exscientia (Nov 2024) adding chemistry AI. Partners: Sanofi, Roche, Bayer, Merck. NVIDIA invested $50M. RXRX-1 dataset: 15.3M biological images.
 - **Why it's here:** The most ambitious AI-agent-driven drug discovery platform, treating the entire R&D pipeline as a coordinated agent system.
 
-### 9. Insilico Medicine
+### 10. Insilico Medicine
 - **What:** AI-driven pharmaceutical company — end-to-end from target discovery to clinical trials
 - **How it uses AI agents:** Agent pipeline: PharmaAI platform uses target discovery agents (PandaOmics), molecular generation agents (Chemistry42), and clinical trial prediction agents. Each agent specializes in one phase of drug development.
-- **Scale:** $2.1B+ in partnership deals including Servier $888M deal (Jan 2026) and Eli Lilly $100M+ (Nov 2025). Listed on HKEX (Dec 2025). $110M Series E (Mar 2025). 30 drug assets, 10 IND clearances. Lead drug Rentosertib completed Phase IIa with positive data. Reduced preclinical time from 2.5–4 years to 12–18 months. Deployed "Dora" multi-agent research assistant and bipedal humanoid AI Scientist in robotic lab (Life Star1).
+- **Scale:** $2.1B+ in partnership deals including Servier $888M deal (Jan 2026) and Eli Lilly $100M+ (Nov 2025). Listed on HKEX Dec 2025 (stock code 03696.HK). $110M Series E (Mar 2025). 30 drug assets, 10 IND clearances. Lead drug Rentosertib completed Phase IIa with positive data. Reduced preclinical time from 2.5–4 years to 12–18 months. Deployed "Dora" multi-agent research assistant and bipedal humanoid AI Scientist in robotic lab (Life Star1). Nach01 multimodal foundation model for natural and chemical languages. Chemistry42 designed first-in-class PROTAC with dual-action mechanism targeting PKMYT1.
 - **Why it's here:** The first company to take an AI-discovered drug into Phase II clinical trials — the ultimate proof that agent-driven pipelines can produce real medicine.
+- [Insilico](https://insilico.com/blog/1112) | [Servier Deal](https://www.prnewswire.com/news-releases/insilico-medicine-announce-us888-million-multi-year-collaboration-with-servier-for-drug-discovery-and-development-in-oncology-302652132.html)
 
-### 10. NVIDIA BioNeMo
+### 11. NVIDIA BioNeMo
 - **What:** Cloud platform for generative biology and chemistry AI
 - **How it uses AI agents:** Multi-agent architecture for protein structure prediction, molecular docking simulation, and drug interaction modeling. Agents work in parallel across NVIDIA GPU clusters.
 - **Scale:** $1B partnership with Eli Lilly. Used by top 20 pharma companies. Powers AlphaFold-scale protein folding simulations.
 - **Why it's here:** The GPU-accelerated infrastructure enabling AI agent fleets to run drug discovery at industrial scale.
 
-### 11. Red Queen Bio + GPT-5 Gene Editing
+### 12. The Virtual Biotech (Research, Feb 2026)
+- **What:** Computational therapeutic discovery where an entire biotech company is simulated by AI agents
+- **How it uses AI agents:** Coordinated team of AI agents mirroring a human biotech organization — target identification agents, lead optimization agents, ADMET prediction agents, clinical strategy agents. End-to-end discovery pipeline run entirely by agent teams.
+- **Scale:** bioRxiv preprint Feb 23, 2026. Demonstrates AI agent teams can replicate the workflow of an entire biotech R&D organization.
+- **Why it's here:** The most radical vision — an entire biotech company replaced by an AI agent fleet.
+- [bioRxiv](https://www.biorxiv.org/content/10.64898/2026.02.23.707551v1)
+
+### 13. Red Queen Bio + GPT-5 Gene Editing
 - **What:** OpenAI lab experiment optimizing CRISPR gene-editing protocols using AI
 - **How it uses AI agents:** AI agents autonomously designed, iterated, and optimized gene-editing experiments — a closed loop of hypothesis → experiment → analysis → refinement.
 - **Scale:** 79x efficiency gain over human-designed protocols in actual lab experiments.
@@ -85,21 +100,21 @@ A comprehensive research dossier of the best projects and products that are **no
 
 ## CATEGORY 3: Financial Systems & Trading
 
-### 12. ai-hedge-fund (Open Source, 43K+ GitHub Stars)
+### 14. ai-hedge-fund (Open Source, 43K+ GitHub Stars)
 - **What:** Open-source AI-powered hedge fund simulation using a fleet of specialized agents
 - **How it uses AI agents:** 18 specialized agents modeled after legendary investors (Buffett, Munger, Cathie Wood) plus valuation, sentiment, and technical analysis agents. Agents debate and reach consensus; an orchestrator synthesizes into trading decisions.
 - **Scale:** 43K+ GitHub stars (up from 8.7K in Feb 2025). 238+ commits. The most popular open-source AI trading project.
 - **Why it's here:** The open-source reference implementation of a multi-agent trading system, demonstrating fleet-based financial decision-making.
 - [GitHub](https://github.com/virattt/ai-hedge-fund)
 
-### 13. Renaissance Technologies / Two Sigma / Citadel AI Fleets
+### 15. Renaissance Technologies / Two Sigma / Citadel AI Fleets
 - **What:** Elite quantitative hedge funds deploying AI agent fleets for algorithmic trading
 - **How it uses AI agents:** Fleets of specialized agents for market microstructure analysis, statistical arbitrage, news sentiment processing, and risk management. Each strategy is an independent agent; portfolio-level agents coordinate across strategies.
 - **Scale:** $10T+ AI-influenced trading volume across the industry. 35%+ of new hedge fund launches in 2025 branded as AI-driven. AI-first funds averaging 12–15% returns vs. 8–10% for non-AI peers. 70%+ of global hedge funds use ML in their trading pipeline.
 - **Why it's here:** The highest-stakes deployment of AI agent fleets — where multi-agent coordination directly produces billions in returns.
 - [Bloomberg](https://www.bloomberg.com/news/articles/2026-03-03/fleet-of-ai-bots-will-supercharge-hedge-fund-power-nettimi-says)
 
-### 14. Stripe Radar + AI Fraud Detection
+### 16. Stripe Radar + AI Fraud Detection
 - **What:** Real-time fraud detection across millions of merchants
 - **How it uses AI agents:** Fleet of specialized detection agents — behavioral analysis agents, device fingerprinting agents, network analysis agents, and pattern matching agents. Each transaction evaluated by multiple agents in parallel, with a meta-agent synthesizing fraud scores.
 - **Scale:** Processes hundreds of billions in payments. $91B+ valuation. Blocks millions of fraudulent transactions daily.
@@ -109,20 +124,20 @@ A comprehensive research dossier of the best projects and products that are **no
 
 ## CATEGORY 4: Gaming & Simulation
 
-### 15. Inworld AI
+### 17. Inworld AI
 - **What:** Platform for creating AI-powered non-player characters (NPCs) with persistent personalities, memories, and goals
 - **How it uses AI agents:** Each NPC is an independent AI agent with its own memory, personality model, emotional state, and goal system. Multiple agents interact with each other and players simultaneously, creating emergent narratives.
 - **Scale:** $500M valuation. $120M total funding. Founded by API.AI creators (acquired by Google/Dialogflow). Clients: Google, NVIDIA, Meta, Ubisoft, Xbox. TTS ranked #1 on Artificial Analysis. AI in gaming market projected to reach $51.26B by 2033 (36.1% CAGR).
 - **Why it's here:** The leading platform for AI agent-powered NPCs — each character is a persistent, autonomous agent.
 - [Inworld AI](https://inworld.ai/blog/ai-agents-in-video-games-current-and-future-state)
 
-### 16. AI-Powered Game Testing Swarms
+### 18. AI-Powered Game Testing Swarms
 - **What:** Fleets of AI agents that play-test games for bugs, balance issues, and exploits
 - **How it uses AI agents:** Hundreds of AI agents simultaneously play a game, each with different play styles and objectives. Agents discover bugs, exploit paths, and balance issues that human testers miss. Coverage agents map game state space systematically.
 - **Scale:** 7,000+ AI-using Steam titles in 2025. Major studios (EA, Ubisoft, Epic) using AI testing fleets. Unity ML-Agents toolkit: 18K+ GitHub stars.
 - **Why it's here:** Agent swarms finding bugs by playing games — thousands of autonomous testers running 24/7.
 
-### 17. Latitude Voyage (AI Dungeon successor)
+### 19. Latitude Voyage (AI Dungeon successor)
 - **What:** AI-powered interactive fiction and world-building platform
 - **How it uses AI agents:** World simulation agents manage persistent environments, NPC agents maintain independent goals and schedules, narrative agents ensure story coherence. Multiple agent types collaborate to create a living, breathing world.
 - **Scale:** Millions of stories generated. Pioneer of consumer AI agent experiences.
@@ -132,19 +147,19 @@ A comprehensive research dossier of the best projects and products that are **no
 
 ## CATEGORY 5: Supply Chain & Logistics
 
-### 18. Amazon Robotics (Formerly Kiva Systems)
+### 20. Amazon Robotics (Formerly Kiva Systems)
 - **What:** AI-powered warehouse robotics fleet managing Amazon's fulfillment network
 - **How it uses AI agents:** 750,000+ robots operating as coordinated agent fleets across warehouses globally. Path planning agents, inventory agents, demand prediction agents, and workforce optimization agents operate hierarchically.
 - **Scale:** 750,000+ robots. The largest robot fleet in the world. Processing millions of packages daily across 175+ fulfillment centers.
 - **Why it's here:** The largest AI-agent-coordinated robot fleet on Earth, managing the world's biggest e-commerce logistics network.
 
-### 19. Flexport AI Supply Chain
+### 21. Flexport AI Supply Chain
 - **What:** Digital freight forwarding with AI-powered supply chain management
 - **How it uses AI agents:** Multi-agent system for route optimization, customs prediction, demand forecasting, and carrier selection. Agents across land, sea, and air coordinate to optimize global supply chains.
 - **Scale:** $8B+ valuation. Manages $19B+ in annual trade. Serves enterprises including Shopify merchants.
 - **Why it's here:** AI agents coordinating global supply chains across multiple transport modes — land, sea, air agents working as a fleet.
 
-### 20. Hylio (Agricultural Drone Swarms)
+### 22. Hylio (Agricultural Drone Swarms)
 - **What:** Autonomous drone fleets for precision agriculture — spraying, seeding, mapping
 - **How it uses AI agents:** Swarm of agricultural drones where each drone is an independent agent. Central planner agent creates field coverage plans; individual drone agents handle navigation, obstacle avoidance, and application rates. FAA-approved swarm operations.
 - **Scale:** 850+ drones sold, $30M+ cumulative revenue. 2025 revenue: ~$13M. First US company with FAA approval for swarming UAS >55 lbs. Single pilot controls 3+ drones covering 150 acres/hour. HYL-150 Ares announced 2026. New 40K sq ft Texas manufacturing facility. $6.72M total raised.
@@ -155,20 +170,20 @@ A comprehensive research dossier of the best projects and products that are **no
 
 ## CATEGORY 6: Healthcare & Medical
 
-### 21. FDA-Cleared AI Diagnostic Agents
+### 23. FDA-Cleared AI Diagnostic Agents
 - **What:** AI diagnostic systems with FDA clearance for clinical use
 - **How it uses AI agents:** Multi-agent diagnostic pipelines — image analysis agents, clinical data agents, differential diagnosis agents, and recommendation agents work in sequence to support physician decision-making. 700+ FDA-cleared AI medical devices.
 - **Scale:** 700+ FDA-cleared AI devices. AI lung nodule detection: 94% accuracy vs. 65% for radiologists. Breast cancer: 90% sensitivity vs. 78% human. $150B potential annual US savings. 80%+ healthcare executives expect moderate-to-significant value from agentic AI in 2026. North Kansas City Hospital reduced check-in from 4 min to 10 seconds; AtlantiCare saves 66 min/provider/day.
 - **Why it's here:** The most regulated deployment of AI agent pipelines — multi-agent systems with FDA clearance treating real patients.
 - [BCG 2026 Outlook](https://www.bcg.com/publications/2026/how-ai-agents-will-transform-health-care)
 
-### 22. Providence Health Care Multi-Agent System (Memora Health)
+### 24. Providence Health Care Multi-Agent System (Memora Health)
 - **What:** AI coordination system monitoring patient recovery and managing follow-up
 - **How it uses AI agents:** Multiple specialized agents — symptom monitoring agents, medication reminder agents, appointment scheduling agents, and escalation agents. Patient-facing agents coordinate with clinical workflow agents.
 - **Scale:** Providence serves 51 hospitals across 7 states. Autonomous post-surgery follow-up and chronic condition management.
 - **Why it's here:** Multi-agent healthcare coordination at hospital scale — agents managing patient journeys autonomously.
 
-### 23. PathAI
+### 25. PathAI
 - **What:** AI-powered pathology for cancer diagnosis
 - **How it uses AI agents:** Fleet of image analysis agents examine tissue slides — cell detection agents, morphology agents, biomarker agents, and grading agents coordinate to produce comprehensive pathology reports. Each agent specializes in one aspect of tissue analysis.
 - **Scale:** Partnered with Bristol-Myers Squibb, Novartis, Roche. Processing millions of pathology images. $255M+ raised.
@@ -178,20 +193,20 @@ A comprehensive research dossier of the best projects and products that are **no
 
 ## CATEGORY 7: Cybersecurity Operations
 
-### 24. Darktrace (Autonomous Cyber Defense)
+### 26. Darktrace (Autonomous Cyber Defense)
 - **What:** Self-learning AI that detects, investigates, and responds to cyber threats autonomously
 - **How it uses AI agents:** Fleet of specialized security agents — network monitoring agents, anomaly detection agents, threat investigation agents, and autonomous response agents. Agents form a self-healing immune system for enterprise networks.
 - **Scale:** $782M annual revenue (FY2024), targeting $1B by 2027. 89% gross margins. 9,800+ customers. Listed on London Stock Exchange. Autonomous Response handles threats in seconds without human intervention. $200M US expansion planned for 2026.
 - **Why it's here:** The largest pure-play AI cybersecurity company — an autonomous fleet of agents defending enterprise networks.
 - [Darktrace](https://www.darktrace.com/resource/the-state-of-ai-cybersecurity-2026)
 
-### 25. CrowdStrike Charlotte AI
+### 27. CrowdStrike Charlotte AI
 - **What:** Conversational AI security analyst powered by generative AI
 - **How it uses AI agents:** Multi-agent threat analysis — endpoint detection agents, threat hunting agents, incident response agents, and forensic analysis agents. Charlotte AI acts as a meta-agent orchestrating security operations across the fleet.
 - **Scale:** $3.4B+ annual revenue. Protecting 29,000+ subscription customers. Processing 2T+ security events weekly.
 - **Why it's here:** AI agent fleet processing trillions of security events — autonomous threat detection at internet scale.
 
-### 26. Autonomous Red Team / Blue Team Exercises
+### 28. Autonomous Red Team / Blue Team Exercises
 - **What:** AI agents conducting offensive security testing and defensive response simultaneously
 - **How it uses AI agents:** Red team agents autonomously probe for vulnerabilities, attempt exploits, and chain attacks. Blue team agents detect, classify, and respond to attacks. Both fleets operate independently in continuous adversarial testing.
 - **Scale:** Cybersecurity AI (CAI) captured 41/45 flags at Neurogrid. Opus 4.6 found 22 Firefox zero-days. GTG-1002 campaign (Nov 2025) demonstrated AI swarms executing 80–90% of an attack lifecycle autonomously. Attackers outnumber defenders 82:1 via autonomous agents. "Jeopardy-style CTFs have become a solved game for well-engineered AI agents."
@@ -202,19 +217,19 @@ A comprehensive research dossier of the best projects and products that are **no
 
 ## CATEGORY 8: Content Creation & Media
 
-### 27. Runway Gen-3 / Sora (AI Video Production)
+### 29. Runway Gen-3 / Sora (AI Video Production)
 - **What:** AI-powered video generation and editing platforms
 - **How it uses AI agents:** Multi-agent video pipeline — scene understanding agents, motion synthesis agents, style transfer agents, and compositing agents work in sequence to generate or edit video. Director agents orchestrate the pipeline based on natural language prompts.
 - **Scale:** Runway: $1.5B valuation, used by major studios. Sora: integrated into ChatGPT. AI video market: $32B → $133B projected growth.
 - **Why it's here:** Agent pipelines producing Hollywood-quality video — each frame processed by a fleet of specialized agents.
 
-### 28. Eleven Labs + AI Audio Agents
+### 30. Eleven Labs + AI Audio Agents
 - **What:** AI voice synthesis and audio production platform
 - **How it uses AI agents:** Voice cloning agents, emotion synthesis agents, multilingual translation agents, and audio mixing agents coordinate to produce broadcast-quality audio. Agent fleet handles dubbing entire films across languages simultaneously.
 - **Scale:** $1.1B valuation. Used by major publishers, game studios, and entertainment companies. Real-time voice synthesis in 29 languages.
 - **Why it's here:** Agent fleet dubbing movies and producing audio at scale — multiple specialized voice agents coordinating per production.
 
-### 29. Automated Journalism Agents (Bloomberg, AP, Reuters)
+### 31. Automated Journalism Agents (Bloomberg, AP, Reuters)
 - **What:** AI agents writing financial reports, earnings summaries, and sports recaps
 - **How it uses AI agents:** Data collection agents, analysis agents, narrative generation agents, and fact-checking agents coordinate to produce articles. Fleet processes thousands of earnings reports simultaneously during reporting season.
 - **Scale:** Bloomberg processes thousands of financial articles per quarter via AI. AP's Automated Insights generates 40,000+ earnings reports annually.
@@ -224,21 +239,21 @@ A comprehensive research dossier of the best projects and products that are **no
 
 ## CATEGORY 9: Infrastructure & DevOps
 
-### 30. Self-Healing Cloud Infrastructure
+### 32. Self-Healing Cloud Infrastructure
 - **What:** Autonomous systems that detect, diagnose, and remediate infrastructure issues without human intervention
 - **How it uses AI agents:** Monitoring agents detect anomalies, diagnostic agents identify root causes (96% accuracy), remediation agents apply fixes (73% auto-fix rate), and validation agents confirm resolution. Agent fleet operates across thousands of servers.
 - **Scale:** Gartner predicts 60%+ of large enterprises will have self-healing systems by 2026. MTTR drops of 40–60%. Key platforms: incident.io (90%+ accuracy in autonomous investigation), Dynatrace (Davis AI engine), PagerDuty AIOps.
 - **Why it's here:** AI agent fleets keeping the internet running — autonomous infrastructure management at cloud scale.
 - [Unite.AI](https://www.unite.ai/agentic-sre-how-self-healing-infrastructure-is-redefining-enterprise-aiops-in-2026/)
 
-### 31. Spotify Honk (Engineering Infrastructure)
+### 33. Spotify Honk (Engineering Infrastructure)
 - **What:** Internal AI deployment system interfacing with Claude Code for engineering automation
 - **How it uses AI agents:** AI agents receive bug reports via Slack, analyze codebases, generate fixes, run tests, create PRs, and deploy. Multiple agents work on different fixes simultaneously across the engineering organization.
 - **Scale:** 1,500+ PRs generated. 50% of all Spotify updates flow through agents. 90% reduction in engineering time. Best developers haven't written code since Dec 2025.
 - **Why it's here:** Spotify's product isn't AI — it's music streaming. But a fleet of AI agents now ships half their code.
 - [TechCrunch](https://techcrunch.com/2026/02/12/spotify-says-its-best-developers-havent-written-a-line-of-code-since-december-thanks-to-ai/)
 
-### 32. Harness AI-Powered CI/CD
+### 34. Harness AI-Powered CI/CD
 - **What:** Software delivery platform with AI agents automating deployments, rollbacks, and verification
 - **How it uses AI agents:** Deployment agents manage rollouts, canary analysis agents evaluate metrics, rollback agents intervene on failures, and optimization agents tune pipeline performance. Fleet manages thousands of deployments daily.
 - **Scale:** 3.5 PRs/engineer/day using Codex agents. Used by enterprise engineering teams globally.
@@ -248,19 +263,19 @@ A comprehensive research dossier of the best projects and products that are **no
 
 ## CATEGORY 10: Agriculture & Environment
 
-### 33. John Deere Autonomous Farming
+### 35. John Deere Autonomous Farming
 - **What:** Autonomous tractors and agricultural equipment
 - **How it uses AI agents:** Perception agents for obstacle detection, navigation agents for GPS-guided operation, crop analysis agents for variable-rate application, and fleet management agents coordinating multiple machines. Entire farms operated by coordinated agent fleets.
 - **Scale:** 300M+ acres under management with JD technology. $62B market cap. See & Spray machines use 36 cameras, 12 agents for real-time weed/crop classification.
 - **Why it's here:** The largest fleet of autonomous farming machines — AI agents growing food at industrial scale.
 
-### 34. Carbon Capture AI Optimization (Climeworks, CarbonCure)
+### 36. Carbon Capture AI Optimization (Climeworks, CarbonCure)
 - **What:** AI agents optimizing direct air capture and carbon sequestration processes
 - **How it uses AI agents:** Process optimization agents tune temperature, pressure, and airflow. Monitoring agents track capture efficiency. Predictive agents forecast optimal operating conditions based on weather. Fleet coordinates across multiple capture facilities.
 - **Scale:** Climeworks Mammoth: 36,000 tons CO2/year capacity. $750M raised. CarbonCure in 750+ concrete plants.
 - **Why it's here:** Agent fleets optimizing carbon removal — the most impactful environmental use of multi-agent AI.
 
-### 35. IPB University Agricultural Drone Swarms
+### 37. IPB University Agricultural Drone Swarms
 - **What:** Research program deploying drone swarms for crop monitoring and precision agriculture in Southeast Asia
 - **How it uses AI agents:** Autonomous drone swarms where each drone runs perception agents, health assessment agents, and mapping agents. Swarm coordination agents ensure complete field coverage with minimal overlap.
 - **Scale:** Research deployment across Indonesian farmland. Model for tropical agriculture AI.
@@ -270,20 +285,20 @@ A comprehensive research dossier of the best projects and products that are **no
 
 ## CATEGORY 11: Smart Cities & Energy
 
-### 36. Grid-Scale Energy Management (Tesla Autobidder / Google DeepMind)
+### 38. Grid-Scale Energy Management (Tesla Autobidder / Google DeepMind)
 - **What:** AI systems managing electrical grid operations, battery storage, and renewable energy integration
 - **How it uses AI agents:** Demand prediction agents, generation optimization agents, battery dispatch agents, and market trading agents coordinate to balance the grid. Google DeepMind's agents achieved 15% energy savings in cooling their own data centers.
 - **Scale:** AI smart cities market: $50.6B (2025) → $460.5B by 2034 (27.8% CAGR). 68%+ US cities adopted/piloting AI. IDC predicts 65% of cities will deploy AI agents by 2027. 15% energy savings, 25–30% cost reductions. Tesla Autobidder manages GW-scale battery installations. DeepMind grid management deployed in UK National Grid.
 - **Why it's here:** AI agent fleets managing national power grids — the highest-stakes infrastructure management using multi-agent coordination.
 - [Smart Cities Dive](https://www.smartcitiesdive.com/news/how-cities-using-ai-2026/810905/)
 
-### 37. Waze / Google Maps Traffic Optimization
+### 39. Waze / Google Maps Traffic Optimization
 - **What:** Real-time traffic routing optimized by AI across millions of concurrent users
 - **How it uses AI agents:** Each user's route is managed by a routing agent. Fleet-level agents optimize traffic flow across the entire network. Incident detection agents identify accidents and road closures. Prediction agents forecast congestion. The system acts as a massive multi-agent optimization across millions of simultaneous trips.
 - **Scale:** 2B+ monthly active users on Google Maps. Processing millions of route optimizations per minute.
 - **Why it's here:** The world's largest real-time multi-agent optimization system — billions of routing agents coordinating traffic flow.
 
-### 38. Digital Twin Cities (Singapore, Helsinki, Dubai)
+### 40. Digital Twin Cities (Singapore, Helsinki, Dubai)
 - **What:** Full digital replicas of cities used for urban planning, disaster simulation, and infrastructure management
 - **How it uses AI agents:** Simulation agents model traffic, energy, water, and population flows. Planning agents test infrastructure changes. Emergency response agents simulate disaster scenarios with thousands of citizen agents.
 - **Scale:** Singapore's Virtual Singapore: nation-scale digital twin. Helsinki's Kalasatama district: fully AI-managed. Dubai: mandatory digital twin for all new construction.
@@ -293,20 +308,20 @@ A comprehensive research dossier of the best projects and products that are **no
 
 ## CATEGORY 12: Legal & Compliance
 
-### 39. Thomson Reuters CoCounsel
+### 41. Thomson Reuters CoCounsel
 - **What:** AI legal assistant for research, contract analysis, and document review
 - **How it uses AI agents:** Multi-agent pipeline — document parsing agents, legal research agents, precedent matching agents, risk identification agents, and summarization agents. Autonomous agentic workflows with "Deep Research" capabilities launched early 2026.
 - **Scale:** Thomson Reuters: $60B+ market cap. CoCounsel integrated into Westlaw and Practical Law. Used by AmLaw 200 firms. AI integration reduces contract cycle times by 40%; Gartner predicts 50% cut in contract review time. EU AI Act full enforcement Aug 2026 (penalties up to 35M EUR or 7% global revenue).
 - **Why it's here:** Multi-agent legal analysis at the world's largest legal information company — agent fleets processing case law.
 - [ContractPodAI](https://contractpodai.com/news/agentic-ai-legal/)
 
-### 40. LexisNexis Protege General AI (4-Agent System)
+### 42. LexisNexis Protege General AI (4-Agent System)
 - **What:** AI legal research assistant with a defined multi-agent architecture
 - **How it uses AI agents:** 4 specialized agents — orchestrator agent, legal research agent, web search agent, and customer document agent. Agents collaborate on complex legal workflows with structured handoffs.
 - **Scale:** LexisNexis serves 1M+ legal professionals globally. Protege's 4-agent architecture is the most explicitly documented production legal AI system.
 - **Why it's here:** The most transparently documented multi-agent legal system — 4 agents with clear responsibilities.
 
-### 41. Contract Intelligence Platforms (Ironclad, DocuSign IAM)
+### 43. Contract Intelligence Platforms (Ironclad, DocuSign IAM)
 - **What:** AI-powered contract lifecycle management
 - **How it uses AI agents:** Extraction agents pull key terms, comparison agents benchmark against templates, risk agents flag unusual clauses, and workflow agents route for approval. Agent fleet processes thousands of contracts in parallel during M&A due diligence.
 - **Scale:** Ironclad: $3.2B valuation. DocuSign: $12B+ market cap. Combined processing millions of contracts annually.
@@ -316,19 +331,19 @@ A comprehensive research dossier of the best projects and products that are **no
 
 ## CATEGORY 13: Education & Tutoring
 
-### 42. Khan Academy Khanmigo
+### 44. Khan Academy Khanmigo
 - **What:** AI tutor powered by GPT-4/5 for personalized education
 - **How it uses AI agents:** Tutoring agent, assessment agent, curriculum agent, and motivation agent coordinate per student. Tutoring agent uses Socratic method (asks guiding questions rather than giving answers). Assessment agent tracks mastery.
 - **Scale:** 150M+ registered users on Khan Academy. Khanmigo deployed across 100+ school districts. Free for all US teachers.
 - **Why it's here:** AI agents providing personalized education to millions — the largest deployment of tutoring agents.
 
-### 43. AgentTutor (Research Framework)
+### 45. AgentTutor (Research Framework)
 - **What:** Multi-agent tutoring system with specialized pedagogical agents
 - **How it uses AI agents:** Diagnostic agent assesses student knowledge, explanation agent provides instruction, practice agent generates exercises, and evaluation agent measures learning. 12.4% score improvement in studies.
 - **Scale:** Research deployment showing 12.4% score improvement. AI education market: $7B → $32B projected.
 - **Why it's here:** The most rigorously studied multi-agent tutoring system with measured learning outcomes.
 
-### 44. Duolingo Max (AI Conversations)
+### 46. Duolingo Max (AI Conversations)
 - **What:** Language learning with AI-powered conversation practice
 - **How it uses AI agents:** Conversation agents with distinct personalities, grammar correction agents, pronunciation analysis agents, and progress tracking agents. Each learner interacts with multiple specialized agents throughout their learning journey.
 - **Scale:** 100M+ monthly active users. $7.7B market cap. AI features across 40+ languages.
@@ -338,33 +353,33 @@ A comprehensive research dossier of the best projects and products that are **no
 
 ## CATEGORY 14: Space & Aerospace
 
-### 45. Starlink Autonomous Collision Avoidance
+### 47. Starlink Autonomous Collision Avoidance
 - **What:** AI system managing 6,000+ satellites' orbital positions to avoid collisions
 - **How it uses AI agents:** Each satellite runs autonomous agents for orbit determination, collision prediction, and maneuver planning. Fleet-level agents coordinate across the entire constellation to prevent conflicts. Thousands of autonomous maneuvers executed daily without human intervention.
 - **Scale:** 6,000+ active satellites. 4M+ subscribers. Performing thousands of autonomous collision avoidance maneuvers per day.
 - **Why it's here:** The largest fleet of autonomous agents in space — 6,000+ AI-managed satellites coordinating in real-time.
 
-### 46. DARPA Oversight + Pit Boss (Autonomous Space/Air)
+### 48. DARPA Oversight + Pit Boss (Autonomous Space/Air)
 - **What:** AI systems for autonomous satellite constellation management and air combat coordination
 - **How it uses AI agents:** "Pit Boss" architecture enables autonomous on-orbit processing, inter-satellite links, and distributed decision-making. Satellites negotiate observations and re-task without ground commands. In air combat: each aircraft runs autonomous flight agents; squadron-level agents coordinate tactics.
 - **Scale:** $16M Phase 2 contract to BAE Systems (Dec 2025). Autonomous F-16 demonstrated in 2024 ACE program.
 - **Why it's here:** AI agents managing satellites and flying fighter jets — the most high-stakes deployment of autonomous agent fleets.
 - [TheDefensePost](https://thedefensepost.com/2025/12/12/bae-ai-satellite-tracking/)
 
-### 47. China Three-Body Computing Constellation (Zhejiang Lab)
+### 49. China Three-Body Computing Constellation (Zhejiang Lab)
 - **What:** 12-satellite AI constellation for space-based computing and Earth observation
 - **How it uses AI agents:** Each satellite runs independent AI agents for data collection, analysis, and inter-satellite coordination. Launched May 2025 as first phase; successfully demonstrated core autonomous computing capabilities after 9 months in orbit (Feb 2026).
 - **Scale:** 12 satellites. First AI-coordinated satellite constellation designed from the ground up for autonomous computing.
 - **Why it's here:** A purpose-built AI-agent-coordinated satellite constellation — agents computing in orbit.
 - [Orbital Today](https://orbitaltoday.com/2026/02/15/china-launches-ai-driven-satellite-constellation-to-transform-space-computing/)
 
-### 48. NASA Mars Rover AI (Perseverance / Future Missions)
+### 50. NASA Mars Rover AI (Perseverance / Future Missions)
 - **What:** Autonomous navigation and science operations on Mars
 - **How it uses AI agents:** AutoNav agents drive the rover autonomously. Science prioritization agents select interesting geological targets. Communication agents optimize data transmission during limited Earth contact windows.
 - **Scale:** 72km+ traversed on Mars. Agent-driven autonomous driving covers more ground than all previous rovers combined.
 - **Why it's here:** AI agents operating autonomously 225M km from the nearest human — the most remote agent deployment.
 
-### 49. ESA ConstellAI
+### 51. ESA ConstellAI
 - **What:** European Space Agency program for mega-constellation management optimization
 - **How it uses AI agents:** AI agents for adaptive, robust constellation management reducing ground operator workload. Investigating "collective consciousness" for tiny satellite swarms — emergent behavior from coordinated autonomous agents.
 - **Scale:** ESA research program covering future European constellation deployments.
@@ -375,19 +390,19 @@ A comprehensive research dossier of the best projects and products that are **no
 
 ## CATEGORY 15: Manufacturing & Digital Twins
 
-### 50. Siemens Industrial Copilot + Digital Twins
+### 52. Siemens Industrial Copilot + Digital Twins
 - **What:** AI-powered manufacturing optimization using digital twin technology
 - **How it uses AI agents:** Digital twin agents simulate factory operations. Quality control agents inspect products via computer vision. Predictive maintenance agents forecast equipment failures (94.3% accuracy). Optimization agents tune production parameters in real-time.
 - **Scale:** Digital twin market: $34B → $155B projected. Siemens deployed across automotive, aerospace, and pharmaceutical manufacturing.
 - **Why it's here:** Agent fleets running digital twins of entire factories — the most sophisticated manufacturing AI systems.
 
-### 51. BMW + Figure AI Manufacturing Agents
+### 53. BMW + Figure AI Manufacturing Agents
 - **What:** Humanoid robots + AI agents in automotive manufacturing
 - **How it uses AI agents:** Figure's humanoid robots as physical agents, BMW's manufacturing execution system as the orchestrator. Computer vision agents for quality inspection. Logistics agents for parts delivery. Assembly agents for production tasks.
 - **Scale:** Pilot in BMW Spartanburg, SC plant (largest BMW factory: 11,000 employees, 1,500 vehicles/day).
 - **Why it's here:** Humanoid robot agents in automotive manufacturing — the convergence of physical and digital agent fleets.
 
-### 52. NVIDIA Omniverse + Isaac Sim
+### 54. NVIDIA Omniverse + Isaac Sim
 - **What:** Platform for simulating and training robot fleets before real-world deployment
 - **How it uses AI agents:** Thousands of simulated robot agents train simultaneously in physically accurate virtual environments. Transfer learning agents port skills from simulation to real robots. Fleet coordination agents optimize multi-robot behavior.
 - **Scale:** Used by BMW, Amazon, Siemens, John Deere. Enables training on millions of scenarios before any physical deployment. NVIDIA market cap: $3T+.
@@ -397,14 +412,14 @@ A comprehensive research dossier of the best projects and products that are **no
 
 ## CATEGORY 16: Consumer Products & Assistants
 
-### 53. OpenClaw / Moltbook (247K+ GitHub Stars)
+### 55. OpenClaw / Moltbook (247K+ GitHub Stars)
 - **What:** Self-hosted personal AI agent connecting WhatsApp, Telegram, Slack, Discord, Signal, iMessage, Teams
 - **How it uses AI agents:** Personal agent orchestrator deploying specialized agents — messaging agents, productivity agents, home automation agents, scheduling agents. 1.6M bots on Moltbook. Users configure fleets of specialized agents for different aspects of their digital life.
 - **Scale:** 247K+ GitHub stars. 1.6M active bots. Creator hired by OpenAI.
 - **Why it's here:** The most popular personal agent fleet system — millions of users running their own AI agent swarms.
 - [GitHub](https://github.com/openclaw/openclaw)
 
-### 54. Rabbit R1 / Humane AI Pin / Meta Ray-Ban AI
+### 56. Rabbit R1 / Humane AI Pin / Meta Ray-Ban AI
 - **What:** AI-native hardware devices with always-on agent capabilities
 - **How it uses AI agents:** Vision agents, voice agents, search agents, and action agents running on dedicated hardware. Meta Ray-Ban: camera agent + voice agent + search agent coordinating for real-world queries.
 - **Scale:** Meta Ray-Ban AI: fastest-growing Ray-Ban product. AI hardware market growing rapidly despite Humane's struggles.
