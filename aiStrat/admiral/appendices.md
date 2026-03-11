@@ -5,7 +5,9 @@
 
 ## A — Pre-Flight Checklist
 
-Before deploying any new fleet, verify every item. If any box is unchecked, the fleet is not ready.
+Before deploying, verify the items for your adoption level. Each level includes all items from previous levels. **Only check items for your current level** — checking ahead encourages premature implementation.
+
+### Level 1: Disciplined Solo
 
 **Part 1 — Strategy**
 
@@ -15,16 +17,43 @@ Before deploying any new fleet, verify every item. If any box is unchecked, the 
 
 **Part 2 — Context**
 
-- [ ] **Context Engineering (04):** Instructions follow prompt anatomy (Identity → Authority → Constraints → Knowledge → Task). Tested with probes.
-- [ ] **Ground Truth (05):** Ontology, naming, tech stack versions, access/permissions, known issues, configuration artifacts.
-- [ ] **Context Window Strategy (06):** Profiles per role. Loading order, refresh triggers, sacrifice order. Progressive disclosure.
-- [ ] **Configuration File Strategy (07):** AGENTS.md under 150 lines. Tool-specific pointers (CLAUDE.md, etc.) configured. Skills, agent files, path rules defined. All version-controlled.
+- [ ] **Configuration File Strategy (07):** AGENTS.md under 150 lines. Tool-specific pointers (CLAUDE.md, etc.) configured. All version-controlled.
 
 **Part 3 — Enforcement**
 
-- [ ] **Deterministic Enforcement (08):** Every constraint classified Hook / Instruction / Guidance. Critical safety as hooks. Self-healing loops.
+- [ ] **Deterministic Enforcement (08):** Every constraint classified Hook / Instruction / Guidance. Safety-critical constraints deployed as live hooks (token budget, loop detection, context health). Self-healing loops operational. Hooks are running in the agent runtime — not just tested as code.
+- [ ] **Configuration Security (10):** Audit configs. Set CODEOWNERS. Pin MCP servers if applicable.
+
+**Part 11 — Protocols**
+
+- [ ] **Standing Orders (36):** All 15 Standing Orders loaded into agent standing context. Referenced from AGENTS.md.
+
+**Identity**
+
+- [ ] **Simple identity model:** Agent-id + role defined. No cryptographic signing required. The identity *model* exists and can be progressively hardened at higher levels.
+
+**Scope boundary check — do NOT have at Level 1:**
+
+- [ ] No handoff protocols implemented (no agents to hand off to).
+- [ ] No escalation routing implemented (no agents to route through).
+- [ ] No governance heartbeat monitors (no governance agents exist).
+- [ ] No tier validation hooks (no fleet roster exists).
+- [ ] No empty placeholder packages for future levels.
+- [ ] No HMAC-SHA256 identity tokens (Level 4 concern).
+
+### Level 2: Core Fleet
+
+Everything from Level 1, plus:
+
+**Part 2 — Context**
+
+- [ ] **Context Engineering (04):** Instructions follow prompt anatomy (Identity → Authority → Constraints → Knowledge → Task). Tested with probes.
+- [ ] **Ground Truth (05):** Ontology, naming, tech stack versions, access/permissions, known issues, configuration artifacts.
+- [ ] **Context Window Strategy (06):** Profiles per role. Loading order, refresh triggers, sacrifice order. Progressive disclosure.
+
+**Part 3 — Enforcement**
+
 - [ ] **Decision Authority (09):** Four tiers with concrete examples. Calibrated to project maturity.
-- [ ] **Configuration Security (10):** Security audit checklist completed. MCP servers audited and pinned. CODEOWNERS set.
 
 **Part 4 — Fleet**
 
@@ -32,6 +61,47 @@ Before deploying any new fleet, verify every item. If any box is unchecked, the 
 - [ ] **Tool & Capability Registry (12):** Per-agent tool registry including negative tool list and MCP servers.
 - [ ] **Model Selection (13):** Every role assigned to tier with rationale. Context requirements verified.
 - [ ] **Protocol Integration (14):** MCP servers registered and pinned. A2A configured if needed.
+
+**Part 6 — Execution**
+
+- [ ] **Work Decomposition (18):** Chunks with entry/exit states, budgets, quality gates. Spec-first pipeline if applicable.
+
+**Part 7 — Quality**
+
+- [ ] **Failure Recovery (22):** Recovery ladder documented. Max retries set. Escalation template ready.
+
+**Part 8 — Operations**
+
+- [ ] **Institutional Memory (24):** Persistence pattern selected. Decision log location established. Checkpoint template ready.
+
+**Part 11 — Protocols**
+
+- [ ] **Escalation Protocol (37):** Escalation routing and report format defined.
+- [ ] **Handoff Protocol (38):** Structured handoff format for inter-agent transfers.
+
+### Level 3: Governed Fleet
+
+Everything from Levels 1–2, plus:
+
+**Part 7 — Quality**
+
+- [ ] **Quality Assurance (21):** Verification levels per task type. Self-healing loops operational. QA template ready.
+- [ ] **Failure Modes (23):** Configuration reviewed against catalog. Mitigations in place.
+
+**Part 8 — Operations**
+
+- [ ] **Cost Management (26):** Per-session and per-phase budgets. Cost tracking in place. LLM-Last implemented.
+- [ ] **Fleet Health Metrics (27):** Metrics selected. Collection rhythm defined.
+- [ ] **Fleet Scaling (28):** Lifecycle phase identified. Scaling signals understood. Size upper bound set.
+
+**Governance**
+
+- [ ] **Governance agents deployed:** Token Budgeter, Hallucination Auditor, Loop Breaker minimum. Governance heartbeat monitor hook now active.
+- [ ] **Brain Level 1–2:** File-based or SQLite persistent memory operational.
+
+### Level 4: Full Framework
+
+Everything from Levels 1–3, plus:
 
 **Part 5 — The Brain**
 
@@ -42,23 +112,12 @@ Before deploying any new fleet, verify every item. If any box is unchecked, the 
 
 **Part 6 — Execution**
 
-- [ ] **Work Decomposition (18):** Chunks with entry/exit states, budgets, quality gates. Spec-first pipeline if applicable.
 - [ ] **Parallel Execution (19):** Parallelization criteria. Coordination patterns. Divergence detection.
 - [ ] **Swarm Patterns (20):** Confirmed hierarchical fleet sufficient, or swarm topology defined.
 
-**Part 7 — Quality**
-
-- [ ] **Quality Assurance (21):** Verification levels per task type. Self-healing loops operational. QA template ready.
-- [ ] **Failure Recovery (22):** Recovery ladder documented. Max retries set. Escalation template ready.
-- [ ] **Failure Modes (23):** Configuration reviewed against catalog. Mitigations in place.
-
 **Part 8 — Operations**
 
-- [ ] **Institutional Memory (24):** Persistence pattern selected. Decision log location established. Checkpoint template ready.
 - [ ] **Adaptation Protocol (25):** Change tiers defined. Cascade map understood. Pause Protocol documented.
-- [ ] **Cost Management (26):** Per-session and per-phase budgets. Cost tracking in place. LLM-Last implemented.
-- [ ] **Fleet Health Metrics (27):** Metrics selected. Collection rhythm defined.
-- [ ] **Fleet Scaling (28):** Lifecycle phase identified. Scaling signals understood. Size upper bound set.
 - [ ] **Inter-Fleet Governance (29):** Knowledge boundaries set. Sharing protocol defined. Review cadence scheduled.
 
 **Part 9 — Platform**
@@ -72,6 +131,11 @@ Before deploying any new fleet, verify every item. If any box is unchecked, the 
 - [ ] **Admiral Self-Calibration (33):** Bottleneck signals known. Trust log initialized. Growth stage assessed. Intent fluency self-assessed.
 - [ ] **Intent completeness:** Task assignments communicate goal, priority, constraints, failure modes, judgment boundaries, and values. See [`intent-engineering.md`](intent-engineering.md).
 - [ ] **Human-Expert Routing (34):** Expert Roster defined. Routing triggers documented. Consultation template ready.
+
+**Identity & Security**
+
+- [ ] **Identity tokens:** HMAC-SHA256 signed, session-scoped, non-delegable. Zero-trust access control.
+- [ ] **Configuration Security (10):** Full security audit checklist completed. MCP servers audited and pinned.
 
 -----
 
@@ -88,14 +152,24 @@ Structured around the four Adoption Levels (see index.md). Complete each level b
 3. **Boundaries (02)** — What you are NOT building. Resource budgets.
 4. **Success Criteria (03)** — Machine-verifiable definition of "done."
 5. **Configuration File Strategy (07)** — Create AGENTS.md (<150 lines). Tool-specific pointers configured. Reference Standing Orders from AGENTS.md.
-6. **Deterministic Enforcement (08)** — Classify constraints (see classification decision process in Section 08). Implement hooks for safety-critical ones. Standing Orders define the *content* that hooks enforce.
+6. **Deterministic Enforcement (08)** — Classify constraints (see classification decision process in Section 08). **Deploy** hooks for safety-critical ones as live enforcement in your agent runtime (e.g., `.claude/hooks/` for Claude Code, equivalent for other platforms). "Deploy" means the hooks run and block violations in real sessions — not just that the hook code exists and passes tests. Only deploy `Level 1` hooks (token budget, loop detection, context health). Standing Orders define the *content* that hooks enforce.
 7. **Configuration Security (10)** — Audit configs. Pin MCP servers (if applicable at this level). Set CODEOWNERS.
 
 > **Critical sequencing insight (from implementation):** Implementers naturally organize work by *code architecture* (data models → engine → tests). Admiral organizes by *operational maturity*. These are different orderings. If you build the hook engine before creating AGENTS.md and loading Standing Orders, you have infrastructure without governance — the dogfooding loop is broken. **Create AGENTS.md and Standing Orders first**, then build the infrastructure to enforce them.
 
 **You can start working here.** One agent with clear Identity, Scope, Boundaries, and hooks.
 
-> **Note on Identity Tokens:** At Level 1, simplified identity (agent-id + role, no cryptographic signing) is sufficient. Full HMAC-SHA256 token signing with expiry and cross-project access control is a Level 4 concern (Section 09, vulnerability 8.3.2). However, the identity *model* should be defined at Level 1 so it can be progressively hardened.
+> **Note on Identity Tokens:** At Level 1, simplified identity (agent-id + role, no cryptographic signing) is sufficient. Full HMAC-SHA256 token signing with expiry and cross-project access control is a Level 4 concern (Section 09, vulnerability 8.3.2). However, the identity *model* should be defined at Level 1 so it can be progressively hardened. **Do not implement cryptographic identity at Level 1** — it has no consumer until zero-trust access control is deployed at Level 4.
+
+> **Level 1 scope boundary — do NOT build these yet:**
+> - Handoff protocols or session handoff documents (Section 38) — there is one agent, no one to hand off to.
+> - Escalation routing or escalation reports (Section 37) — there is one agent, no chain to escalate through.
+> - Governance heartbeat monitor hook — there are no governance agents until Level 3.
+> - Tier validation hook — there is no fleet roster or model tier assignments until Level 2.
+> - Identity validation hook with hash checking — simplified identity (agent-id + role) is sufficient.
+> - Empty placeholder packages/directories for future levels — create directories when you need them.
+>
+> If you find yourself building multi-agent infrastructure for a single agent, stop. You are building ahead of your adoption level. Define the *models* so they can grow, but do not implement features that have no consumer.
 
 ### Level 2: Core Fleet (2-4 hours)
 
