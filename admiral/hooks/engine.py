@@ -137,11 +137,25 @@ class HookEngine:
         for event in manifest.events:
             self._event_hooks[event].append(manifest.name)
 
-    def discover(self, hooks_dir: Path) -> list[str]:
+    def discover(
+        self,
+        hooks_dir: Path,
+        implementations_dir: Path | None = None,
+    ) -> list[str]:
         """Discover hooks from a directory tree.
 
         Looks for hook.manifest.json files in hooks_dir subdirectories.
-        Returns list of discovered hook names.
+        When a manifest directory contains no executable (e.g. aiStrat/
+        spec-only manifests), falls back to looking in implementations_dir
+        for a matching Python module.
+
+        Args:
+            hooks_dir: Root directory to search for hook.manifest.json files.
+            implementations_dir: Optional fallback directory containing hook
+                implementation scripts (e.g. admiral/hooks/implementations/).
+
+        Returns:
+            List of discovered hook names.
         """
         discovered = []
         if not hooks_dir.exists():
@@ -157,6 +171,22 @@ class HookEngine:
                 # Try any .py file in the directory
                 py_files = list(hook_dir.glob("*.py"))
                 executable = py_files[0] if py_files else None
+
+            # Fallback: look in the implementations directory
+            if executable is None and implementations_dir is not None:
+                impl_candidate = implementations_dir / f"{manifest.name}.py"
+                if impl_candidate.exists():
+                    executable = impl_candidate
+
+            if executable is None:
+                import warnings
+
+                warnings.warn(
+                    f"Hook '{manifest.name}' has a manifest at {manifest_path} "
+                    f"but no executable was found — skipping registration.",
+                    stacklevel=2,
+                )
+                continue
 
             self.register(
                 manifest=manifest,
@@ -225,33 +255,43 @@ class HookEngine:
         """Resolve hook execution order for an event using topological sort.
 
         Dependencies execute before dependents. Within the same dependency
-        level, hooks execute in registration order.
+        level, hooks execute in registration order (the order they were
+        appended to ``self._event_hooks[event]``).
         """
-        event_hooks = set(self._event_hooks.get(event, []))
+        registration_order = self._event_hooks.get(event, [])
+        event_hooks = set(registration_order)
         if not event_hooks:
             return []
 
-        # Topological sort (Kahn's algorithm)
+        # Build a position map so we can break ties by registration order
+        position = {name: idx for idx, name in enumerate(registration_order)}
+
+        # Topological sort (Kahn's algorithm) — ties broken by registration order
         in_degree: dict[str, int] = {name: 0 for name in event_hooks}
         for name in event_hooks:
             for dep in self._hooks[name].manifest.requires:
                 if dep in event_hooks:
                     in_degree[name] += 1
 
-        queue = sorted(
-            [name for name, deg in in_degree.items() if deg == 0]
-        )
-        order = []
+        queue = [name for name in registration_order if in_degree[name] == 0]
+        order: list[str] = []
 
         while queue:
             node = queue.pop(0)
             order.append(node)
-            for name in sorted(event_hooks):
-                if node in self._hooks[name].manifest.requires:
+            for name in registration_order:
+                if name in event_hooks and node in self._hooks[name].manifest.requires:
                     in_degree[name] -= 1
                     if in_degree[name] == 0:
-                        queue.append(name)
-                        queue.sort()
+                        # Insert into queue maintaining registration order
+                        inserted = False
+                        for i, q_name in enumerate(queue):
+                            if position[name] < position[q_name]:
+                                queue.insert(i, name)
+                                inserted = True
+                                break
+                        if not inserted:
+                            queue.append(name)
 
         return order
 
@@ -340,10 +380,17 @@ class HookEngine:
                     duration_ms=(time.monotonic() - start) * 1000,
                 )
 
-        # Subprocess execution
+        # Subprocess execution — select interpreter based on file extension.
+        # Supports the hook contract: "any executable (shell, Python, compiled binary)".
+        hook_path = str(hook.executable_path)
+        if hook_path.endswith(".py"):
+            cmd = [sys.executable, hook_path]
+        else:
+            cmd = [hook_path]
+
         try:
             proc = subprocess.run(
-                [sys.executable, str(hook.executable_path)],
+                cmd,
                 input=json.dumps(payload_with_event),
                 capture_output=True,
                 text=True,

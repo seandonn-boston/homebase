@@ -99,7 +99,7 @@ class HandoffDocument(BaseModel):
         alias="to",
         description="Receiving agent role.",
     )
-    via: str = Field(
+    via: HandoffVia = Field(
         ...,
         description="'Orchestrator' or 'Direct'.",
     )

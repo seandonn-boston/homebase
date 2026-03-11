@@ -69,8 +69,8 @@ class SelfHealingLoop:
         key = f"{hook_name}:{signature}"
         self._total_retries += 1
 
-        # Check session-wide retry limit
-        if self._total_retries > self.max_session_retries:
+        # Check session-wide retry limit (hard cap, >= not >)
+        if self._total_retries >= self.max_session_retries:
             return SelfHealingResult(
                 should_retry=False,
                 message=(
@@ -82,10 +82,25 @@ class SelfHealingLoop:
                 hook_retries=self._records.get(key, RetryRecord(hook_name, signature)).count,
             )
 
-        # Check consecutive identical errors
+        # Early-exit: if the same error recurs immediately after a fix attempt
+        # (consecutive identical signature), break the loop right away per spec.
         if self._last_signature == signature and key in self._records:
             self._records[key].count += 1
-        elif key in self._records:
+            self._last_signature = signature
+            record = self._records[key]
+            return SelfHealingResult(
+                should_retry=False,
+                message=(
+                    f"Self-healing loop terminated: identical error recurred "
+                    f"after fix attempt (signature: {signature}). "
+                    f"Moving to recovery ladder step 2 (fallback)."
+                ),
+                total_retries=self._total_retries,
+                hook_retries=record.count,
+            )
+
+        # Track the error
+        if key in self._records:
             self._records[key].count += 1
         else:
             self._records[key] = RetryRecord(hook_name, signature)

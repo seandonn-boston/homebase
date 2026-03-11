@@ -6,6 +6,10 @@ Tracks (agent_id, error_signature) tuples and detects retry loops.
 From Section 08:
     Triggers when: same error recurs 3+ times, OR total retry count
     across all error signatures in a session exceeds configurable maximum (default: 10).
+
+State is carried via the runtime payload (``hook_state.loop_detector``) so that
+tracking survives subprocess invocations.  The runtime is responsible for
+persisting the returned state dict and injecting it into subsequent payloads.
 """
 
 from __future__ import annotations
@@ -15,20 +19,19 @@ import json
 import sys
 from typing import Any
 
-# Session-level state (persists across invocations within a session)
-_error_counts: dict[str, int] = {}
-_total_errors: int = 0
-_max_same_error: int = 3
-_max_total_errors: int = 10
+# Default thresholds
+_DEFAULT_MAX_SAME_ERROR: int = 3
+_DEFAULT_MAX_TOTAL_ERRORS: int = 10
 
 
-def reset(max_same: int = 3, max_total: int = 10) -> None:
-    """Reset loop detector state (for testing or new sessions)."""
-    global _error_counts, _total_errors, _max_same_error, _max_total_errors
-    _error_counts = {}
-    _total_errors = 0
-    _max_same_error = max_same
-    _max_total_errors = max_total
+def reset(max_same: int = 3, max_total: int = 10) -> dict[str, Any]:
+    """Return a fresh loop detector state dict (for testing or new sessions)."""
+    return {
+        "error_counts": {},
+        "total_errors": 0,
+        "max_same_error": max_same,
+        "max_total_errors": max_total,
+    }
 
 
 def _compute_signature(agent_id: str, error: str) -> str:
@@ -40,13 +43,23 @@ def _compute_signature(agent_id: str, error: str) -> str:
 def execute(payload: dict[str, Any]) -> tuple[int, str, str]:
     """Execute the loop detector hook.
 
+    State is read from ``payload["hook_state"]["loop_detector"]`` and the
+    updated state is returned as a JSON object on stdout so the runtime can
+    persist it for the next invocation.
+
     Args:
-        payload: Hook input with result.exit_code, result.error, agent_identity.
+        payload: Hook input with result.exit_code, result.error, agent_identity,
+                 and optionally hook_state.loop_detector.
 
     Returns:
         (exit_code, stdout, stderr)
     """
-    global _total_errors
+    # Recover persisted state from payload, or start fresh
+    hook_state = payload.get("hook_state", {}).get("loop_detector", {})
+    error_counts: dict[str, int] = dict(hook_state.get("error_counts", {}))
+    total_errors: int = hook_state.get("total_errors", 0)
+    max_same_error: int = hook_state.get("max_same_error", _DEFAULT_MAX_SAME_ERROR)
+    max_total_errors: int = hook_state.get("max_total_errors", _DEFAULT_MAX_TOTAL_ERRORS)
 
     result = payload.get("result", {})
     exit_code = result.get("exit_code", 0)
@@ -58,28 +71,46 @@ def execute(payload: dict[str, Any]) -> tuple[int, str, str]:
         return 0, "", ""
 
     sig = _compute_signature(agent_id, error_msg)
-    _error_counts[sig] = _error_counts.get(sig, 0) + 1
-    _total_errors += 1
-    count = _error_counts[sig]
+    error_counts[sig] = error_counts.get(sig, 0) + 1
+    total_errors += 1
+    count = error_counts[sig]
+
+    # Build updated state to return
+    updated_state = {
+        "error_counts": error_counts,
+        "total_errors": total_errors,
+        "max_same_error": max_same_error,
+        "max_total_errors": max_total_errors,
+    }
 
     # Check same-error threshold
-    if count >= _max_same_error:
-        message = (
-            f"Loop detected: error signature '{sig}' repeated {count} times. "
-            f"Moving to recovery ladder (Section 22)."
-        )
+    if count >= max_same_error:
+        message = json.dumps({
+            "loop_detected": True,
+            "reason": f"error signature '{sig}' repeated {count} times",
+            "message": (
+                f"Loop detected: error signature '{sig}' repeated {count} times. "
+                f"Moving to recovery ladder (Section 22)."
+            ),
+            "hook_state": {"loop_detector": updated_state},
+        })
         return 1, message, ""
 
     # Check total-error threshold
-    if _total_errors >= _max_total_errors:
-        message = (
-            f"Loop detected: total error count ({_total_errors}) exceeded "
-            f"session maximum ({_max_total_errors}). "
-            f"Moving to recovery ladder (Section 22)."
-        )
+    if total_errors >= max_total_errors:
+        message = json.dumps({
+            "loop_detected": True,
+            "reason": f"total error count ({total_errors}) exceeded session maximum ({max_total_errors})",
+            "message": (
+                f"Loop detected: total error count ({total_errors}) exceeded "
+                f"session maximum ({max_total_errors}). "
+                f"Moving to recovery ladder (Section 22)."
+            ),
+            "hook_state": {"loop_detector": updated_state},
+        })
         return 1, message, ""
 
-    return 0, "", ""
+    return 0, json.dumps({"hook_state": {"loop_detector": updated_state}}), ""
 
 
 if __name__ == "__main__":
