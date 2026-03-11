@@ -1,18 +1,99 @@
-# Comprehensive Timeline of Major AI Models (2020 – February 2026)
+# Comprehensive Timeline of Major AI Models (2020 – March 2026)
 
 > Reverse chronological listing of known AI models available to public and private sectors, including major LLMs, open-source models, image generation models, and coding-specific models. Covers key specs, training data, improvements, benchmarks, builders, and data center locations.
 
 ---
 
+## March 2026
+
+### OpenAI GPT-5.4 (Thinking & Pro)
+- **Released:** March 5, 2026
+- **Builder:** OpenAI
+- **Type:** Frontier multimodal reasoning LLM
+- **Context Window:** 1M tokens (128K max output)
+- **Key Innovations:** Native computer-use capabilities (screenshots, mouse, keyboard); integrates GPT-5.3-Codex coding capabilities into mainline model; most token-efficient reasoning model yet; 33% fewer errors per claim vs GPT-5.2
+- **Benchmarks:** GDPval: 83% match-or-exceed (vs 70.9% GPT-5.2) | OSWorld-Verified: 75.0% (surpassing human 72.4%)
+- **Variants:** GPT-5.4 Thinking (Plus/Team/Pro) and GPT-5.4 Pro (Pro/Enterprise)
+- **Pricing:** $2.50/1M input, $20.00/1M output (via API)
+- **Data Centers:** Microsoft Azure Fairwater sites + Stargate (Abilene, TX)
+- **Availability:** ChatGPT Plus/Team/Pro/Enterprise, API (not free tier)
+
+### OpenAI GPT-5.3 Instant
+- **Released:** March 3, 2026
+- **Builder:** OpenAI
+- **Type:** Conversational LLM (replacing GPT-5.2 Instant)
+- **Context Window:** 400K tokens
+- **Key Innovations:** 26.8% fewer hallucinations on high-stakes queries (medicine, law, finance) with web search; reduced preachy tone and unnecessary caveats; improved web search integration
+- **Availability:** All ChatGPT users, API (`gpt-5.3-chat-latest`), Microsoft 365 Copilot
+- **Data Centers:** Microsoft Azure + Stargate
+
+### JetBrains Air IDE + Junie CLI Beta
+- **Released:** March 9, 2026
+- **Builder:** JetBrains
+- **Type:** AI-native IDE + terminal-based coding agent
+- **Key Innovations:** Air is a lightweight AI-native IDE built on abandoned Fleet codebase; public preview for macOS (Linux/Windows later). Junie CLI is an LLM-agnostic terminal agent supporting OpenAI, Anthropic, Google, xAI models. One-click migration from Claude Code, Codex CLI, etc. BYOK pricing from $10/month.
+
+### Cursor Automations
+- **Released:** March 5, 2026
+- **Builder:** Anysphere (Cursor)
+- **Type:** Event-driven agentic coding automation
+- **Key Innovations:** Agents triggered by GitHub PRs, Slack messages, Linear issues, PagerDuty alerts, cron schedules, and webhooks; agents run in cloud sandboxes with memory across runs; 35%+ of Cursor's own merged PRs created by agents
+- **Scale:** Revenue reportedly over $2B ARR; $14B+ valuation
+
+### MCP 2026 Roadmap Published
+- **Released:** March 5, 2026 (last updated)
+- **Builder:** Anthropic / Linux Foundation
+- **Key Innovations:** Four priority areas: Transport Evolution & Scalability, Agent Communication (Tasks primitive), Governance Maturation, Enterprise Readiness. MCP donated to Linux Foundation; OpenAI, Google DeepMind, Microsoft, AWS, Cloudflare joined as founding members. SDK downloads exceed 97M/month. Security concern: 30 CVEs in 60 days; 38% of 500+ scanned servers lack authentication.
+- [Spec](https://spec.modelcontextprotocol.io) | [Roadmap](https://modelcontextprotocol.io/development/roadmap)
+
+### NVIDIA GTC 2026
+- **Date:** March 16–19, 2026
+- **Location:** San Jose McEnery Convention Center (hybrid)
+- **Scale:** 30,000+ attendees from 190+ countries; 700+ sessions; 60+ hands-on labs
+- **Key Topics:** Physical AI, agentic AI, inference, AI factories; Jensen Huang keynote March 16
+
+---
+
 ## February 2026
+
+### OpenAI $110B Funding Round (Amazon $50B, NVIDIA $30B, SoftBank $30B)
+- **Announced:** February 27, 2026
+- **Builder:** OpenAI
+- **Key Details:** $730B pre-money valuation. Amazon $50B ($15B initial + $35B conditional), NVIDIA $30B, SoftBank $30B. AWS becomes exclusive third-party cloud distribution for "OpenAI Frontier." OpenAI expanding AWS commitment by $100B over 8 years (~2GW Trainium capacity).
+
+### Anthropic $30B Series G at $380B Valuation
+- **Announced:** February 12, 2026
+- **Builder:** Anthropic
+- **Key Details:** Co-led by Coatue, GIC, D.E. Shaw Ventures, Dragoneer, Founders Fund, Iconiq, MGX. Microsoft and NVIDIA participated. Total raised to date: ~$64B. Run-rate revenue: $14B. ARR trajectory: $1B (Dec 2024) → $4B (mid-2025) → $9B (end 2025) → $14B (Feb 2026) — 14x growth in 14 months.
+
+### Perplexity "Computer"
+- **Released:** February 25, 2026
+- **Builder:** Perplexity AI
+- **Type:** Multi-model orchestration agent platform
+- **Key Innovations:** Coordinates 19 models — Claude Opus 4.6 for central reasoning, Gemini for research, GPT-5.2 for long-context recall, Grok for lightweight tasks, plus specialized image/video models. Workflows can run for hours or months autonomously. 400+ app integrations.
+- **Benchmarks:** DRACO benchmark: 67.15% (leading)
+- **Pricing:** $200/month (Max tier)
+
+### GitHub Copilot CLI GA
+- **Released:** February 25, 2026
+- **Builder:** GitHub / Microsoft
+- **Type:** Terminal-based AI coding agent
+- **Key Innovations:** Plan mode, Autopilot mode, multi-model support (Opus 4.6, GPT-5.3-Codex, Gemini 3 Pro), Fleet mode for parallel subagents, background cloud delegation. V1.0 formally stamped March 6. 15M+ total Copilot users.
+- [GitHub Changelog](https://github.blog/changelog/2026-02-25-github-copilot-cli-is-now-generally-available/)
+
+### Anthropic Claude Cowork
+- **Released:** Late January 2026 (macOS preview); February 11 (Windows); February 24 (enterprise connectors)
+- **Builder:** Anthropic
+- **Type:** Desktop AI productivity agent for knowledge workers
+- **Key Innovations:** Reads/edits/creates local files, automates browser tasks, connects to Google Drive, Gmail, DocuSign, FactSet via MCP connectors. Triggered $285B selloff in enterprise software stocks (Thomson Reuters -16%, LegalZoom -20%, FactSet -10%). Boris Cherny built the product via vibe coding with Claude Code in under two weeks.
 
 ### OpenAI GPT-5.3-Codex-Spark
 - **Released:** February 12, 2026
 - **Builder:** OpenAI
 - **Type:** Distilled coding-specific LLM (research preview)
 - **Parameters:** Distilled variant of Codex 5.3 (undisclosed)
-- **Context Window:** 128K tokens
-- **Key Innovations:** Cerebras Wafer Scale Engine 3-powered inference at 1,000+ tokens/sec (15x standard Codex 5.3); per-roundtrip overhead dropped 80%, per-token overhead fell 30%, time-to-first-token cut in half
+- **Context Window:** 128K tokens (text-only)
+- **Key Innovations:** First OpenAI model running on Cerebras WSE-3 chips (not NVIDIA); inference at 1,000+ tokens/sec (15x standard Codex 5.3); per-roundtrip overhead dropped 80%, per-token overhead fell 30%, time-to-first-token cut in half
 - **Benchmarks:** Terminal-Bench 2.0: 58.4% | SWE-Bench Pro: ~16 pts below full Codex 5.3 | Matches Codex 5.3 accuracy in 2-3 min vs 15-17 min
 - **Training Data:** Distilled from GPT-5.3-Codex (undisclosed specifics)
 - **Data Centers:** OpenAI Stargate (Abilene, TX) + Cerebras partnership infrastructure; Microsoft Azure Fairwater sites (Wisconsin, Georgia, Arizona)
@@ -23,8 +104,10 @@
 - **Builder:** Anthropic
 - **Type:** Frontier multimodal LLM
 - **Parameters:** Undisclosed
-- **Context Window:** 200K+ tokens
-- **Key Innovations:** Enhanced agentic coding, tool use, and long-running autonomous task capabilities; Constitutional AI safety framework
+- **Context Window:** 200K tokens (1M in beta); 128K max output
+- **Key Innovations:** Enhanced agentic coding with Agent Teams (sub-agent coordination); extended thinking; Constitutional AI safety framework. 16 Opus 4.6 agents wrote a C compiler in Rust capable of compiling the Linux kernel (~$20K cost). METR 50%-time horizon: 14 hours 30 minutes.
+- **Benchmarks:** SWE-bench Verified: 80.8% | OSWorld: 72.7% | ARC-AGI-2: 68.8% (vs 37.6% for Opus 4.5) | MRCR v2: 76%
+- **Pricing:** $5/$25 per million tokens (input/output)
 - **Training Data:** Web data, books, code, academic sources (specifics undisclosed); trained using Constitutional AI with RLHF
 - **Data Centers:** AWS (primary — Project Rainier in Indiana/Pennsylvania/Mississippi, 500K+ Trainium2 chips); Google Cloud TPUs (up to 1M chips); Microsoft Azure ($30B commitment); own data centers planned in Texas and New York ($50B infrastructure plan)
 - **Availability:** API, Claude.ai, Amazon Bedrock, Google Vertex AI
@@ -33,36 +116,53 @@
 - **Released:** February 17, 2026
 - **Builder:** Anthropic
 - **Type:** Mid-tier multimodal LLM
-- **Key Innovations:** Priced same as Sonnet 4.5 with improved performance
+- **Context Window:** 200K tokens (1M in beta)
+- **Key Innovations:** Hybrid reasoning architecture — near-instant responses or extended thinking depending on task. Developers preferred Sonnet 4.6 over Sonnet 4.5 70% of the time and over Opus 4.5 59% of the time.
+- **Benchmarks:** SWE-bench Verified: 79.6% | OSWorld: 72.5% (within 1-2 points of Opus 4.6)
+- **Pricing:** $3/$15 per million tokens (same as Sonnet 4.5)
 - **Data Centers:** Same as Opus 4.6
 
 ### OpenAI GPT-5.3-Codex
 - **Released:** February 5, 2026
 - **Builder:** OpenAI
 - **Type:** Frontier coding/agentic LLM
-- **Key Innovations:** Designed to work autonomously for minutes or hours on complex programming tasks; native git operations, data analysis, and broad agentic capabilities
-- **Benchmarks:** Terminal-Bench 2.0: 77.3% | SWE-Bench Pro: top tier
+- **Key Innovations:** Designed to work autonomously for minutes or hours on complex programming tasks; native git operations, data analysis, and broad agentic capabilities; first model instrumental in creating itself (self-bootstrapping)
+- **Benchmarks:** Terminal-Bench 2.0: 77.3% | SWE-Bench Pro: 56.8%
 - **Training Data:** Undisclosed (likely similar to GPT-5 series with code-heavy emphasis)
 - **Data Centers:** Microsoft Azure Fairwater sites + Stargate
+- **Availability:** Codex app, CLI, and IDE extension
 
-### OpenAI GPT-5.2
-- **Released:** Early 2026
-- **Builder:** OpenAI
-- **Type:** Frontier multimodal LLM
-- **Parameters:** Undisclosed
-- **Context Window:** 400K tokens (up from 128K in GPT-4)
-- **Key Innovations:** AIME 2025: 100% score; hallucination rate reduced to 6.2% (~40% reduction from earlier generations)
-- **Open-weight variants:** GPT-oss-120B and GPT-oss-20B released alongside
-- **Data Centers:** Microsoft Azure + Stargate infrastructure
+### xAI Grok 4.20 Beta
+- **Released:** February 17, 2026
+- **Builder:** xAI (Elon Musk)
+- **Type:** Multi-agent collaborative LLM system
+- **Key Innovations:** 4-agent collaboration system (Grok, Harper, Benjamin, Lucas) with rapid learning architecture and weekly updates
+- **Pricing:** Free with limits; $30/month SuperGrok
+- **Data Centers:** Colossus — Memphis, TN
 
-### Zhipu AI GLM-4.7
-- **Released:** Early 2026
+### Zhipu AI GLM-5
+- **Released:** February 11–12, 2026
 - **Builder:** Zhipu AI (China)
-- **Type:** Frontier foundation model
-- **Context Window:** 200K input / 128K output
-- **Architecture:** MoE (Mixture of Experts)
-- **Key Innovations:** "Vibe Coding" capabilities; massive output capacity
-- **Data Centers:** China (Beijing and other domestic locations)
+- **Type:** Frontier MoE foundation model
+- **Parameters:** 744B total / 40B active
+- **Key Innovations:** Trained entirely on 100,000 Huawei Ascend 910B chips (no NVIDIA hardware); MIT license. Stock surged 34% on release.
+- **Data Centers:** China (Beijing and other domestic locations; Huawei Ascend infrastructure)
+
+### Spotify "Honk" System (Reported)
+- **Reported:** February 12, 2026 (Spotify Q4 2025 earnings)
+- **Builder:** Spotify (internal tool built on Claude Code)
+- **Type:** Internal AI deployment system integrated with Slack ChatOps
+- **Key Innovations:** Best developers haven't written a line of code since December 2025; engineers deploy fixes via Slack from phones. ~50% of all Spotify code updates flow through the system. 1,500+ PRs generated.
+
+### OpenAI Codex App (macOS)
+- **Released:** February 2, 2026 (Windows: March 4)
+- **Builder:** OpenAI
+- **Type:** Native desktop agentic coding application
+- **Key Innovations:** Codex CLI rewritten in Rust (95.7% Rust as of v0.98.0 Feb 5); Landlock sandboxing on Linux, Apple Seatbelt on macOS
+
+### Snowflake + OpenAI $200M Partnership
+- **Announced:** February 2, 2026
+- **Key Details:** Multi-year agreement making OpenAI models natively available to Snowflake's 12,600 customers via Cortex AI. Snowflake also has separate $200M deal with Anthropic (December 2025).
 
 ### NVIDIA Nemotron 3 Nano
 - **Released:** Early 2026
@@ -72,17 +172,53 @@
 - **Key Innovations:** Hybrid Mamba-Transformer architecture; 4x faster inference; open weights
 - **Data Centers:** NVIDIA DGX Cloud infrastructure
 
+---
+
+## January 2026
+
 ### Alibaba Qwen3-Max-Thinking
 - **Released:** January 27, 2026
 - **Builder:** Alibaba Cloud (Qwen Team)
-- **Type:** Reasoning-enhanced LLM
-- **Key Innovations:** Enhanced chain-of-thought reasoning on top of Qwen3-Max
+- **Type:** Reasoning-enhanced LLM (trillion-parameter flagship)
+- **Key Innovations:** Enhanced chain-of-thought reasoning on top of Qwen3-Max; reportedly rivaling GPT-5.2
 - **Training Data:** Extended from Qwen3 training (36T+ tokens, 119 languages)
 - **Data Centers:** Alibaba Cloud — Beijing (mainland China), Singapore (international); new facilities planned in Brazil, France, Netherlands, Mexico, Japan, South Korea, Malaysia, Dubai
+
+### OpenAI GPT-5.2-Codex
+- **Released:** January 14, 2026
+- **Builder:** OpenAI
+- **Type:** Coding-optimized frontier LLM
+- **Key Innovations:** Optimized for agentic coding: context compaction, long-horizon tasks, Windows environments, cybersecurity
+- **Benchmarks:** SWE-Bench Pro: 56.4% | Terminal-Bench 2.0: 64.0%
+- **Data Centers:** Microsoft Azure Fairwater sites + Stargate
+- **Availability:** Codex app, API; succeeded by GPT-5.3-Codex on February 5
 
 ---
 
 ## Late 2025 (October – December)
+
+### OpenAI GPT-5.2
+- **Released:** December 11, 2025
+- **Builder:** OpenAI
+- **Type:** Frontier multimodal LLM
+- **Parameters:** Undisclosed
+- **Context Window:** 400K tokens (128K max output)
+- **Variants:** Instant, Thinking, and Pro
+- **Key Innovations:** AIME 2025: 100% score; hallucination rate reduced to 6.2% (~40% reduction from earlier generations); fast-tracked after Google Gemini 3 topped benchmarks (internal "Code Red")
+- **Open-weight variants:** GPT-oss-120B and GPT-oss-20B released alongside
+- **Pricing:** $1.75/$14 per million tokens (input/output)
+- **Knowledge Cutoff:** August 31, 2025
+- **Data Centers:** Microsoft Azure + Stargate infrastructure
+
+### Zhipu AI GLM-4.7
+- **Released:** December 22, 2025
+- **Builder:** Zhipu AI (China)
+- **Type:** Frontier foundation model
+- **Parameters:** ~400B
+- **Context Window:** 200K input / 128K output
+- **Architecture:** MoE (Mixture of Experts)
+- **Key Innovations:** "Vibe Coding" capabilities; massive output capacity; open source. GLM-4.7-Flash (30B MoE, ~3B active) launched January 19, 2026.
+- **Data Centers:** China (Beijing and other domestic locations)
 
 ### Mistral Large 3 & Ministral 3
 - **Released:** December 2025
@@ -120,6 +256,12 @@
 - **Training Data:** Undisclosed (Google's web index, Google Books, YouTube transcripts, scholarly content, code); trained on custom TPUs (Trillium 6th-gen)
 - **Data Centers:** Google Cloud — multiple data centers globally; TPU clusters across North America, Europe, Asia; trained across multiple sites simultaneously
 - **Image Generation:** Nano Banana Pro — viral photorealistic image generation, attracted 10M+ new Gemini users
+
+### Google Antigravity IDE (Preview)
+- **Released:** November 18, 2025 (alongside Gemini 3)
+- **Builder:** Google
+- **Type:** AI-native IDE
+- **Key Innovations:** Built on Windsurf acquisition ($2.4B); Sergey Brin personally involved. Free public preview for macOS, Windows, Linux. Supports Claude Opus 4.6, GPT-OSS-120B alongside Gemini models. No MCP support (uses Google's own extension system). Gemini 3.1 Pro integration added February 2026.
 
 ### Anthropic Claude Opus 4.5
 - **Released:** November 2025
@@ -737,6 +879,7 @@
 | **Google DeepMind** | Multiple undisclosed sites (multi-DC training confirmed); TPU Cloud: North America, Europe, Asia | Custom TPUs v4/v5e/Trillium (6th-gen)/Ironwood; liquid-cooled since 2018 |
 | **Meta** | Multiple US data centers (undisclosed specifics) | NVIDIA GPUs (massive clusters) |
 | **xAI** | Colossus: Memphis, TN (3 buildings, 200K+ GPUs, expanding to 1M GPUs, ~2GW) | NVIDIA H100/GB200 |
+| **Zhipu AI** | Beijing (China) and other domestic locations | Huawei Ascend 910B (100K chips for GLM-5 training) |
 | **DeepSeek** | Hangzhou (China); underwater DC off Hainan Island; desert DCs in Xinjiang; SE Asia partnerships; global cloud (AWS/GCP/Azure) | NVIDIA H800 (training), Huawei Ascend (inference) |
 | **Alibaba** | Beijing (mainland China); Singapore (international); expanding to Brazil, France, Netherlands, Mexico, Japan, South Korea, Malaysia, Dubai | Alibaba Cloud infrastructure |
 | **Mistral AI** | Essonne, France (40MW, 18K NVIDIA Grace Blackwell chips); Eclairion facility, Bruyeres-le-Chatel | NVIDIA Grace Blackwell Superchips |
@@ -747,17 +890,20 @@
 
 ## Key Industry Trends (2020–2026)
 
-1. **Scale explosion:** GPT-3 (175B, 2020) → GPT-4 (~1.8T MoE, 2023) → Llama 4 Behemoth (~2T MoE, 2025) → multi-trillion parameter frontier models
+1. **Scale explosion:** GPT-3 (175B, 2020) → GPT-4 (~1.8T MoE, 2023) → Llama 4 Behemoth (~2T MoE, 2025) → GLM-5 (744B MoE, 2026) → multi-trillion parameter frontier models
 2. **Training data growth:** 500B tokens (GPT-3, 2020) → 14.8T tokens (DeepSeek V3, 2024) → 36T tokens (Qwen3, 2025) → estimated 70T+ tokens (GPT-5)
-3. **Context windows:** 2K (GPT-3) → 128K (GPT-4 Turbo) → 1M (Gemini) → 10M (Llama 4 Scout)
-4. **Reasoning revolution (2024–2025):** OpenAI o1 pioneered RLVR; DeepSeek R1 democratized it; by late 2025 every major lab shipped reasoning models
-5. **MoE architecture dominance:** Dense models gave way to sparse MoE (DeepSeek V3, Llama 4, Mixtral, Mistral Large 3)
-6. **Open-weight shift:** Meta Llama dominated 2023–2024; Alibaba Qwen overtook by mid-2025; DeepSeek R1 proved open weights could match frontier proprietary models
+3. **Context windows:** 2K (GPT-3) → 128K (GPT-4 Turbo) → 1M (Gemini/Claude beta) → 10M (Llama 4 Scout)
+4. **Reasoning revolution (2024–2026):** OpenAI o1 pioneered RLVR; DeepSeek R1 democratized it; by early 2026 multi-agent reasoning systems (Grok 4.20's 4-agent system, Perplexity's 19-model orchestration) are the new frontier
+5. **MoE architecture dominance:** Dense models gave way to sparse MoE (DeepSeek V3, Llama 4, Mixtral, Mistral Large 3, GLM-5)
+6. **Open-weight shift:** Meta Llama dominated 2023–2024; Alibaba Qwen overtook by mid-2025; DeepSeek R1 proved open weights could match frontier proprietary models; Zhipu GLM-5 released under MIT license
 7. **Declining transparency:** GPT-3 disclosed exact training data; GPT-4/5 disclosed almost nothing
-8. **Synthetic data:** Became mainstream by 2024–2025 for training; Microsoft Phi series pioneered "textbook quality" synthetic data
-9. **Infrastructure race:** $500B+ Stargate, $50B Anthropic DC plan, $53B Alibaba expansion, $109B French AI sovereignty program
+8. **Synthetic data:** Became mainstream by 2024–2025 for training; Microsoft Phi series pioneered "textbook quality" synthetic data; GPT-5.3-Codex is first model instrumental in creating itself
+9. **Infrastructure race:** $500B+ Stargate, $50B Anthropic DC plan, $53B Alibaba expansion, $109B French AI sovereignty program; OpenAI $110B round (Feb 2026) and $100B AWS commitment signal unprecedented capital concentration
 10. **Inference speed:** Cerebras partnership (Codex Spark: 1,000+ tok/s), Google Gemini Diffusion, speculative decoding becoming standard
+11. **Agentic AI era:** Coding agents (Claude Code, Codex CLI, Copilot CLI, Cursor) move from reactive tools to proactive platforms; Cursor Automations and GitHub Agentic Workflows enable always-on background agents; Spotify's entire engineering workflow runs through AI agents
+12. **Protocol wars:** MCP (tool access, Linux Foundation), A2A (agent-to-agent, Google), ACP (JetBrains/Zed) — three competing standards for agent infrastructure; "TCP/IP of agents" not yet decided
+13. **Non-NVIDIA training:** Zhipu's GLM-5 trained entirely on 100K Huawei Ascend 910B chips, proving viable frontier model training without NVIDIA hardware
 
 ---
 
-*Sources consulted: OpenAI technical reports and blog posts, Anthropic documentation, Google DeepMind publications, Meta AI blog, DeepSeek technical reports, Mistral AI docs, Cohere documentation, xAI announcements, Wikipedia, arXiv papers, Sebastian Raschka's State of LLMs 2025, Simon Willison's Year in LLMs 2025, Andrej Karpathy's 2025 LLM Review, and various industry reporting from TechCrunch, The Decoder, Data Center Dynamics, CNBC, and others.*
+*Sources consulted: OpenAI technical reports and blog posts, Anthropic documentation, Google DeepMind publications, Meta AI blog, DeepSeek technical reports, Mistral AI docs, Cohere documentation, xAI announcements, Zhipu AI announcements, JetBrains blog, GitHub blog and changelogs, NVIDIA GTC, Wikipedia, arXiv papers, Sebastian Raschka's State of LLMs 2025, Simon Willison's Year in LLMs 2025, Andrej Karpathy's 2025 LLM Review, and various industry reporting from TechCrunch, VentureBeat, The Decoder, Data Center Dynamics, CNBC, Fortune, and others.*
