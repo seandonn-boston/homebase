@@ -76,8 +76,8 @@ A comprehensive research dossier of the most impressive configurations, prompt l
 ## CATEGORY 2: Multi-Agent Orchestration Systems
 
 ### 12. Ruflo (formerly Claude Flow) (~20.5K stars, v3.5.0) (ruvnet)
-- **What:** Enterprise AI agent orchestration — 60+ specialized agents, distributed swarm intelligence, 215 MCP tools
-- **Why chosen:** 5,800+ commits, 55 alpha iterations, now production-ready v3.5.0. Agents organize into swarms led by "queens" that coordinate work, prevent drift, reach consensus even when agents fail. Self-learning neural capabilities — learns from every execution, prevents catastrophic forgetting.
+- **What:** Enterprise AI agent orchestration — 60+ specialized agents, distributed swarm intelligence, 215 MCP tools, 8 AgentDB controllers. 250K+ lines of TypeScript/WASM. RuVector intelligence layer for continuous optimization.
+- **Why chosen:** 5,800+ commits, 55 alpha iterations, now production-ready v3.5.0. ~500K downloads, ~100K MAU across 80+ countries. Agents organize into swarms led by "queens" that coordinate work, prevent drift, reach consensus even when agents fail. Self-learning Q-Learning router with Mixture of Experts and 42+ skills.
 - **What sets it apart:** Swarm intelligence with queen-worker topology and self-learning — the most ambitious open-source orchestration system.
 - [github.com/ruvnet/ruflo](https://github.com/ruvnet/ruflo)
 
@@ -99,7 +99,7 @@ A comprehensive research dossier of the most impressive configurations, prompt l
 - **What sets it apart:** Simplicity — the "just works" parallel agent approach without complex orchestration.
 
 ### 16. Anthropic Native Agent Teams (Built-in, 2026)
-- **What:** Anthropic's built-in support for multi-agent coordination in Claude Code using TeammateTool and Task system
+- **What:** Anthropic's built-in support for multi-agent coordination in Claude Code using TeammateTool and Task system. One session acts as team lead, coordinating work; teammates work independently in separate context windows. Enable via `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` environment variable.
 - **Why chosen:** First-party multi-agent support. No external orchestration needed. Sub-agents coordinate through structured task delegation.
 - **What sets it apart:** Native integration — no third-party dependencies for multi-agent workflows.
 
@@ -164,6 +164,12 @@ A comprehensive research dossier of the most impressive configurations, prompt l
 
 ## CATEGORY 4: Prompt Libraries & System Prompt Collections
 
+### 25b. awesome-chatgpt-prompts (~143K stars) (f)
+- **What:** World's largest open-source prompt library. GitHub Staff Pick. 25+ chapter guide covering basics to advanced techniques — chain-of-thought reasoning, few-shot learning, AI agents.
+- **Why chosen:** ~143K stars makes it the most-starred prompt resource on GitHub. Comprehensive from beginner to advanced. Continuously maintained.
+- **What sets it apart:** Sheer scale and community trust — the undisputed standard reference for prompt engineering.
+- [github.com/f/awesome-chatgpt-prompts](https://github.com/f/awesome-chatgpt-prompts)
+
 ### 26. system-prompts-and-models-of-ai-tools (x1xhlol) — Updated Mar 8, 2026
 - **What:** 30,000+ lines of system prompts from 30+ AI tools — Claude Code, Cursor, Devin, Lovable, Manus, Perplexity, Replit, Windsurf, and more
 - **Why chosen:** The definitive collection of how production AI tools instruct their models. Updated Mar 8, 2026 with latest system prompts. Essential for understanding how the best products engineer their prompts.
@@ -210,10 +216,16 @@ A comprehensive research dossier of the most impressive configurations, prompt l
 - [github.com/PatrickJS/awesome-cursorrules](https://github.com/PatrickJS/awesome-cursorrules)
 
 ### 33. awesome-ai-prompts (convertscout)
-- **What:** 206+ prompts, 500+ Cursor rules for React, Next.js, Python, Django
-- **Why chosen:** Includes a free prompt generator tool. Framework-specific rules for popular stacks.
+- **What:** 500+ Cursor rules and coding prompts with free prompt generator. Includes prompts optimized for Cursor IDE, Lovable, Claude, ChatGPT/OpenAI, GitHub Copilot, and Gemini.
+- **Why chosen:** Includes a free prompt generator tool. Framework-specific rules for popular stacks. Cross-platform prompt coverage.
 - **What sets it apart:** The prompt generator — a tool for creating new prompts, not just a static library.
 - [github.com/convertscout/awesome-ai-prompts](https://github.com/convertscout/awesome-ai-prompts)
+
+### 33b. awesome-cursor-rules-mdc (sanjeed5)
+- **What:** 879 MDC rule files for Cursor. Uses Exa + Gemini for content generation.
+- **Why chosen:** The largest MDC-specific collection — 879 files covering the new MDC format that replaced `.cursorrules`.
+- **What sets it apart:** Pure MDC focus — the format Cursor is evolving toward.
+- [github.com/sanjeed5/awesome-cursor-rules-mdc](https://github.com/sanjeed5/awesome-cursor-rules-mdc)
 
 ### 34. ai-prompts (instructa)
 - **What:** Curated prompts for Cursor Rules, Cline, Windsurf, and GitHub Copilot
@@ -391,9 +403,10 @@ A comprehensive research dossier of the most impressive configurations, prompt l
 - [code.claude.com/docs/en/best-practices](https://code.claude.com/docs/en/best-practices)
 
 ### 61. OpenAI Codex Best Practices + AGENTS.md (32KiB limit)
-- **What:** OpenAI's official guidance for Codex agent configuration. AGENTS.md files capped at 32KiB.
-- **Why chosen:** GPT-5.4 with 1M context. Structured agent configuration through AGENTS.md. Clear size limits prevent instruction bloat.
-- **What sets it apart:** Explicit size constraints as a design principle.
+- **What:** OpenAI's official guidance for Codex agent configuration. AGENTS.md files capped at 32KiB (`project_doc_max_bytes`). Merge order: root down, files closer to working directory override earlier ones. Agent depth default: 1 (max nesting). Concurrency default: 6 threads. Codex CLI can be exposed as an MCP server (`codex()` + `codex-reply()` tools) for Agents SDK orchestration.
+- **Why chosen:** GPT-5.4 with 1M context. Structured agent configuration through AGENTS.md. Clear size limits prevent instruction bloat. MCP server mode enables pipeline orchestration.
+- **What sets it apart:** Explicit size constraints as a design principle. MCP server mode for composability.
+- [developers.openai.com/codex/guides/agents-md](https://developers.openai.com/codex/guides/agents-md/) | [developers.openai.com/codex/config-reference](https://developers.openai.com/codex/config-reference/)
 
 ### 62. Builder.io CLAUDE.md Guide
 - **What:** Practical guide to CLAUDE.md authoring from a team shipping production code with Claude Code daily
