@@ -1,6 +1,6 @@
 # Admiral Sales Pitch — 30-Minute Conversation Guide
 
-**Audience:** Non-technical Salesforce salesperson, enterprise deal closer, AI awareness stuck in 2025.
+**Audience:** Someone in tech with strong technical familiarity — comfortable with infrastructure concepts, software architecture, and AI terminology.
 
 ---
 
@@ -14,42 +14,33 @@
 
 ---
 
-## PART 1: The AI Catch-Up (8-10 minutes)
+## PART 1: The Market Context (8-10 minutes)
 
-### The Hook — "Everything you knew about AI changed in February"
-
-Start here. He needs to feel the ground shift before the product makes sense.
-
-**Key talking points:**
-
-> "Remember in 2025, everyone was debating whether AI was a bubble? Whether ChatGPT was a party trick or a real thing? That debate is over. Let me tell you what happened."
+### The Hook — "The market already priced in what's coming"
 
 **February 3, 2026 — "Black Tuesday for Software"**
-- Anthropic (the company behind Claude) released specialized AI agents that could do real enterprise work autonomously — not just answer questions, but actually *do the work*.
-- In a single day, enterprise software stocks lost $285 billion. Over the following week, it became $800 billion. By mid-February, roughly **$2 trillion** in market cap had evaporated.
-- Salesforce fell 26% year-to-date, becoming the second-worst performer in the Dow.
-- The market wasn't panicking because AI failed. It was panicking because **AI succeeded** — so decisively that one AI agent could replace the output of five humans on SaaS platforms.
+- Anthropic shipped autonomous agents that could execute real enterprise workflows end-to-end — not copilots, not chat assistants, but autonomous execution.
+- Enterprise software stocks lost $285 billion in a single day. ~$2 trillion in market cap evaporated by mid-February.
+- The per-seat SaaS model broke overnight. When one agent replaces five seats, the math is obvious.
+- The market wasn't panicking because AI failed — it panicked because **AI succeeded** so decisively that the entire pricing model for enterprise software became obsolete.
 
-**Frame it in his language:**
-> "Think about it this way — you know how Salesforce charges per seat? What happens to that model when one AI agent does the work of five people? The seats disappear. That's what the market priced in overnight."
+**Where the capability bar sits now:**
 
-**The capability shift (2025 vs. now):**
-
-| 2025 Reality | March 2026 Reality |
+| 2025 | March 2026 |
 |---|---|
-| AI answers questions well | AI *does work* autonomously for hours |
-| One chatbot, one conversation | Fleets of specialized AI agents coordinating together |
-| "Copilot" — assists a human | "Agent" — works independently, reports back |
-| You type a prompt, get a response | You assign a mission, it decomposes and executes |
-| Impressive demo, questionable production use | Enterprise-grade, running in production at scale |
+| Conversational AI, single-turn | Autonomous multi-hour execution |
+| Single agent, single task | Fleets of specialized agents coordinating |
+| Copilot paradigm — human in the loop | Agent paradigm — works independently, reports back |
+| Prompt → response | Mission → decomposition → execution |
+| Demos well, fragile in production | Enterprise-grade, running at scale |
 
-**The money being spent (this is real, not hype):**
-- Hyperscalers (Amazon, Google, Microsoft, Meta, Apple) committed **$660-690 billion** in AI infrastructure spending for 2026 alone.
-- Data center vacancy rates are at a record-low 1.6%. Three-quarters of what's being built is already pre-leased.
-- This isn't speculation — these are profitable companies spending their own cash flow. The "Magnificent Seven" generated ~$400B in free cash flow. They're reinvesting it because demand exceeds supply.
+**The infrastructure commitment:**
+- Hyperscalers committed **$660-690 billion** in AI infrastructure spending for 2026 alone.
+- Data center vacancy at a record-low 1.6%. Three-quarters of new capacity is pre-leased.
+- The "Magnificent Seven" generated ~$400B in free cash flow and are reinvesting it because demand exceeds supply.
 
-**The bottom line for him:**
-> "The question in 2025 was 'will AI be real?' The question in 2026 is 'how do you govern and manage AI that's already doing real work?' That's where I come in."
+**The key framing:**
+> "The capability question is settled. The open question is governance — how do you manage autonomous agents doing real work at scale? That's where Admiral comes in."
 
 ---
 
@@ -59,39 +50,34 @@ Start here. He needs to feel the ground shift before the product makes sense.
 
 > "So here's the thing — everyone figured out AI agents can do work. What nobody figured out is how to run *teams* of them safely. That's like having fifty new employees show up on Monday with no org chart, no manager, no HR, and no rules. That's the problem Admiral solves."
 
-### What Admiral Is (Non-Technical Explanation)
+### What Admiral Is
 
-**The Analogy: Admiral is the Operating Manual for AI Workforces**
-
-> "You know how when a company scales from 10 people to 500, they need HR policies, org charts, decision-making authority, quality standards, onboarding docs, security protocols? They need *structure*. Without it, everything falls apart.
->
-> AI agents are the same. One agent? Fine. Five agents on a team? Manageable. But when you're running 20, 50, 100 agents doing real work across an organization — writing code, analyzing data, handling documents — you need the same kind of structure. Who does what? Who can make what decisions? What happens when one of them screws up? How do you make sure they don't go rogue?
->
-> Admiral is that structure. It's the HR department, the org chart, the policy manual, and the quality control system — but for AI agent fleets."
+> "Everyone figured out how to *build* agents. Nobody figured out how to *run fleets of them* safely. Admiral is the governance and operations layer — role definitions, routing, decision authority, enforcement, and institutional memory — designed from scratch for how agents actually behave."
 
 ### The Three Things Admiral Provides
 
-**1. The Org Chart — "Who does what"**
+**1. Role Architecture — Agent Definitions & Routing**
 - 71 pre-defined agent roles (67 specialists across 12 categories + 4 command agents for orchestration, triage, context, and conflict resolution)
-- Like having a staffing agency that already has job descriptions, skill requirements, and role boundaries written for every AI position you'd need
-- Routing rules that match tasks to the right agent automatically
+- Interface contracts and routing rules that match tasks to the right agent automatically
+- Clear role boundaries and capability declarations
 
-**2. The Policy Manual — "What they're allowed to do"**
-- Four-tier decision authority: things agents can just do, things they need to propose, things they must escalate to a human
-- The core insight: some rules need to be *enforced mechanically* (like a locked door), not just *suggested* (like a "please knock" sign). Admiral distinguishes between hard enforcement and soft guidance.
-- Think of it like expense policies — under $500, approve yourself. $500-$5000, manager approval. Over $5000, VP sign-off. Same idea for AI decisions.
+**2. Decision Authority & Enforcement**
+- Four-tier decision authority: autonomous action, propose-then-act, human escalation, and hard blocks
+- Key architectural distinction: *mechanical enforcement* (hooks, pre/post-conditions) vs. *instructional guidance* (system prompts, soft constraints). Admiral treats these as fundamentally different enforcement classes.
+- Tiered escalation policies scoped per role and per action type
 
-**3. The Institutional Memory — "What they've learned"**
-- AI agents normally forget everything between sessions. Like having an employee who gets amnesia every night.
-- Admiral's "Brain" specification gives agents persistent memory — lessons learned, project context, past decisions — so the fleet gets smarter over time instead of starting from scratch every day.
+**3. Institutional Memory (Brain Architecture)**
+- Persistent memory across sessions — lessons learned, project context, decision history
+- The fleet accumulates knowledge over time instead of cold-starting every session
+- Shared context enables coordination without redundant discovery
 
 ### Why This Matters (The Business Case)
 
-**For his Salesforce brain, frame it as a market opportunity:**
+**The market gap:**
 
-> "Right now, every company deploying AI agents is building this stuff from scratch. There's no Salesforce for AI agent management. No ServiceNow for AI operations. No standard playbook. Every team is reinventing the wheel.
+> "Every company deploying AI agents is building governance from scratch. There's no standard playbook, no shared abstraction layer. Every team is reinventing the wheel — role definitions, escalation logic, memory, security.
 >
-> Admiral is positioning to be that standard. The governance layer that sits on top of any AI agent platform — Claude, GPT, open-source, whatever. Model-agnostic, like how Salesforce works with any email provider."
+> Admiral is positioning to be that standard. Model-agnostic governance that sits on top of any AI agent platform — Claude, GPT, open-source models, whatever the stack looks like."
 
 **The competitive landscape (keep it brief):**
 - Tools like CrewAI, AutoGen, LangGraph help you *build* agents. They don't help you *govern* them.
@@ -119,13 +105,13 @@ Start here. He needs to feel the ground shift before the product makes sense.
 - It's not a running software product you can download and install. It's the specification — the *blueprint*. Implementations are downstream.
 - Think of it like: I've written the franchise manual before opening the first store. The manual is the product.
 
-**The adoption model (this is smart — lead with this):**
-- Level 1: Single agent, 30 minutes to deploy. Just mission + boundaries + basic rules.
+**Progressive adoption model:**
+- Level 1: Single agent, 30 minutes to deploy. Mission + boundaries + basic rules.
 - Level 2: Small team of 5-8 agents with routing. A few days.
 - Level 3: Full governance with specialized oversight agents. A couple weeks.
 - Level 4: Complete framework. 1-2 weeks for an experienced team.
 
-> "It's designed so you don't have to buy in all at once. Start small, prove value, scale up. Same way you'd roll out Salesforce — start with one team, then expand."
+> "Designed for incremental adoption. Start with one agent, prove value, scale up. No big-bang deployment required."
 
 ### The Market Timing Argument
 
@@ -133,7 +119,7 @@ Start here. He needs to feel the ground shift before the product makes sense.
 
 ---
 
-## CHEAT SHEET: His Likely Questions & Your Answers
+## CHEAT SHEET: Likely Questions & Answers
 
 **"Who's the customer?"**
 → Engineering teams running AI agent fleets. Companies building AI-native products. Any org where governance, auditability, and quality matter — legal, finance, healthcare especially.
@@ -145,22 +131,15 @@ Start here. He needs to feel the ground shift before the product makes sense.
 → First-mover on the governance problem specifically. The spec is model-agnostic (not locked to one platform). The depth — 15,000+ lines of battle-tested doctrine — is hard to replicate. And the insight about enforcement mechanisms (hooks vs. instructions) is non-obvious and validated.
 
 **"Is this a real market?"**
-→ Point to the $660B+ being spent on AI infrastructure in 2026. Every dollar of that creates demand for governance. If Salesforce lost 26% because agents are replacing seats, the companies deploying those agents need Admiral.
-
-**"Why should I care as a salesperson?"**
-→ "Because you've closed enterprise deals. You know what enterprise buyers need: governance, compliance, auditability, security. Every CISO and CTO deploying AI agents is going to ask 'how do we control this?' I have the answer. That's a sales conversation you know how to have."
+→ $660B+ being spent on AI infrastructure in 2026. Every dollar of that creates downstream demand for governance. The $2 trillion repricing of enterprise software proves the market already believes agents are replacing seats — the companies deploying those agents need governance tooling.
 
 ---
 
 ## CLOSING MOVE
 
-End with the "Fundamental Truths" framing — this will resonate with a salesperson:
-
-> "Here's what I keep coming back to. AI decimated execution, knowledge, and speed as sources of value. What it made *more* valuable is taste, judgment, conviction, and relationships. Admiral is built on that insight — the agents do the work, but humans provide the governance, the taste, the judgment calls. I'm not building a product that replaces people. I'm building the product that makes it safe for AI to do the work while humans do what humans are uniquely good at.
->
-> And honestly? A guy who closes enterprise deals for a living — relationships, judgment, conviction — you're exactly the kind of person whose value just went *up*."
+> "AI commoditized execution, knowledge retrieval, and speed. What it made *more* valuable is taste, judgment, and architectural thinking. Admiral is built on that insight — agents handle execution, but humans define governance, set boundaries, and make the judgment calls about what 'good' looks like. The product isn't about replacing people. It's about making it safe to run autonomous agents at scale while humans retain control over what matters."
 
 ---
 
 *Total estimated time: 25-28 minutes with natural conversation flow.*
-*Leave 2-5 minutes for his questions — the cheat sheet above covers the likely ones.*
+*Leave 2-5 minutes for questions — the cheat sheet above covers the likely ones.*
