@@ -1,7 +1,7 @@
 """Tests for hook runtime engine.
 
-Phase 1: Hook discovery, dependency resolution, execution order,
-timeout handling, self-healing loops, and all 8 hook implementations.
+Level 1: Hook discovery, dependency resolution, execution order,
+timeout handling, self-healing loops, and 5 Level 1 hook implementations.
 """
 
 from __future__ import annotations
@@ -22,9 +22,6 @@ from admiral.hooks.implementations import (
     loop_detector,
     context_baseline,
     context_health_check,
-    tier_validation,
-    identity_validation,
-    governance_heartbeat_monitor,
 )
 
 
@@ -483,125 +480,7 @@ class TestContextHealthCheck:
         assert "Authority" in stdout or "Constraints" in stdout
 
 
-@pytest.mark.phase1
-class TestTierValidation:
-    def test_tier_matches(self):
-        code, stdout, stderr = tier_validation.execute({
-            "agent_identity": "backend-impl",
-            "model_id": "claude-sonnet-4.6",
-            "tier_assignment": "workhorse",
-            "degradation_policy": {},
-        })
-        assert code == 0
-        assert "ok" in stdout
-
-    def test_tier_exceeds(self):
-        code, stdout, stderr = tier_validation.execute({
-            "agent_identity": "backend-impl",
-            "model_id": "claude-opus-4.6",
-            "tier_assignment": "workhorse",
-            "degradation_policy": {},
-        })
-        assert code == 0  # Flagship >= Workhorse
-
-    def test_tier_violation_blocked(self):
-        code, stdout, stderr = tier_validation.execute({
-            "agent_identity": "orchestrator",
-            "model_id": "claude-haiku-4.5",
-            "tier_assignment": "flagship",
-            "degradation_policy": {"blocked": "true"},
-        })
-        assert code == 1
-        assert "violation" in stdout.lower()
-
-    def test_no_model_fails(self):
-        code, stdout, stderr = tier_validation.execute({
-            "agent_identity": "test",
-            "model_id": "",
-            "tier_assignment": "workhorse",
-            "degradation_policy": {},
-        })
-        assert code == 1
-
-
-@pytest.mark.phase1
-class TestIdentityValidation:
-    def test_no_artifact_configured(self):
-        code, stdout, stderr = identity_validation.execute({
-            "agent_identity": "test",
-            "project_config": {},
-        })
-        assert code == 0
-        assert "skipped" in stdout
-
-    def test_missing_artifact(self):
-        code, stdout, stderr = identity_validation.execute({
-            "agent_identity": "test",
-            "project_config": {
-                "auth_artifact_path": "/nonexistent/path/auth.json",
-            },
-        })
-        assert code == 1
-        assert "missing" in stdout.lower()
-
-    def test_valid_artifact(self, tmp_path):
-        auth_file = tmp_path / "auth.json"
-        auth_file.write_text('{"valid": true}')
-        code, stdout, stderr = identity_validation.execute({
-            "agent_identity": "test",
-            "project_config": {
-                "auth_artifact_path": str(auth_file),
-            },
-        })
-        assert code == 0
-        assert "valid" in stdout
-
-
-@pytest.mark.phase1
-class TestGovernanceHeartbeatMonitor:
-    def setup_method(self):
-        governance_heartbeat_monitor.reset()
-
-    def test_all_healthy(self):
-        import time
-        heartbeats = {
-            agent: {"timestamp": time.time(), "confidence_self_assessment": 0.9}
-            for agent in governance_heartbeat_monitor.DEFAULT_EXPECTED_AGENTS
-        }
-        code, stdout, stderr = governance_heartbeat_monitor.execute({
-            "expected_agents": governance_heartbeat_monitor.DEFAULT_EXPECTED_AGENTS,
-            "received_heartbeats": heartbeats,
-        })
-        assert code == 0
-        assert "healthy" in stdout
-
-    def test_missing_heartbeat_alert(self):
-        governance_heartbeat_monitor.reset()
-        # Miss twice to trigger alert (2 consecutive misses threshold)
-        for _ in range(2):
-            code, stdout, stderr = governance_heartbeat_monitor.execute({
-                "expected_agents": ["Token Budgeter"],
-                "received_heartbeats": {},
-            })
-        assert code == 1
-        assert "ADMIRAL_DIRECT" in stdout
-
-    def test_low_confidence_alert(self):
-        import time
-        code, stdout, stderr = governance_heartbeat_monitor.execute({
-            "expected_agents": ["Token Budgeter"],
-            "received_heartbeats": {
-                "Token Budgeter": {
-                    "timestamp": time.time(),
-                    "confidence_self_assessment": 0.3,  # Below 0.5 threshold
-                },
-            },
-        })
-        assert code == 1
-        assert "low_confidence" in stdout
-
-
-# === Edge Case Tests (Phase 1 Review) ===
+# === Edge Case Tests (Level 1 Review) ===
 
 
 @pytest.mark.phase1

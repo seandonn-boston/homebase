@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import time
-
 import pytest
 
 from admiral.models.mission import (
@@ -16,11 +14,6 @@ from admiral.models.mission import (
     PipelineEntry,
     ResourceBudgets,
 )
-from admiral.models.identity import (
-    IdentityToken,
-    TokenClaims,
-    AuthorityTierLevel,
-)
 from admiral.models.agent import (
     AgentDefinition,
     AgentCategory,
@@ -30,34 +23,6 @@ from admiral.models.agent import (
 from admiral.hooks.engine import HookEngine, HookResult
 from admiral.hooks.lifecycle import HookEvent
 from admiral.hooks.manifest import HookManifest
-
-
-# Signing key for test tokens
-TEST_SIGNING_KEY = "test-signing-key-for-admiral-framework-tests"
-
-
-@pytest.fixture
-def signing_key() -> str:
-    return TEST_SIGNING_KEY
-
-
-@pytest.fixture
-def sample_claims() -> TokenClaims:
-    now = time.time()
-    return TokenClaims(
-        agent_id="backend-implementer-001",
-        agent_role="Backend Implementer",
-        authority_tier=AuthorityTierLevel.SPECIALIST,
-        session_id="session-test-001",
-        project="admiral-self-build",
-        issued_at=now,
-        expires_at=now + 3600,
-    )
-
-
-@pytest.fixture
-def sample_token(sample_claims: TokenClaims, signing_key: str) -> IdentityToken:
-    return IdentityToken.create(claims=sample_claims, signing_key=signing_key)
 
 
 @pytest.fixture

@@ -2,6 +2,9 @@
 
 Every model here replicates a specification structure from aiStrat/admiral/.
 Models use Pydantic for validation to ensure spec compliance at runtime.
+
+Level 1 exports only — Level 2+ models (identity tokens, handoff, config,
+task decomposition) are deferred until those levels are implemented.
 """
 
 from admiral.models.mission import Mission, Boundaries, SuccessCriteria, ResourceBudgets
@@ -16,25 +19,12 @@ from admiral.models.authority import (
     AuthorityAssignment,
     CalibrationCondition,
 )
-from admiral.models.identity import IdentityToken, TokenClaims, TokenVerificationResult
 from admiral.models.agent import (
     AgentDefinition,
     AgentScope,
     ModelTier,
     ToolPermission,
 )
-from admiral.models.handoff import (
-    HandoffDocument,
-    SessionHandoff,
-    HandoffConstraints,
-)
-from admiral.models.task import (
-    Chunk,
-    TaskDecomposition,
-    FailureScenario,
-    VerificationLevel,
-)
-from admiral.models.config import FleetConfiguration, ProjectConfig
 
 __all__ = [
     "Mission",
@@ -48,20 +38,8 @@ __all__ = [
     "DecisionAuthority",
     "AuthorityAssignment",
     "CalibrationCondition",
-    "IdentityToken",
-    "TokenClaims",
-    "TokenVerificationResult",
     "AgentDefinition",
     "AgentScope",
     "ModelTier",
     "ToolPermission",
-    "HandoffDocument",
-    "SessionHandoff",
-    "HandoffConstraints",
-    "Chunk",
-    "TaskDecomposition",
-    "FailureScenario",
-    "VerificationLevel",
-    "FleetConfiguration",
-    "ProjectConfig",
 ]

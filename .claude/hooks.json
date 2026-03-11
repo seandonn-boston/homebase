@@ -1,29 +1,24 @@
 {
   "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "",
+        "command": "python -m admiral.runtime session_start",
+        "description": "Admiral Level 1: Initialize session state, inject Standing Orders into context"
+      }
+    ],
     "PreToolUse": [
       {
-        "matcher": "Write|Edit",
-        "command": "python aiStrat/scripts/hooks/check_file_scope.py",
-        "description": "Block modifications outside allowed directories (aiStrat/, src/, prisma/, .claude/)"
+        "matcher": "",
+        "command": "python -m admiral.runtime pre_tool_use",
+        "description": "Admiral Level 1: Token budget gate — block if budget exhausted"
       }
     ],
     "PostToolUse": [
       {
-        "matcher": "Write|Edit",
-        "command": "python aiStrat/scripts/hooks/post_edit_check.py",
-        "description": "Syntax-check Python files after modification"
-      },
-      {
-        "matcher": "Write|Edit",
-        "command": "python aiStrat/scripts/quality_check.py > /dev/null 2>&1 || echo 'WARNING: Quality gate failed'",
-        "description": "Run quality gate after file modifications"
-      }
-    ],
-    "SessionStart": [
-      {
         "matcher": "",
-        "command": "python aiStrat/scripts/hooks/session_halt_check.py",
-        "description": "Check for active Brain halt on session start"
+        "command": "python -m admiral.runtime post_tool_use",
+        "description": "Admiral Level 1: Token tracking, loop detection, context health check"
       }
     ]
   }
