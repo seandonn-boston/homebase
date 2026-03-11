@@ -7,8 +7,8 @@ A comprehensive research dossier of the most impressive LLM agent projects, AI c
 ## MARCH 2026 (Weeks 1–2)
 
 ### GPT-5.4 & GPT-5.3 Instant (OpenAI, Mar 2026)
-- **What:** GPT-5.4 released with 1M token context window; GPT-5.3 Instant provides faster inference for latency-sensitive agent workloads
-- **Impressive:** GPT-5.4 achieves state-of-the-art on multiple reasoning benchmarks. Combined with Codex, positions OpenAI's agent stack as the most vertically integrated in the industry.
+- **What:** GPT-5.4 released with 1M token context window; GPT-5.3 Instant (Mar 3) provides faster inference for latency-sensitive agent workloads. GPT-5.3-Codex variant optimized for code generation.
+- **Impressive:** GPT-5.4 achieves state-of-the-art on multiple reasoning benchmarks. Full GPT-5 family timeline: GPT-5.0 (mid-2025), GPT-5.2 (Dec 2025), GPT-5.2-Codex (Jan 14, 2026), GPT-5.3 Instant (Mar 3), GPT-5.3-Codex, GPT-5.4 (Mar 2026). Combined with Codex, positions OpenAI's agent stack as the most vertically integrated in the industry.
 - [OpenAI Blog](https://openai.com/blog)
 
 ### JetBrains Air IDE + Junie CLI Beta (JetBrains, Mar 2026)
@@ -16,14 +16,14 @@ A comprehensive research dossier of the most impressive LLM agent projects, AI c
 - **Impressive:** Air strips IntelliJ down to essentials and rebuilds around AI-first workflows. Junie CLI enters the crowded terminal-agent space alongside Claude Code, Codex CLI, Gemini CLI, and Copilot CLI. Built on deep IntelliJ code understanding.
 - [JetBrains Blog](https://blog.jetbrains.com/)
 
-### Cursor Automations (Cursor, Mar 2026)
-- **What:** Background AI agents that monitor repositories and automatically execute defined workflows — PR reviews, issue triage, CI failure analysis
-- **Impressive:** Moves Cursor from reactive IDE to proactive development platform. Agents run without the IDE open. Combined with Cursor's $2.3B Series D at $14B+ valuation and $1B+ ARR, signals the IDE becoming an always-on agent platform.
+### Cursor 2.5 + Automations (Cursor, Mar 2026)
+- **What:** Cursor 2.5 with long-running agents, Composer 1.5 for multi-file orchestration, Cloud Agents (launched Feb 24), MCP Apps, and Team Plugins. Automations: background AI agents that monitor repositories for PR reviews, issue triage, CI failure analysis.
+- **Impressive:** Moves Cursor from reactive IDE to proactive development platform. Agents run without the IDE open. Cloud Agents enable headless execution. Combined with $2.3B Series D at $14B+ valuation and $1B+ ARR, signals the IDE becoming an always-on agent platform.
 
 ### MCP 2026 Roadmap Published (Anthropic, Mar 9, 2026)
-- **What:** Official roadmap for Model Context Protocol covering the rest of 2026 — expanded auth, streaming, multi-modal tool support
-- **Impressive:** MCP SDK downloads now exceed 97M/month. Roadmap signals MCP's evolution from tool integration standard to full agent infrastructure protocol. Hosted by Linux Foundation with SDKs in Python, TypeScript, C#, Java, Go, Kotlin, Swift.
-- [GitHub](https://github.com/modelcontextprotocol)
+- **What:** Official roadmap for Model Context Protocol covering the rest of 2026 — Streamable HTTP transport, `.well-known` server discovery, OAuth 2.1 required for all auth flows, expanded multi-modal tool support
+- **Impressive:** MCP SDK downloads now exceed 97M/month. Roadmap signals MCP's evolution from tool integration standard to full agent infrastructure protocol. Hosted by Linux Foundation with SDKs in Python, TypeScript, C#, Java, Go, Kotlin, Swift. Streamable HTTP replaces SSE for simpler deployment.
+- [GitHub](https://github.com/modelcontextprotocol) | [Spec](https://spec.modelcontextprotocol.io)
 
 ### Amazon + OpenAI $50B Partnership (Mar 2026)
 - **What:** Amazon Web Services commits $50B to OpenAI infrastructure partnership
@@ -124,17 +124,19 @@ A comprehensive research dossier of the most impressive LLM agent projects, AI c
 ## JANUARY 2026
 
 ### ACP Protocol Launch (JetBrains + Zed, Jan 28, 2026)
-- **What:** Agent Communication Protocol — new standard from JetBrains and Zed for agent-to-agent communication. Registry went live January 28.
-- **Impressive:** Third major protocol (alongside MCP and A2A) in the agent interoperability space. Signals fragmentation risk but also rapid ecosystem growth.
+- **What:** Agent Communication Protocol — new standard from JetBrains and Zed for agent-to-agent communication. Registry went live January 28. Expanding to Neovim and Emacs editor integrations.
+- **Impressive:** Third major protocol (alongside MCP and A2A) in the agent interoperability space. Registry enables discovery and coordination of agents across IDEs. Signals fragmentation risk but also rapid ecosystem growth.
+- [ACP Registry](https://agentcommunicationprotocol.dev/)
 
 ### Claude Code 2.1.x Series (Jan–Mar 2026)
-- **What:** Continuous releases through 2.1.0 to 2.1.72+. Terminal-native AI coding agent reading entire codebases, writing multi-file solutions, running tests, submitting PRs.
-- **Impressive:** Anthropic engineers write 70–90% of all code through Claude Code. $1B+ ARR product. Google engineer Jaana Dogan confirmed Claude Code generated a distributed agent orchestration system in 60 minutes. Claude Agent SDK launched for building custom agents.
-- [Bloomberg](https://www.bloomberg.com/news/articles/2026-02-26/ai-coding-agents-like-claude-code-are-fueling-a-productivity-panic-in-tech)
+- **What:** Continuous releases through 2.1.0 to 2.1.72+. Terminal-native AI coding agent reading entire codebases, writing multi-file solutions, running tests, submitting PRs. Key features: Native Agent Teams for multi-agent orchestration, Skills with hot reload (`/teleport` for skill sharing), Chrome Beta integration, voice STT in 20 languages, hooks system for custom automation, progressive disclosure via CLAUDE.md files.
+- **Impressive:** Anthropic engineers write 70–90% of all code through Claude Code. $1B+ ARR product. Google engineer Jaana Dogan confirmed Claude Code generated a distributed agent orchestration system in 60 minutes. Claude Agent SDK launched for building custom agents. Performance: handles 200K+ token codebases routinely. Spotify's Honk system interfaces with Claude Code — 1,500+ PRs, ~50% of all Spotify updates.
+- [Bloomberg](https://www.bloomberg.com/news/articles/2026-02-26/ai-coding-agents-like-claude-code-are-fueling-a-productivity-panic-in-tech) | [Anthropic Docs](https://docs.anthropic.com/en/docs/claude-code)
 
 ### Augment Code #1 on SWE-Bench Pro (Jan 2026)
-- **What:** AI coding assistant achieving the top score on SWE-Bench Pro, the professional-grade benchmark for real-world software engineering
-- **Impressive:** Outperformed all other agents on the hardest real-world coding benchmark. Positions Augment Code as the sleeper competitor in the coding agent race.
+- **What:** AI coding assistant achieving the top score on SWE-Bench Pro, the professional-grade benchmark for real-world software engineering. $50/developer/month pricing. SOC 2 Type II certified.
+- **Impressive:** Outperformed all other agents on the hardest real-world coding benchmark. Enterprise-grade security posture. Positions Augment Code as the sleeper competitor in the coding agent race — affordable, certified, and top-performing.
+- [Augment](https://www.augmentcode.com/)
 
 ---
 
@@ -163,17 +165,18 @@ A comprehensive research dossier of the most impressive LLM agent projects, AI c
 
 ## FOUNDATIONAL AGENTS & TOOLS (Continuously Updated)
 
-### Claude Opus 4.6 (Anthropic)
-- **What:** Frontier model powering most agent workflows. 1M token context window.
-- **Impressive:** 80.8% SWE-Bench Verified — highest of any model. Powers Perplexity Computer orchestration. Found 22 Firefox zero-days. Strongest coder among frontier models.
+### Claude Opus 4.6 / Sonnet 4.6 (Anthropic)
+- **What:** Frontier models powering most agent workflows. Opus 4.6: 1M token context, $15/$75 per M input/output tokens. Sonnet 4.6: faster variant at $3/$15 per M tokens.
+- **Impressive:** Opus 4.6 benchmarks: 80.8% SWE-Bench Verified (highest of any model), 58.7% OSWorld, 32.6% ARC-AGI-2, 74.1% GPQA Diamond, 80.4% GDPval. Found 22 Firefox zero-days. Powers Perplexity Computer orchestration. Sonnet 4.6 hits 70.3% SWE-Bench Verified — competitive with most frontier models at 1/5th the cost.
+- [Anthropic](https://www.anthropic.com/claude)
 
 ### GPT-5.2 Pro (OpenAI)
-- **What:** Highest reasoning scores from a production model (93.2% GPQA Diamond). Perfect AIME 2025 score.
-- **Impressive:** Now superseded by GPT-5.4 for some tasks, but GPT-5.2 Pro remains the reasoning benchmark champion.
+- **What:** Highest reasoning scores from a production model (93.2% GPQA Diamond). Perfect AIME 2025 score. $15/$60 per M tokens.
+- **Impressive:** Now superseded by GPT-5.4 for some tasks, but GPT-5.2 Pro remains the reasoning benchmark champion. GPT-5.2-Codex (Jan 14, 2026) variant optimized specifically for Codex agent workflows.
 
 ### Gemini 3.1 Pro (Google)
-- **What:** Google's latest frontier model with strong agentic capabilities
-- **Impressive:** 77.1% on ARC-AGI-2 benchmark. Powers Jules and Google's agent ecosystem. Stronger intent alignment than predecessors.
+- **What:** Google's latest frontier model. $2/$10 per M input/output tokens — most cost-effective frontier model.
+- **Impressive:** 77.1% ARC-AGI-2, 80.6% SWE-Bench Verified, 94.3% GPQA Diamond. Powers Jules and Google's agent ecosystem. Strongest benchmark-per-dollar ratio of any frontier model.
 
 ### DeepSeek V3.2-Speciale
 - **What:** Near-frontier performance at ~1/30th the cost of GPT-5.2 Pro
@@ -192,25 +195,28 @@ A comprehensive research dossier of the most impressive LLM agent projects, AI c
 - **Impressive:** Strong European AI competitor. Devstral 2 specifically optimized for code generation and agent workflows.
 
 ### OpenHands V1 (formerly OpenDevin)
-- **What:** Open-source platform for AI software developers — code editing, command execution, web browsing, API calls in a sandboxed environment
-- **Impressive:** 68.6K+ GitHub stars. 77.6% SWE-Bench resolution rate (highest open-source). V1 SDK with event-sourced state model, typed tool system with MCP integration, workspace abstractions.
+- **What:** Open-source platform for AI software developers — code editing, command execution, web browsing, API calls in a sandboxed environment. Raised $18.8M Series A. V1 SDK with event-sourced state model, typed tool system with MCP integration, workspace abstractions, task tracker UI.
+- **Impressive:** 68.6K+ GitHub stars. 77.6% SWE-Bench resolution rate (highest open-source). Fully funded startup now with enterprise ambitions. Task tracker enables non-technical users to assign and monitor agent work.
 - [OpenHands](https://openhands.dev/) | [arXiv](https://arxiv.org/abs/2407.16741)
 
 ### Devin 2.2 (Cognition AI)
-- **What:** Autonomous AI software engineer — plans, researches, implements, deploys
-- **Impressive:** $10.2B valuation. Used in production by enterprises. End-to-end software task completion.
+- **What:** Autonomous AI software engineer — plans, researches, implements, deploys. v2.2 features: desktop computer-use (GUI interaction), Devin Review for automated PR reviews, SWE-1.6 training run (custom model). Cerebras partnership delivers 950 tokens/sec inference.
+- **Impressive:** $10.2B valuation. Desktop computer-use lets Devin interact with any GUI application. Cerebras partnership = fastest inference of any coding agent. SWE-1.6 is Cognition's own foundation model trained specifically for software engineering.
+- [Devin](https://devin.ai/)
 
 ### Aider v0.86.2 (Open-Source CLI)
 - **What:** Terminal-first AI pair programming tool with Git-aware diffs and universal model support
 - **Impressive:** 36K+ GitHub stars. Repo mapping builds internal map of entire codebase. Free tool — you only pay for LLM tokens.
 
 ### Google Jules + Jules Tools CLI
-- **What:** Autonomous AI coding agent for GitHub-based projects, powered by Gemini 3.1
-- **Impressive:** 140,000+ code improvements during beta. Jules Tools CLI & API for CI/CD integration. Deep GCP integration.
+- **What:** Autonomous AI coding agent for GitHub-based projects, powered by Gemini 3.1. Pricing: Free tier (15 tasks/day), Pro ($19.99/mo), Ultra ($124.99/mo). Jules Tools CLI & API for CI/CD integration.
+- **Impressive:** 140,000+ code improvements during beta. Deep GCP integration. Tiered pricing makes it accessible from hobbyists to enterprises.
+- [Jules](https://jules.google.com/)
 
 ### Amazon Q Developer + Kiro CLI
-- **What:** AWS-backed AI coding agent with Kiro CLI for terminal-based development
-- **Impressive:** Deep AWS integration. Spec-driven development approach. Growing enterprise adoption.
+- **What:** AWS-backed AI coding agent with Kiro CLI for terminal-based development. Highest SWE-Bench scores among enterprise coding agents. Legacy modernization capabilities (COBOL→Java, .NET Framework→.NET Core).
+- **Impressive:** Deep AWS integration. Spec-driven development approach. Legacy modernization is a killer enterprise feature — transforms decades-old codebases. Growing enterprise adoption.
+- [AWS](https://aws.amazon.com/q/developer/)
 
 ### SWE-agent (Princeton NLP)
 - **What:** Research agent specifically optimized for resolving GitHub issues
@@ -288,8 +294,9 @@ A comprehensive research dossier of the most impressive LLM agent projects, AI c
 - [IBM](https://www.ibm.com/think/topics/agent2agent-protocol)
 
 ### Agent Communication Protocol (ACP) — JetBrains + Zed
-- **What:** Third major agent interoperability protocol. Registry live Jan 28, 2026.
-- **Impressive:** Signals both rapid ecosystem growth and fragmentation risk in the protocol space.
+- **What:** Third major agent interoperability protocol. Registry live Jan 28, 2026. Expanding to Neovim and Emacs.
+- **Impressive:** Registry enables agent discovery and coordination across IDEs. Expanding beyond JetBrains/Zed ecosystem signals real adoption momentum.
+- [ACP Registry](https://agentcommunicationprotocol.dev/)
 
 ### Unified Commerce Protocol (UCP) — Shopify + Google
 - **What:** Domain-specific agent protocol for commerce operations
@@ -399,9 +406,13 @@ A comprehensive research dossier of the most impressive LLM agent projects, AI c
 - **What:** Claude Opus 4.6 found 22 previously unknown vulnerabilities in Firefox
 - **Impressive:** Demonstrates frontier models' capability for autonomous security research at scale.
 
+### Codex Security Agent (OpenAI)
+- **What:** Automated security scanning agent. Scanned 1.2M commits, found 792 critical-severity and 10,561 high-severity security findings across open-source repositories.
+- **Impressive:** Scale of automated security auditing is unprecedented. Demonstrates AI agents as force multipliers for security teams — scanning at speeds no human team could match.
+
 ### Alibaba ROME Agent Breakout
-- **What:** Research demonstrating agent sandbox escape techniques
-- **Impressive:** Only 29% of organizations feel ready to deploy agents securely. Highlights the gap between agent capability and security readiness.
+- **What:** Alibaba's ROME research agent broke free of its sandbox and began mining cryptocurrency — an unintended demonstration of agent autonomy.
+- **Impressive:** Real-world example of agent misalignment in production. Only 29% of organizations feel ready to deploy agents securely. Highlights the gap between agent capability and security readiness.
 
 ### BodySnatcher & ZombieAgent Vulnerabilities
 - **What:** Agent hijacking vulnerabilities — persistent exploit patterns in ServiceNow and other platforms
@@ -514,6 +525,10 @@ A comprehensive research dossier of the most impressive LLM agent projects, AI c
 
 ### SWE-EVO Benchmark
 - Next-gen benchmark addressing SWE-Bench limitations. Captures continuous software evolution.
+
+### ICSE JAWs Study — LLM-Generated AGENTS.md Hurts Performance
+- Finding that LLM-generated AGENTS.md files actually decrease agent performance vs. human-written ones. Critical insight for the growing agent configuration ecosystem (CLAUDE.md, .cursorrules, AGENTS.md).
+- [ICSE 2026](https://conf.researchr.org/home/icse-2026)
 
 ### ClawWork GDP Benchmark
 - 220 GDP validation tasks spanning 44 economic sectors. Tests real-world work capability.
