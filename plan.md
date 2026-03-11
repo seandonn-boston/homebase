@@ -18,7 +18,7 @@ Already built and tested (133 tests):
 - Hook engine with self-healing, dependency resolution, topological ordering
 - Runtime adapter bridging Claude Code ↔ Admiral hooks
 
-## What Level 2 Requires (13 Checklist Items)
+## What Level 2 Requires (12 Checklist Items)
 
 Grouped by implementation type:
 

@@ -214,9 +214,9 @@ class Checkpoint(BaseModel):
 
         lines.append("## Resources")
         r = self.resources
-        if r.tokens_budget:
+        if r.tokens_budget is not None:
             lines.append(f"- Tokens: {r.tokens_used}/{r.tokens_budget}")
-        if r.time_budget_minutes:
+        if r.time_budget_minutes is not None:
             lines.append(f"- Time: {r.time_minutes}/{r.time_budget_minutes} min")
         lines.append(f"- Tool calls: {r.tool_calls}")
         lines.append("")
@@ -266,12 +266,15 @@ class HandoffBrief(BaseModel):
         lines = [
             f"# Handoff Brief: {self.session_id}",
             "",
-            f"**Completed:** {self.completed_summary}" if self.completed_summary else "",
-            f"**In Progress:** {self.in_progress_summary}" if self.in_progress_summary else "",
-            f"**Blocked:** {self.blocked_summary}" if self.blocked_summary else "",
-            f"**Decisions:** {self.decisions_summary}" if self.decisions_summary else "",
         ]
-        lines = [l for l in lines if l or l == ""]  # Keep blank lines
+        if self.completed_summary:
+            lines.append(f"**Completed:** {self.completed_summary}")
+        if self.in_progress_summary:
+            lines.append(f"**In Progress:** {self.in_progress_summary}")
+        if self.blocked_summary:
+            lines.append(f"**Blocked:** {self.blocked_summary}")
+        if self.decisions_summary:
+            lines.append(f"**Decisions:** {self.decisions_summary}")
 
         if self.next_session_should:
             lines.append("")

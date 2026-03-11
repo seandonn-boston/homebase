@@ -10,7 +10,6 @@ Versions must be exact ("React 19.1 with TypeScript 5.7", not "React with TypeSc
 
 from __future__ import annotations
 
-import re
 from enum import Enum
 
 from pydantic import BaseModel, Field, field_validator
@@ -156,12 +155,25 @@ class GroundTruth(BaseModel):
         """Render Ground Truth as markdown for context injection."""
         lines = ["# Ground Truth", ""]
 
-        if self.glossary:
+        # Domain Ontology
+        has_ontology = self.glossary or self.naming_conventions or self.status_definitions
+        if has_ontology:
             lines.append("## Domain Ontology")
-            for term, definition in self.glossary.items():
-                lines.append(f"- **{term}**: {definition}")
+            if self.glossary:
+                lines.append("### Glossary")
+                for term, definition in self.glossary.items():
+                    lines.append(f"- **{term}**: {definition}")
+            if self.naming_conventions:
+                lines.append("### Naming Conventions")
+                for scope, convention in self.naming_conventions.items():
+                    lines.append(f"- **{scope}**: {convention}")
+            if self.status_definitions:
+                lines.append("### Status Definitions")
+                for status, meaning in self.status_definitions.items():
+                    lines.append(f"- **{status}**: {meaning}")
             lines.append("")
 
+        # Environmental Facts
         if self.tech_stack:
             lines.append("## Tech Stack")
             for tech in self.tech_stack:
@@ -169,11 +181,47 @@ class GroundTruth(BaseModel):
                 lines.append(f"- {tech.name} {tech.version}{purpose}")
             lines.append("")
 
+        if self.infrastructure_topology:
+            lines.append("## Infrastructure")
+            lines.append(self.infrastructure_topology)
+            lines.append("")
+
+        if self.access_permissions:
+            lines.append("## Access Permissions")
+            for perm in self.access_permissions:
+                lines.append(f"- **{perm.role}**: read={perm.can_read}, write={perm.can_write}")
+                if perm.cannot_access:
+                    lines.append(f"  - Cannot access: {perm.cannot_access}")
+            lines.append("")
+
         if self.known_issues:
             lines.append("## Known Issues")
             for issue in self.known_issues:
                 workaround = f" Workaround: {issue.workaround}" if issue.workaround else ""
                 lines.append(f"- [{issue.severity.value}] {issue.description}{workaround}")
+            lines.append("")
+
+        if self.external_dependencies:
+            lines.append("## External Dependencies")
+            for dep, sla in self.external_dependencies.items():
+                lines.append(f"- **{dep}**: {sla}")
+            lines.append("")
+
+        # Configuration Status
+        cs = self.config_status
+        has_config = cs.agents_md_version or cs.hooks_count or cs.skills_count or cs.mcp_servers
+        if has_config:
+            lines.append("## Configuration Status")
+            if cs.agents_md_version:
+                lines.append(f"- AGENTS.md: {cs.agents_md_version}")
+            if cs.hooks_count:
+                audit = f" (last audit: {cs.hooks_last_audit})" if cs.hooks_last_audit else ""
+                lines.append(f"- Hooks: {cs.hooks_count}{audit}")
+            if cs.skills_count:
+                domains = f" ({', '.join(cs.skills_domains)})" if cs.skills_domains else ""
+                lines.append(f"- Skills: {cs.skills_count}{domains}")
+            if cs.mcp_servers:
+                lines.append(f"- MCP Servers: {', '.join(cs.mcp_servers)}")
             lines.append("")
 
         return "\n".join(lines)

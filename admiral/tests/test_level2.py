@@ -552,3 +552,146 @@ class TestRoutingTable:
         violations = fleet.validate_routing()
         assert len(violations) == 1
         assert "Ghost QA" in violations[0]
+
+
+@pytest.mark.phase2
+class TestSelfQAValidation:
+    def test_detects_same_agent_doing_impl_and_qa(self):
+        fleet = FleetRoster(
+            agents=[_make_agent("FullStack")],
+            routing=RoutingTable(
+                rules=[
+                    RoutingRule(task_type="backend", agent_role="FullStack"),
+                    RoutingRule(task_type="code_review", agent_role="FullStack"),
+                ]
+            ),
+        )
+        violations = fleet.validate_no_self_qa()
+        assert len(violations) == 1
+        assert "FullStack" in violations[0]
+        assert "conflict of interest" in violations[0]
+
+    def test_no_violation_when_roles_separated(self):
+        fleet = FleetRoster(
+            agents=[_make_agent("Implementer"), _make_agent("QA Agent")],
+            routing=RoutingTable(
+                rules=[
+                    RoutingRule(task_type="backend", agent_role="Implementer"),
+                    RoutingRule(task_type="code_review", agent_role="QA Agent"),
+                ]
+            ),
+        )
+        violations = fleet.validate_no_self_qa()
+        assert violations == []
+
+    def test_detects_multiple_qa_keywords(self):
+        """Detects conflicts with various QA-related task types."""
+        for qa_task in ["code_review", "qa_check", "run_test", "security_audit", "verify_output"]:
+            fleet = FleetRoster(
+                agents=[_make_agent("Agent")],
+                routing=RoutingTable(
+                    rules=[
+                        RoutingRule(task_type="implement", agent_role="Agent"),
+                        RoutingRule(task_type=qa_task, agent_role="Agent"),
+                    ]
+                ),
+            )
+            violations = fleet.validate_no_self_qa()
+            assert len(violations) == 1, f"Expected violation for qa_task={qa_task}"
+
+    def test_no_violation_when_only_qa_tasks(self):
+        """Agent doing only QA tasks is fine."""
+        fleet = FleetRoster(
+            agents=[_make_agent("QA Specialist")],
+            routing=RoutingTable(
+                rules=[
+                    RoutingRule(task_type="code_review", agent_role="QA Specialist"),
+                    RoutingRule(task_type="test_execution", agent_role="QA Specialist"),
+                ]
+            ),
+        )
+        violations = fleet.validate_no_self_qa()
+        assert violations == []
+
+    def test_no_violation_with_empty_routing(self):
+        fleet = FleetRoster(agents=[_make_agent("Solo")])
+        assert fleet.validate_no_self_qa() == []
+
+
+@pytest.mark.phase2
+class TestGroundTruthRenderComplete:
+    """Verify render() covers all modeled sections."""
+
+    def test_render_includes_naming_conventions(self):
+        gt = GroundTruth(naming_conventions={"files": "kebab-case"})
+        rendered = gt.render()
+        assert "kebab-case" in rendered
+
+    def test_render_includes_status_definitions(self):
+        gt = GroundTruth(status_definitions={"done": "tested and merged"})
+        rendered = gt.render()
+        assert "tested and merged" in rendered
+
+    def test_render_includes_access_permissions(self):
+        gt = GroundTruth(
+            access_permissions=[
+                AccessPermission(role="QA", can_read=["src/"], can_write=["tests/"]),
+            ]
+        )
+        rendered = gt.render()
+        assert "QA" in rendered
+
+    def test_render_includes_external_dependencies(self):
+        gt = GroundTruth(external_dependencies={"Stripe": "99.9% SLA"})
+        rendered = gt.render()
+        assert "Stripe" in rendered
+        assert "99.9% SLA" in rendered
+
+    def test_render_includes_config_status(self):
+        gt = GroundTruth(
+            config_status=ConfigurationStatus(
+                agents_md_version="v2.1",
+                hooks_count=5,
+                mcp_servers=["filesystem", "github"],
+            )
+        )
+        rendered = gt.render()
+        assert "v2.1" in rendered
+        assert "5" in rendered
+        assert "filesystem" in rendered
+
+    def test_render_includes_infrastructure(self):
+        gt = GroundTruth(infrastructure_topology="3-tier: CDN → API → Postgres")
+        rendered = gt.render()
+        assert "3-tier" in rendered
+
+
+@pytest.mark.phase2
+class TestCheckpointZeroBudget:
+    def test_render_shows_zero_budget(self):
+        cp = Checkpoint(
+            session_id="s1",
+            resources=ResourceUsage(tokens_used=0, tokens_budget=0),
+        )
+        rendered = cp.render()
+        assert "Tokens: 0/0" in rendered
+
+    def test_render_shows_zero_time_budget(self):
+        cp = Checkpoint(
+            session_id="s1",
+            resources=ResourceUsage(time_minutes=0, time_budget_minutes=0),
+        )
+        rendered = cp.render()
+        assert "Time: 0/0" in rendered
+
+
+@pytest.mark.phase2
+class TestHandoffBriefRenderClean:
+    def test_render_omits_empty_sections(self):
+        brief = HandoffBrief(session_id="s1", completed_summary="Done")
+        rendered = brief.render()
+        assert "**Completed:** Done" in rendered
+        # Empty sections should not appear
+        assert "**In Progress:**" not in rendered
+        assert "**Blocked:**" not in rendered
+        assert "**Decisions:**" not in rendered

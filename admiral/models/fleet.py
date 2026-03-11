@@ -2,9 +2,9 @@
 
 Implements Section 11 — Fleet Composition.
 
-Define every agent role, scope, boundaries, and handoff contracts. Upper bound
-8-12 agents. Beyond that, coordination costs dominate. Start at 5; grow only
-when routing bottlenecks emerge.
+Define every agent role, scope, boundaries, and handoff contracts. Spec recommends
+starting at 5 and growing only when routing bottlenecks emerge. Upper bound is 12;
+beyond that, coordination costs dominate. Minimum is 1 (solo agent is valid).
 
 Anti-pattern: Fleet Bloat — more agents ≠ better results.
 Anti-pattern: QA by Implementer — never route QA to the agent who wrote the code.
@@ -158,23 +158,31 @@ class FleetRoster(BaseModel):
         return self.routing.validate_agents_exist(self.roles)
 
     def validate_no_self_qa(self) -> list[str]:
-        """Check that no agent routes QA output back to itself.
+        """Check that no agent handles both implementation and QA tasks.
 
         Per Section 11: Never route QA to the implementer who wrote the code.
+        Detects conflict by finding agents assigned to both QA/review tasks
+        and non-QA tasks — same agent doing both is a conflict of interest.
         """
-        violations = []
+        qa_keywords = {"review", "qa", "test", "audit", "verify"}
+
+        def is_qa_task(task_type: str) -> bool:
+            return any(kw in task_type.lower() for kw in qa_keywords)
+
+        # Build map: agent_role → (qa_tasks, impl_tasks)
+        qa_tasks: dict[str, list[str]] = {}
+        impl_tasks: dict[str, list[str]] = {}
         for rule in self.routing.rules:
-            if "review" in rule.task_type.lower() or "qa" in rule.task_type.lower():
-                # Check if the QA agent is the same as the implementer
-                impl_rule = next(
-                    (r for r in self.routing.rules
-                     if r.task_type.replace("review", "implement").replace("qa", "implement") == rule.task_type
-                     and r.agent_role == rule.agent_role),
-                    None,
+            if is_qa_task(rule.task_type):
+                qa_tasks.setdefault(rule.agent_role, []).append(rule.task_type)
+            else:
+                impl_tasks.setdefault(rule.agent_role, []).append(rule.task_type)
+
+        violations = []
+        for agent_role in qa_tasks:
+            if agent_role in impl_tasks:
+                violations.append(
+                    f"Agent '{agent_role}' handles both QA ({qa_tasks[agent_role]}) "
+                    f"and implementation ({impl_tasks[agent_role]}) — conflict of interest."
                 )
-                if impl_rule:
-                    violations.append(
-                        f"QA task '{rule.task_type}' routes to '{rule.agent_role}' "
-                        f"who also implements — conflict of interest."
-                    )
         return violations
