@@ -145,7 +145,7 @@ Structured around the four Adoption Levels (see index.md). Complete each level b
 
 ### Level 1: Disciplined Solo (30 minutes to configure, 1-2 days to implement)
 
-> **Time estimate clarification:** "30 minutes" is for **configuring** an existing tool (writing AGENTS.md, setting up hooks in Claude Code or your platform). If you are **building a framework implementation** (writing the hook engine, data models, etc.), expect 1-2 days for Level 1. The reference implementation (Admiral-builds-Admiral) took ~4,200 lines of Python and 89 tests to reach Level 1 completion. See Case Study 4 (Appendix D).
+> **Time estimate clarification:** "30 minutes" is for **configuring** an existing tool (writing AGENTS.md, setting up hooks in Claude Code or your platform). If you are **building a framework implementation** (writing the hook engine, data models, etc.), expect 1-2 days for Level 1. The reference implementation (Admiral-builds-Admiral) took ~5,300 lines of Python and 126 tests to reach verified Level 1 completion. See Case Study 4 (Appendix D).
 
 1. **Standing Orders (36)** — Load the 15 non-negotiable rules into agent context. These govern everything that follows. Despite their Part 11 position, Standing Orders are a Level 1 prerequisite — read them before implementing anything else.
 2. **Mission (01)** — What you are building. What success looks like.
@@ -173,32 +173,32 @@ Structured around the four Adoption Levels (see index.md). Complete each level b
 
 ### Level 2: Core Fleet (2-4 hours)
 
-7. **Ground Truth (05)** — Tech stack, tools, access, vocabulary.
-8. **Fleet Composition (11)** — 5-8 agents, roles, routing, interface contracts.
-9. **Decision Authority (09)** — Four authority tiers for this project's risk profile.
-10. **Tool & Capability Registry (12)** — Available and unavailable tools per agent.
-11. **Model Selection (13)** — Assign each role to a tier. Verify context fit.
-12. **Context Engineering (04)** — Write system prompts per prompt anatomy. Run probes.
-13. **Context Window Strategy (06)** — Profiles, loading order, progressive disclosure.
-14. **Work Decomposition (18)** — Break first phase into chunks.
-15. **Institutional Memory (24)** — File-based checkpoints and handoff documents.
+8. **Ground Truth (05)** — Tech stack, tools, access, vocabulary.
+9. **Fleet Composition (11)** — 5-8 agents, roles, routing, interface contracts.
+10. **Decision Authority (09)** — Four authority tiers for this project's risk profile.
+11. **Tool & Capability Registry (12)** — Available and unavailable tools per agent.
+12. **Model Selection (13)** — Assign each role to a tier. Verify context fit.
+13. **Context Engineering (04)** — Write system prompts per prompt anatomy. Run probes.
+14. **Context Window Strategy (06)** — Profiles, loading order, progressive disclosure.
+15. **Work Decomposition (18)** — Break first phase into chunks.
+16. **Institutional Memory (24)** — File-based checkpoints and handoff documents.
 
 ### Level 3: Governed Fleet (1-2 days)
 
-16. **Governance agents** — Deploy Token Budgeter, Hallucination Auditor, and Loop Breaker minimum. Add remaining governance agents as needed.
-17. **Cost Management (26)** — Per-session and per-phase budgets. Cost tracking active.
-18. **Brain Level 1-2** — File-based or SQLite Brain. Validate that persistent memory improves retrieval before scaling (see Section 15, "Start Simple").
-19. **Quality Assurance (21)** — Verification levels per task type. Self-healing loops operational.
-20. **Failure Recovery (22)** — Recovery ladder documented. Max retries set.
+17. **Governance agents** — Deploy Token Budgeter, Hallucination Auditor, and Loop Breaker minimum. Add remaining governance agents as needed.
+18. **Cost Management (26)** — Per-session and per-phase budgets. Cost tracking active.
+19. **Brain Level 1-2** — File-based or SQLite Brain. Validate that persistent memory improves retrieval before scaling (see Section 15, "Start Simple").
+20. **Quality Assurance (21)** — Verification levels per task type. Self-healing loops operational.
+21. **Failure Recovery (22)** — Recovery ladder documented. Max retries set.
 
 ### Level 4: Full Framework (1-2 weeks)
 
-21. **Brain Architecture (15)** — Deploy Postgres + pgvector. Create schema. Register Brain MCP server.
-22. **Knowledge Protocol (16)** — Configure zero-trust access control. Identity tokens. Add brain_query and brain_record to agent tool registries.
-23. **Protocol Integration (14)** — Register MCP servers. Configure A2A if needed.
-24. **Continuous Monitor** — Configure watched repos, RSS feeds. Enable GitHub Actions workflow. Quarantine layer active.
-25. **Fleet Observability (30)** — Instrumentation strategy. Trace correlation. Dashboards.
-26. **Remaining sections** — Adaptation (25), Metrics (27), Scaling (28), Governance (29), CI/CD Operations (31), Evaluation (32), Admiral (33), Expert Routing (34).
+22. **Brain Architecture (15)** — Deploy Postgres + pgvector. Create schema. Register Brain MCP server.
+23. **Knowledge Protocol (16)** — Configure zero-trust access control. Identity tokens. Add brain_query and brain_record to agent tool registries.
+24. **Protocol Integration (14)** — Register MCP servers. Configure A2A if needed.
+25. **Continuous Monitor** — Configure watched repos, RSS feeds. Enable GitHub Actions workflow. Quarantine layer active.
+26. **Fleet Observability (30)** — Instrumentation strategy. Trace correlation. Dashboards.
+27. **Remaining sections** — Adaptation (25), Metrics (27), Scaling (28), Governance (29), CI/CD Operations (31), Evaluation (32), Admiral (33), Expert Routing (34).
 
 **The most common mistake is starting at Level 4.** See Case Study 2 (Appendix D) for what happens when you over-engineer from day one.
 

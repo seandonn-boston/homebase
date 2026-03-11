@@ -350,6 +350,19 @@ Every orchestrator needs a clear decision envelope: what it may decide autonomou
 >    runtime. At Level 4, identity is a cryptographically signed token (see Section 16).
 >    The requirement is immutable binding, not cryptographic signing — the signing
 >    sophistication scales with adoption level.
+>
+>    **Level 1 identity example** (sufficient for Disciplined Solo):
+>    ```json
+>    {
+>      "agent_id": "admiral-solo",
+>      "role": "implementer",
+>      "authority_tier": "autonomous",
+>      "project": "my-project"
+>    }
+>    ```
+>    This is set once at session start and never modified. No signing, no expiry,
+>    no cross-project access control. Add HMAC-SHA256 signing at Level 4 when
+>    zero-trust access control is deployed — not before.
 > 3. **Orchestrator-level validation:** The Orchestrator validates that every task
 >    assignment includes the correct authority tier for the receiving agent. If a
 >    specialist attempts to operate at a tier above its assignment, the Orchestrator

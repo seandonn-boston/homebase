@@ -50,7 +50,7 @@ If you are starting at Level 1, you do not need to read the entire framework. Th
 |---|---|---|---|
 | 1 | [`index.md`](index.md) | Glossary + Adoption Levels | Shared vocabulary and your roadmap. |
 | 2 | [`part1-strategy.md`](part1-strategy.md) | Full file | Mission, Boundaries, Success Criteria — the three inputs every agent needs. |
-| 3 | [`part3-enforcement.md`](part3-enforcement.md) | Full file | The enforcement spectrum: hooks over instructions. This is the framework's core insight. |
+| 3 | [`part3-enforcement.md`](part3-enforcement.md) | Section 08 only | The enforcement spectrum: hooks over instructions. Sections 09 (Decision Authority) and 10 (Configuration Security) are Level 2+ — read them when you add a fleet. |
 | 3.5 | [`intent-engineering.md`](intent-engineering.md) | Six Elements of Intent | How to write mission, boundaries, and task assignments that give agents enough context to handle unexpected situations. |
 | 4 | [`part11-protocols.md`](part11-protocols.md) | Section 36 (Standing Orders) only | The fifteen non-negotiable rules loaded into every agent's standing context. |
 | 5 | [`appendices.md`](appendices.md) | Appendix A (Pre-Flight Checklist) | Go/no-go gate — confirms you have not missed anything critical. |
@@ -327,7 +327,7 @@ Sections are ordered by impact and grouped by relevance.
 | A | Pre-Flight Checklist | Go/no-go gate before fleet deployment. | |
 | B | Quick-Start Sequence | Level-structured operational order for standing up a new fleet. | |
 | C | Worked Example | A complete SaaS application fleet, end to end. | |
-| D | Case Studies | Three synthetic case studies: ungoverned, over-engineered, security-first. | |
+| D | Case Studies | Four case studies: ungoverned, over-engineered, security-first, and reference implementation (Admiral-builds-Admiral). | |
 | E | Platform Integration Patterns | How to use Admiral with Claude Code, Agent SDKs, and orchestration frameworks. | |
 | F | Framework Versioning | Version policy, migration between versions, agent definition versioning. | |
 | G | Implementation Status Map | Category 1/2/3 implementability for every framework component. | |
