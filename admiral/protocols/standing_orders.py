@@ -171,11 +171,12 @@ _STANDING_ORDERS: list[dict] = [
         "title": "Context Discovery",
         "priority": PriorityCategory.SCOPE,
         "rules": [
-            "Before producing any output, confirm you have the project context needed for your task.",
-            "Learn the project's structure, conventions, tech stack, and constraints from Ground Truth — do not infer them from code alone.",
-            "Identify where your domain-specific data lives in this project.",
-            "When project context is ambiguous or contradictory, flag it immediately.",
-            "Never assume project context carries over from a prior session. Verify it.",
+            "Before producing any output, confirm you have the project context needed for your task. If context has not been provided, request it before proceeding.",
+            "Learn the project's structure, conventions, tech stack, and constraints from Ground Truth — do not infer them from code alone and do not assume defaults.",
+            "Identify where your domain-specific data lives in this project. Do not act on a project you have not learned.",
+            "When project context is ambiguous or contradictory, flag it immediately. Do not resolve ambiguity by guessing — resolve it by asking.",
+            "Your Context Profile (standing, on-demand, session) defines what you need. If any of it is missing, you are context-starved and must say so before continuing.",
+            "Never assume project context carries over from a prior session. Verify it. Context is perishable.",
         ],
     },
     {

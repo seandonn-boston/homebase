@@ -179,20 +179,27 @@ class HookEngine:
                     executable = impl_candidate
 
             if executable is None:
-                import warnings
-
-                warnings.warn(
+                raise FileNotFoundError(
                     f"Hook '{manifest.name}' has a manifest at {manifest_path} "
-                    f"but no executable was found — skipping registration.",
-                    stacklevel=2,
+                    f"but no executable was found. A manifest without a "
+                    f"corresponding executable is an incomplete hook and must "
+                    f"be rejected at discovery time."
                 )
-                continue
 
             self.register(
                 manifest=manifest,
                 executable_path=executable,
             )
             discovered.append(manifest.name)
+
+        # Validate dependencies after all hooks are discovered.
+        # Per Section 08: runtime validates dependencies at SessionStart.
+        errors = self.validate_dependencies()
+        if errors:
+            raise ValueError(
+                f"Hook dependency validation failed after discovery: "
+                + "; ".join(errors)
+            )
 
         return discovered
 
@@ -303,6 +310,10 @@ class HookEngine:
         """Execute all hooks for an event in dependency order.
 
         Fail-fast: first failure stops the chain.
+        Hook state persistence: if a hook returns JSON with a "hook_state" key,
+        those values are merged into the payload for subsequent hooks in the chain.
+        This allows hooks like loop_detector and context_baseline to persist state
+        across invocations within a chain.
         """
         order = self.resolve_execution_order(event)
         chain_result = HookChainResult(event=event)
@@ -311,6 +322,18 @@ class HookEngine:
             hook = self._hooks[hook_name]
             result = self._execute_single(hook, event, payload)
             chain_result.results.append(result)
+
+            # Merge hook_state from stdout back into the payload so
+            # downstream hooks in the chain can see upstream state.
+            if result.stdout:
+                try:
+                    output = json.loads(result.stdout)
+                    if isinstance(output, dict) and "hook_state" in output:
+                        existing = payload.get("hook_state", {})
+                        existing.update(output["hook_state"])
+                        payload["hook_state"] = existing
+                except (json.JSONDecodeError, TypeError):
+                    pass
 
             if not result.passed:
                 chain_result.aborted = True
@@ -342,7 +365,7 @@ class HookEngine:
         failed = chain_result.failed_hook
         if failed:
             healing = self._self_healing.record_failure(
-                failed.hook_name, failed.stdout
+                failed.hook_name, failed.stdout, failed.exit_code
             )
             return chain_result, healing
 

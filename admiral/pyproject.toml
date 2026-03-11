@@ -33,10 +33,10 @@ mcp = [
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 markers = [
-    "phase1: Phase 1 - Foundation (Disciplined Solo)",
-    "phase2: Phase 2 - Core Fleet (Orchestration)",
-    "phase3: Phase 3 - Governed Fleet (Governance)",
-    "phase4: Phase 4 - Full Framework (Production)",
+    "phase1: Level 1 - Disciplined Solo",
+    "phase2: Level 2 - Coordinated Pair",
+    "phase3: Level 3 - Governed Fleet",
+    "phase4: Level 4 - Full Framework",
 ]
 
 [tool.setuptools.packages.find]

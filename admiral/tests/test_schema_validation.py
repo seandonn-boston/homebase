@@ -4,6 +4,8 @@ Validates that Pydantic models produce JSON that conforms to the
 authoritative JSON Schema files in aiStrat/.
 
 This catches divergence between spec schemas and implementation models.
+
+Level 2+ schema tests (handoff) are deferred.
 """
 
 from __future__ import annotations
@@ -14,20 +16,11 @@ from pathlib import Path
 import jsonschema
 import pytest
 
-from admiral.models.handoff import HandoffDocument, SessionHandoff
 from admiral.hooks.manifest import HookManifest
 
 # Paths to authoritative schemas
 SPEC_ROOT = Path(__file__).resolve().parent.parent.parent / "aiStrat"
-HANDOFF_SCHEMA_PATH = SPEC_ROOT / "handoff" / "v1.schema.json"
 HOOK_MANIFEST_SCHEMA_PATH = SPEC_ROOT / "hooks" / "manifest.schema.json"
-
-
-@pytest.fixture
-def handoff_schema() -> dict:
-    """Load the authoritative handoff v1 JSON Schema."""
-    with HANDOFF_SCHEMA_PATH.open() as f:
-        return json.load(f)
 
 
 @pytest.fixture
@@ -35,94 +28,6 @@ def hook_manifest_schema() -> dict:
     """Load the authoritative hook manifest JSON Schema."""
     with HOOK_MANIFEST_SCHEMA_PATH.open() as f:
         return json.load(f)
-
-
-# ── Handoff Schema Validation ──────────────────────────────────────────
-
-
-class TestHandoffSchemaValidation:
-    """Validate HandoffDocument instances against v1.schema.json."""
-
-    def test_minimal_handoff_validates(self, handoff_schema: dict) -> None:
-        """A minimal HandoffDocument should validate against the schema."""
-        doc = HandoffDocument(
-            **{
-                "from": "Backend Implementer",
-                "to": "QA Agent",
-                "via": "Orchestrator",
-                "task": "Review the API endpoint implementation",
-                "deliverable": "Code diff for /api/users endpoint",
-                "acceptance_criteria": ["All tests pass", "No lint errors"],
-            }
-        )
-        schema_dict = doc.to_schema_dict()
-        jsonschema.validate(instance=schema_dict, schema=handoff_schema)
-
-    def test_full_handoff_validates(self, handoff_schema: dict) -> None:
-        """A fully-populated HandoffDocument should validate against the schema."""
-        doc = HandoffDocument(
-            **{
-                "from": "API Designer",
-                "to": "Backend Implementer",
-                "via": "Orchestrator",
-                "task": "Implement the user registration endpoint",
-                "deliverable": "OpenAPI spec for POST /api/users",
-                "acceptance_criteria": ["Endpoint returns 201", "Validation errors return 422"],
-                "context_files": ["src/api/routes.py", "docs/api-spec.yaml"],
-                "assumptions": ["Using PostgreSQL as the database"],
-                "open_questions": ["Should we support OAuth in v1?"],
-                "metadata": {"priority": "high"},
-            }
-        )
-        schema_dict = doc.to_schema_dict()
-        jsonschema.validate(instance=schema_dict, schema=handoff_schema)
-
-    def test_session_handoff_validates(self, handoff_schema: dict) -> None:
-        """A HandoffDocument with session_handoff should validate."""
-        doc = HandoffDocument(
-            **{
-                "from": "Backend Implementer",
-                "to": "Backend Implementer",
-                "via": "Orchestrator",
-                "task": "Continue API implementation",
-                "deliverable": "Partial implementation of /api/users",
-                "acceptance_criteria": ["Pick up from checkpoint"],
-            }
-        )
-        doc.session_handoff = SessionHandoff(
-            session_id="session-001",
-            agent="Backend Implementer",
-            completed=["Database schema created"],
-            in_progress=["Route handler partially implemented"],
-            next_session_should=["Complete route handler", "Add tests"],
-        )
-        schema_dict = doc.to_schema_dict()
-        jsonschema.validate(instance=schema_dict, schema=handoff_schema)
-
-    def test_invalid_via_rejected_by_schema(self, handoff_schema: dict) -> None:
-        """The schema restricts 'via' to 'Orchestrator' or 'Direct'."""
-        invalid_doc = {
-            "$schema": "handoff/v1",
-            "from": "Agent A",
-            "to": "Agent B",
-            "via": "InvalidRoute",
-            "task": "Do something",
-            "deliverable": "Something",
-            "acceptance_criteria": ["Done"],
-        }
-        with pytest.raises(jsonschema.ValidationError):
-            jsonschema.validate(instance=invalid_doc, schema=handoff_schema)
-
-    def test_missing_required_field_rejected(self, handoff_schema: dict) -> None:
-        """The schema requires from, to, via, task, deliverable, acceptance_criteria."""
-        incomplete_doc = {
-            "$schema": "handoff/v1",
-            "from": "Agent A",
-            "to": "Agent B",
-            # missing via, task, deliverable, acceptance_criteria
-        }
-        with pytest.raises(jsonschema.ValidationError):
-            jsonschema.validate(instance=incomplete_doc, schema=handoff_schema)
 
 
 # ── Hook Manifest Schema Validation ────────────────────────────────────

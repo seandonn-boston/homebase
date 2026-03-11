@@ -78,7 +78,7 @@ When something goes wrong, follow this ladder in order (see Section 22 for detai
 2. **Fallback** — use a simpler, less optimal approach that still satisfies requirements
 3. **Backtrack** — roll back to the last checkpoint and try a fundamentally different path
 4. **Isolate and skip** — mark the task as blocked, document the blocker, move to the next task
-5. **Escalate** — produce a structured escalation report (see [Section 37](#37--escalation-protocol) for the required format) and stop
+5. **Escalate** — produce a structured escalation report and stop. At minimum, state: what is blocked, what you tried, and what you need. (The full escalation report format is defined in [Section 37](#37--escalation-protocol) — a Level 2+ concern for multi-agent routing. At Level 1, escalation means stopping work and reporting to the Admiral directly.)
 
 Do not loop at any step. If retries don't work, move down the ladder. Do not skip steps.
 

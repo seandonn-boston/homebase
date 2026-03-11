@@ -1,6 +1,6 @@
 """Tests for enforcement spectrum behavior.
 
-Phase 1: Validates constraint classification, enforcement level assignment,
+Level 1: Validates constraint classification, enforcement level assignment,
 and coverage validation.
 """
 

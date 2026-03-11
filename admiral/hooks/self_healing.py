@@ -49,23 +49,33 @@ class SelfHealingLoop:
     _last_signature: str | None = None
 
     @staticmethod
-    def compute_error_signature(hook_name: str, error_output: str) -> str:
+    def compute_error_signature(
+        hook_name: str, error_output: str, exit_code: int = 1
+    ) -> str:
         """Compute a stable signature for an error output.
 
-        Uses SHA-256 of the normalized error to detect identical errors
-        across consecutive retries.
+        Uses SHA-256 of the normalized error concatenated with the exit code
+        to detect identical errors across consecutive retries.
+
+        Per the spec glossary (Error signature): "the first line of stderr
+        concatenated with the exit code, with timestamps and line numbers
+        stripped." In practice, hooks write structured JSON to stdout (the
+        error signal fed back to the agent) and rarely use stderr, so this
+        implementation uses stdout + exit_code as the signature input.
         """
-        normalized = error_output.strip().lower()
-        content = f"{hook_name}:{normalized}"
+        first_line = error_output.strip().split("\n")[0].lower()
+        content = f"{hook_name}:{first_line}:{exit_code}"
         return hashlib.sha256(content.encode("utf-8")).hexdigest()[:16]
 
-    def record_failure(self, hook_name: str, error_output: str) -> SelfHealingResult:
+    def record_failure(
+        self, hook_name: str, error_output: str, exit_code: int = 1
+    ) -> SelfHealingResult:
         """Record a hook failure and determine if the loop should continue.
 
         Returns:
             SelfHealingResult indicating whether to retry or break.
         """
-        signature = self.compute_error_signature(hook_name, error_output)
+        signature = self.compute_error_signature(hook_name, error_output, exit_code)
         key = f"{hook_name}:{signature}"
         self._total_retries += 1
 

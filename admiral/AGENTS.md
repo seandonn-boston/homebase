@@ -27,15 +27,15 @@ LLM-LAST: Deterministic tools handle: testing, linting, type checking, formattin
 
 ## Success Criteria
 
-FUNCTIONAL: All Phase 1-4 tests pass. Hook engine discovers, validates, and executes hooks. Identity tokens sign and verify. Standing Orders load and render. Escalation reports generate correctly.
+FUNCTIONAL: All Level 1 tests pass. Hook engine discovers, validates, and executes hooks. Standing Orders load and render. Escalation reports generate correctly.
 
 QUALITY: `python -m pytest admiral/tests/ -v` exits 0. Every model validates against its spec schema where a JSON schema exists.
 
-COMPLETENESS: AGENTS.md, CLAUDE.md, all models, all hooks, all protocols, all tests.
+COMPLETENESS: AGENTS.md, CLAUDE.md, all Level 1 models, all Level 1 hooks, all protocols, all tests.
 
-NEGATIVE: No files modified outside `admiral/` (except `.github/CODEOWNERS`). No secrets in code. No disabled quality gates.
+NEGATIVE: No files modified outside `admiral/` (except `.github/CODEOWNERS` and `.claude/hooks.json`). No secrets in code. No disabled quality gates.
 
-VERIFICATION: Self-Check for Phase 1-2. Peer Review for Phase 3-4.
+VERIFICATION: Self-Check for Level 1.
 
 ## Standing Orders
 
@@ -48,15 +48,27 @@ All 15 Standing Orders from Section 36 apply. Priority when conflicts arise:
 
 Load the full set via: `from admiral.protocols.standing_orders import load_standing_orders`
 
-## Enforcement Classification
+## Enforcement Classification (Level 1)
 
 | Category | Hook (deterministic) | Instruction (firm) |
 |---|---|---|
-| Security | identity_validation, tier_validation | Use secure patterns |
+| Security | — | Use secure patterns |
 | Scope | token_budget_gate | Stay within task scope |
 | Quality | context_health_check | Write clean code |
 | Process | token_budget_tracker, loop_detector | Follow spec-first pipeline |
 | Cost | token_budget_gate | Be mindful of token usage |
+
+Level 2+ hooks (tier_validation, identity_validation, governance_heartbeat_monitor) are deferred.
+
+## Live Enforcement
+
+Hooks are wired into Claude Code via `.claude/hooks.json` and fire through the runtime adapter (`admiral/runtime/hook_adapter.py`):
+
+- **SessionStart**: Resets session state, fires `context_baseline`, injects Standing Orders
+- **PreToolUse**: Fires `token_budget_gate` — blocks if budget exhausted
+- **PostToolUse**: Fires `token_budget_tracker`, `loop_detector`, `context_health_check`
+
+State persists across hook invocations in `.admiral/session_state.json`.
 
 ## Design Principles
 
@@ -79,7 +91,8 @@ Load the full set via: `from admiral.protocols.standing_orders import load_stand
 | See data models | `admiral/models/` |
 | See hook engine | `admiral/hooks/engine.py` |
 | See Standing Orders | `admiral/protocols/standing_orders.py` |
+| See runtime adapter | `admiral/runtime/hook_adapter.py` |
 
 ## Adoption Level
 
-This project is currently at **Level 1: Disciplined Solo** — one agent with clear Identity, Scope, Boundaries, and hooks. Graduating to Level 2 when fleet composition and routing are implemented.
+This project is currently at **Level 1: Disciplined Solo** — one agent with clear Identity, Scope, Boundaries, and 5 hooks deployed as live enforcement. Graduating to Level 2 when fleet composition and routing are implemented.

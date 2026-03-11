@@ -3,6 +3,9 @@ __pycache__/
 .pytest_cache/
 *.egg-info/
 
+# Admiral runtime session state (ephemeral, session-scoped)
+.admiral/
+
 # Monitor: state and digests are committed deliberately via CI,
 # but seed candidates should be reviewed before committing
 # aiStrat/monitor/digests/seed-candidates-*.py

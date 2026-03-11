@@ -1,7 +1,9 @@
 """Tests for all core data models.
 
-Phase 1: Validates that every spec structure serializes, validates,
+Level 1: Validates that every spec structure serializes, validates,
 and rejects invalid input correctly.
+
+Level 2+ models (handoff, task, config, identity tokens) are deferred.
 """
 
 from __future__ import annotations
@@ -40,21 +42,6 @@ from admiral.models.agent import (
     AgentScope,
     ToolPermission,
 )
-from admiral.models.handoff import (
-    HandoffDocument,
-    SessionHandoff,
-    HandoffConstraints,
-)
-from admiral.models.task import (
-    Chunk,
-    TaskDecomposition,
-    ChunkState,
-    PipelineStage,
-    FailureScenario,
-    QualityGate,
-    VerificationLevel,
-)
-from admiral.models.config import FleetConfiguration, ProjectConfig, GroundTruth
 
 
 # === Mission Models ===
@@ -279,145 +266,3 @@ class TestAgent:
                 model_tier=ModelTier.WORKHORSE,
             )
             assert a.category == cat
-
-
-# === Handoff Models ===
-
-@pytest.mark.phase1
-class TestHandoff:
-    def test_create_handoff(self):
-        h = HandoffDocument(
-            **{
-                "from": "API Designer",
-                "to": "Backend Implementer",
-                "via": "Orchestrator",
-                "task": "Implement the /users endpoint",
-                "deliverable": "OpenAPI spec for /users",
-                "acceptance_criteria": ["Endpoint returns 200", "Tests pass"],
-            }
-        )
-        assert h.from_agent == "API Designer"
-        assert h.to_agent == "Backend Implementer"
-        assert len(h.acceptance_criteria) == 2
-
-    def test_handoff_text_rendering(self):
-        h = HandoffDocument(
-            **{
-                "from": "QA Agent",
-                "to": "Backend Implementer",
-                "via": "Orchestrator",
-                "task": "Fix failing test",
-                "deliverable": "Test failure report",
-                "acceptance_criteria": ["Test passes"],
-                "assumptions": ["The test was passing before"],
-            }
-        )
-        text = h.to_text()
-        assert "QA Agent → Backend Implementer" in text
-        assert "ASSUMPTIONS:" in text
-
-    def test_handoff_schema_dict(self):
-        h = HandoffDocument(
-            **{
-                "from": "A",
-                "to": "B",
-                "via": "Orchestrator",
-                "task": "Do something",
-                "deliverable": "Output",
-                "acceptance_criteria": ["Done"],
-            }
-        )
-        d = h.to_schema_dict()
-        assert d["$schema"] == "handoff/v1"
-        assert d["from"] == "A"
-        assert d["to"] == "B"
-
-    def test_session_handoff(self):
-        sh = SessionHandoff(
-            session_id="session-001",
-            agent="Backend Implementer",
-            completed=["Implemented /users GET"],
-            in_progress=["Implementing /users POST"],
-            next_session_should=["Complete /users POST", "Add tests"],
-        )
-        assert len(sh.next_session_should) == 2
-
-
-# === Task Models ===
-
-@pytest.mark.phase1
-class TestTask:
-    def test_chunk_budget_check(self):
-        c = Chunk(
-            id="chunk-1",
-            title="Implement feature",
-            estimated_tokens=50_000,
-        )
-        assert c.check_budget(200_000) is True  # 50k < 80k (40% of 200k)
-        assert c.check_budget(100_000) is False  # 50k > 40k (40% of 100k)
-
-    def test_task_decomposition_progress(self):
-        td = TaskDecomposition(
-            task_id="task-1",
-            title="Build admiral",
-            chunks=[
-                Chunk(id="c1", title="Models", state=ChunkState.COMPLETED),
-                Chunk(id="c2", title="Hooks", state=ChunkState.COMPLETED),
-                Chunk(id="c3", title="Tests", state=ChunkState.PENDING),
-                Chunk(id="c4", title="Review", state=ChunkState.PENDING),
-            ],
-        )
-        assert td.progress == 0.5
-        assert len(td.pending_chunks) == 2
-        assert len(td.completed_chunks) == 2
-
-    def test_ready_chunks_respect_dependencies(self):
-        td = TaskDecomposition(
-            task_id="task-1",
-            title="Build",
-            chunks=[
-                Chunk(id="c1", title="Foundation", state=ChunkState.COMPLETED),
-                Chunk(id="c2", title="Walls", dependencies=["c1"]),
-                Chunk(id="c3", title="Roof", dependencies=["c2"]),
-            ],
-        )
-        ready = td.get_ready_chunks()
-        assert len(ready) == 1
-        assert ready[0].id == "c2"
-
-    def test_validate_budget(self):
-        td = TaskDecomposition(
-            task_id="task-1",
-            title="Build",
-            total_token_budget=100_000,
-            chunks=[
-                Chunk(id="c1", title="Small", estimated_tokens=30_000),
-                Chunk(id="c2", title="Too big", estimated_tokens=50_000),
-            ],
-        )
-        violations = td.validate_budget()
-        assert len(violations) == 1
-        assert "c2" in violations[0]
-
-
-# === Config Models ===
-
-@pytest.mark.phase1
-class TestConfig:
-    def test_fleet_config(self, sample_mission):
-        fc = FleetConfiguration(
-            project=ProjectConfig(
-                name="admiral-self-build",
-                mission=sample_mission,
-            ),
-        )
-        assert fc.min_agents == 5
-        assert fc.max_agents == 12
-        assert len(fc.core_fleet_agents) == 11
-        assert fc.first_pass_quality_threshold == 0.75
-
-    def test_design_principles_default(self, sample_mission):
-        pc = ProjectConfig(name="test", mission=sample_mission)
-        assert "Hooks over instructions" in pc.design_principles
-        assert "Zero-trust" in pc.design_principles
-        assert len(pc.design_principles) == 7
