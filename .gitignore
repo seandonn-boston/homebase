@@ -1,6 +1,7 @@
 __pycache__/
 *.pyc
 .pytest_cache/
+*.egg-info/
 
 # Monitor: state and digests are committed deliberately via CI,
 # but seed candidates should be reviewed before committing

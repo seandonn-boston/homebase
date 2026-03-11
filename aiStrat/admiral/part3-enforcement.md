@@ -13,6 +13,8 @@
 
 This distinction — between advisory instructions and deterministic enforcement — is the foundation of reliable fleet operations.
 
+> **PREREQUISITE: Read Standing Orders (Section 36, Part 11) before implementing hooks.** Standing Orders define the *policy* that hooks enforce. Both are Level 1 requirements. Implementing hooks without Standing Orders produces enforcement without governance — the hooks enforce nothing meaningful. Hooks are the mechanism; Standing Orders are the policy.
+
 ### The Enforcement Spectrum
 
 | Level | Mechanism | Reliability | Use For |
@@ -242,7 +244,7 @@ Every hook must ship with a `hook.manifest.json` conforming to `hooks/manifest.s
 
 - **Dependency resolution:** The `requires` field lists hooks that must be active in the session. The runtime validates all dependencies at `SessionStart` and rejects sessions with unsatisfied or circular dependencies.
 - **Version compatibility:** The `input_contract` field is a simple version string. Hooks with the same version are wire-compatible. Breaking input changes require a new version string.
-- **Registration:** All hook manifests are discovered from the `hooks/` directory tree at `SessionStart`. Invalid manifests block session start.
+- **Registration:** All hook manifests are discovered from the project's hook directory tree at `SessionStart`. Invalid manifests block session start. **Note:** The `aiStrat/hooks/` directory contains specification-only manifests (no executables) — see `hooks/README.md`. Your project's hook directory should contain both manifests and their corresponding executables. A manifest without a corresponding executable is an incomplete hook and should be rejected at discovery time.
 - **Event types:** Manifests support the standard lifecycle events (`PreToolUse`, `PostToolUse`, `PreCommit`, `PostCommit`, `SessionStart`, `TaskCompleted`, `PrePush`) plus `Periodic` for interval-based hooks like the governance heartbeat monitor.
 
 See `hooks/README.md` for the full ecosystem specification, directory conventions, and reference manifests.
@@ -261,6 +263,20 @@ Agent writes code
 
 One deterministic check that fires every time and self-heals is more effective than three manual review passes that may or may not happen. Apply the same pattern to type checking, tests, and formatting.
 
+**Self-healing implementation parameters** (not specified above — implementers must design these):
+
+| Parameter | Recommended Default | Rationale |
+|---|---|---|
+| Max retries per hook per error | 3 | Prevents infinite loops while allowing genuine variation |
+| Max session-wide retries | 10 | Caps total self-healing cost across all hooks |
+| Error signature format | `(hook_name, hash(error_output))` | Enables cycle detection — same error recurring means fix didn't work |
+| Cycle detection | Track `(hook_name, error_signature)` tuples | If same tuple recurs after fix attempt, break immediately |
+| On max retries exceeded | Move to recovery ladder step 2 (fallback) | Matches SO 6 escalation sequence |
+
+> **Implementation lesson (Admiral-builds-Admiral):** The spec describes self-healing conceptually but leaves implementation parameters to the implementer. The reference implementation (`admiral/hooks/self_healing.py`) uses the defaults above. The cycle detection via `(hook_name, error_signature)` tuples was the key insight — without it, agents retry the same broken fix indefinitely.
+
+> **Two retry mechanisms, different layers:** Hook self-healing retries (max 3, automatic, deterministic) operate at the enforcement layer. The recovery ladder retries in Standing Order 6 and Section 22 ("2-3 attempts, each genuinely different") operate at the task layer and are agent-driven. These are complementary, not competing: hooks catch mechanical failures; the recovery ladder handles strategic dead ends. When hook retries are exhausted, escalation flows to the recovery ladder (step 2: fallback).
+
 > **TEMPLATE: ENFORCEMENT CLASSIFICATION**
 >
 > HARD ENFORCEMENT (hooks):
@@ -272,7 +288,17 @@ One deterministic check that fires every time and self-heals is more effective t
 > SOFT GUIDANCE (reference):
 > - [Preference]: [Where noted]
 
-> **ANTI-PATTERN: ALL INSTRUCTIONS, NO HOOKS** — The Admiral writes comprehensive AGENTS.md rules but implements zero hooks. For the first 60% of a session, rules are followed. As context pressure builds, rules near the beginning lose attention weight. The agent violates constraints it followed an hour ago. More rules are added. The file grows. The agent ignores more. Death spiral.
+> **CLASSIFICATION DECISION PROCESS:**
+>
+> For each constraint, ask in order:
+> 1. **Is it safety/security-critical?** (secrets, auth, data loss) → **Hook.** No exceptions.
+> 2. **Does a deterministic tool exist to check it?** (linter, type checker, test) → **Hook.** Automate what can be automated.
+> 3. **Is it an important convention that requires judgment?** (architecture patterns, naming, design) → **Firm guidance** (AGENTS.md).
+> 4. **Is it a preference with acceptable exceptions?** (line length, comment style) → **Soft guidance** (reference docs).
+>
+> Example: "Never commit secrets" → safety-critical → Hook (pre-commit scanner). "Use TypeScript strict mode" → deterministic tool exists (`tsc --strict`) → Hook. "Prefer composition over inheritance" → judgment-dependent → Firm guidance. "Keep functions under 50 lines" → preference with exceptions → Soft guidance.
+
+> **ANTI-PATTERN: ALL INSTRUCTIONS, NO HOOKS** — The Admiral writes comprehensive AGENTS.md rules but implements zero hooks. For the first 60% of a session, rules are followed. As context pressure builds, rules near the beginning lose attention weight. The agent violates constraints it followed an hour ago. More rules are added. The file grows. The agent ignores more. Death spiral. **Defense:** Standing Order 6 (Recovery Protocol) — when rules aren't being followed, convert to hooks. The Admiral-builds-Admiral reference implementation (Case Study 4, Appendix D) made this exact error by deferring hooks in favor of instructions.
 
 -----
 
@@ -316,8 +342,12 @@ Every orchestrator needs a clear decision envelope: what it may decide autonomou
 >    authority tiers, decision permissions, or scope modifications is flagged for
 >    Admiral review before activation.
 > 2. **Runtime authority binding:** Authority tiers are bound to the agent's identity
->    token at session start, not read from Brain entries or configuration files during
+>    at session start, not read from Brain entries or configuration files during
 >    execution. An agent cannot change its own authority tier mid-session.
+>    At Levels 1-3, identity may be a simple agent-id + role string set by the
+>    runtime. At Level 4, identity is a cryptographically signed token (see Section 16).
+>    The requirement is immutable binding, not cryptographic signing — the signing
+>    sophistication scales with adoption level.
 > 3. **Orchestrator-level validation:** The Orchestrator validates that every task
 >    assignment includes the correct authority tier for the receiving agent. If a
 >    specialist attempts to operate at a tier above its assignment, the Orchestrator

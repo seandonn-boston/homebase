@@ -206,7 +206,7 @@ The budget percentages above are reference points calibrated for 200K-token cont
 >
 > SACRIFICE ORDER: [When full, what gets compressed first]
 
-> **ANTI-PATTERN: CONTEXT STUFFING** — Loading every artifact "just in case." Standing context consumes 60% of the window. Output becomes shallow and unfocused. More context is not better context. Curate ruthlessly.
+> **ANTI-PATTERN: CONTEXT STUFFING** — Loading every artifact "just in case." Standing context consumes 60% of the window. Output becomes shallow and unfocused. More context is not better context. Curate ruthlessly. **Defense:** Standing Order 11 (Context Discovery) — agents must verify context source and relevance before loading.
 
 -----
 
@@ -260,6 +260,11 @@ AGENTS.md should not exceed 150 lines. For each line, ask "Would removing this c
 - Move per-agent instructions to agent-specific files (each agent loads only its own).
 - Move path-specific rules to path-scoped files (loaded only when working in that directory).
 - What remains in AGENTS.md: project identity, tech stack, critical conventions, workflow essentials.
+- **Standing Orders (Section 36) must be referenced or loaded from AGENTS.md.** Standing Orders are Level 1 requirements — they define what hooks enforce. Load them before hooks, before infrastructure code. See the co-requirement note in Section 08.
+
+> **Creation order for new projects:** (1) Create AGENTS.md with project identity, tech stack, critical conventions. (2) Create tool-specific pointers (CLAUDE.md, .cursorrules). (3) Add skills as domain knowledge accumulates. (4) Add path-specific rules when directory-scoped conventions emerge. The first two are Level 1 requirements. Skills and path rules are Level 2+.
+
+> **ANTI-PATTERN: BUILDING THE TOOLBOX WITHOUT THE TOOLBOX** — When your project is itself a framework implementation, the temptation is to build the configuration infrastructure (hooks, skills, agent definitions) before creating the configuration files (AGENTS.md, Standing Orders). This inverts the dependency: the configuration files should govern how the infrastructure is built, not the other way around. Create AGENTS.md first, even if it's minimal. Iterate on it as the infrastructure matures.
 
 ### Cross-Tool Portability
 

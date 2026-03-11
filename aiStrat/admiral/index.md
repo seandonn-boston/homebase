@@ -23,12 +23,14 @@ You don't need to read 200 pages before deploying your first agent. Start at Lev
 
 | Level | What You Use | Time to Value | When to Advance |
 |---|---|---|---|
-| **Level 1: Disciplined Solo** | AGENTS.md (and tool-specific pointers like CLAUDE.md) with enforcement spectrum (Section 08). Hooks for safety-critical constraints (including token budget, loop detection, and context health hooks from Section 08). Standing Orders (Section 36). One agent with clear Identity/Scope/Boundaries. | 30 minutes | When you need multiple specialists coordinating on a single task. |
+| **Level 1: Disciplined Solo** | Create AGENTS.md (<150 lines) and tool-specific pointers (CLAUDE.md, etc.). Define enforcement spectrum (Section 08). Implement hooks for safety-critical constraints (including token budget, loop detection, and context health hooks from Section 08). Load Standing Orders (Section 36) into agent context. One agent with clear Identity/Scope/Boundaries. Simple identity model (agent-id + role) for authority binding. | 30 min (config) / 1-2 days (build) | When you need multiple specialists coordinating on a single task. |
 | **Level 2: Core Fleet** | Everything in Level 1 plus Fleet Composition (Section 11) with 5–8 agents, routing rules, interface contracts, and the recovery ladder. Hook-based enforcement for budget, loops, and context health (no governance agents required). File-based checkpoints for session persistence. | 2–4 hours | When convention drift, scope creep, or hallucination compound across sessions and you can't catch them manually. |
 | **Level 3: Governed Fleet** | Everything in Level 2 plus 3–7 governance agents (Token Budgeter, Hallucination Auditor, Loop Breaker minimum — matching the Core Fleet "always deploy" set). Add Drift Monitor, Bias Sentinel, Context Health Monitor, and Contradiction Detector as fleet size and risk warrant. Decision authority tiers enforced. Brain at Level 1–2 (file-based or SQLite). | 1–2 days | When cross-session knowledge reuse is critical, or when fleet size exceeds what one Orchestrator can effectively govern. |
 | **Level 4: Full Framework** | Everything in Level 3 plus full Brain (Postgres + pgvector + MCP), Continuous Monitor, scale agents for review cycles, identity tokens, zero-trust access control, fleet observability. | 1–2 weeks | This is the target state for production fleets operating continuously. |
 
 **The most common mistake is starting at Level 4.** The administrative overhead of 40+ agents, a full Brain, and 7 governance agents exceeds the value for any project that hasn't yet validated its fleet's core workflow. Start at Level 1. Each level builds on the previous one. Skip nothing.
+
+> **Config time vs. build time:** The "Time to Value" column has two meanings depending on your context. If you are **configuring** Admiral on an existing platform (e.g., writing AGENTS.md and hooks for Claude Code), the time estimates are for configuration. If you are **implementing** Admiral as code (building a hook engine, data models, test suites), expect significantly longer — the config-to-build ratio varies by level but is typically 50-100x for Level 1. The reference implementation needed ~5,000 lines of Python, 126 tests, and 2 days to reach verified Level 1 completion. See Case Study 4 in Appendix D for the full account.
 
 ### What Each Level Adds
 
@@ -40,13 +42,14 @@ You don't need to read 200 pages before deploying your first agent. Start at Lev
 
 ### Minimum Viable Reading Path
 
-If you are starting at Level 1, you do not need to read the entire framework. These five files (~800 lines total) give you everything you need to deploy your first governed agent. Read the rest when you need it.
+If you are starting at Level 1, you do not need to read the entire framework. These six files (~900 lines total) give you everything you need to deploy your first governed agent. Read the rest when you need it.
 
 | Order | File | What to Read | Why |
 |---|---|---|---|
 | 1 | [`index.md`](index.md) | Glossary + Adoption Levels | Shared vocabulary and your roadmap. |
 | 2 | [`part1-strategy.md`](part1-strategy.md) | Full file | Mission, Boundaries, Success Criteria — the three inputs every agent needs. |
 | 3 | [`part3-enforcement.md`](part3-enforcement.md) | Full file | The enforcement spectrum: hooks over instructions. This is the framework's core insight. |
+| 3.5 | [`intent-engineering.md`](intent-engineering.md) | Six Elements of Intent | How to write mission, boundaries, and task assignments that give agents enough context to handle unexpected situations. |
 | 4 | [`part11-protocols.md`](part11-protocols.md) | Section 36 (Standing Orders) only | The fifteen non-negotiable rules loaded into every agent's standing context. |
 | 5 | [`appendices.md`](appendices.md) | Appendix A (Pre-Flight Checklist) | Go/no-go gate — confirms you have not missed anything critical. |
 
@@ -168,6 +171,7 @@ Terms are listed alphabetically. When these terms appear in any part file, they 
 | **Embedding** | A vector representation of text that captures semantic meaning. Used by the Brain (pgvector) to match queries by meaning, not keywords. Section 15. |
 | **Enforced tier** | Decision authority level handled by hooks, not agent judgment. The agent never makes this decision — the enforcement layer prevents or requires the action deterministically. |
 | **Escalate tier** | Decision authority level where the agent stops all work and flags to the Admiral immediately. Used for scope changes, budget overruns, security concerns, contradictory requirements. |
+| **Error signature** | A normalized representation of a hook failure used for cycle detection. Recommended: the first line of stderr concatenated with the exit code, with timestamps and line numbers stripped. Used by the self-healing loop (Section 08) to detect when an agent is producing the same failure repeatedly. |
 | **Escalation report** | Structured document produced when an agent exhausts its recovery ladder: blocker, context, approaches attempted, root cause assessment, what's needed, impact, recommendation. Section 22. |
 | **Event-driven agent** | An agent triggered by repository or system events (PR opened, CI failed, scheduled cron) rather than interactive sessions. Requires pre-configured context bootstrapping and narrower authority tiers. Section 31. |
 | **Exemplar** | A tracked repository representing best-in-class agent tooling (e.g., Claude Code, Aider, Cline). The monitor watches exemplars for releases, configuration changes, and design patterns that should inform fleet configuration. Section 17. |

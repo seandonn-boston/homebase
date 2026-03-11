@@ -36,7 +36,7 @@ Agent completes implementation
 
 QA focuses on what machines cannot check: logic correctness, design quality, edge case completeness, architectural alignment.
 
-**Cycle detection in self-healing loops:** The runtime tracks `(check_name, error_signature)` tuples across iterations. If the same error recurs after a fix attempt, the loop breaks immediately — the agent is producing the same failure and further retries are wasteful. Maximum iterations per loop: 3 (configurable). When the loop terminates without resolution, the agent moves to step 2 of the recovery ladder (fallback). See Section 08 for the full hook execution model.
+**Cycle detection in self-healing loops:** The runtime tracks `(check_name, error_signature)` tuples across iterations. If the same error recurs after a fix attempt, the loop breaks immediately — the agent is producing the same failure and further retries are wasteful. Maximum iterations per loop: configurable (see Section 08 for the authoritative default and full implementation parameters). When the loop terminates without resolution, the agent moves to step 2 of the recovery ladder (fallback). See Section 08 for the full hook execution model.
 
 ### QA Feedback Loop
 
@@ -72,7 +72,7 @@ The ladder preserves agent autonomy for as long as possible and escalates only w
 2. **Fallback to simpler approach.** Known-safe fallback producing lesser but acceptable result. Defined in advance.
 3. **Backtrack.** Roll back to last known-good state. Try a different path entirely. Distinct from retry — abandons the current approach.
 4. **Isolate and skip.** Mark task as blocked with structured report. Move to next task. Surface at checkpoint.
-5. **Escalate to Admiral.** Structured escalation report. No further creative solutions.
+5. **Escalate to Admiral.** Structured escalation report per [Section 37](part11-protocols.md) format. No further creative solutions.
 
 ### Backtracking
 
@@ -81,6 +81,8 @@ Effective backtracking requires:
 - **Checkpoint before branching decisions.** Save state before committing to an approach.
 - **Clean rollback.** Return to checkpoint without residual state from the failed path.
 - **Path memory.** Record which paths were tried and why they failed.
+
+> When backtracking invalidates downstream work (e.g., a schema change that affects API contracts and UI), review the Cascade Map (Section 25) to identify affected artifacts. Backtracking without cascading is the recovery equivalent of "Patch Without Cascade" (Section 25 anti-pattern).
 
 > **ESCALATION REPORT format:** See [Part 11 — Escalation Protocol, Section 37](part11-protocols.md) for the authoritative escalation report template.
 

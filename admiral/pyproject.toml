@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=68.0", "setuptools-scm>=8.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "admiral"
+version = "0.1.0"
+description = "Admiral Framework — Governance for Autonomous AI Agent Fleets"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "Proprietary"}
+dependencies = [
+    "jsonschema>=4.20.0",
+    "pydantic>=2.5.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+]
+brain-l2 = [
+    "numpy>=1.26.0",
+]
+brain-l3 = [
+    "psycopg[binary]>=3.1.0",
+    "pgvector>=0.2.0",
+]
+mcp = [
+    "mcp>=1.0.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "phase1: Phase 1 - Foundation (Disciplined Solo)",
+    "phase2: Phase 2 - Core Fleet (Orchestration)",
+    "phase3: Phase 3 - Governed Fleet (Governance)",
+    "phase4: Phase 4 - Full Framework (Production)",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["admiral*"]

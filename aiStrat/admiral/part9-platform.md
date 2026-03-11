@@ -3,6 +3,8 @@
 
 *The infrastructure that surrounds the fleet.*
 
+> **Naming hazard:** "Platform" conflicts with Python's `platform` stdlib module and potentially with similar names in other languages. If implementing Part 9 concepts as a code package, use an alternative name (e.g., `platform_ops/`). See Appendix E, Implementation Pitfalls for details.
+
 *Parts 1–8 define what the fleet is, what it knows, how it's enforced, who does the work, what it remembers, how it executes, how it maintains quality, and how it operates over time. Part 9 addresses the engineering infrastructure beneath all of that: how you see what agents are actually doing at runtime, how agents operate without a human pressing the button, and how you know whether your fleet configuration is any good. These three sections turn agent operations from artisanal session work into repeatable engineering.*
 
 -----

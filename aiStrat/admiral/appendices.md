@@ -79,16 +79,23 @@ Before deploying any new fleet, verify every item. If any box is unchecked, the 
 
 Structured around the four Adoption Levels (see index.md). Complete each level before advancing. Each level progressively deepens intent operationalization: Level 1 establishes the **intent foundation** (what are we building, what constrains us, how do we know we're done). Level 2 makes intent **operational** (who enforces it, with what tools, how do they coordinate). Level 3 adds **intent governance** (how do we detect when intent is being violated). Level 4 makes intent **persistent** (how do we remember what we learned, scale safely).
 
-### Level 1: Disciplined Solo (30 minutes)
+### Level 1: Disciplined Solo (30 minutes to configure, 1-2 days to implement)
 
-1. **Mission (01)** — What you are building. What success looks like.
-2. **Boundaries (02)** — What you are NOT building. Resource budgets.
-3. **Success Criteria (03)** — Machine-verifiable definition of "done."
-4. **Deterministic Enforcement (08)** — Classify constraints. Implement hooks for safety-critical ones.
-5. **Configuration File Strategy (07)** — AGENTS.md (<150 lines). Tool-specific pointers configured. Standing Orders loaded.
-6. **Configuration Security (10)** — Audit configs. Pin MCP servers. Set CODEOWNERS.
+> **Time estimate clarification:** "30 minutes" is for **configuring** an existing tool (writing AGENTS.md, setting up hooks in Claude Code or your platform). If you are **building a framework implementation** (writing the hook engine, data models, etc.), expect 1-2 days for Level 1. The reference implementation (Admiral-builds-Admiral) took ~4,200 lines of Python and 89 tests to reach Level 1 completion. See Case Study 4 (Appendix D).
+
+1. **Standing Orders (36)** — Load the 15 non-negotiable rules into agent context. These govern everything that follows. Despite their Part 11 position, Standing Orders are a Level 1 prerequisite — read them before implementing anything else.
+2. **Mission (01)** — What you are building. What success looks like.
+3. **Boundaries (02)** — What you are NOT building. Resource budgets.
+4. **Success Criteria (03)** — Machine-verifiable definition of "done."
+5. **Configuration File Strategy (07)** — Create AGENTS.md (<150 lines). Tool-specific pointers configured. Reference Standing Orders from AGENTS.md.
+6. **Deterministic Enforcement (08)** — Classify constraints (see classification decision process in Section 08). Implement hooks for safety-critical ones. Standing Orders define the *content* that hooks enforce.
+7. **Configuration Security (10)** — Audit configs. Pin MCP servers (if applicable at this level). Set CODEOWNERS.
+
+> **Critical sequencing insight (from implementation):** Implementers naturally organize work by *code architecture* (data models → engine → tests). Admiral organizes by *operational maturity*. These are different orderings. If you build the hook engine before creating AGENTS.md and loading Standing Orders, you have infrastructure without governance — the dogfooding loop is broken. **Create AGENTS.md and Standing Orders first**, then build the infrastructure to enforce them.
 
 **You can start working here.** One agent with clear Identity, Scope, Boundaries, and hooks.
+
+> **Note on Identity Tokens:** At Level 1, simplified identity (agent-id + role, no cryptographic signing) is sufficient. Full HMAC-SHA256 token signing with expiry and cross-project access control is a Level 4 concern (Section 09, vulnerability 8.3.2). However, the identity *model* should be defined at Level 1 so it can be progressively hardened.
 
 ### Level 2: Core Fleet (2-4 hours)
 
@@ -124,6 +131,8 @@ Structured around the four Adoption Levels (see index.md). Complete each level b
 -----
 
 ## C — Worked Example: SaaS Task Manager
+
+> **Adoption level note:** This example deploys a Level 3 fleet (8 agents including governance agents). The Mission, Boundaries, Success Criteria, and Enforcement sections apply at Level 1. The Fleet Roster and governance failure scenarios demonstrate Level 3 capabilities — if you are at Level 1-2, they show where you are headed, not what you need now.
 
 A concrete application for a mid-complexity greenfield project.
 
@@ -356,6 +365,47 @@ These case studies are synthesized from patterns observed across multiple agent 
 - Zero false positives from quarantine over 6 weeks.
 - Identity token overhead: <2% of request latency.
 
+### Case Study 4: Admiral Builds Admiral (Reference Implementation)
+
+**Setup:** Single-agent implementation using Claude Code. Goal: implement Admiral Framework as working Python code, governed by Admiral's own doctrine. Dogfooding from commit zero. Branch: `claude/admiral-competitor-research-GVKNX`.
+
+**Phase 1 Plan:** Organized by code architecture — data models first, then hook engine, then tests. Deferred Standing Orders and AGENTS.md to later phases because they appeared in Part 11 (late in the document) and seemed like "configuration, not code."
+
+**What went right:**
+- Core data models faithfully replicate every spec section (8 model files, Pydantic validation).
+- Hook engine implements full Section 08: discovery, topological dependency resolution, fail-fast chain execution, self-healing with cycle detection.
+- All 8 hook implementations match their spec definitions exactly.
+- Identity tokens use HMAC-SHA256 signing, session-scoped, non-delegable — per vulnerability 8.3.2 mitigation.
+- 89 tests passing on first commit.
+
+**What went wrong:**
+1. **Standing Orders deferred to Phase 4.** Part 11's structural position (last part) made it seem like a late-stage concern. It is Level 1. The plan had a design error that contradicted the spec's own adoption levels.
+2. **AGENTS.md created last, not first.** Without AGENTS.md, the project had no declared Mission, Boundaries, or Success Criteria. The fleet was operating at Level 0 despite having Level 1 infrastructure.
+3. **Dogfooding loop was broken.** The whole point was "Admiral governs its own construction." But without AGENTS.md and Standing Orders loaded, Admiral wasn't governing anything — it was just a Python package that implements Admiral's spec.
+4. **`platform/` package name shadowed Python's stdlib `platform` module.** Crashed the test runner. Renamed to `platform_ops/`. The spec's Part 9 category name ("Platform") is a known naming hazard for Python, Go, and other languages with `platform` in their stdlib.
+5. **Self-healing loop parameters unspecified.** The spec describes the concept but not: max retries, error signature format, cycle detection algorithm, session-wide retry limits. Implementers must design these.
+6. **Hook manifests in `aiStrat/hooks/` are specification-only.** No executables exist. A runtime that discovers hooks from these directories finds manifests but no code to execute.
+
+**Corrective actions (same session):**
+- Created `admiral/AGENTS.md` (85 lines, under 150-line rule) with Mission, Boundaries, Success Criteria, Standing Orders reference, Enforcement Classification.
+- Created `admiral/CLAUDE.md` as thin pointer.
+- Implemented `admiral/protocols/standing_orders.py` — all 15 Standing Orders as Pydantic models with loader, priority sorting, context injection renderer.
+- Implemented `admiral/protocols/escalation.py` — EscalationReport and EmergencyHaltReport per Section 37.
+- Added schema validation tests against authoritative JSON schemas in `aiStrat/`.
+- Set `.github/CODEOWNERS` per Section 10.
+- Applied 4 spec patches (SPEC-1 through SPEC-4) to aiStrat/ to fix the gaps that caused these errors.
+
+**Lesson:** The most dangerous anti-pattern for framework implementers is **organizing by code architecture instead of adoption level**. Admiral's levels exist for a reason — they represent operational capability, not code modules. Level 1 means "you can start working here," which requires governance artifacts (AGENTS.md, Standing Orders) before infrastructure (hook engine, data models). Building the engine without the governance is like building a car without a steering wheel — it runs, but it can't be directed.
+
+**Second lesson:** Spec documents read sequentially can mislead about priority. Standing Orders are in Part 11 but required at Level 1. Cross-references and the Minimum Viable Reading Path help, but implementers who read parts in order will naturally defer Part 11 content. The spec now includes explicit sequencing warnings.
+
+**Metrics:**
+- Phase 1 first commit: 47 files, 4,227 lines, 89 tests (80% Level 1 complete — missing governance artifacts).
+- Phase 1 corrective commit: +10 files, +1,016 lines, 31 new tests (100% Level 1 complete).
+- Post-review commit: +124 lines, 6 new tests (126 total tests, all coverage gaps closed).
+- Total Phase 1: ~5,300 lines of Python, 126 passing tests, 35 implementation files.
+- Time: ~2 days (not 30 minutes — that estimate is for configuration, not implementation).
+
 -----
 
 ## E — Platform Integration Patterns
@@ -405,6 +455,37 @@ Regardless of which tool you use, the foundation is the same:
 - **Standing Orders** → Prepended to every agent's system prompt as binding constraints.
 
 > **Note:** SDKs provide the runtime; Admiral provides the operational doctrine. The SDK handles message passing; Admiral defines what messages should say, who should receive them, and what constraints govern the exchange.
+
+> **Implementation Note — `platform` naming conflict:** In Python, `platform` is a stdlib module. If your implementation uses a `platform/` package (matching Part 9's "Platform" category), the name will shadow the stdlib and cause import failures (e.g., `platform.system()` becomes unavailable). Use an alternative name such as `platform_ops/` for the implementation package. This applies to any language where "platform" conflicts with a standard library module.
+
+### Implementation Pitfalls (Learned from Admiral-builds-Admiral)
+
+These pitfalls were discovered during the reference implementation (Case Study 4, Appendix D). Each was encountered in practice, not theorized.
+
+**Build-Order Pitfalls:**
+
+| Pitfall | What Happens | Fix |
+|---|---|---|
+| **Infrastructure before config** | You build hooks, models, and engines — then realize you have no Mission, no Boundaries, no Standing Orders. The fleet operates at Level 0 despite having Level 1 code. | Define AGENTS.md and Standing Orders first (30 min). Then build the code that enforces them (1-2 days). |
+| **Organizing by code architecture** | Grouping code as models → hooks → fleet → governance → protocols. Standing Orders end up in the last package because they're in Part 11 of the spec. | Organize by adoption level: config → enforcement → coordination → governance → persistence. Standing Orders are Level 1 despite their Part 11 position. |
+| **Deferring Standing Orders** | "We'll add Standing Orders in Phase 4 with the other protocols." But the spec says Standing Orders are Level 1 — they define what hooks enforce. Without them, hooks have no semantic content. | Standing Orders are the content. Hooks are the enforcement. You need both at Level 1. See Section 36 and the co-requirement note in Section 08. |
+
+**Python-Specific Pitfalls:**
+
+| Pitfall | What Happens | Fix |
+|---|---|---|
+| **`platform` stdlib shadow** | `import platform` resolves to your package, not the stdlib. `platform.system()` fails. Especially pernicious under `pytest`, which manipulates `sys.path` — your tests may shadow stdlib modules even when production code does not. | Name it `platform_ops/` or similar. Check all category names against your language's stdlib before creating packages. Test your import paths under pytest specifically. |
+| **`from __future__ import annotations`** | Deferred annotation evaluation masks import errors at definition time. A model referencing a non-existent type appears to work until runtime. Tests pass until you actually instantiate the model. | Run type-checking (`mypy` or `pyright`) in CI. Don't rely solely on runtime tests to catch import/type issues. |
+| **Pydantic model ↔ JSON Schema divergence** | Your Pydantic model replicates a JSON Schema's fields, but the two drift silently over time. Fields added to the schema don't appear in the model. | Add a validation test: load the canonical JSON Schema, generate instances from your Pydantic model, validate instances against the schema. The Admiral reference implementation does this for `v1.schema.json` and `manifest.schema.json`. |
+| **Hook manifest without executable** | Spec hook directories contain `hook.manifest.json` but no executable. The hook engine discovers manifests but has nothing to run. | Spec manifests are specification-only artifacts. Implementations live in the consuming project. Document this clearly (see `hooks/README.md` implementation note). |
+
+**General Agent Framework Pitfalls:**
+
+| Pitfall | What Happens | Fix |
+|---|---|---|
+| **Self-healing without cycle detection** | The self-healing loop retries the same failing fix forever. Token budget burns to zero with no progress. | Track `(hook_name, hash(error_output))` tuples. If the same error recurs after a fix attempt, break immediately. Max 3 retries per hook, 10 per session. See Section 08 implementation parameters. |
+| **Config time ≠ build time** | "Level 1 in 30 minutes" is true for configuration (AGENTS.md, Standing Orders, Ground Truth). Code implementation takes 1-2 days. Implementers expect runnable code in 30 minutes, then discover the gap. | Distinguish config time from build time in project planning. 30 minutes gets you governed. 1-2 days gets you automated. |
+| **Standing Orders bootstrap problem** | Standing Orders define what hooks enforce. Hooks fire at SessionStart. If Standing Orders loading is itself a hook, you have a circular dependency. | Standing Orders loading is a pre-hook bootstrap step, not a hook. Load Standing Orders → discover hooks → resolve dependencies → execute hooks. |
 
 ### Pattern 3: Admiral with LangGraph / CrewAI / AutoGen
 
@@ -480,6 +561,7 @@ This appendix maps every major framework component to its real-world implementat
 
 **Reading this table:**
 
+- **Time-to-value vs. implementation effort:** The adoption time estimates in the Adoption Levels table (index.md) assume you are *configuring existing tools*. These categories describe effort to *build custom tooling*. Category 1 components can be adopted in minutes but implementing them as custom code is a separate engineering effort. See the "Config time vs. build time" note in index.md.
 - **Level 1 adoption** (Appendix B) uses only Category 1 components. Zero custom infrastructure.
 - **Level 2 adoption** adds some Category 2 components (routing rules, file-based checkpoints). Moderate engineering effort.
 - **Level 3 adoption** adds governance agents (Category 2) and Brain Level 1-2 (Category 1-2). Still no heavy infrastructure.

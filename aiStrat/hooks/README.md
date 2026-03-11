@@ -28,6 +28,8 @@ hooks/
 
 Each hook lives in its own directory under `hooks/`. The directory name must match the hook's `name` field in the manifest.
 
+> **Implementation Note:** The hook directories in `aiStrat/hooks/` contain manifests only — they are specification artifacts, not executable implementations. Implementations live in the consuming project (e.g., `admiral/hooks/implementations/` for the reference implementation). The manifest declares *what* the hook does; the implementation project provides the *how*.
+
 ### Manifest Format
 
 Every hook manifest must conform to `hooks/manifest.schema.json`. Example:

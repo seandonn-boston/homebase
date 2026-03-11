@@ -7,6 +7,10 @@
 
 <!-- Six protocol areas: 36 Standing Orders | 37 Escalation | 38 Handoff | 39 Human Referral | 40 Paid Resources | 41 Data Sensitivity -->
 
+> **Sequencing note:** Standing Orders (Section 36) are a **Level 1 requirement**, not a Level 4 afterthought. They appear in Part 11 because they are protocols — but they are needed at adoption Level 1 alongside Sections 01-03 and 08. If you are implementing Admiral, Standing Orders should be among the first things you build, not the last. The Minimum Viable Reading Path (index.md) already reflects this, but if you are reading parts sequentially, read Section 36 before implementing anything from Parts 4-10.
+>
+> **Implementation lesson (Admiral-builds-Admiral, March 2026):** The reference implementation initially deferred Standing Orders to Phase 4 because of their structural position in Part 11. This was a design error — Phase 1 was functionally complete but operationally ungoverned. The corrective: implement Standing Orders as a data model with a loader and renderer so they can be injected into every agent's context programmatically. See `admiral/protocols/standing_orders.py` in the reference implementation.
+
 -----
 
 ## 36 — STANDING ORDERS
@@ -74,7 +78,7 @@ When something goes wrong, follow this ladder in order (see Section 22 for detai
 2. **Fallback** — use a simpler, less optimal approach that still satisfies requirements
 3. **Backtrack** — roll back to the last checkpoint and try a fundamentally different path
 4. **Isolate and skip** — mark the task as blocked, document the blocker, move to the next task
-5. **Escalate** — produce a structured escalation report and stop
+5. **Escalate** — produce a structured escalation report (see [Section 37](#37--escalation-protocol) for the required format) and stop
 
 Do not loop at any step. If retries don't work, move down the ladder. Do not skip steps.
 
