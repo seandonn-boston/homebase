@@ -1,6 +1,9 @@
 # Comprehensive Timeline of Major AI Models (2020 – March 2026)
 
-> Reverse chronological listing of known AI models available to public and private sectors, including major LLMs, open-source models, image generation models, and coding-specific models. Covers key specs, training data, improvements, benchmarks, builders, and data center locations.
+Created: February 2026
+Revised: March 2026
+
+> Reverse chronological listing of known AI models available to public and private sectors, including major LLMs, open-source models, image generation models, and coding-specific models. Covers key specs, training data, improvements, benchmarks, builders, and data center locations. Source links provided where available.
 
 ---
 
@@ -17,6 +20,7 @@
 - **Pricing:** $2.50/1M input, $20.00/1M output (via API)
 - **Data Centers:** Microsoft Azure Fairwater sites + Stargate (Abilene, TX)
 - **Availability:** ChatGPT Plus/Team/Pro/Enterprise, API (not free tier)
+- [OpenAI Blog](https://openai.com/index/gpt-5-4/) | [API Docs](https://platform.openai.com/docs/models)
 
 ### OpenAI GPT-5.3 Instant
 - **Released:** March 3, 2026
@@ -26,12 +30,14 @@
 - **Key Innovations:** 26.8% fewer hallucinations on high-stakes queries (medicine, law, finance) with web search; reduced preachy tone and unnecessary caveats; improved web search integration
 - **Availability:** All ChatGPT users, API (`gpt-5.3-chat-latest`), Microsoft 365 Copilot
 - **Data Centers:** Microsoft Azure + Stargate
+- [OpenAI Blog](https://openai.com/blog)
 
 ### JetBrains Air IDE + Junie CLI Beta
 - **Released:** March 9, 2026
 - **Builder:** JetBrains
 - **Type:** AI-native IDE + terminal-based coding agent
 - **Key Innovations:** Air is a lightweight AI-native IDE built on abandoned Fleet codebase; public preview for macOS (Linux/Windows later). Junie CLI is an LLM-agnostic terminal agent supporting OpenAI, Anthropic, Google, xAI models. One-click migration from Claude Code, Codex CLI, etc. BYOK pricing from $10/month.
+- [JetBrains Blog](https://blog.jetbrains.com/)
 
 ### Cursor Automations
 - **Released:** March 5, 2026
@@ -39,6 +45,7 @@
 - **Type:** Event-driven agentic coding automation
 - **Key Innovations:** Agents triggered by GitHub PRs, Slack messages, Linear issues, PagerDuty alerts, cron schedules, and webhooks; agents run in cloud sandboxes with memory across runs; 35%+ of Cursor's own merged PRs created by agents
 - **Scale:** Revenue reportedly over $2B ARR; $14B+ valuation
+- [Cursor Blog](https://www.cursor.com/blog)
 
 ### MCP 2026 Roadmap Published
 - **Released:** March 5, 2026 (last updated)
@@ -60,11 +67,13 @@
 - **Announced:** February 27, 2026
 - **Builder:** OpenAI
 - **Key Details:** $730B pre-money valuation. Amazon $50B ($15B initial + $35B conditional), NVIDIA $30B, SoftBank $30B. AWS becomes exclusive third-party cloud distribution for "OpenAI Frontier." OpenAI expanding AWS commitment by $100B over 8 years (~2GW Trainium capacity).
+- [OpenAI Newsroom](https://openai.com/index/openai-funding/) | [CNBC](https://www.cnbc.com/2026/02/27/openai-closes-110-billion-funding-round.html)
 
 ### Anthropic $30B Series G at $380B Valuation
 - **Announced:** February 12, 2026
 - **Builder:** Anthropic
 - **Key Details:** Co-led by Coatue, GIC, D.E. Shaw Ventures, Dragoneer, Founders Fund, Iconiq, MGX. Microsoft and NVIDIA participated. Total raised to date: ~$64B. Run-rate revenue: $14B. ARR trajectory: $1B (Dec 2024) → $4B (mid-2025) → $9B (end 2025) → $14B (Feb 2026) — 14x growth in 14 months.
+- [Anthropic News](https://www.anthropic.com/news) | [WSJ](https://www.wsj.com/tech/ai/anthropic-raises-30-billion-at-380-billion-valuation-92830402)
 
 ### Perplexity "Computer"
 - **Released:** February 25, 2026
@@ -73,6 +82,7 @@
 - **Key Innovations:** Coordinates 19 models — Claude Opus 4.6 for central reasoning, Gemini for research, GPT-5.2 for long-context recall, Grok for lightweight tasks, plus specialized image/video models. Workflows can run for hours or months autonomously. 400+ app integrations.
 - **Benchmarks:** DRACO benchmark: 67.15% (leading)
 - **Pricing:** $200/month (Max tier)
+- [VentureBeat](https://venturebeat.com/technology/perplexity-launches-computer-ai-agent-that-coordinates-19-models-priced-at)
 
 ### GitHub Copilot CLI GA
 - **Released:** February 25, 2026
@@ -86,6 +96,7 @@
 - **Builder:** Anthropic
 - **Type:** Desktop AI productivity agent for knowledge workers
 - **Key Innovations:** Reads/edits/creates local files, automates browser tasks, connects to Google Drive, Gmail, DocuSign, FactSet via MCP connectors. Triggered $285B selloff in enterprise software stocks (Thomson Reuters -16%, LegalZoom -20%, FactSet -10%). Boris Cherny built the product via vibe coding with Claude Code in under two weeks.
+- [VentureBeat](https://venturebeat.com/orchestration/anthropic-says-claude-code-transformed-programming-now-claude-cowork-is) | [CNN](https://www.cnn.com/2026/02/04/investing/us-stocks-anthropic-software) | [Fortune](https://fortune.com/2026/02/06/anthropic-claude-opus-4-6-stock-selloff-new-upgrade/)
 
 ### OpenAI GPT-5.3-Codex-Spark
 - **Released:** February 12, 2026
@@ -111,6 +122,7 @@
 - **Training Data:** Web data, books, code, academic sources (specifics undisclosed); trained using Constitutional AI with RLHF
 - **Data Centers:** AWS (primary — Project Rainier in Indiana/Pennsylvania/Mississippi, 500K+ Trainium2 chips); Google Cloud TPUs (up to 1M chips); Microsoft Azure ($30B commitment); own data centers planned in Texas and New York ($50B infrastructure plan)
 - **Availability:** API, Claude.ai, Amazon Bedrock, Google Vertex AI
+- [Anthropic](https://www.anthropic.com/claude) | [API Docs](https://docs.anthropic.com/)
 
 ### Anthropic Claude Sonnet 4.6
 - **Released:** February 17, 2026
@@ -121,6 +133,7 @@
 - **Benchmarks:** SWE-bench Verified: 79.6% | OSWorld: 72.5% (within 1-2 points of Opus 4.6)
 - **Pricing:** $3/$15 per million tokens (same as Sonnet 4.5)
 - **Data Centers:** Same as Opus 4.6
+- [Anthropic](https://www.anthropic.com/claude)
 
 ### OpenAI GPT-5.3-Codex
 - **Released:** February 5, 2026
@@ -153,6 +166,7 @@
 - **Builder:** Spotify (internal tool built on Claude Code)
 - **Type:** Internal AI deployment system integrated with Slack ChatOps
 - **Key Innovations:** Best developers haven't written a line of code since December 2025; engineers deploy fixes via Slack from phones. ~50% of all Spotify code updates flow through the system. 1,500+ PRs generated.
+- [TechCrunch](https://techcrunch.com/2026/02/12/spotify-says-its-best-developers-havent-written-a-line-of-code-since-december-thanks-to-ai/)
 
 ### OpenAI Codex App (macOS)
 - **Released:** February 2, 2026 (Windows: March 4)
