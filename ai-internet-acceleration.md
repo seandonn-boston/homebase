@@ -9,7 +9,7 @@ Revised: March 2026
 
 ## The Thesis
 
-AI is adopting faster than anything before it because it inherited the internet's distribution infrastructure. Connectivity, cloud compute, digitized knowledge, software-eaten industries, payment rails, app stores, API ecosystems. All built over 30 years for internet-era reasons. AI showed up and used all of it without building any of it.
+AI adoption speed can be largely explained by the fact that it inherited the internet's existing distribution infrastructure rather than having to build its own. AI is adopting faster than anything before it because it inherited the internet's distribution infrastructure. Connectivity, cloud compute, digitized knowledge, software-eaten industries, payment rails, app stores, API ecosystems. All built over 30 years for internet-era reasons. AI showed up and used all of it without building any of it.
 
 [ChatGPT reached 100M users in two months](https://www.reuters.com/technology/chatgpt-sets-record-fastest-growing-user-base-analyst-note-2023-02-01/). The internet took seven years to get there. [Enterprise AI revenue went from $1.7B to $37B in three years](https://menlovc.com/perspective/2025-the-state-of-generative-ai-in-the-enterprise/). That kind of speed is only possible when someone else already solved the distribution problem for you.
 
@@ -111,7 +111,7 @@ Three things. Disprove inheritance: AI applications generating massive value wit
 
 AI adoption is fast because it inherited internet infrastructure. Whether AI is "stage two of the internet" or something categorically different is a question we previously answered too confidently. It's open. The strategic advice holds either way: build AI-accelerated internet companies, not pure AI companies.
 
-Full economic impact arrives around 2035, not 2027.
+If historical infrastructure patterns hold, full economic impact likely arrives in the 2030-2040 range — not 2027.
 
 The internet was the infrastructure. AI is the intelligence. The combination is what was always promised but never delivered. The delivery will take longer than people are saying.
 

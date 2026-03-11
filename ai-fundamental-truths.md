@@ -29,11 +29,11 @@ This axiom applies to this document itself. Some of what is written here will be
 
 ## What Is Gone
 
-Not reassigned. Not elevated. Gone.
+Several categories of professional value are being rapidly displaced by AI capabilities. Not reassigned. Not elevated. Gone.
 
 **Execution as a source of individual value.**
 
-If your value was "I can write the code," that value is gone. Not because AI writes better code than you. It often doesn't. But the gap between "person who can write code" and "person who cannot but has AI" has collapsed for most tasks. The skill that took ten years to build can now be approximated in ten minutes by someone with a clear description of what they want.
+The gap between "person who can do the work" and "person who has AI" has collapsed for a growing number of tasks. If your value was "I can write the code," that value is gone. Not because AI writes better code than you. It often doesn't. But the gap between "person who can write code" and "person who cannot but has AI" has collapsed for most tasks. The skill that took ten years to build can now be approximated in ten minutes by someone with a clear description of what they want.
 
 [Spotify](https://techcrunch.com/2026/02/12/spotify-says-its-best-developers-havent-written-a-line-of-code-since-december-thanks-to-ai/) says its best developers haven't written a line of code since December 2025. Engineers deploy fixes via Slack from their phones. 90% reduction in engineering time. About half of all Spotify updates now flow through their "Honk" AI system. [Harness](https://www.builder.io/blog/codex-vs-claude-code) reports 3.5 PRs per engineer per day using Codex agents. [Anthropic's own engineers](https://www.bloomberg.com/news/articles/2026-02-26/ai-coding-agents-like-claude-code-are-fueling-a-productivity-panic-in-tech) write 70-90% of their code through Claude Code. [Replit](https://blog.replit.com/) says 75% of its users never write code directly.
 
@@ -43,7 +43,7 @@ But the direction is clear, and it applies across knowledge work where the outpu
 
 **Knowledge as a moat.**
 
-Knowing how to do X used to be a defensible position. The person who memorized the API, who knew the framework quirks, who had the obscure syntax in muscle memory. That advantage has been neutralized. Not because knowing things is worthless, but because not knowing things is no longer expensive.
+Memorized knowledge — APIs, syntax, framework quirks — is no longer scarce when AI can retrieve it instantly. Knowing how to do X used to be a defensible position. The person who memorized the API, who knew the framework quirks, who had the obscure syntax in muscle memory. That advantage has been neutralized. Not because knowing things is worthless, but because not knowing things is no longer expensive.
 
 [ChatGPT Enterprise](https://openai.com/index/the-state-of-enterprise-ai-2025-report/) reports reasoning token consumption per organization increased 320x year-over-year. [Lawrence Berkeley National Lab](https://blog.google/technology/google-deepmind/data-science-agent/) used Google's Data Science Agent to reduce analysis time from one week to five minutes. Medical AI systems now achieve [94% accuracy on lung nodule detection vs. 65% for radiologists alone](https://www.bcg.com/publications/2026/how-ai-agents-will-transform-health-care).
 
@@ -51,7 +51,7 @@ Knowledge and understanding are different things, though. A senior engineer does
 
 **Speed as a differentiator.**
 
-Being the fastest coder in the room is like being the fastest mental calculator in the room after 1975. [Claude Code generated a distributed agent orchestration system in 60 minutes](https://www.bloomberg.com/news/articles/2026-02-26/ai-coding-agents-like-claude-code-are-fueling-a-productivity-panic-in-tech), work that would have taken a senior engineer weeks. The competition now is not between fast humans and slow humans. It is between humans who use AI and humans who don't.
+When AI can generate in seconds what took hours, raw human speed is no longer a competitive advantage in most knowledge work. Being the fastest coder in the room is like being the fastest mental calculator in the room after 1975. [Claude Code generated a distributed agent orchestration system in 60 minutes](https://www.bloomberg.com/news/articles/2026-02-26/ai-coding-agents-like-claude-code-are-fueling-a-productivity-panic-in-tech), work that would have taken a senior engineer weeks. The competition now is not between fast humans and slow humans. It is between humans who use AI and humans who don't.
 
 **Volume as a signal of effort.**
 
@@ -61,7 +61,7 @@ Volume is free now. [Cursor](https://www.cursor.com/blog) says 35%+ of its merge
 
 ## What Is Not Going Anywhere
 
-Some things got more valuable because everything around them got cheaper.
+As execution costs decline, certain human capabilities become relatively more scarce and more valuable. Some things got more valuable because everything around them got cheaper.
 
 **Taste.**
 

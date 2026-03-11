@@ -1,4 +1,4 @@
-# THE AI "BUBBLE" ISN'T A BUBBLE — IT'S A DOWN PAYMENT
+# THE AI INFRASTRUCTURE CYCLE: BUBBLE OR DOWN PAYMENT?
 
 **An Investment Thesis**
 
@@ -9,7 +9,7 @@ Revised: March 2026
 
 ## The Thesis
 
-This is not a bubble. It is a massive, cash-funded infrastructure buildout with real demand signals, accelerating enterprise adoption, and proof that the technology can blow up incumbent business models overnight.
+The current AI investment cycle shares surface-level characteristics with historical bubbles but differs in fundamental ways: it is cash-funded, demand-constrained rather than supply-constrained, and backed by demonstrated technology. This is not a bubble. It is a massive, cash-funded infrastructure buildout with real demand signals, accelerating enterprise adoption, and proof that the technology can blow up incumbent business models overnight.
 
 It is also an investment cycle with a real, unresolved gap between spending and revenue. No historical analogy closes that gap for you.
 
@@ -25,7 +25,7 @@ The S&P 500 Software Index dropped 5.7% that day, then fell another 13% over the
 
 The market was not panicking about AI failing. It was panicking about AI working so well that it could compress the total addressable market for per-seat SaaS software by 80%.
 
-Bubbles happen when the technology doesn't deliver. This technology threatened $2+ trillion in incumbent market cap because it delivered.
+The market repricing suggests the technology is delivering real capability, not just hype. Bubbles happen when the technology doesn't deliver. This technology threatened $2+ trillion in incumbent market cap because it delivered.
 
 ---
 
@@ -169,7 +169,7 @@ More bearish: revenue gap widening through 2027, vacancy rates above 5%, hypersc
 
 ## Where We Land
 
-Not a bubble. A legitimate infrastructure buildout funded by the most profitable companies in history, deploying technology that works. The down payment is 5-10 years ahead of the revenue that justifies it. Not 3-5. "The technology works" is a proven statement. "The returns will justify this scale on this timeline" is a bet. We are making the bet. We know it is a bet.
+The evidence points to a legitimate infrastructure buildout, not a speculative bubble — but the return timeline remains an open question. Not a bubble. A legitimate infrastructure buildout funded by the most profitable companies in history, deploying technology that works. The down payment is 5-10 years ahead of the revenue that justifies it. Not 3-5. "The technology works" is a proven statement. "The returns will justify this scale on this timeline" is a bet. We are making the bet. We know it is a bet.
 
 Being early and well-capitalized is painful but survivable. Being late is fatal. Both are true at the same time.
 
