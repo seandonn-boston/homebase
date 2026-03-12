@@ -54,7 +54,15 @@ from admiral.models.fleet import (
     FLEET_MAX_AGENTS,
 )
 from admiral.models.agent import AgentDefinition, AgentCategory, ModelTier
-from admiral.models.authority import DecisionTier
+from admiral.models.authority import (
+    DecisionTier,
+    DecisionAuthority,
+    CalibrationCondition,
+)
+from admiral.protocols.handoff_protocol import (
+    validate_handoff_completeness,
+    validate_acceptance,
+)
 
 
 # === Ground Truth ===
@@ -695,3 +703,191 @@ class TestHandoffBriefRenderClean:
         assert "**In Progress:**" not in rendered
         assert "**Blocked:**" not in rendered
         assert "**Decisions:**" not in rendered
+
+
+# === Decision Authority Defaults (Section 09 Extensions) ===
+
+
+@pytest.mark.phase2
+class TestDecisionAuthorityDefaults:
+    def test_common_defaults_creates_all_tiers(self):
+        authority = DecisionAuthority.with_common_defaults()
+        assert len(authority.enforced) >= 1
+        assert len(authority.autonomous) >= 1
+        assert len(authority.propose) >= 1
+        assert len(authority.escalate) >= 1
+
+    def test_common_defaults_has_concrete_examples(self):
+        authority = DecisionAuthority.with_common_defaults()
+        for assignment in authority.assignments:
+            assert assignment.examples, f"'{assignment.decision}' has no examples"
+
+    def test_common_defaults_architecture_is_propose(self):
+        authority = DecisionAuthority.with_common_defaults()
+        arch = [a for a in authority.assignments if "architecture" in a.decision.lower()]
+        assert arch, "Should have an architecture decision"
+        assert arch[0].tier == DecisionTier.PROPOSE
+
+    def test_common_defaults_code_pattern_is_autonomous(self):
+        authority = DecisionAuthority.with_common_defaults()
+        code = [a for a in authority.assignments if "code pattern" in a.decision.lower()]
+        assert code, "Should have a code pattern decision"
+        assert code[0].tier == DecisionTier.AUTONOMOUS
+
+    def test_common_defaults_security_is_escalate(self):
+        authority = DecisionAuthority.with_common_defaults()
+        security = [a for a in authority.assignments if "security" in a.decision.lower()]
+        assert security, "Should have a security decision"
+        assert security[0].tier == DecisionTier.ESCALATE
+
+    def test_maturity_calibration_greenfield(self):
+        authority = DecisionAuthority.project_maturity_calibration(
+            is_greenfield=True, has_strong_tests=True,
+        )
+        assert len(authority.calibration_rules) == 2
+        conditions = {r.condition for r in authority.calibration_rules}
+        assert CalibrationCondition.GREENFIELD in conditions
+        assert CalibrationCondition.STRONG_TEST_COVERAGE in conditions
+
+    def test_maturity_calibration_external_facing(self):
+        authority = DecisionAuthority.project_maturity_calibration(
+            is_external_facing=True,
+        )
+        assert len(authority.calibration_rules) == 1
+        assert authority.calibration_rules[0].condition == CalibrationCondition.EXTERNAL_FACING
+        assert "narrow" in authority.calibration_rules[0].effect.lower()
+
+    def test_maturity_calibration_no_conditions(self):
+        authority = DecisionAuthority.project_maturity_calibration()
+        assert authority.calibration_rules == []
+        # Should still have common defaults
+        assert len(authority.assignments) > 0
+
+    def test_maturity_calibration_all_conditions(self):
+        authority = DecisionAuthority.project_maturity_calibration(
+            has_strong_tests=True,
+            is_greenfield=True,
+            has_established_patterns=True,
+            is_external_facing=True,
+            has_self_healing=True,
+        )
+        assert len(authority.calibration_rules) == 5
+
+
+# === Agent Model Extensions (Section 13) ===
+
+
+@pytest.mark.phase2
+class TestAgentModelExtensions:
+    def test_model_rationale_field(self):
+        agent = AgentDefinition(
+            name="Orchestrator",
+            category=AgentCategory.COMMAND,
+            model_tier=ModelTier.FLAGSHIP,
+            model_rationale="Needs deep reasoning for architecture decisions",
+        )
+        assert agent.model_rationale == "Needs deep reasoning for architecture decisions"
+
+    def test_model_rationale_default_empty(self):
+        agent = AgentDefinition(
+            name="Worker",
+            category=AgentCategory.ENGINEERING_BACKEND,
+            model_tier=ModelTier.WORKHORSE,
+        )
+        assert agent.model_rationale == ""
+
+    def test_context_budget_kb_field(self):
+        agent = AgentDefinition(
+            name="Analyst",
+            category=AgentCategory.QUALITY,
+            model_tier=ModelTier.WORKHORSE,
+            context_budget_kb=200,
+        )
+        assert agent.context_budget_kb == 200
+
+    def test_context_budget_kb_default_none(self):
+        agent = AgentDefinition(
+            name="Worker",
+            category=AgentCategory.ENGINEERING_BACKEND,
+            model_tier=ModelTier.WORKHORSE,
+        )
+        assert agent.context_budget_kb is None
+
+    def test_context_budget_kb_rejects_zero(self):
+        with pytest.raises(Exception):
+            AgentDefinition(
+                name="Bad",
+                category=AgentCategory.ENGINEERING_BACKEND,
+                model_tier=ModelTier.WORKHORSE,
+                context_budget_kb=0,
+            )
+
+
+# === Handoff Protocol (Section 38 Extensions) ===
+
+
+@pytest.mark.phase2
+class TestHandoffProtocol:
+    def test_validate_completeness_passes(self):
+        doc = HandoffDocument(
+            from_agent="A",
+            to_agent="B",
+            task="Implement feature",
+            deliverable="Code diff",
+            acceptance_criteria=["Tests pass"],
+            assumptions=["API stable"],
+            context_files=["src/api.py"],
+        )
+        issues = validate_handoff_completeness(doc)
+        assert issues == []
+
+    def test_validate_completeness_warns_no_context(self):
+        doc = HandoffDocument(
+            from_agent="A",
+            to_agent="B",
+            task="Do something",
+            deliverable="Result",
+            acceptance_criteria=["Done"],
+            assumptions=["Stable"],
+        )
+        issues = validate_handoff_completeness(doc)
+        assert any("context" in i.lower() for i in issues)
+
+    def test_validate_acceptance_correct_receiver(self):
+        doc = HandoffDocument(
+            from_agent="Implementer",
+            to_agent="QA",
+            task="Review code",
+            deliverable="PR diff",
+            acceptance_criteria=["All tests pass"],
+            assumptions=["No breaking changes"],
+        )
+        ok, reasons = validate_acceptance(doc, "QA")
+        assert ok is True
+        assert reasons == []
+
+    def test_validate_acceptance_wrong_receiver(self):
+        doc = HandoffDocument(
+            from_agent="A",
+            to_agent="B",
+            task="Review",
+            deliverable="Code",
+            acceptance_criteria=["Tests pass"],
+            assumptions=["Stable"],
+        )
+        ok, reasons = validate_acceptance(doc, "C")
+        assert ok is False
+        assert any("C" in r for r in reasons)
+
+    def test_validate_acceptance_vague_criteria(self):
+        doc = HandoffDocument(
+            from_agent="A",
+            to_agent="B",
+            task="Review",
+            deliverable="Code",
+            acceptance_criteria=["OK"],
+            assumptions=["Stable"],
+        )
+        ok, reasons = validate_acceptance(doc, "B")
+        assert ok is False
+        assert any("vague" in r.lower() for r in reasons)
