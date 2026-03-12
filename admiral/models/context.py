@@ -152,3 +152,20 @@ class ContextProfile(BaseModel):
                 f"Move content to session or on-demand slots."
             )
         return violations
+
+    def validate_fits_budget(self, context_budget_kb: int) -> list[str]:
+        """Cross-validate that total estimated context fits the agent's budget.
+
+        Per Section 13: context requirements must be verified against the
+        agent's context window budget. Uses ~40 bytes/line as rough estimate.
+        """
+        violations = []
+        total_lines = sum(e.estimated_lines for e in self.entries)
+        estimated_kb = (total_lines * 40) // 1024
+        if estimated_kb > context_budget_kb:
+            violations.append(
+                f"Context profile for '{self.agent_role}' estimates ~{estimated_kb}KB "
+                f"({total_lines} lines) but agent budget is {context_budget_kb}KB. "
+                f"Reduce entries or increase budget."
+            )
+        return violations

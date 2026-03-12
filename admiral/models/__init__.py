@@ -74,6 +74,26 @@ from admiral.models.fleet import (
     FLEET_MIN_AGENTS,
     FLEET_MAX_AGENTS,
 )
+from admiral.models.tool_registry import (
+    FleetToolRegistry,
+    AgentToolRegistry,
+    ToolEntry,
+    MCPServerConfig,
+    MCPTrustLevel,
+)
+from admiral.models.protocol_integration import (
+    ProtocolRegistry,
+    A2AConnection,
+    A2AAuthMethod,
+)
+from admiral.models.recovery import (
+    RecoveryLadder,
+    RecoveryRecord,
+    RecoveryStep,
+    RetryConfig,
+    FallbackConfig,
+    RECOVERY_LADDER_ORDER,
+)
 
 __all__ = [
     # Level 1
@@ -131,4 +151,21 @@ __all__ = [
     "RoutingTable",
     "FLEET_MIN_AGENTS",
     "FLEET_MAX_AGENTS",
+    # Level 2 — Tool & Capability Registry
+    "FleetToolRegistry",
+    "AgentToolRegistry",
+    "ToolEntry",
+    "MCPServerConfig",
+    "MCPTrustLevel",
+    # Level 2 — Protocol Integration
+    "ProtocolRegistry",
+    "A2AConnection",
+    "A2AAuthMethod",
+    # Level 2 — Failure Recovery
+    "RecoveryLadder",
+    "RecoveryRecord",
+    "RecoveryStep",
+    "RetryConfig",
+    "FallbackConfig",
+    "RECOVERY_LADDER_ORDER",
 ]

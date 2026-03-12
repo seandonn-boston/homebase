@@ -11,7 +11,8 @@ Level 1 (Disciplined Solo):
 
 Level 2 (Core Fleet):
     admiral.models    — Fleet composition, routing, handoff, work decomposition,
-                        context profiles, ground truth, checkpoints
+                        context profiles, ground truth, checkpoints, tool registry,
+                        protocol integration, failure recovery
     admiral.protocols — Handoff protocol validation (completeness, acceptance)
 """
 

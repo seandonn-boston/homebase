@@ -63,6 +63,25 @@ from admiral.protocols.handoff_protocol import (
     validate_handoff_completeness,
     validate_acceptance,
 )
+from admiral.models.tool_registry import (
+    FleetToolRegistry,
+    AgentToolRegistry,
+    ToolEntry,
+    MCPServerConfig,
+    MCPTrustLevel,
+)
+from admiral.models.protocol_integration import (
+    ProtocolRegistry,
+    A2AConnection,
+    A2AAuthMethod,
+)
+from admiral.models.recovery import (
+    RecoveryLadder,
+    RecoveryRecord,
+    RecoveryStep,
+    FallbackConfig,
+    RECOVERY_LADDER_ORDER,
+)
 
 
 # === Ground Truth ===
@@ -891,3 +910,234 @@ class TestHandoffProtocol:
         ok, reasons = validate_acceptance(doc, "B")
         assert ok is False
         assert any("vague" in r.lower() for r in reasons)
+
+
+# === Tool & Capability Registry (Section 12) ===
+
+
+@pytest.mark.phase2
+class TestToolRegistry:
+    def test_create_agent_registry(self):
+        reg = AgentToolRegistry(
+            agent_role="Backend Implementer",
+            available_tools=[
+                ToolEntry(name="Read", capability="Read files"),
+                ToolEntry(name="Write", capability="Write files"),
+            ],
+            not_available=["shell_access", "http_requests"],
+        )
+        assert len(reg.available_tools) == 2
+        assert len(reg.not_available) == 2
+
+    def test_overlap_rejected(self):
+        with pytest.raises(Exception, match="both available and not_available"):
+            AgentToolRegistry(
+                agent_role="Bad",
+                available_tools=[ToolEntry(name="Read", capability="Read")],
+                not_available=["Read"],
+            )
+
+    def test_mcp_server_config(self):
+        srv = MCPServerConfig(
+            name="GitHub MCP",
+            version="1.2.0",
+            capability="Repo management",
+            trust_level=MCPTrustLevel.OFFICIAL,
+            agent_roles=["Orchestrator", "Implementer"],
+        )
+        assert srv.trust_level == MCPTrustLevel.OFFICIAL
+        assert len(srv.agent_roles) == 2
+
+    def test_fleet_registry_mcp_validation(self):
+        registry = FleetToolRegistry(
+            agent_registries=[
+                AgentToolRegistry(
+                    agent_role="Implementer",
+                    mcp_servers=["GitHub MCP", "Ghost Server"],
+                ),
+            ],
+            mcp_servers=[
+                MCPServerConfig(name="GitHub MCP", version="1.2.0"),
+            ],
+        )
+        violations = registry.validate_mcp_references()
+        assert len(violations) == 1
+        assert "Ghost Server" in violations[0]
+
+    def test_fleet_registry_mcp_authorization(self):
+        registry = FleetToolRegistry(
+            agent_registries=[
+                AgentToolRegistry(agent_role="QA", mcp_servers=["GitHub MCP"]),
+            ],
+            mcp_servers=[
+                MCPServerConfig(
+                    name="GitHub MCP",
+                    version="1.2.0",
+                    agent_roles=["Implementer"],  # QA not authorized
+                ),
+            ],
+        )
+        violations = registry.validate_mcp_agent_authorization()
+        assert len(violations) == 1
+        assert "QA" in violations[0]
+
+    def test_fleet_registry_render(self):
+        registry = FleetToolRegistry(
+            mcp_servers=[
+                MCPServerConfig(name="GitHub", version="1.0", capability="Repos"),
+            ],
+            agent_registries=[
+                AgentToolRegistry(
+                    agent_role="Dev",
+                    available_tools=[ToolEntry(name="Read", capability="Read files")],
+                    not_available=["shell"],
+                ),
+            ],
+        )
+        rendered = registry.render()
+        assert "GitHub" in rendered
+        assert "Dev" in rendered
+        assert "shell" in rendered
+
+    def test_fleet_registry_lookup(self):
+        registry = FleetToolRegistry(
+            agent_registries=[AgentToolRegistry(agent_role="QA")],
+            mcp_servers=[MCPServerConfig(name="FS", version="1.0")],
+        )
+        assert registry.get_agent_registry("QA") is not None
+        assert registry.get_agent_registry("Ghost") is None
+        assert registry.get_mcp_server("FS") is not None
+        assert registry.get_mcp_server("Ghost") is None
+
+
+# === Protocol Integration (Section 14) ===
+
+
+@pytest.mark.phase2
+class TestProtocolIntegration:
+    def test_a2a_connection(self):
+        conn = A2AConnection(
+            agent_a="Orchestrator",
+            agent_b="External Agent",
+            purpose="Cross-process task delegation",
+            auth_method=A2AAuthMethod.OAUTH2,
+        )
+        assert conn.timeout_seconds == 300
+        assert conn.bidirectional is True
+
+    def test_protocol_registry(self):
+        registry = ProtocolRegistry(
+            a2a_enabled=True,
+            a2a_connections=[
+                A2AConnection(agent_a="A", agent_b="B", purpose="test"),
+            ],
+        )
+        assert len(registry.get_connections_for("A")) == 1
+        assert len(registry.get_connections_for("C")) == 0
+
+    def test_validate_a2a_agents(self):
+        registry = ProtocolRegistry(
+            a2a_connections=[
+                A2AConnection(agent_a="Real", agent_b="Ghost"),
+            ],
+        )
+        violations = registry.validate_agents_exist({"Real", "Other"})
+        assert len(violations) == 1
+        assert "Ghost" in violations[0]
+
+
+# === Failure Recovery (Section 22) ===
+
+
+@pytest.mark.phase2
+class TestRecoveryLadder:
+    def test_ladder_order(self):
+        assert RECOVERY_LADDER_ORDER == [
+            RecoveryStep.RETRY,
+            RecoveryStep.FALLBACK,
+            RecoveryStep.BACKTRACK,
+            RecoveryStep.ISOLATE,
+            RecoveryStep.ESCALATE,
+        ]
+
+    def test_default_config(self):
+        ladder = RecoveryLadder()
+        assert ladder.retry.max_retries == 3
+        assert ladder.log_all_recovery_actions is True
+
+    def test_validate_readiness_missing_template(self):
+        ladder = RecoveryLadder(escalation_template_ready=False)
+        issues = ladder.validate_readiness()
+        assert any("escalation template" in i.lower() for i in issues)
+
+    def test_validate_readiness_missing_fallback(self):
+        ladder = RecoveryLadder(escalation_template_ready=True)
+        issues = ladder.validate_readiness()
+        assert any("fallback" in i.lower() for i in issues)
+
+    def test_validate_readiness_passes(self):
+        ladder = RecoveryLadder(
+            escalation_template_ready=True,
+            fallback=FallbackConfig(
+                description="Use simpler algorithm",
+                quality_floor="Correct but slower",
+            ),
+        )
+        assert ladder.validate_readiness() == []
+
+    def test_recovery_record_valid_progression(self):
+        record = RecoveryRecord(
+            step=RecoveryStep.RETRY,
+            description="Tried different approach",
+            next_step=RecoveryStep.FALLBACK,
+        )
+        assert record.next_step == RecoveryStep.FALLBACK
+
+    def test_recovery_record_rejects_skip(self):
+        with pytest.raises(Exception, match="skip"):
+            RecoveryRecord(
+                step=RecoveryStep.RETRY,
+                description="Tried once",
+                next_step=RecoveryStep.ESCALATE,  # skips fallback, backtrack, isolate
+            )
+
+    def test_recovery_record_rejects_backward(self):
+        with pytest.raises(Exception, match="ladder"):
+            RecoveryRecord(
+                step=RecoveryStep.BACKTRACK,
+                description="Going back",
+                next_step=RecoveryStep.RETRY,  # going backward
+            )
+
+    def test_recovery_record_no_next_step_ok(self):
+        record = RecoveryRecord(
+            step=RecoveryStep.RETRY,
+            description="Succeeded on retry",
+        )
+        assert record.next_step is None
+
+
+# === Context Budget Cross-Validation (Section 13) ===
+
+
+@pytest.mark.phase2
+class TestContextBudgetCrossValidation:
+    def test_fits_budget(self):
+        profile = ContextProfile(
+            agent_role="Test",
+            entries=[
+                ContextEntry(name="small", slot=ContextSlot.STANDING, source="a.md", estimated_lines=100),
+            ],
+        )
+        assert profile.validate_fits_budget(100) == []
+
+    def test_exceeds_budget(self):
+        profile = ContextProfile(
+            agent_role="Bloated",
+            entries=[
+                ContextEntry(name="huge", slot=ContextSlot.STANDING, source="a.md", estimated_lines=100_000),
+            ],
+        )
+        violations = profile.validate_fits_budget(100)
+        assert len(violations) == 1
+        assert "budget" in violations[0].lower()
