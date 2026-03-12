@@ -66,15 +66,17 @@ with async handlers that return NextResponse objects."
 
 ### Prompt Anatomy
 
-Every agent's system prompt should follow a consistent structure:
+Every agent's system prompt should follow a consistent five-section structure. The ordering is not arbitrary — it maps to how LLMs allocate attention across context windows.
 
-| Section | Purpose | Position |
-|---|---|---|
-| **Identity** | Who this agent is, hierarchical position | First — establishes operating posture |
-| **Authority** | What it may decide, propose, or must escalate | Second — constrains all subsequent behavior |
-| **Constraints** | Boundaries, non-goals, scope limits, budgets | Third — defines the walls before the room |
-| **Knowledge** | Ground Truth excerpts relevant to this role | Middle — reference material |
-| **Task** | Current task, acceptance criteria, interface contracts | Last — benefits from recency effect |
+| Section | Purpose | Position | Content |
+|---|---|---|---|
+| **Identity** | Who this agent is, hierarchical position | First — establishes operating posture | Role name, category, model tier, description, schedule |
+| **Authority** | What it may decide, propose, or must escalate | Second — constrains all subsequent behavior | Decision tier assignments, calibration rules |
+| **Constraints** | Boundaries, non-goals, scope limits, budgets | Third — defines the walls before the room | "Does NOT Do" list, scope paths, token/time budgets, Standing Orders |
+| **Knowledge** | Ground Truth excerpts relevant to this role | Middle — reference material | Tech stack, glossary, known issues, interface contracts |
+| **Task** | Current task, acceptance criteria, interface contracts | Last — benefits from recency effect | Work chunk description, entry/exit states, quality gates, handoff spec |
+
+**Implementation note:** The `PromptAnatomy` model in `admiral/models/agent.py` assembles these five sections from an `AgentDefinition` and its associated context. Each section is independently renderable and testable. The `render()` method produces the final system prompt by concatenating sections in the specified order. At Level 2, this is a data structure and rendering function — not a runtime prompt injection mechanism (Level 3+).
 
 ### Prompt Testing Protocol
 
@@ -85,6 +87,8 @@ Prompts are code. Test before deployment.
 3. **Ambiguity probe.** Underspecified requirement. Does it invent, ask, or escalate?
 4. **Conflict probe.** Two instructions that conflict. Which wins?
 5. **Regression check.** After modification, re-run previous probes.
+
+**Implementation note:** At Level 2, prompt probes are modeled as `PromptProbe` data structures with expected outcomes. The probe *execution harness* (actually sending probes to an LLM and grading responses) is Level 3+ — it requires a running agent runtime. At Level 2, probe definitions exist so that Level 3 can execute them without redesigning the data model.
 
 > **ANTI-PATTERN: PERSONALITY PROMPTING** — "You are a meticulous, detail-oriented engineer who takes pride in clean code" consumes attention on character simulation. "Run the linter and fix all warnings before delivering" produces more reliable behavior than "You care deeply about code quality."
 

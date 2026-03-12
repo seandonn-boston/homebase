@@ -860,13 +860,27 @@ class TestHandoffProtocol:
         issues = validate_handoff_completeness(doc)
         assert issues == []
 
-    def test_validate_completeness_warns_no_context(self):
+    def test_validate_completeness_simple_task_no_context_ok(self):
+        """Short/simple tasks without context files are fine per Section 38."""
         doc = HandoffDocument(
             from_agent="A",
             to_agent="B",
             task="Do something",
             deliverable="Result",
-            acceptance_criteria=["Done"],
+            acceptance_criteria=["Done and verified"],
+            assumptions=["Stable"],
+        )
+        issues = validate_handoff_completeness(doc)
+        assert not any("context" in i.lower() for i in issues)
+
+    def test_validate_completeness_warns_complex_task_no_context(self):
+        """Complex tasks (>200 chars) without context files trigger a warning."""
+        doc = HandoffDocument(
+            from_agent="A",
+            to_agent="B",
+            task="x" * 201,  # long task, no supporting context
+            deliverable="Result",
+            acceptance_criteria=["Done and verified"],
             assumptions=["Stable"],
         )
         issues = validate_handoff_completeness(doc)

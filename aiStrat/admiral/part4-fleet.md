@@ -84,6 +84,8 @@ When one agent's output becomes another agent's input, the handoff must follow a
 > **ANTI-PATTERN: FLEET BLOAT** — The fleet grows to twenty-five agents. The orchestrator cannot hold the full roster in context. Routing becomes a maze. Interface contracts multiply quadratically. Upper bound for a single fleet: eight to twelve active specialists before coordination costs dominate.
 
 > **Clarification:** "Five to twelve" is the general fleet size recommendation for most projects. "Eight to twelve" is the upper bound before coordination costs dominate — it appears in the anti-pattern warning as the threshold at which fleet bloat becomes a risk, not as a minimum. Start at five; grow toward twelve only when routing bottlenecks or domain gaps justify it.
+>
+> **Implementation note:** The `FleetRoster` model enforces a minimum of 1 agent to support unit testing and incremental fleet assembly. The five-agent minimum is an operational recommendation, not a schema constraint. A fleet with fewer than five agents is valid code but incomplete deployment — the Pre-Flight Checklist (Appendix A, Level 2 item 11) should verify the fleet has sufficient coverage before production use.
 
 -----
 

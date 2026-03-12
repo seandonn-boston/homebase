@@ -42,6 +42,12 @@ from admiral.models.agent import (
     ToolPermission,
     InterfaceContractRef,
     GuardrailDef,
+    PromptAnatomy,
+    PromptSection,
+    PROMPT_SECTION_ORDER,
+    PromptProbe,
+    ProbeType,
+    ExpectedBehavior,
 )
 
 # --- Level 2 ---
@@ -142,6 +148,13 @@ __all__ = [
     "ToolPermission",
     "InterfaceContractRef",
     "GuardrailDef",
+    # Level 2 — Prompt Anatomy (Section 04)
+    "PromptAnatomy",
+    "PromptSection",
+    "PROMPT_SECTION_ORDER",
+    "PromptProbe",
+    "ProbeType",
+    "ExpectedBehavior",
     # Level 2 — Ground Truth
     "GroundTruth",
     "TechStackEntry",

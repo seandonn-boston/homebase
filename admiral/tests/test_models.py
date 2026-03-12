@@ -2,13 +2,12 @@
 
 Level 1: Validates that every spec structure serializes, validates,
 and rejects invalid input correctly.
-
-Level 2+ models (handoff, task, config, identity tokens) are deferred.
 """
 
 from __future__ import annotations
 
 import pytest
+from pydantic import ValidationError
 
 from admiral.models.mission import (
     Mission,
@@ -53,7 +52,7 @@ class TestMission:
         assert sample_mission.pipeline_entry == PipelineEntry.IMPLEMENTATION
 
     def test_mission_requires_identity(self):
-        with pytest.raises(Exception):
+        with pytest.raises(ValidationError):
             Mission(
                 identity="",
                 success_state="Tests pass",
@@ -138,7 +137,7 @@ class TestSuccessCriteria:
         assert len(sc.negative) == 1
 
     def test_criteria_requires_at_least_one(self):
-        with pytest.raises(Exception):
+        with pytest.raises(ValidationError):
             SuccessCriteria(criteria=[])
 
 

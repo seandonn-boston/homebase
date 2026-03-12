@@ -1,10 +1,14 @@
 """Agent definition models.
 
 Implements the agent structure from Part 4 (Fleet Composition) and
-the prompt anatomy from fleet/prompt-anatomy.md.
+the prompt anatomy from Section 04 (Context Engineering).
 
 Each agent has: Identity, Scope, Boundaries, Authority, Tools, Model Tier.
 Agent definitions can be loaded from markdown specs or Python configs.
+
+Section 04 defines the five-section prompt anatomy:
+    Identity → Authority → Constraints → Knowledge → Task
+The ordering maps to LLM attention allocation across context windows.
 """
 
 from __future__ import annotations
@@ -186,7 +190,7 @@ class AgentDefinition(BaseModel):
     def prompt_anchor(self) -> str:
         """Generate the identity anchor for system prompt assembly.
 
-        Per fleet/prompt-anatomy.md: Identity section comes first.
+        Per Section 04: Identity section comes first in prompt anatomy.
         """
         return (
             f"You are the {self.name}. "
@@ -194,3 +198,199 @@ class AgentDefinition(BaseModel):
             f"Model tier: {self.model_tier.value}. "
             f"{self.description}"
         )
+
+    @property
+    def non_goals(self) -> list[str]:
+        """Shortcut to the agent's 'Does NOT Do' list."""
+        return self.scope.does_not_do
+
+
+class PromptSection(str, Enum):
+    """The five sections of prompt anatomy per Section 04.
+
+    Ordering is critical — it maps to LLM attention allocation:
+    Identity first (primacy), Task last (recency), Knowledge in middle.
+    """
+
+    IDENTITY = "identity"
+    AUTHORITY = "authority"
+    CONSTRAINTS = "constraints"
+    KNOWLEDGE = "knowledge"
+    TASK = "task"
+
+
+# Canonical ordering — do not reorder
+PROMPT_SECTION_ORDER = [
+    PromptSection.IDENTITY,
+    PromptSection.AUTHORITY,
+    PromptSection.CONSTRAINTS,
+    PromptSection.KNOWLEDGE,
+    PromptSection.TASK,
+]
+
+
+class PromptAnatomy(BaseModel):
+    """Section 04 — Five-section prompt structure for agent system prompts.
+
+    Each section is independently renderable and testable.
+    The render() method concatenates in the canonical order:
+    Identity → Authority → Constraints → Knowledge → Task.
+
+    At Level 2 this is a data structure and rendering function.
+    Runtime prompt injection into agent sessions is Level 3+.
+    """
+
+    identity: str = Field(
+        default="",
+        description="Who this agent is: role, category, tier, hierarchical position.",
+    )
+    authority: str = Field(
+        default="",
+        description="Decision tier assignments: what it may decide, propose, or must escalate.",
+    )
+    constraints: str = Field(
+        default="",
+        description="Boundaries, non-goals, scope limits, budgets, Standing Orders.",
+    )
+    knowledge: str = Field(
+        default="",
+        description="Ground Truth excerpts, tech stack, glossary, interface contracts.",
+    )
+    task: str = Field(
+        default="",
+        description="Current work chunk, acceptance criteria, entry/exit states.",
+    )
+
+    @classmethod
+    def from_agent(cls, agent: AgentDefinition) -> PromptAnatomy:
+        """Build a PromptAnatomy from an AgentDefinition.
+
+        Populates Identity, Authority, and Constraints from the agent definition.
+        Knowledge and Task are left empty — they are populated at runtime
+        from GroundTruth and WorkChunk respectively.
+        """
+        # Identity section
+        identity_lines = [
+            f"You are the {agent.name}.",
+            f"Category: {agent.category.value}.",
+            f"Model tier: {agent.model_tier.value}.",
+        ]
+        if agent.description:
+            identity_lines.append(agent.description)
+        if agent.schedule != ScheduleType.TRIGGERED:
+            identity_lines.append(f"Schedule: {agent.schedule.value}.")
+
+        # Authority section
+        authority_lines = []
+        for assignment in agent.decision_authority.assignments:
+            authority_lines.append(
+                f"[{assignment.tier.value.upper()}] {assignment.decision}"
+            )
+
+        # Constraints section
+        constraint_lines = []
+        if agent.scope.does_not_do:
+            constraint_lines.append("You do NOT:")
+            for non_goal in agent.scope.does_not_do:
+                constraint_lines.append(f"  - {non_goal}")
+        if agent.tools.denied:
+            constraint_lines.append("Tools you do NOT have:")
+            for tool in agent.tools.denied:
+                rationale = agent.tools.rationale.get(tool, "")
+                suffix = f" — {rationale}" if rationale else ""
+                constraint_lines.append(f"  - {tool}{suffix}")
+
+        return cls(
+            identity="\n".join(identity_lines),
+            authority="\n".join(authority_lines),
+            constraints="\n".join(constraint_lines),
+        )
+
+    def sections(self) -> list[tuple[PromptSection, str]]:
+        """Return all non-empty sections in canonical order."""
+        mapping = {
+            PromptSection.IDENTITY: self.identity,
+            PromptSection.AUTHORITY: self.authority,
+            PromptSection.CONSTRAINTS: self.constraints,
+            PromptSection.KNOWLEDGE: self.knowledge,
+            PromptSection.TASK: self.task,
+        }
+        return [
+            (section, mapping[section])
+            for section in PROMPT_SECTION_ORDER
+            if mapping[section].strip()
+        ]
+
+    def render(self) -> str:
+        """Render the full system prompt in canonical section order.
+
+        Sections are separated by blank lines. Empty sections are omitted.
+        """
+        parts = []
+        for section, content in self.sections():
+            parts.append(f"## {section.value.upper()}\n{content}")
+        return "\n\n".join(parts)
+
+
+class ProbeType(str, Enum):
+    """Types of prompt probes from Section 04 testing protocol.
+
+    Each probe type tests a different failure mode:
+    BOUNDARY:  Does the agent refuse tasks outside scope?
+    AUTHORITY: Does the agent escalate decisions above its tier?
+    AMBIGUITY: Does the agent invent, ask, or escalate on underspecified input?
+    CONFLICT:  When instructions conflict, does the right one win?
+    REGRESSION: After prompt modification, do previous probes still pass?
+    """
+
+    BOUNDARY = "boundary"
+    AUTHORITY = "authority"
+    AMBIGUITY = "ambiguity"
+    CONFLICT = "conflict"
+    REGRESSION = "regression"
+
+
+class ExpectedBehavior(str, Enum):
+    """Expected agent behavior in response to a probe."""
+
+    REFUSE = "refuse"
+    COMPLY = "comply"
+    ESCALATE = "escalate"
+    ASK = "ask"
+    PROPOSE = "propose"
+
+
+class PromptProbe(BaseModel):
+    """A test probe for validating prompt behavior per Section 04.
+
+    At Level 2 this is a data definition — the probe execution harness
+    (sending to an LLM, grading responses) is Level 3+.
+
+    Example:
+        PromptProbe(
+            probe_type=ProbeType.BOUNDARY,
+            description="Ask Backend Implementer to modify frontend CSS",
+            input_text="Please update the CSS in src/styles/main.css",
+            expected=ExpectedBehavior.REFUSE,
+            rationale="Backend Implementer scope excludes frontend files",
+        )
+    """
+
+    probe_type: ProbeType
+    description: str = Field(..., min_length=1, description="What this probe tests.")
+    input_text: str = Field(
+        ...,
+        min_length=1,
+        description="The message to send to the agent.",
+    )
+    expected: ExpectedBehavior = Field(
+        description="What the agent should do in response.",
+    )
+    rationale: str = Field(
+        default="",
+        description="Why this is the correct response.",
+    )
+    agent_role: str = Field(
+        default="",
+        description="Which agent role this probe targets.",
+    )

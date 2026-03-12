@@ -35,7 +35,7 @@ class TechStackEntry(BaseModel):
     @field_validator("version")
     @classmethod
     def version_must_be_exact(cls, v: str) -> str:
-        """Reject vague version strings."""
+        """Reject vague version strings like 'latest', 'stable', 'current'."""
         vague = {"latest", "stable", "current", "newest", "recent", "lts"}
         if v.strip().lower() in vague:
             raise ValueError(

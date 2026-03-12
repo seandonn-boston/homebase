@@ -25,6 +25,7 @@ from admiral.protocols.escalation import (
 from admiral.protocols.handoff_protocol import (
     validate_handoff_completeness,
     validate_acceptance,
+    MIN_CRITERION_LENGTH,
 )
 
 __all__ = [
@@ -43,4 +44,5 @@ __all__ = [
     "EmergencyHaltTrigger",
     "validate_handoff_completeness",
     "validate_acceptance",
+    "MIN_CRITERION_LENGTH",
 ]

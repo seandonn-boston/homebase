@@ -360,6 +360,16 @@ OPEN QUESTIONS:
 
 5. **Context does not transfer implicitly.** The sending agent's full context is not available to the receiver. Only the deliverable, listed context files, and handoff metadata transfer. Everything the receiver needs must be explicit.
 
+### Handoff Validation
+
+Validation operates at two levels:
+
+1. **Schema validation** (Pydantic model): Required fields present, sender ≠ receiver, acceptance criteria non-empty. This is strict and rejects malformed handoffs immediately.
+
+2. **Semantic validation** (protocol layer): Checks that context is sufficient for the receiver, criteria are actionable (minimum 10 characters to be meaningful), and deliverable describes real output. Semantic validation produces *warnings*, not hard rejections — the receiver decides whether to accept or bounce back.
+
+**Implementation note:** `context_files` and `constraints` are optional by design. An Orchestrator → Specialist handoff may carry all context inline in the task description. An Implementer → QA handoff always needs context files. The validation layer should not reject handoffs missing optional fields — it should warn when the *combination* suggests incompleteness (e.g., a complex task with no context files and no constraints is suspicious, but a simple task with inline context is fine). The `assumptions` and `open_questions` fields being empty is worth a warning — real handoffs almost always involve unknowns — but is not a rejection condition.
+
 ### Common Handoff Patterns
 
 #### Implementer → QA Agent

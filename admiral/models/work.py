@@ -97,7 +97,11 @@ class WorkChunk(BaseModel):
 
     @model_validator(mode="after")
     def validate_budget_ceiling(self) -> WorkChunk:
-        """Enforce 40% budget ceiling."""
+        """Enforce 40% budget ceiling per Section 18.
+
+        If both token_budget and agent_total_budget are set, validates
+        that the chunk doesn't exceed CHUNK_BUDGET_CEILING_PCT of total.
+        """
         if self.token_budget and self.agent_total_budget:
             pct = (self.token_budget / self.agent_total_budget) * 100
             if pct > CHUNK_BUDGET_CEILING_PCT:

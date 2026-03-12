@@ -104,12 +104,14 @@ class ResourceUsage(BaseModel):
 
     @property
     def tokens_remaining(self) -> int | None:
+        """Tokens remaining in budget, or None if no budget set."""
         if self.tokens_budget is not None:
             return max(0, self.tokens_budget - self.tokens_used)
         return None
 
     @property
     def time_remaining(self) -> int | None:
+        """Minutes remaining in time budget, or None if no budget set."""
         if self.time_budget_minutes is not None:
             return max(0, self.time_budget_minutes - self.time_minutes)
         return None
