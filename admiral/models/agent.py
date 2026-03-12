@@ -108,20 +108,35 @@ class AgentScope(BaseModel):
     )
 
 
+class ContractDirection(str, Enum):
+    """Direction of an interface contract."""
+
+    SENDS_TO = "sends_to"
+    RECEIVES_FROM = "receives_from"
+
+
 class InterfaceContractRef(BaseModel):
     """Reference to an interface contract with another agent."""
 
-    partner_role: str
-    direction: str = Field(description="'sends_to' or 'receives_from'")
-    contract_summary: str
+    partner_role: str = Field(..., min_length=1, description="The partner agent's role name.")
+    direction: ContractDirection = Field(description="'sends_to' or 'receives_from'")
+    contract_summary: str = Field(..., min_length=1, description="What is exchanged.")
+
+
+class GuardrailEnforcement(str, Enum):
+    """How a guardrail is enforced."""
+
+    HOOK = "hook"
+    INSTRUCTION = "instruction"
+    GUIDANCE = "guidance"
 
 
 class GuardrailDef(BaseModel):
     """A guardrail — a specific constraint or safety mechanism."""
 
-    name: str
-    description: str
-    enforcement: str = Field(description="How enforced: hook, instruction, or guidance.")
+    name: str = Field(..., min_length=1, description="Guardrail name.")
+    description: str = Field(..., min_length=1, description="What this guardrail does.")
+    enforcement: GuardrailEnforcement = Field(description="How enforced: hook, instruction, or guidance.")
 
 
 class AgentDefinition(BaseModel):
@@ -282,10 +297,11 @@ class PromptAnatomy(BaseModel):
 
         # Authority section
         authority_lines = []
-        for assignment in agent.decision_authority.assignments:
-            authority_lines.append(
-                f"[{assignment.tier.value.upper()}] {assignment.decision}"
-            )
+        if agent.decision_authority and agent.decision_authority.assignments:
+            for assignment in agent.decision_authority.assignments:
+                authority_lines.append(
+                    f"[{assignment.tier.value.upper()}] {assignment.decision}"
+                )
 
         # Constraints section
         constraint_lines = []

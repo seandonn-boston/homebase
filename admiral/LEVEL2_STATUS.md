@@ -77,17 +77,22 @@ Mirrors the 13 checklist items from the spec's Level 2 Pre-Flight Checklist.
 
 ## Test Coverage
 
-**313 tests passing** across 7 test files:
+**386 tests passing** across 8 test files:
 - `test_models.py` — Level 1 model validation (uses `ValidationError` not bare `Exception`)
 - `test_level2.py` — Level 2 model validation per section
 - `test_level2_comprehensive.py` — Edge cases, serialization roundtrips, cross-model integration, prompt anatomy
+- `test_coverage_gaps.py` — Previously untested models, negative validation, render structure, defensive programming
 - `test_hooks.py`, `test_runtime.py`, `test_standing_orders.py`, `test_enforcement.py`, `test_schema_validation.py`
 
-Key test categories in `test_level2_comprehensive.py`:
+Key test categories:
 - **Edge cases:** Boundary values (40% ceiling exactly, 150-line limit), empty inputs, rejection conditions
 - **Serialization roundtrips:** All Level 2 models survive JSON → dict → model → JSON cycle
 - **Cross-model integration:** Fleet → routing → handoff → checkpoint end-to-end workflow
 - **Prompt anatomy:** Section ordering, `from_agent()` factory, render output, probe definitions
+- **Previously untested models:** AgentScope, ToolPermission, InterfaceContractRef, GuardrailDef, MCPTrustLevel, A2AAuthMethod, RetryConfig, HandoffRoute
+- **Negative validation:** Invalid budgets, self-handoff, vague versions, constraint coverage violations, recovery ladder skipping
+- **Render structure:** Section ordering validation (not just substring presence), header verification
+- **Defensive programming:** increment_usage with missing context key, ResourceUsage.time_remaining
 
 ## Spec Clarifications Applied
 
@@ -101,4 +106,4 @@ Items where the spec was updated to clarify Level 2 expectations:
 
 ## Verdict
 
-Level 2 is **13/13 complete** against the spec's pre-flight checklist. All checklist items are satisfied with tested Pydantic models, validated through 313 tests including edge cases, serialization roundtrips, and cross-model integration.
+Level 2 is **13/13 complete** against the spec's pre-flight checklist. All checklist items are satisfied with tested Pydantic models, validated through 386 tests including edge cases, serialization roundtrips, negative validation, and cross-model integration.

@@ -95,5 +95,9 @@ def increment_usage(state: dict[str, Any], tool_name: str) -> dict[str, Any]:
     state["tool_call_count"] = state.get("tool_call_count", 0) + 1
     budget = state.get("token_budget", DEFAULT_TOKEN_BUDGET)
     if budget > 0:
-        state["context"]["current_utilization"] = state["tokens_used"] / budget
+        ctx = state.get("context")
+        if ctx is None:
+            ctx = {"current_utilization": 0.0}
+            state["context"] = ctx
+        ctx["current_utilization"] = state["tokens_used"] / budget
     return state

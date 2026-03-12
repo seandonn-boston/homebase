@@ -13,6 +13,7 @@ from __future__ import annotations
 import base64
 import hashlib
 import os
+import threading
 import time
 from typing import Optional
 
@@ -38,6 +39,7 @@ class CredentialVault:
     def __init__(self, store: Store, master_key: str | None = None) -> None:
         self._store = store
         self._master_key = _derive_key(master_key or os.environ.get("BROKER_MASTER_KEY", "demo-key"))
+        self._lock = threading.Lock()
 
     # --- Public API ---------------------------------------------------------
 
@@ -63,20 +65,22 @@ class CredentialVault:
         Atomically increment active_sessions and mark checked-out.
         Returns None if credential is at capacity or disabled.
         """
-        cred = self._store.get_credential(credential_id)
-        if cred is None or not cred.has_capacity:
-            return None
-        cred.active_sessions += 1
-        cred.state = CredentialState.AVAILABLE  # still available if below cap
-        cred.last_checked_out = time.time()
-        return cred
+        with self._lock:
+            cred = self._store.get_credential(credential_id)
+            if cred is None or not cred.has_capacity:
+                return None
+            cred.active_sessions += 1
+            cred.state = CredentialState.AVAILABLE  # still available if below cap
+            cred.last_checked_out = time.time()
+            return cred
 
     def checkin(self, credential_id: str) -> None:
         """Decrement active_sessions when a session ends."""
-        cred = self._store.get_credential(credential_id)
-        if cred is None:
-            return
-        cred.active_sessions = max(0, cred.active_sessions - 1)
+        with self._lock:
+            cred = self._store.get_credential(credential_id)
+            if cred is None:
+                return
+            cred.active_sessions = max(0, cred.active_sessions - 1)
 
     def reveal_password(self, credential_id: str) -> Optional[str]:
         """De-obfuscate and return the plaintext password (for session setup)."""
@@ -120,4 +124,7 @@ class CredentialVault:
         key_bytes = self._master_key
         data = base64.b64decode(token.encode())
         plain = bytes(b ^ key_bytes[i % len(key_bytes)] for i, b in enumerate(data))
-        return plain.decode()
+        try:
+            return plain.decode()
+        except UnicodeDecodeError as e:
+            raise ValueError(f"Failed to decode credential: corrupted or wrong master key") from e

@@ -13,6 +13,5 @@
 # Protocol implementations — non-negotiable rules, requires explicit review
 /admiral/protocols/ @admiral-maintainers
 
-# Identity and security — highest scrutiny
-/admiral/models/identity.py @admiral-maintainers
-/admiral/security/ @admiral-maintainers
+# Core models — highest scrutiny
+/admiral/models/ @admiral-maintainers

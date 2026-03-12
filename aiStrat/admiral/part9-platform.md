@@ -27,7 +27,7 @@ Observability answers a different question: "why did Agent B fail on chunk 3 of 
 | Dashboards and alerts | Trace exploration and root cause analysis |
 | Answers: "Is something wrong?" | Answers: "What exactly went wrong and why?" |
 
-### The Three Pillars for Agent Fleets
+### The Four Pillars for Agent Fleets
 
 Traditional observability has three pillars — logs, metrics, traces. Agent fleets add a fourth.
 

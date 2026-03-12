@@ -15,6 +15,7 @@ import time
 from typing import Optional
 
 from broker.core.models import (
+    CredentialState,
     Session,
     SessionState,
     UsageRecord,
@@ -144,7 +145,7 @@ class SessionBroker:
             raise ValueError(f"Unknown service: {service_id}")
 
         creds = self._store.credentials_for_service(service_id)
-        total_slots = sum(c.max_streams for c in creds if c.state.value != "disabled")
+        total_slots = sum(c.max_streams for c in creds if c.state != CredentialState.DISABLED)
         used_slots = sum(c.active_sessions for c in creds)
         queue = self._store.queued_sessions_for_service(service_id)
 

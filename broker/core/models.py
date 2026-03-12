@@ -83,6 +83,8 @@ class Credential:
         return f"{salt}:{h}"
 
     def verify_password(self, plain: str) -> bool:
+        if ":" not in self.password_hash:
+            return False
         salt, expected = self.password_hash.split(":", 1)
         h = hashlib.sha256(f"{salt}:{plain}".encode()).hexdigest()
         return h == expected

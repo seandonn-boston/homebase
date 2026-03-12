@@ -45,9 +45,9 @@ These are the agents to implement first. A fleet can operate effectively with ju
 | 6 | **Security Auditor** | Security review of all code changes |
 | 7 | **Architect** | System design, technical decisions |
 | 8 | **DevOps Agent** | Deployment, CI/CD, infrastructure |
-| 9 | **Token Budgeter** | Governance (always deploy) — tracks and enforces token/cost budgets |
-| 10 | **Hallucination Auditor** | Governance (always deploy) — detects fabricated facts, false citations |
-| 11 | **Loop Breaker** | Governance (always deploy) — detects and terminates circular agent loops |
+| 9 | **Token Budgeter** | Governance (Level 3+) — tracks and enforces token/cost budgets |
+| 10 | **Hallucination Auditor** | Governance (Level 3+) — detects fabricated facts, false citations |
+| 11 | **Loop Breaker** | Governance (Level 3+) — detects and terminates circular agent loops |
 
 > **Note:** Agents 9-11 (Token Budgeter, Hallucination Auditor, Loop Breaker) are governance additions for Level 3+. At Level 2, deploy agents 1-8 only.
 

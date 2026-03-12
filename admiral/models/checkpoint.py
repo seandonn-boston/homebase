@@ -12,7 +12,7 @@ RECOVERY_ACTIONS are both empty, be suspicious.
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 
 from pydantic import BaseModel, Field
@@ -136,7 +136,7 @@ class Checkpoint(BaseModel):
     session_id: str = Field(..., min_length=1)
     fleet_id: str = Field(default="")
     created_at: str = Field(
-        default_factory=lambda: datetime.now().isoformat(),
+        default_factory=lambda: datetime.now(timezone.utc).isoformat(),
     )
 
     # Task tracking

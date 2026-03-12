@@ -37,11 +37,11 @@ class MCPServerConfig(BaseModel):
     )
     capability: str = Field(
         default="",
-        description="What this server provides in one sentence.",
+        description="What this server provides in one sentence. Should not be empty.",
     )
     scope_limits: str = Field(
         default="",
-        description="What this server cannot do or is restricted from.",
+        description="What this server cannot do or is restricted from. Should not be empty.",
     )
     trust_level: MCPTrustLevel = Field(default=MCPTrustLevel.INTERNAL)
     auth_method: str = Field(
