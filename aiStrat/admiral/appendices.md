@@ -79,6 +79,18 @@ Everything from Level 1, plus:
 - [ ] **Escalation Protocol (37):** Escalation routing and report format defined.
 - [ ] **Handoff Protocol (38):** Structured handoff format for inter-agent transfers.
 
+> **Implementation Notes (from reference implementation — `admiral/`):**
+>
+> The Level 2 checklist mixes two categories of requirement that should be distinguished:
+> 1. **Model requirements** (Pydantic classes, data structures, validation logic) — testable without deployment.
+> 2. **Deployment requirements** (running MCP servers, probe testing, populated fleet rosters) — require runtime infrastructure.
+>
+> Specific gaps identified during implementation:
+> - **Section 04** "tested with probes": No probe framework is defined in the spec. `AgentDefinition.prompt_anchor` provides the structure; probe testing requires a runtime harness (arguably Level 3).
+> - **Section 11** "5-12 agents": The model supports 1-12 agents. Populating a roster with concrete agent definitions is a configuration task, not a framework task. Consider clarifying the distinction.
+> - **Section 22** "Recovery ladder": The spec's 5-step ladder (Retry → Fallback → Backtrack → Isolate → Escalate) is cross-cutting — it touches context management, fleet routing, and escalation protocol. The model enforces no-skip progression but the runtime integration spans multiple systems.
+> - **Time estimates**: The "~2 hours per item" estimate does not account for cross-model validation (e.g., context budget ↔ agent definition) or test writing. Realistic implementation is 3-4 hours per item with tests.
+
 ### Level 3: Governed Fleet
 
 Everything from Levels 1–2, plus:

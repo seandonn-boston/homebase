@@ -135,8 +135,17 @@ class AgentDefinition(BaseModel):
     name: str = Field(..., min_length=1, description="Agent role name.")
     category: AgentCategory
     model_tier: ModelTier
+    model_rationale: str = Field(
+        default="",
+        description="Why this model tier was chosen (e.g., 'Needs deep reasoning for architecture decisions').",
+    )
     schedule: ScheduleType = Field(default=ScheduleType.TRIGGERED)
     description: str = Field(default="", description="Brief role description.")
+    context_budget_kb: int | None = Field(
+        default=None,
+        gt=0,
+        description="Context window budget in KB. Used to verify context profile fits.",
+    )
 
     # Scope
     scope: AgentScope = Field(default_factory=AgentScope)

@@ -22,6 +22,10 @@ from admiral.protocols.escalation import (
     EmergencyHaltReport,
     EmergencyHaltTrigger,
 )
+from admiral.protocols.handoff_protocol import (
+    validate_handoff_completeness,
+    validate_acceptance,
+)
 
 __all__ = [
     "StandingOrder",
@@ -37,4 +41,6 @@ __all__ = [
     "ApproachAttempted",
     "EmergencyHaltReport",
     "EmergencyHaltTrigger",
+    "validate_handoff_completeness",
+    "validate_acceptance",
 ]

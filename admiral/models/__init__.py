@@ -9,10 +9,21 @@ Level 2: Fleet composition, routing, handoff protocol, work decomposition,
 """
 
 # --- Level 1 ---
-from admiral.models.mission import Mission, Boundaries, SuccessCriteria, ResourceBudgets
+from admiral.models.mission import (
+    Mission,
+    Boundaries,
+    SuccessCriteria,
+    ResourceBudgets,
+    ProjectPhase,
+    PipelineEntry,
+    LLMLastBoundary,
+    CriterionCategory,
+    Criterion,
+)
 from admiral.models.enforcement import (
     EnforcementLevel,
     ConstraintClassification,
+    ConstraintCategory,
     Constraint,
 )
 from admiral.models.authority import (
@@ -20,12 +31,17 @@ from admiral.models.authority import (
     DecisionAuthority,
     AuthorityAssignment,
     CalibrationCondition,
+    CalibrationRule,
 )
 from admiral.models.agent import (
     AgentDefinition,
+    AgentCategory,
     AgentScope,
     ModelTier,
+    ScheduleType,
     ToolPermission,
+    InterfaceContractRef,
+    GuardrailDef,
 )
 
 # --- Level 2 ---
@@ -74,24 +90,58 @@ from admiral.models.fleet import (
     FLEET_MIN_AGENTS,
     FLEET_MAX_AGENTS,
 )
+from admiral.models.tool_registry import (
+    FleetToolRegistry,
+    AgentToolRegistry,
+    ToolEntry,
+    MCPServerConfig,
+    MCPTrustLevel,
+)
+from admiral.models.protocol_integration import (
+    ProtocolRegistry,
+    A2AConnection,
+    A2AAuthMethod,
+)
+from admiral.models.recovery import (
+    RecoveryLadder,
+    RecoveryRecord,
+    RecoveryStep,
+    RetryConfig,
+    FallbackConfig,
+    RECOVERY_LADDER_ORDER,
+)
 
 __all__ = [
-    # Level 1
+    # Level 1 — Mission
     "Mission",
     "Boundaries",
     "SuccessCriteria",
     "ResourceBudgets",
+    "ProjectPhase",
+    "PipelineEntry",
+    "LLMLastBoundary",
+    "CriterionCategory",
+    "Criterion",
+    # Level 1 — Enforcement
     "EnforcementLevel",
     "ConstraintClassification",
+    "ConstraintCategory",
     "Constraint",
+    # Level 1 — Authority
     "DecisionTier",
     "DecisionAuthority",
     "AuthorityAssignment",
     "CalibrationCondition",
+    "CalibrationRule",
+    # Level 1 — Agent
     "AgentDefinition",
+    "AgentCategory",
     "AgentScope",
     "ModelTier",
+    "ScheduleType",
     "ToolPermission",
+    "InterfaceContractRef",
+    "GuardrailDef",
     # Level 2 — Ground Truth
     "GroundTruth",
     "TechStackEntry",
@@ -131,4 +181,21 @@ __all__ = [
     "RoutingTable",
     "FLEET_MIN_AGENTS",
     "FLEET_MAX_AGENTS",
+    # Level 2 — Tool & Capability Registry
+    "FleetToolRegistry",
+    "AgentToolRegistry",
+    "ToolEntry",
+    "MCPServerConfig",
+    "MCPTrustLevel",
+    # Level 2 — Protocol Integration
+    "ProtocolRegistry",
+    "A2AConnection",
+    "A2AAuthMethod",
+    # Level 2 — Failure Recovery
+    "RecoveryLadder",
+    "RecoveryRecord",
+    "RecoveryStep",
+    "RetryConfig",
+    "FallbackConfig",
+    "RECOVERY_LADDER_ORDER",
 ]

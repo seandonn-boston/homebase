@@ -27,11 +27,11 @@ LLM-LAST: Deterministic tools handle: testing, linting, type checking, formattin
 
 ## Success Criteria
 
-FUNCTIONAL: All Level 1 tests pass. Hook engine discovers, validates, and executes hooks. Standing Orders load and render. Escalation reports generate correctly.
+FUNCTIONAL: All Level 1 and Level 2 tests pass. Hook engine discovers, validates, and executes hooks. Standing Orders load and render. Escalation reports generate correctly. Fleet models validate composition, routing, tool registries, and recovery ladders.
 
 QUALITY: `python -m pytest admiral/tests/ -v` exits 0. Every model validates against its spec schema where a JSON schema exists.
 
-COMPLETENESS: AGENTS.md, CLAUDE.md, all Level 1 models, all Level 1 hooks, all protocols, all tests.
+COMPLETENESS: AGENTS.md, CLAUDE.md, all Level 1 models, all Level 1 hooks, all Level 2 models (fleet, routing, tools, context, ground truth, checkpoints, handoff, recovery, protocol integration), all protocols, all tests.
 
 NEGATIVE: No files modified outside `admiral/` (except `.github/CODEOWNERS` and `.claude/hooks.json`). No secrets in code. No disabled quality gates.
 
@@ -92,7 +92,13 @@ State persists across hook invocations in `.admiral/session_state.json`.
 | See hook engine | `admiral/hooks/engine.py` |
 | See Standing Orders | `admiral/protocols/standing_orders.py` |
 | See runtime adapter | `admiral/runtime/hook_adapter.py` |
+| See fleet models | `admiral/models/fleet.py` |
+| See tool registry | `admiral/models/tool_registry.py` |
+| See recovery ladder | `admiral/models/recovery.py` |
+| See handoff protocol | `admiral/protocols/handoff_protocol.py` |
+| See Level 1 status | `admiral/LEVEL1_STATUS.md` |
+| See Level 2 status | `admiral/LEVEL2_STATUS.md` |
 
 ## Adoption Level
 
-This project is currently at **Level 1: Disciplined Solo** — one agent with clear Identity, Scope, Boundaries, and 5 hooks deployed as live enforcement. Graduating to Level 2 when fleet composition and routing are implemented.
+This project is currently at **Level 2: Core Fleet** — fleet composition, routing, tool registries, context profiles, ground truth, work decomposition, checkpoints, handoff protocol, protocol integration, and failure recovery are all modeled with tested Pydantic classes. Level 1 hooks remain deployed as live enforcement. Graduating to Level 3 when governance agents perform verification.
