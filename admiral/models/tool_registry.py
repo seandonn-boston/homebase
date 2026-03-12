@@ -25,7 +25,7 @@ class MCPTrustLevel(str, Enum):
 class MCPServerConfig(BaseModel):
     """A registered MCP server.
 
-    Per Section 14: MCP servers must be registered, scoped, version-pinned,
+    Per Section 12: MCP servers must be registered, scoped, version-pinned,
     and audited. Never use 'latest' in production.
     """
 
@@ -117,7 +117,7 @@ class FleetToolRegistry(BaseModel):
     """Fleet-wide tool registry aggregating all agents' tools and MCP servers.
 
     Section 12: the fleet must have a complete picture of what each agent
-    can and cannot do. Section 14: MCP servers are registered fleet-wide.
+    can and cannot do. MCP servers are registered fleet-wide.
     """
 
     agent_registries: list[AgentToolRegistry] = Field(default_factory=list)

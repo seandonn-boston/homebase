@@ -23,6 +23,7 @@ from admiral.models.authority import DecisionTier
 class TaskStatus(str, Enum):
     """Status of a task in a checkpoint."""
 
+    PENDING = "pending"
     COMPLETED = "completed"
     IN_PROGRESS = "in_progress"
     BLOCKED = "blocked"

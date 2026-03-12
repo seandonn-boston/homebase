@@ -1141,3 +1141,70 @@ class TestContextBudgetCrossValidation:
         violations = profile.validate_fits_budget(100)
         assert len(violations) == 1
         assert "budget" in violations[0].lower()
+
+
+class TestDecisionAuthorityProperties:
+    """Direct property access tests for DecisionAuthority filter properties."""
+
+    def test_enforced_property(self):
+        authority = DecisionAuthority.with_common_defaults()
+        enforced = authority.enforced
+        assert len(enforced) >= 1
+        assert all(a.tier == DecisionTier.ENFORCED for a in enforced)
+
+    def test_autonomous_property(self):
+        authority = DecisionAuthority.with_common_defaults()
+        autonomous = authority.autonomous
+        assert len(autonomous) >= 1
+        assert all(a.tier == DecisionTier.AUTONOMOUS for a in autonomous)
+
+    def test_all_four_tiers_covered(self):
+        authority = DecisionAuthority.with_common_defaults()
+        assert len(authority.enforced) >= 1
+        assert len(authority.autonomous) >= 1
+        assert len(authority.propose) >= 1
+        assert len(authority.escalate) >= 1
+
+
+class TestFleetRosterGetByCategory:
+    """Tests for FleetRoster.get_by_category()."""
+
+    def test_get_by_category_returns_matching(self):
+        from admiral.models.agent import AgentCategory, ModelTier
+        agents = [
+            AgentDefinition(name="Backend", category=AgentCategory.ENGINEERING_BACKEND, model_tier=ModelTier.WORKHORSE),
+            AgentDefinition(name="Frontend", category=AgentCategory.ENGINEERING_FRONTEND, model_tier=ModelTier.WORKHORSE),
+            AgentDefinition(name="QA", category=AgentCategory.QUALITY, model_tier=ModelTier.UTILITY),
+        ]
+        roster = FleetRoster(agents=agents)
+        backend = roster.get_by_category("engineering/backend")
+        assert len(backend) == 1
+        assert backend[0].name == "Backend"
+
+    def test_get_by_category_empty_result(self):
+        from admiral.models.agent import AgentCategory, ModelTier
+        agents = [
+            AgentDefinition(name="Backend", category=AgentCategory.ENGINEERING_BACKEND, model_tier=ModelTier.WORKHORSE),
+        ]
+        roster = FleetRoster(agents=agents)
+        result = roster.get_by_category("security")
+        assert result == []
+
+
+class TestTaskStatusAlignment:
+    """Verify TaskStatus and ChunkState enum alignment."""
+
+    def test_pending_exists_in_both(self):
+        from admiral.models.checkpoint import TaskStatus
+        from admiral.models.work import ChunkState
+        assert TaskStatus.PENDING.value == "pending"
+        assert ChunkState.PENDING.value == "pending"
+
+    def test_shared_states_match(self):
+        from admiral.models.checkpoint import TaskStatus
+        from admiral.models.work import ChunkState
+        shared = {"pending", "in_progress", "completed", "blocked"}
+        task_values = {s.value for s in TaskStatus}
+        chunk_values = {s.value for s in ChunkState}
+        assert shared.issubset(task_values)
+        assert shared.issubset(chunk_values)
