@@ -11,11 +11,11 @@ name: AI Landscape Monitor
 # 4. Commit state and digest files
 
 on:
-  schedule:
-    # Daily at 07:00 UTC (morning scan)
-    - cron: "0 7 * * *"
-    # Weekly deep scan on Monday at 06:00 UTC
-    - cron: "0 6 * * 1"
+  # Schedule triggers disabled until scanner is implemented.
+  # Uncomment when aiStrat/monitor/ has a working runtime.
+  # schedule:
+  #   - cron: "0 7 * * *"   # Daily at 07:00 UTC
+  #   - cron: "0 6 * * 1"   # Weekly deep scan on Monday at 06:00 UTC
   workflow_dispatch:
     inputs:
       scan_type:
