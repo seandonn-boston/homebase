@@ -7,6 +7,8 @@
 
 Before deploying, verify the items for your adoption level. Each level includes all items from previous levels. **Only check items for your current level** — checking ahead encourages premature implementation.
 
+> **Bootstrap note:** This checklist validates that Standing Orders (Section 36) are loaded, but using the checklist effectively presupposes familiarity with Standing Orders. Bootstrap sequence: (1) read Standing Orders in Part 11, Section 36; (2) configure your agent's context to include them; (3) run this Pre-Flight Checklist to verify completeness.
+
 ### Level 1: Disciplined Solo
 
 **Part 1 — Strategy**
@@ -480,11 +482,12 @@ These case studies are synthesized from patterns observed across multiple agent 
 **Corrective actions (same session):**
 - Created `admiral/AGENTS.md` (85 lines, under 150-line rule) with Mission, Boundaries, Success Criteria, Standing Orders reference, Enforcement Classification.
 - Created `admiral/CLAUDE.md` as thin pointer.
-- Implemented `admiral/protocols/standing_orders.py` — all 15 Standing Orders as Pydantic models with loader, priority sorting, context injection renderer.
-- Implemented `admiral/protocols/escalation.py` — EscalationReport and EmergencyHaltReport per Section 37.
+- Modeled all 15 Standing Orders as structured data with loader, priority sorting, and context injection renderer — validating that Standing Orders can be programmatically injected into every agent context.
+- Modeled EscalationReport and EmergencyHaltReport per Section 37, confirming the escalation protocol is implementable as specified.
 - Added schema validation tests against authoritative JSON schemas in `aiStrat/`.
 - Set `.github/CODEOWNERS` per Section 10.
 - Applied 4 spec patches (SPEC-1 through SPEC-4) to aiStrat/ to fix the gaps that caused these errors.
+- *Note: The reference implementation (`broker/` POC) was subsequently removed. Its learnings are captured in the spec; the spec is the deliverable.*
 
 **Lesson:** The most dangerous anti-pattern for framework implementers is **organizing by code architecture instead of adoption level**. Admiral's levels exist for a reason — they represent operational capability, not code modules. Level 1 means "you can start working here," which requires governance artifacts (AGENTS.md, Standing Orders) before infrastructure (hook engine, data models). Building the engine without the governance is like building a car without a steering wheel — it runs, but it can't be directed.
 

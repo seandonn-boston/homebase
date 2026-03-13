@@ -474,7 +474,7 @@ The Orchestrator maintains a **governance incident log** with a 15-minute dedupl
 
 ## Governance Self-Monitoring
 
-Nothing monitors the governance agents themselves. A silent failure in the Drift Monitor — where it stops detecting drift but continues emitting heartbeats — would go undetected until the unmonitored drift compounds into visible damage. This section establishes two layers of self-monitoring: liveness (are governance agents running?) and correctness (are they producing valid findings?).
+No external, non-governance entity monitors the governance agents. A silent failure in the Drift Monitor — where it stops detecting drift but continues emitting heartbeats — would go undetected until the unmonitored drift compounds into visible damage. Governance agents self-monitor via two internal layers described below: liveness (are governance agents running?) and correctness (are they producing valid findings?). The Admiral serves as the external accountability layer — governance heartbeats route directly to the Admiral, not to other governance agents.
 
 ### Layer 1: Governance Heartbeat
 

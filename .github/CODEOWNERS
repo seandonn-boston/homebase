@@ -1,0 +1,20 @@
+# Admiral Framework — Code Ownership
+# See Section 10 (Configuration Security) for CODEOWNERS as a Level 1 requirement.
+
+# All spec files require review
+/aiStrat/ @seandonn-boston
+
+# Doctrine (highest scrutiny — foundational framework definitions)
+/aiStrat/admiral/ @seandonn-boston
+
+# Hook specifications (enforcement layer)
+/aiStrat/hooks/ @seandonn-boston
+
+# Database schemas (data model integrity)
+/aiStrat/brain/schema/ @seandonn-boston
+
+# Command agent definitions (fleet coordination layer)
+/aiStrat/fleet/agents/command/ @seandonn-boston
+
+# CI/CD workflows
+/.github/workflows/ @seandonn-boston

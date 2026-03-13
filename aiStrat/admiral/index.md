@@ -44,7 +44,7 @@ You don't need to read 200 pages before deploying your first agent. Start at Lev
 
 ### Minimum Viable Reading Path
 
-If you are starting at Level 1, you do not need to read the entire framework. These six files (~900 lines total) give you everything you need to deploy your first governed agent. Read the rest when you need it.
+If you are starting at Level 1, you do not need to read the entire framework. These six files (~800 lines of targeted reading) give you everything you need to deploy your first governed agent. Read the rest when you need it.
 
 | Order | File | What to Read | Why |
 |---|---|---|---|

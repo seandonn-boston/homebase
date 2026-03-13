@@ -1,7 +1,7 @@
 <!-- Admiral Framework v0.3.0-alpha -->
 # PART 5 — THE BRAIN
 
-*Infrastructure designed for anything.*
+*How does the fleet remember?*
 
 *Parts 1–4 define what the fleet is, what it knows, how it's enforced, and who does the work. Part 5 gives the fleet long-term memory — a queryable knowledge system accessible through a standard protocol that any AI agent can speak. It replaces file-based persistence (Section 24) with a permanent knowledge system that captures not just what happened, but what it meant and why it mattered. Set up the Brain before the fleet starts executing (Part 6) so that every decision, lesson, and failure is captured from day one.*
 

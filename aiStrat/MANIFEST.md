@@ -15,10 +15,11 @@ Master index and entry point. Subtitled "A Workforce Toolkit for Autonomous AI A
 Fleets." Defines four adoption levels (Disciplined Solo → Core Fleet → Governed Fleet
 → Full Framework) with time-to-value and graduation criteria. Links all 11 parts.
 
-Minimum Viable Reading Path (~800 lines total):
+Minimum Viable Reading Path (~800 lines of targeted reading):
   1. index.md — Glossary + Adoption Levels (shared vocabulary and roadmap)
   2. part1-strategy.md — Full file (Mission, Boundaries, Success Criteria)
-  3. part3-enforcement.md — Full file (enforcement spectrum: hooks over instructions)
+  3. part3-enforcement.md — Section 08 only (enforcement spectrum: hooks over instructions)
+  3.5. intent-engineering.md — Six Elements of Intent (how to write effective agent directives)
   4. part11-protocols.md — Section 36 only (Standing Orders: 15 non-negotiable rules)
   5. appendices.md — Appendix A only (Pre-Flight Checklist: go/no-go gate)
 

@@ -23,7 +23,8 @@ CREATE TABLE entries (
     superseded_by   UUID REFERENCES entries(id) ON DELETE SET NULL,
     last_accessed_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     purged_at       TIMESTAMPTZ,
-    purge_reason    TEXT
+    purge_reason    TEXT,
+    purge_regulation TEXT
 );
 
 CREATE INDEX idx_entries_project_category ON entries (project, category);
