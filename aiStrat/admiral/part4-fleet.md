@@ -59,6 +59,8 @@ These are the agents to implement first. A fleet can operate effectively with ju
 - **Route by file ownership:** Each specialist owns specific directories. Tasks touching those files route to the owner.
 - **Escalate ambiguous routing:** If a task spans multiple specialists, decompose further. If decomposition fails, escalate to the Admiral.
 - **Never route QA to the implementer who wrote the code.** This prevents conflict of interest — the same judgment that produced the code cannot objectively evaluate it. Different blind spots are the point.
+- **QA conflict detection:** Validate the routing table for QA conflicts at configuration time. A task type matching any QA keyword (`review`, `qa`, `test`, `audit`, `verify`) assigned to an agent that also handles non-QA task types is a conflict of interest. This is a structural check at fleet configuration time, not a runtime judgment.
+- **Tool permission validation:** Each agent's available tool list and denied tool list must be disjoint — `available ∩ denied = ∅`. A tool appearing in both lists indicates a configuration error and should be rejected at validation time.
 
 Routing rules that communicate intent produce better specialist output. "Database task" is a category. "Schema migration that must be backward-compatible because we have live traffic" is intent. When routing includes the *why*, the specialist makes better trade-offs without additional round trips to the Orchestrator.
 

@@ -348,6 +348,11 @@ OPEN QUESTIONS:
 [Unresolved issues the receiver should be aware of]
 ```
 
+### Handoff Validation Rules
+
+- **Sender and receiver must be different agents.** A handoff where the sending agent and receiving agent are the same is rejected. This prevents self-referential handoff loops.
+- **Completeness warning:** A handoff with neither assumptions nor open questions should trigger a completeness warning. Real handoffs involve unknowns — an empty assumptions list AND an empty open questions list may indicate the sender did not think through what the receiver needs to validate.
+
 ### Handoff Rules
 
 1. **All handoffs route through the Orchestrator** unless a direct handoff is explicitly authorized in the routing rules. The Orchestrator validates that the handoff format is complete and the routing is correct.

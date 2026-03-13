@@ -90,6 +90,10 @@ Everything from Level 1, plus:
 > - **Section 11** "5-12 agents": The model supports 1-12 agents. Populating a roster with concrete agent definitions is a configuration task, not a framework task. Consider clarifying the distinction.
 > - **Section 22** "Recovery ladder": The spec's 5-step ladder (Retry → Fallback → Backtrack → Isolate → Escalate) is cross-cutting — it touches context management, fleet routing, and escalation protocol. The model enforces no-skip progression but the runtime integration spans multiple systems.
 > - **Time estimates**: The "~2 hours per item" estimate does not account for cross-model validation (e.g., context budget ↔ agent definition) or test writing. Realistic implementation is 3-4 hours per item with tests.
+> - **Section 14** "A2A configured if needed": A2A is primarily a Level 3+ concern (cross-process communication between governance agents). The model exists for when it is needed. The spec's "if needed" qualifier means this is conditionally complete at Level 2.
+> - **Standing Order 12** has exactly 7 rules (verified in reference implementation). Like SO 11's 6 rules, this is a fixed count that implementations should validate.
+> - **LLM-Last boundary enforcement** (Section 02) is a documentation concern — it defines which tools are deterministic vs. which require LLM judgment. It does not require a hook or runtime check until Level 3+ when governance agents verify compliance.
+> - **Async hook execution** is deferred to Level 3+. The manifest schema accepts the `async` field for forward compatibility, but Level 1–2 runtimes should execute all hooks synchronously.
 
 ### Level 3: Governed Fleet
 

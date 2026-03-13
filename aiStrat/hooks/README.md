@@ -87,6 +87,17 @@ When multiple hooks bind to the same lifecycle event:
 2. Among hooks at the same dependency level, execution follows declaration order.
 3. First failure stops the chain (fail-fast) — consistent with the hook chaining behavior in Section 08.
 
+### Hook State Propagation
+
+Hooks can pass state to downstream hooks within the same event chain. When a hook writes JSON to stdout containing a `"hook_state"` key, the runtime merges those values into the payload for subsequent hooks. This enables stateful patterns such as the loop detector maintaining error counts across a PostToolUse chain.
+
+Key behaviors:
+
+- State is merged via shallow update: `payload["hook_state"].update(output["hook_state"])`. State is keyed by hook name by convention (e.g., `"loop_detector": {...}`).
+- **State merges even on hook failure.** A failing hook can still communicate state to subsequent hooks or to the next invocation of the same chain. This is intentional — diagnostic state from a failure is valuable for debugging and recovery.
+- Non-JSON stdout does not break propagation (silently ignored).
+- The runtime persists the merged `hook_state` to its session state file between event firings, so state survives across separate tool invocations within the same session.
+
 -----
 
 ## Contract Versioning

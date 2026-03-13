@@ -81,6 +81,8 @@ Agent action
 | **Process** | Require test existence before implementation accepted | Write tests for new features |
 | **Cost** | Kill session after token budget exceeded | Be mindful of token usage |
 
+> **Enforcement coverage rule:** Security and scope constraints MUST be hook-enforced. Any constraint classified under the SECURITY or SCOPE categories that is assigned to INSTRUCTION or GUIDANCE enforcement level represents a compliance gap. Validate enforcement coverage at configuration time, not at runtime — a miscategorized security constraint discovered during an incident is too late.
+
 ### Reference Hook Implementations
 
 The enforcement classifications above (e.g., "Kill session after token budget exceeded") require concrete hook specifications. The following hooks implement the deterministic enforcement for token budgets, loop detection, and context health — three areas where advisory instructions are insufficient and hook-based enforcement is mandatory.
@@ -250,6 +252,8 @@ Every hook must ship with a `hook.manifest.json` conforming to `hooks/manifest.s
 - **Event types:** Manifests support the standard lifecycle events (`PreToolUse`, `PostToolUse`, `PreCommit`, `PostCommit`, `SessionStart`, `TaskCompleted`, `PrePush`) plus `Periodic` for interval-based hooks like the governance heartbeat monitor.
 
 See `hooks/README.md` for the full ecosystem specification, directory conventions, and reference manifests.
+
+> **Async hook execution** (the `async` field in the manifest) is deferred to Level 3+. At Levels 1–2, all hooks execute synchronously. The manifest schema accepts the field for forward compatibility, but runtimes at Levels 1–2 should ignore it and execute all hooks synchronously.
 
 ### Self-Healing Quality Loops
 
