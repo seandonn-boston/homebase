@@ -1,7 +1,7 @@
 <!-- Admiral Framework v0.3.0-alpha -->
 # Monitor Scanner Specification
 
-**Status:** Specification only — no implementation exists. See `.github/workflows/ai-monitor.yml` for the CI stub.
+**Status:** Partially implemented. `scanner.sh` provides GitHub release tracking, trending repo discovery, digest generation, state management, and issue creation. RSS feeds, quarantine layers, and seed candidate generation remain specification-only.
 
 The scanner is the data collection layer of the AI Landscape Monitor. It watches the AI ecosystem for new releases, capability shifts, emerging patterns, and developments relevant to the Admiral Framework and its users.
 

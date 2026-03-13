@@ -1,21 +1,17 @@
 name: AI Landscape Monitor
 
-# SPECIFICATION STUB — This workflow documents the intended CI behavior for the
-# AI Landscape Monitor. The scanner module is not yet implemented.
-# See aiStrat/monitor/ for the full architecture specification.
+# Scans the AI ecosystem for new releases, trending repos, and notable
+# developments. Generates markdown digests, updates persistent state,
+# and creates GitHub issues for high-priority findings.
 #
-# When the scanner is implemented, this workflow will:
-# 1. Run daily and weekly scans of the AI ecosystem
-# 2. Generate digest files with findings
-# 3. Create GitHub issues for high-priority findings
-# 4. Commit state and digest files
+# See aiStrat/monitor/ for architecture specs and scanner implementation.
 
 on:
-  # Schedule triggers disabled until scanner is implemented.
-  # Uncomment when aiStrat/monitor/ has a working runtime.
-  # schedule:
-  #   - cron: "0 7 * * *"   # Daily at 07:00 UTC
-  #   - cron: "0 6 * * 1"   # Weekly deep scan on Monday at 06:00 UTC
+  schedule:
+    # Daily at 07:00 UTC (standard scan)
+    - cron: "0 7 * * *"
+    # Weekly deep scan on Monday at 06:00 UTC
+    - cron: "0 6 * * 1"
   workflow_dispatch:
     inputs:
       scan_type:
@@ -38,7 +34,6 @@ on:
 permissions:
   contents: write      # To commit state and digests
   issues: write        # To create alert issues for high-priority findings
-  pull-requests: write # To create PRs with seed candidates
 
 jobs:
   scan:
@@ -49,22 +44,43 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Monitor scanner (not yet implemented)
+      - name: Determine scan type
+        id: scan-config
         run: |
-          echo "========================================================"
-          echo "AI Landscape Monitor — Scanner Not Yet Implemented"
-          echo "========================================================"
-          echo ""
-          echo "This workflow is a specification stub. The scanner module"
-          echo "has not yet been built. See the following specs:"
-          echo ""
-          echo "  - aiStrat/monitor/README.md (architecture overview)"
-          echo "  - aiStrat/monitor/scanner-spec.md (scanner specification)"
-          echo "  - aiStrat/monitor/state-schema.json (state file schema)"
-          echo "  - aiStrat/monitor/digest-format.md (digest output format)"
-          echo ""
-          echo "To implement, create a scanner that conforms to these specs"
-          echo "and update this workflow to invoke it."
-          echo ""
-          echo "Scan type requested: ${{ inputs.scan_type || 'scheduled' }}"
-          echo "Dry run: ${{ inputs.dry_run || 'false' }}"
+          # Scheduled runs: detect daily vs weekly from cron trigger
+          if [[ "${{ github.event_name }}" == "schedule" ]]; then
+            if [[ "${{ github.event.schedule }}" == "0 6 * * 1" ]]; then
+              echo "scan_type=discover" >> "$GITHUB_OUTPUT"
+            else
+              echo "scan_type=full" >> "$GITHUB_OUTPUT"
+            fi
+            echo "dry_run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "scan_type=${{ inputs.scan_type || 'full' }}" >> "$GITHUB_OUTPUT"
+            echo "dry_run=${{ inputs.dry_run || 'false' }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run scanner
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ARGS="${{ steps.scan-config.outputs.scan_type }}"
+          if [[ "${{ steps.scan-config.outputs.dry_run }}" == "true" ]]; then
+            ARGS="$ARGS --dry-run"
+          fi
+          chmod +x aiStrat/monitor/scanner.sh
+          bash aiStrat/monitor/scanner.sh $ARGS
+
+      - name: Commit state and digest
+        if: steps.scan-config.outputs.dry_run != 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add aiStrat/monitor/state.json
+          git add aiStrat/monitor/digests/
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "monitor: scan digest $(date -u +%Y-%m-%d) [${{ steps.scan-config.outputs.scan_type }}]"
+            git push
+          fi

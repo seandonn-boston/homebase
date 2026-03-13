@@ -612,7 +612,7 @@ aiStrat/brain/schema/test_sensitive_data_guard.sql
 
 ---
 
-## Monitor / Ecosystem Intelligence (4 files)
+## Monitor / Ecosystem Intelligence (7 files)
 
 ```
 README.md - monitor/architecture - 2026-03-10:
@@ -651,6 +651,29 @@ medium/low priority findings, seed candidates for Brain ingestion, and scan meta
 File naming convention (YYYY-MM-DD.md, weekly suffix). Governance rules for digest
 handling.
 aiStrat/monitor/digest-format.md
+```
+
+```
+scanner.sh - monitor/implementation - 2026-03-13:
+The scanner implementation. Executes scan types defined in scanner-spec.md against
+configured intelligence sources, produces digest reports, and updates persistent state.
+aiStrat/monitor/scanner.sh
+```
+
+```
+state.json - monitor/state - 2026-03-13:
+Persistent state tracking scan history and known versions. Conforms to state-schema.json.
+Records per-source scan timestamps, known versions, scan history entries, and watchlist
+configuration.
+aiStrat/monitor/state.json
+```
+
+```
+digests/ - monitor/output - 2026-03-13:
+Directory for generated markdown digest reports. Each digest follows the format defined
+in digest-format.md, named by date (YYYY-MM-DD.md, weekly suffix). Contains prioritized
+findings and seed candidates for Brain ingestion.
+aiStrat/monitor/digests/
 ```
 
 ---

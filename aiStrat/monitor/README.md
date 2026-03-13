@@ -3,7 +3,21 @@
 
 **Automated surveillance of the AI agent ecosystem — with an immune system.**
 
-This document specifies the architecture for the Continuous AI Landscape Monitor — the fleet's intelligence service. It scans the AI ecosystem for model releases, agent patterns, trending tools, and emerging threats, then feeds curated intelligence into the Brain through a quarantine system that neutralizes adversarial inputs before they can reach fleet memory.
+## Implementation Status
+
+The scanner is implemented as a shell script (`scanner.sh`) that runs in GitHub Actions via `.github/workflows/ai-monitor.yml`. It currently supports:
+
+- **GitHub release tracking** — Checks all watchlist repos for new releases via the GitHub API
+- **Trending repo discovery** — Searches GitHub for new repos matching watchlist topics
+- **Digest generation** — Produces markdown reports in `digests/YYYY-MM-DD.md`
+- **State persistence** — Tracks known versions and scan history in `state.json`
+- **Issue creation** — Opens GitHub issues for high-priority findings (major provider releases)
+
+**Not yet implemented:** RSS/blog feed scanning, the five-layer quarantine/immune system (Layers 1-5), seed candidate generation for Brain ingestion, and the Bayesian/TF-IDF semantic analysis described below. These are specified but require additional tooling beyond what `gh` CLI and standard shell provide.
+
+---
+
+This document specifies the full architecture for the Continuous AI Landscape Monitor — the fleet's intelligence service. It scans the AI ecosystem for model releases, agent patterns, trending tools, and emerging threats, then feeds curated intelligence into the Brain through a quarantine system that neutralizes adversarial inputs before they can reach fleet memory.
 
 ## Architecture
 
