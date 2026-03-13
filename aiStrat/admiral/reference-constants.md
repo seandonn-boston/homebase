@@ -87,6 +87,34 @@ SHA256(agent_id + ":" + error.strip().lower())[:16]
 
 -----
 
+## Token Budget Alert Thresholds
+
+The `token_budget_tracker` hook issues alerts at two thresholds:
+
+| Utilization | Alert String | Meaning | Exit Code |
+|---|---|---|---|
+| >= 90% | `"ESCALATION"` | Agent should escalate remaining work | 0 (pass) |
+| >= 80% | `"WARNING"` | Agent should conserve tokens | 0 (pass) |
+
+Both thresholds use `>=` (inclusive). Alerts are advisory (exit 0); they do not block actions. The alert type is a string literal in the hook's JSON stdout under the `"alert"` key. An agent may receive both alerts in a single session as utilization crosses each threshold.
+
+The `token_budget_gate` hook (PreToolUse) blocks at 100% utilization with exit code 2. At 99.99% utilization, the gate allows the action.
+
+-----
+
+## Loop Detection Thresholds
+
+The `loop_detector` hook implements dual-threshold activation:
+
+| Constant | Value | Meaning |
+|---|---|---|
+| MAX_SAME_ERROR | 3 | Same error signature recurs this many times |
+| MAX_TOTAL_ERRORS | 10 | Total distinct error signatures in a session |
+
+Loop detection triggers when **EITHER** threshold is crossed. These are the same defaults as the self-healing loop's `max_retries` and `max_session_retries`, but they apply at the tool-error level (loop detector) rather than the hook-error level (self-healing).
+
+-----
+
 ## Self-Healing Behavioral Details
 
 Beyond the parameters documented in Section 08 (max_retries: 3, max_session_retries: 10):
@@ -116,6 +144,16 @@ Hook exit codes follow the Claude Code convention:
 | **2** | Block (hard) | Action is blocked. Stderr contains reason shown to agent. Used for budget exhaustion, loop detection. |
 
 > **Platform note:** Exit code 2 is specific to Claude Code's hook contract. Other platforms may use different conventions. The adapter layer (see below) translates between platform conventions and the framework's internal hook results.
+
+### Hook Result Success Criterion
+
+A hook result passes if and only if BOTH conditions are true:
+
+```
+passed = (exit_code == 0) AND (not timed_out)
+```
+
+A timeout always means failure, regardless of exit code. Exit codes and timeouts are independent failure channels. On timeout, exit code is forced to 1 and stderr contains a timeout message.
 
 -----
 
@@ -163,13 +201,15 @@ This stdout is captured by the platform (Claude Code) and prepended to the agent
 
 ## Critical Context Sections
 
-The context health check hook validates the presence of three critical sections that must exist in the agent's standing context:
+The context health check hook validates the presence of three critical sections by exact string name in `context.standing_context_present`:
 
-1. **Identity** — Who the agent is, what role it plays.
-2. **Authority** — What decisions the agent can make autonomously vs. must escalate.
-3. **Constraints** — What the agent must not do.
+1. **`"Identity"`** — Who the agent is, what role it plays.
+2. **`"Authority"`** — What decisions the agent can make autonomously vs. must escalate.
+3. **`"Constraints"`** — What the agent must not do.
 
 If any of these three sections is missing from the standing context, the health check fails (exit code 1). Other context sections (Knowledge, Task, Ground Truth) are valuable but not critical — their absence produces a warning, not a failure.
+
+**Utilization threshold:** The health check also fails (exit code 1) when `current_utilization >= 0.85` (85%). Both conditions — missing sections and high utilization — trigger exit 1 (soft fail), not exit 2 (block). They can co-occur; when both trigger, the issues list contains both.
 
 -----
 
@@ -190,6 +230,87 @@ The adapter handles:
 - Converting hook results back to platform exit codes.
 
 This pattern allows the same hook implementations to work across different platforms by swapping only the adapter layer.
+
+-----
+
+## Hook Manifest Validation
+
+### Name Pattern
+
+Hook names must match:
+
+```
+^[a-z][a-z0-9_]*$
+```
+
+First character: lowercase letter. Subsequent: lowercase letters, digits, underscores. No hyphens, PascalCase, or leading digits.
+
+### Version Pattern
+
+Hook versions must be strict semantic versioning:
+
+```
+^\d+\.\d+\.\d+$
+```
+
+Three numeric parts separated by dots (e.g., `1.0.0`). No pre-release suffixes, build metadata, or `v` prefix.
+
+### Events Uniqueness
+
+The `events` list must not contain duplicate lifecycle event types. A hook can bind to multiple events, but each event appears at most once.
+
+### Timeout Configuration
+
+- **Field name:** `timeout_ms` (milliseconds)
+- **Minimum:** 100ms
+- **Maximum:** 300,000ms (5 minutes)
+- **On timeout:** Exit code forced to 1, stderr contains `"Hook timed out after Nms"`
+
+-----
+
+## Hook Discovery
+
+Hook discovery scans a directory tree for `hook.manifest.json` files, then locates executables using a three-stage fallback:
+
+1. **Exact match:** `{hook_dir}/{manifest.name}.py`
+2. **Any Python file:** First `.py` file in the hook's directory
+3. **Implementations directory:** `{implementations_dir}/{manifest.name}.py`
+
+A manifest without a locatable executable is rejected at discovery time (`FileNotFoundError`). All manifests are discovered and validated before any hooks execute — dependency validation occurs after full discovery.
+
+-----
+
+## Fleet and Work Constants
+
+| Constant | Value | Section | Meaning |
+|---|---|---|---|
+| FLEET_MIN_AGENTS | 1 | 11 | Single-agent fleets valid at Level 1 |
+| FLEET_MAX_AGENTS | 12 | 11 | Maximum agents in a single fleet |
+| CHUNK_BUDGET_CEILING_PCT | 40 | 18 | Max % of agent budget for one work chunk |
+| STANDING_CONTEXT_MAX_LINES | 150 | 06 | Hard limit on standing context size |
+
+`FleetRoster` rejects configurations outside 1–12 agents. The spec recommends 5–12 for Level 2+, but single-agent (Level 1) is valid.
+
+-----
+
+## Decision Authority Reference Defaults
+
+`DecisionAuthority.with_common_defaults()` provides 10 pre-configured decision assignments for rapid Level 2 setup:
+
+| Decision | Default Tier | Rationale |
+|---|---|---|
+| Token budget allocation | ENFORCED | Hook-controlled, no agent discretion |
+| Loop detection response | ENFORCED | Automated, deterministic |
+| Code pattern violations | AUTONOMOUS | Agent fixes without asking |
+| Test coverage gaps | AUTONOMOUS | Agent writes tests without asking |
+| Documentation updates | AUTONOMOUS | Agent updates docs without asking |
+| Architecture changes | PROPOSE | Requires Admiral review |
+| Dependency upgrades | PROPOSE | Risk assessment needed |
+| Enforcement config changes | ESCALATE | Security-critical |
+| Security decisions | ESCALATE | Always requires human review |
+| Scope contradictions | ESCALATE | Ambiguity resolution |
+
+`project_maturity_calibration()` adjusts tiers based on project context: strong tests, greenfield status, and self-healing widen the AUTONOMOUS tier; external-facing narrows it.
 
 -----
 
