@@ -1,0 +1,156 @@
+name: Spec Validation
+
+on:
+  push:
+    paths:
+      - 'aiStrat/**'
+  pull_request:
+    paths:
+      - 'aiStrat/**'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Version consistency
+        run: |
+          echo "=== Checking version consistency ==="
+          VERSION="v0.3.0-alpha"
+
+          ERRORS=0
+
+          # Check .md files in aiStrat/ for version comment on line 1
+          while IFS= read -r file; do
+            FIRST_LINE=$(head -1 "$file")
+            if [[ "$FIRST_LINE" != *"Admiral Framework $VERSION"* ]]; then
+              echo "FAIL: $file — line 1 does not contain '$VERSION'"
+              echo "  Found: $FIRST_LINE"
+              ERRORS=$((ERRORS + 1))
+            fi
+          done < <(find aiStrat/ -name "*.md" -not -path "*/node_modules/*")
+
+          # Check .sql files
+          while IFS= read -r file; do
+            FIRST_LINE=$(head -1 "$file")
+            if [[ "$FIRST_LINE" != *"Admiral Framework $VERSION"* ]]; then
+              echo "FAIL: $file — line 1 does not contain '$VERSION'"
+              echo "  Found: $FIRST_LINE"
+              ERRORS=$((ERRORS + 1))
+            fi
+          done < <(find aiStrat/ -name "*.sql")
+
+          if [ $ERRORS -gt 0 ]; then
+            echo ""
+            echo "FAILED: $ERRORS file(s) have incorrect version strings"
+            exit 1
+          else
+            echo "PASSED: All files have correct version string"
+          fi
+
+      - name: JSON validation
+        run: |
+          echo "=== Validating JSON files ==="
+          ERRORS=0
+
+          while IFS= read -r file; do
+            if ! python3 -m json.tool "$file" > /dev/null 2>&1; then
+              echo "FAIL: $file — invalid JSON"
+              ERRORS=$((ERRORS + 1))
+            else
+              echo "OK: $file"
+            fi
+          done < <(find aiStrat/ -name "*.json")
+
+          if [ $ERRORS -gt 0 ]; then
+            echo ""
+            echo "FAILED: $ERRORS file(s) have invalid JSON"
+            exit 1
+          else
+            echo "PASSED: All JSON files are valid"
+          fi
+
+      - name: YAML validation
+        run: |
+          echo "=== Validating YAML files ==="
+          ERRORS=0
+
+          while IFS= read -r file; do
+            if ! python3 -c "import yaml; yaml.safe_load(open('$file'))" 2>/dev/null; then
+              echo "FAIL: $file — invalid YAML"
+              ERRORS=$((ERRORS + 1))
+            else
+              echo "OK: $file"
+            fi
+          done < <(find aiStrat/ -name "*.yaml" -o -name "*.yml")
+
+          if [ $ERRORS -gt 0 ]; then
+            echo ""
+            echo "FAILED: $ERRORS file(s) have invalid YAML"
+            exit 1
+          else
+            echo "PASSED: All YAML files are valid"
+          fi
+
+      - name: Markdown link validation
+        run: |
+          echo "=== Checking markdown cross-references ==="
+          ERRORS=0
+
+          # Find markdown links in format [text](path.md) and check they resolve
+          while IFS= read -r file; do
+            DIR=$(dirname "$file")
+            # Extract relative links (not http/https, not anchors-only)
+            grep -oP '\[.*?\]\(\K[^)#]+(?=[)#])' "$file" 2>/dev/null | while read -r link; do
+              # Skip external URLs
+              if [[ "$link" == http* ]] || [[ "$link" == mailto* ]]; then
+                continue
+              fi
+              # Resolve relative to file's directory
+              TARGET="$DIR/$link"
+              if [ ! -f "$TARGET" ] && [ ! -d "$TARGET" ]; then
+                echo "FAIL: $file references '$link' — target not found"
+                ERRORS=$((ERRORS + 1))
+              fi
+            done
+          done < <(find aiStrat/ -name "*.md")
+
+          if [ $ERRORS -gt 0 ]; then
+            echo ""
+            echo "WARNING: $ERRORS broken link(s) found"
+            # Don't fail the build for link issues — warn only
+            exit 0
+          else
+            echo "PASSED: All checked links resolve"
+          fi
+
+      - name: Hook manifest schema validation
+        run: |
+          echo "=== Validating hook manifests against schema ==="
+
+          # Simple validation: check required fields exist in each manifest
+          ERRORS=0
+          REQUIRED_FIELDS=("name" "version" "events" "timeout_ms" "input_contract" "description")
+
+          while IFS= read -r file; do
+            for field in "${REQUIRED_FIELDS[@]}"; do
+              if ! python3 -c "import json; d=json.load(open('$file')); assert '$field' in d" 2>/dev/null; then
+                echo "FAIL: $file — missing required field '$field'"
+                ERRORS=$((ERRORS + 1))
+              fi
+            done
+            echo "OK: $file"
+          done < <(find aiStrat/hooks/ -name "hook.manifest.json")
+
+          if [ $ERRORS -gt 0 ]; then
+            echo ""
+            echo "FAILED: $ERRORS manifest validation error(s)"
+            exit 1
+          else
+            echo "PASSED: All hook manifests have required fields"
+          fi
