@@ -1,0 +1,115 @@
+{
+  "version": "1.0.0",
+  "last_updated": "2026-03-13T00:00:00Z",
+  "sources": {
+    "anthropic": {
+      "type": "model_provider",
+      "last_scanned": "1970-01-01T00:00:00Z",
+      "known_version": "",
+      "enabled": true
+    },
+    "openai": {
+      "type": "model_provider",
+      "last_scanned": "1970-01-01T00:00:00Z",
+      "known_version": "",
+      "enabled": true
+    },
+    "google-deepmind": {
+      "type": "model_provider",
+      "last_scanned": "1970-01-01T00:00:00Z",
+      "known_version": "",
+      "enabled": true
+    },
+    "meta-llama": {
+      "type": "model_provider",
+      "last_scanned": "1970-01-01T00:00:00Z",
+      "known_version": "",
+      "enabled": true
+    },
+    "mistralai": {
+      "type": "model_provider",
+      "last_scanned": "1970-01-01T00:00:00Z",
+      "known_version": "",
+      "enabled": true
+    },
+    "deepseek-ai": {
+      "type": "model_provider",
+      "last_scanned": "1970-01-01T00:00:00Z",
+      "known_version": "",
+      "enabled": true
+    },
+    "claude-code": {
+      "type": "framework",
+      "last_scanned": "1970-01-01T00:00:00Z",
+      "known_version": "",
+      "enabled": true
+    },
+    "aider": {
+      "type": "framework",
+      "last_scanned": "1970-01-01T00:00:00Z",
+      "known_version": "",
+      "enabled": true
+    },
+    "cline": {
+      "type": "framework",
+      "last_scanned": "1970-01-01T00:00:00Z",
+      "known_version": "",
+      "enabled": true
+    },
+    "cursor": {
+      "type": "framework",
+      "last_scanned": "1970-01-01T00:00:00Z",
+      "known_version": "",
+      "enabled": true
+    },
+    "langchain": {
+      "type": "framework",
+      "last_scanned": "1970-01-01T00:00:00Z",
+      "known_version": "",
+      "enabled": true
+    },
+    "crewai": {
+      "type": "framework",
+      "last_scanned": "1970-01-01T00:00:00Z",
+      "known_version": "",
+      "enabled": true
+    },
+    "autogen": {
+      "type": "framework",
+      "last_scanned": "1970-01-01T00:00:00Z",
+      "known_version": "",
+      "enabled": true
+    }
+  },
+  "scan_history": [],
+  "watchlist": {
+    "repos": [
+      "anthropics/claude-code",
+      "Aider-AI/aider",
+      "cline/cline",
+      "langchain-ai/langchain",
+      "crewAIInc/crewAI",
+      "microsoft/autogen",
+      "openai/openai-agents-python",
+      "meta-llama/llama-models",
+      "mistralai/mistral-common",
+      "deepseek-ai/DeepSeek-V3"
+    ],
+    "topics": [
+      "ai-agent",
+      "agent-framework",
+      "llm-orchestration",
+      "ai-governance",
+      "prompt-injection"
+    ],
+    "providers": [
+      "anthropic",
+      "openai",
+      "google-deepmind",
+      "meta",
+      "mistral",
+      "deepseek",
+      "xai"
+    ]
+  }
+}

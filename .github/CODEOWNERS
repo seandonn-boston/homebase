@@ -1,18 +1,20 @@
-# Admiral Framework Implementation — Code Ownership
-# Per Section 10 (Configuration Security), Level 1 item 6: Set CODEOWNERS.
+# Admiral Framework — Code Ownership
+# See Section 10 (Configuration Security) for CODEOWNERS as a Level 1 requirement.
 
-# Admiral implementation package — requires review for all changes
-/admiral/ @admiral-maintainers
+# All spec files require review
+/aiStrat/ @seandonn-boston
 
-# Spec files — changes must be coordinated with implementation
-/aiStrat/ @admiral-maintainers
+# Doctrine (highest scrutiny — foundational framework definitions)
+/aiStrat/admiral/ @seandonn-boston
 
-# Hook implementations — security-critical, requires explicit review
-/admiral/hooks/ @admiral-maintainers
+# Hook specifications (enforcement layer)
+/aiStrat/hooks/ @seandonn-boston
 
-# Protocol implementations — non-negotiable rules, requires explicit review
-/admiral/protocols/ @admiral-maintainers
+# Database schemas (data model integrity)
+/aiStrat/brain/schema/ @seandonn-boston
 
-# Identity and security — highest scrutiny
-/admiral/models/identity.py @admiral-maintainers
-/admiral/security/ @admiral-maintainers
+# Command agent definitions (fleet coordination layer)
+/aiStrat/fleet/agents/command/ @seandonn-boston
+
+# CI/CD workflows
+/.github/workflows/ @seandonn-boston

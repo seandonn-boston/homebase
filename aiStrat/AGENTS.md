@@ -1,11 +1,11 @@
-<!-- Admiral Framework v0.2.0-alpha -->
+<!-- Admiral Framework v0.3.0-alpha -->
 # AGENTS.md
 
 This file provides guidance to any AI coding agent working with this repository. It is the canonical, model-agnostic instruction file for the Admiral Framework. Tool-specific entry points (e.g., `CLAUDE.md` for Claude Code) should reference this file and add only tool-specific configuration.
 
 ## Project Overview
 
-aiStrat is the **Admiral Framework** — a comprehensive specification for AI agent fleet orchestration. It is a pure specification project: no executable code, no runtime dependencies. Every artifact is a design document defining how autonomous AI agent systems should be structured, secured, coordinated, and governed.
+aiStrat is the **Admiral Framework** — a comprehensive specification for AI agent fleet orchestration. It is a pure specification project: no executable code, no runtime dependencies. Every artifact is a design document defining how autonomous AI agent systems should be structured, secured, coordinated, and governed. The fleet catalog (71 core + 29 extended agent definitions) represents high-quality specifications based on production patterns — not battle-tested implementations. As Admiral matures through real-world deployments, these will be validated and refined.
 
 **Why this exists:** AI agents are not employees and they are not code. You cannot manage them with HR policies and you cannot validate them with traditional software tests. They are an entirely new category of resource — one that makes decisions, fails in novel ways, and forgets everything between sessions. Admiral is governance and operations designed from scratch for how agents actually behave. Model-agnostic, progressively adoptable, and built around the insight that deterministic enforcement always outperforms advisory instructions.
 
@@ -37,10 +37,11 @@ aiStrat is the **Admiral Framework** — a comprehensive specification for AI ag
 
 ## Versioning
 
-- **Current version: v0.2.0-alpha** (pre-release, not yet published)
+- **Current version: v0.3.0-alpha** (pre-release, not yet published)
 - The framework uses [semantic versioning](https://semver.org/) with pre-release labels: `MAJOR.MINOR.PATCH[-label]`
 - The authoritative version string lives in `admiral/index.md` (line 6). All other version references must match it.
-- **Version appears in 3 locations:** `admiral/index.md` (line 6, display version), `admiral/appendices.md` (Appendix F footer), and as an HTML comment `<!-- Admiral Framework vX.Y.Z-label -->` on line 1 of every `.md` file (or SQL comment `-- Admiral Framework vX.Y.Z-label` on line 1 of every `.sql` file).
+- **Version appears in 3 locations:** `admiral/index.md` (line 6, display version), `admiral/appendices.md` (Appendix F footer), and as an HTML comment `<!-- Admiral Framework vX.Y.Z-label -->` on line 1 of every `.md` file within `aiStrat/` (or SQL comment `-- Admiral Framework vX.Y.Z-label` on line 1 of every `.sql` file).
+- **Version scope:** Version comments apply only to files within `aiStrat/`. Strategy documents (`research/`, `thesis/`) and sales materials at the repository root are not spec artifacts and are excluded from version stamping.
 - **MANIFEST.md** is the semantic file catalog. Update it when files are added, removed, renamed, or when their content changes materially (new sections, restructured scope, changed agent counts). It should also be updated on version bumps.
 - When bumping versions, update all markers: `grep -rn "v0\.[0-9]" aiStrat/ --include="*.md" --include="*.sql"` should show only the current version.
 

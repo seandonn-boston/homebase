@@ -1,24 +1,26 @@
-<!-- Admiral Framework v0.2.0-alpha -->
+<!-- Admiral Framework v0.3.0-alpha -->
 # Admiral Framework — File Manifest
 
-**71 files across 15 groups | Last modified: 2026-03-13**
+**102 files across 22 groups | Last modified: 2026-03-13**
 
 This is the semantic catalog of every file in the Admiral Framework. Each entry describes what the file contains, verified against the source. Update this manifest when files are added, removed, renamed, or when their content changes materially.
 
 ---
 
-## Admiral Doctrine (15 files)
+## Admiral Doctrine (16 files)
 
 ```
 index.md - admiral/doctrine - 2026-03-10:
 Master index and entry point. Subtitled "A Workforce Toolkit for Autonomous AI Agent
-Fleets." Defines four adoption levels (Disciplined Solo → Core Fleet → Governed Fleet
-→ Full Framework) with time-to-value and graduation criteria. Links all 11 parts.
+Fleets." Defines five adoption levels (Disciplined Solo → Core Fleet → Governed Fleet
+→ Full Framework → Enterprise) with time-to-value and graduation criteria. Brain is
+fully complete at Level 3. Links all 11 parts.
 
-Minimum Viable Reading Path (~800 lines total):
+Minimum Viable Reading Path (~800 lines of targeted reading):
   1. index.md — Glossary + Adoption Levels (shared vocabulary and roadmap)
   2. part1-strategy.md — Full file (Mission, Boundaries, Success Criteria)
-  3. part3-enforcement.md — Full file (enforcement spectrum: hooks over instructions)
+  3. part3-enforcement.md — Section 08 only (enforcement spectrum: hooks over instructions)
+  3.5. intent-engineering.md — Six Elements of Intent (how to write effective agent directives)
   4. part11-protocols.md — Section 36 only (Standing Orders: 15 non-negotiable rules)
   5. appendices.md — Appendix A only (Pre-Flight Checklist: go/no-go gate)
 
@@ -76,11 +78,12 @@ aiStrat/admiral/part4-fleet.md
 ```
 
 ```
-part5-brain.md - admiral/doctrine - 2026-03-08:
-Three sections: Brain Architecture (15) — three maturity levels (file → SQLite →
-Postgres+pgvector), "Start Simple" principle; Knowledge Protocol (16) — MCP tools,
-zero-trust access control, identity tokens; Intelligence Lifecycle (17) — capture
-triggers, review cadence, cross-project namespace.
+part5-brain.md - admiral/doctrine - 2026-03-13:
+Three sections: Brain Architecture (15) — three Brain maturity levels (file → SQLite
+→ Full Brain at Level 3 with Postgres+pgvector+MCP+identity), "Start Simple"
+principle, Brain complete at Level 3 with no changes at Levels 4-5; Knowledge Protocol
+(16) — MCP tools, zero-trust access control, identity tokens; Intelligence Lifecycle
+(17) — capture triggers, review cadence, cross-project namespace.
 aiStrat/admiral/part5-brain.md
 ```
 
@@ -192,6 +195,16 @@ mechanism, critical context section set (Identity/Authority/Constraints), hook
 adapter pattern (three-handler architecture), minimum dependency set by adoption
 level.
 aiStrat/admiral/reference-constants.md
+```
+
+```
+benchmarks.md - admiral/doctrine - 2026-03-13:
+Framework benchmarks for measuring Admiral-governed fleet effectiveness. Seven core
+metrics (governance overhead, first-pass quality, recovery success rate, context
+efficiency, enforcement coverage, coordination overhead, knowledge reuse) with targets
+and red flags. Competitive differentiators. Measurement cadence by adoption level.
+Baseline expectations across fleet maturity phases.
+aiStrat/admiral/benchmarks.md
 ```
 
 ---
@@ -519,7 +532,7 @@ aiStrat/fleet/agents/extras/scale-extended.md
 
 ---
 
-## Brain / Knowledge System (6 files)
+## Brain / Knowledge System (7 files)
 
 ```
 README.md - brain/architecture - 2026-03-10:
@@ -555,6 +568,18 @@ aiStrat/brain/level2-spec.md
 ```
 
 ```
+level3-spec.md - brain/maturity-levels - 2026-03-13:
+Level 3 Brain: the COMPLETE Brain. Postgres + pgvector + MCP server + identity tokens
++ zero-trust access control. Full schema (entries with sensitivity/approved/authority_
+tier, entry_links, audit_log with session_id/entry_ids/risk_flags). 8 MCP tools.
+JWT identity tokens (ES256 recommended). Permission matrix. Sensitivity classification
+(standard/elevated/restricted). 5-layer quarantine for external intelligence. Multi-
+signal retrieval pipeline with 8 ranking signals. Migration from Level 2. No Brain
+changes at Levels 4-5.
+aiStrat/brain/level3-spec.md
+```
+
+```
 001_initial.sql - brain/schema - 2026-03-08:
 Production Postgres + pgvector schema. Three tables: entries (UUID PK, project,
 category, title, content, vector(1536), JSONB metadata, provenance, sensitivity,
@@ -587,7 +612,7 @@ aiStrat/brain/schema/test_sensitive_data_guard.sql
 
 ---
 
-## Monitor / Ecosystem Intelligence (1 file)
+## Monitor / Ecosystem Intelligence (7 files)
 
 ```
 README.md - monitor/architecture - 2026-03-10:
@@ -600,6 +625,55 @@ Antibodies (converts attacks into Brain FAILURE entries). "Fail-open for discove
 fail-closed for ingestion" principle. Intelligence sources: 11+ model providers, 20+
 tracked repos, RSS feeds. Daily/weekly/manual scan cadence.
 aiStrat/monitor/README.md
+```
+
+```
+scanner-spec.md - monitor/specification - 2026-03-13:
+Scanner module specification. Defines 5 scan types (full, models, patterns, releases,
+discover), input source categories, output formats (state file, digest files, seed
+candidates), findings classification (HIGH/MEDIUM/LOW), state management, and security
+considerations. No implementation — specification only.
+aiStrat/monitor/scanner-spec.md
+```
+
+```
+state-schema.json - monitor/schema - 2026-03-13:
+JSON Schema for the monitor state file (state.json). Defines sources (per-source type,
+last_scanned, known_version), scan_history (max 100 entries with timestamp, scan_type,
+status, findings counts), and watchlist (repos, topics, providers).
+aiStrat/monitor/state-schema.json
+```
+
+```
+digest-format.md - monitor/specification - 2026-03-13:
+Specification for monitor digest output files. Markdown format with sections for high/
+medium/low priority findings, seed candidates for Brain ingestion, and scan metadata.
+File naming convention (YYYY-MM-DD.md, weekly suffix). Governance rules for digest
+handling.
+aiStrat/monitor/digest-format.md
+```
+
+```
+scanner.sh - monitor/implementation - 2026-03-13:
+The scanner implementation. Executes scan types defined in scanner-spec.md against
+configured intelligence sources, produces digest reports, and updates persistent state.
+aiStrat/monitor/scanner.sh
+```
+
+```
+state.json - monitor/state - 2026-03-13:
+Persistent state tracking scan history and known versions. Conforms to state-schema.json.
+Records per-source scan timestamps, known versions, scan history entries, and watchlist
+configuration.
+aiStrat/monitor/state.json
+```
+
+```
+digests/ - monitor/output - 2026-03-13:
+Directory for generated markdown digest reports. Each digest follows the format defined
+in digest-format.md, named by date (YYYY-MM-DD.md, weekly suffix). Contains prioritized
+findings and seed candidates for Brain ingestion.
+aiStrat/monitor/digests/
 ```
 
 ---
@@ -618,7 +692,7 @@ aiStrat/handoff/v1.schema.json
 
 ---
 
-## Attack Corpus (1 file)
+## Attack Corpus (19 files)
 
 ```
 attack-corpus/README.md - attack-corpus/specification - 2026-03-10:
@@ -630,6 +704,42 @@ behavior manipulation (3), prompt injection (3), failure scenarios (3), and chao
 Team Agent, Incident Response Agent, Chaos Agent). Storage strategy for Level 1 (file-based)
 and Level 2+ (Brain `failure` category with attack corpus metadata tag).
 aiStrat/attack-corpus/README.md
+```
+
+```
+ATK-0001.yaml through ATK-0018.yaml - attack-corpus/scenarios - 2026-03-10:
+18 individual YAML attack scenario files. Each contains: id, category, source, title,
+trigger, expected_behavior, actual_behavior, severity, defenses, testing metadata
+(last_tested, times_passed, times_failed), created_by, created_at, superseded_by.
+
+  Authority Spoofing (4, Critical/High):
+    ATK-0001: Admiral approval claim | ATK-0002: Standing Order override attempt
+    ATK-0003: Authority tier self-escalation | ATK-0004: Fabricated governance consensus
+
+  Credential Fabrication (3, High/Medium):
+    ATK-0005: Invented certification claim | ATK-0006: False provenance
+    ATK-0007: Fabricated tool output
+
+  Behavior Manipulation (3, Critical/High):
+    ATK-0008: Instruction override via injected content
+    ATK-0009: Role reassignment attempt
+    ATK-0010: Constraint relaxation via helpfulness
+
+  Prompt Injection (3, Critical/High):
+    ATK-0011: Indirect prompt injection via external content
+    ATK-0012: Payload smuggling via encoding
+    ATK-0013: Context window poisoning via large payload
+
+  Failure Scenarios (3, Medium/High):
+    ATK-0014: Network partition during Brain write
+    ATK-0015: Model API timeout mid-task
+    ATK-0016: Context window exhaustion during critical operation
+
+  Chaos Scenarios (2, Medium):
+    ATK-0017: Clock skew between agents
+    ATK-0018: Resource exhaustion during parallel execution
+
+aiStrat/attack-corpus/ATK-0001.yaml through ATK-0018.yaml
 ```
 
 ---
@@ -659,7 +769,7 @@ aiStrat/hooks/manifest.schema.json
 
 ---
 
-## Hook Manifests (8 files)
+## Hook Manifests — Runtime (8 files)
 
 ```
 hook.manifest.json - hooks/context_baseline - 2026-03-10:
@@ -724,6 +834,42 @@ aiStrat/hooks/token_budget_tracker/hook.manifest.json
 
 ---
 
+## Hook Manifests — Spec Repository (4 files)
+
+```
+hook.manifest.json - hooks/version_consistency - 2026-03-13:
+Manifest for version_consistency hook. SessionStart event. Validates all .md and .sql
+files carry correct version string. Analogous to SO 1 (Identity Discipline) for spec
+files. 5s timeout.
+aiStrat/hooks/version_consistency/hook.manifest.json
+```
+
+```
+hook.manifest.json - hooks/manifest_freshness - 2026-03-13:
+Manifest for manifest_freshness hook. PostToolUse event (async). Checks MANIFEST.md
+reflects actual file inventory after edits. Analogous to SO 11 (Context Discovery). 5s
+timeout.
+aiStrat/hooks/manifest_freshness/hook.manifest.json
+```
+
+```
+hook.manifest.json - hooks/link_validator - 2026-03-13:
+Manifest for link_validator hook. PostToolUse event (async). Validates markdown cross-
+references resolve to existing targets. Analogous to SO 4 (Context Honesty). 10s
+timeout.
+aiStrat/hooks/link_validator/hook.manifest.json
+```
+
+```
+hook.manifest.json - hooks/standing_order_integrity - 2026-03-13:
+Manifest for standing_order_integrity hook. PostToolUse event. Validates all 15 Standing
+Orders present and correctly numbered in part11-protocols.md. Analogous to SO 3 (Scope
+Boundaries). 5s timeout.
+aiStrat/hooks/standing_order_integrity/hook.manifest.json
+```
+
+---
+
 ## Configuration (3 files)
 
 ```
@@ -748,7 +894,27 @@ aiStrat/CLAUDE.md
 
 ```
 settings.local.json - project/config - 2026-03-05:
-Claude Code local settings. Whitelists bash commands: wc, python, grep, xargs cat, pip
-install, pytest, quality_check, find, rm, mv.
+Claude Code local settings. Whitelists bash commands: wc, grep, xargs cat, find.
 aiStrat/.claude/settings.local.json
 ```
+
+---
+
+## Sales & Positioning (1 file)
+
+```
+sales-pitch-30min-guide.md - sales/guide - 2026-03-10:
+30-minute conversation guide for presenting the Admiral Framework. Structured as:
+30-second pitch → 8-10 min market context → 12-15 min product pitch → 5-7 min
+status/roadmap → Q&A cheat sheet. References v0.3.0-alpha status, 71 agent definitions,
+15,000+ lines of spec. Includes objection handling for "just a spec" and "why not
+LangGraph/CrewAI" concerns.
+aiStrat/sales-pitch-30min-guide.md
+```
+
+---
+
+> **Note:** Research (5 files) and thesis (3 files) documents have been relocated to
+> the repository root (`research/` and `thesis/`). They are strategy and investment
+> documents, not specification artifacts, and are excluded from the spec versioning
+> policy. See `AGENTS.md` for versioning scope details.

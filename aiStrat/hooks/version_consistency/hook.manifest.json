@@ -1,0 +1,10 @@
+{
+  "name": "version_consistency",
+  "version": "0.1.0",
+  "events": ["SessionStart"],
+  "timeout_ms": 5000,
+  "requires": [],
+  "input_contract": "v1",
+  "description": "Validates that all .md and .sql files in aiStrat/ carry the correct version string on line 1. Analogous to Standing Order 1 (Identity Discipline) applied to spec files — every file must declare its version identity.",
+  "async": false
+}

@@ -1,7 +1,9 @@
-<!-- Admiral Framework v0.2.0-alpha -->
+<!-- Admiral Framework v0.3.0-alpha -->
 # Reference Implementation Constants
 
-> **Audience:** Implementers building a runtime that conforms to the Admiral Framework spec. This file captures concrete values, algorithms, and integration details derived from the reference implementation (`admiral/`). These are not part of the specification's normative prose — they are the decisions an implementation must make that the spec intentionally leaves open.
+> **Audience:** Implementers building a runtime that conforms to the Admiral Framework spec. This file captures concrete values, algorithms, and integration details that complement the normative spec prose — the decisions an implementation must make that the spec intentionally leaves open.
+>
+> **Relationship to spec:** This file derives its authority from the spec sections it references, creating an intentional bidirectional dependency — the spec defines intent and constraints, this file defines concrete constants, and each validates the other.
 
 ## Table of Contents
 

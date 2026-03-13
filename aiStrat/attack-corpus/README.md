@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.2.0-alpha -->
+<!-- Admiral Framework v0.3.0-alpha -->
 # Attack Corpus
 
 **The fleet's adversarial memory — every failure, attack, and edge case discovered becomes a reusable test.**
@@ -244,6 +244,40 @@ Chaos Agent receives system-under-test description
 At Level 2+, the Brain's semantic search enables the Chaos Agent to find scenarios *relevant* to the current system — not just replay old tests. The `brain_query` tool with vector similarity search matches system-under-test descriptions against corpus entry triggers and contexts.
 
 A local file cache of critical corpus entries should be maintained for resilience — the corpus must be available even if the Brain is temporarily unreachable.
+
+-----
+
+## Testing Methodology
+
+Attack corpus scenarios can be validated at two levels:
+
+### Spec Validation (No Runtime Required)
+
+For each scenario, verify against the specification alone:
+
+- [ ] **Expected behavior** references a documented Standing Order or defense mechanism
+- [ ] **Defense** references an existing hook manifest or governance agent
+- [ ] **Trigger** is specific enough to be unambiguously detected
+- [ ] **Category** matches one of the six defined categories
+- [ ] **Severity** is justified by the blast radius described
+
+### Runtime Validation (Requires Implementation)
+
+For each scenario, execute against a running fleet:
+
+- [ ] Inject the trigger into an agent session
+- [ ] Verify the expected defense activates
+- [ ] Record actual behavior vs. expected behavior
+- [ ] Update `times_tested`, `times_passed`, `times_failed`, `last_tested`
+
+### Scenario Maturity
+
+| Status | Criteria |
+|---|---|
+| **seed** | Curated by Admiral, not yet tested at runtime |
+| **spec-validated** | Passes all spec validation checks above |
+| **runtime-validated** | Tested against a running implementation with recorded results |
+| **graduated** | 10+ consecutive passes; stable, proven defense |
 
 -----
 

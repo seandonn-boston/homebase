@@ -1,4 +1,4 @@
--- Admiral Framework v0.2.0-alpha
+-- Admiral Framework v0.3.0-alpha
 -- Test-adapted schema: omits pgvector (embedding column + HNSW index)
 -- Everything else is identical to 001_initial.sql
 
@@ -23,7 +23,8 @@ CREATE TABLE entries (
     superseded_by   UUID REFERENCES entries(id) ON DELETE SET NULL,
     last_accessed_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     purged_at       TIMESTAMPTZ,
-    purge_reason    TEXT
+    purge_reason    TEXT,
+    purge_regulation TEXT
 );
 
 CREATE INDEX idx_entries_project_category ON entries (project, category);

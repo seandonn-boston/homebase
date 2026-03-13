@@ -1,9 +1,11 @@
-<!-- Admiral Framework v0.2.0-alpha -->
+<!-- Admiral Framework v0.3.0-alpha -->
 # Specialists
 
 **Domain-expert agents with deep knowledge, collaborative instinct, and human referral judgment.**
 
 Specialists are the fleet's productive capacity. Each specialist is deeply knowledgeable in its domain and complementary domains — not narrowly competent, but genuinely expert with awareness of how its domain connects to others.
+
+> **Transparency note:** These specialist definitions are high-quality specifications based on observed production patterns. They have not yet been validated through large-scale deployment. Treat them as well-researched starting points that will evolve with real-world usage.
 
 > **Note on naming:** The "Specialist" label is used broadly in this framework. It includes implementation agents (Frontend Implementer, Backend Implementer), review agents (QA Agent, Security Auditor), analytical agents (Devil's Advocate, Bias Sentinel), and governance agents (Token Budgeter, Loop Breaker). The unifying trait is domain depth, not implementation activity. An agent is a "specialist" if it has deep knowledge in a specific domain, regardless of whether its output is code, analysis, or governance decisions.
 

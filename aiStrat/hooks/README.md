@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.2.0-alpha -->
+<!-- Admiral Framework v0.3.0-alpha -->
 # Hook Ecosystem
 
 **Manifest-first hook management for the Admiral Framework.**
@@ -28,7 +28,7 @@ hooks/
 
 Each hook lives in its own directory under `hooks/`. The directory name must match the hook's `name` field in the manifest.
 
-> **Implementation Note:** The hook directories in `aiStrat/hooks/` contain manifests only — they are specification artifacts, not executable implementations. Implementations live in the consuming project (e.g., `admiral/hooks/implementations/` for the reference implementation). The manifest declares *what* the hook does; the implementation project provides the *how*.
+> **Implementation Note:** The hook directories in `aiStrat/hooks/` contain manifests only — they are specification artifacts, not executable implementations. Implementations live in the consuming project's hook directory (e.g., `.claude/hooks/` for Claude Code, or an equivalent path for other platforms). The manifest declares *what* the hook does; the implementation project provides the *how*.
 
 ### Manifest Format
 

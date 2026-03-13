@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.2.0-alpha -->
+<!-- Admiral Framework v0.3.0-alpha -->
 # PART 11 — PROTOCOLS
 
 *The universal operating rules every agent follows.*
@@ -9,7 +9,7 @@
 
 > **Sequencing note:** Standing Orders (Section 36) are a **Level 1 requirement**, not a Level 4 afterthought. They appear in Part 11 because they are protocols — but they are needed at adoption Level 1 alongside Sections 01-03 and 08. If you are implementing Admiral, Standing Orders should be among the first things you build, not the last. The Minimum Viable Reading Path (index.md) already reflects this, but if you are reading parts sequentially, read Section 36 before implementing anything from Parts 4-10.
 >
-> **Implementation lesson (Admiral-builds-Admiral, March 2026):** The reference implementation initially deferred Standing Orders to Phase 4 because of their structural position in Part 11. This was a design error — Phase 1 was functionally complete but operationally ungoverned. The corrective: implement Standing Orders as a data model with a loader and renderer so they can be injected into every agent's context programmatically. See `admiral/protocols/standing_orders.py` in the reference implementation.
+> **Implementation lesson (Admiral-builds-Admiral, March 2026):** An early reference implementation initially deferred Standing Orders to Phase 4 because of their structural position in Part 11. This was a design error — Phase 1 was functionally complete but operationally ungoverned. The corrective: implement Standing Orders as a data model with a loader and renderer so they can be injected into every agent's context programmatically. Standing Orders should be among the first things built, not the last.
 
 -----
 

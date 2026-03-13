@@ -1,11 +1,14 @@
 name: AI Landscape Monitor
 
-# Runs on a schedule and on-demand to scan the AI ecosystem
-# for new releases, trending repos, and significant developments.
+# Scans the AI ecosystem for new releases, trending repos, and notable
+# developments. Generates markdown digests, updates persistent state,
+# and creates GitHub issues for high-priority findings.
+#
+# See aiStrat/monitor/ for architecture specs and scanner implementation.
 
 on:
   schedule:
-    # Daily at 07:00 UTC (morning scan)
+    # Daily at 07:00 UTC (standard scan)
     - cron: "0 7 * * *"
     # Weekly deep scan on Monday at 06:00 UTC
     - cron: "0 6 * * 1"
@@ -31,7 +34,6 @@ on:
 permissions:
   contents: write      # To commit state and digests
   issues: write        # To create alert issues for high-priority findings
-  pull-requests: write # To create PRs with seed candidates
 
 jobs:
   scan:
@@ -42,107 +44,43 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
+      - name: Determine scan type
+        id: scan-config
+        run: |
+          # Scheduled runs: detect daily vs weekly from cron trigger
+          if [[ "${{ github.event_name }}" == "schedule" ]]; then
+            if [[ "${{ github.event.schedule }}" == "0 6 * * 1" ]]; then
+              echo "scan_type=discover" >> "$GITHUB_OUTPUT"
+            else
+              echo "scan_type=full" >> "$GITHUB_OUTPUT"
+            fi
+            echo "dry_run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "scan_type=${{ inputs.scan_type || 'full' }}" >> "$GITHUB_OUTPUT"
+            echo "dry_run=${{ inputs.dry_run || 'false' }}" >> "$GITHUB_OUTPUT"
+          fi
 
-      - name: Run monitor scan
+      - name: Run scanner
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          ARGS=""
-
-          # Determine scan type
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            SCAN_TYPE="${{ inputs.scan_type }}"
-            if [ "$SCAN_TYPE" = "models" ]; then
-              ARGS="--models"
-            elif [ "$SCAN_TYPE" = "patterns" ]; then
-              ARGS="--patterns"
-            elif [ "$SCAN_TYPE" = "releases" ]; then
-              ARGS="--releases"
-            elif [ "$SCAN_TYPE" = "discover" ]; then
-              ARGS="--discover"
-            fi
-            # "full" = no flags = both missions run
-            if [ "${{ inputs.dry_run }}" = "true" ]; then
-              ARGS="$ARGS --dry-run"
-            fi
-          else
-            # Scheduled: 07:00 = full scan, 19:00 = model check only
-            HOUR=$(date -u +%H)
-            if [ "$HOUR" = "19" ]; then
-              ARGS="--models"
-            fi
+          ARGS="${{ steps.scan-config.outputs.scan_type }}"
+          if [[ "${{ steps.scan-config.outputs.dry_run }}" == "true" ]]; then
+            ARGS="$ARGS --dry-run"
           fi
+          chmod +x aiStrat/monitor/scanner.sh
+          bash aiStrat/monitor/scanner.sh $ARGS
 
-          python -m aiStrat.monitor.scanner $ARGS --verbose 2>&1 | tee scan-output.txt
-
-      - name: Check for high-priority findings
-        id: check_findings
-        run: |
-          if grep -q "HIGH PRIORITY" scan-output.txt 2>/dev/null; then
-            echo "has_alerts=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "has_alerts=false" >> "$GITHUB_OUTPUT"
-          fi
-
-          if [ -f "aiStrat/monitor/digests/$(date -u +%Y-%m-%d).md" ]; then
-            echo "has_digest=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "has_digest=false" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Create alert issue for high-priority findings
-        if: steps.check_findings.outputs.has_alerts == 'true'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          DATE=$(date -u +%Y-%m-%d)
-          DIGEST_FILE="aiStrat/monitor/digests/${DATE}.md"
-
-          # Build issue body as a file to avoid shell injection.
-          # The digest contains external content (repo names, release notes)
-          # that must NEVER be shell-expanded. Using --body-file prevents
-          # command substitution ($(), ``) from executing.
-          {
-            echo "## AI Landscape Monitor — Alerts"
-            echo ""
-            echo "The scheduled monitor scan detected high-priority developments"
-            echo "that may require attention."
-            echo ""
-            echo "See full digest: \`${DIGEST_FILE}\`"
-            echo ""
-            echo "**Next steps:**"
-            echo "1. Review the findings in the digest file"
-            echo "2. Approve relevant seed candidates for Brain ingestion"
-            echo "3. Update the watchlist if new repos should be tracked"
-          } > /tmp/issue-body.md
-
-          gh issue create \
-            --title "AI Monitor Alert: High-Priority Findings — ${DATE}" \
-            --body-file /tmp/issue-body.md \
-            --label "ai-monitor,high-priority"
-
-      - name: Commit state and digests
-        if: inputs.dry_run != 'true'
+      - name: Commit state and digest
+        if: steps.scan-config.outputs.dry_run != 'true'
         run: |
           git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          # Add state file and any new digests
-          git add aiStrat/monitor/state.json || true
-          git add aiStrat/monitor/digests/ || true
-
-          # Only commit if there are changes
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add aiStrat/monitor/state.json
+          git add aiStrat/monitor/digests/
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
-            DATE=$(date -u +%Y-%m-%d)
-            git commit -m "chore(monitor): AI landscape scan ${DATE}
-
-          Automated scan by AI Landscape Monitor.
-          See aiStrat/monitor/digests/${DATE}.md for findings."
+            git commit -m "monitor: scan digest $(date -u +%Y-%m-%d) [${{ steps.scan-config.outputs.scan_type }}]"
             git push
           fi

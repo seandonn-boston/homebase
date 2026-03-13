@@ -1,9 +1,11 @@
-<!-- Admiral Framework v0.2.0-alpha -->
+<!-- Admiral Framework v0.3.0-alpha -->
 # The Fleet
 
 **A project-agnostic toolbox of agent definitions, prompts, and routing for the Fleet Admiral Framework.**
 
 The fleet is the toolbox. Each agent is a self-contained module — project-agnostic, independently deployable, and operationally inert until project context is injected. Where [admiral/](../admiral/) defines the principles and meta-process for running autonomous AI agent systems, this directory provides the concrete, reusable components that any Admiral can pull from the shelf and deploy.
+
+> **Transparency note:** Agent definitions in this catalog are detailed specifications, not battle-tested implementations. They represent the framework's design intent based on production patterns observed across the AI agent ecosystem. As Admiral matures through real-world deployments, these definitions will be validated, refined, and graduated from sample specifications to proven configurations.
 
 The fleet organizes agents into two fundamental categories:
 

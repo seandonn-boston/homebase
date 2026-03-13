@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AI Landscape Monitor State",
+  "description": "Persistent state for the AI Landscape Monitor scanner. Tracks scan history, known entities, and watchlist configuration.",
+  "type": "object",
+  "required": ["version", "last_updated", "sources", "scan_history"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "State schema version",
+      "const": "1.0.0"
+    },
+    "last_updated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of last state update"
+    },
+    "sources": {
+      "type": "object",
+      "description": "Tracked sources with per-source metadata",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["type", "last_scanned"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["model_provider", "framework", "research", "community", "regulatory"]
+          },
+          "last_scanned": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO 8601 timestamp of last successful scan"
+          },
+          "known_version": {
+            "type": "string",
+            "description": "Last known version or release identifier"
+          },
+          "enabled": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether this source is actively monitored"
+          }
+        }
+      }
+    },
+    "scan_history": {
+      "type": "array",
+      "description": "Recent scan records (most recent first, max 100 entries)",
+      "items": {
+        "type": "object",
+        "required": ["timestamp", "scan_type", "status"],
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "scan_type": {
+            "type": "string",
+            "enum": ["full", "models", "patterns", "releases", "discover"]
+          },
+          "status": {
+            "type": "string",
+            "enum": ["success", "partial", "failed"]
+          },
+          "findings_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "high_priority_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "digest_file": {
+            "type": "string",
+            "description": "Path to generated digest file, if any"
+          }
+        }
+      },
+      "maxItems": 100
+    },
+    "watchlist": {
+      "type": "object",
+      "description": "Configurable watch targets",
+      "properties": {
+        "repos": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "GitHub repos to track (owner/repo format)"
+        },
+        "topics": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Keywords and topics to monitor"
+        },
+        "providers": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "AI model providers to track"
+        }
+      }
+    }
+  }
+}

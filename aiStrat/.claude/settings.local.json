@@ -2,14 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(wc:*)",
-      "Bash(python:*)",
       "Bash(grep:*)",
       "Bash(xargs cat:*)",
-      "Bash(pip install:*)",
-      "Bash(PYTHONPATH=. python -m pytest aiStrat/ -v)",
-      "Bash(PYTHONPATH=. python -m scripts.quality_check)",
       "Bash(find .:*)",
-      "Bash(rm:*)",
       "Bash(mv:*)"
     ]
   }

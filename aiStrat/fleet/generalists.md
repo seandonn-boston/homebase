@@ -1,9 +1,11 @@
-<!-- Admiral Framework v0.2.0-alpha -->
+<!-- Admiral Framework v0.3.0-alpha -->
 # Generalists
 
 **Overhead and coordination agents that keep the fleet operational.**
 
 Generalists handle the meta-work: orchestrating tasks, triaging incoming work, managing context, and resolving conflicts between specialists. They don't produce domain-specific deliverables — they make it possible for specialists to produce theirs.
+
+> **Transparency note:** These generalist definitions are high-quality specifications based on observed production patterns. They have not yet been validated through large-scale deployment. Treat them as well-researched starting points that will evolve with real-world usage.
 
 -----
 
