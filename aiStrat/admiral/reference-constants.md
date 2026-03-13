@@ -3,6 +3,38 @@
 
 > **Audience:** Implementers building a runtime that conforms to the Admiral Framework spec. This file captures concrete values, algorithms, and integration details derived from the reference implementation (`admiral/`). These are not part of the specification's normative prose — they are the decisions an implementation must make that the spec intentionally leaves open.
 
+## Table of Contents
+
+1. [Tool Token Estimation](#tool-token-estimation)
+2. [Context Budget Validation](#context-budget-validation)
+3. [Hook Dependency Algorithms](#hook-dependency-algorithms)
+4. [Error Signature Formulas](#error-signature-formulas)
+5. [Token Budget Alert Thresholds](#token-budget-alert-thresholds)
+6. [Loop Detection Thresholds](#loop-detection-thresholds)
+7. [Self-Healing Behavioral Details](#self-healing-behavioral-details)
+8. [Exit Code Conventions](#exit-code-conventions)
+9. [Session State Persistence](#session-state-persistence)
+10. [Standing Orders Injection](#standing-orders-injection)
+11. [Critical Context Sections](#critical-context-sections)
+12. [Hook Adapter Pattern](#hook-adapter-pattern)
+13. [Hook Manifest Validation](#hook-manifest-validation)
+14. [Hook Discovery](#hook-discovery)
+15. [Fleet and Work Constants](#fleet-and-work-constants)
+16. [Decision Authority Reference Defaults](#decision-authority-reference-defaults)
+17. [Minimum Dependency Set](#minimum-dependency-set)
+18. [Hook Timeout Defaults](#hook-timeout-defaults)
+19. [Context Health Check Invocation Frequency](#context-health-check-invocation-frequency)
+20. [Governance Heartbeat Monitor](#governance-heartbeat-monitor)
+21. [Context Window Absolute Ceilings](#context-window-absolute-ceilings)
+22. [Token Depletion and Chunk Sizing](#token-depletion-and-chunk-sizing)
+23. [Swarm Pattern Constants](#swarm-pattern-constants)
+24. [Quality & Health Metric Thresholds](#quality--health-metric-thresholds)
+25. [Admiral Fallback Decomposer Mode](#admiral-fallback-decomposer-mode)
+26. [A2A Protocol Constants](#a2a-protocol-constants)
+27. [Brain Configuration Constants](#brain-configuration-constants)
+28. [Contract-First Parallelism Impact](#contract-first-parallelism-impact)
+29. [LLM-Last Design Constants](#llm-last-design-constants)
+
 -----
 
 ## Tool Token Estimation
