@@ -9,11 +9,11 @@ v0.2.0-alpha · March 2026
 
 ## What This Is
 
-AI agents are not employees and they are not code. You cannot manage them with HR policies and you cannot validate them with traditional software tests. They are an entirely new category of resource — non-deterministic, amnesiac between sessions, prone to novel failure modes (hallucination, sycophantic drift, scope creep, context starvation), and incapable of learning from being told something twice. The people deploying agent fleets who recognize this have a massive head start over those still trying to make old frameworks fit.
+AI agents are not employees and they are not code. You cannot manage them with HR policies and you cannot validate them with traditional software tests. They are an entirely new category of resource — non-deterministic, amnesiac between sessions, prone to novel failure modes (hallucination, sycophantic drift, scope creep, context starvation), and incapable of learning from being told something twice. Existing management frameworks (HR, DevOps, traditional QA) address parts of this problem but none address the full surface.
 
-This is a **Swiss army knife for that reality** — a reusable toolkit of patterns, agent definitions, enforcement strategies, and operational knowledge designed from scratch for how agents actually behave. It is the workforce itself, not overhead for building a specific product.
+This is a **governance and operations toolkit** — a reusable set of patterns, agent definitions, enforcement strategies, and operational knowledge designed from scratch for how agents actually behave. It is the workforce itself, not overhead for building a specific product.
 
-Pick the parts you need. A two-person team might use only the enforcement spectrum (Part 3) and five agent definitions. A platform team might deploy the full Brain, Monitor, and Fleet. The framework scales to what you need — you don't adopt all of it to use any of it.
+The framework is modular and progressively adoptable. A two-person team might use only the enforcement spectrum (Part 3) and five agent definitions. A platform team might deploy the full Brain, Monitor, and Fleet. You don't adopt all of it to use any of it.
 
 -----
 
@@ -38,20 +38,20 @@ You don't need to read 200 pages before deploying your first agent. Start at Lev
 
 **Level 1 → 2:** You go from one agent to coordinated specialists. The Orchestrator decomposes work, routes to the right agent, and enforces handoff contracts. This is where most of the productivity gain lives.
 
-**Level 2 → 3:** You add the fleet's immune system. Governance agents add analytical capabilities on top of the deterministic hooks already present at Levels 1-2. They catch the failure modes that compound silently over multiple sessions — sycophantic drift, hallucination, scope creep, cross-agent patterns. Without them, quality degrades gradually and invisibly.
+**Level 2 → 3:** You add governance agents. These add analytical capabilities on top of the deterministic hooks already present at Levels 1-2. They catch the failure modes that compound silently over multiple sessions — sycophantic drift, hallucination, scope creep, cross-agent patterns. Without them, quality degrades gradually and invisibly.
 
-**Level 3 → 4:** You add persistent memory and ecosystem intelligence. The Brain captures lessons that outlive sessions. The Monitor captures lessons that outlive the fleet. Identity tokens and zero-trust access control harden the system for continuous, unsupervised operation.
+**Level 3 → 4:** You add persistent memory and ecosystem intelligence. The Brain (at Level 3-4, Postgres + MCP) captures lessons that outlive sessions. The Monitor captures lessons that outlive the fleet. Identity tokens and zero-trust access control harden the system for continuous, unsupervised operation. Cross-project knowledge sharing becomes possible. For organizations operating at massive scale, Brain Level 5 (Federated Brain) enables cross-organizational knowledge sharing while respecting sovereignty boundaries.
 
 ### Minimum Viable Reading Path
 
-If you are starting at Level 1, you do not need to read the entire framework. These six files (~900 lines total) give you everything you need to deploy your first governed agent. Read the rest when you need it.
+If you are starting at Level 1, you do not need to read the entire framework. These six files (~1,160 lines of the relevant sections) give you everything you need to deploy your first governed agent. Read the rest when you need it.
 
 | Order | File | What to Read | Why |
 |---|---|---|---|
 | 1 | [`index.md`](index.md) | Glossary + Adoption Levels | Shared vocabulary and your roadmap. |
 | 2 | [`part1-strategy.md`](part1-strategy.md) | Full file | Mission, Boundaries, Success Criteria — the three inputs every agent needs. |
 | 3 | [`part3-enforcement.md`](part3-enforcement.md) | Section 08 only | The enforcement spectrum: hooks over instructions. Sections 09 (Decision Authority) and 10 (Configuration Security) are Level 2+ — read them when you add a fleet. |
-| 3.5 | [`intent-engineering.md`](intent-engineering.md) | Six Elements of Intent | How to write mission, boundaries, and task assignments that give agents enough context to handle unexpected situations. |
+| 3.5 | [`intent-engineering.md`](intent-engineering.md) | Six Elements of Intent (supplementary) | How to write mission, boundaries, and task assignments that give agents enough context to handle unexpected situations. Optional at Level 1; required reading at Level 2+. |
 | 4 | [`part11-protocols.md`](part11-protocols.md) | Section 36 (Standing Orders) only | The fifteen non-negotiable rules loaded into every agent's standing context. |
 | 5 | [`appendices.md`](appendices.md) | Appendix A (Pre-Flight Checklist) | Go/no-go gate — confirms you have not missed anything critical. |
 
@@ -92,11 +92,11 @@ Admiral is complementary to agent SDKs and orchestration frameworks. They provid
 
 This framework is split across fourteen files. This index is the entry point. Each part is a self-contained module that can be loaded into an agent's context independently.
 
-**Humans** — You are the Admiral. Start here. Read the operating model and glossary, then work through parts in order or jump to whichever part addresses your current need. The prose, anti-patterns, and worked example are for you.
+**Humans** — You are the Admiral. Start here. Read the operating model and glossary, then work through parts in order or jump to whichever part addresses your current need. The prose, anti-patterns, and worked example are for you. This is the primary audience for v0.2.0-alpha — the specification is written for humans designing and deploying agent fleets.
 
-**LLM agents** — Individual part files will be loaded into your context as operational instructions. The TL;DR blocks, templates, and structured formats are for you. When a part file is loaded, treat its constraints as binding and its templates as required output formats. Refer to the glossary below for term definitions.
+**LLM agents** — Individual part files will be loaded into your context as operational instructions. The TL;DR blocks, templates, and structured formats are for you. When a part file is loaded, treat its constraints as binding and its templates as required output formats. Refer to the glossary below for term definitions. At the current spec-only stage, LLM agents consume the spec as design context rather than as runtime instructions.
 
-**Machines** — CI pipelines, hook scripts, linters, and automation tooling consume the artifacts this framework produces. Templates, checklists, and structured formats are designed to be parseable. Configuration files generated from this framework should be version-controlled and diffable.
+**Machines** — CI pipelines, hook scripts, linters, and automation tooling consume the artifacts this framework produces. Templates, checklists, and structured formats are designed to be parseable. Configuration files generated from this framework should be version-controlled and diffable. Machine-readable enforcement (hook manifests, JSON schemas) exists in the spec; runtime implementations will expand this audience with code artifacts.
 
 > **This is not an AGENTS.md file.** It is the meta-framework that generates AGENTS.md files, agent definitions, hook scripts, skill files, and operational artifacts. Your actual configuration files (AGENTS.md, CLAUDE.md, .cursorrules, etc.) should be under 150 lines each. This framework is the source of truth they are distilled from.
 

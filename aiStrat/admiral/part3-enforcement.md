@@ -13,7 +13,7 @@
 
 This distinction — between advisory instructions and deterministic enforcement — is the foundation of reliable fleet operations.
 
-> **PREREQUISITE: Read Standing Orders (Section 36, Part 11) before implementing hooks.** Standing Orders define the *policy* that hooks enforce. Both are Level 1 requirements. Implementing hooks without Standing Orders produces enforcement without governance — the hooks enforce nothing meaningful. Hooks are the mechanism; Standing Orders are the policy.
+> **Co-requisite: Standing Orders (Section 36, Part 11).** This section and Standing Orders are co-requisite Level 1 reading — neither depends on the other, but both are needed before implementation. Standing Orders define the *policy* that hooks enforce. Hooks are the mechanism; Standing Orders are the policy. Implementing hooks without Standing Orders produces enforcement without governance. Reading order does not matter; both must be understood before deploying.
 
 ### The Enforcement Spectrum
 
@@ -443,6 +443,8 @@ Additionally, all monitor findings arrive as seed candidates with `"approved": F
 > **No single layer is a standalone guarantee.** Layers 1-3 are deterministic and LLM-airgapped — they provide the load-bearing security boundary. Layer 4 (LLM Advisory) supplements them as an additive rejection net but is inherently probabilistic and cannot guarantee detection of novel adversarial patterns. The Admiral approval gate provides the final human checkpoint. See `monitor/README.md` for each layer's specific limitations and mitigations.
 
 ### Configuration Hygiene
+
+> **Level 1 requirement:** Create a `.github/CODEOWNERS` file during initial setup. At minimum, set ownership for your specification directory and agent configuration directories. This is a one-time setup that prevents unauthorized configuration changes from the first commit.
 
 - **Version all configuration files** in git, reviewed in PRs.
 - **CODEOWNERS for agent configuration directories** (`.claude/`, `.cursor/`, etc.).

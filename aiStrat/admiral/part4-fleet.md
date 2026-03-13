@@ -29,6 +29,8 @@ Define every agent role. Each needs a clear identity, a defined scope, and expli
 
 The canonical agent catalog lives in [`fleet/README.md`](../fleet/README.md). It contains 71 core agent definitions (67 specialists across 12 categories plus 4 command & coordination agents), with an additional 29 extended agents in `fleet/agents/extras/`.
 
+> **Maturity note (v0.2.0-alpha):** All agent definitions are currently **reference samples** — designed from framework principles but not yet validated through production deployment. They represent sound architectural patterns for agent specialization, boundaries, and handoff contracts. As the framework matures through real-world use, individual definitions will be promoted from Sample → Validated → Battle-Tested status based on measured performance data. See `fleet/README.md` for the full maturity model.
+
 Select agents based on the project's actual needs. Define "Does NOT Do" boundaries for each. See `fleet/README.md` for the complete catalog with agent counts per category.
 
 ### Core Fleet (Minimum Viable Deployment)
