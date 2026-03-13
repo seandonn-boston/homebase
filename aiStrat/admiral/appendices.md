@@ -478,13 +478,15 @@ These case studies are synthesized from patterns observed across multiple agent 
 6. **Hook manifests in `aiStrat/hooks/` are specification-only.** No executables exist. A runtime that discovers hooks from these directories finds manifests but no code to execute.
 
 **Corrective actions (same session):**
-- Created `admiral/AGENTS.md` (85 lines, under 150-line rule) with Mission, Boundaries, Success Criteria, Standing Orders reference, Enforcement Classification.
-- Created `admiral/CLAUDE.md` as thin pointer.
-- Implemented `admiral/protocols/standing_orders.py` — all 15 Standing Orders as Pydantic models with loader, priority sorting, context injection renderer.
-- Implemented `admiral/protocols/escalation.py` — EscalationReport and EmergencyHaltReport per Section 37.
+- Created `AGENTS.md` (85 lines, under 150-line rule) with Mission, Boundaries, Success Criteria, Standing Orders reference, Enforcement Classification.
+- Created `CLAUDE.md` as thin pointer.
+- Implemented Standing Orders as a data model (Pydantic models with loader, priority sorting, context injection renderer).
+- Implemented escalation protocol models (EscalationReport and EmergencyHaltReport per Section 37).
 - Added schema validation tests against authoritative JSON schemas in `aiStrat/`.
 - Set `.github/CODEOWNERS` per Section 10.
 - Applied 4 spec patches (SPEC-1 through SPEC-4) to aiStrat/ to fix the gaps that caused these errors.
+
+> **Note:** The reference implementation from this case study has since been deprecated. The lessons learned are preserved here; the code artifacts are not part of the current specification. Future implementations should follow the adoption level sequence documented in Appendix B.
 
 **Lesson:** The most dangerous anti-pattern for framework implementers is **organizing by code architecture instead of adoption level**. Admiral's levels exist for a reason — they represent operational capability, not code modules. Level 1 means "you can start working here," which requires governance artifacts (AGENTS.md, Standing Orders) before infrastructure (hook engine, data models). Building the engine without the governance is like building a car without a steering wheel — it runs, but it can't be directed.
 

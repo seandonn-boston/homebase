@@ -1,3 +1,4 @@
+<!-- Admiral Framework v0.2.0-alpha -->
 # Comprehensive AI Timeline (2010 – March 2026)
 
 Created: February 2026

@@ -1,3 +1,4 @@
+<!-- Admiral Framework v0.2.0-alpha -->
 # Admiral Sales Pitch — 30-Minute Conversation Guide
 
 **Audience:** Someone in tech with strong technical familiarity — comfortable with infrastructure concepts, software architecture, and AI terminology.

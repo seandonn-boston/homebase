@@ -1,3 +1,4 @@
+<!-- Admiral Framework v0.2.0-alpha -->
 # THE AI INFRASTRUCTURE CYCLE: BUBBLE OR DOWN PAYMENT?
 
 **An Investment Thesis**

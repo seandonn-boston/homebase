@@ -279,7 +279,7 @@ One deterministic check that fires every time and self-heals is more effective t
 | Cycle detection | Track `(hook_name, error_signature)` tuples | If same tuple recurs after fix attempt, break immediately |
 | On max retries exceeded | Move to recovery ladder step 2 (fallback) | Matches SO 6 escalation sequence |
 
-> **Implementation lesson (Admiral-builds-Admiral):** The spec describes self-healing conceptually but leaves implementation parameters to the implementer. The reference implementation (`admiral/hooks/self_healing.py`) uses the defaults above. The cycle detection via `(hook_name, error_signature)` tuples was the key insight — without it, agents retry the same broken fix indefinitely.
+> **Implementation lesson (Admiral-builds-Admiral):** The spec describes self-healing conceptually but leaves implementation parameters to the implementer. A reference implementation should use the defaults above. The cycle detection via `(hook_name, error_signature)` tuples is the key insight — without it, agents retry the same broken fix indefinitely.
 
 > **Two retry mechanisms, different layers:** Hook self-healing retries (max 3, automatic, deterministic) operate at the enforcement layer. The recovery ladder retries in Standing Order 6 and Section 22 ("2-3 attempts, each genuinely different") operate at the task layer and are agent-driven. These are complementary, not competing: hooks catch mechanical failures; the recovery ladder handles strategic dead ends. When hook retries are exhausted, escalation flows to the recovery ladder (step 2: fallback).
 

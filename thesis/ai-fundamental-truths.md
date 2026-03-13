@@ -1,3 +1,4 @@
+<!-- Admiral Framework v0.2.0-alpha -->
 # FUNDAMENTAL TRUTHS ABOUT AI
 
 **From someone standing in the middle of it.**

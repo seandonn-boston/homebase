@@ -1,18 +1,9 @@
-# Admiral Framework Implementation — Code Ownership
-# Per Section 10 (Configuration Security), Level 1 item 6: Set CODEOWNERS.
+# Admiral Framework — Code Ownership
+# See part3-enforcement.md Section 10 for CODEOWNERS guidance
 
-# Admiral implementation package — requires review for all changes
-/admiral/ @admiral-maintainers
-
-# Spec files — changes must be coordinated with implementation
+# Admiral specification — requires review for all changes
 /aiStrat/ @admiral-maintainers
 
-# Hook implementations — security-critical, requires explicit review
-/admiral/hooks/ @admiral-maintainers
-
-# Protocol implementations — non-negotiable rules, requires explicit review
-/admiral/protocols/ @admiral-maintainers
-
-# Identity and security — highest scrutiny
-/admiral/models/identity.py @admiral-maintainers
-/admiral/security/ @admiral-maintainers
+# Supporting research and strategic documents
+/research/ @admiral-maintainers
+/thesis/ @admiral-maintainers

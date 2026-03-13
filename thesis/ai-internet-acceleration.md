@@ -1,3 +1,4 @@
+<!-- Admiral Framework v0.2.0-alpha -->
 # AI INHERITS THE INTERNET
 
 **Why AI adoption is faster than any prior technology wave, and why the timeline still matters.**
