@@ -1,7 +1,7 @@
 <!-- Admiral Framework v0.2.0-alpha -->
 # Admiral Framework — File Manifest
 
-**100 files across 18 groups | Last modified: 2026-03-13**
+**105 files across 18 groups | Last modified: 2026-03-13**
 
 > **Note:** Research and thesis documents live at the repository root (`/research/`, `/thesis/`), not under `aiStrat/`. All other framework files are under `aiStrat/`.
 
@@ -9,7 +9,7 @@ This is the semantic catalog of every file in the Admiral Framework. Each entry 
 
 ---
 
-## Admiral Doctrine (17 files)
+## Admiral Doctrine (18 files)
 
 ```
 index.md - admiral/doctrine - 2026-03-10:
@@ -217,6 +217,19 @@ hooks enforce which standing orders, identifies enforcement gaps, and provides
 the progression path for increasing deterministic enforcement coverage across
 adoption levels.
 aiStrat/admiral/standing-orders-enforcement-map.md
+```
+
+```
+competitive-analysis.md - admiral/doctrine - 2026-03-13:
+Competitive positioning analysis and benchmark recommendations. Evaluates Admiral
+against BMAD (workflow optimization), Ruflo (orchestration platform), everything-
+claude-code/AgentShield (community configs + security scanner), and platform
+absorption risk (Anthropic Agent SDK, OpenAI Agents SDK, Google ADK). Includes
+security landscape context (MCP vulnerabilities, ClawHavoc, ROME breakout),
+six recommended benchmarks (governance overhead, enforcement reliability, context
+efficiency, failure mode coverage, adoption velocity, knowledge retrieval precision),
+and competitive positioning summary with strategic priorities.
+aiStrat/admiral/competitive-analysis.md
 ```
 
 ---
@@ -612,7 +625,7 @@ aiStrat/brain/schema/test_sensitive_data_guard.sql
 
 ---
 
-## Monitor / Ecosystem Intelligence (1 file)
+## Monitor / Ecosystem Intelligence (5 files)
 
 ```
 README.md - monitor/architecture - 2026-03-10:
@@ -625,6 +638,38 @@ Antibodies (converts attacks into Brain FAILURE entries). "Fail-open for discove
 fail-closed for ingestion" principle. Intelligence sources: 11+ model providers, 20+
 tracked repos, RSS feeds. Daily/weekly/manual scan cadence.
 aiStrat/monitor/README.md
+```
+
+```
+scanner-spec.md - monitor/specification - 2026-03-13:
+Scanner orchestrator specification. Defines scan types (full, models, patterns,
+releases, discover), scan cadence (daily/weekly), output format, error handling,
+and integration with state and digest systems.
+aiStrat/monitor/scanner-spec.md
+```
+
+```
+state-format.md - monitor/specification - 2026-03-13:
+Persistent state specification. Defines JSON schema for state.json, what gets
+tracked between scans, and atomic write semantics.
+aiStrat/monitor/state-format.md
+```
+
+```
+digest-format.md - monitor/specification - 2026-03-13:
+Digest output specification. Defines markdown digest format, naming convention
+(YYYY-MM-DD.md), sections (findings, alerts, seed candidates), and severity
+classification.
+aiStrat/monitor/digest-format.md
+```
+
+```
+quarantine-spec.md - monitor/specification - 2026-03-13:
+Detailed specification for each of the 5 quarantine layers. Expands the summary
+in README.md into individual layer specs with: input/output contracts, pass/fail
+criteria, attack corpus integration, and coverage matrix mapping ATK scenarios
+to quarantine layers.
+aiStrat/monitor/quarantine-spec.md
 ```
 
 ---

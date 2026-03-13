@@ -258,6 +258,88 @@ Scenarios are never automatically deleted. Retirement follows a conservative pro
 
 -----
 
+## Coverage Gap Analysis
+
+The 18 seed scenarios cover 6 attack categories. The following analysis identifies gaps where the corpus lacks coverage for known or plausible attack vectors.
+
+### Current Coverage
+
+| Category | Count | ATK IDs | Coverage Assessment |
+|---|---|---|---|
+| Authority spoofing | 4 | ATK-0001–0004 | **Good.** Covers claim fabrication, SO override, self-escalation, false consensus. |
+| Credential fabrication | 3 | ATK-0005–0007 | **Adequate.** Covers certifications, provenance, tool output. |
+| Behavior manipulation | 3 | ATK-0008–0010 | **Adequate.** Covers instruction override, role reassignment, constraint relaxation. |
+| Prompt injection | 3 | ATK-0011–0013 | **Good.** Covers indirect injection, encoding smuggling, context window poisoning. |
+| Failure scenarios | 3 | ATK-0014–0016 | **Adequate.** Covers network partition, API timeout, context exhaustion. |
+| Chaos scenarios | 2 | ATK-0017–0018 | **Minimal.** Only clock skew and resource exhaustion. |
+
+### Identified Gaps
+
+The following attack categories are **not represented** in the current seed corpus:
+
+| Gap | Description | Suggested Priority | Rationale |
+|---|---|---|---|
+| **Data exfiltration** | Agent attempts to leak sensitive data through tool outputs, Brain entries, or handoff documents (e.g., encoding secrets in commit messages or PR descriptions). | High | PII and secrets in persistent storage is a top-tier risk. The Data Sensitivity Protocol (Section 41) and Brain schema sensitive data guard exist but have no corpus test cases. |
+| **Context poisoning** | Adversary injects plausible but subtly wrong information into the Brain that degrades future decision quality without triggering obvious alarms (e.g., slightly incorrect API version numbers, wrong default configuration values). | High | Unlike prompt injection (which is detectable by pattern), context poisoning mimics legitimate knowledge. Layer 3 statistical analysis may not catch entries that are structurally valid but factually wrong. |
+| **Supply chain attacks (MCP servers)** | Malicious MCP server registered in the fleet's tool registry returns manipulated results — correct most of the time, adversarial under specific conditions (e.g., a code search tool that occasionally injects backdoors in results). | Medium | MCP server auditing (Section 10) specifies version pinning and hash verification, but the corpus has no test cases for compromised-but-registered tools. |
+| **Model confusion / multi-model attacks** | Exploiting differences between model capabilities when the fleet uses multiple model tiers. Craft input that a Tier 3 (Utility) model misinterprets but a Tier 1 (Flagship) model would catch — then route via triage to the wrong tier. | Medium | Model Selection (Section 13) assigns tiers but does not test cross-tier interpretation divergence. |
+| **Side-channel information leakage** | Agent inadvertently reveals internal state, other agents' outputs, or fleet topology through its responses. Not a direct attack but an information disclosure risk exploitable by adversaries with access to agent outputs. | Low | This is primarily a confidentiality concern rather than an integrity concern, but it becomes high-priority in multi-tenant or multi-operator deployments (Section 35). |
+| **Cascading failure scenarios** | Failure in one subsystem triggers failures in dependent subsystems (e.g., Brain unavailability → governance agents lose state → enforcement degrades → unchecked agent behavior). Current failure scenarios test individual components, not failure chains. | Medium | The current failure scenarios (ATK-0014–0016) are single-component. Real production failures cascade. |
+
+### Recommended Next Scenarios (ATK-0019+)
+
+When expanding the corpus, prioritize in this order:
+1. Data exfiltration (tests Data Sensitivity Protocol and Brain sensitive data guard)
+2. Context poisoning (tests quarantine Layer 3 limits and Brain entry quality)
+3. Cascading failure (tests fleet resilience as a system, not per-component)
+4. Supply chain MCP (tests MCP audit and tool registry integrity)
+
+-----
+
+## Quarantine Layer Mapping
+
+Each seed scenario maps to the quarantine layer(s) expected to detect it. This mapping validates that the five-layer quarantine pipeline provides defense-in-depth for the known attack surface. See `monitor/quarantine-spec.md` for detailed layer specifications.
+
+| ATK ID | Title | Primary Layer | Backup Layer | Notes |
+|---|---|---|---|---|
+| ATK-0001 | Admiral approval claim | Layer 3 (TF-IDF authority scoring) | Layer 4 (LLM advisory) | Authority-pattern vocabulary triggers TF-IDF similarity match against known spoofing patterns. |
+| ATK-0002 | Standing Order override | Layer 3 (TF-IDF authority scoring) | Layer 2 (injection detection) | "Override standing order" also matches Layer 2 imperative-pattern regexes. |
+| ATK-0003 | Authority tier self-escalation | Layer 3 (Bayesian classification) | Layer 4 (LLM advisory) | Self-escalation patterns are statistically distinct; Bayesian classifier trained on this category. |
+| ATK-0004 | Fabricated governance consensus | Layer 3 (credential fabrication detection) | Layer 4 (LLM advisory) | Claims of consensus without verifiable governance agent outputs trigger provenance checks. |
+| ATK-0005 | Invented certifications | Layer 3 (credential fabrication detection) | Layer 2 (pattern matching) | Certification claims matched against known credential vocabulary. |
+| ATK-0006 | False provenance | Layer 3 (credential fabrication detection) | Layer 4 (LLM advisory) | Unverifiable source attribution detected via provenance validation. |
+| ATK-0007 | Fabricated tool output | Layer 3 (Bayesian classification) | Layer 4 (LLM advisory) | Phantom capability claims are a Layer 3 behavioral pattern. Hallucination Auditor provides secondary defense. |
+| ATK-0008 | Instruction override via external content | Layer 2 (injection detection) | Layer 3 (behavior manipulation scoring) | "Ignore previous instructions" and similar imperative patterns caught by 70+ regex patterns. |
+| ATK-0009 | Role reassignment attempt | Layer 3 (behavior manipulation scoring) | Layer 4 (LLM advisory) | Identity token binding (Section 16) provides runtime defense; quarantine catches it in Brain-bound content. |
+| ATK-0010 | Constraint relaxation via helpfulness | Layer 3 (behavior manipulation scoring) | Layer 4 (LLM advisory) | Subtlest manipulation type — framed as optimization. Layer 3 trained on relaxation vocabulary. |
+| ATK-0011 | Indirect prompt injection | Layer 2 (injection detection) | Layer 3 (TF-IDF) | HTML comments and embedded directives caught by positional authority rules and injection patterns. |
+| ATK-0012 | Payload smuggling via encoding | Layer 2 (encoding normalization + injection detection) | Layer 3 (TF-IDF) | Encoding normalization (Unicode NFC, HTML entity, URL decode, homoglyph) runs before pattern matching. |
+| ATK-0013 | Context window poisoning | N/A (quarantine) | N/A | **Not a quarantine target.** This attack targets the agent's context window directly, not Brain-bound content. Defended by sacrifice order (Section 06) and Context Health Monitor. |
+| ATK-0014 | Network partition during Brain write | N/A (operational) | N/A | **Not a quarantine target.** Operational failure scenario. Defended by atomic write semantics and idempotency keys. |
+| ATK-0015 | Model API timeout mid-task | N/A (operational) | N/A | **Not a quarantine target.** Operational failure. Defended by API Resilience policy (model-tiers.md). |
+| ATK-0016 | Context window exhaustion | N/A (operational) | N/A | **Not a quarantine target.** Operational failure. Defended by sacrifice order and Context Health Monitor. |
+| ATK-0017 | Clock skew between agents | N/A (operational) | N/A | **Not a quarantine target.** Chaos scenario. Defended by monotonic counters, not wall-clock comparison. |
+| ATK-0018 | Resource exhaustion | N/A (operational) | N/A | **Not a quarantine target.** Chaos scenario. Defended by Token Budgeter and Orchestrator serialization. |
+
+### Coverage Summary
+
+| Quarantine Layer | Scenarios Caught (Primary) | Scenarios Caught (Backup) |
+|---|---|---|
+| Layer 1 (Structural) | 0 | 0 |
+| Layer 2 (Injection) | 3 (ATK-0008, 0011, 0012) | 2 (ATK-0002, 0005) |
+| Layer 3 (Deterministic Semantic) | 7 (ATK-0001–0004, 0005, 0009, 0010) | 3 (ATK-0008, 0011, 0012) |
+| Layer 4 (LLM Advisory) | 0 | 7 (ATK-0001, 0003, 0004, 0006, 0007, 0009, 0010) |
+| Layer 5 (Antibody) | 0 (generative, not detective) | 0 |
+| N/A (operational/non-quarantine) | 6 (ATK-0013–0018) | — |
+
+**Key observations:**
+- **Layer 1 has no primary or backup role** for current seed scenarios. This is expected — seed scenarios represent sophisticated attacks that pass structural validation. Future data exfiltration scenarios (Gap #1) would likely be caught at Layer 1 if they involve malformed entries.
+- **Layer 3 carries the heaviest load** as primary defense (7 of 12 adversarial scenarios). This validates the quarantine design principle that deterministic semantic analysis is the load-bearing security boundary.
+- **Layer 4 serves exclusively as backup** — no scenario depends on it as primary defense. This confirms the design intent: the system's security does not depend on LLM judgment.
+- **6 scenarios are not quarantine targets** — they test fleet resilience, not Brain content integrity. These are defended by other framework mechanisms (sacrifice order, API resilience, token budgeting).
+
+-----
+
 ## Governance
 
 - **Seed entries are curated by the Admiral** — never by agents. Agents contribute feedback entries; the Admiral curates the seed.

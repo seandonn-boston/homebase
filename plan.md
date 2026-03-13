@@ -1,5 +1,18 @@
 # Admiral Framework v0.2.0-alpha Overhaul -- Implementation Plan
 
+## Completion Status
+
+| Phase | Status | Notes |
+|---|---|---|
+| Phase 0 (Prereqs) | **COMPLETE** | Task 18 done |
+| Phase 1 (Cleanup) | **COMPLETE** | Tasks 2, 3, 4, 11 done |
+| Phase 2 (Foundation) | **COMPLETE** | Tasks 1, 6, 15, 16 done |
+| Phase 3 (Substance) | **COMPLETE** | Tasks 5, 7, 9, 12, 13 done; Task 10 partial (coverage gap analysis and quarantine mapping added) |
+| Phase 4 (Polish) | **COMPLETE** | Tasks 8, 14, 17, 19 done |
+| Phase 5 (Strategy) | **COMPLETE** | Task 20 done — competitive-analysis.md created |
+
+---
+
 ## Dependency Graph and Execution Ordering
 
 The 20 tasks have significant interdependencies. The correct execution order groups them into 6 phases based on dependency chains:
