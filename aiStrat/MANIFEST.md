@@ -1,13 +1,13 @@
 <!-- Admiral Framework v0.2.0-alpha -->
 # Admiral Framework — File Manifest
 
-**70 files across 15 groups | Last modified: 2026-03-10**
+**71 files across 15 groups | Last modified: 2026-03-13**
 
 This is the semantic catalog of every file in the Admiral Framework. Each entry describes what the file contains, verified against the source. Update this manifest when files are added, removed, renamed, or when their content changes materially.
 
 ---
 
-## Admiral Doctrine (14 files)
+## Admiral Doctrine (15 files)
 
 ```
 index.md - admiral/doctrine - 2026-03-10:
@@ -177,6 +177,21 @@ Implementation Pitfalls section (build-order, Python-specific, general agent fra
 pitfalls from reference implementation); Framework Versioning (F); Implementation
 Status Map (G) — three implementation categories mapped to every component.
 aiStrat/admiral/appendices.md
+```
+
+```
+reference-constants.md - admiral/doctrine - 2026-03-13:
+Implementer's reference card for the Admiral Framework. Tool token estimation
+table (11 tools), context budget validation rule (must sum to 100%), hook
+dependency cycle detection algorithm (DFS three-color), hook execution order
+algorithm (Kahn's with registration-order tie-breaking), error signature
+formulas (self-healing vs. loop detector — two distinct formulas), consecutive
+error early-exit behavior, exit code conventions (0/1/2), session state
+persistence format (.admiral/session_state.json), Standing Orders injection
+mechanism, critical context section set (Identity/Authority/Constraints), hook
+adapter pattern (three-handler architecture), minimum dependency set by adoption
+level.
+aiStrat/admiral/reference-constants.md
 ```
 
 ---

@@ -74,6 +74,8 @@ The ladder preserves agent autonomy for as long as possible and escalates only w
 4. **Isolate and skip.** Mark task as blocked with structured report. Move to next task. Surface at checkpoint.
 5. **Escalate to Admiral.** Structured escalation report per [Section 37](part11-protocols.md) format. No further creative solutions.
 
+> **Recovery progression rule:** Recovery records must advance exactly one rung at a time. A record at "retry" whose next step is "backtrack" (skipping "fallback") is invalid. A record whose next step points backward (e.g., fallback → retry) is also invalid. Enforce this at record creation, not as advisory guidance. The rule ensures escalation reports contain evidence of genuine effort at each rung.
+
 ### Backtracking
 
 Effective backtracking requires:

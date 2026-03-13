@@ -31,6 +31,7 @@ aiStrat is the **Admiral Framework** — a comprehensive specification for AI ag
 | See the database schema | `brain/schema/001_initial.sql` |
 | Know the universal agent rules | `admiral/part11-protocols.md` |
 | Understand the threat model | `admiral/part3-enforcement.md` (Section 10) |
+| Implement the framework | `admiral/reference-constants.md` |
 | Start adopting the framework | `admiral/index.md` → Adoption Levels |
 | Integrate with a platform | `admiral/appendices.md` → Appendix E |
 

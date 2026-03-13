@@ -107,7 +107,7 @@ Load it into every agent's context at the start of every session. Maintain and u
 
 ### Environmental Facts
 
-- **Tech stack and exact versions:** Not "React" but "React 19.1 with TypeScript 5.7, Vite 6.2, Tailwind 4.0."
+- **Tech stack and exact versions:** Not "React" but "React 19.1 with TypeScript 5.7, Vite 6.2, Tailwind 4.0." Reject vague version strings: `latest`, `stable`, `current`, `newest`, `recent`, and `lts` are all invalid. Vague versions cause phantom capability assumptions — an agent that believes it has "latest React" may assume features that do not exist in the actual installed version.
 - **Infrastructure topology:** Where things run, how they connect, deployment targets, CI/CD details.
 - **Access and permissions:** What APIs, services, files, and tools each role actually has access to. Enumerate explicitly.
 - **Current known issues:** Bugs, limitations, workarounds, technical debt, "do not touch" areas and why.

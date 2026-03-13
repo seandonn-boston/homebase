@@ -1,25 +1,3 @@
 {
-  "hooks": {
-    "SessionStart": [
-      {
-        "matcher": "",
-        "command": "python -m admiral.runtime session_start",
-        "description": "Admiral Level 1: Initialize session state, inject Standing Orders into context"
-      }
-    ],
-    "PreToolUse": [
-      {
-        "matcher": "",
-        "command": "python -m admiral.runtime pre_tool_use",
-        "description": "Admiral Level 1: Token budget gate — block if budget exhausted"
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "",
-        "command": "python -m admiral.runtime post_tool_use",
-        "description": "Admiral Level 1: Token tracking, loop detection, context health check"
-      }
-    ]
-  }
+  "hooks": {}
 }
