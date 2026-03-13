@@ -1,19 +1,20 @@
 <!-- Admiral Framework v0.3.0-alpha -->
 # Admiral Framework — File Manifest
 
-**97 files across 20 groups | Last modified: 2026-03-13**
+**102 files across 22 groups | Last modified: 2026-03-13**
 
 This is the semantic catalog of every file in the Admiral Framework. Each entry describes what the file contains, verified against the source. Update this manifest when files are added, removed, renamed, or when their content changes materially.
 
 ---
 
-## Admiral Doctrine (15 files)
+## Admiral Doctrine (16 files)
 
 ```
 index.md - admiral/doctrine - 2026-03-10:
 Master index and entry point. Subtitled "A Workforce Toolkit for Autonomous AI Agent
-Fleets." Defines four adoption levels (Disciplined Solo → Core Fleet → Governed Fleet
-→ Full Framework) with time-to-value and graduation criteria. Links all 11 parts.
+Fleets." Defines five adoption levels (Disciplined Solo → Core Fleet → Governed Fleet
+→ Full Framework → Enterprise) with time-to-value and graduation criteria. Brain is
+fully complete at Level 3. Links all 11 parts.
 
 Minimum Viable Reading Path (~800 lines of targeted reading):
   1. index.md — Glossary + Adoption Levels (shared vocabulary and roadmap)
@@ -77,11 +78,12 @@ aiStrat/admiral/part4-fleet.md
 ```
 
 ```
-part5-brain.md - admiral/doctrine - 2026-03-08:
-Three sections: Brain Architecture (15) — three maturity levels (file → SQLite →
-Postgres+pgvector), "Start Simple" principle; Knowledge Protocol (16) — MCP tools,
-zero-trust access control, identity tokens; Intelligence Lifecycle (17) — capture
-triggers, review cadence, cross-project namespace.
+part5-brain.md - admiral/doctrine - 2026-03-13:
+Three sections: Brain Architecture (15) — three Brain maturity levels (file → SQLite
+→ Full Brain at Level 3 with Postgres+pgvector+MCP+identity), "Start Simple"
+principle, Brain complete at Level 3 with no changes at Levels 4-5; Knowledge Protocol
+(16) — MCP tools, zero-trust access control, identity tokens; Intelligence Lifecycle
+(17) — capture triggers, review cadence, cross-project namespace.
 aiStrat/admiral/part5-brain.md
 ```
 
@@ -193,6 +195,16 @@ mechanism, critical context section set (Identity/Authority/Constraints), hook
 adapter pattern (three-handler architecture), minimum dependency set by adoption
 level.
 aiStrat/admiral/reference-constants.md
+```
+
+```
+benchmarks.md - admiral/doctrine - 2026-03-13:
+Framework benchmarks for measuring Admiral-governed fleet effectiveness. Seven core
+metrics (governance overhead, first-pass quality, recovery success rate, context
+efficiency, enforcement coverage, coordination overhead, knowledge reuse) with targets
+and red flags. Competitive differentiators. Measurement cadence by adoption level.
+Baseline expectations across fleet maturity phases.
+aiStrat/admiral/benchmarks.md
 ```
 
 ---
@@ -520,7 +532,7 @@ aiStrat/fleet/agents/extras/scale-extended.md
 
 ---
 
-## Brain / Knowledge System (6 files)
+## Brain / Knowledge System (7 files)
 
 ```
 README.md - brain/architecture - 2026-03-10:
@@ -556,6 +568,18 @@ aiStrat/brain/level2-spec.md
 ```
 
 ```
+level3-spec.md - brain/maturity-levels - 2026-03-13:
+Level 3 Brain: the COMPLETE Brain. Postgres + pgvector + MCP server + identity tokens
++ zero-trust access control. Full schema (entries with sensitivity/approved/authority_
+tier, entry_links, audit_log with session_id/entry_ids/risk_flags). 8 MCP tools.
+JWT identity tokens (ES256 recommended). Permission matrix. Sensitivity classification
+(standard/elevated/restricted). 5-layer quarantine for external intelligence. Multi-
+signal retrieval pipeline with 8 ranking signals. Migration from Level 2. No Brain
+changes at Levels 4-5.
+aiStrat/brain/level3-spec.md
+```
+
+```
 001_initial.sql - brain/schema - 2026-03-08:
 Production Postgres + pgvector schema. Three tables: entries (UUID PK, project,
 category, title, content, vector(1536), JSONB metadata, provenance, sensitivity,
@@ -588,7 +612,7 @@ aiStrat/brain/schema/test_sensitive_data_guard.sql
 
 ---
 
-## Monitor / Ecosystem Intelligence (1 file)
+## Monitor / Ecosystem Intelligence (4 files)
 
 ```
 README.md - monitor/architecture - 2026-03-10:
@@ -601,6 +625,32 @@ Antibodies (converts attacks into Brain FAILURE entries). "Fail-open for discove
 fail-closed for ingestion" principle. Intelligence sources: 11+ model providers, 20+
 tracked repos, RSS feeds. Daily/weekly/manual scan cadence.
 aiStrat/monitor/README.md
+```
+
+```
+scanner-spec.md - monitor/specification - 2026-03-13:
+Scanner module specification. Defines 5 scan types (full, models, patterns, releases,
+discover), input source categories, output formats (state file, digest files, seed
+candidates), findings classification (HIGH/MEDIUM/LOW), state management, and security
+considerations. No implementation — specification only.
+aiStrat/monitor/scanner-spec.md
+```
+
+```
+state-schema.json - monitor/schema - 2026-03-13:
+JSON Schema for the monitor state file (state.json). Defines sources (per-source type,
+last_scanned, known_version), scan_history (max 100 entries with timestamp, scan_type,
+status, findings counts), and watchlist (repos, topics, providers).
+aiStrat/monitor/state-schema.json
+```
+
+```
+digest-format.md - monitor/specification - 2026-03-13:
+Specification for monitor digest output files. Markdown format with sections for high/
+medium/low priority findings, seed candidates for Brain ingestion, and scan metadata.
+File naming convention (YYYY-MM-DD.md, weekly suffix). Governance rules for digest
+handling.
+aiStrat/monitor/digest-format.md
 ```
 
 ---
@@ -696,7 +746,7 @@ aiStrat/hooks/manifest.schema.json
 
 ---
 
-## Hook Manifests (8 files)
+## Hook Manifests — Runtime (8 files)
 
 ```
 hook.manifest.json - hooks/context_baseline - 2026-03-10:
@@ -761,6 +811,42 @@ aiStrat/hooks/token_budget_tracker/hook.manifest.json
 
 ---
 
+## Hook Manifests — Spec Repository (4 files)
+
+```
+hook.manifest.json - hooks/version_consistency - 2026-03-13:
+Manifest for version_consistency hook. SessionStart event. Validates all .md and .sql
+files carry correct version string. Analogous to SO 1 (Identity Discipline) for spec
+files. 5s timeout.
+aiStrat/hooks/version_consistency/hook.manifest.json
+```
+
+```
+hook.manifest.json - hooks/manifest_freshness - 2026-03-13:
+Manifest for manifest_freshness hook. PostToolUse event (async). Checks MANIFEST.md
+reflects actual file inventory after edits. Analogous to SO 11 (Context Discovery). 5s
+timeout.
+aiStrat/hooks/manifest_freshness/hook.manifest.json
+```
+
+```
+hook.manifest.json - hooks/link_validator - 2026-03-13:
+Manifest for link_validator hook. PostToolUse event (async). Validates markdown cross-
+references resolve to existing targets. Analogous to SO 4 (Context Honesty). 10s
+timeout.
+aiStrat/hooks/link_validator/hook.manifest.json
+```
+
+```
+hook.manifest.json - hooks/standing_order_integrity - 2026-03-13:
+Manifest for standing_order_integrity hook. PostToolUse event. Validates all 15 Standing
+Orders present and correctly numbered in part11-protocols.md. Analogous to SO 3 (Scope
+Boundaries). 5s timeout.
+aiStrat/hooks/standing_order_integrity/hook.manifest.json
+```
+
+---
+
 ## Configuration (3 files)
 
 ```
@@ -805,83 +891,7 @@ aiStrat/sales-pitch-30min-guide.md
 
 ---
 
-## Research (5 files) — *Pending relocation to repo root*
-
-> These files are strategy and market research documents, not specification
-> artifacts. They will be moved from `aiStrat/research/` to the repository root
-> (`research/`) and excluded from the spec versioning policy.
-
-```
-AI-MODELS-TIMELINE.md - research/timeline - 2026-03-10:
-Comprehensive AI timeline from 2010 to March 2026. ~1,469 lines covering major model
-releases, company milestones, benchmark results, and industry events organized
-chronologically. Includes GPT series, Claude series, Gemini, Llama, and 50+ other
-model families.
-aiStrat/research/AI-MODELS-TIMELINE.md
-```
-
-```
-hinton-et-al-ai-pioneers.md - research/people - 2026-03-10:
-Chronological profiles of 20+ AI pioneer figures: Hopfield, Hinton, LeCun, Bengio,
-Fei-Fei Li, Goodfellow, Sutskever, Karpathy, Amodei siblings, Hassabis, and others.
-Covers career arcs, key contributions, institutional affiliations, and 2024-2025
-Nobel/QE Prize recognition. ~430 lines.
-aiStrat/research/hinton-et-al-ai-pioneers.md
-```
-
-```
-research-cutting-edge-usecases-mar-2026.md - research/usecases - 2026-03-10:
-Cutting-edge projects utilizing AI agent fleets as of March 2026. Categories:
-autonomous vehicles (Waymo, Tesla, Figure AI), drug discovery (Recursion, Insilico,
-NVIDIA BioNeMo), and other frontier applications. ~473 lines.
-aiStrat/research/research-cutting-edge-usecases-mar-2026.md
-```
-
-```
-research-llm-agents-mar-2026.md - research/agents - 2026-03-10:
-State of the art in LLM agents and AI coding tools as of March 2026. Covers GPT-5.4,
-Claude 4.6, Cursor 2.5, MCP ecosystem, A2A protocol, Codex CLI, and 30+ other agent
-projects. Evaluated on ingenuity, effectiveness, integrity, security, creativity.
-~547 lines.
-aiStrat/research/research-llm-agents-mar-2026.md
-```
-
-```
-research-top-agent-toolkits-mar-2026.md - research/toolkits - 2026-03-10:
-Top AI agent tool suites, workflows, configurations, and production setups as of
-March 2026. Covers everything-claude-code, awesome-claude-code-toolkit, Trail of Bits
-security configs, Ruflo enterprise orchestration, and 20+ other toolkit projects.
-~532 lines.
-aiStrat/research/research-top-agent-toolkits-mar-2026.md
-```
-
----
-
-## Thesis (3 files) — *Pending relocation to repo root*
-
-> These files are investment and strategy thesis documents, not specification
-> artifacts. They will be moved from `aiStrat/thesis/` to the repository root
-> (`thesis/`) and excluded from the spec versioning policy.
-
-```
-ai-fundamental-truths.md - thesis/strategy - 2026-03-08:
-Foundational truths about AI that inform Admiral's design philosophy. Covers: why
-agents are neither employees nor code, why governance must be designed from scratch,
-why deterministic enforcement outperforms advisory constraints. ~224 lines.
-aiStrat/thesis/ai-fundamental-truths.md
-```
-
-```
-ai-internet-acceleration.md - thesis/strategy - 2026-03-08:
-Thesis on how AI inherits and accelerates internet patterns. Draws parallels between
-internet infrastructure evolution and AI agent infrastructure needs. ~156 lines.
-aiStrat/thesis/ai-internet-acceleration.md
-```
-
-```
-ai-investment-thesis.md - thesis/strategy - 2026-03-08:
-Investment thesis analyzing the AI infrastructure cycle — whether current spending
-represents a bubble or a down payment. Market data, infrastructure spending analysis,
-and positioning of Admiral within the broader AI ecosystem. ~218 lines.
-aiStrat/thesis/ai-investment-thesis.md
-```
+> **Note:** Research (5 files) and thesis (3 files) documents have been relocated to
+> the repository root (`research/` and `thesis/`). They are strategy and investment
+> documents, not specification artifacts, and are excluded from the spec versioning
+> policy. See `AGENTS.md` for versioning scope details.

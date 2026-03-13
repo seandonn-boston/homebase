@@ -683,6 +683,26 @@ This appendix maps every major framework component to its real-world implementat
 
 -----
 
+### Version History
+
+**v0.3.0-alpha (March 2026)**
+
+- **Brain restructured to 5 levels.** Brain is fully complete at Level 3 (Postgres + pgvector + MCP + identity tokens + zero-trust). Levels 4-5 add fleet-level and enterprise capabilities without modifying the Brain. Created `brain/level3-spec.md`.
+- **5 adoption levels.** Added Level 5 (Enterprise) for multi-fleet coordination and cross-org federation. Pre-Flight Checklist and Quick-Start Sequence updated.
+- **Infrastructure fixes.** Recreated CODEOWNERS with correct paths. Stubbed `ai-monitor.yml` (removed non-existent Python references). Cleaned `.gitignore` and `settings.local.json` of Python vestiges. Deleted empty `hooks.json`.
+- **Deprecated reference cleanup.** Removed references to deleted reference implementation files (`admiral/protocols/`, `admiral/hooks/`). Rewrote implementation lessons to be implementation-agnostic.
+- **Content corrections.** Fixed governance self-monitoring contradiction. Fixed domain.md duplicate output routing. Added `purge_regulation` to test_schema.sql. Fixed ATTACK_CORPUS category references (→ `failure` with metadata tag). Reconciled reading path between index.md and MANIFEST.md.
+- **New specifications.** Monitor scanner spec, state schema, digest format. Framework benchmarks (7 core metrics). 4 spec-repo hook manifests. CI spec-validation workflow.
+- **Fleet transparency.** Added notes to fleet README, specialists.md, generalists.md, and AGENTS.md acknowledging agent definitions are well-researched specifications, not battle-tested implementations.
+- **Structural moves.** Relocated `research/` and `thesis/` to repository root (not spec artifacts). Updated versioning policy scope.
+- **Tone adjustments.** Replaced Part 5 marketing subtitle. Adjusted sales pitch language. Condensed Metered Service Broker. Added bootstrap note to Pre-Flight Checklist.
+
+**v0.2.0-alpha (March 2026)**
+
+- Initial 11-part framework with 71 core + 29 extended agent definitions. Brain Level 1-2 specs. 8 hook manifests. 18 attack corpus scenarios. Full doctrine, fleet, brain, and monitor specifications.
+
+-----
+
 *The Fleet Admiral Framework · v0.3.0-alpha*
 
 *Context is the currency of autonomous AI. Intent is its purpose. The Brain is where both compound.*
