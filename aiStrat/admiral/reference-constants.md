@@ -328,3 +328,192 @@ A manifest without a locatable executable is rejected at discovery time (`FileNo
 | mcp | ≥ 1.0 | Optional (MCP protocol integration) |
 
 The optional dependencies correspond to Level 3+ features. A Level 1–2 implementation requires only Python, pydantic, jsonschema, and pytest.
+
+-----
+
+## Hook Timeout Defaults
+
+The spec defines a default hook timeout and per-hook overrides. Implementers must apply the per-hook value when present, falling back to the global default.
+
+| Hook | Timeout | Rationale |
+|---|---|---|
+| **Global default** | **30 seconds** | Safe ceiling for any hook without explicit config |
+| token_budget_gate | 5 seconds | Lightweight arithmetic check; blocks tool use |
+| token_budget_tracker | 5 seconds | Lightweight arithmetic check; advisory only |
+| loop_detector | 5 seconds | Signature comparison; no I/O |
+| context_baseline | 10 seconds | Reads context state; one-time at session start |
+| context_health_check | 10 seconds | Reads context state; periodic |
+| identity_validation | 10 seconds | String presence checks against context |
+| governance_heartbeat_monitor | 10 seconds | Async heartbeat collection and evaluation |
+
+All timeouts use `timeout_ms` in the manifest. On timeout, exit code is forced to 1 and stderr contains `"Hook timed out after Nms"`.
+
+-----
+
+## Context Health Check Invocation Frequency
+
+The `context_health_check` hook does not fire on every tool invocation. It fires every **N tool invocations** (configurable, default: **10**). This reduces overhead while still catching context degradation before it compounds.
+
+Implementers track `tool_call_count` in session state and fire the health check when `tool_call_count % N == 0`.
+
+-----
+
+## Governance Heartbeat Monitor
+
+The governance heartbeat monitor runs **asynchronously** on a configurable interval, separate from the synchronous hook chain.
+
+| Constant | Value | Meaning |
+|---|---|---|
+| Default interval | 60 seconds | Time between heartbeat checks |
+| Missed heartbeat threshold | 2 consecutive misses | Triggers direct alert to Admiral (bypasses Orchestrator) |
+| Confidence floor | 0.5 | If `confidence_self_assessment < 0.5` for any agent, alert Admiral even if heartbeat is present (alive but degraded) |
+
+The monitor detects two failure modes: unresponsive agents (no heartbeat) and degraded agents (heartbeat present but low confidence). Both bypass the Orchestrator and alert the Admiral directly.
+
+-----
+
+## Context Window Absolute Ceilings
+
+Section 06 defines percentage-based allocation ranges (Standing 15–25%, Session 50–65%, Working 20–30%). Two absolute limits complement the percentages:
+
+| Constant | Value | Source | Meaning |
+|---|---|---|---|
+| Standing context absolute ceiling | 50K tokens | part2-context.md | Standing context should rarely exceed this regardless of window size. At 2M tokens, 15% = 300K — far more than any agent needs. |
+| Context stuffing anti-pattern threshold | 60% standing context | part2-context.md | If standing context consumes ≥60% of the window, output becomes shallow and unfocused. This is a design smell, not a hard gate. |
+
+-----
+
+## Token Depletion and Chunk Sizing
+
+Work decomposition constants govern how agents partition tasks to avoid quality degradation near budget exhaustion.
+
+| Constant | Value | Source | Meaning |
+|---|---|---|---|
+| Chunk budget ceiling | 40% of agent budget | part6-execution.md | No single task should consume more than 40%. Agents near depletion rush to finish — they drop error handling, skip edge cases. |
+| Quality degradation onset | ~60% through task | part6-execution.md | Agents produce high-quality work for the first 60% and rush the remaining 40%. The chunk ceiling prevents this by keeping each chunk well within the safe zone. |
+| Over-decomposition signal | <20% budget used per chunk | part6-execution.md | Chunks using less than 20% of budget suggest the work was split too finely — coordination overhead exceeds the benefit. |
+
+-----
+
+## Swarm Pattern Constants
+
+Swarm patterns (queen + workers) require health monitoring at the swarm level.
+
+| Constant | Value | Source | Meaning |
+|---|---|---|---|
+| Worker heartbeat timeout | 60 seconds (configurable) | part6-execution.md | Queen detects missing worker heartbeat after this interval |
+| Swarm error rate threshold | 30% | part6-execution.md | If >30% of workers fail on the same task type, the queen halts the swarm and escalates — the task specification is likely flawed |
+
+-----
+
+## Quality & Health Metric Thresholds
+
+Operational dashboards use these thresholds to distinguish healthy fleet behavior from degradation.
+
+### Execution Quality
+
+| Metric | Healthy | Critical | Meaning |
+|---|---|---|---|
+| First-Pass Quality Rate | Above 75% | Below 50% | Below 75%, rework volume exceeds new work volume |
+| Rework Ratio | Under 10% | Above 20% | Upstream problems — unclear criteria or stale Ground Truth |
+| Self-Heal Rate | Above 80% | Below 50% | Below 50% means gates are misconfigured |
+| Assumption Accuracy | Above 85% | Below 70% | Below 70% means Ground Truth is stale |
+| Handoff Rejection Rate | Under 5% | Above 15% | Above 15% means contracts are underspecified |
+
+### Cost & Efficiency
+
+| Metric | Healthy | Critical | Meaning |
+|---|---|---|---|
+| Idle Time Ratio | Under 15% | Over 25% | Bottleneck — agents waiting on dependencies or orchestrator |
+| Orchestrator Overhead | Under 25% of session budget | Over 25% | Coordination bloat — fleet spending more on routing than work |
+| Budget Adherence | 80–120% consistently | Consistent overruns/underruns | Estimation calibration issue |
+
+### Budget Burn Rate Brackets
+
+| Utilization | Status | Action |
+|---|---|---|
+| < 50% | Normal | No action needed |
+| 50–80% | Caution | Monitor closely |
+| 80–100% | Tighten | Conserve tokens, defer non-critical work |
+| > 100% | Exhausted | Pause non-critical work immediately |
+
+### Orchestrator Overhead Case Study Reference
+
+Case Study 2 documents an orchestrator consuming **60%** of the session token budget — the canonical example of coordination bloat. The 25% threshold exists to catch this pattern early.
+
+-----
+
+## Admiral Fallback Decomposer Mode
+
+When the Orchestrator becomes unresponsive, the Admiral activates a degraded but functional coordination state.
+
+| Constant | Value | Meaning |
+|---|---|---|
+| Orchestrator failure detection | 3 consecutive missed heartbeats over 30 seconds | Confirmed by governance agent escalation |
+| Fallback mode duration limit | 5 minutes | Escalate to human if Orchestrator has not recovered |
+| Fallback mode exit criteria | 3 consecutive stable intervals (30 seconds) | Orchestrator heartbeat must resume and remain stable |
+
+-----
+
+## A2A Protocol Constants
+
+| Constant | Value | Meaning |
+|---|---|---|
+| Default request timeout | 5 minutes | Caller receives timeout error and moves to recovery ladder |
+
+-----
+
+## Brain Configuration Constants
+
+### Query Defaults
+
+| Constant | Value | Scope | Meaning |
+|---|---|---|---|
+| Default result limit | 10 | General queries (part5-brain.md) | Maximum results returned by default |
+| Max result limit | 50 | Batch/admin queries (part5-brain.md) | Upper bound on result count |
+| Cosine similarity min_score | 0.7 | All queries | Below 0.7, results are typically false positives — noise rather than signal |
+
+### Token Lifecycle
+
+| Constant | Value | Meaning |
+|---|---|---|
+| Default token lifetime | 1 hour | How long a brain access token remains valid |
+| Maximum token lifetime | 4 hours | Hard ceiling regardless of configuration |
+| Token rotation interval | 1 hour (configurable) | Matches default lifetime; long-running sessions must rotate |
+| Revocation propagation | Within one heartbeat interval (~10 seconds) | Time for a revoked token to become invalid across the fleet |
+
+### Decay and Graduation
+
+| Constant | Value | Meaning |
+|---|---|---|
+| Decay awareness window | 90 days | Entries not accessed in this window are flagged for review (not deleted) |
+| Level 1→2 graduation threshold | 30% missed retrieval rate over 2 weeks | When file-based brain can't keep up, migrate to vector store |
+| Level 2 performance limit | ~10,000 entries | Beyond this, full-table scan latency degrades; advance to Level 3 (HNSW index) |
+
+### Embedding Models
+
+| Model | Dimensions | Requirements | Notes |
+|---|---|---|---|
+| text-embedding-3-small (OpenAI) | 1536 | API key + network | Best quality when API access is available |
+| all-MiniLM-L6-v2 (local) | 384 | Python + sentence-transformers | Fully local, zero cost, lower quality |
+
+-----
+
+## Contract-First Parallelism Impact
+
+Behavioral data from case studies documenting the effect of contract-first design on fleet coordination:
+
+| Metric | Without Contracts | With Contracts |
+|---|---|---|
+| Handoff rejection rate | 18% | 3% |
+
+This data supports the standing order requiring contract-first decomposition before parallel work assignment.
+
+-----
+
+## LLM-Last Design Constants
+
+| Constant | Value | Source | Meaning |
+|---|---|---|---|
+| LLM call elimination rate | 30–60% | part8-operations.md | Percentage of LLM calls eliminated by deterministic pre-processing |
+| Economy-tier cost ratio | 1/30th of flagship | part8-operations.md | Cost savings when routing simple tasks to smaller models |
