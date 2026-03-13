@@ -184,6 +184,40 @@ Models like DeepSeek V3.2 at ~1/30th flagship cost change fleet economics:
 
 > **ANTI-PATTERN: COST BLINDNESS** — Token budgets tracked but never translated to dollars. The fleet runs three weeks before anyone checks the invoice. **Value: Transparency enables sustainable operations.** Cost tracking is not overhead — it is the feedback signal that prevents the fleet from consuming more resources than it produces in value. A fleet that cannot answer "what did this feature cost?" cannot answer "was this fleet worth it?"
 
+### Metered Service Broker (Actionable — Deploy During Fleet Setup)
+
+When a fleet shares pooled access to external subscription services (LLM API keys, SaaS platforms, streaming services, cloud resources), deploy a **metered service broker** to manage access, prevent credential leakage, and allocate costs fairly across agents and projects.
+
+**Core architecture:**
+
+```
+Agent/User → API Server → Session Broker → External Service
+                 ↓              ↓
+          Billing Engine   Credential Vault
+```
+
+**Components to implement:**
+
+| Component | Responsibility |
+|---|---|
+| **Credential Vault** | Encrypts pooled credentials at rest. Checkout/checkin lifecycle prevents concurrent overuse. Supports rotation and disabling if upstream flags abuse. |
+| **Session Broker** | Routes requests to available credentials (first-fit). Queues when at capacity (FIFO fairness). Enforces per-service max session duration. Produces usage records for billing. |
+| **Billing Engine** | Per-second metered billing with fair-split cost allocation. Formula: `duration_seconds × (monthly_cost_cents / 2,592,000)`. Immutable usage ledger prevents billing fraud. |
+| **Data Store** | Thread-safe, swappable storage interface (in-memory for dev, SQLite/Postgres for production). Stores services, credentials, sessions, and immutable usage records. |
+
+**Key design principles:**
+
+- **No credential leakage.** Agents never see raw credentials — the vault handles checkout/checkin atomically. Passwords stored encrypted, not plaintext.
+- **Concurrency control.** Per-credential limits enforced by tier (e.g., basic: 1, standard: 2, premium: 4 concurrent sessions). Queue-based backpressure when all slots are occupied.
+- **Fair-split billing.** Cost divides proportionally by actual usage duration — no flat splits, no overcharges. Per-second granularity.
+- **Immutable audit trail.** Every usage record is append-only. Enables cost recovery analysis and platform economics reporting.
+- **Credential lifecycle.** Support for rotation, disabling (when upstream detects violations), and anti-sharing detection.
+- **Session states.** QUEUED → ACTIVE → ENDED (normal) or EXPIRED (max duration exceeded). Background enforcement job pattern for stale session cleanup.
+
+**When to deploy:** Level 3+ fleets that share pooled API keys or subscription accounts across agents or projects. The broker prevents the most common shared-resource failures: credential collision, unfair cost allocation, and concurrent session limit violations. At Level 2, manual credential management with per-agent API keys is sufficient.
+
+**Integration points:** The broker's billing output feeds into per-agent cost attribution (this section). Its session telemetry feeds into Fleet Observability (Section 30). Its credential vault integrates with Configuration Security (Section 10).
+
 -----
 
 ## 27 — FLEET HEALTH METRICS

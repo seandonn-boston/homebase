@@ -103,6 +103,7 @@ Everything from Levels 1–2, plus:
 **Part 8 — Operations**
 
 - [ ] **Cost Management (26):** Per-session and per-phase budgets. Cost tracking in place. LLM-Last implemented.
+- [ ] **Metered Service Broker (26):** If the fleet shares pooled API keys or subscription accounts, deploy a service broker with credential vault, session management, and fair-split billing. See Section 26, "Metered Service Broker."
 - [ ] **Fleet Health Metrics (27):** Metrics selected. Collection rhythm defined.
 - [ ] **Fleet Scaling (28):** Lifecycle phase identified. Scaling signals understood. Size upper bound set.
 
@@ -198,7 +199,7 @@ Structured around the four Adoption Levels (see index.md). Complete each level b
 ### Level 3: Governed Fleet (1-2 days)
 
 17. **Governance agents** — Deploy Token Budgeter, Hallucination Auditor, and Loop Breaker minimum. Add remaining governance agents as needed.
-18. **Cost Management (26)** — Per-session and per-phase budgets. Cost tracking active.
+18. **Cost Management (26)** — Per-session and per-phase budgets. Cost tracking active. If the fleet shares pooled API keys or subscription accounts, deploy the metered service broker (credential vault, session broker, fair-split billing engine). See Section 26.
 19. **Brain Level 1-2** — File-based or SQLite Brain. Validate that persistent memory improves retrieval before scaling (see Section 15, "Start Simple").
 20. **Quality Assurance (21)** — Verification levels per task type. Self-healing loops operational.
 21. **Failure Recovery (22)** — Recovery ladder documented. Max retries set.
