@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.2.0-alpha -->
+<!-- Admiral Framework v0.3.0-alpha -->
 # Specification Gaps: Vague Behavioral Claims Needing Concrete Constants
 
 > **Audience:** Spec authors and reviewers. This document identifies sections across the Admiral Framework that make behavioral claims without pinning down concrete numbers, thresholds, or constants. Each gap includes the vague phrase, what should be specified, and a suggested value inferred from context.

@@ -90,7 +90,7 @@
 
 ### Development Status — Be Honest and Specific
 
-> "I'm at v0.2.0-alpha. Here's what that means in plain English:"
+> "I'm at v0.3.0-alpha. Here's what that means in plain English:"
 
 **What exists today:**
 - The complete specification — 15,000+ lines across 70+ files. Think of it as the full architectural blueprint.

@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.2.0-alpha -->
+<!-- Admiral Framework v0.3.0-alpha -->
 # PART 4 — FLEET
 
 *Who does what, with what tools, on what models, speaking what protocols?*

@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.2.0-alpha -->
+<!-- Admiral Framework v0.3.0-alpha -->
 # APPENDICES
 
 -----
@@ -607,7 +607,7 @@ These frameworks handle orchestration (routing, handoffs, tool calls). Admiral a
 
 ### Version Policy
 
-The Admiral Framework uses [semantic versioning](https://semver.org/): **MAJOR.MINOR.PATCH** with pre-release labels (e.g., v0.1.0-alpha, v0.2.0-alpha, v1.0.0).
+The Admiral Framework uses [semantic versioning](https://semver.org/): **MAJOR.MINOR.PATCH** with pre-release labels (e.g., v0.1.0-alpha, v0.3.0-alpha, v1.0.0).
 
 - **MAJOR** (e.g., v0.x → v1.0): Indicates production readiness. Pre-1.0 versions (v0.x.y) are in development — the API surface, Standing Orders, agent definition format, Brain schema, and enforcement model may change without notice. Post-1.0 major bumps indicate breaking changes requiring migration.
 - **MINOR** (e.g., v0.1.0 → v0.2.0): New agent definitions, additional appendices, structural changes, or non-breaking extensions.
@@ -673,6 +673,6 @@ This appendix maps every major framework component to its real-world implementat
 
 -----
 
-*The Fleet Admiral Framework · v0.2.0-alpha*
+*The Fleet Admiral Framework · v0.3.0-alpha*
 
 *Context is the currency of autonomous AI. Intent is its purpose. The Brain is where both compound.*
