@@ -1,7 +1,7 @@
 <!-- Admiral Framework v0.2.0-alpha -->
 # Admiral Framework — File Manifest
 
-**71 files across 15 groups | Last modified: 2026-03-13**
+**97 files across 20 groups | Last modified: 2026-03-13**
 
 This is the semantic catalog of every file in the Admiral Framework. Each entry describes what the file contains, verified against the source. Update this manifest when files are added, removed, renamed, or when their content changes materially.
 
@@ -618,7 +618,7 @@ aiStrat/handoff/v1.schema.json
 
 ---
 
-## Attack Corpus (1 file)
+## Attack Corpus (19 files)
 
 ```
 attack-corpus/README.md - attack-corpus/specification - 2026-03-10:
@@ -630,6 +630,42 @@ behavior manipulation (3), prompt injection (3), failure scenarios (3), and chao
 Team Agent, Incident Response Agent, Chaos Agent). Storage strategy for Level 1 (file-based)
 and Level 2+ (Brain `failure` category with attack corpus metadata tag).
 aiStrat/attack-corpus/README.md
+```
+
+```
+ATK-0001.yaml through ATK-0018.yaml - attack-corpus/scenarios - 2026-03-10:
+18 individual YAML attack scenario files. Each contains: id, category, source, title,
+trigger, expected_behavior, actual_behavior, severity, defenses, testing metadata
+(last_tested, times_passed, times_failed), created_by, created_at, superseded_by.
+
+  Authority Spoofing (4, Critical/High):
+    ATK-0001: Admiral approval claim | ATK-0002: Standing Order override attempt
+    ATK-0003: Authority tier self-escalation | ATK-0004: Fabricated governance consensus
+
+  Credential Fabrication (3, High/Medium):
+    ATK-0005: Invented certification claim | ATK-0006: False provenance
+    ATK-0007: Fabricated tool output
+
+  Behavior Manipulation (3, Critical/High):
+    ATK-0008: Instruction override via injected content
+    ATK-0009: Role reassignment attempt
+    ATK-0010: Constraint relaxation via helpfulness
+
+  Prompt Injection (3, Critical/High):
+    ATK-0011: Indirect prompt injection via external content
+    ATK-0012: Payload smuggling via encoding
+    ATK-0013: Context window poisoning via large payload
+
+  Failure Scenarios (3, Medium/High):
+    ATK-0014: Network partition during Brain write
+    ATK-0015: Model API timeout mid-task
+    ATK-0016: Context window exhaustion during critical operation
+
+  Chaos Scenarios (2, Medium):
+    ATK-0017: Clock skew between agents
+    ATK-0018: Resource exhaustion during parallel execution
+
+aiStrat/attack-corpus/ATK-0001.yaml through ATK-0018.yaml
 ```
 
 ---
@@ -748,7 +784,103 @@ aiStrat/CLAUDE.md
 
 ```
 settings.local.json - project/config - 2026-03-05:
-Claude Code local settings. Whitelists bash commands: wc, python, grep, xargs cat, pip
-install, pytest, quality_check, find, rm, mv.
+Claude Code local settings. Whitelists bash commands: wc, grep, xargs cat, find.
 aiStrat/.claude/settings.local.json
+```
+
+---
+
+## Sales & Positioning (1 file)
+
+```
+sales-pitch-30min-guide.md - sales/guide - 2026-03-10:
+30-minute conversation guide for presenting the Admiral Framework. Structured as:
+30-second pitch → 8-10 min market context → 12-15 min product pitch → 5-7 min
+status/roadmap → Q&A cheat sheet. References v0.2.0-alpha status, 71 agent definitions,
+15,000+ lines of spec. Includes objection handling for "just a spec" and "why not
+LangGraph/CrewAI" concerns.
+aiStrat/sales-pitch-30min-guide.md
+```
+
+---
+
+## Research (5 files) — *Pending relocation to repo root*
+
+> These files are strategy and market research documents, not specification
+> artifacts. They will be moved from `aiStrat/research/` to the repository root
+> (`research/`) and excluded from the spec versioning policy.
+
+```
+AI-MODELS-TIMELINE.md - research/timeline - 2026-03-10:
+Comprehensive AI timeline from 2010 to March 2026. ~1,469 lines covering major model
+releases, company milestones, benchmark results, and industry events organized
+chronologically. Includes GPT series, Claude series, Gemini, Llama, and 50+ other
+model families.
+aiStrat/research/AI-MODELS-TIMELINE.md
+```
+
+```
+hinton-et-al-ai-pioneers.md - research/people - 2026-03-10:
+Chronological profiles of 20+ AI pioneer figures: Hopfield, Hinton, LeCun, Bengio,
+Fei-Fei Li, Goodfellow, Sutskever, Karpathy, Amodei siblings, Hassabis, and others.
+Covers career arcs, key contributions, institutional affiliations, and 2024-2025
+Nobel/QE Prize recognition. ~430 lines.
+aiStrat/research/hinton-et-al-ai-pioneers.md
+```
+
+```
+research-cutting-edge-usecases-mar-2026.md - research/usecases - 2026-03-10:
+Cutting-edge projects utilizing AI agent fleets as of March 2026. Categories:
+autonomous vehicles (Waymo, Tesla, Figure AI), drug discovery (Recursion, Insilico,
+NVIDIA BioNeMo), and other frontier applications. ~473 lines.
+aiStrat/research/research-cutting-edge-usecases-mar-2026.md
+```
+
+```
+research-llm-agents-mar-2026.md - research/agents - 2026-03-10:
+State of the art in LLM agents and AI coding tools as of March 2026. Covers GPT-5.4,
+Claude 4.6, Cursor 2.5, MCP ecosystem, A2A protocol, Codex CLI, and 30+ other agent
+projects. Evaluated on ingenuity, effectiveness, integrity, security, creativity.
+~547 lines.
+aiStrat/research/research-llm-agents-mar-2026.md
+```
+
+```
+research-top-agent-toolkits-mar-2026.md - research/toolkits - 2026-03-10:
+Top AI agent tool suites, workflows, configurations, and production setups as of
+March 2026. Covers everything-claude-code, awesome-claude-code-toolkit, Trail of Bits
+security configs, Ruflo enterprise orchestration, and 20+ other toolkit projects.
+~532 lines.
+aiStrat/research/research-top-agent-toolkits-mar-2026.md
+```
+
+---
+
+## Thesis (3 files) — *Pending relocation to repo root*
+
+> These files are investment and strategy thesis documents, not specification
+> artifacts. They will be moved from `aiStrat/thesis/` to the repository root
+> (`thesis/`) and excluded from the spec versioning policy.
+
+```
+ai-fundamental-truths.md - thesis/strategy - 2026-03-08:
+Foundational truths about AI that inform Admiral's design philosophy. Covers: why
+agents are neither employees nor code, why governance must be designed from scratch,
+why deterministic enforcement outperforms advisory constraints. ~224 lines.
+aiStrat/thesis/ai-fundamental-truths.md
+```
+
+```
+ai-internet-acceleration.md - thesis/strategy - 2026-03-08:
+Thesis on how AI inherits and accelerates internet patterns. Draws parallels between
+internet infrastructure evolution and AI agent infrastructure needs. ~156 lines.
+aiStrat/thesis/ai-internet-acceleration.md
+```
+
+```
+ai-investment-thesis.md - thesis/strategy - 2026-03-08:
+Investment thesis analyzing the AI infrastructure cycle — whether current spending
+represents a bubble or a down payment. Market data, infrastructure spending analysis,
+and positioning of Admiral within the broader AI ecosystem. ~218 lines.
+aiStrat/thesis/ai-investment-thesis.md
 ```
