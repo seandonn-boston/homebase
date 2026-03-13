@@ -5,7 +5,7 @@ This file provides guidance to any AI coding agent working with this repository.
 
 ## Project Overview
 
-aiStrat is the **Admiral Framework** — a comprehensive specification for AI agent fleet orchestration. It is a pure specification project: no executable code, no runtime dependencies. Every artifact is a design document defining how autonomous AI agent systems should be structured, secured, coordinated, and governed.
+aiStrat is the **Admiral Framework** — a comprehensive specification for AI agent fleet orchestration. It is a pure specification project: no executable code, no runtime dependencies. Every artifact is a design document defining how autonomous AI agent systems should be structured, secured, coordinated, and governed. The fleet catalog (71 core + 29 extended agent definitions) represents high-quality specifications based on production patterns — not battle-tested implementations. As Admiral matures through real-world deployments, these will be validated and refined.
 
 **Why this exists:** AI agents are not employees and they are not code. You cannot manage them with HR policies and you cannot validate them with traditional software tests. They are an entirely new category of resource — one that makes decisions, fails in novel ways, and forgets everything between sessions. Admiral is governance and operations designed from scratch for how agents actually behave. Model-agnostic, progressively adoptable, and built around the insight that deterministic enforcement always outperforms advisory instructions.
 

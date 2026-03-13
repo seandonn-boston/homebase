@@ -262,7 +262,7 @@ Level 2 is a stepping stone. These limitations define when to graduate to Level 
 
 ## Graduation Criteria
 
-Advance to Level 3 (Postgres + pgvector) when any of:
+Advance to Level 3 (Postgres + pgvector + MCP — the complete Brain) when any of:
 
 1. **Concurrent access contention.** Multiple agents writing simultaneously causes `SQLITE_BUSY` errors or measurable wait times. Track write failures per session.
 2. **Cross-project query needs.** Regular need to query across projects from multiple agents simultaneously.

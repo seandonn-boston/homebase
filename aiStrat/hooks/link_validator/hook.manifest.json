@@ -1,0 +1,10 @@
+{
+  "name": "link_validator",
+  "version": "0.1.0",
+  "events": ["PostToolUse"],
+  "timeout_ms": 10000,
+  "requires": [],
+  "input_contract": "v1",
+  "description": "Validates that markdown cross-references in edited files resolve to existing targets. Analogous to Standing Order 4 (Context Honesty) — the spec must not reference files or sections that do not exist.",
+  "async": true
+}

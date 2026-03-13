@@ -6,11 +6,11 @@
 
 ## ELEVATOR PITCH (30 seconds)
 
-> "AI agents can now do real work autonomously — not just answer questions, but actually execute complex tasks for hours without supervision. Every company is about to deploy fleets of these agents. But here's what nobody's talking about: governing these agents requires something new. They exhibit characteristics of both employees and software but fit neatly into neither category. You can't manage them with HR policies and you can't validate them with traditional software tests. They're an entirely new category of resource — and the people who recognize that have a massive head start.
+> "AI agents can now do real work autonomously — not just answer questions, but actually execute complex tasks for hours without supervision. Every company is about to deploy fleets of these agents. The unsolved problem is governance: agents exhibit characteristics of both employees and software but fit neatly into neither category. You can't manage them with HR policies and you can't validate them with traditional software tests.
 >
-> Admiral is the first framework built for that reality. It's governance and operations designed from scratch for how agents actually behave — how they make decisions, how they fail, how they hand off work, how the whole system learns over time. Model-agnostic, works with any AI platform, and designed so you can start small and scale up.
+> Admiral is a governance and operations framework designed from scratch for how agents actually behave — how they make decisions, how they fail, how they hand off work, how the whole system learns over time. Model-agnostic, works with any AI platform, and designed so you can start small and scale up.
 >
-> Every dollar of the $660 billion being poured into AI infrastructure this year creates demand for what I'm building."
+> The $660+ billion being invested in AI infrastructure this year creates demand for the governance layer that doesn't yet exist."
 
 ---
 

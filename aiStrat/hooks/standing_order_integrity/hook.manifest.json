@@ -1,0 +1,10 @@
+{
+  "name": "standing_order_integrity",
+  "version": "0.1.0",
+  "events": ["PostToolUse"],
+  "timeout_ms": 5000,
+  "requires": [],
+  "input_contract": "v1",
+  "description": "Validates that all 15 Standing Orders are present and correctly numbered in part11-protocols.md after any edit. Analogous to Standing Order 3 (Scope Boundaries) — the Standing Orders themselves are a protected scope that must not be altered without explicit intent.",
+  "async": false
+}

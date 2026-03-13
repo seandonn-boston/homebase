@@ -178,7 +178,7 @@ Track "missed retrievals" — instances where an agent searches for a concept an
 
 ## Compatibility Note
 
-The JSON fields used at Level 1 are a strict subset of the Level 3/4 Postgres `entries` table columns. Migration to Level 2 (SQLite) or Level 3 (Postgres) is a straightforward import:
+The JSON fields used at Level 1 are a strict subset of the Level 3 Postgres `entries` table columns. Migration to Level 2 (SQLite) or Level 3 (Postgres) is a straightforward import:
 
 | Level 1 JSON field | Level 2 SQLite column | Level 3 Postgres column |
 |---|---|---|
@@ -191,4 +191,4 @@ The JSON fields used at Level 1 are a strict subset of the Level 3/4 Postgres `e
 | `source_agent` | `source_agent` | `source_agent` |
 | `created_at` | `created_at` | `created_at` (TIMESTAMPTZ) |
 
-Fields present in Level 3/4 but absent at Level 1 (`embedding`, `embedding_model`, `access_count`, `usefulness`, `superseded_by`, `sensitivity`, `approved`, `authority_tier`, `source_session`, `last_accessed_at`) are populated with defaults during migration.
+Fields present in Level 3 but absent at Level 1 (`embedding`, `embedding_model`, `access_count`, `usefulness`, `superseded_by`, `sensitivity`, `approved`, `authority_tier`, `source_session`, `last_accessed_at`) are populated with defaults during migration.

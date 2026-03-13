@@ -1,0 +1,10 @@
+{
+  "name": "manifest_freshness",
+  "version": "0.1.0",
+  "events": ["PostToolUse"],
+  "timeout_ms": 5000,
+  "requires": [],
+  "input_contract": "v1",
+  "description": "Checks that MANIFEST.md reflects the actual file inventory after any Edit or Write operation in aiStrat/. Analogous to Standing Order 11 (Context Discovery) — the manifest is the fleet's map of its own specification.",
+  "async": true
+}

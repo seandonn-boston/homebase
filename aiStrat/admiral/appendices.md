@@ -41,7 +41,7 @@ Before deploying, verify the items for your adoption level. Each level includes 
 - [ ] No governance heartbeat monitors (no governance agents exist).
 - [ ] No tier validation hooks (no fleet roster exists).
 - [ ] No empty placeholder packages for future levels.
-- [ ] No HMAC-SHA256 identity tokens (Level 4 concern).
+- [ ] No HMAC-SHA256 identity tokens (Level 3 concern).
 
 ### Level 2: Core Fleet
 
@@ -116,18 +116,13 @@ Everything from Levels 1–2, plus:
 **Governance**
 
 - [ ] **Governance agents deployed:** Token Budgeter, Hallucination Auditor, Loop Breaker minimum. Governance heartbeat monitor hook now active.
-- [ ] **Brain Level 1–2:** File-based or SQLite persistent memory operational.
+- [ ] **Brain Level 3 (COMPLETE):** Postgres + pgvector deployed. Schema created. MCP server running. Identity tokens implemented. Zero-trust access control configured. See `brain/level3-spec.md`.
+- [ ] **Intelligence Lifecycle (17):** Capture triggers defined (chunk boundaries, decisions, failures). Review cadence scheduled.
+- [ ] **Quarantine layer:** Spec-only quarantine for external intelligence active.
 
 ### Level 4: Full Framework
 
 Everything from Levels 1–3, plus:
-
-**Part 5 — The Brain**
-
-- [ ] **Brain Architecture (15):** Postgres + pgvector deployed. Schema created. Embedding model selected. HNSW index built.
-- [ ] **Knowledge Protocol (16):** Brain MCP server running and registered. Access control configured per role. All agents have brain_query and brain_record in their tool registry.
-- [ ] **Intelligence Lifecycle (17):** Capture triggers defined (chunk boundaries, decisions, failures). Review cadence scheduled. Cross-project namespace established if multi-fleet.
-- [ ] **Continuous Monitor:** Monitor configured with watched repos, search queries, and RSS feeds. Scheduler (cron or CI workflow) enabled. Quarantine layer active. Digest review cadence matches scan cadence. Seed candidate approval workflow established.
 
 **Part 6 — Execution**
 
@@ -137,7 +132,7 @@ Everything from Levels 1–3, plus:
 **Part 8 — Operations**
 
 - [ ] **Adaptation Protocol (25):** Change tiers defined. Cascade map understood. Pause Protocol documented.
-- [ ] **Inter-Fleet Governance (29):** Knowledge boundaries set. Sharing protocol defined. Review cadence scheduled.
+- [ ] **Continuous Monitor:** Monitor configured with watched repos, search queries, and RSS feeds. Scheduler (cron or CI workflow) enabled. Quarantine layer operational. Digest review cadence matches scan cadence.
 
 **Part 9 — Platform**
 
@@ -151,10 +146,18 @@ Everything from Levels 1–3, plus:
 - [ ] **Intent completeness:** Task assignments communicate goal, priority, constraints, failure modes, judgment boundaries, and values. See [`intent-engineering.md`](intent-engineering.md).
 - [ ] **Human-Expert Routing (34):** Expert Roster defined. Routing triggers documented. Consultation template ready.
 
-**Identity & Security**
+**Enforcement**
 
-- [ ] **Identity tokens:** HMAC-SHA256 signed, session-scoped, non-delegable. Zero-trust access control.
+- [ ] **Full Standing Orders enforcement:** All 15 Standing Orders with hook-based enforcement.
 - [ ] **Configuration Security (10):** Full security audit checklist completed. MCP servers audited and pinned.
+
+### Level 5: Enterprise
+
+Everything from Levels 1–4, plus:
+
+- [ ] **Cross-fleet Brain federation:** Cross-project namespace established. Multi-fleet query authorization.
+- [ ] **Multi-Operator Governance (35):** Multiple admirals with coordinated authority. Knowledge boundaries set. Sharing protocol defined.
+- [ ] **Inter-Fleet Governance (29):** Cross-fleet hooks coordinated. Review cadence scheduled.
 
 -----
 
@@ -178,7 +181,7 @@ Structured around the four Adoption Levels (see index.md). Complete each level b
 
 **You can start working here.** One agent with clear Identity, Scope, Boundaries, and hooks.
 
-> **Note on Identity Tokens:** At Level 1, simplified identity (agent-id + role, no cryptographic signing) is sufficient. Full HMAC-SHA256 token signing with expiry and cross-project access control is a Level 4 concern (Section 09, vulnerability 8.3.2). However, the identity *model* should be defined at Level 1 so it can be progressively hardened. **Do not implement cryptographic identity at Level 1** — it has no consumer until zero-trust access control is deployed at Level 4.
+> **Note on Identity Tokens:** At Level 1, simplified identity (agent-id + role, no cryptographic signing) is sufficient. Full cryptographic token signing with expiry and cross-project access control is a Level 3 concern (Section 09, vulnerability 8.3.2), deployed alongside the complete Brain. However, the identity *model* should be defined at Level 1 so it can be progressively hardened. **Do not implement cryptographic identity at Level 1** — it has no consumer until zero-trust access control is deployed at Level 3.
 
 > **Level 1 scope boundary — do NOT build these yet:**
 > - Handoff protocols or session handoff documents (Section 38) — there is one agent, no one to hand off to.
@@ -205,21 +208,26 @@ Structured around the four Adoption Levels (see index.md). Complete each level b
 ### Level 3: Governed Fleet (1-2 days)
 
 17. **Governance agents** — Deploy Token Budgeter, Hallucination Auditor, and Loop Breaker minimum. Add remaining governance agents as needed.
-18. **Cost Management (26)** — Per-session and per-phase budgets. Cost tracking active. If the fleet shares pooled API keys or subscription accounts, deploy the metered service broker (credential vault, session broker, fair-split billing engine). See Section 26.
-19. **Brain Level 1-2** — File-based or SQLite Brain. Validate that persistent memory improves retrieval before scaling (see Section 15, "Start Simple").
+18. **Cost Management (26)** — Per-session and per-phase budgets. Cost tracking active. If the fleet shares pooled API keys or subscription accounts, deploy the metered service broker.
+19. **Brain Level 3 (COMPLETE)** — Deploy Postgres + pgvector. Create schema. Register Brain MCP server. Implement identity tokens and zero-trust access control. See `brain/level3-spec.md`.
 20. **Quality Assurance (21)** — Verification levels per task type. Self-healing loops operational.
 21. **Failure Recovery (22)** — Recovery ladder documented. Max retries set.
 
 ### Level 4: Full Framework (1-2 weeks)
 
-22. **Brain Architecture (15)** — Deploy Postgres + pgvector. Create schema. Register Brain MCP server.
-23. **Knowledge Protocol (16)** — Configure zero-trust access control. Identity tokens. Add brain_query and brain_record to agent tool registries.
-24. **Protocol Integration (14)** — Register MCP servers. Configure A2A if needed.
-25. **Continuous Monitor** — Configure watched repos, RSS feeds. Enable GitHub Actions workflow. Quarantine layer active.
-26. **Fleet Observability (30)** — Instrumentation strategy. Trace correlation. Dashboards.
-27. **Remaining sections** — Adaptation (25), Metrics (27), Scaling (28), Governance (29), CI/CD Operations (31), Evaluation (32), Admiral (33), Expert Routing (34).
+22. **Full fleet deployment** — Scale agents for review cycles. Full enforcement coverage.
+23. **Protocol Integration (14)** — Register MCP servers. Configure A2A if needed.
+24. **Continuous Monitor** — Configure watched repos, RSS feeds. Enable GitHub Actions workflow. Quarantine layer operational.
+25. **Fleet Observability (30)** — Instrumentation strategy. Trace correlation. Dashboards.
+26. **Remaining sections** — Adaptation (25), Metrics (27), Scaling (28), CI/CD Operations (31), Evaluation (32), Admiral (33), Expert Routing (34).
 
-**The most common mistake is starting at Level 4.** See Case Study 2 (Appendix D) for what happens when you over-engineer from day one.
+### Level 5: Enterprise (2-4 weeks)
+
+27. **Cross-fleet Brain federation** — Multi-project namespace. Cross-fleet query authorization.
+28. **Multi-Operator Governance (35)** — Multiple admirals. Knowledge sharing protocols. Inter-Fleet Governance (29).
+29. **Cross-fleet hooks** — Coordinated enforcement policies across fleets.
+
+**The most common mistake is starting at Level 5.** See Case Study 2 (Appendix D) for what happens when you over-engineer from day one.
 
 -----
 
@@ -659,18 +667,17 @@ This appendix maps every major framework component to its real-world implementat
 | **Quarantine immune system** | 2 | Regex patterns + LLM classifier | Implement 4-layer validation pipeline (structural, injection, semantic, antibody) |
 | **Continuous Monitor** | 2–3 | GitHub API + scheduler (cron/Actions) + quarantine | Implement scanner, state persistence, digest generation, seed writing |
 | **Fleet observability / metrics** | 2–3 | Custom dashboards + structured logging | Define trace format, implement log aggregation, build or configure dashboards |
-| **Brain Level 3 (Postgres + pgvector)** | 3 | Postgres 16 + pgvector extension + MCP server | Database deployment, schema creation, HNSW index tuning, MCP server implementation |
-| **Brain Level 4 (full specification)** | 3 | Everything in Level 3 + identity service + quarantine integration | Full MCP server with zero-trust access control, sensitivity classification, audit logging |
-| **Identity tokens / zero-trust** | 3 | Custom identity service, cryptographic signing | Token issuance, validation, rotation, revocation infrastructure |
-| **Cross-project intelligence** | 3 | Brain Level 3-4 + MCP + `_global` namespace | Multi-project Brain deployment, cross-project query authorization, knowledge promotion workflow |
+| **Brain Level 3 (COMPLETE Brain)** | 3 | Postgres 16 + pgvector + MCP server + identity service | Database deployment, schema creation, HNSW index tuning, MCP server implementation, zero-trust access control, sensitivity classification, audit logging |
+| **Cross-project intelligence** | 3 | Brain Level 3 + `_global` namespace | Multi-project Brain deployment, cross-project query authorization, knowledge promotion workflow |
 
 **Reading this table:**
 
 - **Time-to-value vs. implementation effort:** The adoption time estimates in the Adoption Levels table (index.md) assume you are *configuring existing tools*. These categories describe effort to *build custom tooling*. Category 1 components can be adopted in minutes but implementing them as custom code is a separate engineering effort. See the "Config time vs. build time" note in index.md.
 - **Level 1 adoption** (Appendix B) uses only Category 1 components. Zero custom infrastructure.
 - **Level 2 adoption** adds some Category 2 components (routing rules, file-based checkpoints). Moderate engineering effort.
-- **Level 3 adoption** adds governance agents (Category 2) and Brain Level 1-2 (Category 1-2). Still no heavy infrastructure.
-- **Level 4 adoption** requires Category 3 components. This is where infrastructure investment is justified by proven fleet value at lower levels.
+- **Level 3 adoption** adds governance agents (Category 2) and the complete Brain (Category 3). This is where infrastructure investment is justified by proven fleet value at lower levels.
+- **Level 4 adoption** adds fleet-wide enforcement, observability, and monitor. Builds on Level 3 infrastructure.
+- **Level 5 adoption** adds cross-fleet coordination. Enterprise-scale infrastructure.
 
 > **ANTI-PATTERN: CATEGORY 3 BEFORE CATEGORY 1** — Deploying Postgres + pgvector + identity tokens before implementing hooks and standing orders. The highest-impact, lowest-cost improvements are all Category 1. A fleet with comprehensive hooks and no Brain outperforms a fleet with a full Brain and no hooks.
 

@@ -148,8 +148,11 @@ brain/
 ├── README.md               # This file — architecture overview
 ├── level1-spec.md          # Level 1 (file-based) specification
 ├── level2-spec.md          # Level 2 (SQLite + embeddings) specification
+├── level3-spec.md          # Level 3 (Postgres + pgvector + MCP — COMPLETE Brain)
 └── schema/
-    └── 001_initial.sql     # Postgres + pgvector schema (entries, entry_links, audit_log, indexes)
+    ├── 001_initial.sql     # Postgres + pgvector schema (entries, entry_links, audit_log, indexes)
+    ├── test_schema.sql     # Schema parity tests
+    └── test_sensitive_data_guard.sql  # Sensitive data rejection tests
 ```
 
 ## Relationship to the Admiral Framework
