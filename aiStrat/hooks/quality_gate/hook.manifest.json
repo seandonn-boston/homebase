@@ -1,0 +1,9 @@
+{
+  "name": "quality_gate",
+  "version": "1.0.0",
+  "events": ["PostToolUse"],
+  "timeout_ms": 10000,
+  "requires": [],
+  "input_contract": "v1",
+  "description": "Validates output quality against acceptance criteria after tool execution. Flags outputs that fail to meet minimum quality thresholds for the agent's tier. Enforces Standing Order 8 (Quality Standards)."
+}

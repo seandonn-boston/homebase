@@ -1,0 +1,9 @@
+{
+  "name": "assumption_tracker",
+  "version": "1.0.0",
+  "events": ["PostToolUse"],
+  "timeout_ms": 5000,
+  "requires": [],
+  "input_contract": "v1",
+  "description": "Tracks assumptions made during task execution and flags unvalidated assumptions that exceed the confidence threshold. Enforces Standing Order 9 (Assumption Flagging)."
+}

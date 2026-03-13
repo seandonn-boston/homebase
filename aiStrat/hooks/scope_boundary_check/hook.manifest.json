@@ -1,0 +1,9 @@
+{
+  "name": "scope_boundary_check",
+  "version": "1.0.0",
+  "events": ["PreToolUse"],
+  "timeout_ms": 5000,
+  "requires": ["identity_validation"],
+  "input_contract": "v1",
+  "description": "Validates that the requesting agent's tool invocation falls within its declared scope boundaries. Rejects out-of-scope operations before execution. Enforces Standing Order 3 (Scope Boundaries)."
+}

@@ -1,0 +1,9 @@
+{
+  "name": "zero_trust_validation",
+  "version": "1.0.0",
+  "events": ["PreToolUse"],
+  "timeout_ms": 10000,
+  "requires": ["identity_validation"],
+  "input_contract": "v1",
+  "description": "Validates zero-trust constraints before tool execution. Verifies identity tokens, checks provenance of inputs, and rejects unverified external content. Enforces Standing Order 12 (Zero-Trust Self-Protection)."
+}

@@ -1,0 +1,9 @@
+{
+  "name": "decision_authority_gate",
+  "version": "1.0.0",
+  "events": ["PreToolUse"],
+  "timeout_ms": 5000,
+  "requires": ["identity_validation"],
+  "input_contract": "v1",
+  "description": "Validates that the requesting agent has sufficient decision authority tier for the operation. Blocks Escalate-tier decisions from being executed autonomously. Enforces Standing Order 5 (Decision Authority)."
+}

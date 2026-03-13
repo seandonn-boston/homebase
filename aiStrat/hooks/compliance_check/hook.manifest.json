@@ -1,0 +1,9 @@
+{
+  "name": "compliance_check",
+  "version": "1.0.0",
+  "events": ["PreToolUse"],
+  "timeout_ms": 10000,
+  "requires": [],
+  "input_contract": "v1",
+  "description": "Checks operations against compliance, ethics, and legal constraints before execution. Blocks operations that would violate regulatory requirements or ethical guidelines. Enforces Standing Order 14 (Compliance/Ethics/Legal)."
+}

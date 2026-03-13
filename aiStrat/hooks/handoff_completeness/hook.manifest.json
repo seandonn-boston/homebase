@@ -1,0 +1,9 @@
+{
+  "name": "handoff_completeness",
+  "version": "1.0.0",
+  "events": ["PreCommit"],
+  "timeout_ms": 10000,
+  "requires": [],
+  "input_contract": "v1",
+  "description": "Validates that agent handoff documents include all required fields per the handoff schema (v1.schema.json). Rejects incomplete handoffs before commit. Enforces Standing Order 7 (Handoff Protocol)."
+}

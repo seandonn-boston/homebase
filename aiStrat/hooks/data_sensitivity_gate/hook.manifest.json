@@ -1,0 +1,9 @@
+{
+  "name": "data_sensitivity_gate",
+  "version": "1.0.0",
+  "events": ["PreToolUse"],
+  "timeout_ms": 5000,
+  "requires": ["identity_validation"],
+  "input_contract": "v1",
+  "description": "Validates data sensitivity classification before allowing operations on restricted or elevated-sensitivity data. Ensures agents with insufficient clearance cannot access sensitive information. Enforces Standing Order 13 (Information Handling)."
+}

@@ -1,0 +1,9 @@
+{
+  "name": "pre_work_validation",
+  "version": "1.0.0",
+  "events": ["SessionStart"],
+  "timeout_ms": 15000,
+  "requires": ["identity_validation", "context_baseline"],
+  "input_contract": "v1",
+  "description": "Validates pre-work checklist completion before allowing task execution. Checks for mission clarity, scope definition, acceptance criteria, and required context. Enforces Standing Order 15 (Pre-Work Validation)."
+}
