@@ -1,13 +1,15 @@
 <!-- Admiral Framework v0.2.0-alpha -->
 # Admiral Framework — File Manifest
 
-**71 files across 15 groups | Last modified: 2026-03-13**
+**100 files across 18 groups | Last modified: 2026-03-13**
+
+> **Note:** Research and thesis documents live at the repository root (`/research/`, `/thesis/`), not under `aiStrat/`. All other framework files are under `aiStrat/`.
 
 This is the semantic catalog of every file in the Admiral Framework. Each entry describes what the file contains, verified against the source. Update this manifest when files are added, removed, renamed, or when their content changes materially.
 
 ---
 
-## Admiral Doctrine (15 files)
+## Admiral Doctrine (17 files)
 
 ```
 index.md - admiral/doctrine - 2026-03-10:
@@ -192,6 +194,29 @@ mechanism, critical context section set (Identity/Authority/Constraints), hook
 adapter pattern (three-handler architecture), minimum dependency set by adoption
 level.
 aiStrat/admiral/reference-constants.md
+```
+
+```
+spec-gaps.md - admiral/doctrine - 2026-03-13:
+Self-audit identifying 14 vague behavioral claims across the spec that lack concrete
+constants. 7 critical gaps (standing context ceiling, brain advancement criteria,
+supersession rate, over-decomposition trigger, tactical vs. strategic classification,
+health metric gray zones, orchestrator overhead response), 6 moderate gaps (context
+loading position, QA confidence levels, sycophantic drift, trust promotion, context
+honesty, headless authority), 1 minor gap (escalation rate). Each gap includes the
+vague phrase, what should be specified, and a suggested value. Summary table and
+recommended actions by version.
+aiStrat/admiral/spec-gaps.md
+```
+
+```
+standing-orders-enforcement-map.md - admiral/doctrine - 2026-03-13:
+Maps all 15 Standing Orders to their enforcement mechanisms. Documents coverage:
+4/15 hook-enforced, 1/15 partially enforced, 10/15 advisory-only. Details which
+hooks enforce which standing orders, identifies enforcement gaps, and provides
+the progression path for increasing deterministic enforcement coverage across
+adoption levels.
+aiStrat/admiral/standing-orders-enforcement-map.md
 ```
 
 ---
@@ -618,7 +643,7 @@ aiStrat/handoff/v1.schema.json
 
 ---
 
-## Attack Corpus (1 file)
+## Attack Corpus (19 files)
 
 ```
 attack-corpus/README.md - attack-corpus/specification - 2026-03-10:
@@ -630,6 +655,60 @@ behavior manipulation (3), prompt injection (3), failure scenarios (3), and chao
 Team Agent, Incident Response Agent, Chaos Agent). Storage strategy for Level 1 (file-based)
 and Level 2+ (Brain `failure` category with attack corpus metadata tag).
 aiStrat/attack-corpus/README.md
+```
+
+```
+ATK-0001.yaml through ATK-0018.yaml - attack-corpus/scenarios - 2026-03-10:
+18 seed attack scenarios in YAML format, each following the schema defined in README.md.
+
+Authority Spoofing (ATK-0001 through ATK-0004):
+  ATK-0001: Admiral approval claim — agent claims Admiral approved an action
+  ATK-0002: Standing Order override — agent claims authority to override SO
+  ATK-0003: Authority tier self-escalation — agent escalates own tier
+  ATK-0004: Fabricated governance consensus — agent invents consensus
+
+Credential Fabrication (ATK-0005 through ATK-0007):
+  ATK-0005: Invented certifications — agent fabricates qualifications
+  ATK-0006: False provenance — agent invents source attribution
+  ATK-0007: Fabricated tool output — agent invents tool results
+
+Behavior Manipulation (ATK-0008 through ATK-0010):
+  ATK-0008: Instruction override via external content — indirect manipulation
+  ATK-0009: Role reassignment — agent attempts to change its role
+  ATK-0010: Constraint relaxation — agent loosens its own constraints
+
+Prompt Injection (ATK-0011 through ATK-0013):
+  ATK-0011: Indirect injection via external content — hidden instructions in data
+  ATK-0012: Payload smuggling via encoding — Unicode/HTML/URL encoding evasion
+  ATK-0013: Context window poisoning — flooding context to displace instructions
+
+Failure Scenarios (ATK-0014 through ATK-0016):
+  ATK-0014: Network partition during writes — data consistency under failure
+  ATK-0015: API timeout cascade — downstream timeout propagation
+  ATK-0016: Context window exhaustion — graceful degradation when full
+
+Chaos Scenarios (ATK-0017 through ATK-0018):
+  ATK-0017: Clock skew — temporal inconsistency in distributed operations
+  ATK-0018: Resource exhaustion — memory/CPU/storage depletion
+
+aiStrat/attack-corpus/ATK-0001.yaml
+aiStrat/attack-corpus/ATK-0002.yaml
+aiStrat/attack-corpus/ATK-0003.yaml
+aiStrat/attack-corpus/ATK-0004.yaml
+aiStrat/attack-corpus/ATK-0005.yaml
+aiStrat/attack-corpus/ATK-0006.yaml
+aiStrat/attack-corpus/ATK-0007.yaml
+aiStrat/attack-corpus/ATK-0008.yaml
+aiStrat/attack-corpus/ATK-0009.yaml
+aiStrat/attack-corpus/ATK-0010.yaml
+aiStrat/attack-corpus/ATK-0011.yaml
+aiStrat/attack-corpus/ATK-0012.yaml
+aiStrat/attack-corpus/ATK-0013.yaml
+aiStrat/attack-corpus/ATK-0014.yaml
+aiStrat/attack-corpus/ATK-0015.yaml
+aiStrat/attack-corpus/ATK-0016.yaml
+aiStrat/attack-corpus/ATK-0017.yaml
+aiStrat/attack-corpus/ATK-0018.yaml
 ```
 
 ---
@@ -751,4 +830,98 @@ settings.local.json - project/config - 2026-03-05:
 Claude Code local settings. Whitelists bash commands: wc, python, grep, xargs cat, pip
 install, pytest, quality_check, find, rm, mv.
 aiStrat/.claude/settings.local.json
+```
+
+---
+
+## Sales & Marketing (1 file)
+
+```
+sales-pitch-30min-guide.md - sales/guide - 2026-03-13:
+30-minute conversation guide for presenting Admiral to a technical audience.
+Structured as: elevator pitch (30 sec), market context (8-10 min) covering the
+February 2026 market repricing event and $660B+ infrastructure commitment,
+product pitch (12-15 min) covering three pillars (role architecture, decision
+authority, institutional memory), development status (5-7 min) with honest
+assessment of v0.2.0-alpha state, and cheat sheet for likely questions. Data-driven
+approach with supporting market figures.
+aiStrat/sales-pitch-30min-guide.md
+```
+
+---
+
+## Research (5 files) — repo root: `/research/`
+
+```
+AI-MODELS-TIMELINE.md - research/reference - 2026-03:
+Comprehensive timeline of AI model releases and milestones from 2010 through
+March 2026. Tracks key model releases, capability milestones, and industry
+developments across major providers.
+research/AI-MODELS-TIMELINE.md
+```
+
+```
+hinton-et-al-ai-pioneers.md - research/reference - 2026-03:
+Chronological timeline of AI pioneer figures — biographical profiles, key
+contributions, and institutional affiliations of foundational researchers
+in artificial intelligence.
+research/hinton-et-al-ai-pioneers.md
+```
+
+```
+research-cutting-edge-usecases-mar-2026.md - research/market - 2026-03:
+Dossier of projects and products that heavily leverage AI agent fleets for
+non-AI purposes. Evaluated on ingenuity, effectiveness, real-world impact.
+Covers enterprise deployments, startup applications, and cross-industry
+adoption patterns.
+research/research-cutting-edge-usecases-mar-2026.md
+```
+
+```
+research-llm-agents-mar-2026.md - research/market - 2026-03:
+State of the art dossier of LLM agent projects, AI coding tools, and
+autonomous systems as of March 2026. Covers models, frameworks, protocols,
+enterprise deployments, market data. Evaluated on ingenuity, effectiveness,
+integrity, security, creativity.
+research/research-llm-agents-mar-2026.md
+```
+
+```
+research-top-agent-toolkits-mar-2026.md - research/market - 2026-03:
+Comprehensive dossier of AI agent tool configurations, prompt libraries,
+workflow templates, CLAUDE.md files, agent orchestration setups, hooks,
+skills, and production pipelines. 80+ entries across 12 categories.
+Evaluated on community traction and practical utility.
+research/research-top-agent-toolkits-mar-2026.md
+```
+
+---
+
+## Thesis (3 files) — repo root: `/thesis/`
+
+```
+ai-fundamental-truths.md - thesis/strategy - 2026-03:
+Foundational observations about AI capability, adoption patterns, and
+market dynamics from a practitioner perspective. Core axioms informing
+Admiral's strategic positioning and design decisions.
+thesis/ai-fundamental-truths.md
+```
+
+```
+ai-internet-acceleration.md - thesis/strategy - 2026-03:
+Analysis of AI adoption velocity compared to prior technology waves
+(internet, mobile, cloud). Argues AI adoption is structurally faster
+due to infrastructure inheritance, and examines timeline implications
+for governance tooling demand.
+thesis/ai-internet-acceleration.md
+```
+
+```
+ai-investment-thesis.md - thesis/strategy - 2026-03:
+Investment thesis examining the AI infrastructure cycle: $660B+ hyperscaler
+capex, 1.6% data center vacancy, demand outrunning supply. Compares current
+cycle to dotcom bubble using structural metrics (P/E ratios, cash generation,
+share issuance). Concludes current investment is infrastructure backed by
+real demand, not speculative bubble.
+thesis/ai-investment-thesis.md
 ```
