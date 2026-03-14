@@ -1,13 +1,13 @@
 <!-- Admiral Framework v0.3.0-alpha -->
 # Admiral Framework — File Manifest
 
-**102 files across 22 groups | Last modified: 2026-03-13**
+**106 files across 22 groups | Last modified: 2026-03-14**
 
 This is the semantic catalog of every file in the Admiral Framework. Each entry describes what the file contains, verified against the source. Update this manifest when files are added, removed, renamed, or when their content changes materially.
 
 ---
 
-## Admiral Doctrine (16 files)
+## Admiral Doctrine (20 files)
 
 ```
 index.md - admiral/doctrine - 2026-03-10:
@@ -205,6 +205,55 @@ efficiency, enforcement coverage, coordination overhead, knowledge reuse) with t
 and red flags. Competitive differentiators. Measurement cadence by adoption level.
 Baseline expectations across fleet maturity phases.
 aiStrat/admiral/benchmarks.md
+```
+
+```
+governance-platform.md - admiral/doctrine - 2026-03-14:
+The foundational paradigm shift: Admiral is air traffic control, not a flight plan
+generator. Infrastructure must handle chaos, not elegance. Defines the four pillars
+(Visibility, Control, Policy, Recovery), the toolkit-vs-environment distinction,
+chaos-first architecture principles, and the progression to indispensability. The
+Kubernetes lesson applied to agent fleets. Establishes that Admiral is the operating
+environment where AI organizations run, not a replaceable toolkit.
+aiStrat/admiral/governance-platform.md
+```
+
+```
+fleet-control-plane.md - admiral/doctrine - 2026-03-14:
+The real-time operational surface where operators manage AI workforces. Fleet Status
+View (ASCII dashboard mockup), Agent Detail View, Task Flow View. Alert system with
+four severity levels and fatigue prevention. Operator intervention catalog (pause,
+halt, kill, reroute, override, inject context) with audit trail. Operational workflows
+(morning review, incident response, fleet scaling). Integration points with external
+tools (Slack, GitHub, Datadog, PagerDuty). Operator-facing metrics vs. vanity metrics.
+Extends Section 30 (Observability) into an actionable product surface.
+aiStrat/admiral/fleet-control-plane.md
+```
+
+```
+progressive-autonomy.md - admiral/doctrine - 2026-03-14:
+Four-stage progression from manual oversight to full autonomy: Stage 1 (Manual
+Oversight — operator drives, agents assist), Stage 2 (Assisted Automation — routine
+work automated, exceptions reviewed), Stage 3 (Partial Autonomy — fleet operates
+independently, operators govern), Stage 4 (Full Autonomy — fleet self-governing,
+operators set strategy). The Autonomy Matrix (different capabilities at different
+stages in the same fleet). Trust mechanics (accumulation, per-category tracking,
+decay). Stage transition prerequisites and reversion triggers. Infrastructure
+requirements by stage. Orthogonal to adoption levels.
+aiStrat/admiral/progressive-autonomy.md
+```
+
+```
+inevitable-features.md - admiral/doctrine - 2026-03-14:
+The three features that make Admiral indispensable: (1) Fleet-Wide Causality Tracing
+— reverse causal chains from failure to root cause in seconds, not hours; (2) Living
+Operational Memory — the Brain at three months, compounding institutional wisdom that
+agents query on every task; (3) Predictive Fleet Health — trend extrapolation that
+warns operators before failures happen, not after. Each feature has before/after
+contrasts, compounding effects, specification anchors, and the properties that make
+them inevitable (reveals invisible, compounds over time, becomes decision surface).
+The compounding effect between all three features. Implementation priority order.
+aiStrat/admiral/inevitable-features.md
 ```
 
 ---
