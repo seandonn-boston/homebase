@@ -2,7 +2,7 @@
 
 **A Workforce Toolkit for Autonomous AI Agent Fleets**
 
-v0.5.0-alpha · March 2026
+v0.5.3-alpha · March 2026
 
 -----
 
@@ -26,7 +26,7 @@ Admiral enables a new form of organization: **the hybrid organization where AI a
 
 The new behavior Admiral enables: *treating AI capacity as an operational workforce, not a feature.*
 
-See [`thesis.md`](../extensions/thesis.md) for the full analysis and [`research/future-operations.md`](../../research/future-operations.md) for the underlying thought experiment.
+See [`thesis.md`](../extensions/thesis.md) for the full analysis and [`research/future-operations.md`](../../../research/future-operations.md) for the underlying thought experiment.
 
 -----
 
@@ -290,7 +290,7 @@ Terms are listed alphabetically. When these terms appear in any part file, they 
 | **Orchestrator** | The coordinating agent that decomposes goals into tasks, routes to specialists, manages progress, and enforces standards. Does not write production code. |
 | **Phantom capabilities** | Agent assumes tools or access it does not have. See Failure Mode Catalog (Part 7) for diagnosis and defense. |
 | **Progressive disclosure** | Loading strategy where knowledge is provided on-demand via skills rather than front-loaded at startup. Preserves context window capacity. See Configuration File Strategy (Part 2). |
-| **Prompt anatomy** | Standard structure for agent system prompts: Identity → Authority → Constraints → Knowledge → Task. See Context Engineering (Part 2). See also: [`fleet/prompt-anatomy.md`](../fleet/prompt-anatomy.md) for the full reference specification. |
+| **Prompt anatomy** | Standard structure for agent system prompts: Identity → Authority → Constraints → Knowledge → Task. See Context Engineering (Part 2). See also: [`fleet/prompt-anatomy.md`](../../fleet/prompt-anatomy.md) for the full reference specification. |
 | **Propose tier** | Decision authority level where the agent drafts the decision with rationale, presents alternatives, and waits for approval. Used for architecture changes, schema migrations, new dependencies. |
 | **Quarantine** | Five-layer immune system that validates all external content before it enters the Brain. Layers 1-3 are completely LLM-airgapped; Layer 4 is LLM advisory (reject-only); Layer 5 generates antibodies. See Configuration Security (Part 3). |
 | **Quality floor** | Minimum acceptable quality bar, defined concretely. Prevents infinite refinement by defining "good enough." Part of Boundaries. See Boundaries (Part 1). |
@@ -363,7 +363,7 @@ Topics are ordered by impact and grouped by relevance.
 | Tool & Capability Registry | What each agent can do — and explicitly cannot do. | |
 | Model Selection | Matching model capability to role requirements across four tiers. | |
 | Protocol Integration | MCP for tool access. A2A for agent-to-agent communication. | |
-| **PART 5 — THE BRAIN** | *Infrastructure designed for anything.* | [`part5-brain.md`](part5-brain.md) |
+| **PART 5 — THE BRAIN** | *How does the fleet remember?* | [`part5-brain.md`](part5-brain.md) |
 | Brain Architecture | Postgres + pgvector: the fleet's long-term memory with semantic understanding. | |
 | The Knowledge Protocol | MCP server interface — any agent speaks to the Brain, now and always. | |
 | Intelligence Lifecycle | How knowledge enters, strengthens, links, surfaces, and compounds over time. | |

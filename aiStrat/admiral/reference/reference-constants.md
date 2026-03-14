@@ -521,7 +521,7 @@ When the Orchestrator becomes unresponsive, the Admiral activates a degraded but
 |---|---|---|
 | Decay awareness window | 90 days | Entries not accessed in this window are flagged for review (not deleted) |
 | B1→B2 graduation threshold | 30% missed retrieval rate over 2 weeks | When file-based brain can't keep up, migrate to vector store |
-| B2 performance limit | ~10,000 entries | Beyond this, full-table scan latency degrades; advance to B3 (HNSW index) |
+| B2 performance limit | ~10,000 entries | Implementation guidance: beyond this, full-table scan latency degrades; advance to B3 (HNSW index). Not specified in spec — this is an implementation decision. |
 
 ### Embedding Models
 

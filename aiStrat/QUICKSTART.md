@@ -10,7 +10,7 @@
 
 ## Step 1: Read Standing Orders (15 minutes)
 
-Read `admiral/spec/part11-protocols.md` — **Standing Orders section only** (lines 14–177).
+Read `admiral/spec/part11-protocols.md` — **Standing Orders section only** (lines 15–178).
 
 These 15 rules are the governance foundation. Every hook you write enforces one or more of these orders. Do not skip this step.
 
@@ -120,6 +120,8 @@ fi
 exit 0
 ```
 
+**Note:** This hook checks a budget threshold but does not track token usage itself. In production, pair it with a `PostToolUse` tracker hook that updates `tokens_used` after each tool call. For now, this hook validates the *pattern* — the hook fires, reads state, and can block execution.
+
 **Verify:** Run the agent. Confirm the hook fires on every tool invocation. If it doesn't fire, the hook path or configuration is wrong — fix before proceeding.
 
 ---
@@ -143,7 +145,7 @@ Add a Decision Authority table to your AGENTS.md (if not already done in Step 2)
 
 Run through this checklist:
 
-- [ ] AGENTS.md exists, is under 150 lines, and includes Mission, Boundaries, and Decision Authority
+- [ ] AGENTS.md exists, is under 150 lines, and includes Project Overview, Boundaries, and Decision Authority
 - [ ] Standing Orders are referenced from AGENTS.md
 - [ ] At least one hook fires deterministically on every qualifying event
 - [ ] Decision Authority tiers are defined (even if minimal)
@@ -176,7 +178,7 @@ At the Starter profile, these are explicitly out of scope:
 - Multiple agents or an Orchestrator (that's F2)
 - Handoff protocols (there's no one to hand off to)
 - Governance agents (that's F3)
-- Brain/database (that's B2+)
+- Database-backed Brain (that's B2+; B1 file-based memory is part of Starter)
 - Escalation routing (you ARE the escalation target)
 - Identity validation hooks (that's E2)
 

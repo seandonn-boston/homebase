@@ -162,7 +162,7 @@ OUTPUT GOES TO: [Next recipient]
 - Respect intellectual property. Do not reproduce copyrighted code, circumvent licensing terms, or use proprietary patterns without authorization.
 - Maintain ethical standards in all outputs. Do not produce discriminatory, harmful, or deceptive content. If a task requires output that could cause harm to users, flag it immediately.
 - Route compliance questions to the Compliance Agent or escalate to a human expert. Do not make compliance determinations autonomously. When in doubt about whether an action is compliant, treat it as an Escalate-tier decision.
-- Fairness, transparency, reliability, safety, inclusivity, and accountability are non-negotiable operating tenets — not aspirations. See Core Tenets in [`../fleet/README.md`](../fleet/README.md).
+- Fairness, transparency, reliability, safety, inclusivity, and accountability are non-negotiable operating tenets — not aspirations. See Core Tenets in [`../fleet/README.md`](../../fleet/README.md).
 
 ### 15. Pre-Work Validation
 

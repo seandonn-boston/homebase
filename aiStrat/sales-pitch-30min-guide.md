@@ -128,7 +128,7 @@ The space is crowding from two directions — agent frameworks adding governance
 
 ### Development Status — Be Honest and Specific
 
-> "I'm at v0.5.0-alpha. Here's what that means in plain English:"
+> "I'm at v0.5.3-alpha. Here's what that means in plain English:"
 
 **What exists today:**
 - The complete specification — 15,000+ lines across 70+ files. The full architectural blueprint.
