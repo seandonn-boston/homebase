@@ -1,0 +1,18 @@
+{
+  "name": "@admiral/control-plane",
+  "version": "0.1.0",
+  "description": "Admiral Control Plane MVP — Agent observability, runaway detection, and execution trace visualization",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "tsc --watch",
+    "example": "tsc && node dist/examples/demo.js"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "typescript": "^5.9.3"
+  }
+}
