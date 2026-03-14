@@ -1,13 +1,12 @@
-<!-- Admiral Framework v0.4.0-alpha -->
-# Brain Level 3 Specification — Full Brain (Postgres + pgvector + MCP)
+# B3 Specification — Full Brain (Postgres + pgvector + MCP)
 
-**Level 3 is the complete Brain.** All Brain capabilities are fully specified at this level. Levels 4 and 5 of the Admiral Framework add fleet-level capabilities (scale agents, full enforcement, multi-fleet coordination) but do not modify the Brain architecture.
+**B3 is the complete Brain.** All Brain capabilities are fully specified at this level. The Production and Enterprise profiles of the Admiral Framework add fleet-level capabilities (scale agents, full enforcement, multi-fleet coordination) but do not modify the Brain architecture.
 
 -----
 
 ## Overview
 
-Level 3 replaces SQLite with Postgres + pgvector, adds the MCP server as the universal agent interface, introduces cryptographic identity tokens for zero-trust access control, and enables the quarantine layer for external intelligence. This is the production-grade Brain.
+B3 replaces SQLite with Postgres + pgvector, adds the MCP server as the universal agent interface, introduces cryptographic identity tokens for zero-trust access control, and enables the quarantine layer for external intelligence. This is the production-grade Brain.
 
 | Component | Technology | Purpose |
 |---|---|---|
@@ -26,9 +25,9 @@ The complete Postgres schema lives in `schema/001_initial.sql`. Three tables:
 
 ### entries
 
-The atomic unit of knowledge. Key columns beyond Level 2:
+The atomic unit of knowledge. Key columns beyond B2:
 
-| Column | Type | New at Level 3 | Purpose |
+| Column | Type | New at B3 | Purpose |
 |---|---|---|---|
 | `id` | UUID | Upgraded from TEXT | Native UUID generation |
 | `embedding` | vector(1536) | Upgraded from BLOB | Native vector operations with HNSW indexing |
@@ -44,9 +43,9 @@ Typed relationships between entries: `supports`, `contradicts`, `supersedes`, `e
 
 ### audit_log
 
-Append-only, immutable record of every MCP operation. Key columns beyond Level 2:
+Append-only, immutable record of every MCP operation. Key columns beyond B2:
 
-| Column | Type | New at Level 3 | Purpose |
+| Column | Type | New at B3 | Purpose |
 |---|---|---|---|
 | `session_id` | TEXT | Yes | Binds operation to verified session |
 | `entry_ids` | UUID[] | Yes | Array of affected entries per operation |
@@ -162,7 +161,7 @@ Entries passing all 5 layers arrive with `approved = false`. Only the Admiral ca
 
 ## Multi-Signal Retrieval Pipeline
 
-Level 3 applies eight ranking signals (defined in Part 5, Intelligence Lifecycle):
+B3 applies eight ranking signals (defined in Part 5, Intelligence Lifecycle):
 
 1. **Semantic similarity** — Cosine distance via pgvector HNSW
 2. **Project relevance** — Same-project entries weighted higher
@@ -177,11 +176,11 @@ Multi-hop traversal follows `entry_links` to build reasoning chains (e.g., decis
 
 -----
 
-## Migration from Level 2
+## Migration from B2
 
 Column-for-column import with defaults for new fields:
 
-| Level 2 SQLite | Level 3 Postgres | Migration Note |
+| B2 SQLite | B3 Postgres | Migration Note |
 |---|---|---|
 | `id` (TEXT) | `id` (UUID) | Cast text to UUID |
 | `embedding` (BLOB) | `embedding` (vector(1536)) | Deserialize blob, insert as vector. Re-embed if model differs. |
@@ -198,4 +197,4 @@ Column-for-column import with defaults for new fields:
 
 ## This Is the Complete Brain
 
-No Brain changes occur at Levels 4 or 5 of the Admiral Framework. Level 4 adds fleet-level capabilities (scale agents, full enforcement, fleet observability) and Level 5 adds enterprise capabilities (multi-fleet coordination, cross-org federation). The Brain architecture at Level 3 supports all of these without modification — cross-project queries, cross-fleet federation, and multi-operator access are all handled by the identity token and permission matrix system defined here.
+No Brain changes occur at the Production or Enterprise profiles of the Admiral Framework. The Production profile adds fleet-level capabilities (scale agents, full enforcement, fleet observability) and the Enterprise profile adds enterprise capabilities (multi-fleet coordination, cross-org federation). The Brain architecture at B3 supports all of these without modification — cross-project queries, cross-fleet federation, and multi-operator access are all handled by the identity token and permission matrix system defined here.

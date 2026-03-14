@@ -1,5 +1,8 @@
-// Reference implementation sketch for the Level 1-2 Fleet Control Plane.
-// See aiStrat/admiral/fleet-control-plane.md for the full specification.
+// Reference implementation sketch for the CP1-CP2 Fleet Control Plane.
+// See aiStrat/admiral/extensions/fleet-control-plane.md for the full specification.
+//
+// NOTE: The canonical control plane implementation is at /control-plane/ (repo root).
+// This file is an earlier reference sketch kept for spec-adjacent context.
 
 import * as http from 'node:http';
 import type { FleetEvent, AgentStatus, FleetSnapshot } from './types';

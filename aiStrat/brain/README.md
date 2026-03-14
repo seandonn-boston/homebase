@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # The Brain — Architecture Specification
 
 **Long-term fleet memory: Postgres + pgvector, accessible via MCP.**
@@ -146,9 +145,9 @@ Permanently delete a Brain entry for regulatory compliance (right-to-erasure). R
 ```
 brain/
 ├── README.md               # This file — architecture overview
-├── level1-spec.md          # Level 1 (file-based) specification
-├── level2-spec.md          # Level 2 (SQLite + embeddings) specification
-├── level3-spec.md          # Level 3 (Postgres + pgvector + MCP — COMPLETE Brain)
+├── level1-spec.md          # B1 (file-based) specification
+├── level2-spec.md          # B2 (SQLite + embeddings) specification
+├── level3-spec.md          # B3 (Postgres + pgvector + MCP — COMPLETE Brain)
 └── schema/
     ├── 001_initial.sql     # Postgres + pgvector schema (entries, entry_links, audit_log, indexes)
     ├── test_schema.sql     # Schema parity tests
@@ -168,7 +167,7 @@ brain/
 - **Postgres + pgvector** chosen for combined structured/unstructured/vector storage in a single transactional system. No vendor lock-in.
 - **MCP as the universal interface.** Any agent that speaks MCP speaks to the Brain — Claude Code, Agent SDK agents, third-party agents. Protocol-agnostic by design.
 - **Zero-trust access control.** Identity tokens are cryptographically signed, session-scoped, non-delegable. No caller-declared identity trusted.
-- **Embedding generation is pluggable.** The `EmbeddingProvider` interface accepts any implementation — OpenAI, local models, or future alternatives. The `embedding_model` column tracks which model produced each entry's embedding for migration purposes, but no MCP tool exposes embedding model selection or re-embedding. Embedding generation is an infrastructure concern managed at the MCP server configuration level, not an agent-facing operation. At Level 2 (SQLite), the embedding model is configured at deployment time. Agents interact with embeddings indirectly through `brain_query` (semantic search) and `brain_record` (automatic embedding on write).
+- **Embedding generation is pluggable.** The `EmbeddingProvider` interface accepts any implementation — OpenAI, local models, or future alternatives. The `embedding_model` column tracks which model produced each entry's embedding for migration purposes, but no MCP tool exposes embedding model selection or re-embedding. Embedding generation is an infrastructure concern managed at the MCP server configuration level, not an agent-facing operation. At B2 (SQLite), the embedding model is configured at deployment time. Agents interact with embeddings indirectly through `brain_query` (semantic search) and `brain_record` (automatic embedding on write).
 - **Retrieval is multi-signal.** Vector similarity alone is insufficient. The pipeline applies eight ranking signals from Part 5, Intelligence Lifecycle, including multi-hop traversal and contradiction awareness.
 - **All access is audited.** Immutable, append-only audit log captures every operation with verified identity, risk flags, and sensitivity classification.
 

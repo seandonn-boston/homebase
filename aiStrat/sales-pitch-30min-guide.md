@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # Admiral Sales Pitch — 30-Minute Conversation Guide
 
 **Audience:** Someone in tech with strong technical familiarity — comfortable with infrastructure concepts, software architecture, and AI terminology.
@@ -129,13 +128,13 @@ The space is crowding from two directions — agent frameworks adding governance
 
 ### Development Status — Be Honest and Specific
 
-> "I'm at v0.4.0-alpha. Here's what that means in plain English:"
+> "I'm at v0.5.0-alpha. Here's what that means in plain English:"
 
 **What exists today:**
 - The complete specification — 15,000+ lines across 70+ files. The full architectural blueprint.
-- 11-part operational doctrine covering strategy, enforcement, execution, security, and quality assurance
+- 12-part operational doctrine covering strategy, enforcement, execution, security, and quality assurance
 - 71 agent definitions with routing rules and interface contracts
-- The persistent memory (Brain) architecture — five-level semantic memory with Postgres+pgvector
+- The persistent memory (Brain) architecture — three-level semantic memory (B1: file-based → B2: SQLite → B3: Postgres+pgvector)
 - A security/monitoring system with five defensive layers
 - Multiple review passes completed and incorporated (cross-system integrity audits, adversarial reviews, resolution tracking)
 - Supporting research: market analysis, competitive landscape, investment thesis, product strategy
@@ -149,11 +148,13 @@ The space is crowding from two directions — agent frameworks adding governance
 - Prove the wedge: visibility and control are immediately useful before fleet governance matters
 - Let the spec pull adoption as teams scale their agent usage
 
-**Progressive adoption model:**
-- Level 1: Single agent, 30 minutes to deploy. Mission + boundaries + basic rules.
-- Level 2: Small team of 5-8 agents with routing. A few days.
-- Level 3: Full governance with specialized oversight agents. A couple weeks.
-- Level 4: Complete framework. 1-2 weeks for an experienced team.
+**Progressive adoption — seven components, five profiles:**
+- Starter: Single agent, 30 minutes to deploy. Mission + boundaries + basic hooks.
+- Team: Small team of 5-8 agents with routing. A few days.
+- Governed: Full governance with specialized oversight agents. A couple weeks.
+- Production: Complete framework. 1-2 weeks for an experienced team.
+- Enterprise: Multi-fleet coordination and cross-org federation.
+- Each component (Brain, Fleet, Enforcement, Control Plane, Security, Protocols, Data Ecosystem) scales independently — mix and match to fit your needs.
 
 > "Designed for incremental adoption. Start with one agent, prove value, scale up. No big-bang deployment required."
 

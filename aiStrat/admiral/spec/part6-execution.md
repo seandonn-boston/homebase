@@ -1,11 +1,10 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # PART 6 — EXECUTION
 
 *How work gets planned, parallelized, and completed.*
 
 *Strategy says what. Context says how agents know. Enforcement says what's mandatory. Fleet says who. The Brain persists what the fleet learns. Now: how does actual work flow? These three sections cover decomposition, parallelization, and advanced orchestration patterns.*
 
-> **Control Plane surface:** Task decomposition trees and parallel execution status are visible in the Control Plane's Task Flow View (Level 2+). Operators can see how the Orchestrator broke down work, which chunks are assigned to which agents, and where tasks are blocked or queued.
+> **Control Plane surface:** Task decomposition trees and parallel execution status are visible in the Control Plane's Task Flow View (CP2+). Operators can see how the Orchestrator broke down work, which chunks are assigned to which agents, and where tasks are blocked or queued.
 
 -----
 

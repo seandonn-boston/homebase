@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # Routing Rules
 
 **How the Orchestrator assigns tasks to agents.**

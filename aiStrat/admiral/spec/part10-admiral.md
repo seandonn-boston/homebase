@@ -1,11 +1,10 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # PART 10 — THE ADMIRAL
 
 *The human element.*
 
 *Every section above defines what the fleet needs — its strategy, context, enforcement, composition, memory, execution, quality, operations, and platform infrastructure. This part addresses the Admiral's own development — how to detect when you are the bottleneck, how to calibrate trust over time, and when to route decisions to experts instead of answering them yourself.*
 
-> **Control Plane surface:** Admiral self-calibration decisions and human-expert routing events are visible in the Control Plane (Level 3+). Operators see which decisions were escalated, which experts were consulted, and how trust calibration has changed over time.
+> **Control Plane surface:** Admiral self-calibration decisions and human-expert routing events are visible in the Control Plane (CP3+). Operators see which decisions were escalated, which experts were consulted, and how trust calibration has changed over time.
 
 -----
 
@@ -139,7 +138,7 @@ When multiple humans operate the same fleet, define three operator tiers:
 
 | Role | Authority | Example Actions |
 |---|---|---|
-| **Owner** | Full framework authority | Modify Standing Orders, change adoption level, approve Strategic Shifts, grant/revoke Operator access |
+| **Owner** | Full framework authority | Modify Standing Orders, change profile/component levels, approve Strategic Shifts, grant/revoke Operator access |
 | **Operator** | Fleet operational authority | Approve Escalate-tier decisions, adjust trust calibration, deploy/retire agents, approve paid resource access |
 | **Observer** | Read-only with alert authority | Monitor fleet health, review traces, trigger Emergency Halt (observers can always halt) |
 

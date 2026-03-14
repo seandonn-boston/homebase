@@ -1,11 +1,10 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # PART 12 — THE DATA ECOSYSTEM
 
 *How the fleet generates compounding intelligence from every interaction.*
 
 *Parts 1–11 define a governed fleet that executes, remembers, and adapts. Part 12 closes the loop — every customer interaction, every AI output, every governance event becomes a data signal that flows back into the system. The fleet does not just consume data; it generates unique, constantly refreshing datasets that no competitor can replicate because they emerge from the specific intersection of your customers, your agents, and your operational context.*
 
-> **Control Plane surface:** Feedback loop health, data pipeline metrics, and dataset growth surface in the Control Plane at Level 4+. Operators can see which loops are active, whether attribution is keeping pace with outcomes, and overall ecosystem health.
+> **Control Plane surface:** Feedback loop health, data pipeline metrics, and dataset growth surface in the Control Plane at CP4+. Operators can see which loops are active, whether attribution is keeping pace with outcomes, and overall ecosystem health.
 
 -----
 
@@ -661,28 +660,28 @@ All datasets operate under the Data Sensitivity Protocol (Data Sensitivity Class
 
 ## Implementation Levels
 
-> **TL;DR** — The data ecosystem follows Admiral's progressive adoption model. Start at Level 1 with manual observation. Graduate when you need automated feedback.
+> **TL;DR** — The data ecosystem follows Admiral's progressive adoption model. Start at DE1 with manual observation. Graduate when you need automated feedback.
 
 ### Progressive Adoption
 
-| Level | What You Build | Brain Level Required | Feedback Loops Active |
+| DE Level | What You Build | Brain Level Required | Feedback Loops Active |
 |-------|---------------|---------------------|----------------------|
-| **Level 1: Manual Observation** | Instrument basic engagement events. Admiral manually reviews agent decisions and customer outcomes. No automated attribution. | Level 1 (file-based) | None automated — Admiral closes loop manually |
-| **Level 2: Capture & Store** | Deploy engagement event stream. Agent outputs captured in Brain. Basic trend computation (scripted). | Level 2 (SQLite + embeddings) | Loop 2 (Brain strengthening — manual) |
-| **Level 3: Automated Attribution** | Attribution Engine active. Outcome-to-decision linking. Engagement Analyst and Trend Analyst deployed. | Level 3 (Postgres + pgvector) | Loops 1, 2, 3 (automated with Admiral approval) |
-| **Level 4: Full Ecosystem** | All five ecosystem agents active. All six feedback loops running. Cross-domain insight graph computed. | Level 3 | All six loops |
-| **Level 5: Autonomous Optimization** | Feedback loops operate with expanded Autonomous tiers (earned through track record). Minimal Admiral intervention for routine calibrations. | Level 3 | All six — elevated autonomy |
+| **DE1: Manual Observation** | Instrument basic engagement events. Admiral manually reviews agent decisions and customer outcomes. No automated attribution. | B1 (file-based) | None automated — Admiral closes loop manually |
+| **DE2: Capture & Store** | Deploy engagement event stream. Agent outputs captured in Brain. Basic trend computation (scripted). | B2 (SQLite + embeddings) | Loop 2 (Brain strengthening — manual) |
+| **DE3: Automated Attribution** | Attribution Engine active. Outcome-to-decision linking. Engagement Analyst and Trend Analyst deployed. | B3 (Postgres + pgvector) | Loops 1, 2, 3 (automated with Admiral approval) |
+| **DE4: Full Ecosystem** | All five ecosystem agents active. All six feedback loops running. Cross-domain insight graph computed. | B3 | All six loops |
+| **DE5: Autonomous Optimization** | Feedback loops operate with expanded Autonomous tiers (earned through track record). Minimal Admiral intervention for routine calibrations. | B3 | All six — elevated autonomy |
 
-**Start at Level 1.** The most common mistake is deploying the full pipeline before validating that your fleet generates data worth capturing. Instrument engagement. Review agent decisions manually. If you see patterns that would improve the fleet, you're ready for Level 2.
+**Start at DE1.** The most common mistake is deploying the full pipeline before validating that your fleet generates data worth capturing. Instrument engagement. Review agent decisions manually. If you see patterns that would improve the fleet, you're ready for DE2.
 
-### Level Transition Criteria
+### DE Transition Criteria
 
 | From → To | Transition When |
 |-----------|-----------------|
-| 1 → 2 | Admiral spends >2 hours/week manually reviewing agent decisions and spotting patterns |
-| 2 → 3 | Brain has >100 entries with outcomes that could be attributed to decisions, but aren't linked |
-| 3 → 4 | Attribution reveals cross-domain insights that manual review would miss |
-| 4 → 5 | Feedback Synthesizer recommendations are approved >90% of the time for >3 months |
+| DE1 → DE2 | Admiral spends >2 hours/week manually reviewing agent decisions and spotting patterns |
+| DE2 → DE3 | Brain has >100 entries with outcomes that could be attributed to decisions, but aren't linked |
+| DE3 → DE4 | Attribution reveals cross-domain insights that manual review would miss |
+| DE4 → DE5 | Feedback Synthesizer recommendations are approved >90% of the time for >3 months |
 
 -----
 

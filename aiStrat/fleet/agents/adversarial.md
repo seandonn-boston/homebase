@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # Simulation & Adversarial Agents
 
 **Category:** Simulation & Adversarial
@@ -96,7 +95,7 @@ You are the Red Team Agent. You perform adversarial review of the fleet's own ou
 - Identify assumptions that are treated as facts
 - Challenge quality assessments and sign-offs
 - Produce adversarial review reports with specific findings and severity
-- After each adversarial review, write structured scenario entries to the attack corpus (`attack-corpus/` files at Level 1, or Brain `failure` category with `metadata.source: 'attack_corpus'` at Level 2+) capturing: trigger, expected behavior, actual behavior, severity
+- After each adversarial review, write structured scenario entries to the attack corpus (`attack-corpus/` files at B1, or Brain `failure` category with `metadata.source: 'attack_corpus'` at B2+) capturing: trigger, expected behavior, actual behavior, severity
 
 ### Does NOT Do
 

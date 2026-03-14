@@ -1,11 +1,10 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # PART 8 — OPERATIONS
 
 *How work persists, adapts, and scales over time.*
 
 *Parts 1–7 cover a single fleet executing a single phase of work. Part 8 addresses the ongoing reality: sessions end, requirements change, budgets matter, fleets grow and shrink, and multiple projects run simultaneously. These six sections keep the enterprise healthy over time.*
 
-> **Control Plane surface:** Cost tracking, fleet health metrics, and scaling recommendations are the Control Plane's primary operations surface (Level 3+). At Level 4+, trend analysis shows whether the fleet is getting more efficient over time.
+> **Control Plane surface:** Cost tracking, fleet health metrics, and scaling recommendations are the Control Plane's primary operations surface (CP3+). At CP4+, trend analysis shows whether the fleet is getting more efficient over time.
 
 -----
 
@@ -201,7 +200,7 @@ When a fleet shares pooled access to external subscription services (LLM API key
 
 **Behavioral principles:** No credential leakage (agents never see raw credentials). Concurrency control via per-credential tier limits with queue-based backpressure. Fair-split billing proportional to actual usage. Append-only audit trail. Session states: QUEUED → ACTIVE → ENDED (normal) or EXPIRED (max duration exceeded).
 
-**When to deploy:** Level 3+ fleets sharing pooled API keys or subscription accounts. At Level 2, manual credential management with per-agent API keys is sufficient.
+**When to deploy:** Governed profile (F3+) fleets sharing pooled API keys or subscription accounts. At Team profile (F2), manual credential management with per-agent API keys is sufficient.
 
 **Integration points:** Billing output feeds per-agent cost attribution (this section). Session telemetry feeds Fleet Observability (Part 9). Credential vault integrates with Configuration Security (Part 3).
 
@@ -265,7 +264,7 @@ Complement threshold-based alerts with SRE-style error budgets to manage the vel
 | 80-100% | Tighten. Narrow Autonomous tiers, increase verification levels, slow execution pace. |
 | > 100% (exhausted) | Pause non-critical work. Root-cause analysis required before resuming normal operations. All new tasks default to Propose tier until budget recovers. |
 
-**Recalibration:** Error budgets should be recalibrated quarterly or after significant fleet changes (new agents, model upgrades, adoption level changes). Initial budgets for new fleets should be generous — tighten as baselines stabilize.
+**Recalibration:** Error budgets should be recalibrated quarterly or after significant fleet changes (new agents, model upgrades, profile transitions). Initial budgets for new fleets should be generous — tighten as baselines stabilize.
 
 Error budgets formalize what Fleet Health Metrics' metric interpretation already implies: "Throughput up, Quality down" means the fleet is burning its error budget faster than expected.
 

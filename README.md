@@ -8,7 +8,7 @@ Homebase is a monorepo containing four major workstreams — all converging on a
 
 ## What's Here
 
-### 🔷 [`aiStrat/`](aiStrat/) — The Admiral Framework `v0.4.2-alpha`
+### 🔷 [`aiStrat/`](aiStrat/) — The Admiral Framework `v0.5.0-alpha`
 
 The flagship project. **Admiral** is a comprehensive, model-agnostic specification for AI agent fleet orchestration — 114 files across 22 groups defining how autonomous AI agent systems should be structured, secured, coordinated, and governed.
 
@@ -19,8 +19,8 @@ Admiral is built on a core insight: *AI agents are not employees and they are no
 | Pillar | Directory | What It Defines |
 |---|---|---|
 | **Doctrine** | [`admiral/`](aiStrat/admiral/) | 12-part operational framework — strategy, context engineering, deterministic enforcement, fleet composition, the Brain knowledge system, execution patterns, quality assurance, operations, platform integration, meta-agent governance, universal protocols, and the closed-loop data ecosystem |
-| **Fleet** | [`fleet/`](aiStrat/fleet/) | Agent catalog with 71 core + 29 extended role definitions, prompt assembly patterns, routing rules, interface contracts, model tier assignments, and context injection guides |
-| **Design Artifacts** | [`brain/`](aiStrat/brain/) · [`monitor/`](aiStrat/monitor/) | Brain: 5-level semantic long-term memory architecture with database schema. Monitor: ecosystem intelligence scanner with immune system design — runs daily via GitHub Actions |
+| **Fleet** | [`fleet/`](aiStrat/fleet/) | Agent catalog with 71 core + 34 extended role definitions, prompt assembly patterns, routing rules, interface contracts, model tier assignments, and context injection guides |
+| **Design Artifacts** | [`brain/`](aiStrat/brain/) · [`monitor/`](aiStrat/monitor/) | Brain: 3-level semantic long-term memory architecture (B1-B3) with database schema. Monitor: ecosystem intelligence scanner with immune system design — runs daily via GitHub Actions |
 
 #### Key Concepts
 
@@ -28,7 +28,7 @@ Admiral is built on a core insight: *AI agents are not employees and they are no
 - **Decision Authority Tiers** — Enforced / Autonomous / Propose / Escalate. Agents earn trust per category, not globally.
 - **Intent Engineering** — Communicating *what you want to achieve*, not *what you think the system needs to hear*.
 - **Standing Orders** — 15 non-negotiable rules forming the behavioral floor for all agents.
-- **Progressive Adoption** — Five levels from Disciplined Solo → Core Fleet → Governed Fleet → Full Framework → Enterprise.
+- **Per-Component Scaling** — Seven independently-scaling components (Brain, Fleet, Enforcement, Control Plane, Security, Protocols, Data Ecosystem) with five Quick-Start Profiles: Starter → Team → Governed → Production → Enterprise.
 
 #### Entry Points
 

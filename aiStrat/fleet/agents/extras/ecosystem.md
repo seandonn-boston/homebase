@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # Data Ecosystem Agents
 
 **Category:** Data Ecosystem (Closed-Loop)

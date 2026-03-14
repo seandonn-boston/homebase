@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # Framework Benchmarks
 
 > **Audience:** Implementers and evaluators measuring Admiral Framework effectiveness. These benchmarks define what "good" looks like for an Admiral-governed fleet.
@@ -85,7 +84,7 @@ These are capabilities unique to or pioneered by the Admiral Framework:
 | Differentiator | What It Means | Measurable Signal |
 |---|---|---|
 | **Enforcement spectrum** | Hooks > instructions > guidance — only framework with explicit enforcement hierarchy | % of constraints with deterministic enforcement |
-| **Progressive adoption** | 5 levels from solo agent to enterprise fleet — no all-or-nothing | Time-to-value at each level; adoption level distribution |
+| **Progressive adoption** | 5 profiles from solo agent to enterprise fleet with per-component scaling — no all-or-nothing | Time-to-value at each profile; adoption profile distribution |
 | **Built-in attack corpus** | 18+ adversarial scenarios with structured testing methodology | Scenarios tested, pass rates, new scenarios discovered |
 | **Context as budgeted resource** | Token budgets, context health monitoring, sacrifice ordering | Context waste ratio, budget adherence |
 | **Intent engineering** | Evolution beyond prompt engineering — six elements of intent | First-pass quality improvement when using intent framework |
@@ -95,12 +94,12 @@ These are capabilities unique to or pioneered by the Admiral Framework:
 
 ## Measurement Cadence
 
-| Level | Recommended Cadence | Focus |
+| Profile | Recommended Cadence | Focus |
 |---|---|---|
-| Level 1 | Weekly manual review | First-pass quality, context waste |
-| Level 2 | Per-session automated | + Recovery rate, handoff overhead |
-| Level 3 | Continuous | + Governance overhead, knowledge reuse |
-| Level 4-5 | Continuous + dashboards | All metrics, trend analysis, cross-fleet comparison |
+| Starter | Weekly manual review | First-pass quality, context waste |
+| Team | Per-session automated | + Recovery rate, handoff overhead |
+| Governed | Continuous | + Governance overhead, knowledge reuse |
+| Production–Enterprise | Continuous + dashboards | All metrics, trend analysis, cross-fleet comparison |
 
 -----
 

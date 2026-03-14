@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # Interface Contracts
 
 **Defined formats for handoffs between specific agent pairs.**

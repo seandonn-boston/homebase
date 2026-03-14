@@ -1,11 +1,10 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # PART 3 — ENFORCEMENT
 
 *The gap between "should" and "must."*
 
 *An instruction says "don't do this." Enforcement makes it impossible. Every constraint you define in Parts 1 and 2 falls somewhere on the spectrum from soft guidance to hard enforcement. These three sections define that spectrum, assign each constraint to its correct level, and secure the enforcement layer itself against attack.*
 
-> **Control Plane surface:** Hook execution status, violation logs, and enforcement coverage metrics are visible in the Control Plane. At Level 1, this is a line in the CLI status display. At Level 2+, it is a dedicated enforcement dashboard showing which hooks fired, which blocked, and which Standing Orders lack hook coverage.
+> **Control Plane surface:** Hook execution status, violation logs, and enforcement coverage metrics are visible in the Control Plane. At CP1, this is a line in the CLI status display. At CP2+, it is a dedicated enforcement dashboard showing which hooks fired, which blocked, and which Standing Orders lack hook coverage.
 
 -----
 
@@ -15,7 +14,7 @@
 
 This distinction — between advisory instructions and deterministic enforcement — is the foundation of reliable fleet operations.
 
-> **PREREQUISITE: Read Standing Orders (Part 11) before implementing hooks.** Standing Orders define the *policy* that hooks enforce. Both are Level 1 requirements. Implementing hooks without Standing Orders produces enforcement without governance — the hooks enforce nothing meaningful. Hooks are the mechanism; Standing Orders are the policy.
+> **PREREQUISITE: Read Standing Orders (Part 11) before implementing hooks.** Standing Orders define the *policy* that hooks enforce. Both are E1 requirements. Implementing hooks without Standing Orders produces enforcement without governance — the hooks enforce nothing meaningful. Hooks are the mechanism; Standing Orders are the policy.
 
 ### The Enforcement Spectrum
 
@@ -89,9 +88,9 @@ Agent action
 
 The enforcement classifications above (e.g., "Kill session after token budget exceeded") require concrete hook specifications. The following hooks implement the deterministic enforcement for token budgets, loop detection, and context health — three areas where advisory instructions are insufficient and hook-based enforcement is mandatory.
 
-> **Adoption level annotations:** Each hook below is tagged with the adoption level at which it should be **deployed**. Hooks tagged **Level 1** are part of the Disciplined Solo checklist. Hooks tagged **Level 2+** or **Level 3+** should not be implemented until their consumers exist (e.g., do not deploy `governance_heartbeat_monitor` until governance agents are running, do not deploy `tier_validation` until a fleet roster with multiple agents exists). Reading ahead is fine; building ahead wastes effort and adds complexity with no consumer.
+> **Enforcement level annotations:** Each hook below is tagged with the enforcement level at which it should be **deployed**. Hooks tagged **E1** are part of the Disciplined Solo checklist. Hooks tagged **E2+** or **E3+** should not be implemented until their consumers exist (e.g., do not deploy `governance_heartbeat_monitor` until governance agents are running, do not deploy `tier_validation` until a fleet roster with multiple agents exists). Reading ahead is fine; building ahead wastes effort and adds complexity with no consumer.
 
-**Token Budget Enforcement Hooks:** `Level 1`
+**Token Budget Enforcement Hooks:** `E1`
 
 ```
 PostToolUse: token_budget_tracker
@@ -114,7 +113,7 @@ PreToolUse: token_budget_gate
   Timeout:    5 seconds.
 ```
 
-**Retry Loop Detection Hook:** `Level 1`
+**Retry Loop Detection Hook:** `E1`
 
 ```
 PostToolUse: loop_detector
@@ -132,7 +131,7 @@ PostToolUse: loop_detector
   Timeout:    5 seconds.
 ```
 
-**Context Health Monitoring Hooks:** `Level 1`
+**Context Health Monitoring Hooks:** `E1`
 
 ```
 SessionStart: context_baseline
@@ -157,7 +156,7 @@ PostToolUse: context_health_check
   Timeout:    10 seconds.
 ```
 
-**Model Tier Validation Hook:** `Level 2` — requires fleet roster with multiple agents and model tier assignments
+**Model Tier Validation Hook:** `E2` — requires fleet roster with multiple agents and model tier assignments
 
 ```
 SessionStart: tier_validation
@@ -180,7 +179,7 @@ SessionStart: tier_validation
   Timeout:    10 seconds.
 ```
 
-**Governance Heartbeat Monitoring Hook:** `Level 3` — requires governance agents to be deployed
+**Governance Heartbeat Monitoring Hook:** `E3` — requires governance agents to be deployed
 
 ```
 Periodic: governance_heartbeat_monitor
@@ -205,7 +204,7 @@ Periodic: governance_heartbeat_monitor
   Timeout:    10 seconds.
 ```
 
-**Identity Validation Hook:** `Level 2` — at Level 1, identity is agent-id + role without cryptographic validation; deploy this hook when hardening identity at Level 2+
+**Identity Validation Hook:** `E2` — at E1, identity is agent-id + role without cryptographic validation; deploy this hook when hardening identity at F2+
 
 ```
 SessionStart: identity_validation
@@ -255,7 +254,7 @@ Every hook must ship with a `hook.manifest.json` conforming to `hooks/manifest.s
 
 See `hooks/README.md` for the full ecosystem specification, directory conventions, and reference manifests.
 
-> **Async hook execution** (the `async` field in the manifest) is deferred to Level 3+. At Levels 1–2, all hooks execute synchronously. The manifest schema accepts the field for forward compatibility, but runtimes at Levels 1–2 should ignore it and execute all hooks synchronously.
+> **Async hook execution** (the `async` field in the manifest) is deferred to E3+. At E1–E2, all hooks execute synchronously. The manifest schema accepts the field for forward compatibility, but runtimes at E1–E2 should ignore it and execute all hooks synchronously.
 
 ### Self-Healing Quality Loops
 
@@ -352,12 +351,12 @@ Every orchestrator needs a clear decision envelope: what it may decide autonomou
 > 2. **Runtime authority binding:** Authority tiers are bound to the agent's identity
 >    at session start, not read from Brain entries or configuration files during
 >    execution. An agent cannot change its own authority tier mid-session.
->    At Levels 1-3, identity may be a simple agent-id + role string set by the
->    runtime. At Level 4, identity is a cryptographically signed token (see Knowledge Protocol, Part 5).
+>    At E1–E2, identity may be a simple agent-id + role string set by the
+>    runtime. At E3 with S2+ security, identity is a cryptographically signed token (see Knowledge Protocol, Part 5).
 >    The requirement is immutable binding, not cryptographic signing — the signing
->    sophistication scales with adoption level.
+>    sophistication scales with component level.
 >
->    **Level 1 identity example** (sufficient for Disciplined Solo):
+>    **E1 identity example** (sufficient for Disciplined Solo):
 >    ```json
 >    {
 >      "agent_id": "admiral-solo",
@@ -367,7 +366,7 @@ Every orchestrator needs a clear decision envelope: what it may decide autonomou
 >    }
 >    ```
 >    This is set once at session start and never modified. No signing, no expiry,
->    no cross-project access control. Add HMAC-SHA256 signing at Level 4 when
+>    no cross-project access control. Add HMAC-SHA256 signing at E3/S2 when
 >    zero-trust access control is deployed — not before.
 > 3. **Orchestrator-level validation:** The Orchestrator validates that every task
 >    assignment includes the correct authority tier for the receiving agent. If a

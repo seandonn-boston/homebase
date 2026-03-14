@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # Specialists
 
 **Domain-expert agents with deep knowledge, collaborative instinct, and human referral judgment.**
@@ -62,7 +61,7 @@ All specialist agent definitions live in [`agents/`](agents/). They are organize
 | **Inhuman-Scale Analysis** | `agents/scale.md` | 12 | Failure topology, decay, combinatorial, security, schema, capacity |
 | **Release & Developer Platform** | `agents/lifecycle.md` | 6 | Release, incident response, feature flags, SDK, monorepo, contracts |
 
-**Total: 71 core agents across 12 categories (67 specialists + 4 generalists).** An additional 29 extended specialists (Data & Analytics, Domain Specialization, supplementary Scale agents) are available in `agents/extras/`.
+**Total: 71 core agents across 12 categories (67 specialists + 4 generalists).** An additional 34 extended agents (Domain Specialization, Data & Analytics, Ecosystem, and supplementary Scale agents) are available in `agents/extras/`.
 
 -----
 

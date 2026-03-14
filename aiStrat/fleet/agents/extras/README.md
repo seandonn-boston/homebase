@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # Extended Agent Catalog
 
 These agent specifications are stashed here for reference. They are available for deployment when specific project needs arise but are not part of the core fleet catalog. Each is a fully specified agent definition — move it back to the main `agents/` directory when your project needs it.
@@ -9,7 +8,7 @@ These agent specifications are stashed here for reference. They are available fo
 |---|---|---|
 | `domain.md` | 7 domain specialists (Auth, Search, Payments, Real-time, Media, Notifications, i18n) | When the project touches these specific domains and the Backend Implementer lacks sufficient depth |
 | `data.md` | 5 data & analytics agents (Data Engineer, Analytics, ML, Validation, Visualization) | When the project has dedicated data pipelines, ML models, or analytics requirements |
-| `ecosystem.md` | 5 closed-loop data ecosystem agents (Engagement Analyst, Trend Analyst, Attribution Engine, Feedback Synthesizer, Ecosystem Health Monitor) | When deploying the closed-loop data ecosystem (Part 12). Requires Data & Analytics agents as infrastructure. Deploy at Ecosystem Level 3+ (Ecosystem Implementation Levels). |
+| `ecosystem.md` | 5 closed-loop data ecosystem agents (Engagement Analyst, Trend Analyst, Attribution Engine, Feedback Synthesizer, Ecosystem Health Monitor) | When deploying the closed-loop data ecosystem (Part 12). Requires Data & Analytics agents as infrastructure. Deploy at DE3+ (Data Ecosystem level 3+). |
 | `scale-extended.md` | 17 supplementary scale agents (planetary, temporal, cognitive, regulatory, migration) | When specific review cycles need analysis dimensions beyond the core 12 scale agents |
 
 ## How to Activate

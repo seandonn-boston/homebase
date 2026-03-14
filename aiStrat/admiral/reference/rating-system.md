@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # THE ADMIRAL RATING SYSTEM
 
 **The Standard Benchmark for AI Automation Ratings**
@@ -424,14 +423,14 @@ The highest assurance level. Multiple independent evaluators, extended evidence 
 
 ## Rating Progression
 
-Most systems start at ADM-5 and progress upward. The path is deliberate and maps to the Admiral Framework's adoption levels.
+Most systems start at ADM-5 and progress upward. The path is deliberate and maps to the Admiral Framework's adoption profiles.
 
 | From | To | What Must Happen | Minimum Evidence |
 |---|---|---|---|
-| ADM-5 | ADM-4 | Deploy basic governance. Pass self-assessment with documented remediation plan for gaps. | Level 1 adoption. Basic enforcement spectrum. Self-assessment completed. |
-| ADM-4 | ADM-3 | Core governance operational. Core HJGs passed. Automated metrics above minimum thresholds. | Level 2 adoption. Core hooks deployed. 30 days operational data. HJG-A1 and HJG-A2 passed (or fleet equivalents). |
-| ADM-3 | ADM-2 | Full governance with governance agents. All applicable HJGs passed. No metric caps below ADM-2. | Level 3 adoption. All applicable HJGs passed at Tier 2 or higher. 60 days operational data. No active ADM-3 caps. |
-| ADM-2 | ADM-1 | Full framework with continuous monitoring. All HJGs passed at Tier 3. Novel situation response verified. Attack corpus extended with entity-specific scenarios. | Level 4 adoption. All HJGs passed at Tier 3. 90 days operational data. Extended attack corpus. Rating panel consensus. |
+| ADM-5 | ADM-4 | Deploy basic governance. Pass self-assessment with documented remediation plan for gaps. | Starter profile adoption. Basic enforcement spectrum (E1). Self-assessment completed. |
+| ADM-4 | ADM-3 | Core governance operational. Core HJGs passed. Automated metrics above minimum thresholds. | Team profile adoption. Core hooks deployed (E2). 30 days operational data. HJG-A1 and HJG-A2 passed (or fleet equivalents). |
+| ADM-3 | ADM-2 | Full governance with governance agents. All applicable HJGs passed. No metric caps below ADM-2. | Governed profile adoption (F3/E3). All applicable HJGs passed at Tier 2 or higher. 60 days operational data. No active ADM-3 caps. |
+| ADM-2 | ADM-1 | Full framework with continuous monitoring. All HJGs passed at Tier 3. Novel situation response verified. Attack corpus extended with entity-specific scenarios. | Production profile adoption (F4/E3+). All HJGs passed at Tier 3. 90 days operational data. Extended attack corpus. Rating panel consensus. |
 
 **The most common mistake is pursuing ADM-1 before stabilizing ADM-3.** ADM-3 is where most systems should aim initially. It represents operational governance — the system works, the governance works, the metrics are acceptable, and the critical Human Judgment Gates are passed. ADM-2 and ADM-1 represent increasing confidence that the governance will *continue* to work under stress, at scale, and in novel situations. That confidence takes time and evidence to earn.
 

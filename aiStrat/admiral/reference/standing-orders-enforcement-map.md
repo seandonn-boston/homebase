@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # Standing Orders → Enforcement Mechanism Map
 
 > **Audience:** Implementers and auditors verifying that standing orders have deterministic enforcement where required. This document maps each of the 15 standing orders to its enforcement mechanism (or documents the gap).
@@ -81,13 +80,13 @@ These standing orders are classified as Safety-tier (highest priority) but lack 
 
 As the framework matures through levels, enforcement coverage should increase:
 
-| Level | Expected Coverage | Focus |
-|-------|------------------|-------|
-| Level 1 | 4/15 (current) | Budget, loops, identity, context — the runtime essentials |
-| Level 2 | 8/15 (target) | Add scope boundaries, decision authority, pre-work validation, secret detection |
-| Level 3 | 12/15 (target) | Add compliance boundaries, output routing validation, checkpoint verification, quality gate integration |
-| Level 4 | 15/15 (target) | Full deterministic enforcement; all advisory orders graduate to hooks |
-| Level 5 | 15/15 + cross-fleet | Cross-fleet enforcement coordination, multi-operator hook policies |
+| Enforcement Level | Expected Coverage | Focus |
+|-------------------|------------------|-------|
+| E1 | 4/15 (current) | Budget, loops, identity, context — the runtime essentials |
+| E2 | 8/15 (target) | Add scope boundaries, decision authority, pre-work validation, secret detection |
+| E3 | 12/15 (target) | Add compliance boundaries, output routing validation, checkpoint verification, quality gate integration |
+| E3 + Production profile | 15/15 (target) | Full deterministic enforcement; all advisory orders graduate to hooks |
+| E3 + Enterprise profile | 15/15 + cross-fleet | Cross-fleet enforcement coordination, multi-operator hook policies |
 
 -----
 
@@ -103,9 +102,9 @@ The Admiral Framework must eat its own dogfood. While the spec repository is not
 | `standing_order_integrity` | SO 3 (Scope Boundaries) | All 15 Standing Orders present and numbered correctly | `hooks/standing_order_integrity/hook.manifest.json` |
 
 These hooks are specification-only (manifests without executables), consistent with the framework's current state. They document the enforcement intent for the spec repository. Implementation targets:
-- **Level 1 (current):** Manifest-only — enforcement is manual
-- **Level 2:** CI workflow validation (`.github/workflows/spec-validation.yml`)
-- **Level 3:** Live hooks in Claude Code (`.claude/hooks/`)
+- **E1 (current):** Manifest-only — enforcement is manual
+- **E2:** CI workflow validation (`.github/workflows/spec-validation.yml`)
+- **E3:** Live hooks in Claude Code (`.claude/hooks/`)
 
 This progression mirrors the framework's own enforcement spectrum: start with documentation, graduate to CI, then to live hooks.
 

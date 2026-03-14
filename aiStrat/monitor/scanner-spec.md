@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # Monitor Scanner Specification
 
 **Status:** Partially implemented. `scanner.sh` provides GitHub release tracking, trending repo discovery, digest generation, state management, and issue creation. RSS feeds, quarantine layers, and seed candidate generation remain specification-only.
@@ -43,7 +42,7 @@ The scanner monitors these categories of sources (specific sources are configure
 
 ### Seed Candidates
 
-When the scanner identifies information that should be ingested into the Brain, it produces seed candidate entries. At Level 1-2, these are files for human review. At Level 3+, they pass through the quarantine layer (5-layer immune system) before Brain ingestion.
+When the scanner identifies information that should be ingested into the Brain, it produces seed candidate entries. At B1-B2, these are files for human review. At B3+ (with S3 security), they pass through the quarantine layer (5-layer immune system) before Brain ingestion.
 
 -----
 
@@ -75,4 +74,4 @@ See `state-schema.json` for the complete state file schema.
 - Scanner has **read-only** access to external sources. No write operations to external services.
 - All external content is treated as untrusted. Digest content is written to files, never shell-expanded.
 - GitHub issue creation uses `--body-file` to prevent injection from external content.
-- Seed candidates for Brain ingestion must pass through quarantine (Level 3+) or human review (Level 1-2).
+- Seed candidates for Brain ingestion must pass through quarantine (B3+/S3) or human review (B1-B2).

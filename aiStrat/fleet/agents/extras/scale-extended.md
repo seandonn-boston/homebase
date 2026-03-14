@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # Extended Scale Agents
 
 These are supplementary inhuman-scale analysis agents held in reserve for reference. They are available for deployment when specific project needs arise but are not part of the core 12 scale agents. See `fleet/agents/scale.md` for the core set.

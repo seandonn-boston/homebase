@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # Admiral Framework — File Manifest
 
 **114 files across 22 groups | Last modified: 2026-03-14**
@@ -12,12 +11,12 @@ This is the semantic catalog of every file in the Admiral Framework. Each entry 
 ```
 index.md - admiral/doctrine - 2026-03-10:
 Master index and entry point. Subtitled "A Workforce Toolkit for Autonomous AI Agent
-Fleets." Defines five adoption levels (Disciplined Solo → Core Fleet → Governed Fleet
-→ Full Framework → Enterprise) with time-to-value and graduation criteria. Brain is
-fully complete at Level 3. Links all 11 parts.
+Fleets." Defines seven independently-scaling components (Brain, Fleet, Enforcement, Control
+Plane, Security, Protocols, Data Ecosystem) with five Quick-Start Profiles (Starter →
+Team → Governed → Production → Enterprise). Links all 12 parts.
 
 Minimum Viable Reading Path (~800 lines of targeted reading):
-  1. index.md — Glossary + Adoption Levels (shared vocabulary and roadmap)
+  1. index.md — Glossary + Component Scaling (shared vocabulary and roadmap)
   2. part1-strategy.md — Full file (Mission, Boundaries, Success Criteria)
   3. part3-enforcement.md — Deterministic Enforcement only (enforcement spectrum: hooks over instructions)
   3.5. intent-engineering.md — Six Elements of Intent (how to write effective agent directives)
@@ -91,9 +90,9 @@ aiStrat/admiral/spec/part4-fleet.md
 
 ```
 part5-brain.md - admiral/doctrine - 2026-03-13:
-Three sections: Brain Architecture (15) — three Brain maturity levels (file → SQLite
-→ Full Brain at Level 3 with Postgres+pgvector+MCP+identity), "Start Simple"
-principle, Brain complete at Level 3 with no changes at Levels 4-5; Knowledge Protocol
+Three sections: Brain Architecture (15) — three Brain levels (B1: file → B2: SQLite
+→ B3: Full Brain with Postgres+pgvector+MCP+identity), "Start Simple"
+principle, B3 is the Brain's maximum level; Knowledge Protocol
 (16) — MCP tools, zero-trust access control, identity tokens; Intelligence Lifecycle
 (17) — capture triggers, review cadence, cross-project namespace.
 aiStrat/admiral/spec/part5-brain.md
@@ -155,8 +154,8 @@ aiStrat/admiral/spec/part10-admiral.md
 
 ```
 part11-protocols.md - admiral/doctrine - 2026-03-10:
-Six protocol areas: Standing Orders (36) — 15 non-negotiable rules with Level 1
-sequencing note (Standing Orders are Level 1 requirements despite Part 11 position);
+Six protocol areas: Standing Orders (36) — 15 non-negotiable rules with Starter-profile
+sequencing note (Standing Orders are P1 requirements despite Part 11 position);
 Escalation Protocol (37) with forward reference from SO 6; Handoff Protocol (38);
 Human Referral Protocol (39); Paid Resource Authorization Protocol (40); Data
 Sensitivity Protocol (41). Concrete formats and decision ladders for each. Includes
@@ -181,8 +180,8 @@ aiStrat/admiral/extensions/intent-engineering.md
 ```
 appendices.md - admiral/doctrine - 2026-03-10:
 Seven appendices: Pre-Flight Checklist (A) — per-section verification with intent
-completeness check; Quick-Start Sequence (B) — four adoption levels with intent
-framing (foundation → operational → governance → persistent), Level 1 time estimate
+completeness check; Quick-Start Sequence (B) — five profiles with intent
+framing (foundation → operational → governance → persistent), Starter time estimate
 clarification (30 min config / 1-2 days build), config-first sequencing insight;
 Worked Example: SaaS Task Manager (C) — mission through fleet roster with three
 governance failure scenarios; Case Studies (D) — ungoverned sprint, over-engineered
@@ -214,7 +213,7 @@ benchmarks.md - admiral/doctrine - 2026-03-13:
 Framework benchmarks for measuring Admiral-governed fleet effectiveness. Seven core
 metrics (governance overhead, first-pass quality, recovery success rate, context
 efficiency, enforcement coverage, coordination overhead, knowledge reuse) with targets
-and red flags. Competitive differentiators. Measurement cadence by adoption level.
+and red flags. Competitive differentiators. Measurement cadence by adoption profile.
 Baseline expectations across fleet maturity phases.
 aiStrat/admiral/reference/benchmarks.md
 ```
@@ -251,7 +250,7 @@ independently, operators govern), Stage 4 (Full Autonomy — fleet self-governin
 operators set strategy). The Autonomy Matrix (different capabilities at different
 stages in the same fleet). Trust mechanics (accumulation, per-category tracking,
 decay). Stage transition prerequisites and reversion triggers. Infrastructure
-requirements by stage. Orthogonal to adoption levels.
+requirements by stage. Orthogonal to adoption profiles.
 aiStrat/admiral/extensions/progressive-autonomy.md
 ```
 
@@ -290,9 +289,10 @@ aiStrat/admiral/reference/rating-system.md
 
 ```
 README.md - fleet/infrastructure - 2026-03-10:
-Fleet catalog index. 71 core agents (67 specialists + 4 command) plus 29 extended in
-extras/. Organized into generalists and 12 specialist categories. Core Fleet minimum
-of 11 agents. Quick-reference table. Governance agents qualified as "Always (Level 3+)"
+Fleet catalog index. 71 core agents (67 specialists + 4 command) plus 34 extended in
+extras/ (domain, data, ecosystem, scale). Organized into generalists and 12 specialist
+categories. Core Fleet minimum of 11 agents. Quick-reference table. Governance agents
+deploy at F3+
 to match adoption table. Core tenet: "Admiral is the engineering manual. Fleet is the
 parts catalog."
 aiStrat/fleet/README.md
@@ -520,7 +520,7 @@ governance.md - fleet/agents/specialists - 2026-03-08:
 7 Governance agents: Token Budgeter, Drift Monitor, Hallucination Auditor, Bias
 Sentinel, Loop Breaker, Context Health Monitor, Contradiction Detector. Includes
 Authoritative Ownership Table mapping ~20 failure modes to their authoritative owner,
-conflict resolution protocol, and alert deduplication. Marked "always deploy." Largest
+conflict resolution protocol, and alert deduplication. Deploy at F3+. Largest
 agent file (547 lines).
 aiStrat/fleet/agents/governance.md
 ```
@@ -624,21 +624,21 @@ aiStrat/brain/README.md
 
 ```
 level1-spec.md - brain/maturity-levels - 2026-03-10:
-Level 1 Brain: file-based JSON knowledge store. Filesystem + git only, no
+B1 Brain: file-based JSON knowledge store. Filesystem + git only, no
 infrastructure. Entry format (7 required fields), directory structure (.brain/project/),
 naming convention (timestamp-category-slug.json), shell wrapper, grep-based retrieval.
-Silent knowledge loss failure mode for no semantic search. Graduate to Level 2 when
-missed retrievals exceed 30% over 2 weeks. Includes compatibility mapping to Level 3
+Silent knowledge loss failure mode for no semantic search. Graduate to B2 when
+missed retrievals exceed 30% over 2 weeks. Includes compatibility mapping to B3
 Postgres columns.
 aiStrat/brain/level1-spec.md
 ```
 
 ```
 level2-spec.md - brain/maturity-levels - 2026-03-10:
-Level 2 Brain: SQLite + embeddings. Vector similarity search without infrastructure.
+B2 Brain: SQLite + embeddings. Vector similarity search without infrastructure.
 Full SQLite schema (entries, entry_links, audit_log), embedding generation examples
 (OpenAI text-embedding-3-small or local MiniLM), cosine similarity retrieval with 0.7
-threshold rationale and judgment boundary, Level 1 migration script. Graduate on
+threshold rationale and judgment boundary, B1 migration script. Graduate on
 concurrent access contention, cross-project needs, >500ms retrieval latency, multi-hop
 retrieval needs, or access control requirements.
 aiStrat/brain/level2-spec.md
@@ -646,13 +646,13 @@ aiStrat/brain/level2-spec.md
 
 ```
 level3-spec.md - brain/maturity-levels - 2026-03-13:
-Level 3 Brain: the COMPLETE Brain. Postgres + pgvector + MCP server + identity tokens
+B3 Brain: the COMPLETE Brain. Postgres + pgvector + MCP server + identity tokens
 + zero-trust access control. Full schema (entries with sensitivity/approved/authority_
 tier, entry_links, audit_log with session_id/entry_ids/risk_flags). 8 MCP tools.
 JWT identity tokens (ES256 recommended). Permission matrix. Sensitivity classification
 (standard/elevated/restricted). 5-layer quarantine for external intelligence. Multi-
-signal retrieval pipeline with 8 ranking signals. Migration from Level 2. No Brain
-changes at Levels 4-5.
+signal retrieval pipeline with 8 ranking signals. Migration from B2. B3 is the Brain's
+maximum level.
 aiStrat/brain/level3-spec.md
 ```
 
@@ -778,8 +778,8 @@ id, category, source, trigger, expected/actual behavior, severity, defenses, tes
 metadata. 18 seed scenarios covering authority spoofing (4), credential fabrication (3),
 behavior manipulation (3), prompt injection (3), failure scenarios (3), and chaos scenarios
 (2) — ordered by descending leverage with rationale. Three-source feedback pipeline (Red
-Team Agent, Incident Response Agent, Chaos Agent). Storage strategy for Level 1 (file-based)
-and Level 2+ (Brain `failure` category with attack corpus metadata tag).
+Team Agent, Incident Response Agent, Chaos Agent). Storage strategy for B1 (file-based)
+and B2+ (Brain `failure` category with attack corpus metadata tag).
 aiStrat/attack-corpus/README.md
 ```
 

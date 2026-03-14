@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # Monitor Digest Format
 
 Digest files are the primary output of the AI Landscape Monitor scanner. Each scan produces a markdown digest file stored in `monitor/digests/YYYY-MM-DD.md`.
@@ -72,5 +71,5 @@ Multiple scans on the same day append to the same file. Weekly deep scans produc
 
 - Digests are committed to the repository via CI (see `.github/workflows/ai-monitor.yml`).
 - High-priority findings automatically create GitHub issues for Admiral review.
-- Seed candidates require Admiral approval before Brain ingestion (Level 3+) or manual review (Level 1-2).
+- Seed candidates require Admiral approval before Brain ingestion (B3+) or manual review (B1-B2).
 - All external content in digests is treated as untrusted and must not be shell-expanded.

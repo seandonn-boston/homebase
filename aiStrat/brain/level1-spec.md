@@ -1,15 +1,14 @@
-<!-- Admiral Framework v0.4.0-alpha -->
-# Brain Level 1: File-Based Knowledge Store
+# B1: File-Based Knowledge Store
 
 **The lightest possible implementation of persistent fleet memory.**
 
-Level 1 validates the core hypothesis — that persistent semantic memory improves fleet performance — without any infrastructure beyond the filesystem and git. Start here. Measure. Graduate when keyword search fails you.
+B1 validates the core hypothesis — that persistent semantic memory improves fleet performance — without any infrastructure beyond the filesystem and git. Start here. Measure. Graduate when keyword search fails you.
 
 -----
 
 ## Entry Format
 
-Each entry is a single JSON file. The field names are a strict subset of the Level 3/4 Postgres `entries` table columns (see `schema/001_initial.sql`), ensuring straightforward import during graduation.
+Each entry is a single JSON file. The field names are a strict subset of the B3 Postgres `entries` table columns (see `schema/001_initial.sql`), ensuring straightforward import during graduation.
 
 ```json
 {
@@ -30,7 +29,7 @@ Each entry is a single JSON file. The field names are a strict subset of the Lev
 
 **Optional fields:** `metadata` (defaults to `{}`).
 
-**Category values:** `decision` | `outcome` | `lesson` | `context` | `failure` | `pattern` — same as Level 3/4.
+**Category values:** `decision` | `outcome` | `lesson` | `context` | `failure` | `pattern` — same as B3.
 
 **ID generation:** Use any UUID v4 generator. Shell: `uuidgen`. Python: `uuid.uuid4()`. The ID must be unique across all entries in all projects.
 
@@ -110,7 +109,7 @@ Usage: `brain_record "taskflow" "decision" "Chose JWT for auth" "JWT chosen beca
 
 ## Retrieval Interface
 
-Keyword search via standard command-line tools. No semantic understanding — this is the primary limitation that drives graduation to Level 2.
+Keyword search via standard command-line tools. No semantic understanding — this is the primary limitation that drives graduation to B2.
 
 **Search by content:**
 
@@ -152,7 +151,7 @@ grep -rl "prisma" .brain/
 
 ## Limitations
 
-Level 1 is deliberately minimal. These limitations are features, not bugs — they define exactly when to graduate.
+B1 is deliberately minimal. These limitations are features, not bugs — they define exactly when to graduate.
 
 - **No semantic search.** "How did we handle user authentication?" will not find entries about "JWT" or "login flow" unless those exact keywords appear. This is the primary limitation. **Failure mode: silent knowledge loss.** The fleet has the answer but cannot find it — the agent makes a decision without consulting relevant precedent, potentially contradicting a prior decision that used different terminology. This compounds: each undiscovered precedent is a missed opportunity to learn from past work.
 - **No concurrency model.** Two agents writing to `.brain/` simultaneously could create race conditions. Acceptable for single-agent or low-concurrency fleets.
@@ -172,15 +171,15 @@ Track "missed retrievals" — instances where an agent searches for a concept an
 2. **Search log:** Keep a simple log of searches and whether they returned the expected entries.
 3. **Post-session review:** After each session, check whether Brain entries that should have informed decisions were actually found and used.
 
-**Advance to Level 2 when:** Missed retrievals exceed 30% of searches over a 2-week period of active fleet operation. At that point, keyword search is failing often enough that the overhead of embedding generation and similarity search is justified.
+**Advance to B2 when:** Missed retrievals exceed 30% of searches over a 2-week period of active fleet operation. At that point, keyword search is failing often enough that the overhead of embedding generation and similarity search is justified.
 
 -----
 
 ## Compatibility Note
 
-The JSON fields used at Level 1 are a strict subset of the Level 3 Postgres `entries` table columns. Migration to Level 2 (SQLite) or Level 3 (Postgres) is a straightforward import:
+The JSON fields used at B1 are a strict subset of the B3 Postgres `entries` table columns. Migration to B2 (SQLite) or B3 (Postgres) is a straightforward import:
 
-| Level 1 JSON field | Level 2 SQLite column | Level 3 Postgres column |
+| B1 JSON field | B2 SQLite column | B3 Postgres column |
 |---|---|---|
 | `id` | `id` (TEXT) | `id` (UUID) |
 | `project` | `project` | `project` |
@@ -191,4 +190,4 @@ The JSON fields used at Level 1 are a strict subset of the Level 3 Postgres `ent
 | `source_agent` | `source_agent` | `source_agent` |
 | `created_at` | `created_at` | `created_at` (TIMESTAMPTZ) |
 
-Fields present in Level 3 but absent at Level 1 (`embedding`, `embedding_model`, `access_count`, `usefulness`, `superseded_by`, `sensitivity`, `approved`, `authority_tier`, `source_session`, `last_accessed_at`) are populated with defaults during migration.
+Fields present at B3 but absent at B1 (`embedding`, `embedding_model`, `access_count`, `usefulness`, `superseded_by`, `sensitivity`, `approved`, `authority_tier`, `source_session`, `last_accessed_at`) are populated with defaults during migration.

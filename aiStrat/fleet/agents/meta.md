@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # Meta & Autonomous Agents
 
 **Category:** Meta & Autonomous

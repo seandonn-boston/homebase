@@ -1,4 +1,3 @@
--- Admiral Framework v0.4.0-alpha
 -- Fleet Brain Schema
 -- Reference: admiral/spec/part5-brain.md, Brain Architecture
 --
