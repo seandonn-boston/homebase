@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.3.1-alpha -->
+<!-- Admiral Framework v0.4.0-alpha -->
 # The Fleet
 
 **A project-agnostic toolbox of agent definitions, prompts, and routing for the Fleet Admiral Framework.**
@@ -142,14 +142,14 @@ routing bottlenecks or when specific domain expertise gaps emerge.
 | Understand an agent's capabilities | `agents/[category].md` — read the agent definition |
 | See what an agent needs to operate | Agent definition → Context Profile |
 | See where an agent's output goes | Agent definition → Output Goes To |
-| Know when to consult a human professional | [admiral/part11-protocols.md, Section 39](../admiral/part11-protocols.md) |
-| Know the rules for paid resource access | [admiral/part11-protocols.md, Section 40](../admiral/part11-protocols.md) |
+| Know when to consult a human professional | [admiral/part11-protocols.md, Human Referral Protocol](../admiral/part11-protocols.md) |
+| Know the rules for paid resource access | [admiral/part11-protocols.md, Paid Resource Protocol](../admiral/part11-protocols.md) |
 | Assemble a system prompt | `prompt-anatomy.md` |
 | Inject project context into agents | `context-injection.md` |
 | Route a task to the right agent | `routing-rules.md` |
 | Understand handoff format between agents | `interface-contracts.md` |
 | Choose the right model for an agent | `model-tiers.md` |
-| Understand universal agent rules | [admiral/part11-protocols.md, Section 36](../admiral/part11-protocols.md) |
+| Understand universal agent rules | [admiral/part11-protocols.md, Standing Orders](../admiral/part11-protocols.md) |
 
 -----
 

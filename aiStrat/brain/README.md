@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.3.1-alpha -->
+<!-- Admiral Framework v0.4.0-alpha -->
 # The Brain — Architecture Specification
 
 **Long-term fleet memory: Postgres + pgvector, accessible via MCP.**
@@ -13,7 +13,7 @@ This directory contains the architecture specification for the Brain — the fle
 
 ## MCP Tool Contracts
 
-Each tool exposed by the Brain MCP server has a defined contract. See [admiral/part5-brain.md](../admiral/part5-brain.md) Section 16 for full behavioral semantics.
+Each tool exposed by the Brain MCP server has a defined contract. See [admiral/part5-brain.md](../admiral/part5-brain.md) Knowledge Protocol for full behavioral semantics.
 
 ### brain_record
 
@@ -139,7 +139,7 @@ Permanently delete a Brain entry for regulatory compliance (right-to-erasure). R
 
 **Errors:** `AUTHORITY_INSUFFICIENT` if caller is not Admiral. `NOT_FOUND` if entry does not exist. `ALREADY_PURGED` if entry was previously purged.
 
-> **Note:** The `audit_log` table now exists in the schema (`schema/001_initial.sql`). All eight MCP tools generate audit records on every invocation — see the Audit Logging section in Part 5, Section 16.
+> **Note:** The `audit_log` table now exists in the schema (`schema/001_initial.sql`). All eight MCP tools generate audit records on every invocation — see the Audit Logging section in Part 5, Knowledge Protocol.
 
 ## Design Artifacts
 
@@ -159,9 +159,9 @@ brain/
 
 | Part 5 Section | What It Specifies |
 |---|---|
-| Section 15 — Brain Architecture | Schema design, entry categories, strengthening model, vector embeddings |
-| Section 16 — Knowledge Protocol | MCP server tools, access control, audit logging, identity token lifecycle, RAG security |
-| Section 17 — Intelligence Lifecycle | Retrieval pipeline, multi-hop retrieval, knowledge graph, cross-project intelligence |
+| Brain Architecture (Part 5) | Schema design, entry categories, strengthening model, vector embeddings |
+| Knowledge Protocol (Part 5) | MCP server tools, access control, audit logging, identity token lifecycle, RAG security |
+| Intelligence Lifecycle (Part 5) | Retrieval pipeline, multi-hop retrieval, knowledge graph, cross-project intelligence |
 
 ## Architecture Decisions
 
@@ -169,7 +169,7 @@ brain/
 - **MCP as the universal interface.** Any agent that speaks MCP speaks to the Brain — Claude Code, Agent SDK agents, third-party agents. Protocol-agnostic by design.
 - **Zero-trust access control.** Identity tokens are cryptographically signed, session-scoped, non-delegable. No caller-declared identity trusted.
 - **Embedding generation is pluggable.** The `EmbeddingProvider` interface accepts any implementation — OpenAI, local models, or future alternatives. The `embedding_model` column tracks which model produced each entry's embedding for migration purposes, but no MCP tool exposes embedding model selection or re-embedding. Embedding generation is an infrastructure concern managed at the MCP server configuration level, not an agent-facing operation. At Level 2 (SQLite), the embedding model is configured at deployment time. Agents interact with embeddings indirectly through `brain_query` (semantic search) and `brain_record` (automatic embedding on write).
-- **Retrieval is multi-signal.** Vector similarity alone is insufficient. The pipeline applies eight ranking signals from Part 5, Section 17, including multi-hop traversal and contradiction awareness.
+- **Retrieval is multi-signal.** Vector similarity alone is insufficient. The pipeline applies eight ranking signals from Part 5, Intelligence Lifecycle, including multi-hop traversal and contradiction awareness.
 - **All access is audited.** Immutable, append-only audit log captures every operation with verified identity, risk flags, and sensitivity classification.
 
 ## Schema Overview
@@ -189,11 +189,11 @@ Indexes: HNSW for approximate nearest neighbor vector search, composite indexes 
 1. **Application sanitizer** — scans all entry fields before storage, rejects entries containing sensitive patterns
 2. **Database trigger** (`schema/001_initial.sql`) — SQL-level pattern rejection as defense-in-depth
 
-Store **knowledge** (patterns, decisions, lessons), not **data** (emails, credentials, PII). See [admiral/part11-protocols.md, Section 41](../admiral/part11-protocols.md) for the full protocol.
+Store **knowledge** (patterns, decisions, lessons), not **data** (emails, credentials, PII). See [admiral/part11-protocols.md, Data Sensitivity Classification](../admiral/part11-protocols.md) for the full protocol.
 
 ## Security Model
 
-See [admiral/part5-brain.md](../admiral/part5-brain.md) Section 16 for the full specification:
+See [admiral/part5-brain.md](../admiral/part5-brain.md) Knowledge Protocol for the full specification:
 
 - **Identity tokens** with cryptographic signatures, session scoping, rotation, revocation, and non-delegation
 - **Permission matrix** enforced at runtime: read own project (all agents), read cross-project (orchestrators/Admiral only), write own project, supersede (orchestrator/Admiral only)

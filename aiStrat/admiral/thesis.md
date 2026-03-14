@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.3.1-alpha -->
+<!-- Admiral Framework v0.4.0-alpha -->
 # Admiral Thesis
 
 **The operational infrastructure for AI workforces.**
@@ -74,4 +74,4 @@ Admiral is what makes it safe to run AI agents as a workforce instead of using t
 
 ---
 
-*Full analysis: [research/future-operations.md](../research/future-operations.md)*
+*Full analysis: [research/future-operations.md](../../research/future-operations.md)*

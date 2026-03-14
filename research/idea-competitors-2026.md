@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.3.1-alpha -->
 # Who Threatens Admiral's Idea? — March 2026
 
 **Date:** March 13, 2026

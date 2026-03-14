@@ -1,7 +1,7 @@
-<!-- Admiral Framework v0.3.1-alpha -->
+<!-- Admiral Framework v0.4.0-alpha -->
 # Admiral Framework — File Manifest
 
-**109 files across 22 groups | Last modified: 2026-03-14**
+**114 files across 22 groups | Last modified: 2026-03-14**
 
 This is the semantic catalog of every file in the Admiral Framework. Each entry describes what the file contains, verified against the source. Update this manifest when files are added, removed, renamed, or when their content changes materially.
 
@@ -19,9 +19,9 @@ fully complete at Level 3. Links all 11 parts.
 Minimum Viable Reading Path (~800 lines of targeted reading):
   1. index.md — Glossary + Adoption Levels (shared vocabulary and roadmap)
   2. part1-strategy.md — Full file (Mission, Boundaries, Success Criteria)
-  3. part3-enforcement.md — Section 08 only (enforcement spectrum: hooks over instructions)
+  3. part3-enforcement.md — Deterministic Enforcement only (enforcement spectrum: hooks over instructions)
   3.5. intent-engineering.md — Six Elements of Intent (how to write effective agent directives)
-  4. part11-protocols.md — Section 36 only (Standing Orders: 15 non-negotiable rules)
+  4. part11-protocols.md — Standing Orders only (15 non-negotiable rules)
   5. appendices.md — Appendix A only (Pre-Flight Checklist: go/no-go gate)
 
 Also includes: operating model ("You are the Admiral" with intent engineering as
@@ -73,7 +73,7 @@ Three sections: Deterministic Enforcement (08) — the enforcement spectrum (hoo
 instruction / guidance), hook lifecycle events, hook execution model, self-healing
 loops with implementation parameters table (max retries, cycle detection, error
 signatures), two-layer retry mechanism clarification (hook vs recovery ladder),
-co-requirement note linking to Standing Orders (Section 36); Decision Authority (09) —
+co-requirement note linking to Standing Orders; Decision Authority (09) —
 four tiers (Enforced, Autonomous, Propose, Escalate); Configuration Security (10) —
 threat model, MCP server auditing, CODEOWNERS.
 aiStrat/admiral/part3-enforcement.md
@@ -114,7 +114,7 @@ part7-quality.md - admiral/doctrine - 2026-03-10:
 Three sections: Quality Assurance (21) — verification levels with "What It Catches"
 rationale, self-healing loops; Failure Recovery (22) — recovery ladder with intent
 framing (preserve autonomy, escalate only when exhausted, no skipping rungs), forward
-reference to Section 37 escalation report format; Known Agent Failure Modes (23) —
+reference to Escalation Protocol report format; Known Agent Failure Modes (23) —
 comprehensive catalog of systematic fleet failure patterns with framework-level failure
 modes and diagnostic decision tree.
 aiStrat/admiral/part7-quality.md
@@ -238,7 +238,7 @@ four severity levels and fatigue prevention. Operator intervention catalog (paus
 halt, kill, reroute, override, inject context) with audit trail. Operational workflows
 (morning review, incident response, fleet scaling). Integration points with external
 tools (Slack, GitHub, Datadog, PagerDuty). Operator-facing metrics vs. vanity metrics.
-Extends Section 30 (Observability) into an actionable product surface.
+Extends Fleet Observability (Part 9) into an actionable product surface.
 aiStrat/admiral/fleet-control-plane.md
 ```
 
@@ -759,7 +759,7 @@ aiStrat/monitor/digests/
 
 ```
 handoff/v1.schema.json - handoff/schema - 2026-03-09:
-Canonical JSON Schema for the handoff protocol (Section 38). Defines required fields
+Canonical JSON Schema for the handoff protocol (Handoff Protocol). Defines required fields
 (from, to, via, task, deliverable, acceptance_criteria) and optional fields (context_files,
 constraints, assumptions, open_questions, metadata for domain extensions, session_handoff).
 Dual-format: JSON is canonical for validation; text rendering for human/agent consumption.
@@ -983,7 +983,7 @@ aiStrat/.claude/settings.local.json
 sales-pitch-30min-guide.md - sales/guide - 2026-03-10:
 30-minute conversation guide for presenting the Admiral Framework. Structured as:
 30-second pitch → 8-10 min market context → 12-15 min product pitch → 5-7 min
-status/roadmap → Q&A cheat sheet. References v0.3.1-alpha status, 71 agent definitions,
+status/roadmap → Q&A cheat sheet. References v0.4.0-alpha status, 71 agent definitions,
 15,000+ lines of spec. Includes objection handling for "just a spec" and "why not
 LangGraph/CrewAI" concerns.
 aiStrat/sales-pitch-30min-guide.md
@@ -991,10 +991,11 @@ aiStrat/sales-pitch-30min-guide.md
 
 ---
 
-> **Note:** Research (5 files) and thesis (3 files) documents have been relocated to
-> the repository root (`research/` and `thesis/`). They are strategy and investment
+> **Note:** Research (14 files, consolidated in v0.4.0-alpha) and thesis (6 files) documents
+> live at the repository root (`research/` and `thesis/`). They are strategy and investment
 > documents, not specification artifacts, and are excluded from the spec versioning
-> policy. See `AGENTS.md` for versioning scope details.
+> policy. Eight additional research files were moved from `aiStrat/research/` to root
+> `research/` in v0.4.0-alpha. See `AGENTS.md` for versioning scope details.
 
 ## Admiral Strategic Research (1 file)
 
@@ -1007,5 +1008,5 @@ differently, what systems made Admiral necessary, what fears disappear, new job 
 if Admiral disappears (the dependency test), and the core thesis that Admiral enables
 a new organizational form — the hybrid organization with AI agents as permanent
 operational members. Historical parallel to the invention of the corporation.
-aiStrat/research/future-operations.md
+research/future-operations.md
 ```

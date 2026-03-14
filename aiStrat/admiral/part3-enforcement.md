@@ -1,19 +1,21 @@
-<!-- Admiral Framework v0.3.1-alpha -->
+<!-- Admiral Framework v0.4.0-alpha -->
 # PART 3 — ENFORCEMENT
 
 *The gap between "should" and "must."*
 
 *An instruction says "don't do this." Enforcement makes it impossible. Every constraint you define in Parts 1 and 2 falls somewhere on the spectrum from soft guidance to hard enforcement. These three sections define that spectrum, assign each constraint to its correct level, and secure the enforcement layer itself against attack.*
 
+> **Control Plane surface:** Hook execution status, violation logs, and enforcement coverage metrics are visible in the Control Plane. At Level 1, this is a line in the CLI status display. At Level 2+, it is a dedicated enforcement dashboard showing which hooks fired, which blocked, and which Standing Orders lack hook coverage.
+
 -----
 
-## 08 — DETERMINISTIC ENFORCEMENT
+## Deterministic Enforcement
 
 > **TL;DR** — An instruction in AGENTS.md saying "never use rm -rf" can be forgotten. A PreToolUse hook that blocks it fires every single time. Any constraint that must hold with zero exceptions must be a hook, not an instruction.
 
 This distinction — between advisory instructions and deterministic enforcement — is the foundation of reliable fleet operations.
 
-> **PREREQUISITE: Read Standing Orders (Section 36, Part 11) before implementing hooks.** Standing Orders define the *policy* that hooks enforce. Both are Level 1 requirements. Implementing hooks without Standing Orders produces enforcement without governance — the hooks enforce nothing meaningful. Hooks are the mechanism; Standing Orders are the policy.
+> **PREREQUISITE: Read Standing Orders (Part 11) before implementing hooks.** Standing Orders define the *policy* that hooks enforce. Both are Level 1 requirements. Implementing hooks without Standing Orders produces enforcement without governance — the hooks enforce nothing meaningful. Hooks are the mechanism; Standing Orders are the policy.
 
 ### The Enforcement Spectrum
 
@@ -66,7 +68,7 @@ Agent action
           → Exit non-zero: cycle counter increments
             → Counter < MAX_RETRIES (default: 3): agent retries
             → Counter >= MAX_RETRIES: hook returns permanent failure
-              → Agent moves to next step on recovery ladder (Section 22)
+              → Agent moves to next step on recovery ladder (Failure Recovery, Part 7)
 ```
 
 **Cycle detection:** The runtime tracks `(hook_name, error_signature)` tuples. If the same error signature appears in consecutive retries, the loop is broken immediately — the agent is producing the same failure repeatedly and further retries are wasteful. The agent receives: `"Self-healing loop terminated: identical error after N retries. Moving to recovery ladder step 2 (fallback)."`
@@ -122,7 +124,7 @@ PostToolUse: loop_detector
                 "agent_identity": "...", "trace_id": "..." }
   Output:     Exit 0: no loop detected.
               Exit non-zero: "Loop detected: error signature '{sig}' repeated {count} times.
-              Moving to recovery ladder (Section 22)."
+              Moving to recovery ladder (Failure Recovery, Part 7)."
   Behavior:   Tracks (agent_id, error_signature) tuples across invocations.
               Triggers when: same error recurs 3+ times, OR total retry count across all
               error signatures in a session exceeds configurable maximum (default: 10).
@@ -281,7 +283,7 @@ One deterministic check that fires every time and self-heals is more effective t
 
 > **Implementation lesson (Admiral-builds-Admiral):** The spec describes self-healing conceptually but leaves implementation parameters to the implementer. The defaults above are recommended starting values. The cycle detection via `(hook_name, error_signature)` tuples was the key insight — without it, agents retry the same broken fix indefinitely.
 
-> **Two retry mechanisms, different layers:** Hook self-healing retries (max 3, automatic, deterministic) operate at the enforcement layer. The recovery ladder retries in Standing Order 6 and Section 22 ("2-3 attempts, each genuinely different") operate at the task layer and are agent-driven. These are complementary, not competing: hooks catch mechanical failures; the recovery ladder handles strategic dead ends. When hook retries are exhausted, escalation flows to the recovery ladder (step 2: fallback).
+> **Two retry mechanisms, different layers:** Hook self-healing retries (max 3, automatic, deterministic) operate at the enforcement layer. The recovery ladder retries in Standing Order 6 and Failure Recovery (Part 7) ("2-3 attempts, each genuinely different") operate at the task layer and are agent-driven. These are complementary, not competing: hooks catch mechanical failures; the recovery ladder handles strategic dead ends. When hook retries are exhausted, escalation flows to the recovery ladder (step 2: fallback).
 
 > **TEMPLATE: ENFORCEMENT CLASSIFICATION**
 >
@@ -308,7 +310,7 @@ One deterministic check that fires every time and self-heals is more effective t
 
 -----
 
-## 09 — DECISION AUTHORITY
+## Decision Authority
 
 > **TL;DR** — Four tiers: Enforced (hooks decide), Autonomous (agent decides), Propose (agent recommends, Admiral approves), Escalate (stop all work). Every decision must be assigned to a tier.
 
@@ -333,7 +335,7 @@ Every orchestrator needs a clear decision envelope: what it may decide autonomou
 | External-facing or regulated | Narrow Autonomous significantly. |
 | Self-healing hooks in place | Widen Autonomous for hook-covered categories. |
 
-> **ANTI-PATTERN: DEFERENCE CASCADING** — One agent is uncertain, defers to another, who defers back. The decision is made by whichever agent is last — usually the least qualified. **Uncertainty always flows upward (to Orchestrator or Admiral), never sideways (to a peer agent).** Handoffs between peers (Section 38) transfer *work*, not *uncertainty*. If Agent A is uncertain about a task, it escalates to the Orchestrator — it does not hand the uncertainty to Agent B as a task. The Orchestrator resolves the uncertainty, then delegates clearly-scoped work to the appropriate agent.
+> **ANTI-PATTERN: DEFERENCE CASCADING** — One agent is uncertain, defers to another, who defers back. The decision is made by whichever agent is last — usually the least qualified. **Uncertainty always flows upward (to Orchestrator or Admiral), never sideways (to a peer agent).** Handoffs between peers (Handoff Protocol, Part 11) transfer *work*, not *uncertainty*. If Agent A is uncertain about a task, it escalates to the Orchestrator — it does not hand the uncertainty to Agent B as a task. The Orchestrator resolves the uncertainty, then delegates clearly-scoped work to the appropriate agent.
 
 > **VULNERABILITY (8.3.2): AUTHORITY SELF-ESCALATION** — Decision authority tiers
 > are vulnerable to poisoning when stored as advisory documentation rather than
@@ -343,7 +345,7 @@ Every orchestrator needs a clear decision envelope: what it may decide autonomou
 >
 > **Required mitigations (all three are mandatory, not optional):**
 >
-> 1. **Quarantine layer validation:** The Brain's quarantine immune system (Section 10)
+> 1. **Quarantine layer validation:** The Brain's quarantine immune system (Configuration Security)
 >    must include authority-escalation pattern detection. Any entry referencing
 >    authority tiers, decision permissions, or scope modifications is flagged for
 >    Admiral review before activation.
@@ -351,7 +353,7 @@ Every orchestrator needs a clear decision envelope: what it may decide autonomou
 >    at session start, not read from Brain entries or configuration files during
 >    execution. An agent cannot change its own authority tier mid-session.
 >    At Levels 1-3, identity may be a simple agent-id + role string set by the
->    runtime. At Level 4, identity is a cryptographically signed token (see Section 16).
+>    runtime. At Level 4, identity is a cryptographically signed token (see Knowledge Protocol, Part 5).
 >    The requirement is immutable binding, not cryptographic signing — the signing
 >    sophistication scales with adoption level.
 >
@@ -378,7 +380,7 @@ Every orchestrator needs a clear decision envelope: what it may decide autonomou
 
 -----
 
-## 10 — CONFIGURATION SECURITY
+## Configuration Security
 
 > **TL;DR** — Agent configs are attack surfaces. Memory poisoning persists across sessions. Supply chain attacks arrive through MCP servers and skills. Audit everything, pin versions, treat configs as security-critical code.
 
@@ -398,7 +400,7 @@ Agent configurations are attack surfaces. A compromised AGENTS.md (or tool-speci
 
 1. **Red team:** Attempt to make the agent violate constraints. Probe for injection in skills and MCP servers. Test memory poisoning. Attempt permission escalation.
 2. **Blue team:** Review for overly broad permissions. Audit MCP access. Verify hooks cover critical constraints. Check scope enforcement.
-3. **Auditor:** Compare actual behavior against documented constraints. Verify enforcement classification (Section 08) is implemented correctly.
+3. **Auditor:** Compare actual behavior against documented constraints. Verify enforcement classification (Deterministic Enforcement) is implemented correctly.
 
 ### External Intelligence Quarantine
 

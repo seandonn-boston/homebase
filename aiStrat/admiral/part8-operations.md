@@ -1,13 +1,15 @@
-<!-- Admiral Framework v0.3.1-alpha -->
+<!-- Admiral Framework v0.4.0-alpha -->
 # PART 8 — OPERATIONS
 
 *How work persists, adapts, and scales over time.*
 
 *Parts 1–7 cover a single fleet executing a single phase of work. Part 8 addresses the ongoing reality: sessions end, requirements change, budgets matter, fleets grow and shrink, and multiple projects run simultaneously. These six sections keep the enterprise healthy over time.*
 
+> **Control Plane surface:** Cost tracking, fleet health metrics, and scaling recommendations are the Control Plane's primary operations surface (Level 3+). At Level 4+, trend analysis shows whether the fleet is getting more efficient over time.
+
 -----
 
-## 24 — INSTITUTIONAL MEMORY
+## Institutional Memory
 
 > **TL;DR** — Agents lose context between sessions. Use checkpoint files, ledger files, handoff documents, or git-based state to persist across context window boundaries. Session persistence is the single biggest UX pain point in agentic coding.
 
@@ -62,7 +64,7 @@ Chronological record of every non-trivial decision: timestamp, decision, alterna
 
 -----
 
-## 25 — ADAPTATION PROTOCOL
+## Adaptation Protocol
 
 > **TL;DR** — Three tiers of change: Tactical (update tasks, no pause), Strategic (pause, cascade through artifacts, resume), Full Pivot (halt, restart from scratch). Every artifact update must cascade through its downstream dependencies.
 
@@ -80,11 +82,11 @@ The Continuous AI Landscape Monitor (`monitor/`) is designed to surface ecosyste
 
 | Monitor Finding | Likely Classification | Cascade Target |
 |---|---|---|
-| New flagship model release (e.g., Opus 5) | Strategic Shift | Model Selection (13) → Cost Management (26) → Fleet Composition (11) |
-| New economy-tier model matching workhorse quality | Strategic Shift | Model Selection (13) → Cost Management (26) |
+| New flagship model release (e.g., Opus 5) | Strategic Shift | Model Selection (Part 4) → Cost Management → Fleet Composition (Part 4) |
+| New economy-tier model matching workhorse quality | Strategic Shift | Model Selection (Part 4) → Cost Management |
 | Exemplar tool redesigns agent patterns | Tactical Adjustment | Agent definitions, prompt anatomy, context profiles |
-| New MCP server ecosystem emerges | Tactical or Strategic | Tool Registry (12) → Protocol Integration (14) |
-| Security vulnerability in tracked dependency | Strategic Shift | Configuration Security (10) → Tool Registry (12) |
+| New MCP server ecosystem emerges | Tactical or Strategic | Tool Registry (Part 4) → Protocol Integration (Part 4) |
+| Security vulnerability in tracked dependency | Strategic Shift | Configuration Security (Part 3) → Tool Registry (Part 4) |
 
 The Monitor specification defines a daily scan cadence. The Admiral should review digests at matching cadence and classify findings before they accumulate into stale intelligence.
 
@@ -93,30 +95,30 @@ The Monitor specification defines a daily scan cadence. The Admiral should revie
 Framework artifacts form a dependency graph. When one changes, downstream artifacts may become stale.
 
 ```
-Mission (01) ──→ Boundaries (02) ──→ Success Criteria (03)
-     │                │                       │
-     │                ▼                       ▼
-     │         Work Decomposition (18) ──→ Parallel Execution (19)
-     │                                        │
-     │                                        ▼
-     │         Quality Assurance (21) ──→ Fleet Health Metrics (27) ──→ Cost Management (26)
-     │                                        │
-     │                                        └──→ Fleet Observability (30) ──→ Fleet Evaluation (32)
+Mission ──→ Boundaries ──→ Success Criteria
+     │            │                 │
+     │            ▼                 ▼
+     │     Work Decomposition ──→ Contract-First Parallelism
+     │                                  │
+     │                                  ▼
+     │     Quality Assurance ──→ Fleet Health Metrics ──→ Cost Management
+     │                                  │
+     │                                  └──→ Fleet Observability ──→ Evaluation & Benchmarking
      │
      ▼
-Ground Truth (05) ──→ Fleet Composition (11) ──→ Decision Authority (09) ──→ Admiral Self-Calibration (33)
-                              │
-                              ├──→ Context Profiles (06)
-                              ├──→ Context Engineering (04)
-                              ├──→ Tool Registry (12) ──→ Protocol Integration (14)
-                              │                                 │
-                              │                                 └──→ Brain Architecture (15) ──→ Knowledge Protocol (16)
-                              │                                              │
-                              │                                              └──→ Institutional Memory (24)
-                              ├──→ Model Selection (13) ──→ Cost Management (26)
-                              └──→ Fleet Scaling (28) ──→ CI/CD Operations (31)
+Ground Truth ──→ Fleet Composition ──→ Decision Authority ──→ Admiral Self-Calibration
+                        │
+                        ├──→ Context Profiles
+                        ├──→ Context Engineering
+                        ├──→ Tool Registry ──→ Protocol Integration
+                        │                           │
+                        │                           └──→ Brain Architecture ──→ Knowledge Protocol
+                        │                                        │
+                        │                                        └──→ Institutional Memory
+                        ├──→ Model Selection ──→ Cost Management
+                        └──→ Fleet Scaling & Lifecycle ──→ Event-Driven Operations
 
-Enforcement (08) ──→ Config Strategy (07) ──→ Config Security (10)
+Deterministic Enforcement ──→ Configuration File Strategy ──→ Configuration Security
 ```
 
 **The cascade rule:** Update an artifact, then review every downstream artifact. Revise any that are inconsistent.
@@ -138,17 +140,17 @@ Enforcement (08) ──→ Config Strategy (07) ──→ Config Security (10)
 
 -----
 
-## 26 — COST MANAGEMENT
+## Cost Management
 
-> **TL;DR** — The biggest cost lever is LLM-Last design (Section 02): eliminating 30-60% of LLM calls by routing to deterministic tools. Second: model tier assignment. Third: context size via progressive disclosure. Track spend in dollars, not just tokens.
+> **TL;DR** — The biggest cost lever is LLM-Last design (Boundaries (Part 1)): eliminating 30-60% of LLM calls by routing to deterministic tools. Second: model tier assignment. Third: context size via progressive disclosure. Track spend in dollars, not just tokens.
 
 ### Cost Drivers and Levers
 
 | Cost Driver | Lever | Impact |
 |---|---|---|
-| **LLM for deterministic tasks** | LLM-Last design (Section 02) | **Highest.** Eliminates 30-60% of LLM calls. |
-| **Model tier** | Demote where quality is indistinguishable at lower tier (Section 13) | High. Economy-tier at 1/30th cost. |
-| **Context size** | Progressive disclosure, <150 line rule (Section 07) | High. Every loaded token is billed. |
+| **LLM for deterministic tasks** | LLM-Last design (Boundaries (Part 1)) | **Highest.** Eliminates 30-60% of LLM calls. |
+| **Model tier** | Demote where quality is indistinguishable at lower tier (Model Selection (Part 4)) | High. Economy-tier at 1/30th cost. |
+| **Context size** | Progressive disclosure, <150 line rule (Configuration File Strategy (Part 2)) | High. Every loaded token is billed. |
 | **Retry and rework** | Sharper criteria and self-healing hooks | Medium. Each retry doubles chunk cost. |
 | **Over-decomposition** | Consolidate small chunks | Medium. Each chunk pays context tax. |
 | **Tool call volume** | Cap calls per task | Lower but compounds at scale. |
@@ -201,11 +203,11 @@ When a fleet shares pooled access to external subscription services (LLM API key
 
 **When to deploy:** Level 3+ fleets sharing pooled API keys or subscription accounts. At Level 2, manual credential management with per-agent API keys is sufficient.
 
-**Integration points:** Billing output feeds per-agent cost attribution (this section). Session telemetry feeds Fleet Observability (Section 30). Credential vault integrates with Configuration Security (Section 10).
+**Integration points:** Billing output feeds per-agent cost attribution (this section). Session telemetry feeds Fleet Observability (Part 9). Credential vault integrates with Configuration Security (Part 3).
 
 -----
 
-## 27 — FLEET HEALTH METRICS
+## Fleet Health Metrics
 
 > **TL;DR** — Track productivity, quality, and coordination metrics. Interpret them in combination. Every review ends with "no changes needed" or "metric X indicates problem Y — here is the adjustment."
 
@@ -265,11 +267,11 @@ Complement threshold-based alerts with SRE-style error budgets to manage the vel
 
 **Recalibration:** Error budgets should be recalibrated quarterly or after significant fleet changes (new agents, model upgrades, adoption level changes). Initial budgets for new fleets should be generous — tighten as baselines stabilize.
 
-Error budgets formalize what Section 27's metric interpretation already implies: "Throughput up, Quality down" means the fleet is burning its error budget faster than expected.
+Error budgets formalize what Fleet Health Metrics' metric interpretation already implies: "Throughput up, Quality down" means the fleet is burning its error budget faster than expected.
 
 -----
 
-## 28 — FLEET SCALING & LIFECYCLE
+## Fleet Scaling & Lifecycle
 
 > **TL;DR** — Fleets evolve through five phases: Standup → Acceleration → Steady State → Wind-Down → Dormant. Scale up when generalists produce lower quality in specific domains. Scale down when specialists idle.
 
@@ -309,7 +311,7 @@ When removing an individual agent from a running fleet:
 
 -----
 
-## 28b — ORCHESTRATOR HEALTH PROTOCOL
+## Orchestrator Health Protocol
 
 > **TL;DR** — The Orchestrator is the fleet's single coordination point. If it degrades, everything downstream degrades silently. This section defines how to detect Orchestrator degradation using existing governance agents and what to do when it's detected.
 
@@ -336,7 +338,7 @@ The following signals indicate the Orchestrator is degrading. Any single signal 
 
 | Signal | Detection Method | Threshold |
 |---|---|---|
-| **Routing error rate rising** | Handoff rejection rate (Section 27) increasing within session | >15% rejection rate (healthy baseline: <5%) |
+| **Routing error rate rising** | Handoff rejection rate (Fleet Health Metrics) increasing within session | >15% rejection rate (healthy baseline: <5%) |
 | **Overhead ratio climbing** | Orchestrator token consumption / total fleet token consumption | >25% of session budget on coordination |
 | **Decomposition quality dropping** | Specialist agents requesting re-decomposition or reporting unclear acceptance criteria | 3+ re-decomposition requests in a single session |
 | **Context amnesia** | Orchestrator re-routing tasks it already routed, losing track of in-flight parallel work, or dropping Standing Orders from standing context | Any duplicate routing within a session, or Standing Orders absent from context check |
@@ -361,7 +363,7 @@ When degradation is detected, the response is graduated:
 - Action: Stand up a fresh Orchestrator instance with clean context. Transfer the checkpoint state and fleet roster. The degraded Orchestrator's decision log is preserved for forensic review. The new instance starts with full standing context and the decision log loaded as reference (not as binding state).
 - Who triggers: Admiral.
 
-**No Level 4.** If Orchestrator rotation doesn't resolve the issue, the problem is not the Orchestrator — it's the fleet configuration (too many agents, too much parallel work, unclear routing rules). The Admiral should audit the fleet configuration per Section 28 (Scaling Signals: "Over-specialized" or "Should split").
+**No Level 4.** If Orchestrator rotation doesn't resolve the issue, the problem is not the Orchestrator — it's the fleet configuration (too many agents, too much parallel work, unclear routing rules). The Admiral should audit the fleet configuration per Fleet Scaling & Lifecycle (Scaling Signals: "Over-specialized" or "Should split").
 
 ### Routing Audit
 
@@ -378,7 +380,7 @@ The Orchestrator's routing decisions are spot-checked, not comprehensively revie
 
 -----
 
-## 29 — INTER-FLEET GOVERNANCE
+## Inter-Fleet Governance
 
 > **TL;DR** — Multiple fleets are isolated by default. Sharing happens through Admiral Relay (manual) or A2A (automated). Review across fleets regularly for promotable patterns, systemic failures, and resource imbalances.
 

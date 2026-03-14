@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.3.1-alpha -->
+<!-- Admiral Framework v0.4.0-alpha -->
 # AGENTS.md
 
 This file provides guidance to any AI coding agent working with this repository. It is the canonical, model-agnostic instruction file for the Admiral Framework. Tool-specific entry points (e.g., `CLAUDE.md` for Claude Code) should reference this file and add only tool-specific configuration.
@@ -13,7 +13,7 @@ aiStrat is the **Admiral Framework** — a comprehensive specification for AI ag
 
 ### Three Pillars
 
-1. **Doctrine (admiral/)** — 11-part operational framework defining strategy, context engineering, enforcement, fleet composition, the Brain knowledge system, execution patterns, quality assurance, operations, platform integration, meta-agent governance, and universal protocols. Start with `admiral/index.md`.
+1. **Doctrine (admiral/)** — 12-part operational framework defining strategy, context engineering, enforcement, fleet composition, the Brain knowledge system, execution patterns, quality assurance, operations, platform integration, meta-agent governance, universal protocols, and the closed-loop data ecosystem. Cross-references use descriptive Part-based names (e.g., "Deterministic Enforcement (Part 3)") — no section numbers. Start with `admiral/index.md`.
 2. **Fleet (fleet/)** — Agent catalog with 71 core role definitions (plus 29 extended in `fleet/agents/extras/`), prompt assembly patterns, routing rules, interface contracts, model tier assignments, and context injection guides. Each agent is a self-contained specification — project-agnostic, independently deployable.
 3. **Design Artifacts (brain/, monitor/)** — Architecture specifications for the Brain (semantic long-term memory) and Monitor (ecosystem intelligence with immune system). Includes database schema and architectural diagrams, not code.
 
@@ -30,14 +30,14 @@ aiStrat is the **Admiral Framework** — a comprehensive specification for AI ag
 | Understand the immune system | `monitor/README.md` |
 | See the database schema | `brain/schema/001_initial.sql` |
 | Know the universal agent rules | `admiral/part11-protocols.md` |
-| Understand the threat model | `admiral/part3-enforcement.md` (Section 10) |
+| Understand the threat model | `admiral/part3-enforcement.md` (Configuration Security) |
 | Implement the framework | `admiral/reference-constants.md` |
 | Start adopting the framework | `admiral/index.md` → Adoption Levels |
 | Integrate with a platform | `admiral/appendices.md` → Appendix E |
 
 ## Versioning
 
-- **Current version: v0.3.1-alpha** (pre-release, not yet published)
+- **Current version: v0.4.0-alpha** (pre-release, not yet published)
 - The framework uses [semantic versioning](https://semver.org/) with pre-release labels: `MAJOR.MINOR.PATCH[-label]`
 - The authoritative version string lives in `admiral/index.md` (line 6). All other version references must match it.
 - **Version appears in 3 locations:** `admiral/index.md` (line 6, display version), `admiral/appendices.md` (Appendix F footer), and as an HTML comment `<!-- Admiral Framework vX.Y.Z-label -->` on line 1 of every `.md` file within `aiStrat/` (or SQL comment `-- Admiral Framework vX.Y.Z-label` on line 1 of every `.sql` file).

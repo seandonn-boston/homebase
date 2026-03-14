@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.3.1-alpha -->
+<!-- Admiral Framework v0.4.0-alpha -->
 # Domain Specialization Agents
 
 **Category:** Domain Specialization
@@ -104,7 +104,7 @@ The Auth & Identity Specialist is **stateless** — its knowledge is entirely pr
 
 The specialist produces **auth configuration artifacts** — auth flow specifications, token lifecycle documents, session architecture designs, OAuth/OIDC integration configs — that are persisted as project files.
 
-**Design/Runtime separation:** The specialist handles **design** (architecting auth flows and producing configuration artifacts). **Runtime identity enforcement** is entirely hook-based (`SessionStart: identity_validation` in Section 08) and does NOT depend on the specialist being online. This separation means the specialist's unavailability never blocks runtime identity enforcement — only new auth design work is deferred.
+**Design/Runtime separation:** The specialist handles **design** (architecting auth flows and producing configuration artifacts). **Runtime identity enforcement** is entirely hook-based (`SessionStart: identity_validation` in Deterministic Enforcement) and does NOT depend on the specialist being online. This separation means the specialist's unavailability never blocks runtime identity enforcement — only new auth design work is deferred.
 
 ### Prompt Anchor
 

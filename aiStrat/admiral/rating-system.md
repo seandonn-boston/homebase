@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.3.1-alpha -->
+<!-- Admiral Framework v0.4.0-alpha -->
 # THE ADMIRAL RATING SYSTEM
 
 **The Standard Benchmark for AI Automation Ratings**
@@ -33,9 +33,9 @@ Six categories of evaluation require human judgment, and no amount of automation
 
 **2. Boundary Adequacy.** Are the declared boundaries the *right* boundaries? An automated evaluation can verify that an agent respects its boundaries (behavioral probing). It cannot verify that the boundaries themselves are correct — that non-goals are truly non-goals, that quality floors are set appropriately, that the enforcement spectrum classifies constraints at the right tier. Boundaries are the product of human judgment about risk, values, and priorities. Their adequacy can only be evaluated by human judgment.
 
-**3. Failure Mode Completeness.** Are the cataloged failure modes the *real* risks? Section 23 catalogs twenty failure modes. An automated evaluation can test whether defenses exist for each. It cannot determine whether the catalog is complete for a specific deployment context. A healthcare agent fleet may face failure modes (clinical reasoning hallucination, regulatory compliance drift) that don't appear in any generic catalog. Only domain-expert humans can identify missing failure modes.
+**3. Failure Mode Completeness.** Are the cataloged failure modes the *real* risks? The Failure Mode Catalog (Part 7) catalogs twenty failure modes. An automated evaluation can test whether defenses exist for each. It cannot determine whether the catalog is complete for a specific deployment context. A healthcare agent fleet may face failure modes (clinical reasoning hallucination, regulatory compliance drift) that don't appear in any generic catalog. Only domain-expert humans can identify missing failure modes.
 
-**4. Trust Appropriateness.** Is the current autonomy level justified by the system's actual track record? Trust calibration (Section 33) is earned per category and withdrawn precisely. But the *threshold* — how much evidence justifies widening Autonomous tier — is a human judgment call that depends on the stakes, the domain, and the organization's risk tolerance. Two fleets with identical metrics may warrant different trust levels because the consequences of failure differ.
+**4. Trust Appropriateness.** Is the current autonomy level justified by the system's actual track record? Trust calibration (Admiral Self-Calibration, Part 10) is earned per category and withdrawn precisely. But the *threshold* — how much evidence justifies widening Autonomous tier — is a human judgment call that depends on the stakes, the domain, and the organization's risk tolerance. Two fleets with identical metrics may warrant different trust levels because the consequences of failure differ.
 
 **5. Contextual Fitness.** Is the system making decisions that are contextually appropriate for the organization's situation? An agent that produces optimal technical decisions may be organizationally wrong — building for scale when the company needs to validate product-market fit, or optimizing for performance when the real constraint is time-to-market. Contextual fitness is invisible to any metric that doesn't incorporate organizational reality.
 
@@ -102,7 +102,7 @@ Admiral ratings apply to five categories. Each category has both automated evalu
 | Gate | What the Human Evaluates | Required Evidence | Why Only a Human Can Judge This |
 |---|---|---|---|
 | **HJG-F1: Strategic Alignment** | Does the fleet's output — taken as a whole across sessions and agents — serve the organization's actual goals? Are the right problems being solved? | Fleet output portfolio: last 30 days of completed work, decision logs, escalation history. Organizational goals and strategic context. | Individual agent outputs may be excellent while the fleet collectively drifts from what matters. Strategic alignment requires understanding *what the organization needs*, not just what the instructions say. |
-| **HJG-F2: Failure Mode Completeness** | Are the documented failure modes the real risks for this specific deployment? What failure modes are missing from the catalog? | Section 23 failure mode catalog, deployment-specific risk assessment, incident history, domain expert input. | Generic failure catalogs miss domain-specific risks. A financial services fleet faces regulatory compliance drift that a SaaS fleet doesn't. Only humans with domain knowledge can assess completeness. |
+| **HJG-F2: Failure Mode Completeness** | Are the documented failure modes the real risks for this specific deployment? What failure modes are missing from the catalog? | Failure Mode Catalog (Part 7), deployment-specific risk assessment, incident history, domain expert input. | Generic failure catalogs miss domain-specific risks. A financial services fleet faces regulatory compliance drift that a SaaS fleet doesn't. Only humans with domain knowledge can assess completeness. |
 | **HJG-F3: Governance Architecture Fitness** | Is the enforcement spectrum correctly calibrated? Are the right constraints at the hook level vs. instruction level? Is the governance overhead proportionate to the risk? | Enforcement spectrum map, governance overhead metrics, incident history (what governance *caught* and what it *missed*), comparable deployment benchmarks. | This is the rating's most consequential judgment. Over-governance wastes resources. Under-governance creates risk. The right calibration depends on stakes, domain, organizational maturity, and risk tolerance — all human judgments. |
 | **HJG-F4: Trust Calibration Review** | Are the current autonomy levels appropriate given the fleet's track record and the consequences of failure? | Trust calibration log, decision authority tier assignments, incident history, failure impact analysis. | Two fleets with identical metrics may warrant different trust levels. A fleet managing financial transactions needs tighter calibration than a fleet writing documentation. Stakes determine appropriate trust, and stakes are a human judgment. |
 
@@ -153,7 +153,7 @@ Admiral ratings apply to five categories. Each category has both automated evalu
 | Dimension | What Is Measured | Method |
 |---|---|---|
 | Boundary Definition | Explicit boundaries, non-goals, hard constraints documented and enforced | Artifact review: are boundaries specified? Are they enforced by hooks or only by instructions? |
-| Failure Mode Coverage | Failure modes identified, cataloged, and defended | Coverage analysis: map documented failure modes against Section 23 catalog plus domain-specific risks |
+| Failure Mode Coverage | Failure modes identified, cataloged, and defended | Coverage analysis: map documented failure modes against the Failure Mode Catalog (Part 7) plus domain-specific risks |
 | Audit Trail Completeness | Every decision traceable to agent, authority tier, and rationale | Trace analysis: randomly select 10 decisions, verify full attribution chain |
 | Graceful Degradation | Component failures produce degraded but functional outcomes | Fault injection: disable individual components, verify workflow continues with appropriate degradation |
 | Cost Governance | Token consumption budgeted, tracked, and controlled | Budget adherence analysis: actual vs. budgeted consumption, cost circuit breaker effectiveness |
@@ -444,13 +444,13 @@ Most systems start at ADM-5 and progress upward. The path is deliberate and maps
 You cannot rate what you have not defined. You cannot certify what you cannot verify. You cannot benchmark what you have no vocabulary to describe.
 
 Admiral provides the complete governance vocabulary:
-- **Enforcement spectrum** (Section 08) — the three tiers of constraint reliability
-- **Decision authority** (Section 09) — the four tiers of agent autonomy
-- **Failure mode catalog** (Section 23) — twenty documented ways agent fleets fail
-- **Recovery ladder** (Section 22) — the five steps from failure to escalation
+- **Enforcement spectrum** (Deterministic Enforcement, Part 3) — the three tiers of constraint reliability
+- **Decision authority** (Decision Authority, Part 3) — the four tiers of agent autonomy
+- **Failure mode catalog** (Failure Mode Catalog, Part 7) — twenty documented ways agent fleets fail
+- **Recovery ladder** (Failure Recovery, Part 7) — the five steps from failure to escalation
 - **Attack corpus** (attack-corpus/) — structured adversarial testing
 - **Brain specification** (Part 5) — institutional memory architecture
-- **Standing Orders** (Section 36) — fifteen non-negotiable operating rules
+- **Standing Orders** (Part 11) — fifteen non-negotiable operating rules
 - **Intent engineering** ([`intent-engineering.md`](intent-engineering.md)) — the six elements of intent
 
 Other frameworks provide orchestration machinery. Admiral provides the governance vocabulary that makes rating *possible*. The rating system is not bolted onto Admiral as an afterthought — it emerges from the framework's existing concepts. Human Judgment Gates extend the Human Inflection Point concept from intent engineering. The enforcement spectrum provides the basis for governance coverage metrics. The failure mode catalog provides the basis for completeness evaluation. The attack corpus provides the adversarial testing methodology.

@@ -1,13 +1,15 @@
-<!-- Admiral Framework v0.3.1-alpha -->
+<!-- Admiral Framework v0.4.0-alpha -->
 # PART 4 — FLEET
 
 *Who does what, with what tools, on what models, speaking what protocols?*
 
 *The Strategy triangle (Part 1) defines the destination. The Context discipline (Part 2) defines the information architecture. The Enforcement layer (Part 3) defines what's mandatory. Now: who actually does the work? These four sections define the agents, their capabilities, their model assignments, and their communication protocols.*
 
+> **Control Plane surface:** Agent roster, status, health, and routing decisions are the Control Plane's primary Fleet View (Level 2+). At Level 1, the CLI status display shows the single agent's identity, model tier, and current task.
+
 -----
 
-## 11 — FLEET COMPOSITION
+## Fleet Composition
 
 > **TL;DR** — Define every agent role, what it does, what it does NOT do, how tasks route to it, and how it hands off to others. Five to twelve agents, not fifty. The boring agents win.
 
@@ -89,7 +91,7 @@ When one agent's output becomes another agent's input, the handoff must follow a
 
 -----
 
-## 12 — TOOL & CAPABILITY REGISTRY
+## Tool & Capability Registry
 
 > **TL;DR** — Define what each agent CAN do (tool list, MCP servers) and explicitly what it CANNOT do (negative tool list). Phantom capabilities — agents assuming access they don't have — is one of the most common and expensive failures.
 
@@ -145,7 +147,7 @@ Equally important: what the agent does NOT have. Agents will hallucinate capabil
 
 -----
 
-## 13 — MODEL SELECTION
+## Model Selection
 
 > **TL;DR** — Match model capability to role requirements across four tiers. Flagship for orchestration, workhorse for implementation, utility for triage, economy for batch. Using the best model for every role wastes money. Using the cheapest for every role breaks quality.
 
@@ -203,7 +205,7 @@ Production systems now coordinate multiple models in a single workflow:
 
 -----
 
-## 14 — PROTOCOL INTEGRATION
+## Protocol Integration
 
 > **TL;DR** — MCP connects agents to tools (USB-C for AI). A2A connects agents to other agents. Together they form the protocol layer enabling coordinated fleet operations.
 
@@ -261,7 +263,7 @@ Agent Cards are registered with the fleet's discovery service (typically the Orc
 | Agents in different processes, same machine | A2A or shared filesystem with contracts |
 | Agents across machines or organizations | A2A with full authentication and encryption |
 | Agents using different LLM providers | A2A — provider-agnostic communication |
-| Simple task delegation | Orchestrator-mediated handoff (Section 38) |
+| Simple task delegation | Orchestrator-mediated handoff (Handoff Protocol, Part 11) |
 | Complex multi-step collaboration | A2A with structured contracts |
 
 ### Protocol Security

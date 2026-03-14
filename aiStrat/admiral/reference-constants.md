@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.3.1-alpha -->
+<!-- Admiral Framework v0.4.0-alpha -->
 # Reference Implementation Constants
 
 > **Audience:** Implementers building a runtime that conforms to the Admiral Framework spec. This file captures concrete values, algorithms, and integration details that complement the normative spec prose — the decisions an implementation must make that the spec intentionally leaves open.
@@ -63,7 +63,7 @@ These estimates are intentionally conservative (biased high). Underestimating ca
 
 ## Context Budget Validation
 
-Section 06 specifies budget allocation ranges: Standing 15–25%, Session 50–65%, Working 20–30%. The implementation adds one constraint not stated in the spec:
+Context Profiles (Part 2) specifies budget allocation ranges: Standing 15–25%, Session 50–65%, Working 20–30%. The implementation adds one constraint not stated in the spec:
 
 > **The three allocations must sum to exactly 100%.** A context profile where Standing + Session + Working ≠ 100% is a configuration error and should be rejected at validation time, not discovered at runtime when context overflows.
 
@@ -151,7 +151,7 @@ Loop detection triggers when **EITHER** threshold is crossed. These are the same
 
 ## Self-Healing Behavioral Details
 
-Beyond the parameters documented in Section 08 (max_retries: 3, max_session_retries: 10):
+Beyond the parameters documented in Deterministic Enforcement (Part 3) (max_retries: 3, max_session_retries: 10):
 
 ### Consecutive Identical Error Early-Exit
 
@@ -408,7 +408,7 @@ The monitor detects two failure modes: unresponsive agents (no heartbeat) and de
 
 ## Context Window Absolute Ceilings
 
-Section 06 defines percentage-based allocation ranges (Standing 15–25%, Session 50–65%, Working 20–30%). Two absolute limits complement the percentages:
+Context Profiles (Part 2) defines percentage-based allocation ranges (Standing 15–25%, Session 50–65%, Working 20–30%). Two absolute limits complement the percentages:
 
 | Constant | Value | Source | Meaning |
 |---|---|---|---|

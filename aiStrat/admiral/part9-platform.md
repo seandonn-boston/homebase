@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.3.1-alpha -->
+<!-- Admiral Framework v0.4.0-alpha -->
 # PART 9 — PLATFORM
 
 *The infrastructure that surrounds the fleet.*
@@ -7,19 +7,21 @@
 
 *Parts 1–8 define what the fleet is, what it knows, how it's enforced, who does the work, what it remembers, how it executes, how it maintains quality, and how it operates over time. Part 9 addresses the engineering infrastructure beneath all of that: how you see what agents are actually doing at runtime, how agents operate without a human pressing the button, and how you know whether your fleet configuration is any good. These three sections turn agent operations from artisanal session work into repeatable engineering.*
 
+> **Control Plane surface:** The Control Plane consumes the instrumentation defined here. Fleet Observability provides the traces, logs, and metrics; the Control Plane provides the interface for operators to explore, filter, and act on them.
+
 -----
 
-## 30 — FLEET OBSERVABILITY
+## Fleet Observability
 
-> **TL;DR** — Fleet Health Metrics (Section 27) tell you aggregate health. Observability tells you why a specific agent, on a specific task, in a specific session, produced a specific failure. Instrument with traces, not just metrics. If you can't debug a fleet failure from its telemetry alone, your observability is insufficient.
+> **TL;DR** — Fleet Health Metrics (Part 8) tell you aggregate health. Observability tells you why a specific agent, on a specific task, in a specific session, produced a specific failure. Instrument with traces, not just metrics. If you can't debug a fleet failure from its telemetry alone, your observability is insufficient.
 
 ### Metrics vs. Observability
 
-Section 27 defines what to measure: throughput, quality rates, escalation frequency, cost adherence. Those are **metrics** — aggregate signals sampled at intervals. They answer "is the fleet healthy?"
+Fleet Health Metrics (Part 8) defines what to measure: throughput, quality rates, escalation frequency, cost adherence. Those are **metrics** — aggregate signals sampled at intervals. They answer "is the fleet healthy?"
 
 Observability answers a different question: "why did Agent B fail on chunk 3 of task 7 during Tuesday's session?" That requires **traces** — end-to-end records of individual operations as they flow through agents, tools, and systems.
 
-| Metrics (Section 27) | Observability (this section) |
+| Metrics (Fleet Health Metrics, Part 8) | Observability (this section) |
 |---|---|
 | Aggregate health signals | Individual operation debugging |
 | Sampled at intervals | Continuous, per-operation recording |
@@ -118,7 +120,7 @@ The framework assumes MCP as the universal tool access protocol. As MCP matures,
 
 ### Instrumentation Strategy
 
-**Hooks as instrumentation points.** The framework's hook system (Section 08) provides natural instrumentation:
+**Hooks as instrumentation points.** The framework's hook system (Deterministic Enforcement (Part 3)) provides natural instrumentation:
 
 - **PreToolUse / PostToolUse:** Log tool name, parameters, duration, result status. This is the atomic unit of a trace.
 - **SessionStart:** Record session metadata — agent role, model tier, context loading summary.
@@ -144,7 +146,7 @@ The framework assumes MCP as the universal tool access protocol. As MCP matures,
 | **Trace collector** | Receives and stores trace data | OpenTelemetry Collector, Langfuse, LangSmith, custom |
 | **Trace storage** | Queryable trace database | The Brain (entries with category `trace`), dedicated trace store, or both |
 | **Dashboard** | Real-time fleet visualization | Grafana, custom web UI, or terminal-based |
-| **Alerting** | Notification when signals cross thresholds | Integrated with metrics (Section 27) warning thresholds |
+| **Alerting** | Notification when signals cross thresholds | Integrated with metrics (Fleet Health Metrics, Part 8) warning thresholds |
 
 **OpenTelemetry integration.** OpenTelemetry is the industry standard for distributed tracing. Agent frameworks with native OTel support (Pydantic AI, VoltAgent) emit spans automatically. For frameworks without native support, wrap tool calls in spans manually via hooks.
 
@@ -164,7 +166,7 @@ The framework assumes MCP as the universal tool access protocol. As MCP matures,
 
 -----
 
-## 31 — CI/CD & EVENT-DRIVEN OPERATIONS
+## CI/CD & Event-Driven Operations
 
 > **TL;DR** — The framework so far assumes a human Admiral starts a session and agents execute. Production fleets also run headlessly — triggered by PRs, CI failures, schedules, and webhooks. Event-driven agents need pre-built context, automated result routing, and cost guardrails because no one is watching.
 
@@ -245,7 +247,7 @@ Result routing:
   - High-priority findings → automatic GitHub Issue creation
   - State (JSON) → committed to repo for persistence across runs
 Security: All external content passes through the quarantine layer (5-layer immune system — 3 LLM-airgapped + 1 LLM advisory + antibody)
-  before reaching seed candidates. See Section 10 and Part 5, Section 17.
+  before reaching seed candidates. See Configuration Security (Part 3) and Intelligence Lifecycle (Part 5).
 Cost cap: GitHub API rate limits only — no LLM token costs (deterministic scanning)
 ```
 
@@ -356,13 +358,13 @@ Headless agents need stronger guardrails than interactive agents because no Admi
 
 -----
 
-## 32 — FLEET EVALUATION & BENCHMARKING
+## Fleet Evaluation & Benchmarking
 
-> **TL;DR** — Fleet Health Metrics (Section 27) tell you if the fleet is operating normally. Evaluation asks a harder question: is this fleet configuration better than the alternative? A/B test fleet configs, benchmark against baselines, and measure whether the fleet outperforms manual development. Without evaluation, you're optimizing blind.
+> **TL;DR** — Fleet Health Metrics (Part 8) tell you if the fleet is operating normally. Evaluation asks a harder question: is this fleet configuration better than the alternative? A/B test fleet configs, benchmark against baselines, and measure whether the fleet outperforms manual development. Without evaluation, you're optimizing blind.
 
 ### Monitoring vs. Evaluation
 
-| Monitoring (Section 27) | Evaluation (this section) |
+| Monitoring (Fleet Health Metrics, Part 8) | Evaluation (this section) |
 |---|---|
 | Is the fleet operating normally? | Is this configuration better than alternatives? |
 | Continuous, real-time | Periodic, deliberate |
@@ -381,7 +383,7 @@ Headless agents need stronger guardrails than interactive agents because no Admi
 
 Without evaluation, these are assumptions. With evaluation, they become data.
 
-**Model tier assignments.** Section 13 says "A/B test: same task, both tiers, compare." This section defines how.
+**Model tier assignments.** Model Selection (Part 4) says "A/B test: same task, both tiers, compare." This section defines how.
 
 **Prompt and context changes.** Revised agent instructions, new skills, modified context profiles — any context engineering change affects output quality. Measure it.
 
@@ -412,7 +414,7 @@ COST: ~3x increase in QA token cost
 - Same context profiles.
 - Different: only the variable under test.
 
-**4. Measure outcomes.** Use the metrics from Section 27, plus:
+**4. Measure outcomes.** Use the metrics from Fleet Health Metrics (Part 8), plus:
 
 | Metric | What It Reveals |
 |---|---|
@@ -500,7 +502,7 @@ The strategic question every Admiral must eventually answer: is the fleet worth 
 
 -----
 
-## 32b — MULTI-MODAL AND EXTENDED CAPABILITIES
+## Multi-Modal and Extended Capabilities
 
 > **TL;DR** — Modern agents can see (vision), interact with UIs (computer use), reason deeply (extended thinking), and produce structured outputs. Each capability changes cost, latency, and security profiles. Define when and how each is used.
 
@@ -547,8 +549,8 @@ Frontier models support extended thinking — dedicated reasoning tokens that ar
 Models that support structured output (JSON mode, schema-constrained generation) can enforce output format compliance without post-processing validation.
 
 **Use structured outputs for:**
-- Handoff documents (Section 38) — enforce the HANDOFF schema at generation time
-- Escalation reports (Section 37) — ensure all required fields are present
+- Handoff documents (Handoff Protocol) — enforce the HANDOFF schema at generation time
+- Escalation reports (Escalation Protocol) — ensure all required fields are present
 - Brain entries — enforce category, title, content, metadata structure
 - Interface contracts — validate that specialist output matches the declared contract schema
 - Decision logs — ensure timestamp, decision, alternatives, rationale, and tier are all present

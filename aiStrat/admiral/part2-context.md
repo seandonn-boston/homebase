@@ -1,13 +1,15 @@
-<!-- Admiral Framework v0.3.1-alpha -->
+<!-- Admiral Framework v0.4.0-alpha -->
 # PART 2 — CONTEXT
 
 *How does the right information reach the right agent at the right time?*
 
-*Context is the currency of autonomous AI. These four sections are the framework's center of gravity. Most fleet performance problems that look like capability failures are actually context management failures — the wrong information loaded at the wrong time, or the right information missing entirely. Master these four sections and half the failure modes in Section 23 become impossible.*
+*Context is the currency of autonomous AI. These four sections are the framework's center of gravity. Most fleet performance problems that look like capability failures are actually context management failures — the wrong information loaded at the wrong time, or the right information missing entirely. Master these four sections and half the failure modes in Failure Mode Catalog (Part 7) become impossible.*
+
+> **Control Plane surface:** Context utilization metrics — how much of each agent's context window is consumed, by what, and whether refresh triggers have fired — are visible in the Control Plane's Agent Detail View (Level 2+).
 
 -----
 
-## 04 — CONTEXT ENGINEERING
+## Context Engineering
 
 > **TL;DR** — Not just writing prompts — designing information flows across the entire fleet. What information exists where, when, and why. The discipline that subsumes prompt engineering.
 
@@ -90,7 +92,7 @@ Prompts are code. Test before deployment.
 
 -----
 
-## 05 — GROUND TRUTH
+## Ground Truth
 
 > **TL;DR** — The single source of reality: what words mean, what the stack is, what tools exist, what's broken. Without it, agents hallucinate capabilities and misinterpret terms.
 
@@ -119,7 +121,7 @@ The Continuous AI Landscape Monitor (`monitor/`) produces intelligence that may 
 
 - **Model capabilities change.** A new model release may alter optimal tier assignments, context window sizes, or tool support. When the Admiral approves a model release seed candidate into the Brain, review whether the tech stack versions or model references in Ground Truth need updating.
 - **Agent patterns evolve.** Exemplar tools (Claude Code, Aider, Cline, etc.) change their configuration approaches. New patterns may warrant updating agent definitions, prompt anatomy, or configuration file strategy.
-- **New tools emerge.** The monitor discovers fleet-relevant repos and MCP servers. These may belong in the Tool Registry (Section 12) or Ground Truth's external dependencies.
+- **New tools emerge.** The monitor discovers fleet-relevant repos and MCP servers. These may belong in the Tool Registry (Part 4) or Ground Truth's external dependencies.
 
 The monitor does not update Ground Truth automatically. It surfaces intelligence; the Admiral decides what enters Ground Truth and what remains Brain context.
 
@@ -147,7 +149,7 @@ The monitor does not update Ground Truth automatically. It surfaces intelligence
 
 -----
 
-## 06 — CONTEXT WINDOW STRATEGY
+## Context Window Strategy
 
 > **TL;DR** — The context window is working memory. Load identity first (primacy), task last (recency), reference in the middle. Never exceed 150 lines of standing instructions.
 
@@ -168,7 +170,7 @@ The budget percentages above are reference points calibrated for 200K-token cont
 - **Percentages are soft guides, not hard rules.** At 2M tokens, 15% standing context is 300K tokens — far more than any agent needs. Apply absolute ceilings: standing context should rarely exceed 50K tokens regardless of window size.
 - **Larger windows do not eliminate context engineering.** Attention quality degrades in longer contexts even when capacity permits. The primacy/recency loading principles remain important at any window size.
 - **Larger windows enable richer task context, not bloated standing context.** The primary benefit of larger windows is carrying more project artifacts (full files, test suites, design docs) in the working context, not expanding the instruction payload.
-- **Revisit the 40% chunk sizing rule** (Section 18) when windows grow significantly. Larger windows may permit larger chunks, but the principle — leave headroom for reasoning — still applies. Scale the absolute chunk size, not the percentage.
+- **Revisit the 40% chunk sizing rule** in Work Decomposition (Part 6) when windows grow significantly. Larger windows may permit larger chunks, but the principle — leave headroom for reasoning — still applies. Scale the absolute chunk size, not the percentage.
 
 ### Loading Order Protocol
 
@@ -210,7 +212,7 @@ The budget percentages above are reference points calibrated for 200K-token cont
 
 -----
 
-## 07 — CONFIGURATION FILE STRATEGY
+## Configuration File Strategy
 
 > **TL;DR** — AGENTS.md under 150 lines. Move enforcement to hooks, reference material to skills, per-agent rules to agent files. Version all config files like code. Use AGENTS.md as the canonical source of truth; tool-specific files (CLAUDE.md, .cursorrules) should be thin pointers.
 
@@ -260,7 +262,7 @@ AGENTS.md should not exceed 150 lines. For each line, ask "Would removing this c
 - Move per-agent instructions to agent-specific files (each agent loads only its own).
 - Move path-specific rules to path-scoped files (loaded only when working in that directory).
 - What remains in AGENTS.md: project identity, tech stack, critical conventions, workflow essentials.
-- **Standing Orders (Section 36) must be referenced or loaded from AGENTS.md.** Standing Orders are Level 1 requirements — they define what hooks enforce. Load them before hooks, before infrastructure code. See the co-requirement note in Section 08.
+- **Standing Orders (Part 11) must be referenced or loaded from AGENTS.md.** Standing Orders are Level 1 requirements — they define what hooks enforce. Load them before hooks, before infrastructure code. See the co-requirement note in Deterministic Enforcement (Part 3).
 
 > **Creation order for new projects:** (1) Create AGENTS.md with project identity, tech stack, critical conventions. (2) Create tool-specific pointers (CLAUDE.md, .cursorrules). (3) Add skills as domain knowledge accumulates. (4) Add path-specific rules when directory-scoped conventions emerge. The first two are Level 1 requirements. Skills and path rules are Level 2+.
 

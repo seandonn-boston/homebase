@@ -1,13 +1,15 @@
-<!-- Admiral Framework v0.3.1-alpha -->
+<!-- Admiral Framework v0.4.0-alpha -->
 # PART 10 — THE ADMIRAL
 
 *The human element.*
 
 *Every section above defines what the fleet needs — its strategy, context, enforcement, composition, memory, execution, quality, operations, and platform infrastructure. This part addresses the Admiral's own development — how to detect when you are the bottleneck, how to calibrate trust over time, and when to route decisions to experts instead of answering them yourself.*
 
+> **Control Plane surface:** Admiral self-calibration decisions and human-expert routing events are visible in the Control Plane (Level 3+). Operators see which decisions were escalated, which experts were consulted, and how trust calibration has changed over time.
+
 -----
 
-## 33 — ADMIRAL SELF-CALIBRATION
+## Admiral Self-Calibration
 
 > **TL;DR** — If you're rubber-stamping approvals, widen Autonomous. If agents escalate constantly, narrow your review scope or improve context. Trust is earned per category, not globally, and withdrawn precisely. Intent fluency — the skill of writing instructions that communicate purpose, constraints, failure modes, and judgment boundaries — is the Admiral's primary communication skill. See [`intent-engineering.md`](intent-engineering.md).
 
@@ -80,7 +82,7 @@ The Admiral performs coarse-grained task decomposition — breaking the current 
 
 -----
 
-## 34 — HUMAN-EXPERT ROUTING
+## Human-Expert Routing
 
 > **TL;DR** — The Admiral is not omniscient. Route regulatory, design, business strategy, domain performance, and security risk decisions to subject-matter experts. Package the question. Track the response. Integrate it as Ground Truth.
 
@@ -107,7 +109,7 @@ The Admiral performs coarse-grained task decomposition — breaking the current 
 1. **Package:** Structured request with exactly what the expert needs.
 2. **Route and track:** Log in decision log with "Pending External" status.
 3. **Integrate:** Translate response into fleet-actionable terms. Update Ground Truth if durable.
-4. **Resume:** If paused, resume using Fleet Pause Protocol (Section 25).
+4. **Resume:** If paused, resume using Fleet Pause Protocol (Strategic Adaptation (Part 8)).
 
 > **TEMPLATE: EXPERT CONSULTATION REQUEST**
 >
@@ -127,7 +129,7 @@ The Admiral performs coarse-grained task decomposition — breaking the current 
 
 -----
 
-## 35 — MULTI-OPERATOR GOVERNANCE
+## Multi-Operator Governance
 
 > **TL;DR** — When multiple humans operate the same fleet, define explicit tiers, conflict resolution rules, and handoff protocols. Without these, agents receive contradictory authority signals and fleet behavior becomes unpredictable.
 
