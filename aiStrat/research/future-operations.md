@@ -1,3 +1,4 @@
+<!-- Admiral Framework v0.3.1-alpha -->
 # The Day After Admiral Becomes Default
 
 **Date:** March 14, 2026

@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.3.0-alpha -->
+<!-- Admiral Framework v0.3.1-alpha -->
 # Agentic AI Governance Frameworks: Comprehensive Research Report
 
 **Date:** March 2026

@@ -1,3 +1,4 @@
+<!-- Admiral Framework v0.3.1-alpha -->
 # Admiral Product Strategy: The AI Work OS Reframe
 
 **Date:** March 14, 2026
