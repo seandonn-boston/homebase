@@ -306,6 +306,26 @@ These aren't competitors but foundational standards that affect Admiral's positi
 
 **Implication for Admiral:** MCP standardizes the *tool connection* layer. Admiral should position as the *governance* layer that sits above MCP — defining what tools agents are allowed to use and under what authority, not just how they connect.
 
+### Anthropic Academy (Launched March 2, 2026)
+
+- **13 free courses** with certificates hosted on Skilljar ([anthropic.skilljar.com](https://anthropic.skilljar.com))
+- Three tracks: **AI Fluency** (Claude 101, educator/student/nonprofit tracks), **Developer Deep-Dives** (Claude Code, API, MCP, Agent Skills), **Product Training** (Amazon Bedrock, Google Vertex AI integration)
+- Key courses: Claude 101, Building with the Claude API (8+ hours), Introduction to MCP, Claude Code in Action (21 lessons), Introduction to Agent Skills
+- All courses are **completely free** with certificates that can be added to LinkedIn
+- No Anthropic account required — only a Skilljar account
+
+**Why this matters:** Anthropic is using education as an **ecosystem lock-in strategy**, not a revenue stream. By training developers for free on MCP, Agent Skills, and Claude API patterns, they're embedding Anthropic's vocabulary and architectural patterns as the default mental model for agent development. This is demand generation at scale — every developer who completes "Introduction to MCP" builds within Anthropic's ecosystem.
+
+**Implication for Admiral:** This is a two-sided threat and opportunity:
+- **Threat:** Anthropic is actively training developers on *their* agent architecture patterns (via the Agent Skills course). If their framing becomes the default vocabulary, Admiral's doctrine must either align with or explicitly differentiate from Anthropic's mental models.
+- **Opportunity:** The MCP and Agent Skills courses teach developers *how to build agents* but not *how to govern them*. Admiral's governance doctrine fills the gap that Anthropic's education leaves open — role architecture, decision authority, enforcement spectrum, and institutional memory are not covered.
+- **Strategic move:** Consider creating an Admiral-specific course track that positions as the "governance companion" to Anthropic Academy — "You learned to build agents with Anthropic. Now learn to govern them with Admiral."
+
+**Sources:**
+- [Anthropic Courses](https://anthropic.skilljar.com/)
+- [Top 7 Free Anthropic AI Academy Courses](https://www.analyticsvidhya.com/blog/2026/03/free-anthropic-ai-courses-with-certificates/)
+- [Anthropic Dropped 13 Free Courses — Breakdown](https://dev.to/ji_ai/anthropic-dropped-13-free-courses-i-broke-down-every-single-one-p87)
+
 ### Google's Agent-to-Agent Protocol (A2A)
 
 - Defines how agents from different vendors communicate with each other

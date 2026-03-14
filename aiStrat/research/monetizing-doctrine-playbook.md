@@ -135,6 +135,18 @@ Based on these precedents, here's a layered approach — from fastest revenue to
 
 **The multiplier:** If even 1% of the estimated 2M+ professionals who'll be working with AI agents by 2028 get Admiral certified at $300 each, that's $6M in exam fees alone — before training partner revenue.
 
+> **⚠️ Market Signal: Anthropic Academy (March 2, 2026)**
+>
+> Anthropic launched **13 free courses with certificates** at [anthropic.skilljar.com](https://anthropic.skilljar.com), covering Claude API, MCP, Agent Skills, and Claude Code. All courses are completely free with LinkedIn-ready certificates. This represents a significant counter-data-point to the paid certification model:
+>
+> **What it means for Admiral's certification strategy:**
+> - **The "free vendor cert" precedent is now set.** Anthropic is using certifications as ecosystem demand-gen, not revenue. If developers expect AI certifications to be free, Admiral's paid tiers ($200-$800) need stronger justification.
+> - **Admiral certifies a different thing.** Anthropic's certs prove you can *use their tools*. Admiral's certs would prove you can *govern agent fleets* — a higher-order, vendor-neutral skill closer to ITIL/TOGAF than to a product tutorial. This distinction is critical to defend paid pricing.
+> - **Freemium hybrid may be necessary.** Consider: free Admiral Practitioner (like Anthropic's free certs — drives adoption and vocabulary spread) + paid Admiral Architect and ACI (where the governance depth justifies cost, similar to TOGAF's $495-$1,200 range).
+> - **Positioning matters.** Anthropic teaches "how to build." Admiral teaches "how to govern." These are complementary, not competitive — but only if Admiral's certification clearly occupies the governance/operations lane rather than the tools/API lane.
+>
+> **Sources:** [Anthropic Academy](https://anthropic.skilljar.com/) | [Course Breakdown](https://dev.to/ji_ai/anthropic-dropped-13-free-courses-i-broke-down-every-single-one-p87)
+
 ---
 
 ### Layer 4: Ecosystem Licensing (Revenue in 12-18 months)
