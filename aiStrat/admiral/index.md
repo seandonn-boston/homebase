@@ -85,6 +85,8 @@ Other frameworks solve agent orchestration. Admiral solves agent *governance*.
 
 5. **Decision authority tiers.** Enforced/Autonomous/Propose/Escalate with concrete calibration rubric. Every agent knows exactly what it can decide, what it should recommend, and what it must escalate. No other framework provides this granularity.
 
+6. **The Admiral Rating System.** A credit-rating-agency-style certification standard for AI automation. Five-grade scale (ADM-1 through ADM-5), ten universal rating dimensions, applied across agents, fleets, platforms, models, and workflows. Agents aren't humans and they aren't code — the rating system tests behavioral properties, not output correctness. See [`rating-system.md`](rating-system.md).
+
 Admiral is complementary to agent SDKs and orchestration frameworks. They provide the runtime. Admiral provides the operational doctrine that makes the runtime safe, governed, and effective. See Appendix E for platform integration patterns.
 
 -----
@@ -124,6 +126,7 @@ This framework is split across fourteen files. This index is the entry point. Ea
 | [`fleet-control-plane.md`](fleet-control-plane.md) | Real-time operational surface: dashboard, alerts, interventions. |
 | [`progressive-autonomy.md`](progressive-autonomy.md) | Four stages from manual oversight to full autonomy. |
 | [`inevitable-features.md`](inevitable-features.md) | The three features that make Admiral indispensable. |
+| [`rating-system.md`](rating-system.md) | The Admiral Rating System — the standard benchmark for AI automation ratings |
 | [`part12-data-ecosystem.md`](part12-data-ecosystem.md) | Sections 42–48: Closed-Loop Architecture, Data Streams, Enrichment & Attribution, Ecosystem Agents, Feedback Loops, Dataset Strategy, Implementation Levels |
 | [`appendices.md`](appendices.md) | Pre-Flight Checklist, Quick-Start Sequence, Worked Example |
 

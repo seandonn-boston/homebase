@@ -1,13 +1,13 @@
 <!-- Admiral Framework v0.3.1-alpha -->
 # Admiral Framework — File Manifest
 
-**106 files across 22 groups | Last modified: 2026-03-14**
+**107 files across 22 groups | Last modified: 2026-03-14**
 
 This is the semantic catalog of every file in the Admiral Framework. Each entry describes what the file contains, verified against the source. Update this manifest when files are added, removed, renamed, or when their content changes materially.
 
 ---
 
-## Admiral Doctrine (20 files)
+## Admiral Doctrine (21 files)
 
 ```
 index.md - admiral/doctrine - 2026-03-10:
@@ -254,6 +254,22 @@ contrasts, compounding effects, specification anchors, and the properties that m
 them inevitable (reveals invisible, compounds over time, becomes decision surface).
 The compounding effect between all three features. Implementation priority order.
 aiStrat/admiral/inevitable-features.md
+```
+
+```
+rating-system.md - admiral/doctrine - 2026-03-14:
+The Admiral Rating System — the standard benchmark for AI automation ratings. Positions
+Admiral as the credit rating agency for the agentic AI ecosystem. Five-grade rating
+scale (ADM-1 Premier through ADM-5 Ungoverned) applied across five entity categories:
+individual agents, agent fleets, platforms & orchestration frameworks, AI models (as
+governance substrates), and agentic workflows. Human Judgment Gates (HJGs) at specific
+verifiable points where only human evaluation can assess quality: strategic alignment,
+boundary adequacy, failure mode completeness, trust appropriateness, contextual fitness,
+novel situation response. Four-phase evaluation protocol (automated evidence collection,
+human judgment gates, rating determination, continuous validation). Three certification
+tiers (self-assessment, independent assessment, full certification). Evidence chain
+requirement ensures every rating is traceable to specific evidence.
+aiStrat/admiral/rating-system.md
 ```
 
 ---
