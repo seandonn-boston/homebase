@@ -113,8 +113,8 @@ This progression mirrors the framework's own enforcement spectrum: start with do
 
 ## Cross-References
 
-- Standing Orders source: `part11-protocols.md`
-- Enforcement spectrum: `part3-enforcement.md`, Deterministic Enforcement
+- Standing Orders source: `../spec/part11-protocols.md`
+- Enforcement spectrum: `../spec/part3-enforcement.md`, Deterministic Enforcement
 - Hook implementations: `hooks/` directory
 - Hook manifest schema: `hooks/manifest.schema.json`
 - Reference constants for hook behavior: `reference-constants.md`

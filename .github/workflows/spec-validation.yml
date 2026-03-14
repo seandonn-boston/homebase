@@ -23,9 +23,9 @@ jobs:
           echo "=== Checking version consistency ==="
 
           # Extract canonical version from index.md line 6
-          VERSION=$(sed -n '6p' aiStrat/admiral/index.md | grep -oP 'v[0-9]+\.[0-9]+\.[0-9]+-[a-z]+')
+          VERSION=$(sed -n '6p' aiStrat/admiral/spec/index.md | grep -oP 'v[0-9]+\.[0-9]+\.[0-9]+-[a-z]+')
           if [ -z "$VERSION" ]; then
-            echo "FAIL: Could not extract version from aiStrat/admiral/index.md line 6"
+            echo "FAIL: Could not extract version from aiStrat/admiral/spec/index.md line 6"
             exit 1
           fi
           echo "Canonical version: $VERSION"

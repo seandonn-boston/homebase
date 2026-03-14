@@ -27,7 +27,7 @@ Admiral enables a new form of organization: **the hybrid organization where AI a
 
 The new behavior Admiral enables: *treating AI capacity as an operational workforce, not a feature.*
 
-See [`thesis.md`](thesis.md) for the full analysis and [`research/future-operations.md`](../../research/future-operations.md) for the underlying thought experiment.
+See [`thesis.md`](../extensions/thesis.md) for the full analysis and [`research/future-operations.md`](../../research/future-operations.md) for the underlying thought experiment.
 
 -----
 
@@ -66,9 +66,9 @@ If you are starting at Level 1, you do not need to read the entire framework. Th
 | 1 | [`index.md`](index.md) | Glossary + Adoption Levels | Shared vocabulary and your roadmap. |
 | 2 | [`part1-strategy.md`](part1-strategy.md) | Full file | Mission, Boundaries, Success Criteria — the three inputs every agent needs. |
 | 3 | [`part3-enforcement.md`](part3-enforcement.md) | Deterministic Enforcement only | The enforcement spectrum: hooks over instructions. Decision Authority and Configuration Security are Level 2+ — read them when you add a fleet. |
-| 3.5 | [`intent-engineering.md`](intent-engineering.md) | Six Elements of Intent | How to write mission, boundaries, and task assignments that give agents enough context to handle unexpected situations. |
+| 3.5 | [`intent-engineering.md`](../extensions/intent-engineering.md) | Six Elements of Intent | How to write mission, boundaries, and task assignments that give agents enough context to handle unexpected situations. |
 | 4 | [`part11-protocols.md`](part11-protocols.md) | Standing Orders only | The fifteen non-negotiable rules loaded into every agent's standing context. |
-| 4.5 | [`fleet-control-plane.md`](fleet-control-plane.md) | Level 1 section | The CLI dashboard: event logging, status, and runaway detection from day one. |
+| 4.5 | [`fleet-control-plane.md`](../extensions/fleet-control-plane.md) | Level 1 section | The CLI dashboard: event logging, status, and runaway detection from day one. |
 | 5 | [`appendices.md`](appendices.md) | Appendix A (Pre-Flight Checklist) | Go/no-go gate — confirms you have not missed anything critical. |
 
 Start here. Graduate to the full framework when you hit the limits of Level 1.
@@ -100,7 +100,7 @@ Other frameworks solve agent orchestration. Admiral solves agent *governance*.
 
 5. **Decision authority tiers.** Enforced/Autonomous/Propose/Escalate with concrete calibration rubric. Every agent knows exactly what it can decide, what it should recommend, and what it must escalate. No other framework provides this granularity.
 
-6. **The Admiral Rating System.** A credit-rating-agency-style certification standard for AI automation. Five-grade scale (ADM-1 through ADM-5), ten universal rating dimensions, applied across agents, fleets, platforms, models, and workflows. Agents aren't humans and they aren't code — the rating system tests behavioral properties, not output correctness. See [`rating-system.md`](rating-system.md).
+6. **The Admiral Rating System.** A credit-rating-agency-style certification standard for AI automation. Five-grade scale (ADM-1 through ADM-5), ten universal rating dimensions, applied across agents, fleets, platforms, models, and workflows. Agents aren't humans and they aren't code — the rating system tests behavioral properties, not output correctness. See [`rating-system.md`](../reference/rating-system.md).
 
 Admiral is complementary to agent SDKs and orchestration frameworks. They provide the runtime. Admiral provides the operational doctrine that makes the runtime safe, governed, and effective. See Appendix E for platform integration patterns.
 
@@ -125,7 +125,7 @@ This framework is split across fourteen files. This index is the entry point. Ea
 | File | Contents |
 |---|---|
 | [`index.md`](index.md) | This file. Operating model, glossary, table of contents. |
-| [`thesis.md`](thesis.md) | The organizational thesis: why Admiral exists and what new form of organization it enables. |
+| [`thesis.md`](../extensions/thesis.md) | The organizational thesis: why Admiral exists and what new form of organization it enables. |
 | [`part1-strategy.md`](part1-strategy.md) | Mission, Boundaries, Success Criteria |
 | [`part2-context.md`](part2-context.md) | Context Engineering, Ground Truth, Context Window Strategy, Configuration File Strategy |
 | [`part3-enforcement.md`](part3-enforcement.md) | Deterministic Enforcement, Decision Authority, Configuration Security |
@@ -137,12 +137,12 @@ This framework is split across fourteen files. This index is the entry point. Ea
 | [`part9-platform.md`](part9-platform.md) | Fleet Observability, CI/CD & Event-Driven Operations, Fleet Evaluation & Benchmarking, Multi-Modal & Extended Capabilities |
 | [`part10-admiral.md`](part10-admiral.md) | Admiral Self-Calibration, Human-Expert Routing, Multi-Operator Governance |
 | [`part11-protocols.md`](part11-protocols.md) | Standing Orders, Escalation, Handoffs, Human Referral, Paid Resource Authorization, Data Sensitivity |
-| [`intent-engineering.md`](intent-engineering.md) | Intent Engineering: the shared dialect between Admirals and Brains |
-| [`governance-platform.md`](governance-platform.md) | The paradigm shift: ATC, not flight plans. Four pillars. Chaos-first architecture. |
-| [`fleet-control-plane.md`](fleet-control-plane.md) | Real-time operational surface: dashboard, alerts, interventions. |
-| [`progressive-autonomy.md`](progressive-autonomy.md) | Four stages from manual oversight to full autonomy. |
-| [`inevitable-features.md`](inevitable-features.md) | The three features that make Admiral indispensable. |
-| [`rating-system.md`](rating-system.md) | The Admiral Rating System — the standard benchmark for AI automation ratings |
+| [`intent-engineering.md`](../extensions/intent-engineering.md) | Intent Engineering: the shared dialect between Admirals and Brains |
+| [`governance-platform.md`](../extensions/governance-platform.md) | The paradigm shift: ATC, not flight plans. Four pillars. Chaos-first architecture. |
+| [`fleet-control-plane.md`](../extensions/fleet-control-plane.md) | Real-time operational surface: dashboard, alerts, interventions. |
+| [`progressive-autonomy.md`](../extensions/progressive-autonomy.md) | Four stages from manual oversight to full autonomy. |
+| [`inevitable-features.md`](../extensions/inevitable-features.md) | The three features that make Admiral indispensable. |
+| [`rating-system.md`](../reference/rating-system.md) | The Admiral Rating System — the standard benchmark for AI automation ratings |
 | [`part12-data-ecosystem.md`](part12-data-ecosystem.md) | Closed-Loop Architecture, Data Streams, Enrichment & Attribution, Ecosystem Agents, Feedback Loops, Dataset Strategy, Implementation Levels |
 | [`appendices.md`](appendices.md) | Pre-Flight Checklist, Quick-Start Sequence, Worked Example |
 
@@ -150,7 +150,7 @@ This framework is split across fourteen files. This index is the entry point. Ea
 
 ## The Operating Model
 
-You are the Admiral. You provide the strategic context, constraints, and clarity that no AI can generate for itself. You may be a human operator, a meta-agent orchestrating other agents, or a hybrid of both. What matters is not whether you write code — it is whether the fleet has the context it needs to operate autonomously within defined boundaries. Your primary communication skill is **intent engineering** — structuring instructions around outcomes, values, constraints, failure modes, and judgment boundaries so that agents encountering unexpected situations can either make the right call or know that they cannot. See [`intent-engineering.md`](intent-engineering.md).
+You are the Admiral. You provide the strategic context, constraints, and clarity that no AI can generate for itself. You may be a human operator, a meta-agent orchestrating other agents, or a hybrid of both. What matters is not whether you write code — it is whether the fleet has the context it needs to operate autonomously within defined boundaries. Your primary communication skill is **intent engineering** — structuring instructions around outcomes, values, constraints, failure modes, and judgment boundaries so that agents encountering unexpected situations can either make the right call or know that they cannot. See [`intent-engineering.md`](../extensions/intent-engineering.md).
 
 Every autonomous AI system, regardless of intelligence, operates within the boundaries of what it has been told and what has been enforced. The quality of those boundaries — and the reliability of their enforcement — determines whether a fleet self-organizes into productive work or spirals into hallucination, scope creep, and wasted tokens.
 
@@ -227,9 +227,9 @@ Terms are listed alphabetically. When these terms appear in any part file, they 
 | **LLM-Last** | Design principle: if a deterministic tool (linter, type checker, formatter, regex) can do it, the LLM should not. Highest-impact cost and reliability lever. See Boundaries (Part 1). |
 | **Computer use** | Agent capability to interact with graphical user interfaces — clicking, typing, scrolling, reading screen content. Requires sandboxed environment, strict time limits, and narrow Autonomous tier. See Multi-Modal Capabilities (Part 9). |
 | **Extended thinking** | Dedicated reasoning tokens consumed before the model's response begins. Deeper reasoning, not longer output. 5-50x output volume. Must be budgeted separately. See Multi-Modal Capabilities (Part 9). |
-| **Human inflection point** | A moment during execution where the correct action requires human judgment, taste, ethics, or strategic context that an LLM cannot derive from training data. The agent must stop and ask. See `admiral/intent-engineering.md`. |
+| **Human inflection point** | A moment during execution where the correct action requires human judgment, taste, ethics, or strategic context that an LLM cannot derive from training data. The agent must stop and ask. See `admiral/extensions/intent-engineering.md`. |
 | **Identity token** | Cryptographically signed, session-scoped, non-delegable credential binding an agent to a specific project, role, authority tier, and session. Verified by the Brain MCP server on every request. See Knowledge Protocol (Part 5). |
-| **Intent engineering** | The practice of structuring instructions around outcomes, values, constraints, failure modes, and judgment boundaries — not just outputs. The evolution beyond prompt engineering and context engineering. The shared dialect between Admirals and Brains. See `admiral/intent-engineering.md`. |
+| **Intent engineering** | The practice of structuring instructions around outcomes, values, constraints, failure modes, and judgment boundaries — not just outputs. The evolution beyond prompt engineering and context engineering. The shared dialect between Admirals and Brains. See `admiral/extensions/intent-engineering.md`. |
 | **MCP** | Model Context Protocol. Open standard (Anthropic, now Linux Foundation) for connecting agents to tools and data sources. Supports streaming, subscriptions, and discovery with trust signals. "USB-C for AI." |
 | **Multi-hop retrieval** | Brain retrieval pattern that follows entry links to return full reasoning chains — cause → decision → outcome → consequence — not just the directly matching entry. Maximum depth: 3. See Intelligence Lifecycle (Part 5). |
 | **MCP server** | A tool provider implementing the MCP standard. Extends agent capabilities. Must be registered, scoped, version-pinned, and audited. See Tool Registry (Part 4) and Protocol Integration (Part 4). |
@@ -360,23 +360,23 @@ Topics are ordered by impact and grouped by relevance.
 | Feedback Loops | Six loops connecting outcomes back to inputs for continuous improvement. | |
 | Dataset Strategy | Seven proprietary datasets that compound in value over time. | |
 | Implementation Levels | Progressive adoption from manual observation to autonomous optimization. | |
-| | **INTENT ENGINEERING** | *The shared dialect between Admirals and Brains.* | [`intent-engineering.md`](intent-engineering.md) |
+| | **INTENT ENGINEERING** | *The shared dialect between Admirals and Brains.* | [`intent-engineering.md`](../extensions/intent-engineering.md) |
 | — | Intent Engineering | Structuring instructions around outcomes, values, constraints, failure modes, and judgment boundaries. | |
 | — | The Six Elements of Intent | Goal, Priority, Constraints, Failure Modes, Judgment Boundaries, Values. | |
 | — | The Human Inflection Point | Where the agent's authority ends and the human's begins. This shall not be worked around. | |
-| | **GOVERNANCE PLATFORM** | *The paradigm shift: from toolkit to operating environment.* | [`governance-platform.md`](governance-platform.md) |
+| | **GOVERNANCE PLATFORM** | *The paradigm shift: from toolkit to operating environment.* | [`governance-platform.md`](../extensions/governance-platform.md) |
 | — | The Paradigm Shift | Infrastructure must handle chaos, not elegance. Air traffic control, not flight plans. | |
 | — | The Four Pillars | Visibility, Control, Policy, Recovery — the foundations of fleet governance. | |
 | — | Chaos-First Architecture | Designing for the messy reality of production agent fleets. | |
-| | **FLEET CONTROL PLANE** | *The real-time operational surface.* | [`fleet-control-plane.md`](fleet-control-plane.md) |
+| | **FLEET CONTROL PLANE** | *The real-time operational surface.* | [`fleet-control-plane.md`](../extensions/fleet-control-plane.md) |
 | — | The Command Center | Fleet status, agent detail, task flow — the single management interface. | |
 | — | Alert System | Classification, fatigue prevention, and actionable notifications. | |
 | — | Operator Interventions | Pause, halt, kill, reroute, override — with audit trail. | |
-| | **PROGRESSIVE AUTONOMY** | *The four stages from manual oversight to full autonomy.* | [`progressive-autonomy.md`](progressive-autonomy.md) |
+| | **PROGRESSIVE AUTONOMY** | *The four stages from manual oversight to full autonomy.* | [`progressive-autonomy.md`](../extensions/progressive-autonomy.md) |
 | — | The Four Stages | Manual Oversight → Assisted Automation → Partial Autonomy → Full Autonomy. | |
 | — | The Autonomy Matrix | Different capabilities at different stages in the same fleet. | |
 | — | Trust Mechanics | How trust is earned, tracked, and withdrawn per category. | |
-| | **INEVITABLE FEATURES** | *The three features that create operational lock-in through genuine value.* | [`inevitable-features.md`](inevitable-features.md) |
+| | **INEVITABLE FEATURES** | *The three features that create operational lock-in through genuine value.* | [`inevitable-features.md`](../extensions/inevitable-features.md) |
 | — | Fleet-Wide Causality Tracing | From "something broke" to "here is exactly why." | |
 | — | Living Operational Memory | The Brain at three months: institutional wisdom, not just storage. | |
 | — | Predictive Fleet Health | From reactive to proactive: predicting failures before they happen. | |

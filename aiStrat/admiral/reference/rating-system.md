@@ -39,7 +39,7 @@ Six categories of evaluation require human judgment, and no amount of automation
 
 **5. Contextual Fitness.** Is the system making decisions that are contextually appropriate for the organization's situation? An agent that produces optimal technical decisions may be organizationally wrong — building for scale when the company needs to validate product-market fit, or optimizing for performance when the real constraint is time-to-market. Contextual fitness is invisible to any metric that doesn't incorporate organizational reality.
 
-**6. Novel Situation Response.** How does the system handle genuinely novel situations not covered by its governance artifacts? This is the *intent engineering* test (see [`intent-engineering.md`](intent-engineering.md)). When an agent encounters a situation not anticipated by its instructions, does it make a reasonable judgment call or escalate appropriately? The quality of that response can only be evaluated by a human who understands what the right call would have been.
+**6. Novel Situation Response.** How does the system handle genuinely novel situations not covered by its governance artifacts? This is the *intent engineering* test (see [`intent-engineering.md`](../extensions/intent-engineering.md)). When an agent encounters a situation not anticipated by its instructions, does it make a reasonable judgment call or escalate appropriately? The quality of that response can only be evaluated by a human who understands what the right call would have been.
 
 These six categories define the **Human Judgment Gates** — mandatory evaluation points in the rating process where a qualified human must render a verdict, with evidence, and that verdict must be recorded. No rating can be issued without passing through every applicable gate.
 
@@ -451,7 +451,7 @@ Admiral provides the complete governance vocabulary:
 - **Attack corpus** (attack-corpus/) — structured adversarial testing
 - **Brain specification** (Part 5) — institutional memory architecture
 - **Standing Orders** (Part 11) — fifteen non-negotiable operating rules
-- **Intent engineering** ([`intent-engineering.md`](intent-engineering.md)) — the six elements of intent
+- **Intent engineering** ([`intent-engineering.md`](../extensions/intent-engineering.md)) — the six elements of intent
 
 Other frameworks provide orchestration machinery. Admiral provides the governance vocabulary that makes rating *possible*. The rating system is not bolted onto Admiral as an afterthought — it emerges from the framework's existing concepts. Human Judgment Gates extend the Human Inflection Point concept from intent engineering. The enforcement spectrum provides the basis for governance coverage metrics. The failure mode catalog provides the basis for completeness evaluation. The attack corpus provides the adversarial testing methodology.
 

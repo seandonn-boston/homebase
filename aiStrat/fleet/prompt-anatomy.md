@@ -103,7 +103,7 @@ Identity → Authority → Constraints → Knowledge → Task
 - **Knowledge before Task** because the agent needs context before it can meaningfully act on an assignment.
 - **Task last** because it's the most variable element and sits at the position of highest attention in many models.
 
-This order reflects the intent engineering principle: establish *why* and *what matters* before *what to do*. The agent that knows its identity, authority, and constraints before receiving a task will interpret the task through those lenses. The agent that receives a task first will retrofit constraints onto an already-formed plan. See [`admiral/intent-engineering.md`](../admiral/intent-engineering.md).
+This order reflects the intent engineering principle: establish *why* and *what matters* before *what to do*. The agent that knows its identity, authority, and constraints before receiving a task will interpret the task through those lenses. The agent that receives a task first will retrofit constraints onto an already-formed plan. See [`admiral/intent-engineering.md`](../admiral/extensions/intent-engineering.md).
 
 -----
 

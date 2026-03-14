@@ -3,7 +3,7 @@
 
 **Long-term fleet memory: Postgres + pgvector, accessible via MCP.**
 
-This directory contains the architecture specification for the Brain — the fleet's durable knowledge system defined in [admiral/part5-brain.md](../admiral/part5-brain.md). It specifies:
+This directory contains the architecture specification for the Brain — the fleet's durable knowledge system defined in [admiral/part5-brain.md](../admiral/spec/part5-brain.md). It specifies:
 
 - A database schema for storing decisions, outcomes, lessons, failures, and patterns as vector embeddings
 - An MCP server interface exposing eight tools (`brain_record`, `brain_query`, `brain_retrieve`, `brain_strengthen`, `brain_supersede`, `brain_status`, `brain_audit`, `brain_purge`) that any AI agent can use
@@ -13,7 +13,7 @@ This directory contains the architecture specification for the Brain — the fle
 
 ## MCP Tool Contracts
 
-Each tool exposed by the Brain MCP server has a defined contract. See [admiral/part5-brain.md](../admiral/part5-brain.md) Knowledge Protocol for full behavioral semantics.
+Each tool exposed by the Brain MCP server has a defined contract. See [admiral/part5-brain.md](../admiral/spec/part5-brain.md) Knowledge Protocol for full behavioral semantics.
 
 ### brain_record
 
@@ -189,11 +189,11 @@ Indexes: HNSW for approximate nearest neighbor vector search, composite indexes 
 1. **Application sanitizer** — scans all entry fields before storage, rejects entries containing sensitive patterns
 2. **Database trigger** (`schema/001_initial.sql`) — SQL-level pattern rejection as defense-in-depth
 
-Store **knowledge** (patterns, decisions, lessons), not **data** (emails, credentials, PII). See [admiral/part11-protocols.md, Data Sensitivity Classification](../admiral/part11-protocols.md) for the full protocol.
+Store **knowledge** (patterns, decisions, lessons), not **data** (emails, credentials, PII). See [admiral/part11-protocols.md, Data Sensitivity Classification](../admiral/spec/part11-protocols.md) for the full protocol.
 
 ## Security Model
 
-See [admiral/part5-brain.md](../admiral/part5-brain.md) Knowledge Protocol for the full specification:
+See [admiral/part5-brain.md](../admiral/spec/part5-brain.md) Knowledge Protocol for the full specification:
 
 - **Identity tokens** with cryptographic signatures, session scoping, rotation, revocation, and non-delegation
 - **Permission matrix** enforced at runtime: read own project (all agents), read cross-project (orchestrators/Admiral only), write own project, supersede (orchestrator/Admiral only)

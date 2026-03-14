@@ -15,7 +15,7 @@
 
 Context engineering is the discipline of designing information flows across an entire agent system — not just crafting individual prompts, but architecting how the right information reaches the right agent at the right time in the right format.
 
-Context engineering is the *mechanism*. Intent engineering is the *purpose*. Context engineering answers "what information exists where, when, and why." Intent engineering answers "what matters, what must not happen, and when must the human decide." You need both: intent without context produces agents that understand the goal but lack the information to achieve it; context without intent produces agents that have the information but don't know what matters. See [`intent-engineering.md`](intent-engineering.md) for the full specification of intent engineering and its six elements.
+Context engineering is the *mechanism*. Intent engineering is the *purpose*. Context engineering answers "what information exists where, when, and why." Intent engineering answers "what matters, what must not happen, and when must the human decide." You need both: intent without context produces agents that understand the goal but lack the information to achieve it; context without intent produces agents that have the information but don't know what matters. See [`intent-engineering.md`](../extensions/intent-engineering.md) for the full specification of intent engineering and its six elements.
 
 ### From Prompt Engineering to Context Engineering to Intent Engineering
 

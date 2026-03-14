@@ -57,7 +57,7 @@ fleet/
         └── scale-extended.md # 17 supplementary scale agents (planetary, temporal, cognitive, regulatory)
 ```
 
-> **Protocols have moved.** Standing orders, escalation, handoff, human referral, and paid resource authorization protocols are now in [admiral/part11-protocols.md](../admiral/part11-protocols.md). These are universal framework rules, not fleet-specific tooling.
+> **Protocols have moved.** Standing orders, escalation, handoff, human referral, and paid resource authorization protocols are now in [admiral/part11-protocols.md](../admiral/spec/part11-protocols.md). These are universal framework rules, not fleet-specific tooling.
 
 -----
 
@@ -75,7 +75,7 @@ Every agent definition specifies where its output goes next. This is how agents 
 
 ### Protocols Live in the Admiral
 
-Universal operational protocols — standing orders, escalation, handoff, human referral, and paid resource authorization — are defined in [admiral/part11-protocols.md](../admiral/part11-protocols.md). These are the authoritative source. Agent definitions reference these protocols but do not redefine them.
+Universal operational protocols — standing orders, escalation, handoff, human referral, and paid resource authorization — are defined in [admiral/part11-protocols.md](../admiral/spec/part11-protocols.md). These are the authoritative source. Agent definitions reference these protocols but do not redefine them.
 
 ### Prompts Are Assembled, Not Monolithic
 
@@ -105,7 +105,7 @@ The `prompt-anatomy.md` file provides the assembly pattern for building complete
 
 An additional **29 extended agents** are held in reserve in `agents/extras/` — domain specialists (7), data & analytics (5), and supplementary scale agents (17). See `agents/extras/README.md` for activation instructions.
 
-> **Adoption guidance:** See the [Adoption Levels](../admiral/index.md#adoption-levels) in the Admiral Framework for a progressive path from single-agent to full fleet.
+> **Adoption guidance:** See the [Adoption Levels](../admiral/spec/index.md#adoption-levels) in the Admiral Framework for a progressive path from single-agent to full fleet.
 
 ### Core Fleet (Minimum Viable Deployment)
 
@@ -142,14 +142,14 @@ routing bottlenecks or when specific domain expertise gaps emerge.
 | Understand an agent's capabilities | `agents/[category].md` — read the agent definition |
 | See what an agent needs to operate | Agent definition → Context Profile |
 | See where an agent's output goes | Agent definition → Output Goes To |
-| Know when to consult a human professional | [admiral/part11-protocols.md, Human Referral Protocol](../admiral/part11-protocols.md) |
-| Know the rules for paid resource access | [admiral/part11-protocols.md, Paid Resource Protocol](../admiral/part11-protocols.md) |
+| Know when to consult a human professional | [admiral/part11-protocols.md, Human Referral Protocol](../admiral/spec/part11-protocols.md) |
+| Know the rules for paid resource access | [admiral/part11-protocols.md, Paid Resource Protocol](../admiral/spec/part11-protocols.md) |
 | Assemble a system prompt | `prompt-anatomy.md` |
 | Inject project context into agents | `context-injection.md` |
 | Route a task to the right agent | `routing-rules.md` |
 | Understand handoff format between agents | `interface-contracts.md` |
 | Choose the right model for an agent | `model-tiers.md` |
-| Understand universal agent rules | [admiral/part11-protocols.md, Standing Orders](../admiral/part11-protocols.md) |
+| Understand universal agent rules | [admiral/part11-protocols.md, Standing Orders](../admiral/spec/part11-protocols.md) |
 
 -----
 
@@ -159,10 +159,10 @@ This fleet directory is a **companion** to the admiral framework, not a replacem
 
 **Admiral is the engineering manual. Fleet is the parts catalog.**
 
-For the framework's cross-reference to fleet, see the "Relationship to the Fleet" section in [admiral/index.md](../admiral/index.md).
+For the framework's cross-reference to fleet, see the "Relationship to the Fleet" section in [admiral/index.md](../admiral/spec/index.md).
 
 -----
 
 ## Core Tenets
 
-The fleet operates under the framework's Core Tenets: Fairness, Transparency, Reliability, Safety, Inclusivity, and Accountability. See [`admiral/part11-protocols.md`](../admiral/part11-protocols.md) for Standing Orders that enforce these principles.
+The fleet operates under the framework's Core Tenets: Fairness, Transparency, Reliability, Safety, Inclusivity, and Accountability. See [`admiral/part11-protocols.md`](../admiral/spec/part11-protocols.md) for Standing Orders that enforce these principles.
