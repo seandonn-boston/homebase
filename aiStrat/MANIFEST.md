@@ -520,7 +520,7 @@ governance.md - fleet/agents/specialists - 2026-03-08:
 7 Governance agents: Token Budgeter, Drift Monitor, Hallucination Auditor, Bias
 Sentinel, Loop Breaker, Context Health Monitor, Contradiction Detector. Includes
 Authoritative Ownership Table mapping ~20 failure modes to their authoritative owner,
-conflict resolution protocol, and alert deduplication. Marked "always deploy." Largest
+conflict resolution protocol, and alert deduplication. Deploy at F3+. Largest
 agent file (547 lines).
 aiStrat/fleet/agents/governance.md
 ```

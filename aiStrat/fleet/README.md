@@ -44,7 +44,7 @@ fleet/
     ├── security.md          # Security audit, penetration testing, compliance, privacy
     ├── design.md            # UX research, design systems, copywriting, tech writing, diagrams
     ├── adversarial.md       # Simulated users, devil's advocate, red team, persona agents
-    ├── governance.md        # ALWAYS DEPLOY at Level 3+: Token budgeter, drift, hallucination, bias, loops, context, contradictions
+    ├── governance.md        # Deploy at F3+: Token budgeter, drift, hallucination, bias, loops, context, contradictions
     ├── meta.md              # Pattern enforcement, dependency sentinel, SEO crawler, role crystallizer
     ├── scale.md             # Inhuman-scale analysis (failure topology, decay, combinatorial, security)
     ├── lifecycle.md         # Release, incident response, feature flags, SDK, monorepo, contracts
@@ -87,7 +87,7 @@ The `prompt-anatomy.md` file provides the assembly pattern for building complete
 | Category | Location | Agent Count | Deploy |
 |---|---|---|---|
 | Command & Coordination | `agents/command/` | 4 | |
-| **Governance** | **`agents/governance.md`** | **7** | **Always (Level 3+)** |
+| **Governance** | **`agents/governance.md`** | **7** | **F3+** |
 | Engineering — Frontend | `agents/engineering/frontend/` | 5 | |
 | Engineering — Backend | `agents/engineering/backend/` | 5 | |
 | Engineering — Cross-Cutting | `agents/engineering/cross-cutting/` | 5 | |
@@ -122,9 +122,9 @@ beyond what the core fleet handles.
 | 6 | **Security Auditor** | `agents/security.md` | Security review of all code changes |
 | 7 | **Architect** | `agents/engineering/cross-cutting/agents.md` | System design, technical decisions |
 | 8 | **DevOps Agent** | `agents/engineering/infrastructure/agents.md` | Deployment, CI/CD, infrastructure |
-| 9 | **Token Budgeter** | `agents/governance.md` | Governance (always deploy) — tracks and enforces token/cost budgets |
-| 10 | **Hallucination Auditor** | `agents/governance.md` | Governance (always deploy) — detects fabricated facts, false citations |
-| 11 | **Loop Breaker** | `agents/governance.md` | Governance (always deploy) — detects and terminates circular agent loops |
+| 9 | **Token Budgeter** | `agents/governance.md` | Governance (F3+) — tracks and enforces token/cost budgets |
+| 10 | **Hallucination Auditor** | `agents/governance.md` | Governance (F3+) — detects fabricated facts, false citations |
+| 11 | **Loop Breaker** | `agents/governance.md` | Governance (F3+) — detects and terminates circular agent loops |
 
 **Do not deploy 71 agents for a project that needs 11.** The administrative cost of
 configuring, routing, and coordinating a large fleet exceeds the value for most

@@ -162,7 +162,7 @@ Everything from previous profiles, plus:
 
 ## B — Quick-Start Sequence
 
-Structured around the five Quick-Start Profiles (see index.md). Complete each level before advancing. Each level progressively deepens intent operationalization: The Starter profile establishes the **intent foundation** (what are we building, what constrains us, how do we know we're done). The Team profile makes intent **operational** (who enforces it, with what tools, how do they coordinate). The Governed profile adds **intent governance** (how do we detect when intent is being violated). The Production profile makes intent **persistent** (how do we remember what we learned, scale safely).
+Structured around the five Quick-Start Profiles (see index.md). Complete each profile before advancing. Each profile progressively deepens intent operationalization: The Starter profile establishes the **intent foundation** (what are we building, what constrains us, how do we know we're done). The Team profile makes intent **operational** (who enforces it, with what tools, how do they coordinate). The Governed profile adds **intent governance** (how do we detect when intent is being violated). The Production profile makes intent **persistent** (how do we remember what we learned, scale safely).
 
 ### Starter Profile (30 minutes to configure, 1-2 days to implement)
 
@@ -174,7 +174,7 @@ Structured around the five Quick-Start Profiles (see index.md). Complete each le
 4. **Success Criteria (03)** — Machine-verifiable definition of "done."
 5. **Configuration File Strategy (07)** — Create AGENTS.md (<150 lines). Tool-specific pointers configured. Reference Standing Orders from AGENTS.md.
 6. **Deterministic Enforcement (08)** — Classify constraints (see classification decision process in Deterministic Enforcement, Part 3). **Deploy** hooks for safety-critical ones as live enforcement in your agent runtime (e.g., `.claude/hooks/` for Claude Code, equivalent for other platforms). "Deploy" means the hooks run and block violations in real sessions — not just that the hook code exists and passes tests. Only deploy `E1` hooks (token budget, loop detection, context health). Standing Orders define the *content* that hooks enforce.
-7. **Configuration Security (10)** — Audit configs. Pin MCP servers (if applicable at this level). Set CODEOWNERS.
+7. **Configuration Security (10)** — Audit configs. Pin MCP servers (if applicable at this profile). Set CODEOWNERS.
 
 > **Critical sequencing insight (from implementation):** Implementers naturally organize work by *code architecture* (data models → engine → tests). Admiral organizes by *operational maturity*. These are different orderings. If you build the hook engine before creating AGENTS.md and loading Standing Orders, you have infrastructure without governance — the dogfooding loop is broken. **Create AGENTS.md and Standing Orders first**, then build the infrastructure to enforce them.
 
@@ -667,11 +667,11 @@ This appendix maps every major framework component to its real-world implementat
 | **Continuous Monitor** | 2–3 | GitHub API + scheduler (cron/Actions) + quarantine | Implement scanner, state persistence, digest generation, seed writing |
 | **Fleet observability / metrics** | 2–3 | Custom dashboards + structured logging | Define trace format, implement log aggregation, build or configure dashboards |
 | **Brain B3 (COMPLETE Brain)** | 3 | Postgres 16 + pgvector + MCP server + identity service | Database deployment, schema creation, HNSW index tuning, MCP server implementation, zero-trust access control, sensitivity classification, audit logging |
-| **Cross-project intelligence** | 3 | Brain Level 3 + `_global` namespace | Multi-project Brain deployment, cross-project query authorization, knowledge promotion workflow |
+| **Cross-project intelligence** | 3 | Brain B3 + `_global` namespace | Multi-project Brain deployment, cross-project query authorization, knowledge promotion workflow |
 
 **Reading this table:**
 
-- **Time-to-value vs. implementation effort:** The adoption time estimates in the Adoption Levels table (index.md) assume you are *configuring existing tools*. These categories describe effort to *build custom tooling*. Category 1 components can be adopted in minutes but implementing them as custom code is a separate engineering effort. See the "Config time vs. build time" note in index.md.
+- **Time-to-value vs. implementation effort:** The adoption time estimates in the Quick-Start Profiles table (index.md) assume you are *configuring existing tools*. These categories describe effort to *build custom tooling*. Category 1 components can be adopted in minutes but implementing them as custom code is a separate engineering effort. See the "Config time vs. build time" note in index.md.
 - **Starter profile** (Appendix B) uses only Category 1 components. Zero custom infrastructure.
 - **Team profile** adds some Category 2 components (routing rules, file-based checkpoints). Moderate engineering effort.
 - **Governed profile** adds governance agents (Category 2) and the complete Brain (Category 3). This is where infrastructure investment is justified by proven fleet value at lower profiles.
@@ -702,8 +702,8 @@ This appendix maps every major framework component to its real-world implementat
 
 **v0.3.0-alpha (March 2026)**
 
-- **Brain restructured to 5 levels.** Brain is fully complete at Level 3 (Postgres + pgvector + MCP + identity tokens + zero-trust). Levels 4-5 add fleet-level and enterprise capabilities without modifying the Brain. Created `brain/level3-spec.md`.
-- **5 adoption levels.** Added Enterprise profile for multi-fleet coordination and cross-org federation. Pre-Flight Checklist and Quick-Start Sequence updated.
+- **Brain restructured to 5 levels (B1-B3, DE4-DE5).** Brain is fully complete at B3 (Postgres + pgvector + MCP + identity tokens + zero-trust). DE4-DE5 add fleet-level and enterprise capabilities without modifying the Brain. Created `brain/level3-spec.md`.
+- **5 Quick-Start Profiles.** Added Enterprise profile for multi-fleet coordination and cross-org federation. Pre-Flight Checklist and Quick-Start Sequence updated.
 - **Infrastructure fixes.** Recreated CODEOWNERS with correct paths. Stubbed `ai-monitor.yml` (removed non-existent Python references). Cleaned `.gitignore` and `settings.local.json` of Python vestiges. Deleted empty `hooks.json`.
 - **Deprecated reference cleanup.** Removed references to deleted reference implementation files (`admiral/protocols/`, `admiral/hooks/`). Rewrote implementation lessons to be implementation-agnostic.
 - **Content corrections.** Fixed governance self-monitoring contradiction. Fixed domain.md duplicate output routing. Added `purge_regulation` to test_schema.sql. Fixed ATTACK_CORPUS category references (→ `failure` with metadata tag). Reconciled reading path between index.md and MANIFEST.md.
@@ -714,7 +714,7 @@ This appendix maps every major framework component to its real-world implementat
 
 **v0.2.0-alpha (March 2026)**
 
-- Initial 11-part framework with 71 core + 34 extended agent definitions. Brain Level 1-2 specs. 8 hook manifests. 18 attack corpus scenarios. Full doctrine, fleet, brain, and monitor specifications.
+- Initial 11-part framework with 71 core + 34 extended agent definitions. Brain B1-B2 specs. 8 hook manifests. 18 attack corpus scenarios. Full doctrine, fleet, brain, and monitor specifications.
 
 -----
 

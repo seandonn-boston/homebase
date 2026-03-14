@@ -259,7 +259,7 @@ After three months of operation, these three features create a system that is se
 | Feature | When to Build | Prerequisite |
 |---|---|---|
 | **Causality Tracing** | First — this is the foundation | Fleet Observability (Part 9) infrastructure |
-| **Living Memory** | Second — feeds on traces | Brain (Part 5) at Level 2 minimum |
+| **Living Memory** | Second — feeds on traces | Brain (Part 5) at B2 minimum |
 | **Predictive Health** | Third — requires operational history | 30+ days of trace and metric data |
 
 Do not attempt Predictive Health without Causality Tracing. Predictions without traces are guesses. Do not attempt Living Memory without Causality Tracing. Memory without provenance is unreliable.

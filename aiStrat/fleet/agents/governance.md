@@ -1,7 +1,7 @@
 # Governance Agents
 
 **Category:** Governance
-**Required at Adoption Level 3 and above. At Levels 1-2, the Admiral assumes governance responsibilities directly.**
+**Required at F3 and above. At F1-F2, their core functions are covered by deterministic hooks (E1) and the Admiral assumes governance responsibilities directly.**
 
 These agents are the fleet's immune system. They monitor for the systematic weaknesses that every LLM-based fleet exhibits — cost overruns, scope drift, hallucination, bias, loops, context degradation, and internal contradictions. The Admiral Framework documents 20 failure modes and 13+ anti-patterns. These agents operationalize the defenses.
 
@@ -467,7 +467,7 @@ The Orchestrator maintains a **governance incident log** with a 15-minute dedupl
 | **Context Health Monitor** | Context quality analysis (basic thresholds enforced via hooks) | Instruction decay, session amnesia, sacrifice order violations |
 | **Contradiction Detector** | Internal consistency across agents | Inter-agent contradictions, ground truth violations, assumption divergence |
 
-**Minimum deployment at Adoption Level 3: Token Budgeter, Hallucination Auditor, Loop Breaker** (matching the Core Fleet "always deploy" set in `fleet/README.md`). Add remaining governance agents as fleet size and risk warrant — all seven are recommended at Level 3 and required at Level 4. At Levels 1-2, the Admiral assumes these responsibilities directly. Together, these seven agents operationalize the 20 documented failure modes from the Admiral Framework into continuous, active detection.
+**Minimum deployment at F3: Token Budgeter, Hallucination Auditor, Loop Breaker** (the Core Fleet governance set in `fleet/README.md`). Add remaining governance agents as fleet size and risk warrant — all seven are recommended at F3 and required at F4/Production profile. At F1-F2, their core functions are covered by deterministic hooks (E1) and the Admiral assumes these responsibilities directly. Together, these seven agents operationalize the 20 documented failure modes from the Admiral Framework into continuous, active detection.
 
 -----
 

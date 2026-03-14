@@ -223,7 +223,7 @@ The runtime maintains session state in `.admiral/session_state.json` with the fo
 
 At `SessionStart`, the runtime injects Standing Orders into the agent's context window via stdout. The injected block includes:
 
-1. A header: `"Admiral Level 1 — Standing Orders"`
+1. A header: `"Admiral Starter Profile — Standing Orders"`
 2. The full rendered Standing Orders text (all 15 orders with rules)
 3. A session enforcement summary listing active hooks
 4. The current token budget
@@ -328,7 +328,7 @@ A manifest without a locatable executable is rejected at discovery time (`FileNo
 
 ## Decision Authority Reference Defaults
 
-`DecisionAuthority.with_common_defaults()` provides 10 pre-configured decision assignments for rapid Level 2 setup:
+`DecisionAuthority.with_common_defaults()` provides 10 pre-configured decision assignments for rapid Team profile setup:
 
 | Decision | Default Tier | Rationale |
 |---|---|---|
@@ -360,7 +360,7 @@ A manifest without a locatable executable is rejected at discovery time (`FileNo
 | pgvector | ≥ 0.2 | Optional (Brain vector similarity search) |
 | mcp | ≥ 1.0 | Optional (MCP protocol integration) |
 
-The optional dependencies correspond to Level 3+ features. A Level 1–2 implementation requires only Python, pydantic, jsonschema, and pytest.
+The optional dependencies correspond to Governed profile (B3+/F3+) features. A Starter–Team (B1–B2/F1–F2) implementation requires only Python, pydantic, jsonschema, and pytest.
 
 -----
 
@@ -520,8 +520,8 @@ When the Orchestrator becomes unresponsive, the Admiral activates a degraded but
 | Constant | Value | Meaning |
 |---|---|---|
 | Decay awareness window | 90 days | Entries not accessed in this window are flagged for review (not deleted) |
-| Level 1→2 graduation threshold | 30% missed retrieval rate over 2 weeks | When file-based brain can't keep up, migrate to vector store |
-| Level 2 performance limit | ~10,000 entries | Beyond this, full-table scan latency degrades; advance to Level 3 (HNSW index) |
+| B1→B2 graduation threshold | 30% missed retrieval rate over 2 weeks | When file-based brain can't keep up, migrate to vector store |
+| B2 performance limit | ~10,000 entries | Beyond this, full-table scan latency degrades; advance to B3 (HNSW index) |
 
 ### Embedding Models
 

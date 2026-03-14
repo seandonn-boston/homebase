@@ -2,7 +2,7 @@
 
 *The four stages from manual oversight to full autonomy — and why infrastructure must support all of them simultaneously.*
 
-> **Relationship to Adoption Levels:** The five adoption levels (index.md) describe what components of Admiral you deploy. Progressive Autonomy describes how much independence you grant agents within whatever level you have adopted. A Level 3 fleet can operate at any autonomy stage. These are orthogonal dimensions.
+> **Relationship to Adoption Profiles:** The five adoption profiles (Starter through Enterprise, see index.md) describe what components of Admiral you deploy. Progressive Autonomy describes how much independence you grant agents within whatever profile you have adopted. A Governed profile fleet (F3) can operate at any autonomy stage. These are orthogonal dimensions.
 
 -----
 
