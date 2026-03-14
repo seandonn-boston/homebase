@@ -27,7 +27,7 @@ Admiral enables a new form of organization: **the hybrid organization where AI a
 
 The new behavior Admiral enables: *treating AI capacity as an operational workforce, not a feature.*
 
-See [`thesis.md`](thesis.md) for the full analysis and [`research/future-operations.md`](../research/future-operations.md) for the underlying thought experiment.
+See [`thesis.md`](thesis.md) for the full analysis and [`research/future-operations.md`](../../research/future-operations.md) for the underlying thought experiment.
 
 -----
 

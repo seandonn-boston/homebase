@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.3.1-alpha -->
 # Akka vs. Admiral — Competitive Analysis
 
 **Date:** March 2026

@@ -1007,5 +1007,5 @@ differently, what systems made Admiral necessary, what fears disappear, new job 
 if Admiral disappears (the dependency test), and the core thesis that Admiral enables
 a new organizational form — the hybrid organization with AI agents as permanent
 operational members. Historical parallel to the invention of the corporation.
-aiStrat/research/future-operations.md
+research/future-operations.md
 ```
