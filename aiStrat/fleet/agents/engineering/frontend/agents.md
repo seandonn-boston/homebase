@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # Frontend Engineering Agents
 
 **Category:** Engineering — Frontend

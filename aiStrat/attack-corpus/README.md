@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # Attack Corpus
 
 **The fleet's adversarial memory — every failure, attack, and edge case discovered becomes a reusable test.**

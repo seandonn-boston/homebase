@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # PART 1 — STRATEGY
 
 *What are we building, what are the walls, and how do we know when we're done?*

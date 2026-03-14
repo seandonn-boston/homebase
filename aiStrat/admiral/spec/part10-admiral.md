@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # PART 10 — THE ADMIRAL
 
 *The human element.*

@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # Admiral Sales Pitch — 30-Minute Conversation Guide
 
 **Audience:** Someone in tech with strong technical familiarity — comfortable with infrastructure concepts, software architecture, and AI terminology.
@@ -129,11 +128,11 @@ The space is crowding from two directions — agent frameworks adding governance
 
 ### Development Status — Be Honest and Specific
 
-> "I'm at v0.4.0-alpha. Here's what that means in plain English:"
+> "I'm at v0.4.3-alpha. Here's what that means in plain English:"
 
 **What exists today:**
 - The complete specification — 15,000+ lines across 70+ files. The full architectural blueprint.
-- 11-part operational doctrine covering strategy, enforcement, execution, security, and quality assurance
+- 12-part operational doctrine covering strategy, enforcement, execution, security, and quality assurance
 - 71 agent definitions with routing rules and interface contracts
 - The persistent memory (Brain) architecture — five-level semantic memory with Postgres+pgvector
 - A security/monitoring system with five defensive layers
@@ -154,6 +153,7 @@ The space is crowding from two directions — agent frameworks adding governance
 - Level 2: Small team of 5-8 agents with routing. A few days.
 - Level 3: Full governance with specialized oversight agents. A couple weeks.
 - Level 4: Complete framework. 1-2 weeks for an experienced team.
+- Level 5: Enterprise — multi-fleet coordination and cross-org federation.
 
 > "Designed for incremental adoption. Start with one agent, prove value, scale up. No big-bang deployment required."
 

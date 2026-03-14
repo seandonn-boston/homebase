@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # Hook Ecosystem
 
 **Manifest-first hook management for the Admiral Framework.**

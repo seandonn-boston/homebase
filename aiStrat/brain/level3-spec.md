@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # Brain Level 3 Specification — Full Brain (Postgres + pgvector + MCP)
 
 **Level 3 is the complete Brain.** All Brain capabilities are fully specified at this level. Levels 4 and 5 of the Admiral Framework add fleet-level capabilities (scale agents, full enforcement, multi-fleet coordination) but do not modify the Brain architecture.

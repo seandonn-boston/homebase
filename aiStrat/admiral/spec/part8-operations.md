@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # PART 8 — OPERATIONS
 
 *How work persists, adapts, and scales over time.*

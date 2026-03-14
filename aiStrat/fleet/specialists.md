@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # Specialists
 
 **Domain-expert agents with deep knowledge, collaborative instinct, and human referral judgment.**

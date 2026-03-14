@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # THE ADMIRAL RATING SYSTEM
 
 **The Standard Benchmark for AI Automation Ratings**

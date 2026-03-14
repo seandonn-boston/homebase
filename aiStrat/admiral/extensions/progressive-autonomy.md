@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # PROGRESSIVE AUTONOMY FRAMEWORK
 
 *The four stages from manual oversight to full autonomy — and why infrastructure must support all of them simultaneously.*

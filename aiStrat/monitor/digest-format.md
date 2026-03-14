@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # Monitor Digest Format
 
 Digest files are the primary output of the AI Landscape Monitor scanner. Each scan produces a markdown digest file stored in `monitor/digests/YYYY-MM-DD.md`.

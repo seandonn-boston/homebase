@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # Model Tier Assignments
 
 **Matching model capability to agent role requirements.**

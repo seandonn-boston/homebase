@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # PART 9 — PLATFORM
 
 *The infrastructure that surrounds the fleet.*

@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # PART 3 — ENFORCEMENT
 
 *The gap between "should" and "must."*

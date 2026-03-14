@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # PART 12 — THE DATA ECOSYSTEM
 
 *How the fleet generates compounding intelligence from every interaction.*

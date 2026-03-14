@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # PART 11 — PROTOCOLS
 
 *The universal operating rules every agent follows.*

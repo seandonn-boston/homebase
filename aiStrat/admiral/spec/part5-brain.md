@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # PART 5 — THE BRAIN
 
 *How does the fleet remember?*

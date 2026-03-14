@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # INTENT ENGINEERING
 
 *The shared dialect between Admirals and Brains.*

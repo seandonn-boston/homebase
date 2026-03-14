@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # Cross-Cutting Engineering Agents
 
 **Category:** Engineering — Cross-Cutting

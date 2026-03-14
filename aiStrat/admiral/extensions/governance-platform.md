@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # THE GOVERNANCE PLATFORM
 
 *Admiral is not a toolkit. It is the operating environment where AI organizations run.*

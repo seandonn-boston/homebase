@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # Context Curator
 
 **Category:** Command & Coordination

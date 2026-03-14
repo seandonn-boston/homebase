@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # Context Injection Guide
 
 **How to inject project-specific context into project-agnostic agent definitions.**

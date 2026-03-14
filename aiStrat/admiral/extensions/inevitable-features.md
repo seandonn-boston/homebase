@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # THE THREE INEVITABLE FEATURES
 
 *The features that make engineering teams say: "Once you have this, you can't go back."*

@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # Monitor Scanner Specification
 
 **Status:** Partially implemented. `scanner.sh` provides GitHub release tracking, trending repo discovery, digest generation, state management, and issue creation. RSS feeds, quarantine layers, and seed candidate generation remain specification-only.

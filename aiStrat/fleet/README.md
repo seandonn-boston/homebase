@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # The Fleet
 
 **A project-agnostic toolbox of agent definitions, prompts, and routing for the Fleet Admiral Framework.**

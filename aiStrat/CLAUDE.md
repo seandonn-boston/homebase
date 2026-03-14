@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # CLAUDE.md
 
 **Read `AGENTS.md` for full project instructions.** This file contains only Claude Code-specific configuration. All project overview, structure, versioning, conventions, and design principles live in `AGENTS.md` — the canonical, model-agnostic instruction file.

@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # Framework Benchmarks
 
 > **Audience:** Implementers and evaluators measuring Admiral Framework effectiveness. These benchmarks define what "good" looks like for an Admiral-governed fleet.

@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # Admiral Thesis
 
 **The operational infrastructure for AI workforces.**

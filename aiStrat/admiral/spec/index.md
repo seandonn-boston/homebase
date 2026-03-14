@@ -1,4 +1,3 @@
-<!-- Admiral Framework v0.4.0-alpha -->
 # THE FLEET ADMIRAL FRAMEWORK
 
 **A Workforce Toolkit for Autonomous AI Agent Fleets**
