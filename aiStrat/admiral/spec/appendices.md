@@ -166,7 +166,7 @@ Structured around the five Quick-Start Profiles (see index.md). Complete each le
 
 ### Starter Profile (30 minutes to configure, 1-2 days to implement)
 
-> **Time estimate clarification:** "30 minutes" is for **configuring** an existing tool (writing AGENTS.md, setting up hooks in Claude Code or your platform). If you are **building a framework implementation** (writing the hook engine, data models, etc.), expect 1-2 days for the Starter profile. The reference implementation (Admiral-builds-Admiral) took ~5,500 lines of Python and 148 tests to reach verified Level 1 completion. See Case Study 4 (Appendix D).
+> **Time estimate clarification:** "30 minutes" is for **configuring** an existing tool (writing AGENTS.md, setting up hooks in Claude Code or your platform). If you are **building a framework implementation** (writing the hook engine, data models, etc.), expect 1-2 days for the Starter profile. The reference implementation (Admiral-builds-Admiral) took ~5,500 lines of Python and 148 tests to reach verified Starter completion. See Case Study 4 (Appendix D).
 
 1. **Standing Orders (36)** — Load the 15 non-negotiable rules into agent context. These govern everything that follows. Despite their Part 11 position, Standing Orders are a Starter prerequisite — read them before implementing anything else.
 2. **Mission (01)** — What you are building. What success looks like.
@@ -479,7 +479,7 @@ These case studies are synthesized from patterns observed across multiple agent 
 - 89 tests passing on first commit.
 
 **What went wrong:**
-1. **Standing Orders deferred to Phase 4.** Part 11's structural position (last part) made it seem like a late-stage concern. It is Level 1. The plan had a design error that contradicted the spec's own Quick-Start Profiles.
+1. **Standing Orders deferred to Phase 4.** Part 11's structural position (last part) made it seem like a late-stage concern. It is Starter. The plan had a design error that contradicted the spec's own Quick-Start Profiles.
 2. **AGENTS.md created last, not first.** Without AGENTS.md, the project had no declared Mission, Boundaries, or Success Criteria. The fleet was operating without any profile despite having Starter infrastructure.
 3. **Dogfooding loop was broken.** The whole point was "Admiral governs its own construction." But without AGENTS.md and Standing Orders loaded, Admiral wasn't governing anything — it was just a Python package that implements Admiral's spec.
 4. **`platform/` package name shadowed Python's stdlib `platform` module.** Crashed the test runner. Renamed to `platform_ops/`. The spec's Part 9 category name ("Platform") is a known naming hazard for Python, Go, and other languages with `platform` in their stdlib.
@@ -659,14 +659,14 @@ This appendix maps every major framework component to its real-world implementat
 | **Agent definitions** | 1 | AGENTS.md sections, tool-specific agent files, Agent SDK agent constructors | Write agent specifications per prompt anatomy (Context Engineering, Part 2) |
 | **Self-healing quality loops** | 1 | Hook exit codes + agent retry (Deterministic Enforcement, Part 3) | Configure hooks for linter/type-checker/test; retry logic is built-in |
 | **Recovery ladder** | 1 | Agent instructions + hooks | Define fallback/backtrack strategies per agent; hook enforcement for max retries |
-| **Brain Level 1 (file-based)** | 1 | JSON files + grep + git | Create `.brain/` directory, write JSON files (see `brain/level1-spec.md`) |
+| **Brain B1 (file-based)** | 1 | JSON files + grep + git | Create `.brain/` directory, write JSON files (see `brain/level1-spec.md`) |
 | **Routing rules** | 2 | Custom orchestrator logic, Agent SDK handoffs | Implement routing decision tree; map task types to agent roles |
-| **Brain Level 2 (SQLite + embeddings)** | 2 | SQLite + embedding API or local model | Set up SQLite schema, embedding generation, cosine similarity search (see `brain/level2-spec.md`) |
+| **Brain B2 (SQLite + embeddings)** | 2 | SQLite + embedding API or local model | Set up SQLite schema, embedding generation, cosine similarity search (see `brain/level2-spec.md`) |
 | **Governance agents** | 2 | Agent definitions + monitoring hooks | Write agent definitions, configure detection patterns, wire outputs to Orchestrator |
 | **Quarantine immune system** | 2 | Regex patterns + LLM classifier | Implement 4-layer validation pipeline (structural, injection, semantic, antibody) |
 | **Continuous Monitor** | 2–3 | GitHub API + scheduler (cron/Actions) + quarantine | Implement scanner, state persistence, digest generation, seed writing |
 | **Fleet observability / metrics** | 2–3 | Custom dashboards + structured logging | Define trace format, implement log aggregation, build or configure dashboards |
-| **Brain Level 3 (COMPLETE Brain)** | 3 | Postgres 16 + pgvector + MCP server + identity service | Database deployment, schema creation, HNSW index tuning, MCP server implementation, zero-trust access control, sensitivity classification, audit logging |
+| **Brain B3 (COMPLETE Brain)** | 3 | Postgres 16 + pgvector + MCP server + identity service | Database deployment, schema creation, HNSW index tuning, MCP server implementation, zero-trust access control, sensitivity classification, audit logging |
 | **Cross-project intelligence** | 3 | Brain Level 3 + `_global` namespace | Multi-project Brain deployment, cross-project query authorization, knowledge promotion workflow |
 
 **Reading this table:**
@@ -687,7 +687,7 @@ This appendix maps every major framework component to its real-world implementat
 **v0.4.0-alpha (March 2026)**
 
 - **Removed dual numbering system.** Eliminated the parallel numbering scheme (Parts + global Sections 01-48) across the entire specification. All cross-references now use descriptive names with Part identifiers (e.g., "Deterministic Enforcement (Part 3)" instead of "Section 08"). Approximately 344 section references rewritten across ~40 files.
-- **Elevated Fleet Control Plane as a core concept.** The Control Plane is now defined progressively across all five profiles: Starter (CLI Dashboard), Team (Fleet Dashboard), Governed (Governance Dashboard), Production (Operations Dashboard), Enterprise (Federation Dashboard). Control Plane surface notes added to all 12 Part files. Rewrote `extensions/fleet-control-plane.md` with progressive level structure.
+- **Elevated Fleet Control Plane as a core concept.** The Control Plane is now defined progressively across all five profiles: Starter (CLI Dashboard), Team (Fleet Dashboard), Governed (Governance Dashboard), Production (Operations Dashboard), Enterprise (Federation Dashboard). Control Plane surface notes added to all 12 Part files. Rewrote `extensions/fleet-control-plane.md` with progressive profile structure.
 - **Consolidated research directories.** Moved 8 research files from `aiStrat/research/` to root `research/` directory. Research files are no longer spec artifacts and do not carry version headers.
 - **Fixed CI/CD workflow.** Dynamic version extraction from `index.md`, YAML validation dependency fix, broken link validation now fails on errors.
 - **Updated `.gitignore`.** Added standard exclusions for dependencies, build output, IDE files, and OS artifacts.
@@ -703,7 +703,7 @@ This appendix maps every major framework component to its real-world implementat
 **v0.3.0-alpha (March 2026)**
 
 - **Brain restructured to 5 levels.** Brain is fully complete at Level 3 (Postgres + pgvector + MCP + identity tokens + zero-trust). Levels 4-5 add fleet-level and enterprise capabilities without modifying the Brain. Created `brain/level3-spec.md`.
-- **5 adoption levels.** Added Level 5 (Enterprise) for multi-fleet coordination and cross-org federation. Pre-Flight Checklist and Quick-Start Sequence updated.
+- **5 adoption levels.** Added Enterprise profile for multi-fleet coordination and cross-org federation. Pre-Flight Checklist and Quick-Start Sequence updated.
 - **Infrastructure fixes.** Recreated CODEOWNERS with correct paths. Stubbed `ai-monitor.yml` (removed non-existent Python references). Cleaned `.gitignore` and `settings.local.json` of Python vestiges. Deleted empty `hooks.json`.
 - **Deprecated reference cleanup.** Removed references to deleted reference implementation files (`admiral/protocols/`, `admiral/hooks/`). Rewrote implementation lessons to be implementation-agnostic.
 - **Content corrections.** Fixed governance self-monitoring contradiction. Fixed domain.md duplicate output routing. Added `purge_regulation` to test_schema.sql. Fixed ATTACK_CORPUS category references (→ `failure` with metadata tag). Reconciled reading path between index.md and MANIFEST.md.

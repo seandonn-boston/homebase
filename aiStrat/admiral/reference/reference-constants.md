@@ -317,12 +317,12 @@ A manifest without a locatable executable is rejected at discovery time (`FileNo
 
 | Constant | Value | Part | Meaning |
 |---|---|---|---|
-| FLEET_MIN_AGENTS | 1 | Fleet Composition (Part 4) | Single-agent fleets valid at Level 1 |
+| FLEET_MIN_AGENTS | 1 | Fleet Composition (Part 4) | Single-agent fleets valid at F1 |
 | FLEET_MAX_AGENTS | 12 | Fleet Composition (Part 4) | Maximum agents in a single fleet |
 | CHUNK_BUDGET_CEILING_PCT | 40 | Work Decomposition (Part 6) | Max % of agent budget for one work chunk |
 | STANDING_CONTEXT_MAX_LINES | 150 | Context Profiles (Part 2) | Hard limit on standing context size |
 
-`FleetRoster` rejects configurations outside 1–12 agents. The spec recommends 5–12 for Level 2+, but single-agent (Level 1) is valid.
+`FleetRoster` rejects configurations outside 1–12 agents. The spec recommends 5–12 for F2+, but single-agent (F1) is valid.
 
 -----
 
