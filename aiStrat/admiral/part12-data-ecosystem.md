@@ -686,9 +686,9 @@ All datasets operate under the Data Sensitivity Protocol (Data Sensitivity Class
 
 -----
 
-## Relationship to Existing Admiral Sections
+## Relationship to Other Parts
 
-| Admiral Section | Data Ecosystem Role |
+| Admiral Topic | Data Ecosystem Role |
 |---|---|
 | Ground Truth (Part 2) | Data ecosystem configuration (thresholds, freshness requirements, attribution rules) becomes part of Ground Truth |
 | Decision Authority (Part 3) | Ecosystem agents follow standard decision authority tiers; calibration loop adjusts tiers based on outcome data |
