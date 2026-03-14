@@ -24,7 +24,9 @@ The full Brain specification below is enterprise-grade. Before committing to Pos
 
 **The Brain is fully specified at B3.** The Production and Enterprise profiles of the Admiral Framework add fleet-level capabilities (scale agents, full enforcement, fleet observability, multi-fleet coordination) but do not modify the Brain architecture. If you have reached B3, you have the complete knowledge system.
 
-Each level should run for at least 2 weeks of active fleet operation before advancing. Measure: retrieval hit rate (did the agent find what it needed?), retrieval precision (was the top result actually relevant?), and knowledge reuse rate (what percentage of Brain entries are accessed more than once?). If these metrics don't improve at the next level, the current level is sufficient.
+Each level should run for at least 2 weeks of active fleet operation before advancing. Measure: retrieval hit rate (did the agent find what it needed?), retrieval precision (was the top result actually relevant?), and knowledge reuse rate (what percentage of Brain entries are accessed more than once?). Advance when these thresholds are met: **hit rate ≥85%**, **precision ≥90%**, **reuse rate ≥30%** of entries accessed 2+ times, with **≥5% improvement** over the 2-week baseline at the next level. If these metrics don't improve at the next level, the current level is sufficient.
+
+**Supersession rate:** A healthy Brain has a supersession rate of **<10% of entries superseded per quarter**. A rate **>15% per quarter** indicates Brain entry quality issues and should trigger an audit of entry creation practices.
 
 > **ANTI-PATTERN: PREMATURE ARCHITECTURE** — Deploying the full B3 Brain (Postgres + pgvector + MCP + identity tokens) for a fleet that hasn't yet determined whether persistent memory helps. The infrastructure cost (setup, maintenance, security surface) is justified only when lighter approaches hit their limits. Start at B1. Graduate when you have evidence.
 

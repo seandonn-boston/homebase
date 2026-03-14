@@ -1,5 +1,7 @@
 # Specification Gaps: Vague Behavioral Claims Needing Concrete Constants
 
+> **Status: ALL GAPS RESOLVED (v0.5.3-alpha).** All 14 gaps (7 Critical, 6 Moderate, 1 Minor) have been resolved with concrete thresholds added to their source spec files and mirrored in `reference-constants.md`. This document is retained as a historical record of the gaps and their resolutions.
+>
 > **Audience:** Spec authors and reviewers. This document identifies sections across the Admiral Framework that make behavioral claims without pinning down concrete numbers, thresholds, or constants. Each gap includes the vague phrase, what should be specified, and a suggested value inferred from context.
 
 -----
@@ -247,11 +249,11 @@
 
 ## Recommended Actions
 
-1. **Next minor (v0.5.0):** Resolve Critical gaps #1–7 by adding concrete constants to the source spec files and mirroring them in `reference-constants.md`.
-2. **Following minor (v0.6.0):** Resolve Moderate gaps #8–13 with quantitative thresholds.
+~~1. **Next minor (v0.5.0):** Resolve Critical gaps #1–7 by adding concrete constants to the source spec files and mirroring them in `reference-constants.md`.~~
+~~2. **Following minor (v0.6.0):** Resolve Moderate gaps #8–13 with quantitative thresholds.~~
 3. **Ongoing:** Establish a "no vague thresholds" lint rule for spec PRs — every behavioral claim must have a number or explicitly cite another document that provides one.
 
-> **Note (v0.4.3):** These targets were originally set for v0.3.0 and v0.4.0 respectively but were not addressed. Targets updated to reflect realistic schedule.
+> **Resolution note (v0.5.3-alpha):** All 14 gaps resolved. Concrete thresholds added to source spec files and mirrored in `reference-constants.md § Spec-Gap Resolved Thresholds`.
 
 -----
 

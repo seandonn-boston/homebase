@@ -458,7 +458,7 @@ Operational dashboards use these thresholds to distinguish healthy fleet behavio
 | Metric | Healthy | Critical | Meaning |
 |---|---|---|---|
 | Idle Time Ratio | Under 15% | Over 25% | Bottleneck — agents waiting on dependencies or orchestrator |
-| Orchestrator Overhead | Under 25% of session budget | Over 25% | Coordination bloat — fleet spending more on routing than work |
+| Orchestrator Overhead | Under 20% of session budget | Graduated: 20–25% Monitor, 25–35% Caution, 35–50% Alert, 50%+ Critical | Coordination bloat — fleet spending more on routing than work |
 | Budget Adherence | 80–120% consistently | Consistent overruns/underruns | Estimation calibration issue |
 
 ### Budget Burn Rate Brackets
@@ -550,3 +550,114 @@ This data supports the standing order requiring contract-first decomposition bef
 |---|---|---|---|
 | LLM call elimination rate | 30–60% | part8-operations.md | Percentage of LLM calls eliminated by deterministic pre-processing |
 | Economy-tier cost ratio | 1/30th of flagship | part8-operations.md | Cost savings when routing simple tasks to smaller models |
+
+-----
+
+## Spec-Gap Resolved Thresholds
+
+All thresholds below were resolved from `spec-gaps.md` and added to their source spec files. This section mirrors them for quick reference.
+
+### Standing Context Ceiling (Gap #1)
+
+| Constant | Value | Source |
+|---|---|---|
+| Standing context hard limit | 50K tokens | part2-context.md |
+| Standing context warning | 45K tokens | part2-context.md |
+
+### Brain Level Advancement (Gap #2)
+
+| Metric | Threshold | Source |
+|---|---|---|
+| Retrieval hit rate minimum | ≥85% | part5-brain.md |
+| Retrieval precision minimum | ≥90% | part5-brain.md |
+| Knowledge reuse rate minimum | ≥30% of entries accessed 2+ times | part5-brain.md |
+| Improvement threshold | ≥5% improvement over 2-week baseline | part5-brain.md |
+
+### Brain Supersession Rate (Gap #3)
+
+| Constant | Value | Source |
+|---|---|---|
+| Healthy supersession rate | <10% of entries superseded per quarter | part5-brain.md |
+| Warning threshold | >15% supersession per quarter — audit | part5-brain.md |
+
+### Over-Decomposition Trigger (Gap #4)
+
+| Constant | Value | Source |
+|---|---|---|
+| Re-decompose trigger | 2 consecutive chunks using <20% of budget | part6-execution.md |
+| Session-level pattern | 3+ low-budget chunks in a single session | part6-execution.md |
+
+### Tactical vs. Strategic Classification (Gap #5)
+
+| Constant | Value | Source |
+|---|---|---|
+| Scope expansion → Strategic | >15% expansion of original requirements | part8-operations.md |
+| Scope reduction → Strategic | >10% reduction of original requirements | part8-operations.md |
+| Deadline shift → Strategic | >1 week shift from original deadline | part8-operations.md |
+| Mission change → Strategic | Any change to Mission statement text | part8-operations.md |
+
+### Health Metric Yellow Zones (Gap #6)
+
+| Metric | Yellow Zone | Yellow Zone Action | Source |
+|---|---|---|---|
+| First-Pass Quality Rate | 50–75% | Audit acceptance criteria; review Ground Truth freshness | part8-operations.md |
+| Assumption Accuracy | 70–85% | Audit Ground Truth; increase assumption-flagging frequency | part8-operations.md |
+
+### Orchestrator Overhead Graduated Response (Gap #7)
+
+| Threshold | Status | Action | Source |
+|---|---|---|---|
+| <20% | Normal | No action | part8-operations.md |
+| 20–25% | Monitor | Track trend over sessions | part8-operations.md |
+| 25–35% | Caution | Audit routing efficiency | part8-operations.md |
+| 35–50% | Alert | Reduce parallel work, simplify fleet | part8-operations.md |
+| 50%+ | Critical | Reduce fleet scope or split fleet | part8-operations.md |
+
+### Context Loading Position (Gap #8)
+
+| Constant | Value | Source |
+|---|---|---|
+| Standing context position | First 5–10% of context window (~10K–20K tokens in 200K window) | part2-context.md |
+
+### QA Confidence Levels (Gap #9)
+
+| Level | Threshold | Source |
+|---|---|---|
+| Verified | ≥2 independent test cases passing | part7-quality.md |
+| Assessed | ≥50% of changed lines reviewed | part7-quality.md |
+| Assumed | ≥10% of implementation spot-checked | part7-quality.md |
+
+### Sycophantic Drift Detection (Gap #10)
+
+| Constant | Value | Source |
+|---|---|---|
+| Finding count decline trigger | >30% decrease session-over-session | part7-quality.md |
+| Severity language audit | Any "suggestion" replacing a previous "blocking issue" | part7-quality.md |
+
+### Admiral Trust Promotion (Gap #11)
+
+| Constant | Value | Source |
+|---|---|---|
+| Consecutive success threshold | 5 consecutive successful decisions in same category | part10-admiral.md |
+| Reset condition | Any failure resets counter to 0 | part10-admiral.md |
+
+### Context Honesty Confidence (Gap #12)
+
+| Constant | Value | Source |
+|---|---|---|
+| Minimum confidence to proceed | ≥80% | part11-protocols.md |
+| Escalation trigger | <80% → flag to Admiral/Orchestrator with missing context items | part11-protocols.md |
+
+### Headless Agent Authority (Gap #13)
+
+| Constant | Value | Source |
+|---|---|---|
+| Authority shift rule | Shift 1 tier down from interactive baseline | part9-platform.md |
+| Mapping | Autonomous → Propose, Propose → Escalate, Escalate → unchanged | part9-platform.md |
+
+### Escalation Rate (Gap #14)
+
+| Constant | Value | Source |
+|---|---|---|
+| Expected decline rate | 5–10% decrease per session during Acceleration phase | part8-operations.md |
+| Plateau signal | Stable for 3+ sessions → review Decision Authority assignments | part8-operations.md |

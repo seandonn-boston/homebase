@@ -6,7 +6,7 @@
 
 Before deploying, verify the items for your target profile. Each profile includes all items from lower profiles. **Only check items for your current profile** — checking ahead encourages premature implementation.
 
-> **Bootstrap note:** This checklist validates that Standing Orders (Part 11) are loaded, but using the checklist effectively presupposes familiarity with Standing Orders. Bootstrap sequence: (1) read Standing Orders in Part 11; (2) configure your agent's context to include them; (3) run this Pre-Flight Checklist to verify completeness.
+> **Bootstrap note:** If you are deploying for the first time, follow [`QUICKSTART.md`](../../QUICKSTART.md) first — it provides a linear, step-by-step bootstrap sequence. Then return to this checklist to verify completeness. Bootstrap sequence: (1) follow QUICKSTART.md; (2) run this Pre-Flight Checklist to verify nothing was missed.
 
 ### Starter Profile
 

@@ -24,9 +24,9 @@
 
 ### Trust Calibration
 
-Trust is not a feeling. It is a measurable parameter earned incrementally and withdrawn precisely.
+Trust is not a feeling. It is a measurable, per-category parameter earned incrementally and withdrawn precisely. See the **Unified Trust Model** in Decision Authority (Part 3) for the authoritative definition of trust scores, state transitions, and storage. This section covers the Admiral's role in calibrating trust.
 
-**Earning:** After consecutive successful Autonomous decisions in a category, promote similar Propose-tier decisions. Category-specific, not global. Log every promotion.
+**Earning:** After **5 consecutive successful** Autonomous decisions in a category, promote similar Propose-tier decisions. Category-specific, not global. Log every promotion. Any failure resets the consecutive counter to 0 for that category.
 
 **Withdrawing:** After a failed Autonomous decision, demote that category to Propose. Investigate: context gap (fixable via Ground Truth) or judgment gap (needs tighter oversight)?
 

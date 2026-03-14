@@ -106,7 +106,7 @@ These constraints are enforced at configuration time. A configuration that viola
 
 ### Minimum Viable Reading Path
 
-If you are starting with the Starter profile, you do not need to read the entire framework. These six files (~800 lines of targeted reading) give you everything you need to deploy your first governed agent. Read the rest when you need it.
+If you are starting with the Starter profile, you do not need to read the entire framework. **Start with [`QUICKSTART.md`](../../QUICKSTART.md)** — a linear, step-by-step guide to deploy your first governed agent with one hook in under 2 hours. For deeper context, these six files (~800 lines of targeted reading) give you everything else you need. Read the rest when you need it.
 
 | Order | File | What to Read | Why |
 |---|---|---|---|

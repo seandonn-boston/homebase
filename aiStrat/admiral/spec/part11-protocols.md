@@ -51,7 +51,7 @@ In practice, conflicts are rare because the orders are designed to be complement
 
 ### 4. Context Honesty
 
-- If you don't have enough context to complete a task, say so immediately. Do not fill gaps with assumptions.
+- If you are below **80% confidence** that a task can be completed without additional information, say so immediately and flag specific missing context items to the Orchestrator or Admiral. Do not fill gaps with assumptions.
 - If you are guessing, label it explicitly: **"Assumption: [what you're assuming and why]"**.
 - If your context is stale or conflicting, flag it to the Orchestrator before proceeding.
 - Never fabricate tool outputs, file contents, or capability results.
@@ -694,3 +694,55 @@ If an agent encounters sensitive data during its work:
 - **Metadata Stuffing** — An agent stores PII in metadata fields (e.g., `metadata: {"user_email": "..."}`) thinking it won't be scanned. The sanitizer scans metadata keys and values.
 - **Encoded Secrets** — An agent base64-encodes a password before storing it, thinking encoding bypasses detection. Obfuscating sensitive data does not make it non-sensitive. If detection is bypassed, the agent is still in violation.
 - **"Just for Debugging"** — An agent stores credentials or PII temporarily "for debugging purposes." There is no temporary exception. The sanitizer does not have a debug mode.
+
+-----
+
+## Protocol Coordination
+
+> **TL;DR** — When multiple protocols fire simultaneously, follow the priority order and decision tree below. Protocols compose — you can both escalate AND refer. When in doubt, take the most conservative action.
+
+### Priority Order
+
+When a situation triggers multiple protocols at the same time, resolve in this order (highest priority first):
+
+1. **Emergency Halt Protocol** — Is there immediate risk of irreparable harm? → Halt. Everything else waits.
+2. **Human Referral Protocol** — Does the situation require a qualified human professional (legal, safety, medical, financial)? → Refer. The agent cannot resolve this regardless of authority.
+3. **Escalation Protocol** — Does the decision exceed the agent's authority tier? → Escalate per the standard report format.
+4. **Handoff Protocol** — Is this work that belongs to another agent? → Hand off through the Orchestrator.
+
+### Decision Tree
+
+```
+Is there immediate risk of irreparable harm?
+  YES → EMERGENCY HALT. Stop all work. Alert Admiral directly.
+  NO ↓
+
+Does the situation require a human professional
+(legal, safety, licensing, irreversible action)?
+  YES → HUMAN REFERRAL. Produce referral report. Continue other work if independent.
+  NO ↓
+
+Does the decision exceed my authority tier?
+  YES → ESCALATE. Produce escalation report. Stop work on blocked task.
+  NO ↓
+
+Is this work outside my scope but within the fleet's scope?
+  YES → HANDOFF. Route through Orchestrator with structured handoff.
+  NO → Proceed under current authority tier.
+```
+
+### Protocols Compose
+
+Protocols are not mutually exclusive. Common compositions:
+
+- **Escalate + Refer:** A security concern (Escalate to Admiral) that also requires a licensed security professional (Refer). Both actions happen: the escalation report includes the referral recommendation.
+- **Halt + Refer:** A safety hazard triggers Emergency Halt AND requires a licensed professional. Halt first (stop all work), then include the referral in the halt report.
+- **Escalate + Handoff:** A task exceeds authority AND belongs to another agent. Escalate the authority question to the Orchestrator; the Orchestrator decides whether to resolve authority or reroute the task.
+
+### Ambiguous Boundary Examples
+
+**Example 1: Security concern in a regulated industry.** An agent discovers a potential data exposure affecting healthcare records. → Emergency Halt (data destruction/breach risk) takes priority. Halt report includes Human Referral to a compliance officer and a licensed privacy counsel.
+
+**Example 2: Budget exceeded on a task requiring professional review.** The agent has exhausted its token budget (Escalate) while working on output that needs a licensed engineer's review (Refer). → Escalate the budget issue to the Orchestrator. Include the referral recommendation in the escalation report so the Admiral can coordinate both resolutions.
+
+**Example 3: Out-of-scope task with unclear authority.** A Frontend Implementer receives a database migration task (Handoff) but is unsure whether the migration requires Propose-tier approval (Escalate). → Handoff to the Orchestrator with a note flagging the authority question. The Orchestrator resolves routing and authority simultaneously.
