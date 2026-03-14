@@ -14,4 +14,4 @@
 
 ## Why Both Files Exist
 
-Claude Code does not natively read `AGENTS.md` (as of March 2026). This `CLAUDE.md` file exists as the Claude Code entry point, pointing to `AGENTS.md` where the actual instructions live. When Claude Code adds native `AGENTS.md` support, this file can be reduced to tool-specific overrides only. See also: `admiral/part2-context.md` Configuration File Strategy for the cross-tool portability pattern.
+Claude Code does not natively read `AGENTS.md` (as of March 2026). This `CLAUDE.md` file exists as the Claude Code entry point, pointing to `AGENTS.md` where the actual instructions live. When Claude Code adds native `AGENTS.md` support, this file can be reduced to tool-specific overrides only. See also: `admiral/spec/part2-context.md` Configuration File Strategy for the cross-tool portability pattern.

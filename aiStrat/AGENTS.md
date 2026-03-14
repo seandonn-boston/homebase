@@ -13,7 +13,7 @@ aiStrat is the **Admiral Framework** — a comprehensive specification for AI ag
 
 ### Three Pillars
 
-1. **Doctrine (admiral/)** — 12-part operational framework defining strategy, context engineering, enforcement, fleet composition, the Brain knowledge system, execution patterns, quality assurance, operations, platform integration, meta-agent governance, universal protocols, and the closed-loop data ecosystem. Cross-references use descriptive Part-based names (e.g., "Deterministic Enforcement (Part 3)") — no section numbers. Start with `admiral/index.md`.
+1. **Doctrine (admiral/)** — 12-part operational framework defining strategy, context engineering, enforcement, fleet composition, the Brain knowledge system, execution patterns, quality assurance, operations, platform integration, meta-agent governance, universal protocols, and the closed-loop data ecosystem. Cross-references use descriptive Part-based names (e.g., "Deterministic Enforcement (Part 3)") — no section numbers. Start with `admiral/spec/index.md`.
 2. **Fleet (fleet/)** — Agent catalog with 71 core role definitions (plus 29 extended in `fleet/agents/extras/`), prompt assembly patterns, routing rules, interface contracts, model tier assignments, and context injection guides. Each agent is a self-contained specification — project-agnostic, independently deployable.
 3. **Design Artifacts (brain/, monitor/)** — Architecture specifications for the Brain (semantic long-term memory) and Monitor (ecosystem intelligence with immune system). Includes database schema and architectural diagrams, not code.
 
@@ -21,26 +21,26 @@ aiStrat is the **Admiral Framework** — a comprehensive specification for AI ag
 
 | I need to... | Start here |
 |---|---|
-| Understand the full framework | `admiral/index.md` |
+| Understand the full framework | `admiral/spec/index.md` |
 | See every file at a glance | `MANIFEST.md` |
 | See how agents are defined | `fleet/prompt-anatomy.md` |
 | Understand the fleet catalog | `fleet/README.md` |
 | Route a task to the right agent | `fleet/routing-rules.md` |
-| Understand the Brain architecture | `admiral/part5-brain.md` + `brain/README.md` |
+| Understand the Brain architecture | `admiral/spec/part5-brain.md` + `brain/README.md` |
 | Understand the immune system | `monitor/README.md` |
 | See the database schema | `brain/schema/001_initial.sql` |
-| Know the universal agent rules | `admiral/part11-protocols.md` |
-| Understand the threat model | `admiral/part3-enforcement.md` (Configuration Security) |
-| Implement the framework | `admiral/reference-constants.md` |
-| Start adopting the framework | `admiral/index.md` → Adoption Levels |
-| Integrate with a platform | `admiral/appendices.md` → Appendix E |
+| Know the universal agent rules | `admiral/spec/part11-protocols.md` |
+| Understand the threat model | `admiral/spec/part3-enforcement.md` (Configuration Security) |
+| Implement the framework | `admiral/reference/reference-constants.md` |
+| Start adopting the framework | `admiral/spec/index.md` → Adoption Levels |
+| Integrate with a platform | `admiral/spec/appendices.md` → Appendix E |
 
 ## Versioning
 
 - **Current version: v0.4.0-alpha** (pre-release, not yet published)
 - The framework uses [semantic versioning](https://semver.org/) with pre-release labels: `MAJOR.MINOR.PATCH[-label]`
-- The authoritative version string lives in `admiral/index.md` (line 6). All other version references must match it.
-- **Version appears in 3 locations:** `admiral/index.md` (line 6, display version), `admiral/appendices.md` (Appendix F footer), and as an HTML comment `<!-- Admiral Framework vX.Y.Z-label -->` on line 1 of every `.md` file within `aiStrat/` (or SQL comment `-- Admiral Framework vX.Y.Z-label` on line 1 of every `.sql` file).
+- The authoritative version string lives in `admiral/spec/index.md` (line 6). All other version references must match it.
+- **Version appears in 3 locations:** `admiral/spec/index.md` (line 6, display version), `admiral/spec/appendices.md` (Appendix F footer), and as an HTML comment `<!-- Admiral Framework vX.Y.Z-label -->` on line 1 of every `.md` file within `aiStrat/` (or SQL comment `-- Admiral Framework vX.Y.Z-label` on line 1 of every `.sql` file).
 - **Version scope:** Version comments apply only to files within `aiStrat/`. Strategy documents (`research/`, `thesis/`) and sales materials at the repository root are not spec artifacts and are excluded from version stamping.
 - **MANIFEST.md** is the semantic file catalog. Update it when files are added, removed, renamed, or when their content changes materially (new sections, restructured scope, changed agent counts). It should also be updated on version bumps.
 - When bumping versions, update all markers: `grep -rn "v0\.[0-9]" aiStrat/ --include="*.md" --include="*.sql"` should show only the current version.

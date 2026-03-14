@@ -87,7 +87,7 @@ The primary routing strategy. Match the task's nature to the agent whose scope c
 
 > **Note:** Scale and Extended Scale agents not listed in this routing table are advisory/analytical agents invoked by the Orchestrator on demand rather than routed by task type. They do not receive direct task assignments — the Orchestrator calls on them when their analytical capability is needed for a specific decision or assessment.
 
-> **Note:** The Triage Agent has no entry in this routing table because it is a command agent, not a specialist. The Triage Agent is invoked by the Orchestrator during task intake to classify incoming work and assign priority — it does not receive routed tasks. See `admiral/part4-fleet.md` Core Fleet table for the Triage Agent's role.
+> **Note:** The Triage Agent has no entry in this routing table because it is a command agent, not a specialist. The Triage Agent is invoked by the Orchestrator during task intake to classify incoming work and assign priority — it does not receive routed tasks. See `admiral/spec/part4-fleet.md` Core Fleet table for the Triage Agent's role.
 
 ### 2. Route by File Ownership
 

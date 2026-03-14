@@ -7,7 +7,7 @@ Hooks are the deterministic enforcement layer — they fire every time, regardle
 
 This document specifies the hook ecosystem: how hooks declare their capabilities, how the runtime discovers and validates them, and how hook dependencies are resolved.
 
-For hook lifecycle events, execution model, and contract specification, see `admiral/part3-enforcement.md` (Deterministic Enforcement).
+For hook lifecycle events, execution model, and contract specification, see `admiral/spec/part3-enforcement.md` (Deterministic Enforcement).
 
 -----
 
@@ -126,7 +126,7 @@ This extension is planned for a future release. For now, the simple version stri
 
 ## Reference Manifests
 
-The following 8 hooks are specified in `admiral/part3-enforcement.md` (Deterministic Enforcement). Their manifests would be:
+The following 8 hooks are specified in `admiral/spec/part3-enforcement.md` (Deterministic Enforcement). Their manifests would be:
 
 **token_budget_tracker:**
 ```json

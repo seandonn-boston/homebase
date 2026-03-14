@@ -143,7 +143,7 @@ Everything from Levels 1–3, plus:
 **Part 10 — The Admiral**
 
 - [ ] **Admiral Self-Calibration (33):** Bottleneck signals known. Trust log initialized. Growth stage assessed. Intent fluency self-assessed.
-- [ ] **Intent completeness:** Task assignments communicate goal, priority, constraints, failure modes, judgment boundaries, and values. See [`intent-engineering.md`](intent-engineering.md).
+- [ ] **Intent completeness:** Task assignments communicate goal, priority, constraints, failure modes, judgment boundaries, and values. See [`intent-engineering.md`](../extensions/intent-engineering.md).
 - [ ] **Human-Expert Routing (34):** Expert Roster defined. Routing triggers documented. Consultation template ready.
 
 **Enforcement**
@@ -688,7 +688,7 @@ This appendix maps every major framework component to its real-world implementat
 **v0.4.0-alpha (March 2026)**
 
 - **Removed dual numbering system.** Eliminated the parallel numbering scheme (Parts + global Sections 01-48) across the entire specification. All cross-references now use descriptive names with Part identifiers (e.g., "Deterministic Enforcement (Part 3)" instead of "Section 08"). Approximately 344 section references rewritten across ~40 files.
-- **Elevated Fleet Control Plane as a core concept.** The Control Plane is now defined progressively across all five adoption levels: Level 1 (CLI Dashboard), Level 2 (Fleet Dashboard), Level 3 (Governance Dashboard), Level 4 (Operations Dashboard), Level 5 (Federation Dashboard). Control Plane surface notes added to all 12 Part files. Rewrote `fleet-control-plane.md` with progressive level structure.
+- **Elevated Fleet Control Plane as a core concept.** The Control Plane is now defined progressively across all five adoption levels: Level 1 (CLI Dashboard), Level 2 (Fleet Dashboard), Level 3 (Governance Dashboard), Level 4 (Operations Dashboard), Level 5 (Federation Dashboard). Control Plane surface notes added to all 12 Part files. Rewrote `extensions/fleet-control-plane.md` with progressive level structure.
 - **Consolidated research directories.** Moved 8 research files from `aiStrat/research/` to root `research/` directory. Research files are no longer spec artifacts and do not carry version headers.
 - **Fixed CI/CD workflow.** Dynamic version extraction from `index.md`, YAML validation dependency fix, broken link validation now fails on errors.
 - **Updated `.gitignore`.** Added standard exclusions for dependencies, build output, IDE files, and OS artifacts.

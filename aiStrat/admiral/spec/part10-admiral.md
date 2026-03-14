@@ -11,7 +11,7 @@
 
 ## Admiral Self-Calibration
 
-> **TL;DR** — If you're rubber-stamping approvals, widen Autonomous. If agents escalate constantly, narrow your review scope or improve context. Trust is earned per category, not globally, and withdrawn precisely. Intent fluency — the skill of writing instructions that communicate purpose, constraints, failure modes, and judgment boundaries — is the Admiral's primary communication skill. See [`intent-engineering.md`](intent-engineering.md).
+> **TL;DR** — If you're rubber-stamping approvals, widen Autonomous. If agents escalate constantly, narrow your review scope or improve context. Trust is earned per category, not globally, and withdrawn precisely. Intent fluency — the skill of writing instructions that communicate purpose, constraints, failure modes, and judgment boundaries — is the Admiral's primary communication skill. See [`intent-engineering.md`](../extensions/intent-engineering.md).
 
 ### Bottleneck Detection
 
