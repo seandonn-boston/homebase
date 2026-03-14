@@ -4,7 +4,7 @@
 
 *Parts 1–4 define what the fleet is, what it knows, how it's enforced, and who does the work. Part 5 gives the fleet long-term memory — a queryable knowledge system accessible through a standard protocol that any AI agent can speak. It replaces file-based persistence (Institutional Memory, Part 8) with a permanent knowledge system that captures not just what happened, but what it meant and why it mattered. Set up the Brain before the fleet starts executing (Part 6) so that every decision, lesson, and failure is captured from day one.*
 
-> **Control Plane surface:** Knowledge health, query patterns, and decay warnings surface in the Control Plane at Level 3+. Operators can see which Brain entries are being retrieved, which are strengthening, and which are decaying from disuse.
+> **Control Plane surface:** Knowledge health, query patterns, and decay warnings surface in the Control Plane at B3+. Operators can see which Brain entries are being retrieved, which are strengthening, and which are decaying from disuse.
 
 -----
 
@@ -18,15 +18,15 @@ The full Brain specification below is enterprise-grade. Before committing to Pos
 
 | Level | Storage | Retrieval | When to Advance |
 |---|---|---|---|
-| **Level 1: File-based** | JSON files in `.brain/` directory, one per entry. Git-tracked. See `brain/level1-spec.md` for entry format, directory layout, naming convention, and retrieval interface. | Keyword search via grep. Manual lookup. | When keyword search misses semantically relevant entries more than 30% of the time. |
-| **Level 2: SQLite + embeddings** | Single SQLite file with entries table and vector column. Embeddings via local model or API. See `brain/level2-spec.md` for SQLite schema, embedding generation, similarity search, and Level 1 migration path. | Cosine similarity search. No multi-hop. | When concurrent agent access causes lock contention, or cross-project queries are needed. |
-| **Level 3: Full Brain (COMPLETE)** | Postgres + pgvector with full schema from `brain/schema/001_initial.sql`. HNSW indexes. MCP server with 8 tools. Identity tokens (JWT). Zero-trust access control. Sensitivity classification. Quarantine layer. See `brain/level3-spec.md`. | Multi-signal retrieval pipeline. Multi-hop traversal. Confidence levels. Strengthening and decay awareness. | **The Brain is fully complete at Level 3.** No Brain changes at Levels 4-5. |
+| **B1: File-based** | JSON files in `.brain/` directory, one per entry. Git-tracked. See `brain/level1-spec.md` for entry format, directory layout, naming convention, and retrieval interface. | Keyword search via grep. Manual lookup. | When keyword search misses semantically relevant entries more than 30% of the time. |
+| **B2: SQLite + embeddings** | Single SQLite file with entries table and vector column. Embeddings via local model or API. See `brain/level2-spec.md` for SQLite schema, embedding generation, similarity search, and B1 migration path. | Cosine similarity search. No multi-hop. | When concurrent agent access causes lock contention, or cross-project queries are needed. |
+| **B3: Full Brain (COMPLETE)** | Postgres + pgvector with full schema from `brain/schema/001_initial.sql`. HNSW indexes. MCP server with 8 tools. Identity tokens (JWT). Zero-trust access control. Sensitivity classification. Quarantine layer. See `brain/level3-spec.md`. | Multi-signal retrieval pipeline. Multi-hop traversal. Confidence levels. Strengthening and decay awareness. | **B3 is the Brain's maximum level.** No Brain changes at the Production or Enterprise profiles. |
 
-**The Brain is fully specified by Level 3.** Levels 4 and 5 of the Admiral Framework add fleet-level capabilities (scale agents, full enforcement, fleet observability, multi-fleet coordination) but do not modify the Brain architecture. If you have reached Brain Level 3, you have the complete knowledge system.
+**The Brain is fully specified at B3.** The Production and Enterprise profiles of the Admiral Framework add fleet-level capabilities (scale agents, full enforcement, fleet observability, multi-fleet coordination) but do not modify the Brain architecture. If you have reached B3, you have the complete knowledge system.
 
 Each level should run for at least 2 weeks of active fleet operation before advancing. Measure: retrieval hit rate (did the agent find what it needed?), retrieval precision (was the top result actually relevant?), and knowledge reuse rate (what percentage of Brain entries are accessed more than once?). If these metrics don't improve at the next level, the current level is sufficient.
 
-> **ANTI-PATTERN: PREMATURE ARCHITECTURE** — Deploying the full Level 3 Brain (Postgres + pgvector + MCP + identity tokens) for a fleet that hasn't yet determined whether persistent memory helps. The infrastructure cost (setup, maintenance, security surface) is justified only when lighter approaches hit their limits. Start at Level 1. Graduate when you have evidence.
+> **ANTI-PATTERN: PREMATURE ARCHITECTURE** — Deploying the full B3 Brain (Postgres + pgvector + MCP + identity tokens) for a fleet that hasn't yet determined whether persistent memory helps. The infrastructure cost (setup, maintenance, security surface) is justified only when lighter approaches hit their limits. Start at B1. Graduate when you have evidence.
 
 ### Why a Database, Not Files
 

@@ -4,7 +4,7 @@
 
 *The Strategy triangle (Part 1) defines the destination. The Context discipline (Part 2) defines the information architecture. The Enforcement layer (Part 3) defines what's mandatory. Now: who actually does the work? These four sections define the agents, their capabilities, their model assignments, and their communication protocols.*
 
-> **Control Plane surface:** Agent roster, status, health, and routing decisions are the Control Plane's primary Fleet View (Level 2+). At Level 1, the CLI status display shows the single agent's identity, model tier, and current task.
+> **Control Plane surface:** Agent roster, status, health, and routing decisions are the Control Plane's primary Fleet View (F2+). At F1, the CLI status display shows the single agent's identity, model tier, and current task.
 
 -----
 
@@ -28,7 +28,7 @@ Define every agent role. Each needs a clear identity, a defined scope, and expli
 
 ### Agent Catalog
 
-The canonical agent catalog lives in [`fleet/README.md`](../fleet/README.md). It contains 71 core agent definitions (67 specialists across 12 categories plus 4 command & coordination agents), with an additional 29 extended agents in `fleet/agents/extras/`.
+The canonical agent catalog lives in [`fleet/README.md`](../fleet/README.md). It contains 71 core agent definitions (67 specialists across 12 categories plus 4 command & coordination agents), with an additional 34 extended agents in `fleet/agents/extras/`.
 
 Select agents based on the project's actual needs. Define "Does NOT Do" boundaries for each. See `fleet/README.md` for the complete catalog with agent counts per category.
 
@@ -46,11 +46,11 @@ These are the agents to implement first. A fleet can operate effectively with ju
 | 6 | **Security Auditor** | Security review of all code changes |
 | 7 | **Architect** | System design, technical decisions |
 | 8 | **DevOps Agent** | Deployment, CI/CD, infrastructure |
-| 9 | **Token Budgeter** | Governance (always deploy) — tracks and enforces token/cost budgets |
-| 10 | **Hallucination Auditor** | Governance (always deploy) — detects fabricated facts, false citations |
-| 11 | **Loop Breaker** | Governance (always deploy) — detects and terminates circular agent loops |
+| 9 | **Token Budgeter** | Governance — tracks and enforces token/cost budgets |
+| 10 | **Hallucination Auditor** | Governance — detects fabricated facts, false citations |
+| 11 | **Loop Breaker** | Governance — detects and terminates circular agent loops |
 
-> **Note:** Agents 9-11 (Token Budgeter, Hallucination Auditor, Loop Breaker) are governance additions for Level 3+. At Level 2, deploy agents 1-8 only.
+> **Note:** Agents 9-11 (Token Budgeter, Hallucination Auditor, Loop Breaker) are governance agents — deploy them at **F3+**. At F1-F2, their core functions are covered by deterministic hooks (E1: token budget gate, loop detection). The governance agents add analytical depth on top of those hooks. At F2, deploy agents 1-8 only.
 
 **Do not deploy 71 agents for a project that needs 11.** The administrative cost of configuring, routing, and coordinating a large fleet exceeds the value for most projects. Start with the core 11. Add roles when the Orchestrator reports routing bottlenecks or when specific domain expertise gaps emerge.
 
@@ -168,6 +168,8 @@ The model landscape changes frequently. The Continuous AI Landscape Monitor (`mo
 | **GPT-5.2 Pro** | Highest reasoning scores (93.2% GPQA Diamond). | 1M tokens | Research, complex analysis, long-context |
 | **DeepSeek V3.2** | Near-frontier at ~1/30th cost. | 128K tokens | High-volume utility, cost-sensitive tasks |
 | **Gemini 3 Pro** | Strong agentic workflows. Intent alignment. | 2M tokens | Research, multi-document analysis |
+
+> **Note on benchmarks:** Model capabilities and benchmark scores change rapidly. The numbers above reflect publicly reported figures as of March 2026 and should be verified against current model cards and release announcements before making tier assignments. The Continuous AI Landscape Monitor (`monitor/`) automates this verification.
 
 ### Model Tier Strategy
 

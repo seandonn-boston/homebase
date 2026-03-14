@@ -1,14 +1,14 @@
-# Brain Level 2: SQLite + Embeddings
+# B2: SQLite + Embeddings
 
 **Semantic search without infrastructure overhead.**
 
-Level 2 adds vector embeddings and similarity search to the Brain while keeping the operational footprint minimal — a single SQLite file, no server process, no Postgres. This is the right level when keyword search misses semantically relevant entries but concurrent multi-agent access and cross-project queries are not yet critical.
+B2 adds vector embeddings and similarity search to the Brain while keeping the operational footprint minimal — a single SQLite file, no server process, no Postgres. This is the right level when keyword search misses semantically relevant entries but concurrent multi-agent access and cross-project queries are not yet critical.
 
 -----
 
 ## SQLite Schema
 
-The schema mirrors the core columns from `schema/001_initial.sql` (Level 3/4 Postgres). Column names are identical to enable straightforward migration.
+The schema mirrors the core columns from `schema/001_initial.sql` (B3 Postgres). Column names are identical to enable straightforward migration.
 
 ```sql
 CREATE TABLE entries (
@@ -39,7 +39,7 @@ CREATE TABLE entries (
     usefulness      INTEGER NOT NULL DEFAULT 0,
     superseded_by   TEXT REFERENCES entries(id) ON DELETE SET NULL,
 
-    -- Decay tracking — needed for decay awareness even at Level 2
+    -- Decay tracking — needed for decay awareness even at B2
     last_accessed_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
 );
 
@@ -69,13 +69,13 @@ CREATE INDEX idx_audit_log_timestamp ON audit_log (timestamp);
 CREATE INDEX idx_audit_log_project ON audit_log (project);
 ```
 
-**Key differences from Level 3/4 Postgres:**
+**Key differences from B3 Postgres:**
 - `id` is TEXT (UUID string), not native UUID.
 - `embedding` is BLOB (serialized float array), not `vector(1536)`.
 - `metadata` is TEXT (JSON string), not JSONB. Use `json_extract()` for queries.
 - No HNSW index — similarity search is a full table scan (acceptable to ~10,000 entries).
-- No `sensitivity`, `approved`, `authority_tier`, or `source_session` columns. These are Level 3/4 concerns.
-- The `audit_log` table at Level 2 omits `session_id`, `entry_ids` (array), `risk_flags`, and `ip_or_source`. These columns are added during the Level 2→3 migration to support the full zero-trust audit model.
+- No `sensitivity`, `approved`, `authority_tier`, or `source_session` columns. These are B3 concerns.
+- The `audit_log` table at B2 omits `session_id`, `entry_ids` (array), `risk_flags`, and `ip_or_source`. These columns are added during the B2→B3 migration to support the full zero-trust audit model.
 - No immutability rules on `audit_log` (SQLite lacks Postgres RULE enforcement). Treat as convention.
 
 -----
@@ -198,7 +198,7 @@ def brain_query(db_path: str, query_embedding: list[float],
 
 -----
 
-## Migration from Level 1
+## Migration from B1
 
 Import each JSON file from `.brain/`, generate its embedding, and insert into SQLite.
 
@@ -242,13 +242,13 @@ def migrate_level1_to_level2(brain_dir: str, db_path: str, embed_fn, dimensions:
     print(f"Migrated {len(files)} entries from {brain_dir} to {db_path}")
 ```
 
-After migration, verify by running a representative query against the SQLite database and comparing results to what Level 1 keyword search would have returned.
+After migration, verify by running a representative query against the SQLite database and comparing results to what B1 keyword search would have returned.
 
 -----
 
 ## Limitations
 
-Level 2 is a stepping stone. These limitations define when to graduate to Level 3.
+B2 is a stepping stone. These limitations define when to graduate to B3.
 
 - **Single-writer lock.** SQLite allows only one writer at a time. Concurrent agent writes will block or fail with `SQLITE_BUSY`. Acceptable for sequential agent execution or low-concurrency fleets.
 - **No HNSW index.** Similarity search is a full table scan computing cosine similarity against every entry. Performance degrades linearly with entry count. Acceptable up to ~10,000 entries.
@@ -261,7 +261,7 @@ Level 2 is a stepping stone. These limitations define when to graduate to Level 
 
 ## Graduation Criteria
 
-Advance to Level 3 (Postgres + pgvector + MCP — the complete Brain) when any of:
+Advance to B3 (Postgres + pgvector + MCP — the complete Brain) when any of:
 
 1. **Concurrent access contention.** Multiple agents writing simultaneously causes `SQLITE_BUSY` errors or measurable wait times. Track write failures per session.
 2. **Cross-project query needs.** Regular need to query across projects from multiple agents simultaneously.
@@ -273,9 +273,9 @@ Advance to Level 3 (Postgres + pgvector + MCP — the complete Brain) when any o
 
 ## Compatibility Note
 
-The schema is designed for column-for-column import to Level 3 Postgres:
+The schema is designed for column-for-column import to B3 Postgres:
 
-| Level 2 SQLite | Level 3 Postgres | Migration Note |
+| B2 SQLite | B3 Postgres | Migration Note |
 |---|---|---|
 | `id` (TEXT) | `id` (UUID) | Cast text to UUID |
 | `embedding` (BLOB) | `embedding` (vector(1536)) | Deserialize blob, insert as vector. Re-embed if model differs. |

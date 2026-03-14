@@ -4,11 +4,11 @@
 
 ## A — Pre-Flight Checklist
 
-Before deploying, verify the items for your adoption level. Each level includes all items from previous levels. **Only check items for your current level** — checking ahead encourages premature implementation.
+Before deploying, verify the items for your target profile. Each profile includes all items from lower profiles. **Only check items for your current profile** — checking ahead encourages premature implementation.
 
 > **Bootstrap note:** This checklist validates that Standing Orders (Part 11) are loaded, but using the checklist effectively presupposes familiarity with Standing Orders. Bootstrap sequence: (1) read Standing Orders in Part 11; (2) configure your agent's context to include them; (3) run this Pre-Flight Checklist to verify completeness.
 
-### Level 1: Disciplined Solo
+### Starter Profile
 
 **Part 1 — Strategy**
 
@@ -31,20 +31,20 @@ Before deploying, verify the items for your adoption level. Each level includes 
 
 **Identity**
 
-- [ ] **Simple identity model:** Agent-id + role defined. No cryptographic signing required. The identity *model* exists and can be progressively hardened at higher levels.
+- [ ] **Simple identity model:** Agent-id + role defined. No cryptographic signing required. The identity *model* exists and can be progressively hardened at higher profiles.
 
-**Scope boundary check — do NOT have at Level 1:**
+**Scope boundary check — do NOT have at Starter:**
 
 - [ ] No handoff protocols implemented (no agents to hand off to).
 - [ ] No escalation routing implemented (no agents to route through).
 - [ ] No governance heartbeat monitors (no governance agents exist).
 - [ ] No tier validation hooks (no fleet roster exists).
-- [ ] No empty placeholder packages for future levels.
-- [ ] No HMAC-SHA256 identity tokens (Level 3 concern).
+- [ ] No empty placeholder packages for future profiles.
+- [ ] No HMAC-SHA256 identity tokens (S2/B3 concern).
 
-### Level 2: Core Fleet
+### Team Profile
 
-Everything from Level 1, plus:
+Everything from Starter, plus:
 
 **Part 2 — Context**
 
@@ -82,23 +82,23 @@ Everything from Level 1, plus:
 
 > **Implementation Notes (from reference implementation — `admiral/`):**
 >
-> The Level 2 checklist mixes two categories of requirement that should be distinguished:
+> The Team profile checklist mixes two categories of requirement that should be distinguished:
 > 1. **Model requirements** (Pydantic classes, data structures, validation logic) — testable without deployment.
 > 2. **Deployment requirements** (running MCP servers, probe testing, populated fleet rosters) — require runtime infrastructure.
 >
 > Specific gaps identified during implementation:
-> - **Context Engineering** "tested with probes": No probe framework is defined in the spec. `AgentDefinition.prompt_anchor` provides the structure; probe testing requires a runtime harness (arguably Level 3).
+> - **Context Engineering** "tested with probes": No probe framework is defined in the spec. `AgentDefinition.prompt_anchor` provides the structure; probe testing requires a runtime harness (arguably Governed profile).
 > - **Fleet Composition** "5-12 agents": The model supports 1-12 agents. Populating a roster with concrete agent definitions is a configuration task, not a framework task. Consider clarifying the distinction.
 > - **Failure Recovery** "Recovery ladder": The spec's 5-step ladder (Retry → Fallback → Backtrack → Isolate → Escalate) is cross-cutting — it touches context management, fleet routing, and escalation protocol. The model enforces no-skip progression but the runtime integration spans multiple systems.
 > - **Time estimates**: The "~2 hours per item" estimate does not account for cross-model validation (e.g., context budget ↔ agent definition) or test writing. Realistic implementation is 3-4 hours per item with tests.
-> - **Protocol Integration** "A2A configured if needed": A2A is primarily a Level 3+ concern (cross-process communication between governance agents). The model exists for when it is needed. The spec's "if needed" qualifier means this is conditionally complete at Level 2.
+> - **Protocol Integration** "A2A configured if needed": A2A is primarily a F3+ concern (cross-process communication between governance agents). The model exists for when it is needed. The spec's "if needed" qualifier means this is conditionally complete at Team profile.
 > - **Standing Order 12** has exactly 7 rules (verified in reference implementation). Like SO 11's 6 rules, this is a fixed count that implementations should validate.
-> - **LLM-Last boundary enforcement** (Boundaries, Part 1) is a documentation concern — it defines which tools are deterministic vs. which require LLM judgment. It does not require a hook or runtime check until Level 3+ when governance agents verify compliance.
-> - **Async hook execution** is deferred to Level 3+. The manifest schema accepts the `async` field for forward compatibility, but Level 1–2 runtimes should execute all hooks synchronously.
+> - **LLM-Last boundary enforcement** (Boundaries, Part 1) is a documentation concern — it defines which tools are deterministic vs. which require LLM judgment. It does not require a hook or runtime check until the Governed profile when governance agents verify compliance.
+> - **Async hook execution** is deferred to Governed profile and above. The manifest schema accepts the `async` field for forward compatibility, but Starter and Team runtimes should execute all hooks synchronously.
 
-### Level 3: Governed Fleet
+### Governed Profile
 
-Everything from Levels 1–2, plus:
+Everything from Starter and Team, plus:
 
 **Part 7 — Quality**
 
@@ -115,13 +115,13 @@ Everything from Levels 1–2, plus:
 **Governance**
 
 - [ ] **Governance agents deployed:** Token Budgeter, Hallucination Auditor, Loop Breaker minimum. Governance heartbeat monitor hook now active.
-- [ ] **Brain Level 3 (COMPLETE):** Postgres + pgvector deployed. Schema created. MCP server running. Identity tokens implemented. Zero-trust access control configured. See `brain/level3-spec.md`.
+- [ ] **B3 (COMPLETE):** Postgres + pgvector deployed. Schema created. MCP server running. Identity tokens implemented. Zero-trust access control configured. See `brain/level3-spec.md`.
 - [ ] **Intelligence Lifecycle (17):** Capture triggers defined (chunk boundaries, decisions, failures). Review cadence scheduled.
 - [ ] **Quarantine layer:** Spec-only quarantine for external intelligence active.
 
-### Level 4: Full Framework
+### Production Profile
 
-Everything from Levels 1–3, plus:
+Everything from previous profiles, plus:
 
 **Part 6 — Execution**
 
@@ -150,9 +150,9 @@ Everything from Levels 1–3, plus:
 - [ ] **Full Standing Orders enforcement:** All 15 Standing Orders with hook-based enforcement.
 - [ ] **Configuration Security (10):** Full security audit checklist completed. MCP servers audited and pinned.
 
-### Level 5: Enterprise
+### Enterprise Profile
 
-Everything from Levels 1–4, plus:
+Everything from previous profiles, plus:
 
 - [ ] **Cross-fleet Brain federation:** Cross-project namespace established. Multi-fleet query authorization.
 - [ ] **Multi-Operator Governance (35):** Multiple admirals with coordinated authority. Knowledge boundaries set. Sharing protocol defined.
@@ -162,37 +162,37 @@ Everything from Levels 1–4, plus:
 
 ## B — Quick-Start Sequence
 
-Structured around the four Adoption Levels (see index.md). Complete each level before advancing. Each level progressively deepens intent operationalization: Level 1 establishes the **intent foundation** (what are we building, what constrains us, how do we know we're done). Level 2 makes intent **operational** (who enforces it, with what tools, how do they coordinate). Level 3 adds **intent governance** (how do we detect when intent is being violated). Level 4 makes intent **persistent** (how do we remember what we learned, scale safely).
+Structured around the five Quick-Start Profiles (see index.md). Complete each level before advancing. Each level progressively deepens intent operationalization: The Starter profile establishes the **intent foundation** (what are we building, what constrains us, how do we know we're done). The Team profile makes intent **operational** (who enforces it, with what tools, how do they coordinate). The Governed profile adds **intent governance** (how do we detect when intent is being violated). The Production profile makes intent **persistent** (how do we remember what we learned, scale safely).
 
-### Level 1: Disciplined Solo (30 minutes to configure, 1-2 days to implement)
+### Starter Profile (30 minutes to configure, 1-2 days to implement)
 
-> **Time estimate clarification:** "30 minutes" is for **configuring** an existing tool (writing AGENTS.md, setting up hooks in Claude Code or your platform). If you are **building a framework implementation** (writing the hook engine, data models, etc.), expect 1-2 days for Level 1. The reference implementation (Admiral-builds-Admiral) took ~5,300 lines of Python and 126 tests to reach verified Level 1 completion. See Case Study 4 (Appendix D).
+> **Time estimate clarification:** "30 minutes" is for **configuring** an existing tool (writing AGENTS.md, setting up hooks in Claude Code or your platform). If you are **building a framework implementation** (writing the hook engine, data models, etc.), expect 1-2 days for the Starter profile. The reference implementation (Admiral-builds-Admiral) took ~5,500 lines of Python and 148 tests to reach verified Level 1 completion. See Case Study 4 (Appendix D).
 
-1. **Standing Orders (36)** — Load the 15 non-negotiable rules into agent context. These govern everything that follows. Despite their Part 11 position, Standing Orders are a Level 1 prerequisite — read them before implementing anything else.
+1. **Standing Orders (36)** — Load the 15 non-negotiable rules into agent context. These govern everything that follows. Despite their Part 11 position, Standing Orders are a Starter prerequisite — read them before implementing anything else.
 2. **Mission (01)** — What you are building. What success looks like.
 3. **Boundaries (02)** — What you are NOT building. Resource budgets.
 4. **Success Criteria (03)** — Machine-verifiable definition of "done."
 5. **Configuration File Strategy (07)** — Create AGENTS.md (<150 lines). Tool-specific pointers configured. Reference Standing Orders from AGENTS.md.
-6. **Deterministic Enforcement (08)** — Classify constraints (see classification decision process in Deterministic Enforcement, Part 3). **Deploy** hooks for safety-critical ones as live enforcement in your agent runtime (e.g., `.claude/hooks/` for Claude Code, equivalent for other platforms). "Deploy" means the hooks run and block violations in real sessions — not just that the hook code exists and passes tests. Only deploy `Level 1` hooks (token budget, loop detection, context health). Standing Orders define the *content* that hooks enforce.
+6. **Deterministic Enforcement (08)** — Classify constraints (see classification decision process in Deterministic Enforcement, Part 3). **Deploy** hooks for safety-critical ones as live enforcement in your agent runtime (e.g., `.claude/hooks/` for Claude Code, equivalent for other platforms). "Deploy" means the hooks run and block violations in real sessions — not just that the hook code exists and passes tests. Only deploy `E1` hooks (token budget, loop detection, context health). Standing Orders define the *content* that hooks enforce.
 7. **Configuration Security (10)** — Audit configs. Pin MCP servers (if applicable at this level). Set CODEOWNERS.
 
 > **Critical sequencing insight (from implementation):** Implementers naturally organize work by *code architecture* (data models → engine → tests). Admiral organizes by *operational maturity*. These are different orderings. If you build the hook engine before creating AGENTS.md and loading Standing Orders, you have infrastructure without governance — the dogfooding loop is broken. **Create AGENTS.md and Standing Orders first**, then build the infrastructure to enforce them.
 
 **You can start working here.** One agent with clear Identity, Scope, Boundaries, and hooks.
 
-> **Note on Identity Tokens:** At Level 1, simplified identity (agent-id + role, no cryptographic signing) is sufficient. Full cryptographic token signing with expiry and cross-project access control is a Level 3 concern (Decision Authority, Part 3; vulnerability 8.3.2), deployed alongside the complete Brain. However, the identity *model* should be defined at Level 1 so it can be progressively hardened. **Do not implement cryptographic identity at Level 1** — it has no consumer until zero-trust access control is deployed at Level 3.
+> **Note on Identity Tokens:** At Starter profile, simplified identity (agent-id + role, no cryptographic signing) is sufficient. Full cryptographic token signing with expiry and cross-project access control is an S2/B3 concern (Decision Authority, Part 3; vulnerability 8.3.2), deployed alongside the complete Brain. However, the identity *model* should be defined at Starter so it can be progressively hardened. **Do not implement cryptographic identity at Starter** — it has no consumer until zero-trust access control is deployed at the Governed profile.
 
-> **Level 1 scope boundary — do NOT build these yet:**
+> **Starter scope boundary — do NOT build these yet:**
 > - Handoff protocols or session handoff documents (Handoff Protocol, Part 11) — there is one agent, no one to hand off to.
 > - Escalation routing or escalation reports (Escalation Protocol, Part 11) — there is one agent, no chain to escalate through.
-> - Governance heartbeat monitor hook — there are no governance agents until Level 3.
-> - Tier validation hook — there is no fleet roster or model tier assignments until Level 2.
+> - Governance heartbeat monitor hook — there are no governance agents until the Governed profile.
+> - Tier validation hook — there is no fleet roster or model tier assignments until the Team profile.
 > - Identity validation hook with hash checking — simplified identity (agent-id + role) is sufficient.
-> - Empty placeholder packages/directories for future levels — create directories when you need them.
+> - Empty placeholder packages/directories for future profiles — create directories when you need them.
 >
-> If you find yourself building multi-agent infrastructure for a single agent, stop. You are building ahead of your adoption level. Define the *models* so they can grow, but do not implement features that have no consumer.
+> If you find yourself building multi-agent infrastructure for a single agent, stop. You are building ahead of your target profile. Define the *models* so they can grow, but do not implement features that have no consumer.
 
-### Level 2: Core Fleet (2-4 hours)
+### Team Profile (2-4 hours)
 
 8. **Ground Truth (05)** — Tech stack, tools, access, vocabulary.
 9. **Fleet Composition (11)** — 5-8 agents, roles, routing, interface contracts.
@@ -204,15 +204,15 @@ Structured around the four Adoption Levels (see index.md). Complete each level b
 15. **Work Decomposition (18)** — Break first phase into chunks.
 16. **Institutional Memory (24)** — File-based checkpoints and handoff documents.
 
-### Level 3: Governed Fleet (1-2 days)
+### Governed Profile (1-2 days)
 
 17. **Governance agents** — Deploy Token Budgeter, Hallucination Auditor, and Loop Breaker minimum. Add remaining governance agents as needed.
 18. **Cost Management (26)** — Per-session and per-phase budgets. Cost tracking active. If the fleet shares pooled API keys or subscription accounts, deploy the metered service broker.
-19. **Brain Level 3 (COMPLETE)** — Deploy Postgres + pgvector. Create schema. Register Brain MCP server. Implement identity tokens and zero-trust access control. See `brain/level3-spec.md`.
+19. **B3 (COMPLETE)** — Deploy Postgres + pgvector. Create schema. Register Brain MCP server. Implement identity tokens and zero-trust access control. See `brain/level3-spec.md`.
 20. **Quality Assurance (21)** — Verification levels per task type. Self-healing loops operational.
 21. **Failure Recovery (22)** — Recovery ladder documented. Max retries set.
 
-### Level 4: Full Framework (1-2 weeks)
+### Production Profile (1-2 weeks)
 
 22. **Full fleet deployment** — Scale agents for review cycles. Full enforcement coverage.
 23. **Protocol Integration (14)** — Register MCP servers. Configure A2A if needed.
@@ -220,19 +220,19 @@ Structured around the four Adoption Levels (see index.md). Complete each level b
 25. **Fleet Observability (30)** — Instrumentation strategy. Trace correlation. Dashboards.
 26. **Remaining sections** — Adaptation (25), Metrics (27), Scaling (28), CI/CD Operations (31), Evaluation (32), Admiral (33), Expert Routing (34).
 
-### Level 5: Enterprise (2-4 weeks)
+### Enterprise Profile (2-4 weeks)
 
 27. **Cross-fleet Brain federation** — Multi-project namespace. Cross-fleet query authorization.
 28. **Multi-Operator Governance (35)** — Multiple admirals. Knowledge sharing protocols. Inter-Fleet Governance (29).
 29. **Cross-fleet hooks** — Coordinated enforcement policies across fleets.
 
-**The most common mistake is starting at Level 5.** See Case Study 2 (Appendix D) for what happens when you over-engineer from day one.
+**The most common mistake is starting at the Enterprise profile.** See Case Study 2 (Appendix D) for what happens when you over-engineer from day one.
 
 -----
 
 ## C — Worked Example: SaaS Task Manager
 
-> **Adoption level note:** This example deploys a Level 3 fleet (8 agents including governance agents). The Mission, Boundaries, Success Criteria, and Enforcement sections apply at Level 1. The Fleet Roster and governance failure scenarios demonstrate Level 3 capabilities — if you are at Level 1-2, they show where you are headed, not what you need now.
+> **Profile note:** This example deploys a Governed profile fleet (8 agents including governance agents). The Mission, Boundaries, Success Criteria, and Enforcement sections apply at Starter. The Fleet Roster and governance failure scenarios demonstrate Governed profile capabilities — if you are at Starter or Team, they show where you are headed, not what you need now.
 
 A concrete application for a mid-complexity greenfield project.
 
@@ -479,8 +479,8 @@ These case studies are synthesized from patterns observed across multiple agent 
 - 89 tests passing on first commit.
 
 **What went wrong:**
-1. **Standing Orders deferred to Phase 4.** Part 11's structural position (last part) made it seem like a late-stage concern. It is Level 1. The plan had a design error that contradicted the spec's own adoption levels.
-2. **AGENTS.md created last, not first.** Without AGENTS.md, the project had no declared Mission, Boundaries, or Success Criteria. The fleet was operating at Level 0 despite having Level 1 infrastructure.
+1. **Standing Orders deferred to Phase 4.** Part 11's structural position (last part) made it seem like a late-stage concern. It is Level 1. The plan had a design error that contradicted the spec's own Quick-Start Profiles.
+2. **AGENTS.md created last, not first.** Without AGENTS.md, the project had no declared Mission, Boundaries, or Success Criteria. The fleet was operating without any profile despite having Starter infrastructure.
 3. **Dogfooding loop was broken.** The whole point was "Admiral governs its own construction." But without AGENTS.md and Standing Orders loaded, Admiral wasn't governing anything — it was just a Python package that implements Admiral's spec.
 4. **`platform/` package name shadowed Python's stdlib `platform` module.** Crashed the test runner. Renamed to `platform_ops/`. The spec's Part 9 category name ("Platform") is a known naming hazard for Python, Go, and other languages with `platform` in their stdlib.
 5. **Self-healing loop parameters unspecified.** The spec describes the concept but not: max retries, error signature format, cycle detection algorithm, session-wide retry limits. Implementers must design these.
@@ -496,26 +496,26 @@ These case studies are synthesized from patterns observed across multiple agent 
 - Applied 4 spec patches (SPEC-1 through SPEC-4) to aiStrat/ to fix the gaps that caused these errors.
 - *Note: The reference implementation (`broker/` POC) was subsequently removed. Its learnings are captured in the spec; the spec is the deliverable.*
 
-**Lesson:** The most dangerous anti-pattern for framework implementers is **organizing by code architecture instead of adoption level**. Admiral's levels exist for a reason — they represent operational capability, not code modules. Level 1 means "you can start working here," which requires governance artifacts (AGENTS.md, Standing Orders) before infrastructure (hook engine, data models). Building the engine without the governance is like building a car without a steering wheel — it runs, but it can't be directed.
+**Lesson:** The most dangerous anti-pattern for framework implementers is **organizing by code architecture instead of profile progression**. Admiral's profiles exist for a reason — they represent operational capability, not code modules. Starter means "you can start working here," which requires governance artifacts (AGENTS.md, Standing Orders) before infrastructure (hook engine, data models). Building the engine without the governance is like building a car without a steering wheel — it runs, but it can't be directed.
 
-**Second lesson:** Spec documents read sequentially can mislead about priority. Standing Orders are in Part 11 but required at Level 1. Cross-references and the Minimum Viable Reading Path help, but implementers who read parts in order will naturally defer Part 11 content. The spec now includes explicit sequencing warnings.
+**Second lesson:** Spec documents read sequentially can mislead about priority. Standing Orders are in Part 11 but required at Starter. Cross-references and the Minimum Viable Reading Path help, but implementers who read parts in order will naturally defer Part 11 content. The spec now includes explicit sequencing warnings.
 
 **Phase 1 review (post-completion):**
 
-A review of the completed Phase 1 against the Level 1 spec found three categories of issues:
+A review of the completed Phase 1 against the Starter spec found three categories of issues:
 
-1. **Over-engineering beyond Level 1:** HMAC-SHA256 identity tokens (Level 4), governance heartbeat monitor (Level 3), tier validation hook (Level 2), escalation/handoff protocols (Level 2+), and 15 empty placeholder packages for future levels. Root causes traced to spec structure: reading path said "Full file" for part3-enforcement.md (Deterministic Enforcement through Configuration Security), SO 6 hyperlinked directly to Escalation Protocol (Part 11). Spec patched: reading path narrowed to "Deterministic Enforcement only," SO 6 made self-contained, level tags added to hook specs, Pre-Flight Checklist restructured by level with negative checklist.
+1. **Over-engineering beyond Starter:** HMAC-SHA256 identity tokens (S2/B3), governance heartbeat monitor (Governed profile), tier validation hook (Team profile), escalation/handoff protocols (Team profile and above), and 15 empty placeholder packages for future profiles. Root causes traced to spec structure: reading path said "Full file" for part3-enforcement.md (Deterministic Enforcement through Configuration Security), SO 6 hyperlinked directly to Escalation Protocol (Part 11). Spec patched: reading path narrowed to "Deterministic Enforcement only," SO 6 made self-contained, level tags added to hook specs, Pre-Flight Checklist restructured by profile with negative checklist.
 
 2. **Implementation bugs:** Standing Order 11 missing its 6th rule (Context Profile). `HookEngine.discover()` warned on incomplete manifests instead of rejecting per spec. Error signatures used full stdout instead of first-line-plus-exit-code per glossary. All fixed.
 
 3. **Test gaps:** Boundary conditions at exact thresholds (80%, 90%, 100%). Self-healing cycle detection (consecutive identical signatures). Partial critical sections. Hook timeout. Subprocess execution (all prior tests used handler injection). 22 new tests added.
 
 **Metrics:**
-- Phase 1 first commit: 47 files, 4,227 lines, 89 tests (80% Level 1 complete — missing governance artifacts).
-- Phase 1 corrective commit: +10 files, +1,016 lines, 31 new tests (100% Level 1 complete).
+- Phase 1 first commit: 47 files, 4,227 lines, 89 tests (80% Starter complete — missing governance artifacts).
+- Phase 1 corrective commit: +10 files, +1,016 lines, 31 new tests (100% Starter complete).
 - Post-review commit: +124 lines, 6 new tests (126 total tests, all coverage gaps closed).
 - Post-review edge case commit: 3 bug fixes, 22 new tests (148 total). 8 spec patches.
-- Total Phase 1: ~5,500 lines of Python, 148 passing tests, 35 implementation files.
+- Total Starter phase: ~5,500 lines of Python, 148 passing tests, 35 implementation files.
 - Time: ~2 days implementation + review cycle.
 
 -----
@@ -578,9 +578,9 @@ These pitfalls were discovered during the reference implementation (Case Study 4
 
 | Pitfall | What Happens | Fix |
 |---|---|---|
-| **Infrastructure before config** | You build hooks, models, and engines — then realize you have no Mission, no Boundaries, no Standing Orders. The fleet operates at Level 0 despite having Level 1 code. | Define AGENTS.md and Standing Orders first (30 min). Then build the code that enforces them (1-2 days). |
-| **Organizing by code architecture** | Grouping code as models → hooks → fleet → governance → protocols. Standing Orders end up in the last package because they're in Part 11 of the spec. | Organize by adoption level: config → enforcement → coordination → governance → persistence. Standing Orders are Level 1 despite their Part 11 position. |
-| **Deferring Standing Orders** | "We'll add Standing Orders in Phase 4 with the other protocols." But the spec says Standing Orders are Level 1 — they define what hooks enforce. Without them, hooks have no semantic content. | Standing Orders are the content. Hooks are the enforcement. You need both at Level 1. See Standing Orders (Part 11) and the co-requirement note in Deterministic Enforcement (Part 3). |
+| **Infrastructure before config** | You build hooks, models, and engines — then realize you have no Mission, no Boundaries, no Standing Orders. The fleet operates without any profile despite having Starter code. | Define AGENTS.md and Standing Orders first (30 min). Then build the code that enforces them (1-2 days). |
+| **Organizing by code architecture** | Grouping code as models → hooks → fleet → governance → protocols. Standing Orders end up in the last package because they're in Part 11 of the spec. | Organize by profile progression: config → enforcement → coordination → governance → persistence. Standing Orders are Starter despite their Part 11 position. |
+| **Deferring Standing Orders** | "We'll add Standing Orders in Phase 4 with the other protocols." But the spec says Standing Orders are Starter — they define what hooks enforce. Without them, hooks have no semantic content. | Standing Orders are the content. Hooks are the enforcement. You need both at Starter. See Standing Orders (Part 11) and the co-requirement note in Deterministic Enforcement (Part 3). |
 
 **Python-Specific Pitfalls:**
 
@@ -596,7 +596,7 @@ These pitfalls were discovered during the reference implementation (Case Study 4
 | Pitfall | What Happens | Fix |
 |---|---|---|
 | **Self-healing without cycle detection** | The self-healing loop retries the same failing fix forever. Token budget burns to zero with no progress. | Track `(hook_name, hash(error_output))` tuples. If the same error recurs after a fix attempt, break immediately. Max 3 retries per hook, 10 per session. See Deterministic Enforcement (Part 3) implementation parameters. |
-| **Config time ≠ build time** | "Level 1 in 30 minutes" is true for configuration (AGENTS.md, Standing Orders, Ground Truth). Code implementation takes 1-2 days. Implementers expect runnable code in 30 minutes, then discover the gap. | Distinguish config time from build time in project planning. 30 minutes gets you governed. 1-2 days gets you automated. |
+| **Config time ≠ build time** | "Starter in 30 minutes" is true for configuration (AGENTS.md, Standing Orders, Ground Truth). Code implementation takes 1-2 days. Implementers expect runnable code in 30 minutes, then discover the gap. | Distinguish config time from build time in project planning. 30 minutes gets you governed. 1-2 days gets you automated. |
 | **Standing Orders bootstrap problem** | Standing Orders define what hooks enforce. Hooks fire at SessionStart. If Standing Orders loading is itself a hook, you have a circular dependency. | Standing Orders loading is a pre-hook bootstrap step, not a hook. Load Standing Orders → discover hooks → resolve dependencies → execute hooks. |
 
 ### Pattern 3: Admiral with LangGraph / CrewAI / AutoGen
@@ -628,7 +628,7 @@ The Admiral Framework uses [semantic versioning](https://semver.org/): **MAJOR.M
 
 When upgrading a fleet to a new MAJOR version:
 
-1. **Read the changelog.** Identify breaking changes that affect your adoption level. Level 1 fleets are affected only by Standing Order changes; Level 4 fleets may need Brain schema migrations.
+1. **Read the changelog.** Identify breaking changes that affect your target profile. Starter fleets are affected only by Standing Order changes; Production fleets may need Brain schema migrations.
 2. **Update Standing Orders first.** These are the operational core — agents must operate under the new orders before other changes propagate.
 3. **Follow the Cascade Map** (Strategic Adaptation, Part 8). Changes propagate: Standing Orders → Agent Definitions → Routing Rules → Interface Contracts → Brain Schema.
 4. **Re-run the Pre-Flight Checklist** (Appendix A) against the new version.
@@ -672,11 +672,11 @@ This appendix maps every major framework component to its real-world implementat
 **Reading this table:**
 
 - **Time-to-value vs. implementation effort:** The adoption time estimates in the Adoption Levels table (index.md) assume you are *configuring existing tools*. These categories describe effort to *build custom tooling*. Category 1 components can be adopted in minutes but implementing them as custom code is a separate engineering effort. See the "Config time vs. build time" note in index.md.
-- **Level 1 adoption** (Appendix B) uses only Category 1 components. Zero custom infrastructure.
-- **Level 2 adoption** adds some Category 2 components (routing rules, file-based checkpoints). Moderate engineering effort.
-- **Level 3 adoption** adds governance agents (Category 2) and the complete Brain (Category 3). This is where infrastructure investment is justified by proven fleet value at lower levels.
-- **Level 4 adoption** adds fleet-wide enforcement, observability, and monitor. Builds on Level 3 infrastructure.
-- **Level 5 adoption** adds cross-fleet coordination. Enterprise-scale infrastructure.
+- **Starter profile** (Appendix B) uses only Category 1 components. Zero custom infrastructure.
+- **Team profile** adds some Category 2 components (routing rules, file-based checkpoints). Moderate engineering effort.
+- **Governed profile** adds governance agents (Category 2) and the complete Brain (Category 3). This is where infrastructure investment is justified by proven fleet value at lower profiles.
+- **Production profile** adds fleet-wide enforcement, observability, and monitor. Builds on Governed infrastructure.
+- **Enterprise profile** adds cross-fleet coordination. Enterprise-scale infrastructure.
 
 > **ANTI-PATTERN: CATEGORY 3 BEFORE CATEGORY 1** — Deploying Postgres + pgvector + identity tokens before implementing hooks and standing orders. The highest-impact, lowest-cost improvements are all Category 1. A fleet with comprehensive hooks and no Brain outperforms a fleet with a full Brain and no hooks.
 
@@ -687,7 +687,7 @@ This appendix maps every major framework component to its real-world implementat
 **v0.4.0-alpha (March 2026)**
 
 - **Removed dual numbering system.** Eliminated the parallel numbering scheme (Parts + global Sections 01-48) across the entire specification. All cross-references now use descriptive names with Part identifiers (e.g., "Deterministic Enforcement (Part 3)" instead of "Section 08"). Approximately 344 section references rewritten across ~40 files.
-- **Elevated Fleet Control Plane as a core concept.** The Control Plane is now defined progressively across all five adoption levels: Level 1 (CLI Dashboard), Level 2 (Fleet Dashboard), Level 3 (Governance Dashboard), Level 4 (Operations Dashboard), Level 5 (Federation Dashboard). Control Plane surface notes added to all 12 Part files. Rewrote `extensions/fleet-control-plane.md` with progressive level structure.
+- **Elevated Fleet Control Plane as a core concept.** The Control Plane is now defined progressively across all five profiles: Starter (CLI Dashboard), Team (Fleet Dashboard), Governed (Governance Dashboard), Production (Operations Dashboard), Enterprise (Federation Dashboard). Control Plane surface notes added to all 12 Part files. Rewrote `extensions/fleet-control-plane.md` with progressive level structure.
 - **Consolidated research directories.** Moved 8 research files from `aiStrat/research/` to root `research/` directory. Research files are no longer spec artifacts and do not carry version headers.
 - **Fixed CI/CD workflow.** Dynamic version extraction from `index.md`, YAML validation dependency fix, broken link validation now fails on errors.
 - **Updated `.gitignore`.** Added standard exclusions for dependencies, build output, IDE files, and OS artifacts.
@@ -714,7 +714,7 @@ This appendix maps every major framework component to its real-world implementat
 
 **v0.2.0-alpha (March 2026)**
 
-- Initial 11-part framework with 71 core + 29 extended agent definitions. Brain Level 1-2 specs. 8 hook manifests. 18 attack corpus scenarios. Full doctrine, fleet, brain, and monitor specifications.
+- Initial 11-part framework with 71 core + 34 extended agent definitions. Brain Level 1-2 specs. 8 hook manifests. 18 attack corpus scenarios. Full doctrine, fleet, brain, and monitor specifications.
 
 -----
 

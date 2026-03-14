@@ -4,7 +4,7 @@
 
 *Context is the currency of autonomous AI. These four sections are the framework's center of gravity. Most fleet performance problems that look like capability failures are actually context management failures — the wrong information loaded at the wrong time, or the right information missing entirely. Master these four sections and half the failure modes in Failure Mode Catalog (Part 7) become impossible.*
 
-> **Control Plane surface:** Context utilization metrics — how much of each agent's context window is consumed, by what, and whether refresh triggers have fired — are visible in the Control Plane's Agent Detail View (Level 2+).
+> **Control Plane surface:** Context utilization metrics — how much of each agent's context window is consumed, by what, and whether refresh triggers have fired — are visible in the Control Plane's Agent Detail View (CP2+).
 
 -----
 
@@ -252,7 +252,7 @@ Path-specific, role-specific, on-demand, and enforcement scopes are tool-depende
 
 ### The 150-Line Rule
 
-AGENTS.md should not exceed 150 lines. For each line, ask "Would removing this cause mistakes?" If not, remove it. Research (ETH Zurich, Feb 2026) confirms: over-detailed instruction files hinder agent performance. Human-written, minimal instructions targeting non-inferable details show the best results.
+AGENTS.md should not exceed 150 lines. For each line, ask "Would removing this cause mistakes?" If not, remove it. Operational experience and emerging research consistently show: over-detailed instruction files hinder agent performance. Human-written, minimal instructions targeting non-inferable details show the best results.
 
 **How to stay under 150 lines:**
 
@@ -261,15 +261,15 @@ AGENTS.md should not exceed 150 lines. For each line, ask "Would removing this c
 - Move per-agent instructions to agent-specific files (each agent loads only its own).
 - Move path-specific rules to path-scoped files (loaded only when working in that directory).
 - What remains in AGENTS.md: project identity, tech stack, critical conventions, workflow essentials.
-- **Standing Orders (Part 11) must be referenced or loaded from AGENTS.md.** Standing Orders are Level 1 requirements — they define what hooks enforce. Load them before hooks, before infrastructure code. See the co-requirement note in Deterministic Enforcement (Part 3).
+- **Standing Orders (Part 11) must be referenced or loaded from AGENTS.md.** Standing Orders are Starter-profile requirements (P1) — they define what hooks enforce. Load them before hooks, before infrastructure code. See the co-requirement note in Deterministic Enforcement (Part 3).
 
-> **Creation order for new projects:** (1) Create AGENTS.md with project identity, tech stack, critical conventions. (2) Create tool-specific pointers (CLAUDE.md, .cursorrules). (3) Add skills as domain knowledge accumulates. (4) Add path-specific rules when directory-scoped conventions emerge. The first two are Level 1 requirements. Skills and path rules are Level 2+.
+> **Creation order for new projects:** (1) Create AGENTS.md with project identity, tech stack, critical conventions. (2) Create tool-specific pointers (CLAUDE.md, .cursorrules). (3) Add skills as domain knowledge accumulates. (4) Add path-specific rules when directory-scoped conventions emerge. The first two are Starter-profile requirements. Skills and path rules are F2+.
 
 > **ANTI-PATTERN: BUILDING THE TOOLBOX WITHOUT THE TOOLBOX** — When your project is itself a framework implementation, the temptation is to build the configuration infrastructure (hooks, skills, agent definitions) before creating the configuration files (AGENTS.md, Standing Orders). This inverts the dependency: the configuration files should govern how the infrastructure is built, not the other way around. Create AGENTS.md first, even if it's minimal. Iterate on it as the infrastructure matures.
 
 ### Cross-Tool Portability
 
-Analysis of 2,500+ AGENTS.md files shows the best share six characteristics:
+The best AGENTS.md files share six characteristics (based on patterns observed across open-source repositories and internal experimentation):
 
 1. **Clear persona** — who the agent is and what it's responsible for.
 2. **Executable commands** — exact shell commands, not descriptions.

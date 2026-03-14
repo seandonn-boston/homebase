@@ -4,7 +4,7 @@
 
 *Strategy defines the target. The Brain persists what was learned. Execution produces the work. Quality is the feedback loop that closes the gap. These three sections define how work is verified, how failures are recovered, and a comprehensive catalog of the ways agent fleets systematically fail.*
 
-> **Control Plane surface:** Quality gate results, failure mode frequency, and recovery ladder status are tracked in the Control Plane (Level 2+). Operators see first-pass quality trends and can identify which failure modes are recurring vs. being eliminated.
+> **Control Plane surface:** Quality gate results, failure mode frequency, and recovery ladder status are tracked in the Control Plane (CP2+). Operators see first-pass quality trends and can identify which failure modes are recurring vs. being eliminated.
 
 -----
 
@@ -186,7 +186,7 @@ The failure modes above describe individual agent behavior. The following catalo
 | **Governance Theater** | Governance agents deployed but not connected to enforcement. Reports generated, never acted on. | Governance agent logs show findings; agent behavior unchanged. Governance reports accumulate without corresponding configuration changes. |
 | **Hook Erosion** | Hooks disabled "temporarily" for velocity, never re-enabled. Enforcement gap grows silently. | Hook execution logs show decreasing coverage over time. Constraints classified as "Hard enforcement" in Deterministic Enforcement (Part 3) are no longer firing. |
 | **Brain Write-Only** | Brain accumulates entries that are never queried. Knowledge captured but never reused. | `brain_status` shows growing entry counts with near-zero `access_count` values. Agents make decisions without consulting relevant precedent. |
-| **Adoption Level Mismatch** | Framework deployed at Level 4 for a project that needs Level 1. Overhead exceeds value. | More time spent on framework governance than on productive work. Orchestrator spends >40% of budget on routing and coordination. |
+| **Adoption Profile Mismatch** | Framework deployed at Production profile for a project that needs Starter. Overhead exceeds value. | More time spent on framework governance than on productive work. Orchestrator spends >40% of budget on routing and coordination. |
 | **Standing Order Drift** | Standing Orders in agent context diverge from the canonical source. Different agents operate under different rules. | Agents cite different versions of the same Standing Order. Behavioral inconsistencies between agents that should follow identical constraints. |
 | **Quarantine Bypass** | External content reaches the Brain without passing through quarantine. May be architectural (missing integration) or operational (manual override normalized). | Brain entries with no quarantine audit trail. Entries from external sources with `approved: true` but no Admiral review record. |
 | **Recovery Ladder Collapse** | Agents skip recovery ladder steps, jumping from retry to escalate. Middle steps (fallback, backtrack, isolate) atrophy. | Escalation reports with no fallback or backtrack attempts logged. Recovery ladder steps 2-4 never appear in audit trails. |
@@ -197,7 +197,7 @@ The failure modes above describe individual agent behavior. The following catalo
 - Governance agents produce reports but nothing changes? → **Governance Theater** → Wire governance outputs to hooks or Orchestrator action items. Each governance finding must map to a concrete configuration change, threshold adjustment, or Admiral decision.
 - Enforcement coverage declining? → **Hook Erosion** → Audit hook configurations against the enforcement classification (Deterministic Enforcement (Part 3)). Re-enable disabled hooks. Add hook-presence verification to the pre-flight checklist (Appendix A).
 - Brain growing but retrieval rate flat? → **Brain Write-Only** → Check agent context for `brain_query` instructions. Verify agents have the Brain MCP tools in their tool registry. Add pre-decision query hooks or standing instructions to query before Propose-tier decisions.
-- Framework overhead consuming more time than productive work? → **Adoption Level Mismatch** → Drop to the appropriate adoption level. Re-evaluate graduation criteria. See Appendix B for level-appropriate configurations.
+- Framework overhead consuming more time than productive work? → **Adoption Profile Mismatch** → Drop to the appropriate profile. Re-evaluate graduation criteria. See Appendix B for profile-appropriate configurations.
 - Agents behaving inconsistently on the same rules? → **Standing Order Drift** → Diff each agent's loaded Standing Orders against the canonical source (Standing Orders (Part 11)). Automate standing context injection via SessionStart hooks.
 - External intelligence in Brain without audit trail? → **Quarantine Bypass** → Audit all Brain entries with external `source_agent` values. Verify the quarantine layer is active and integrated with all ingestion paths. Close any manual override workflows.
 - Escalations without recovery attempts? → **Recovery Ladder Collapse** → Review escalation reports for evidence of steps 2-4 (fallback, backtrack, isolate). Add recovery-step verification to the escalation template. Consider a PostToolUse hook that requires recovery step evidence before accepting an escalation.

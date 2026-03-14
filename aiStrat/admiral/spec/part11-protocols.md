@@ -4,13 +4,11 @@
 
 *Parts 1–10 define principles, architecture, and strategy. This part consolidates the concrete, non-negotiable protocols that every agent must follow during execution. These are the "how" — structured formats, decision ladders, and behavioral contracts that turn framework principles into repeatable agent behavior.*
 
-<!-- Six protocol areas: 36 Standing Orders | 37 Escalation | 38 Handoff | 39 Human Referral | 40 Paid Resources | 41 Data Sensitivity -->
+> **Control Plane surface:** Escalation and handoff events are logged and visible in the Control Plane event stream (CP2+). Standing Order enforcement status is shown in the Control Plane's policy management interface (CP3+).
 
-> **Control Plane surface:** Escalation and handoff events are logged and visible in the Control Plane event stream (Level 2+). Standing Order enforcement status is shown in the Control Plane's policy management interface (Level 3+).
-
-> **Sequencing note:** Standing Orders are a **Level 1 requirement**, not a Level 4 afterthought. They appear in Part 11 because they are protocols — but they are needed at adoption Level 1 alongside Mission, Boundaries, Success Criteria (Part 1) and Deterministic Enforcement (Part 3). If you are implementing Admiral, Standing Orders should be among the first things you build, not the last. The Minimum Viable Reading Path (index.md) already reflects this, but if you are reading parts sequentially, read Standing Orders before implementing anything from Parts 4-10.
+> **Sequencing note:** Standing Orders are a **Starter-profile requirement**, not a Production-profile afterthought. They appear in Part 11 because they are protocols — but they are needed at the Starter profile alongside Mission, Boundaries, Success Criteria (Part 1) and Deterministic Enforcement (Part 3). If you are implementing Admiral, Standing Orders should be among the first things you build, not the last. The Minimum Viable Reading Path (index.md) already reflects this, but if you are reading parts sequentially, read Standing Orders before implementing anything from Parts 4-10.
 >
-> **Implementation lesson (Admiral-builds-Admiral, March 2026):** An early reference implementation initially deferred Standing Orders to Phase 4 because of their structural position in Part 11. This was a design error — Phase 1 was functionally complete but operationally ungoverned. The corrective: implement Standing Orders as a data model with a loader and renderer so they can be injected into every agent's context programmatically. Standing Orders should be among the first things built, not the last.
+> **Implementation lesson (Admiral-builds-Admiral, March 2026):** An early reference implementation initially deferred Standing Orders to Phase 4 because of their structural position in Part 11. This was a design error — the Starter profile was functionally complete but operationally ungoverned. The corrective: implement Standing Orders as a data model with a loader and renderer so they can be injected into every agent's context programmatically. Standing Orders should be among the first things built, not the last.
 
 -----
 
@@ -79,7 +77,7 @@ When something goes wrong, follow this ladder in order (see Failure Recovery (Pa
 2. **Fallback** — use a simpler, less optimal approach that still satisfies requirements
 3. **Backtrack** — roll back to the last checkpoint and try a fundamentally different path
 4. **Isolate and skip** — mark the task as blocked, document the blocker, move to the next task
-5. **Escalate** — produce a structured escalation report and stop. At minimum, state: what is blocked, what you tried, and what you need. (The full escalation report format is defined in [Escalation Protocol](#escalation-protocol) — a Level 2+ concern for multi-agent routing. At Level 1, escalation means stopping work and reporting to the Admiral directly.)
+5. **Escalate** — produce a structured escalation report and stop. At minimum, state: what is blocked, what you tried, and what you need. (The full escalation report format is defined in [Escalation Protocol](#escalation-protocol) — an F2+ concern for multi-agent routing. At the Starter profile, escalation means stopping work and reporting to the Admiral directly.)
 
 Do not loop at any step. If retries don't work, move down the ladder. Do not skip steps.
 
@@ -122,7 +120,7 @@ OUTPUT GOES TO: [Next recipient]
 
 ### 11. Context Discovery
 
-- Before producing any output, confirm you have the project context needed for your task. If context has not been provided, request it from the Orchestrator or Context Curator before proceeding. *(At Adoption Levels 1–2 where no Orchestrator or Context Curator exists, the agent performs context discovery autonomously using available project files — AGENTS.md, CLAUDE.md or equivalent, README, Ground Truth documents, etc.)*
+- Before producing any output, confirm you have the project context needed for your task. If context has not been provided, request it from the Orchestrator or Context Curator before proceeding. *(At the Starter profile (F1–F2) where no Orchestrator or Context Curator exists, the agent performs context discovery autonomously using available project files — AGENTS.md, CLAUDE.md or equivalent, README, Ground Truth documents, etc.)*
 - Learn the project's structure, conventions, tech stack, and constraints from Ground Truth (Part 2) — do not infer them from code alone and do not assume defaults.
 - Identify where your domain-specific data lives in this project. If you are a Database Agent, learn the schema. If you are a Frontend Implementer, learn the component structure. If you are a Security Auditor, learn the threat model and trust boundaries. Do not act on a project you have not learned.
 - When project context is ambiguous or contradictory, flag it immediately. Do not resolve ambiguity by guessing — resolve it by asking.

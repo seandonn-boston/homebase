@@ -2,7 +2,7 @@
 
 **A Workforce Toolkit for Autonomous AI Agent Fleets**
 
-v0.4.3-alpha · March 2026
+v0.5.0-alpha · March 2026
 
 -----
 
@@ -30,47 +30,95 @@ See [`thesis.md`](../extensions/thesis.md) for the full analysis and [`research/
 
 -----
 
-## Adoption Levels
+## Component Scaling
 
-You don't need to read 200 pages before deploying your first agent. Start at Level 1. Graduate when you hit the limits of your current level.
+You don't need to read 200 pages before deploying your first agent. Each component scales independently — pick the level that matches your need for each one. Start with the Starter profile. Advance individual components when you hit their limits.
 
-| Level | What You Use | Time to Value | When to Advance |
-|---|---|---|---|
-| **Level 1: Disciplined Solo** | Create AGENTS.md (<150 lines) and tool-specific pointers (CLAUDE.md, etc.). Define the enforcement spectrum (Part 3). Deploy hooks for safety-critical constraints — token budget, loop detection, and context health — as live enforcement in your agent runtime, not just as tested code. Load Standing Orders (Part 11) into agent context. One agent with clear Identity/Scope/Boundaries. Simple identity model (agent-id + role, no cryptographic signing) for authority binding. Brain Level 1 (file-based JSON). CLI dashboard for event logging, status, and runaway detection. | 30 min (config) / 1-2 days (build) | When you need multiple specialists coordinating on a single task. |
-| **Level 2: Core Fleet** | Everything in Level 1 plus Fleet Composition (Part 4) with 5–8 agents, routing rules, interface contracts, and the recovery ladder. Hook-based enforcement for budget, loops, and context health (no governance agents required). Brain Level 2 (SQLite + embeddings). File-based checkpoints for session persistence. Fleet dashboard with status view, alerts, traces, and basic intervention. | 2–4 hours | When convention drift, scope creep, or hallucination compound across sessions and you can't catch them manually. |
-| **Level 3: Governed Fleet** | Everything in Level 2 plus 3–7 governance agents (Token Budgeter, Hallucination Auditor, Loop Breaker minimum). Add Drift Monitor, Bias Sentinel, Context Health Monitor, and Contradiction Detector as fleet size and risk warrant. Decision authority tiers enforced. **Brain Level 3 (Postgres + pgvector + MCP + identity tokens + zero-trust) — the Brain is fully complete at this level.** Spec-only quarantine layer for external intelligence. Governance dashboard with audit trail and policy management. | 1–2 days | When cross-session knowledge reuse is critical, or when fleet size exceeds what one Orchestrator can effectively govern. |
-| **Level 4: Full Framework** | Everything in Level 3 plus full fleet with scale agents for review cycles, fleet observability, Continuous Monitor (operational), and full enforcement coverage across all 15 Standing Orders. Brain unchanged from Level 3. Operations dashboard with trend analysis, external integrations, and scaling recommendations. | 1–2 weeks | When operating at scale with multiple concurrent projects and continuous deployment. |
-| **Level 5: Enterprise** | Everything in Level 4 plus cross-fleet Brain federation, multi-operator governance, cross-fleet hooks, multi-source intelligence, and multi-fleet coordination. Federation dashboard for cross-fleet coordination. | 2–4 weeks | Target state for organizations running multiple independent fleets across teams or products. |
+### Component Progression
 
-**The most common mistake is starting at Level 5.** The administrative overhead of 40+ agents, a full Brain, and 7 governance agents exceeds the value for any project that hasn't yet validated its fleet's core workflow. Start at Level 1. Each level builds on the previous one. Skip nothing.
+| Component | Level 1 | Level 2 | Level 3 | Level 4 | Level 5 |
+|---|---|---|---|---|---|
+| **Brain** (B) | File-based JSON, git-tracked, keyword search | SQLite + embeddings, semantic search | Postgres + pgvector + MCP, multi-agent concurrent access | — | — |
+| **Fleet** (F) | Solo agent, Admiral as operator | 5–11 agents, Orchestrator routing, interface contracts | 12–20 agents + governance agents, decision authority tiers enforced | 20–40 agents, multi-orchestrator, federation | — |
+| **Enforcement** (E) | Critical hooks only: token budget, loop detection, context health | Extended: model tier validation, identity validation, periodic monitoring | Full governance: heartbeat, cross-fleet coordination, async hooks | — | — |
+| **Control Plane** (CP) | CLI Dashboard: terminal status, event logging, runaway detection | Fleet Dashboard: web UI, alerts, traces, basic intervention | Governance Dashboard: audit trail, policy management, governance health | Operations Dashboard: trend analysis, cost forecasting, external integrations | Federation Dashboard: cross-fleet, multi-operator governance |
+| **Security** (S) | Structural validation + injection detection (Layers 1-2, LLM-free) | Full deterministic semantic analysis (Layer 3, LLM-airgapped) + LLM advisory (Layer 4, reject-only) | Full immune system with antibody learning (Layer 5) + zero-trust identity | — | — |
+| **Protocols** (P) | All 15 Standing Orders loaded, critical escalations, informal handoff | Structured escalation/handoff with JSON schema validation, interface contracts | Automated trust calibration, SO drift detection, cross-domain referral routing | — | — |
+| **Data Ecosystem** (DE) | Manual observation (Admiral closes loop) | Capture & Store (raw data collection, manual review) | Automated attribution (3 loops active, 3 agents deployed) | Full ecosystem (all 6 loops, all 5 agents, all 7 datasets) | Autonomous optimization (expanded autonomous tiers, predictive) |
 
-> **The second most common mistake is building Level 2–5 artifacts "while you're at it."** Level 1 means one agent. Do not build handoff protocols (there's no one to hand off to), escalation routing (there's no one to escalate through), governance heartbeat monitors (there are no governance agents), tier validation hooks (there's no fleet roster), or empty placeholder packages for future levels. These add complexity without value and violate the Boundaries principle (Part 1): if it's not needed now, it's a non-goal. Define the *models* for progressive hardening (e.g., the identity model should exist so it can grow), but do not implement features that have no consumer at the current level. Build what Level 1 requires, deploy it as live enforcement, and stop.
+A dash (—) means the component has reached its maximum level. Not every component needs five levels.
 
-> **Config time vs. build time:** The "Time to Value" column has two meanings depending on your context. If you are **configuring** Admiral on an existing platform (e.g., writing AGENTS.md and hooks for Claude Code), the time estimates are for configuration. If you are **implementing** Admiral as code (building a hook engine, data models, test suites), expect significantly longer — the config-to-build ratio varies by level but is typically 50-100x for Level 1. The reference implementation needed ~5,500 lines of Python, 148 tests, and 2 days plus a review cycle to reach verified Level 1 completion. See Case Study 4 in Appendix D for the full account.
+**Notation:** `B2+` means "Brain Level 2 or higher." A full configuration is a tuple: `B1 F1 E1 CP1 S1 P1 DE1`. Components are always listed in this order: Brain, Fleet, Enforcement, Control Plane, Security, Protocols, Data Ecosystem.
 
-### What Each Level Adds
+### Quick-Start Profiles
 
-**Level 1 → 2:** You go from one agent to coordinated specialists. The Orchestrator decomposes work, routes to the right agent, and enforces handoff contracts. This is where most of the productivity gain lives.
+These are recommended combinations that satisfy all dependency rules. Start with Starter. Advance individual components when you hit their limits, or advance the whole profile when you're ready.
 
-**Level 2 → 3:** You add the fleet's immune system. Governance agents add analytical capabilities on top of the deterministic hooks already present at Levels 1-2. They catch the failure modes that compound silently over multiple sessions — sycophantic drift, hallucination, scope creep, cross-agent patterns. Without them, quality degrades gradually and invisibly.
+| Profile | B | F | E | CP | S | P | DE | Config Time | Build Time | When to Advance |
+|---|---|---|---|---|---|---|---|---|---|---|
+| **Starter** | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 30 min | 1–2 days | Need multiple specialists coordinating |
+| **Team** | 2 | 2 | 1 | 2 | 1 | 2 | 2 | 2–4 hours | 1–2 weeks | Drift compounds across sessions |
+| **Governed** | 3 | 3 | 2 | 3 | 2 | 2 | 3 | 1–2 days | 2–4 weeks | Need scale or continuous operation |
+| **Production** | 3 | 3 | 3 | 4 | 2 | 3 | 4 | 1–2 weeks | 1–2 months | Multiple fleets needed |
+| **Enterprise** | 3 | 4 | 3 | 5 | 3 | 3 | 5 | 2–4 weeks | 2–4 months | Target state |
 
-**Level 3 → 4:** You add persistent memory and ecosystem intelligence. The Brain captures lessons that outlive sessions. The Monitor captures lessons that outlive the fleet. Identity tokens and zero-trust access control harden the system for continuous, unsupervised operation.
+> **Mix and match.** Profiles are starting points, not rules. You can run B1 with F3 if your fleet doesn't need semantic search. You can run B3 with F1 if a solo agent needs deep memory. The only constraint is the dependency matrix below.
+
+### Cross-Component Dependencies
+
+These constraints are enforced at configuration time. A configuration that violates any of these is invalid.
+
+| If you choose... | You must also have... | Why |
+|---|---|---|
+| F2+ | P1+ | Routing requires Standing Orders |
+| F3+ | E2+ | Governance agents need identity validation |
+| E2+ | F2+ | Tier validation needs fleet roster |
+| E3 | F3+ | Heartbeat monitoring needs governance agents |
+| B3 | CP2+ | MCP infrastructure needs fleet dashboard for health monitoring |
+| DE3+ | B2+ | Automated attribution needs semantic search (embeddings) |
+| DE4+ | F3+ | Ecosystem agents need a governed fleet |
+| CP3+ | F3+ | Governance dashboard needs governance agents to monitor |
+| S3 | B2+ | Antibody patterns need embeddings for storage |
+| P2+ | F2+ | Structured handoffs need multiple agents |
+| P3 | F3+ | Trust calibration needs governance infrastructure |
+
+**The most common mistake is starting at Enterprise.** The administrative overhead of 40+ agents, a full Brain, and 7 governance agents exceeds the value for any project that hasn't yet validated its fleet's core workflow. Start with the Starter profile.
+
+> **The second most common mistake is building Production-level artifacts "while you're at it."** Starter means one agent. Do not build handoff protocols (there's no one to hand off to), escalation routing (there's no one to escalate through), governance heartbeat monitors (there are no governance agents), tier validation hooks (there's no fleet roster), or empty placeholder packages for future component levels. These add complexity without value and violate the Boundaries principle (Part 1): if it's not needed now, it's a non-goal. Define the *models* for progressive hardening (e.g., the identity model should exist so it can grow), but do not implement features that have no consumer at the current component level. Build what the Starter profile requires, deploy it as live enforcement, and stop.
+
+> **Config time vs. build time:** The profiles have two time dimensions. **Config time** is for deploying Admiral on an existing platform (e.g., writing AGENTS.md and hooks for Claude Code). **Build time** is for implementing Admiral as code (building a hook engine, data models, test suites) — expect significantly longer. The reference implementation needed ~5,500 lines of Python, 148 tests, and 2 days plus a review cycle to reach verified Starter-profile completion. See Case Study 4 in Appendix D for the full account.
+
+### What Each Component Adds
+
+**Brain (B1 → B2 → B3):** B1 gives you persistent memory as flat files. B2 adds semantic search — queries match by meaning, not keywords. B3 adds concurrent multi-agent access via MCP, full vector indexing, and production-grade storage. Advance when keyword search misses relevant entries >30% of the time (B1→B2) or when multiple agents query simultaneously (B2→B3).
+
+**Fleet (F1 → F2 → F3 → F4):** F1 is one agent doing everything. F2 adds coordinated specialists — the Orchestrator decomposes work, routes to the right agent, and enforces handoff contracts. This is where most of the productivity gain lives. F3 adds the fleet's immune system: governance agents that catch failure modes compounding across sessions. F4 adds multi-orchestrator coordination for scale.
+
+**Enforcement (E1 → E2 → E3):** E1 deploys the three critical hooks — token budget gate, loop detection, context health. These fire deterministically regardless of context pressure. E2 adds model tier validation and identity hardening. E3 adds governance heartbeat monitoring and cross-fleet coordination with async hook execution.
+
+**Control Plane (CP1 → CP2 → CP3 → CP4 → CP5):** CP1 is `htop` for agents — terminal status, event logging, runaway alerts. Each level adds scope: fleet-wide view (CP2), governance health and audit trail (CP3), trend analysis and cost forecasting (CP4), cross-fleet federation (CP5). The Control Plane exists at every level — it is not a luxury.
+
+**Security (S1 → S2 → S3):** S1 validates structure and catches injection attacks with deterministic rules — no LLM involved. S2 adds the full five-layer quarantine including LLM-airgapped semantic analysis and LLM advisory (reject-only). S3 adds antibody learning and zero-trust identity verification.
+
+**Protocols (P1 → P2 → P3):** P1 loads all 15 Standing Orders into every agent's context — these are non-negotiable at every level. P2 adds structured escalation and handoff with JSON schema validation. P3 adds automated trust calibration and SO drift detection.
+
+**Data Ecosystem (DE1 → DE2 → DE3 → DE4 → DE5):** DE1 is the Admiral manually observing patterns. DE2 captures raw data. DE3 deploys 3 agents and activates 3 feedback loops for automated attribution. DE4 deploys all 5 agents, all 6 loops, all 7 datasets. DE5 expands autonomous tiers based on earned trust.
 
 ### Minimum Viable Reading Path
 
-If you are starting at Level 1, you do not need to read the entire framework. These six files (~800 lines of targeted reading) give you everything you need to deploy your first governed agent. Read the rest when you need it.
+If you are starting with the Starter profile, you do not need to read the entire framework. These six files (~800 lines of targeted reading) give you everything you need to deploy your first governed agent. Read the rest when you need it.
 
 | Order | File | What to Read | Why |
 |---|---|---|---|
-| 1 | [`index.md`](index.md) | Glossary + Adoption Levels | Shared vocabulary and your roadmap. |
+| 1 | [`index.md`](index.md) | Glossary + Component Scaling | Shared vocabulary and your roadmap. |
 | 2 | [`part1-strategy.md`](part1-strategy.md) | Full file | Mission, Boundaries, Success Criteria — the three inputs every agent needs. |
-| 3 | [`part3-enforcement.md`](part3-enforcement.md) | Deterministic Enforcement only | The enforcement spectrum: hooks over instructions. Decision Authority and Configuration Security are Level 2+ — read them when you add a fleet. |
+| 3 | [`part3-enforcement.md`](part3-enforcement.md) | Deterministic Enforcement only | The enforcement spectrum: hooks over instructions. Decision Authority and Configuration Security are F2+ — read them when you add a fleet. |
 | 3.5 | [`intent-engineering.md`](../extensions/intent-engineering.md) | Six Elements of Intent | How to write mission, boundaries, and task assignments that give agents enough context to handle unexpected situations. |
 | 4 | [`part11-protocols.md`](part11-protocols.md) | Standing Orders only | The fifteen non-negotiable rules loaded into every agent's standing context. |
-| 4.5 | [`fleet-control-plane.md`](../extensions/fleet-control-plane.md) | Level 1 section | The CLI dashboard: event logging, status, and runaway detection from day one. |
+| 4.5 | [`fleet-control-plane.md`](../extensions/fleet-control-plane.md) | CP1 section | The CLI dashboard: event logging, status, and runaway detection from day one. |
 | 5 | [`appendices.md`](appendices.md) | Appendix A (Pre-Flight Checklist) | Go/no-go gate — confirms you have not missed anything critical. |
 
-Start here. Graduate to the full framework when you hit the limits of Level 1.
+Start here. Advance individual components when you hit their limits.
 
 -----
 
@@ -107,13 +155,13 @@ Admiral is complementary to agent SDKs and orchestration frameworks. They provid
 
 ## How to Read This Document
 
-This framework is split across fourteen files. This index is the entry point. Each part is a self-contained module that can be loaded into an agent's context independently.
+This framework is split across fourteen core files (this index, twelve parts, and an appendices file). Extension documents and reference materials are listed in the Table of Contents below. Each part is a self-contained module that can be loaded into an agent's context independently.
 
 **Humans (Admirals and implementers)** — You are the Admiral. Start here. Read the operating model and glossary, then work through parts in order or jump to whichever part addresses your current need. The prose, anti-patterns, and worked example are for you. This is the framework's primary audience today.
 
 **LLM agents** — Individual part files will be loaded into your context as operational instructions. The TL;DR blocks, templates, and structured formats are for you. When a part file is loaded, treat its constraints as binding and its templates as required output formats. Refer to the glossary below for term definitions. Agent-facing content is designed for context injection — concise, structured, and unambiguous.
 
-**Machines (future)** — CI pipelines, hook scripts, linters, and automation tooling will consume the artifacts this framework produces. Templates, checklists, and structured formats are designed to be parseable. Machine audience support is emerging — see `.github/workflows/spec-validation.yml` for initial CI tooling. Full machine-readable validation is a Level 4+ capability.
+**Machines (future)** — CI pipelines, hook scripts, linters, and automation tooling will consume the artifacts this framework produces. Templates, checklists, and structured formats are designed to be parseable. Machine audience support is emerging — see `.github/workflows/spec-validation.yml` for initial CI tooling. Full machine-readable validation is a Production-profile capability.
 
 > **This is not an AGENTS.md file.** It is the meta-framework that generates AGENTS.md files, agent definitions, hook scripts, skill files, and operational artifacts. Your actual configuration files (AGENTS.md, CLAUDE.md, .cursorrules, etc.) should be under 150 lines each. This framework is the source of truth they are distilled from.
 
@@ -269,7 +317,7 @@ Terms are listed alphabetically. When these terms appear in any part file, they 
 
 ## Relationship to the Fleet and Monitor
 
-The `fleet/` directory provides 71 core agent definitions (plus 29 extended agents in `fleet/agents/extras/`) organized by category. The `monitor/` directory specifies the continuous intelligence pipeline. The `brain/` directory contains the database schema and architecture specification for long-term memory.
+The `fleet/` directory provides 71 core agent definitions (plus 34 extended agents in `fleet/agents/extras/`) organized by category. The `monitor/` directory specifies the continuous intelligence pipeline. The `brain/` directory contains the database schema and architecture specification for long-term memory.
 
 | Admiral Topic | Companion Specification |
 |---|---|
@@ -359,29 +407,29 @@ Topics are ordered by impact and grouped by relevance.
 | Feedback Loops | Six loops connecting outcomes back to inputs for continuous improvement. | |
 | Dataset Strategy | Seven proprietary datasets that compound in value over time. | |
 | Implementation Levels | Progressive adoption from manual observation to autonomous optimization. | |
-| | **INTENT ENGINEERING** | *The shared dialect between Admirals and Brains.* | [`intent-engineering.md`](../extensions/intent-engineering.md) |
-| — | Intent Engineering | Structuring instructions around outcomes, values, constraints, failure modes, and judgment boundaries. | |
-| — | The Six Elements of Intent | Goal, Priority, Constraints, Failure Modes, Judgment Boundaries, Values. | |
-| — | The Human Inflection Point | Where the agent's authority ends and the human's begins. This shall not be worked around. | |
-| | **GOVERNANCE PLATFORM** | *The paradigm shift: from toolkit to operating environment.* | [`governance-platform.md`](../extensions/governance-platform.md) |
-| — | The Paradigm Shift | Infrastructure must handle chaos, not elegance. Air traffic control, not flight plans. | |
-| — | The Four Pillars | Visibility, Control, Policy, Recovery — the foundations of fleet governance. | |
-| — | Chaos-First Architecture | Designing for the messy reality of production agent fleets. | |
-| | **FLEET CONTROL PLANE** | *The real-time operational surface.* | [`fleet-control-plane.md`](../extensions/fleet-control-plane.md) |
-| — | The Command Center | Fleet status, agent detail, task flow — the single management interface. | |
-| — | Alert System | Classification, fatigue prevention, and actionable notifications. | |
-| — | Operator Interventions | Pause, halt, kill, reroute, override — with audit trail. | |
-| | **PROGRESSIVE AUTONOMY** | *The four stages from manual oversight to full autonomy.* | [`progressive-autonomy.md`](../extensions/progressive-autonomy.md) |
-| — | The Four Stages | Manual Oversight → Assisted Automation → Partial Autonomy → Full Autonomy. | |
-| — | The Autonomy Matrix | Different capabilities at different stages in the same fleet. | |
-| — | Trust Mechanics | How trust is earned, tracked, and withdrawn per category. | |
-| | **INEVITABLE FEATURES** | *The three features that create operational lock-in through genuine value.* | [`inevitable-features.md`](../extensions/inevitable-features.md) |
-| — | Fleet-Wide Causality Tracing | From "something broke" to "here is exactly why." | |
-| — | Living Operational Memory | The Brain at three months: institutional wisdom, not just storage. | |
-| — | Predictive Fleet Health | From reactive to proactive: predicting failures before they happen. | |
-| | **APPENDICES** | | [`appendices.md`](appendices.md) |
+| **INTENT ENGINEERING** | *The shared dialect between Admirals and Brains.* | [`intent-engineering.md`](../extensions/intent-engineering.md) |
+| — Intent Engineering | Structuring instructions around outcomes, values, constraints, failure modes, and judgment boundaries. | |
+| — The Six Elements of Intent | Goal, Priority, Constraints, Failure Modes, Judgment Boundaries, Values. | |
+| — The Human Inflection Point | Where the agent's authority ends and the human's begins. This shall not be worked around. | |
+| **GOVERNANCE PLATFORM** | *The paradigm shift: from toolkit to operating environment.* | [`governance-platform.md`](../extensions/governance-platform.md) |
+| — The Paradigm Shift | Infrastructure must handle chaos, not elegance. Air traffic control, not flight plans. | |
+| — The Four Pillars | Visibility, Control, Policy, Recovery — the foundations of fleet governance. | |
+| — Chaos-First Architecture | Designing for the messy reality of production agent fleets. | |
+| **FLEET CONTROL PLANE** | *The real-time operational surface.* | [`fleet-control-plane.md`](../extensions/fleet-control-plane.md) |
+| — The Command Center | Fleet status, agent detail, task flow — the single management interface. | |
+| — Alert System | Classification, fatigue prevention, and actionable notifications. | |
+| — Operator Interventions | Pause, halt, kill, reroute, override — with audit trail. | |
+| **PROGRESSIVE AUTONOMY** | *The four stages from manual oversight to full autonomy.* | [`progressive-autonomy.md`](../extensions/progressive-autonomy.md) |
+| — The Four Stages | Manual Oversight → Assisted Automation → Partial Autonomy → Full Autonomy. | |
+| — The Autonomy Matrix | Different capabilities at different stages in the same fleet. | |
+| — Trust Mechanics | How trust is earned, tracked, and withdrawn per category. | |
+| **INEVITABLE FEATURES** | *The three features that create operational lock-in through genuine value.* | [`inevitable-features.md`](../extensions/inevitable-features.md) |
+| — Fleet-Wide Causality Tracing | From "something broke" to "here is exactly why." | |
+| — Living Operational Memory | The Brain at three months: institutional wisdom, not just storage. | |
+| — Predictive Fleet Health | From reactive to proactive: predicting failures before they happen. | |
+| **APPENDICES** | | [`appendices.md`](appendices.md) |
 | A | Pre-Flight Checklist | Go/no-go gate before fleet deployment. | |
-| B | Quick-Start Sequence | Level-structured operational order for standing up a new fleet. | |
+| B | Quick-Start Sequence | Profile-structured operational order for standing up a new fleet. | |
 | C | Worked Example | A complete SaaS application fleet, end to end. | |
 | D | Case Studies | Four case studies: ungoverned, over-engineered, security-first, and reference implementation (Admiral-builds-Admiral). | |
 | E | Platform Integration Patterns | How to use Admiral with Claude Code, Agent SDKs, and orchestration frameworks. | |

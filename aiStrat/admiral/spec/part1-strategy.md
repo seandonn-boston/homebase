@@ -4,7 +4,7 @@
 
 *These three sections form a closed triangle. Together they answer the only questions that matter before any agent touches a keyboard: the destination, the fences, and the finish line. Every downstream artifact — agent definitions, task decompositions, quality gates — derives from this triangle. If any vertex is missing, the fleet will infer one, and the inference will be subtly wrong.*
 
-> **Control Plane surface:** Mission alignment and boundary violations surface as alerts in the Fleet Control Plane at all adoption levels. When an agent's actions diverge from Mission or cross a Boundary, the Control Plane flags it immediately.
+> **Control Plane surface:** Mission alignment and boundary violations surface as alerts in the Fleet Control Plane at all profiles (Starter through Enterprise). When an agent's actions diverge from Mission or cross a Boundary, the Control Plane flags it immediately.
 
 -----
 

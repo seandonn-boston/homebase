@@ -102,7 +102,7 @@ The `prompt-anatomy.md` file provides the assembly pattern for building complete
 
 **Core catalog: 71 agent definitions.** Each is independently deployable. Combine as the project demands. Start with the **Core Fleet** below (11 agents) and add specialists only when demonstrated need arises.
 
-An additional **29 extended agents** are held in reserve in `agents/extras/` — domain specialists (7), data & analytics (5), and supplementary scale agents (17). See `agents/extras/README.md` for activation instructions.
+An additional **34 extended agents** are held in reserve in `agents/extras/` — domain specialists (7), data & analytics (5), ecosystem agents (5), and supplementary scale agents (17). See `agents/extras/README.md` for activation instructions.
 
 > **Adoption guidance:** See the [Adoption Levels](../admiral/spec/index.md#adoption-levels) in the Admiral Framework for a progressive path from single-agent to full fleet.
 

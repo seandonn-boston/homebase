@@ -4,25 +4,25 @@
 
 > **Relationship to Fleet Observability (Part 9):** Fleet Observability defines the instrumentation — traces, logs, metrics, agent telemetry. The Fleet Control Plane defines what operators *do* with that instrumentation: the dashboard, the alerts, the interventions, the operational workflows. Observability is the data. The Control Plane is the interface.
 
-> **Core principle:** The Control Plane is not a Level 3+ luxury. It exists at every adoption level, scaled to what the operator needs. A solo developer running one agent still needs to see what that agent is doing, catch runaway behavior, and understand what happened. The difference between levels is scope and sophistication, not presence or absence.
+> **Core principle:** The Control Plane is not a CP3+ luxury. It exists at every component level, scaled to what the operator needs. A solo developer running one agent still needs to see what that agent is doing, catch runaway behavior, and understand what happened. The difference between levels is scope and sophistication, not presence or absence.
 
 -----
 
-## Progressive Control Plane by Adoption Level
+## Progressive Control Plane by Component Level
 
 The Control Plane grows with the fleet. Each level builds on the previous.
 
 | Level | Surface | Primary Interface | Key Capabilities |
 |---|---|---|---|
-| **Level 1** — Disciplined Solo | CLI Dashboard | Terminal | Event logging, status, runaway detection |
-| **Level 2** — Coordinated Team | Fleet Dashboard | Web UI | Fleet status, alerts, traces, basic intervention |
-| **Level 3** — Governed Operations | Governance Dashboard | Web UI + API | Audit trail, policy management, governance health |
-| **Level 4** — Scaled Operations | Operations Dashboard | Web UI + API + Integrations | Trend analysis, cost forecasting, external integrations |
-| **Level 5** — Enterprise Federation | Federation Dashboard | Web UI + API + CLI + Federation Protocol | Cross-fleet view, multi-operator governance |
+| **CP1** — Disciplined Solo | CLI Dashboard | Terminal | Event logging, status, runaway detection |
+| **CP2** — Coordinated Team | Fleet Dashboard | Web UI | Fleet status, alerts, traces, basic intervention |
+| **CP3** — Governed Operations | Governance Dashboard | Web UI + API | Audit trail, policy management, governance health |
+| **CP4** — Scaled Operations | Operations Dashboard | Web UI + API + Integrations | Trend analysis, cost forecasting, external integrations |
+| **CP5** — Enterprise Federation | Federation Dashboard | Web UI + API + CLI + Federation Protocol | Cross-fleet view, multi-operator governance |
 
 -----
 
-## Level 1 — CLI Dashboard
+## CP1 — CLI Dashboard
 
 *For a single operator running a single agent. The minimum viable Control Plane.*
 
@@ -61,7 +61,7 @@ A compact terminal view (like `htop` for agents) showing the agent's current sta
 
 ### Runaway Detection
 
-Even at Level 1, the Control Plane watches for runaway behavior:
+Even at CP1, the Control Plane watches for runaway behavior:
 
 | Detection | Trigger | Response |
 |---|---|---|
@@ -71,7 +71,7 @@ Even at Level 1, the Control Plane watches for runaway behavior:
 | **Time limit** | Configurable max session duration | Warning at 80%, halt at 100% |
 | **Idle detection** | No events for configurable interval | Warning displayed |
 
-### What Level 1 Does NOT Include
+### What CP1 Does NOT Include
 
 - No web UI (terminal only)
 - No fleet view (single agent)
@@ -81,11 +81,11 @@ Even at Level 1, the Control Plane watches for runaway behavior:
 
 -----
 
-## Level 2 — Fleet Dashboard
+## CP2 — Fleet Dashboard
 
 *For a coordinated team of 5-12 agents with an Orchestrator. The first multi-agent surface.*
 
-Everything from Level 1, plus:
+Everything from CP1, plus:
 
 ### Fleet Status View
 
@@ -190,11 +190,11 @@ The most dangerous failure mode for an alert system is alert fatigue — when op
 
 -----
 
-## Level 3 — Governance Dashboard
+## CP3 — Governance Dashboard
 
 *For organizations running governed fleets with governance agents. The trust and policy surface.*
 
-Everything from Level 2, plus:
+Everything from CP2, plus:
 
 ### Governance Agent Health
 
@@ -268,11 +268,11 @@ Operators modify policies, not individual decisions:
 
 -----
 
-## Level 4 — Operations Dashboard
+## CP4 — Operations Dashboard
 
 *For mature operations with trend analysis, forecasting, and external tool integration.*
 
-Everything from Level 3, plus:
+Everything from CP3, plus:
 
 ### Trend Analysis
 
@@ -337,11 +337,11 @@ When adding or removing agents:
 
 -----
 
-## Level 5 — Federation Dashboard
+## CP5 — Federation Dashboard
 
 *For enterprise deployments with multiple fleets, multiple operators, and cross-fleet coordination.*
 
-Everything from Level 4, plus:
+Everything from CP4, plus:
 
 ### Cross-Fleet View
 
@@ -391,17 +391,17 @@ The Control Plane surfaces metrics that help operators make decisions, not metri
 
 | Metric | What It Tells the Operator | Action Trigger | Level |
 |---|---|---|---|
-| **Token budget remaining** | Will this agent finish its task? | Adjust budget or scope | L1+ |
-| **Error count (session)** | Is this agent struggling? | Investigate if > 3 | L1+ |
-| **Fleet utilization** | Are agents busy or idle? | Scale up/down | L2+ |
-| **Task throughput** | How fast is work completing? | Investigate if declining | L2+ |
-| **Budget burn rate** | Will we run out of budget? | Adjust budget or scope | L2+ |
-| **Error rate (rolling 1h)** | Is something breaking more than usual? | Investigate root cause | L2+ |
-| **Escalation backlog** | Are pending decisions piling up? | Review and decide, or widen Autonomous | L3+ |
-| **First-pass quality (rolling)** | Is output quality stable? | Investigate if declining | L3+ |
-| **Mean time to recovery** | When things break, how fast do they heal? | Review recovery ladder if slow | L3+ |
-| **Cost per task (trend)** | Is the fleet getting more efficient? | Investigate if increasing | L4+ |
-| **Cross-fleet health** | Are all fleets healthy? | Drill into unhealthy fleet | L5 |
+| **Token budget remaining** | Will this agent finish its task? | Adjust budget or scope | CP1+ |
+| **Error count (session)** | Is this agent struggling? | Investigate if > 3 | CP1+ |
+| **Fleet utilization** | Are agents busy or idle? | Scale up/down | CP2+ |
+| **Task throughput** | How fast is work completing? | Investigate if declining | CP2+ |
+| **Budget burn rate** | Will we run out of budget? | Adjust budget or scope | CP2+ |
+| **Error rate (rolling 1h)** | Is something breaking more than usual? | Investigate root cause | CP2+ |
+| **Escalation backlog** | Are pending decisions piling up? | Review and decide, or widen Autonomous | CP3+ |
+| **First-pass quality (rolling)** | Is output quality stable? | Investigate if declining | CP3+ |
+| **Mean time to recovery** | When things break, how fast do they heal? | Review recovery ladder if slow | CP3+ |
+| **Cost per task (trend)** | Is the fleet getting more efficient? | Investigate if increasing | CP4+ |
+| **Cross-fleet health** | Are all fleets healthy? | Drill into unhealthy fleet | CP5 |
 
 ### Metrics That Do NOT Belong on the Primary Dashboard
 
@@ -425,17 +425,17 @@ The specifications (Parts 1-12) define the rules. The Fleet Control Plane is whe
 
 | Component | Control Plane Surface | Level |
 |---|---|---|
-| Strategy (Part 1) | Mission alignment alerts, boundary violation detection | L1+ |
-| Enforcement (Part 3) | Hook execution status, violation log, enforcement coverage map | L2+ |
-| Fleet (Part 4) | Agent roster, status, routing visualization | L2+ |
-| Brain (Part 5) | Knowledge health, query patterns, decay warnings | L3+ |
-| Execution (Part 6) | Task decomposition view, parallel execution status | L2+ |
-| Quality (Part 7) | Quality gate results, failure mode frequency | L2+ |
-| Operations (Part 8) | Cost tracking, health metrics, scaling recommendations | L3+ |
-| Observability (Part 9) | Trace exploration, metric dashboards, alert management | L2+ |
-| Admiral (Part 10) | Self-calibration decisions, human-expert routing visibility | L3+ |
-| Protocols (Part 11) | Escalation and handoff events in the event stream | L2+ |
-| Data Ecosystem (Part 12) | Feedback loop health, dataset metrics | L4+ |
+| Strategy (Part 1) | Mission alignment alerts, boundary violation detection | CP1+ |
+| Enforcement (Part 3) | Hook execution status, violation log, enforcement coverage map | CP2+ |
+| Fleet (Part 4) | Agent roster, status, routing visualization | CP2+ |
+| Brain (Part 5) | Knowledge health, query patterns, decay warnings | CP3+ |
+| Execution (Part 6) | Task decomposition view, parallel execution status | CP2+ |
+| Quality (Part 7) | Quality gate results, failure mode frequency | CP2+ |
+| Operations (Part 8) | Cost tracking, health metrics, scaling recommendations | CP3+ |
+| Observability (Part 9) | Trace exploration, metric dashboards, alert management | CP2+ |
+| Admiral (Part 10) | Self-calibration decisions, human-expert routing visibility | CP3+ |
+| Protocols (Part 11) | Escalation and handoff events in the event stream | CP2+ |
+| Data Ecosystem (Part 12) | Feedback loop health, dataset metrics | CP4+ |
 
 The Control Plane unifies all of these into one operational surface. Without it, each component is a separate concern that operators must mentally integrate. With it, the fleet is a single system with a single management interface.
 
@@ -443,7 +443,7 @@ The Control Plane unifies all of these into one operational surface. Without it,
 
 ## Anti-Patterns
 
-> **ANTI-PATTERN: NO CONTROL PLANE AT ALL** — Running agents with no structured logging, no status display, no runaway detection. "I'll just watch the terminal output." This works until the agent runs for 30 minutes, produces 50,000 tokens of output, and you have no idea what it did or why. Even Level 1 needs structured event logging.
+> **ANTI-PATTERN: NO CONTROL PLANE AT ALL** — Running agents with no structured logging, no status display, no runaway detection. "I'll just watch the terminal output." This works until the agent runs for 30 minutes, produces 50,000 tokens of output, and you have no idea what it did or why. Even CP1 needs structured event logging.
 
 > **ANTI-PATTERN: DASHBOARD WITHOUT DRILL-DOWN** — A status page showing "32 agents running, 114 tasks active" with no way to click into a specific agent or task. Aggregate numbers are the starting point, not the destination. Operators need to go from "something is wrong" to "this specific thing is wrong" in two clicks.
 
@@ -453,6 +453,6 @@ The Control Plane unifies all of these into one operational surface. Without it,
 
 > **ANTI-PATTERN: OPERATOR LOCK-IN** — A Control Plane that only works through its own UI. All interventions should also be available via API and CLI. Operators who prefer terminal access should not be forced into a web dashboard. The Control Plane is the canonical interface, not the only one.
 
-> **ANTI-PATTERN: LEVEL 4 BEFORE LEVEL 1** — Building a sophisticated web dashboard with Datadog integration before you have structured event logging. Each level depends on the previous. You cannot visualize what you do not capture.
+> **ANTI-PATTERN: CP4 BEFORE CP1** — Building a sophisticated web dashboard with Datadog integration before you have structured event logging. Each level depends on the previous. You cannot visualize what you do not capture.
 
 -----

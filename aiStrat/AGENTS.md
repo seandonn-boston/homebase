@@ -4,7 +4,7 @@ This file provides guidance to any AI coding agent working with this repository.
 
 ## Project Overview
 
-aiStrat is the **Admiral Framework** — a comprehensive specification for AI agent fleet orchestration. The core deliverable is specification: design documents defining how autonomous AI agent systems should be structured, secured, coordinated, and governed. Early-stage implementation code exists in `control-plane/` (TypeScript control plane MVP) and `brain/schema/` (Postgres schema), with supporting scripts in `monitor/`. The fleet catalog (71 core + 29 extended agent definitions) represents high-quality specifications based on production patterns — not battle-tested implementations. As Admiral matures through real-world deployments, these will be validated and refined.
+aiStrat is the **Admiral Framework** — a comprehensive specification for AI agent fleet orchestration. The core deliverable is specification: design documents defining how autonomous AI agent systems should be structured, secured, coordinated, and governed. Early-stage implementation code exists in `control-plane/` (TypeScript control plane MVP) and `brain/schema/` (Postgres schema), with supporting scripts in `monitor/`. The fleet catalog (71 core + 34 extended agent definitions) represents high-quality specifications based on production patterns — not battle-tested implementations. As Admiral matures through real-world deployments, these will be validated and refined.
 
 **Why this exists:** AI agents are not employees and they are not code. You cannot manage them with HR policies and you cannot validate them with traditional software tests. They are an entirely new category of resource — one that makes decisions, fails in novel ways, and forgets everything between sessions. Admiral is governance and operations designed from scratch for how agents actually behave. Model-agnostic, progressively adoptable, and built around the insight that deterministic enforcement always outperforms advisory instructions.
 
@@ -13,8 +13,8 @@ aiStrat is the **Admiral Framework** — a comprehensive specification for AI ag
 ### Three Pillars
 
 1. **Doctrine (admiral/)** — 12-part operational framework defining strategy, context engineering, enforcement, fleet composition, the Brain knowledge system, execution patterns, quality assurance, operations, platform integration, meta-agent governance, universal protocols, and the closed-loop data ecosystem. Cross-references use descriptive Part-based names (e.g., "Deterministic Enforcement (Part 3)") — no section numbers. Start with `admiral/spec/index.md`.
-2. **Fleet (fleet/)** — Agent catalog with 71 core role definitions (plus 29 extended in `fleet/agents/extras/`), prompt assembly patterns, routing rules, interface contracts, model tier assignments, and context injection guides. Each agent is a self-contained specification — project-agnostic, independently deployable.
-3. **Design Artifacts (brain/, monitor/)** — Architecture specifications for the Brain (semantic long-term memory) and Monitor (ecosystem intelligence with immune system). Includes database schema and architectural diagrams, not code.
+2. **Fleet (fleet/)** — Agent catalog with 71 core role definitions (plus 34 extended in `fleet/agents/extras/`), prompt assembly patterns, routing rules, interface contracts, model tier assignments, and context injection guides. Each agent is a self-contained specification — project-agnostic, independently deployable.
+3. **Design Artifacts (brain/, monitor/)** — Architecture specifications for the Brain (semantic long-term memory) and Monitor (ecosystem intelligence with immune system). Includes database schema (SQL), shell scripts, and architectural diagrams — implementation-adjacent artifacts that define schemas and tooling, not application logic.
 
 ### Key Entry Points
 
