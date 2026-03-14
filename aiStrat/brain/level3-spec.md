@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.3.1-alpha -->
+<!-- Admiral Framework v0.4.0-alpha -->
 # Brain Level 3 Specification — Full Brain (Postgres + pgvector + MCP)
 
 **Level 3 is the complete Brain.** All Brain capabilities are fully specified at this level. Levels 4 and 5 of the Admiral Framework add fleet-level capabilities (scale agents, full enforcement, multi-fleet coordination) but do not modify the Brain architecture.
@@ -162,7 +162,7 @@ Entries passing all 5 layers arrive with `approved = false`. Only the Admiral ca
 
 ## Multi-Signal Retrieval Pipeline
 
-Level 3 applies eight ranking signals (defined in Part 5, Section 17):
+Level 3 applies eight ranking signals (defined in Part 5, Intelligence Lifecycle):
 
 1. **Semantic similarity** — Cosine distance via pgvector HNSW
 2. **Project relevance** — Same-project entries weighted higher

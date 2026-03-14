@@ -1,7 +1,7 @@
-<!-- Admiral Framework v0.3.1-alpha -->
+<!-- Admiral Framework v0.4.0-alpha -->
 # Admiral Framework — File Manifest
 
-**109 files across 22 groups | Last modified: 2026-03-14**
+**114 files across 22 groups | Last modified: 2026-03-14**
 
 This is the semantic catalog of every file in the Admiral Framework. Each entry describes what the file contains, verified against the source. Update this manifest when files are added, removed, renamed, or when their content changes materially.
 
@@ -19,9 +19,9 @@ fully complete at Level 3. Links all 11 parts.
 Minimum Viable Reading Path (~800 lines of targeted reading):
   1. index.md — Glossary + Adoption Levels (shared vocabulary and roadmap)
   2. part1-strategy.md — Full file (Mission, Boundaries, Success Criteria)
-  3. part3-enforcement.md — Section 08 only (enforcement spectrum: hooks over instructions)
+  3. part3-enforcement.md — Deterministic Enforcement only (enforcement spectrum: hooks over instructions)
   3.5. intent-engineering.md — Six Elements of Intent (how to write effective agent directives)
-  4. part11-protocols.md — Section 36 only (Standing Orders: 15 non-negotiable rules)
+  4. part11-protocols.md — Standing Orders only (15 non-negotiable rules)
   5. appendices.md — Appendix A only (Pre-Flight Checklist: go/no-go gate)
 
 Also includes: operating model ("You are the Admiral" with intent engineering as
@@ -30,7 +30,7 @@ human inflection point), competitive comparison table, five unique contributions
 three-audience reading guide (humans, LLM agents, machines), full table of contents
 (41 sections + 2 sub-sections + 7 appendices), and relationship map to
 fleet/brain/monitor directories.
-aiStrat/admiral/index.md
+aiStrat/admiral/spec/index.md
 ```
 
 ```
@@ -42,7 +42,7 @@ gaps that currently prevent it (session amnesia, unenforced constraints, undetec
 compound failures, all-or-nothing trust, no safe pause/resume), the behavior change
 Admiral enables, the dependency test, and the historical parallel to the invention
 of the corporation. Links to research/future-operations.md for full analysis.
-aiStrat/admiral/thesis.md
+aiStrat/admiral/extensions/thesis.md
 ```
 
 ```
@@ -52,7 +52,7 @@ state, stakeholders, phase, and Spec-First Pipeline entry point; Boundaries (02)
 non-goals, hard constraints, resource budgets, LLM-Last boundary with intent rationale
 for each category; Success Criteria (03) — machine-verifiable definition of done with
 failure scenario and judgment boundary criteria.
-aiStrat/admiral/part1-strategy.md
+aiStrat/admiral/spec/part1-strategy.md
 ```
 
 ```
@@ -64,7 +64,7 @@ Window Strategy (06) — profiles, loading/sacrifice order with intent foundatio
 rationale, progressive disclosure, context stuffing defense via SO 11;
 Configuration File Strategy (07) — AGENTS.md as canonical source, 150-line rule,
 cross-tool portability, skills, path rules, Standing Orders loading precedence note.
-aiStrat/admiral/part2-context.md
+aiStrat/admiral/spec/part2-context.md
 ```
 
 ```
@@ -73,10 +73,10 @@ Three sections: Deterministic Enforcement (08) — the enforcement spectrum (hoo
 instruction / guidance), hook lifecycle events, hook execution model, self-healing
 loops with implementation parameters table (max retries, cycle detection, error
 signatures), two-layer retry mechanism clarification (hook vs recovery ladder),
-co-requirement note linking to Standing Orders (Section 36); Decision Authority (09) —
+co-requirement note linking to Standing Orders; Decision Authority (09) —
 four tiers (Enforced, Autonomous, Propose, Escalate); Configuration Security (10) —
 threat model, MCP server auditing, CODEOWNERS.
-aiStrat/admiral/part3-enforcement.md
+aiStrat/admiral/spec/part3-enforcement.md
 ```
 
 ```
@@ -86,7 +86,7 @@ boundaries, 5-12 agents, routing intent rationale; Tool & Capability Registry (1
 per-agent tool lists including negative tool list with hallucination prevention
 rationale; Model Selection (13) — tier assignment with failure mode reasoning for
 mismatches; Protocol Integration (14) — MCP servers, A2A configuration.
-aiStrat/admiral/part4-fleet.md
+aiStrat/admiral/spec/part4-fleet.md
 ```
 
 ```
@@ -96,7 +96,7 @@ Three sections: Brain Architecture (15) — three Brain maturity levels (file �
 principle, Brain complete at Level 3 with no changes at Levels 4-5; Knowledge Protocol
 (16) — MCP tools, zero-trust access control, identity tokens; Intelligence Lifecycle
 (17) — capture triggers, review cadence, cross-project namespace.
-aiStrat/admiral/part5-brain.md
+aiStrat/admiral/spec/part5-brain.md
 ```
 
 ```
@@ -106,7 +106,7 @@ rationale, "Quality > Completeness" value, Spec-First Pipeline, chunk entry/exit
 states, completion bias defense via SO 8; Parallel Execution Strategy (19) —
 coordination patterns with contract-first rationale, divergence detection; Swarm
 Patterns (20) — advanced multi-agent topologies beyond hierarchical fleet.
-aiStrat/admiral/part6-execution.md
+aiStrat/admiral/spec/part6-execution.md
 ```
 
 ```
@@ -114,10 +114,10 @@ part7-quality.md - admiral/doctrine - 2026-03-10:
 Three sections: Quality Assurance (21) — verification levels with "What It Catches"
 rationale, self-healing loops; Failure Recovery (22) — recovery ladder with intent
 framing (preserve autonomy, escalate only when exhausted, no skipping rungs), forward
-reference to Section 37 escalation report format; Known Agent Failure Modes (23) —
+reference to Escalation Protocol report format; Known Agent Failure Modes (23) —
 comprehensive catalog of systematic fleet failure patterns with framework-level failure
 modes and diagnostic decision tree.
-aiStrat/admiral/part7-quality.md
+aiStrat/admiral/spec/part7-quality.md
 ```
 
 ```
@@ -129,7 +129,7 @@ Cost Management (26) — with cost transparency value; Fleet Health Metrics (27)
 threshold rationale (why 75% first-pass quality); Fleet Scaling & Lifecycle (28);
 Orchestrator Health Protocol (28b) — Standing Orders loss as highest-severity context
 degradation signal, context amnesia detection expanded; Inter-Fleet Governance (29).
-aiStrat/admiral/part8-operations.md
+aiStrat/admiral/spec/part8-operations.md
 ```
 
 ```
@@ -140,7 +140,7 @@ Event-Driven Operations (31) — event-driven agent definitions, context bootstr
 with headless authority narrowing as hard constraint; Fleet Evaluation & Benchmarking
 (32) — A/B testing, baseline metrics, evaluation cadence; Multi-Modal & Extended
 Capabilities (32b) — computer use, extended thinking, structured outputs, vision.
-aiStrat/admiral/part9-platform.md
+aiStrat/admiral/spec/part9-platform.md
 ```
 
 ```
@@ -150,7 +150,7 @@ per category, intent fluency as explicit skill, growth stages with "Why This Sta
 Exists" rationale; Human-Expert Routing (34) — expert roster, routing triggers,
 consultation template; Multi-Operator Governance (35) — three operator tiers
 (Owner/Operator/Observer), conflict resolution, operator handoff.
-aiStrat/admiral/part10-admiral.md
+aiStrat/admiral/spec/part10-admiral.md
 ```
 
 ```
@@ -161,7 +161,7 @@ Escalation Protocol (37) with forward reference from SO 6; Handoff Protocol (38)
 Human Referral Protocol (39); Paid Resource Authorization Protocol (40); Data
 Sensitivity Protocol (41). Concrete formats and decision ladders for each. Includes
 implementation lesson from Admiral-builds-Admiral about Standing Orders deferral.
-aiStrat/admiral/part11-protocols.md
+aiStrat/admiral/spec/part11-protocols.md
 ```
 
 ```
@@ -175,7 +175,7 @@ every framework component (hooks, Brain, fleet routing, monitoring, token broker
 attack corpus). Defines human inflection points — moments requiring human judgment,
 taste, ethics, or strategic context that agents must not work around. Includes full
 worked example of an intent-engineered task assignment.
-aiStrat/admiral/intent-engineering.md
+aiStrat/admiral/extensions/intent-engineering.md
 ```
 
 ```
@@ -191,7 +191,7 @@ Platform Integration Patterns (E) — Claude Code, Agent SDK, LangGraph/CrewAI/A
 Implementation Pitfalls section (build-order, Python-specific, general agent framework
 pitfalls from reference implementation); Framework Versioning (F); Implementation
 Status Map (G) — three implementation categories mapped to every component.
-aiStrat/admiral/appendices.md
+aiStrat/admiral/spec/appendices.md
 ```
 
 ```
@@ -206,7 +206,7 @@ persistence format (.admiral/session_state.json), Standing Orders injection
 mechanism, critical context section set (Identity/Authority/Constraints), hook
 adapter pattern (three-handler architecture), minimum dependency set by adoption
 level.
-aiStrat/admiral/reference-constants.md
+aiStrat/admiral/reference/reference-constants.md
 ```
 
 ```
@@ -216,7 +216,7 @@ metrics (governance overhead, first-pass quality, recovery success rate, context
 efficiency, enforcement coverage, coordination overhead, knowledge reuse) with targets
 and red flags. Competitive differentiators. Measurement cadence by adoption level.
 Baseline expectations across fleet maturity phases.
-aiStrat/admiral/benchmarks.md
+aiStrat/admiral/reference/benchmarks.md
 ```
 
 ```
@@ -227,7 +227,7 @@ generator. Infrastructure must handle chaos, not elegance. Defines the four pill
 chaos-first architecture principles, and the progression to indispensability. The
 Kubernetes lesson applied to agent fleets. Establishes that Admiral is the operating
 environment where AI organizations run, not a replaceable toolkit.
-aiStrat/admiral/governance-platform.md
+aiStrat/admiral/extensions/governance-platform.md
 ```
 
 ```
@@ -238,8 +238,8 @@ four severity levels and fatigue prevention. Operator intervention catalog (paus
 halt, kill, reroute, override, inject context) with audit trail. Operational workflows
 (morning review, incident response, fleet scaling). Integration points with external
 tools (Slack, GitHub, Datadog, PagerDuty). Operator-facing metrics vs. vanity metrics.
-Extends Section 30 (Observability) into an actionable product surface.
-aiStrat/admiral/fleet-control-plane.md
+Extends Fleet Observability (Part 9) into an actionable product surface.
+aiStrat/admiral/extensions/fleet-control-plane.md
 ```
 
 ```
@@ -252,7 +252,7 @@ operators set strategy). The Autonomy Matrix (different capabilities at differen
 stages in the same fleet). Trust mechanics (accumulation, per-category tracking,
 decay). Stage transition prerequisites and reversion triggers. Infrastructure
 requirements by stage. Orthogonal to adoption levels.
-aiStrat/admiral/progressive-autonomy.md
+aiStrat/admiral/extensions/progressive-autonomy.md
 ```
 
 ```
@@ -265,7 +265,7 @@ warns operators before failures happen, not after. Each feature has before/after
 contrasts, compounding effects, specification anchors, and the properties that make
 them inevitable (reveals invisible, compounds over time, becomes decision surface).
 The compounding effect between all three features. Implementation priority order.
-aiStrat/admiral/inevitable-features.md
+aiStrat/admiral/extensions/inevitable-features.md
 ```
 
 ```
@@ -281,7 +281,7 @@ novel situation response. Four-phase evaluation protocol (automated evidence col
 human judgment gates, rating determination, continuous validation). Three certification
 tiers (self-assessment, independent assessment, full certification). Evidence chain
 requirement ensures every rating is traceable to specific evidence.
-aiStrat/admiral/rating-system.md
+aiStrat/admiral/reference/rating-system.md
 ```
 
 ---
@@ -759,7 +759,7 @@ aiStrat/monitor/digests/
 
 ```
 handoff/v1.schema.json - handoff/schema - 2026-03-09:
-Canonical JSON Schema for the handoff protocol (Section 38). Defines required fields
+Canonical JSON Schema for the handoff protocol (Handoff Protocol). Defines required fields
 (from, to, via, task, deliverable, acceptance_criteria) and optional fields (context_files,
 constraints, assumptions, open_questions, metadata for domain extensions, session_handoff).
 Dual-format: JSON is canonical for validation; text rendering for human/agent consumption.
@@ -983,7 +983,7 @@ aiStrat/.claude/settings.local.json
 sales-pitch-30min-guide.md - sales/guide - 2026-03-10:
 30-minute conversation guide for presenting the Admiral Framework. Structured as:
 30-second pitch → 8-10 min market context → 12-15 min product pitch → 5-7 min
-status/roadmap → Q&A cheat sheet. References v0.3.1-alpha status, 71 agent definitions,
+status/roadmap → Q&A cheat sheet. References v0.4.0-alpha status, 71 agent definitions,
 15,000+ lines of spec. Includes objection handling for "just a spec" and "why not
 LangGraph/CrewAI" concerns.
 aiStrat/sales-pitch-30min-guide.md
@@ -991,10 +991,11 @@ aiStrat/sales-pitch-30min-guide.md
 
 ---
 
-> **Note:** Research (5 files) and thesis (3 files) documents have been relocated to
-> the repository root (`research/` and `thesis/`). They are strategy and investment
+> **Note:** Research (14 files, consolidated in v0.4.0-alpha) and thesis (6 files) documents
+> live at the repository root (`research/` and `thesis/`). They are strategy and investment
 > documents, not specification artifacts, and are excluded from the spec versioning
-> policy. See `AGENTS.md` for versioning scope details.
+> policy. Eight additional research files were moved from `aiStrat/research/` to root
+> `research/` in v0.4.0-alpha. See `AGENTS.md` for versioning scope details.
 
 ## Admiral Strategic Research (1 file)
 
@@ -1007,5 +1008,5 @@ differently, what systems made Admiral necessary, what fears disappear, new job 
 if Admiral disappears (the dependency test), and the core thesis that Admiral enables
 a new organizational form — the hybrid organization with AI agents as permanent
 operational members. Historical parallel to the invention of the corporation.
-aiStrat/research/future-operations.md
+research/future-operations.md
 ```

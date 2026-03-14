@@ -21,7 +21,14 @@ jobs:
       - name: Version consistency
         run: |
           echo "=== Checking version consistency ==="
-          VERSION="v0.3.1-alpha"
+
+          # Extract canonical version from index.md line 6
+          VERSION=$(sed -n '6p' aiStrat/admiral/spec/index.md | grep -oP 'v[0-9]+\.[0-9]+\.[0-9]+-[a-z]+')
+          if [ -z "$VERSION" ]; then
+            echo "FAIL: Could not extract version from aiStrat/admiral/spec/index.md line 6"
+            exit 1
+          fi
+          echo "Canonical version: $VERSION"
 
           ERRORS=0
 
@@ -79,6 +86,7 @@ jobs:
       - name: YAML validation
         run: |
           echo "=== Validating YAML files ==="
+          pip install pyyaml --quiet
           ERRORS=0
 
           while IFS= read -r file; do
@@ -123,9 +131,8 @@ jobs:
 
           if [ $ERRORS -gt 0 ]; then
             echo ""
-            echo "WARNING: $ERRORS broken link(s) found"
-            # Don't fail the build for link issues — warn only
-            exit 0
+            echo "FAILED: $ERRORS broken link(s) found"
+            exit 1
           else
             echo "PASSED: All checked links resolve"
           fi

@@ -1,4 +1,4 @@
-# Admiral Framework v0.3.0-alpha — Comprehensive Remediation Plan
+# Admiral Framework v0.3.1-alpha — Comprehensive Remediation Plan
 
 ## Context
 

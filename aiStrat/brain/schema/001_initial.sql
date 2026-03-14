@@ -1,6 +1,6 @@
--- Admiral Framework v0.3.1-alpha
+-- Admiral Framework v0.4.0-alpha
 -- Fleet Brain Schema
--- Reference: admiral/part5-brain.md, Section 15
+-- Reference: admiral/spec/part5-brain.md, Brain Architecture
 --
 -- Prerequisites:
 --   CREATE DATABASE fleet_brain;
@@ -127,7 +127,7 @@ REVOKE TRUNCATE ON audit_log FROM PUBLIC;
 -- Defense-in-depth: reject entries containing obvious PII/secret patterns
 -- at the database level. The application sanitizer is the primary
 -- enforcement point; this trigger is a safety net.
--- Reference: admiral/part11-protocols.md, Section 41.
+-- Reference: admiral/spec/part11-protocols.md, Data Sensitivity Classification.
 
 CREATE OR REPLACE FUNCTION reject_sensitive_data()
 RETURNS TRIGGER AS $$

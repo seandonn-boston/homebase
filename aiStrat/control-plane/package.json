@@ -1,0 +1,15 @@
+{
+  "name": "@admiral/control-plane",
+  "version": "0.2.0-alpha",
+  "description": "Reference implementation sketch for the Admiral Fleet Control Plane (Level 1-2)",
+  "main": "server.ts",
+  "scripts": {
+    "start": "npx tsx server.ts",
+    "typecheck": "npx tsc --noEmit"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "tsx": "^4.0.0"
+  }
+}

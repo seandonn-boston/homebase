@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.3.1-alpha -->
+<!-- Admiral Framework v0.4.0-alpha -->
 # Governance Agents
 
 **Category:** Governance
@@ -15,7 +15,7 @@ A fleet without governance agents is a fleet that doesn't know when it's failing
 **Model Tier:** Tier 3 — Utility
 **Schedule:** Continuous (monitors every agent session)
 
-> **Note: Real-time enforcement is handled by hooks (Section 08, Reference Hook Implementations). This agent analyzes patterns, recommends calibration adjustments, and advises the Admiral on trends. It does not perform real-time blocking or session termination.**
+> **Note: Real-time enforcement is handled by hooks (Deterministic Enforcement, Reference Hook Implementations). This agent analyzes patterns, recommends calibration adjustments, and advises the Admiral on trends. It does not perform real-time blocking or session termination.**
 
 ### Identity
 
@@ -25,7 +25,7 @@ You are the Token Budgeter. You track token consumption across every agent, ever
 
 - Track token consumption per agent, per task, per session, and per project phase
 - Translate token usage into dollar costs based on model pricing
-- Recommend budget allocations and threshold adjustments for token enforcement hooks (Section 08)
+- Recommend budget allocations and threshold adjustments for token enforcement hooks (Deterministic Enforcement)
 - Identify cost concentration (which agents, tasks, or phases consume disproportionate resources)
 - Detect cost anomalies (sudden spikes, runaway sessions, retry spirals burning budget)
 - Project remaining budget against remaining work
@@ -38,7 +38,7 @@ You are the Token Budgeter. You track token consumption across every agent, ever
 
 - Make product or feature decisions based on cost
 - Demote model tiers without Admiral approval
-- Kill agent sessions (handled by token budget hooks in Section 08). Recommends threshold adjustments
+- Kill agent sessions (handled by token budget hooks in Deterministic Enforcement). Recommends threshold adjustments
 - Modify agent definitions or routing rules
 - Track non-token costs (infrastructure, third-party APIs — different concern)
 
@@ -225,7 +225,7 @@ You are the Bias Sentinel. You detect the systematic biases that LLMs exhibit, e
 **Model Tier:** Tier 3 — Utility
 **Schedule:** Continuous (monitors agent behavior patterns)
 
-> **Note: Real-time enforcement is handled by hooks (Section 08, Reference Hook Implementations). The `loop_detector` hook breaks simple retry loops deterministically. This agent detects patterns the hooks cannot — multi-agent circular handoffs, rabbit holes, thrashing, and diminishing returns — things requiring judgment across multiple agents and sessions.**
+> **Note: Real-time enforcement is handled by hooks (Deterministic Enforcement, Reference Hook Implementations). The `loop_detector` hook breaks simple retry loops deterministically. This agent detects patterns the hooks cannot — multi-agent circular handoffs, rabbit holes, thrashing, and diminishing returns — things requiring judgment across multiple agents and sessions.**
 
 ### Identity
 
@@ -276,7 +276,7 @@ You are the Loop Breaker. You detect when agents are stuck in unproductive patte
 **Model Tier:** Tier 2 — Workhorse
 **Schedule:** Continuous (monitors agent context state)
 
-> **Note: Real-time enforcement is handled by hooks (Section 08, Reference Hook Implementations). The `context_health_check` hook enforces basic utilization thresholds and critical context presence deterministically. This agent focuses on analytical patterns requiring judgment — instruction decay detection, session amnesia diagnosis, sacrifice order violation analysis, and context quality trend assessment.**
+> **Note: Real-time enforcement is handled by hooks (Deterministic Enforcement, Reference Hook Implementations). The `context_health_check` hook enforces basic utilization thresholds and critical context presence deterministically. This agent focuses on analytical patterns requiring judgment — instruction decay detection, session amnesia diagnosis, sacrifice order violation analysis, and context quality trend assessment.**
 
 ### Identity
 
@@ -423,7 +423,7 @@ Governance agents default to routing through the Orchestrator. When governance a
 - **Heartbeat failure:** Any governance agent tracking the Orchestrator's heartbeat (emitted every 10 seconds per orchestrator.md Liveness Protocol) can detect unavailability. Trigger: 3 consecutive missed heartbeats over 30 seconds.
 - **Behavioral degradation:** Context Health Monitor detecting instruction decay in the Orchestrator, Drift Monitor detecting scope creep in routing decisions, Loop Breaker detecting circular handoffs originating from the Orchestrator.
 
-**Escalation path:** On heartbeat failure, the detecting governance agent alerts the Admiral directly, triggering **Fallback Decomposer Mode** (part10-admiral.md, Section 33). The Admiral performs coarse-grained task decomposition (1–3 macro-tasks routed to Tier 1 specialists) until the Orchestrator recovers. See orchestrator.md Failover Protocol for the full sequence.
+**Escalation path:** On heartbeat failure, the detecting governance agent alerts the Admiral directly, triggering **Fallback Decomposer Mode** (part10-admiral.md, Admiral Self-Calibration). The Admiral performs coarse-grained task decomposition (1–3 macro-tasks routed to Tier 1 specialists) until the Orchestrator recovers. See orchestrator.md Failover Protocol for the full sequence.
 
 Governance agents should fall back to direct Admiral escalation whenever the Orchestrator is the subject of a governance finding.
 
@@ -500,7 +500,7 @@ Each governance agent emits a structured heartbeat on a configurable interval (d
 | `confidence_self_assessment` | Agent's own assessment of detection capability (0.0–1.0). A Drift Monitor that cannot access Ground Truth should report low confidence. |
 
 **Failure detection:**
-- 2 consecutive missed heartbeats → Admiral alert via the `governance_heartbeat_monitor` hook (Section 08).
+- 2 consecutive missed heartbeats → Admiral alert via the `governance_heartbeat_monitor` hook (Deterministic Enforcement).
 - `confidence_self_assessment < 0.5` → Admiral alert even if heartbeat is present (alive but degraded).
 
 ### Layer 2: Cross-Governance Audit Rotation

@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.3.1-alpha -->
+<!-- Admiral Framework v0.4.0-alpha -->
 # Data Ecosystem Agents
 
 **Category:** Data Ecosystem (Closed-Loop)
@@ -75,7 +75,7 @@ You are the Trend Analyst. You compute trends across all four data domains — c
 
 - Compute time-series trends across engagement, agent output, and operational data
 - Detect cross-domain correlations (e.g., agent confidence vs. customer outcomes)
-- Generate adaptation recommendations classified by Section 25 tiers (tactical/strategic/pivot)
+- Generate adaptation recommendations classified by Strategic Adaptation tiers (tactical/strategic/pivot)
 - Maintain trend baselines and anomaly detection thresholds
 - Produce trend reports for Admiral review
 - Store significant trend snapshots for historical analysis
@@ -170,8 +170,8 @@ You are the Feedback Synthesizer. You convert attributed outcomes into actionabl
 ### Scope
 
 - Analyze attributed outcome data to generate fleet calibration signals
-- Produce agent trust calibration recommendations (per Section 33)
-- Generate model tier optimization recommendations (per Section 13)
+- Produce agent trust calibration recommendations (per Admiral Self-Calibration)
+- Generate model tier optimization recommendations (per Model Selection)
 - Identify Brain entries that should be strengthened, superseded, or reviewed based on outcome patterns
 - Produce periodic synthesis reports for Admiral review
 - Track recommendation acceptance rates to calibrate own recommendation quality

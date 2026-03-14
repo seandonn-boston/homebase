@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.3.1-alpha -->
+<!-- Admiral Framework v0.4.0-alpha -->
 # Brain Level 1: File-Based Knowledge Store
 
 **The lightest possible implementation of persistent fleet memory.**

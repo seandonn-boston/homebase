@@ -1,6 +1,30 @@
 # Admiral runtime session state (ephemeral, session-scoped)
 .admiral/
 
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
 # Monitor: state and digests are committed deliberately via CI,
 # but seed candidates should be reviewed before committing
 # aiStrat/monitor/digests/seed-candidates-*.py

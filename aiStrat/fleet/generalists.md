@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.3.1-alpha -->
+<!-- Admiral Framework v0.4.0-alpha -->
 # Generalists
 
 **Overhead and coordination agents that keep the fleet operational.**
@@ -21,7 +21,7 @@ Generalists share these traits:
 
 4. **Escalation receiver.** Generalists are the first line for escalations from specialists. They either resolve the issue (rerouting, decomposition, priority changes) or pass it up to the Admiral.
 
-Generalists also follow Standing Orders 11-15 (Context Discovery, Zero-Trust Self-Protection, Bias Awareness, Compliance/Ethics, Pre-Work Validation). See [`admiral/part11-protocols.md`](../admiral/part11-protocols.md) for full specifications.
+Generalists also follow Standing Orders 11-15 (Context Discovery, Zero-Trust Self-Protection, Bias Awareness, Compliance/Ethics, Pre-Work Validation). See [`admiral/part11-protocols.md`](../admiral/spec/part11-protocols.md) for full specifications.
 
 -----
 
