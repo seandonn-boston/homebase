@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.3.0-alpha -->
+<!-- Admiral Framework v0.3.1-alpha -->
 # Admiral Framework — File Manifest
 
 **71 files across 15 groups | Last modified: 2026-03-13**

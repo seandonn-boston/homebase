@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.3.0-alpha -->
+<!-- Admiral Framework v0.3.1-alpha -->
 # Simulation & Adversarial Agents
 
 **Category:** Simulation & Adversarial

@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.3.0-alpha -->
+<!-- Admiral Framework v0.3.1-alpha -->
 # Continuous AI Landscape Monitor — Architecture Specification
 
 **Automated surveillance of the AI agent ecosystem — with an immune system.**

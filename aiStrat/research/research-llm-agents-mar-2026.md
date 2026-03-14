@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.3.0-alpha -->
+<!-- Admiral Framework v0.3.1-alpha -->
 # State of the Art: LLM Agents & AI Coding Tools — March 2026
 
 A comprehensive research dossier of the most impressive LLM agent projects, AI coding tools, and autonomous systems as of March 2026. Evaluated on **ingenuity, effectiveness, integrity, security, creativity, and impressiveness**. Ordered in **reverse chronological order** (most recent developments first). Sources limited to reputable platforms (GitHub, arXiv, major tech publications).

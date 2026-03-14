@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.3.0-alpha -->
+<!-- Admiral Framework v0.3.1-alpha -->
 # PART 7 — QUALITY
 
 *How the fleet maintains standards and handles failure.*

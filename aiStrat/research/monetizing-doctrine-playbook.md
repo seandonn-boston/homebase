@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.3.0-alpha -->
+<!-- Admiral Framework v0.3.1-alpha -->
 # How to Package and Sell an Operating Philosophy
 
 **Date:** March 13, 2026
