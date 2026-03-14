@@ -685,6 +685,12 @@ This appendix maps every major framework component to its real-world implementat
 
 ### Version History
 
+**v0.3.1-alpha (March 2026)**
+
+- **Organizational thesis added.** Created `admiral/thesis.md` articulating the core proposition that AI agents are permanent operational infrastructure, not transient tools.
+- **Future operations analysis added.** Created `research/future-operations.md` mapping the transition from current state to full Admiral deployment.
+- **Version header consistency.** Applied `v0.3.1-alpha` headers to all spec files within `aiStrat/` that were missed during the v0.3.0 → v0.3.1 bump. CI version check now matches the actual framework version.
+
 **v0.3.0-alpha (March 2026)**
 
 - **Brain restructured to 5 levels.** Brain is fully complete at Level 3 (Postgres + pgvector + MCP + identity tokens + zero-trust). Levels 4-5 add fleet-level and enterprise capabilities without modifying the Brain. Created `brain/level3-spec.md`.

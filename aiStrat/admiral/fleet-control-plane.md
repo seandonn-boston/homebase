@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.3.0-alpha -->
+<!-- Admiral Framework v0.3.1-alpha -->
 # FLEET CONTROL PLANE
 
 *The real-time operational surface where operators manage AI workforces.*
