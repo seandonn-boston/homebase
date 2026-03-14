@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.3.0-alpha -->
+<!-- Admiral Framework v0.3.1-alpha -->
 # The Brain — Architecture Specification
 
 **Long-term fleet memory: Postgres + pgvector, accessible via MCP.**

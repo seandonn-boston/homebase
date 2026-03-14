@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.3.0-alpha -->
+<!-- Admiral Framework v0.3.1-alpha -->
 # AGENTS.md
 
 This file provides guidance to any AI coding agent working with this repository. It is the canonical, model-agnostic instruction file for the Admiral Framework. Tool-specific entry points (e.g., `CLAUDE.md` for Claude Code) should reference this file and add only tool-specific configuration.
@@ -37,7 +37,7 @@ aiStrat is the **Admiral Framework** — a comprehensive specification for AI ag
 
 ## Versioning
 
-- **Current version: v0.3.0-alpha** (pre-release, not yet published)
+- **Current version: v0.3.1-alpha** (pre-release, not yet published)
 - The framework uses [semantic versioning](https://semver.org/) with pre-release labels: `MAJOR.MINOR.PATCH[-label]`
 - The authoritative version string lives in `admiral/index.md` (line 6). All other version references must match it.
 - **Version appears in 3 locations:** `admiral/index.md` (line 6, display version), `admiral/appendices.md` (Appendix F footer), and as an HTML comment `<!-- Admiral Framework vX.Y.Z-label -->` on line 1 of every `.md` file within `aiStrat/` (or SQL comment `-- Admiral Framework vX.Y.Z-label` on line 1 of every `.sql` file).

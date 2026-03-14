@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.3.0-alpha -->
+<!-- Admiral Framework v0.3.1-alpha -->
 # Admiral Framework — File Manifest
 
 **102 files across 22 groups | Last modified: 2026-03-13**
@@ -906,7 +906,7 @@ aiStrat/.claude/settings.local.json
 sales-pitch-30min-guide.md - sales/guide - 2026-03-10:
 30-minute conversation guide for presenting the Admiral Framework. Structured as:
 30-second pitch → 8-10 min market context → 12-15 min product pitch → 5-7 min
-status/roadmap → Q&A cheat sheet. References v0.3.0-alpha status, 71 agent definitions,
+status/roadmap → Q&A cheat sheet. References v0.3.1-alpha status, 71 agent definitions,
 15,000+ lines of spec. Includes objection handling for "just a spec" and "why not
 LangGraph/CrewAI" concerns.
 aiStrat/sales-pitch-30min-guide.md

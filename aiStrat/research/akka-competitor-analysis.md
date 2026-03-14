@@ -65,7 +65,7 @@ Both address the core question: **"How do you run teams of AI agents safely at s
 | **Decision authority** | Not explicitly modeled | Four-tier taxonomy: Enforced → Autonomous → Propose → Escalate |
 | **Failure modes** | Infrastructure failures (crashes, network, scaling) | Agent-specific failures (hallucination, sycophantic drift, scope creep, retry loops) |
 | **Adoption model** | Deploy the platform, build on the SDK | Progressive: Level 1 (single agent, 30 min) → Level 4 (full framework) |
-| **Maturity** | Production-grade, 15+ years heritage | v0.2.0-alpha specification |
+| **Maturity** | Production-grade, 15+ years heritage | v0.3.1-alpha specification |
 | **Business model** | Commercial platform with pricing tiers | TBD (consulting, licensing, SaaS tooling, training) |
 
 ---

@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.3.0-alpha -->
+<!-- Admiral Framework v0.3.1-alpha -->
 # {Agent Name}
 
 **Category:** {Category name — e.g., Command & Coordination, Engineering — Frontend, Governance}
