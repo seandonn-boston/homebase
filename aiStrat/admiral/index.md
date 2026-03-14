@@ -17,6 +17,20 @@ Pick the parts you need. A two-person team might use only the enforcement spectr
 
 -----
 
+## Thesis
+
+Admiral is **the operational infrastructure for AI workforces.**
+
+Infrastructure platforms succeed when they enable a new way of operating, not just a new tool. Kubernetes enabled thousands of containers. Stripe enabled global payments overnight. Datadog enabled massive microservice architectures. Each one changed how organizations behaved.
+
+Admiral enables a new form of organization: **the hybrid organization where AI agents are permanent, persistent members of the operational structure** — not tools invoked on demand, but workers with roles, responsibilities, memory, governance, and accountability. This form of organization is currently too dangerous to run. Five structural gaps prevent it: session amnesia, unenforced constraints, undetected compound failures, all-or-nothing trust, and no safe pause/resume. Admiral closes each one.
+
+The new behavior Admiral enables: *treating AI capacity as an operational workforce, not a feature.*
+
+See [`thesis.md`](thesis.md) for the full analysis and [`research/future-operations.md`](../research/future-operations.md) for the underlying thought experiment.
+
+-----
+
 ## Adoption Levels
 
 You don't need to read 200 pages before deploying your first agent. Start at Level 1. Graduate when you hit the limits of your current level.
@@ -110,6 +124,7 @@ This framework is split across fourteen files. This index is the entry point. Ea
 | File | Contents |
 |---|---|
 | [`index.md`](index.md) | This file. Operating model, glossary, table of contents. |
+| [`thesis.md`](thesis.md) | The organizational thesis: why Admiral exists and what new form of organization it enables. |
 | [`part1-strategy.md`](part1-strategy.md) | Sections 01–03: Mission, Boundaries, Success Criteria |
 | [`part2-context.md`](part2-context.md) | Sections 04–07: Context Engineering, Ground Truth, Context Window Strategy, Configuration File Strategy |
 | [`part3-enforcement.md`](part3-enforcement.md) | Sections 08–10: Deterministic Enforcement, Decision Authority, Configuration Security |

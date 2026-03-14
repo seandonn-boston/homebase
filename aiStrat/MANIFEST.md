@@ -1,13 +1,13 @@
 <!-- Admiral Framework v0.3.1-alpha -->
 # Admiral Framework — File Manifest
 
-**107 files across 22 groups | Last modified: 2026-03-14**
+**109 files across 22 groups | Last modified: 2026-03-14**
 
 This is the semantic catalog of every file in the Admiral Framework. Each entry describes what the file contains, verified against the source. Update this manifest when files are added, removed, renamed, or when their content changes materially.
 
 ---
 
-## Admiral Doctrine (21 files)
+## Admiral Doctrine (22 files)
 
 ```
 index.md - admiral/doctrine - 2026-03-10:
@@ -31,6 +31,18 @@ three-audience reading guide (humans, LLM agents, machines), full table of conte
 (41 sections + 2 sub-sections + 7 appendices), and relationship map to
 fleet/brain/monitor directories.
 aiStrat/admiral/index.md
+```
+
+```
+thesis.md - admiral/doctrine - 2026-03-14:
+The organizational thesis. Defines Admiral as "the operational infrastructure for
+AI workforces." Articulates the new form of organization Admiral enables (hybrid
+organizations with AI agents as permanent operational members), the five structural
+gaps that currently prevent it (session amnesia, unenforced constraints, undetected
+compound failures, all-or-nothing trust, no safe pause/resume), the behavior change
+Admiral enables, the dependency test, and the historical parallel to the invention
+of the corporation. Links to research/future-operations.md for full analysis.
+aiStrat/admiral/thesis.md
 ```
 
 ```
@@ -983,3 +995,17 @@ aiStrat/sales-pitch-30min-guide.md
 > the repository root (`research/` and `thesis/`). They are strategy and investment
 > documents, not specification artifacts, and are excluded from the spec versioning
 > policy. See `AGENTS.md` for versioning scope details.
+
+## Admiral Strategic Research (1 file)
+
+```
+future-operations.md - research/strategic - 2026-03-14:
+"The Day After Admiral Becomes Default" — strategic futures analysis. Concrete thought
+experiment imagining operational reality five years out: what engineering teams do
+differently, what systems made Admiral necessary, what fears disappear, new job roles
+(Fleet Admiral, Governance Engineer, Brain Curator, Fleet Ops), what breaks immediately
+if Admiral disappears (the dependency test), and the core thesis that Admiral enables
+a new organizational form — the hybrid organization with AI agents as permanent
+operational members. Historical parallel to the invention of the corporation.
+aiStrat/research/future-operations.md
+```
