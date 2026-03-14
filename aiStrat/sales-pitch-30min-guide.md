@@ -7,11 +7,11 @@
 
 ## ELEVATOR PITCH (30 seconds)
 
-> "AI agents now execute complex tasks autonomously for hours — not copilots, but independent workers. Every company is about to run fleets of them. The unsolved problem is operations: who does what, with what authority, under what constraints, and how does the system learn over time.
+> "AI agents now execute complex tasks autonomously for hours — not copilots, but independent workers. Every company is about to run fleets of them. The unsolved problem isn't building agents. It's that humans have no way to see what agents are doing, control how they operate, or learn from what happened.
 >
-> Admiral is the operating system for AI work — role definitions, decision authority, enforcement, observability, and institutional memory — designed from scratch for how agents actually behave. Model-agnostic, platform-agnostic, and designed for incremental adoption.
+> Admiral gives humans operational visibility and control over autonomous AI work — who does what, with what authority, under what constraints, and how the system learns over time. Model-agnostic, platform-agnostic, and designed for incremental adoption.
 >
-> The $660+ billion being invested in AI infrastructure this year creates demand for the operations layer that doesn't yet exist."
+> The $660+ billion being invested in AI infrastructure this year creates demand for this layer. Agents are getting deployed. The humans running them are flying blind."
 
 ---
 
@@ -46,7 +46,7 @@
 - AI governance market: **$940M in 2025**, projected **$7.4B by 2030** (51% CAGR).
 
 **The key framing:**
-> "The capability question is settled. The open question is operations — how do you run autonomous agents doing real work at scale? That's where Admiral comes in."
+> "The capability question is settled. The open question is human control — how do the people responsible for these agents see what's happening, set boundaries, and intervene when needed? That's where Admiral comes in."
 
 ---
 
@@ -54,11 +54,13 @@
 
 ### Transition Statement
 
-> "Everyone figured out how to build agents. Nobody figured out how to run fleets of them safely. That's like having fifty new employees show up on Monday with no org chart, no manager, and no rules. Admiral solves that."
+> "Everyone figured out how to build agents. Nobody figured out how to give humans visibility and control once those agents are running. That's like deploying fifty autonomous systems with no dashboards, no kill switches, and no audit trail. Admiral solves that."
 
 ### What Admiral Is
 
-> "Admiral is the operating system for AI work. Not just governance — the full operational environment: execution, coordination, observability, enforcement, and institutional memory. It sits on top of any AI agent platform and provides the operations layer that none of them include."
+> "Admiral gives humans operational visibility and control over autonomous AI work. It answers the questions that every team running agents needs answered: What is each agent doing? What authority does it have? What happens when something goes wrong? And how does the system get smarter over time?
+>
+> It sits on top of any AI agent platform — model-agnostic, platform-agnostic — and provides the human control layer that none of them include."
 
 ### The Five Pillars
 
@@ -72,8 +74,8 @@
 - Key architectural distinction: *mechanical enforcement* (hooks, pre/post-conditions) vs. *instructional guidance* (system prompts, soft constraints) — these are fundamentally different enforcement classes
 - Tiered escalation policies scoped per role and per action type
 
-**3. Observability & Control Plane**
-- Five-layer monitoring immune system
+**3. Visibility & Control Plane**
+- Five-layer monitoring immune system — humans see what agents are doing in real time
 - Cost tracking, failure mode detection, and fleet-wide health metrics
 - Trace what happened and why, stop runaway execution, debug failures
 - Useful from day one with a single agent — no fleet required
@@ -94,7 +96,7 @@
 
 **The market gap:**
 
-> "Every company deploying AI agents is building operations from scratch. There's no standard playbook, no shared abstraction layer. Every team is reinventing role definitions, escalation logic, memory, and security.
+> "Every company deploying AI agents is building visibility and control from scratch. There's no standard playbook. Every team is reinventing role definitions, escalation logic, memory, and security — because no existing tool answers the question 'what are my agents doing and how do I control them?'
 >
 > Admiral is positioning to be that standard. Model-agnostic, platform-agnostic — it works on top of any AI agent framework."
 
@@ -104,11 +106,11 @@ The space is crowding from two directions — agent frameworks adding governance
 
 | Category | Players | What they do | What they don't do |
 |---|---|---|---|
-| **Agent frameworks** | CrewAI, LangGraph, OpenAI Agents SDK | Build and run agents | Governance doctrine, role architecture, enforcement spectrum |
-| **Big tech platforms** | Microsoft Agent Framework, Google ADK + Vertex AI | Full-stack agent infra with bundled governance features | Operational doctrine, institutional memory, agent-specific failure modes |
-| **Agent team management** | OpenAI Frontier (launched March 11, 2026) | Agent identity, permissions, performance tracking | Model-agnostic support, enforcement spectrum, fleet doctrine |
-| **AI governance** | Credo AI, Zenity, IBM watsonx.governance | Compliance, risk assessment, agent registries | Operations doctrine, role architecture depth, decision authority modeling |
-| **Enterprise infrastructure** | Akka | Stateful agent runtime with fault tolerance and memory | Governance specification, role architecture, standing orders |
+| **Agent frameworks** | CrewAI, LangGraph, OpenAI Agents SDK | Build and run agents | Human visibility, role architecture, enforcement spectrum |
+| **Big tech platforms** | Microsoft Agent Framework, Google ADK + Vertex AI | Full-stack agent infra with bundled governance features | Operational visibility, institutional memory, agent-specific failure modes |
+| **Agent team management** | OpenAI Frontier (launched March 11, 2026) | Agent identity, permissions, performance tracking | Model-agnostic support, enforcement spectrum, fleet-wide visibility |
+| **AI governance** | Credo AI, Zenity, IBM watsonx.governance | Compliance, risk assessment, agent registries | Operational control, role architecture depth, decision authority modeling |
+| **Enterprise infrastructure** | Akka | Stateful agent runtime with fault tolerance and memory | Human control layer, role architecture, standing orders |
 
 **Admiral's differentiators — things no competitor provides:**
 - **71 pre-defined roles** with interface contracts and authority scoping
@@ -119,7 +121,7 @@ The space is crowding from two directions — agent frameworks adding governance
 
 **The positioning:**
 
-> "Other tools help you build or run agents. Admiral is the operations layer that governs the fleet — defines roles, scopes authority, enforces policies mechanistically, and accumulates institutional knowledge. It's model-agnostic and platform-agnostic, which matters in a market with 50+ frameworks and three competing big tech platforms."
+> "Other tools help you build or run agents. Admiral is the layer that gives humans visibility and control over the fleet — see what's happening, define who does what, scope authority, enforce policies mechanistically, and accumulate institutional knowledge. It's model-agnostic and platform-agnostic, which matters in a market with 50+ frameworks and three competing big tech platforms."
 
 ---
 
@@ -144,7 +146,7 @@ The space is crowding from two directions — agent frameworks adding governance
 
 **What's next:**
 - Ship a minimal control plane — a reference implementation of standing orders, enforcement spectrum, and fleet observability for a single agent
-- Prove the wedge: observability and control are immediately useful before fleet governance matters
+- Prove the wedge: visibility and control are immediately useful before fleet governance matters
 - Let the spec pull adoption as teams scale their agent usage
 
 **Progressive adoption model:**
@@ -157,7 +159,7 @@ The space is crowding from two directions — agent frameworks adding governance
 
 ### The Market Timing Argument
 
-> "February 2026 demonstrated agent capability at a level the market hadn't priced in. 40% of agentic AI deployments will be canceled by 2027 due to governance failures. The companies that succeed will be the ones with an operations layer. I have that layer already designed. The question is how to get it into their hands."
+> "February 2026 demonstrated agent capability at a level the market hadn't priced in. 40% of agentic AI deployments will be canceled by 2027 — not because the agents can't do the work, but because humans can't see what they're doing or control how they operate. I've designed the visibility and control layer. The question is how to get it into their hands."
 
 ---
 
@@ -170,13 +172,13 @@ The space is crowding from two directions — agent frameworks adding governance
 → Multiple paths: hosted control plane (SaaS), enterprise runtime (on-prem), consulting/implementation, certification/training, marketplace for agent definitions. The spec is the foundation — monetization layers sit above it. *(Be honest if you haven't finalized this — it shows you're thinking about it seriously.)*
 
 **"What's your competitive moat?"**
-→ First-mover on the operations layer specifically. Model-agnostic and platform-agnostic (not locked to one vendor). The depth — 15,000+ lines of doctrine — is hard to replicate. The enforcement spectrum insight (hooks vs. instructions) is non-obvious and validated. And the 71 pre-defined roles with interface contracts don't exist anywhere else.
+→ First-mover on the visibility and control layer specifically — not building agents, not compliance checkboxes, but the operational layer humans need to run agents safely. Model-agnostic and platform-agnostic (not locked to one vendor). The depth — 15,000+ lines of doctrine — is hard to replicate. The enforcement spectrum insight (hooks vs. instructions) is non-obvious and validated. And the 71 pre-defined roles with interface contracts don't exist anywhere else.
 
 **"Is this a real market?"**
 → $660B+ being spent on AI infrastructure in 2026. Every dollar creates downstream demand for operations and governance. The $2 trillion repricing proves the market believes agents are replacing seats. The Gartner stat — 40% of deployments canceled by 2027 due to poor controls — proves governance is the bottleneck. The AI governance market alone is projected at $7.4B by 2030 (51% CAGR).
 
 **"What about Microsoft / OpenAI / Google?"**
-→ They provide governance *features* but not governance *doctrine*. Microsoft Agent Framework has RBAC and audit logs. OpenAI Frontier has permissions and performance tracking. Google Vertex AI has tool governance. None of them provide role architecture, operational doctrine, enforcement spectrum, decision authority modeling, or institutional memory design. They're building the highways — Admiral is the traffic law, the driver's manual, and the DMV.
+→ They provide governance *features* but not operational *visibility and control*. Microsoft Agent Framework has RBAC and audit logs. OpenAI Frontier has permissions and performance tracking. Google Vertex AI has tool governance. But none of them answer the full question: what are my agents doing, what authority do they have, how do I enforce boundaries mechanistically, and how does the system learn? They give you dials. Admiral gives you the control room.
 
 **"Why not just use CrewAI or LangGraph?"**
 → CrewAI and LangGraph help you *build* agents. Admiral helps you *govern the fleet*. They're complementary — you'd run CrewAI agents under Admiral governance. CrewAI has agent roles but no decision authority model, no enforcement spectrum, no institutional memory architecture, and no operational doctrine. LangGraph has monitoring but treats governance as observability tooling, not operational framework.
@@ -188,9 +190,9 @@ The space is crowding from two directions — agent frameworks adding governance
 
 ## CLOSING MOVE
 
-> "AI commoditized execution, knowledge retrieval, and speed. What it made *more* valuable is judgment, architectural thinking, and operational design. Admiral is built on that insight — agents handle execution, but humans define governance, set boundaries, and make the judgment calls about what 'good' looks like.
+> "AI commoditized execution, knowledge retrieval, and speed. What it made *more* valuable is judgment, architectural thinking, and operational design. Admiral is built on that insight — agents handle execution, but humans need to see what's happening, set boundaries, and make the judgment calls about what 'good' looks like.
 >
-> This isn't about restricting agents. It's about making it *possible* to run them at scale. An operating system doesn't exist to prevent programs from misbehaving — it exists to make programs possible in the first place. Admiral is the operating system for AI work."
+> The original framing was governance. But the real problem is bigger than governance: humans need operational visibility and control over autonomous AI work. Governance is part of it — but so is observability, coordination, institutional memory, and enforcement. Admiral is the layer that gives humans all of that."
 
 ---
 
