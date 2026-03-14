@@ -303,20 +303,32 @@ AI Safety Levels (ASL-1 through ASL-4+), Frontier Safety Roadmaps with transpare
 ### What Exists Today vs. What Is Missing
 
 - There is a surfeit of high-level principles and a growing body of security controls
-- **No single end-to-end framework** spans from organizational philosophy through to implementable technical controls
-- **Multi-agent governance** (agent-to-agent trust, orchestration drift, semantic misalignment) is the least mature area -- only the WEF paper seriously addresses it
-- **Agent identity and authorization** is a critical gap that only NIST's NCCoE work and CSA's ATF are beginning to address
+- **No single end-to-end framework** spans from organizational philosophy through to implementable technical controls — except Admiral, which covers all four layers (philosophy, governance, controls, threat response) in its 11-part doctrine
+- **Multi-agent governance** (agent-to-agent trust, orchestration drift, semantic misalignment) is the least mature area -- only the WEF paper seriously addresses it. Admiral's routing rules, interface contracts, and Standing Orders address orchestration drift; the handoff protocol addresses coordination
+- **Agent identity and authorization** is a critical gap that only NIST's NCCoE work and CSA's ATF are beginning to address. Admiral's identity token specification and zero-trust access control predate both
 - **No framework adequately addresses liability allocation** in multi-party agent chains (who is responsible when Agent A calls Agent B which calls Agent C and something breaks?)
 - The OWASP threat taxonomy and Forrester's regulatory crosswalk are the most practically useful artifacts for security teams today
 - McKinsey's organizational lens and the WEF's classification system are the most useful artifacts for strategic leaders
 
 ### Key Convergent Concepts Across All Frameworks
 
-- **"Least Agency"** (not just least privilege, but least autonomy)
-- **Risk-proportional governance** (more autonomy = more oversight)
-- **Agent identity** as a first-class governance concern
-- **Human accountability** as non-negotiable, even as human involvement decreases
-- **Governance must be continuous and embedded**, not periodic and document-based
+- **"Least Agency"** (not just least privilege, but least autonomy) — Admiral: decision authority tiers + Standing Orders
+- **Risk-proportional governance** (more autonomy = more oversight) — Admiral: progressive adoption L1-L4
+- **Agent identity** as a first-class governance concern — Admiral: identity tokens, zero-trust verification
+- **Human accountability** as non-negotiable, even as human involvement decreases — Admiral: Human Inflection Point, Escalate tier
+- **Governance must be continuous and embedded**, not periodic and document-based — Admiral: enforcement spectrum (hooks as continuous enforcement)
+
+### Where Admiral Fills the Gaps
+
+| Gap in the Landscape | Admiral's Answer |
+|---|---|
+| No end-to-end framework | 11-part doctrine: Strategy → Context → Enforcement → Fleet → Brain → Execution → Quality → Operations → Platform → Admiral → Protocols |
+| No enforcement class distinction | Hooks vs. instructions — mechanical enforcement that fires 100% of the time vs. advisory guidance that degrades under context pressure |
+| No ready-to-deploy role catalog | 71 pre-defined agents with routing rules, interface contracts, and capability declarations |
+| No institutional memory spec | Brain architecture with vector embeddings, retrieval confidence, quarantine immune system |
+| No invariant behavioral rules | 15 Standing Orders with explicit priority hierarchy (Safety > Authority > Process > Communication > Scope) |
+| No agent-specific failure taxonomy | 20 documented failure modes with operational responses (governance agents, recovery ladders) |
+| No formalized instruction methodology | Intent engineering: Goal, Priority, Constraints, Failure Modes, Judgment Boundaries, Values |
 
 ---
 

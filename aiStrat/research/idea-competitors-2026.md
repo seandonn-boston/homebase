@@ -272,6 +272,133 @@ Their framing: "Autonomous agents introduce risks legacy governance can't detect
 
 ---
 
+### 9. Forrester AEGIS — The CISO's Governance Spec
+
+**Threat to the idea: HIGH**
+
+Forrester's AEGIS (Agentic AI Enterprise Guardrails for Information Security) is a 39-control framework across six domains, with explicit regulatory crosswalks to EU AI Act, NIST AI RMF, OWASP, MITRE ATLAS, and ISO 42001.
+
+**What they're saying that sounds like Admiral:**
+
+- "CISOs must pivot from securing systems to securing *intent*" — this is governance-as-operating-philosophy, not governance-as-checklist
+- **"Least agency"** — not just least privilege, but least *autonomy*. Admiral uses this exact concept
+- **"Agent on a Page"** — documentation template for each agent (owner, purpose, context, tools, cooperation patterns). Functionally identical to Admiral's agent definitions
+- **"Agent Control Plane"** — vendor-agnostic management layer for visibility and control across heterogeneous agent estates
+- Machine-executable, context-aware policy enforcement — the same thesis as Admiral's enforcement spectrum
+- Agents treated as **"hybrid identities"** with just-in-time privileges
+
+**Where AEGIS overlaps Admiral:**
+- "Least agency" principle (identical concept)
+- Agent documentation templates (Agent on a Page ≈ Admiral's agent definitions)
+- Zero-trust principles as foundational
+- Governance as embedded, not bolt-on
+- Phased implementation roadmap
+
+**Where AEGIS falls short of Admiral:**
+- Security-only scope — no operational doctrine, no fleet coordination, no institutional memory
+- No enforcement spectrum distinction (hooks vs. instructions)
+- No role architecture or pre-defined agent catalog
+- No standing orders or mechanical invariants
+- Behind Forrester's paywall — no open spec
+- 39 controls are auditable but dense; risk of implementation paralysis
+
+**Why this is a serious idea-level threat:** AEGIS speaks the language CISOs already use. 80% of its controls map to 4+ major frameworks. It has Forrester's analyst reach (every enterprise security team reads Forrester). If AEGIS becomes the default governance checklist, Admiral needs to either subsume it or explicitly sit above it.
+
+**Positioning opportunity:** "AEGIS tells CISOs which controls to implement. Admiral tells engineering teams *how to operate* — the roles, routing, enforcement, and memory that make those controls work in practice. Admiral is the operating system; AEGIS is the compliance crosswalk."
+
+**Sources:**
+- [Forrester: Introducing AEGIS](https://www.forrester.com/blogs/introducing-aegis-the-guardrails-cisos-need-for-the-agentic-enterprise/)
+- [Forrester: AEGIS as New Standard](https://www.forrester.com/blogs/forrester-aegis-the-new-standard-for-ai-governance/)
+
+---
+
+### 10. Gartner AI TRiSM — The Market Category Creator
+
+**Threat to the idea: MEDIUM**
+
+Gartner's AI Trust, Risk, and Security Management (AI TRiSM) is less a framework and more a **market category** — it shapes what vendors build and what enterprises buy. Gartner predicts 80% of unauthorized AI transactions through 2026 will stem from internal policy violations, not external attacks.
+
+**What they're saying that sounds like Admiral:**
+
+- Four-layer technology pyramid: AI Governance → Runtime Inspection → Information Governance → Infrastructure Protection
+- **"Guardian Agents"** — "Sentinels" and "Operatives" that provide real-time AI governance. This is functionally Admiral's governance agents (Sentinel, Arbiter, Loop Breaker)
+- Using AI to govern AI — agents monitoring agents
+- Internal risk (oversharing, misuse) as the primary threat vector, not adversarial attack
+
+**Where Gartner overlaps Admiral:**
+- Agents monitoring agents (Guardian Agents ≈ Admiral's governance agents)
+- Layered governance architecture
+- Focus on internal risk, not just external threats
+
+**Where Gartner falls short of Admiral:**
+- AI TRiSM predates agentic AI — it's being *extended* to cover agents, not *built* for them
+- More of a vendor market taxonomy than an implementable framework
+- No enforcement spectrum, no standing orders, no role architecture
+- Behind Gartner's paywall
+
+**Why it matters:** Gartner shapes procurement. When a VP of Engineering asks their Gartner analyst "what should we buy for AI agent governance?", the analyst will recommend TRiSM-category vendors. Admiral needs to be intelligible to Gartner analysts — either as a product in their market guide or as the doctrine those products implement.
+
+**Positioning opportunity:** "Gartner tells enterprises *what capabilities to buy*. Admiral tells them *how to operate*. TRiSM vendors provide the tooling; Admiral provides the doctrine those tools enforce."
+
+**Sources:**
+- [Gartner: AI Trust, Risk and Security](https://www.gartner.com/en/articles/ai-trust-and-ai-risk)
+- [Gartner: 40% of Enterprise Apps with AI Agents by 2026](https://www.gartner.com/en/newsroom/press-releases/2025-08-26-gartner-predicts-40-percent-of-enterprise-apps-will-feature-task-specific-ai-agents-by-2026-up-from-less-than-5-percent-in-2025)
+
+---
+
+### 11. KPMG TACO — The Classification Scheme
+
+**Threat to the idea: LOW-MEDIUM**
+
+KPMG's TACO framework (Taskers, Automators, Collaborators, Orchestrators) provides a four-type taxonomy for classifying AI agents by their operational complexity.
+
+**What they're saying that sounds like Admiral:**
+
+- Not all agents are alike — governance must be calibrated to agent type
+- **Taskers** (single goals) → **Automators** (cross-system workflows) → **Collaborators** (human-AI teamwork) → **Orchestrators** (multi-agent coordination)
+- Each type has different risk profiles and governance needs
+- Paired with KPMG's "Trusted AI" framework for governance principles
+
+**Where KPMG overlaps Admiral:**
+- Agent type taxonomy (TACO types map to subsets of Admiral's 71 roles)
+- Risk calibrated to agent complexity
+- Recognition that governance must match agent type
+
+**Where KPMG falls short of Admiral:**
+- Classification scheme only — not a governance framework
+- No enforcement mechanisms, no operational doctrine, no memory
+- Generic "Trusted AI" principles, not agentic-specific governance
+- Commercial consulting framework, not an open standard
+
+**Why it matters:** TACO is becoming the default vocabulary in enterprise consulting conversations. When KPMG-trained executives talk about agents, they'll use "Tasker" and "Orchestrator." Admiral's 71 roles should be tagged with their TACO classification so KPMG-fluent buyers can map Admiral into their existing mental model.
+
+**Positioning opportunity:** Admiral's 71 roles ARE the detailed implementation behind TACO categories. Tag each role accordingly.
+
+**Sources:**
+- [KPMG: AI Governance for the Agentic AI Era](https://kpmg.com/us/en/articles/2025/ai-governance-for-the-agentic-ai-era.html)
+
+---
+
+### 12. Anthropic RSP v3.0 — The Lab Self-Governance Model
+
+**Threat to the idea: LOW (different scope)**
+
+Anthropic's Responsible Scaling Policy v3.0 (February 2026) governs how the *lab itself* develops and releases models, not how *deployers* govern agent fleets. But it introduces concepts that inform Admiral's territory.
+
+**What they're saying that sounds like Admiral:**
+
+- **AI Safety Levels (ASL-1 through ASL-4+)** — progressive governance tied to capability thresholds
+- **Frontier Safety Roadmaps** — publicly declared goals with transparent grading
+- Safety measures should **scale with model capability** ("regulatory ladder")
+- Separation of what one company can do unilaterally vs. what requires multilateral cooperation
+
+**Why it matters:** RSP's "safety scales with capability" principle is the same thesis as Admiral's progressive adoption (L1-L4). If Anthropic's framing becomes the default language for capability-based governance, Admiral should explicitly map to ASL levels.
+
+**Sources:**
+- [Anthropic RSP v3.0](https://www.anthropic.com/news/responsible-scaling-policy-v3)
+
+---
+
 ## The Competitive Landscape for the Idea — Summary
 
 ```
@@ -288,6 +415,9 @@ Their framing: "Autonomous agents introduce risks legacy governance can't detect
   CSA (ATF)        Open spec on GitHub — zero-trust agents, graduated autonomy
                    (Intern→Principal), earned trust model
 
+  Forrester AEGIS  39 controls, 6 domains, regulatory crosswalk to 5 frameworks.
+                   "Least agency." Agent on a Page. CISO-native language.
+
   Tier 2: Converging on key elements
   ─────────────────────────────────────────
   WEF/Capgemini   Agent classification, Agent Cards, progressive governance,
@@ -299,12 +429,18 @@ Their framing: "Autonomous agents introduce risks legacy governance can't detect
   Credo AI         Agent Registry — capability/autonomy/permission cataloging
                    as commercial product
 
+  Gartner TRiSM   "Guardian Agents" (Sentinels, Operatives), four-layer pyramid,
+                   market category that shapes vendor roadmaps
+
+  KPMG TACO        Taskers/Automators/Collaborators/Orchestrators taxonomy,
+                   becoming default enterprise vocabulary for agent types
+
   Tier 3: Setting context that validates the idea
   ─────────────────────────────────────────
   Deloitte         Agentic AI Mesh, human-on-the-loop, process redesign
   OWASP            Agentic Top 10 risk taxonomy
   EU AI Act        Mandates "effective human oversight" for high-risk AI
-  Gartner          40% of agentic projects will fail (governance gap)
+  Anthropic RSP    AI Safety Levels, capability-scaled governance
 ```
 
 ---
@@ -315,14 +451,16 @@ Even with all these players converging, **no one has assembled the full package:
 
 | Admiral Element | Closest Competitor | Gap |
 |---|---|---|
-| **71 pre-defined roles with routing** | CrewAI (role-based agents), WEF (Agent Cards) | Nobody ships a catalog of ready-to-deploy governance roles |
-| **Enforcement spectrum (hooks vs. instructions)** | Nobody | This distinction is Admiral's most original insight. No framework, spec, or consulting firm makes this architectural distinction. |
-| **Four-tier decision authority** | Singapore IMDA (action-space + autonomy), CSA ATF (Intern→Principal) | Others have *graduated autonomy*. Admiral has a *formal taxonomy* with enforcement mechanisms per tier. |
-| **Institutional memory (Brain)** | Akka Memory, CrewAI memory | Others do session/agent memory. Nobody does *fleet-wide institutional knowledge accumulation*. |
-| **Standing orders (15 non-negotiable rules)** | Nobody | No framework specifies *invariant rules* enforced mechanically. |
-| **Agent-specific failure modes** | OWASP Agentic Top 10, Credo AI | OWASP catalogs risks. Admiral designs *operational responses* to them. |
-| **Progressive adoption model (L1-L4)** | Singapore IMDA (graduated deployment), WEF (progressive governance) | Others suggest graduation. Admiral specifies *exactly what each level contains*. |
-| **Full operational doctrine (11 parts)** | McKinsey (5 pillars) | McKinsey has strategic pillars. Admiral has *implementable doctrine*. |
+| **71 pre-defined roles with routing** | CrewAI (role-based agents), WEF (Agent Cards), Forrester (Agent on a Page) | Forrester documents agents; WEF classifies them. Nobody ships a catalog of 71 ready-to-deploy governance roles with routing rules and interface contracts. |
+| **Enforcement spectrum (hooks vs. instructions)** | Forrester AEGIS ("machine-executable enforcement") | AEGIS gestures at machine-executable controls but does not distinguish enforcement *classes* based on reliability under context pressure. Admiral's three-tier distinction remains unique. |
+| **Four-tier decision authority** | Singapore IMDA (action-space + autonomy), CSA ATF (Intern→Principal), Anthropic RSP (ASL levels) | Others have *graduated autonomy*. Admiral has a *formal taxonomy* with enforcement mechanisms per tier. |
+| **Institutional memory (Brain)** | Akka Memory, CrewAI memory | Others do session/agent memory. Nobody does *fleet-wide institutional knowledge accumulation* with vector embeddings, quarantine immune system, and retrieval confidence. |
+| **Standing orders (15 non-negotiable rules)** | Nobody | No framework specifies *invariant rules* enforced mechanically. AEGIS has 39 controls. Standing orders are not controls — they're behavioral invariants loaded into every agent's context. |
+| **Agent-specific failure modes (20 cataloged)** | OWASP Agentic Top 10, Credo AI | OWASP catalogs 10 risks. Admiral catalogs 20 failure modes AND designs *operational responses* (governance agents, recovery ladders, standing orders). |
+| **Progressive adoption model (L1-L4)** | Singapore IMDA (graduated deployment), WEF (progressive governance), CSA ATF (Intern→Principal) | Others suggest graduation. Admiral specifies *exactly what each level contains* with anti-pattern warnings ("most common mistake is starting at L4"). |
+| **Full operational doctrine (11 parts)** | McKinsey (5 pillars), Forrester AEGIS (6 domains) | McKinsey has strategic pillars. AEGIS has security domains. Admiral has *implementable operational doctrine* covering strategy, context, enforcement, fleet, brain, execution, quality, operations, platform, self-calibration, and protocols. |
+| **Governance agents as first-class citizens** | Gartner ("Guardian Agents"), McKinsey ("embedded control agents") | Gartner names the concept. McKinsey advocates for it. Admiral *specifies* them — Sentinel, Arbiter, Loop Breaker, Token Budgeter, Hallucination Auditor — with role definitions and routing rules. |
+| **Intent engineering as named discipline** | Nobody | No framework has formalized human-to-agent instruction design as a methodology. Six Elements of Intent (Goal, Priority, Constraints, Failure Modes, Judgment Boundaries, Values) is original. |
 
 ---
 
@@ -341,14 +479,19 @@ The pattern from cybersecurity history:
 
 Someone will become the "NIST 800-53 for agentic AI governance." Admiral, Singapore's MGF, CSA's ATF, and NIST's own initiative are all vying for that position. The winner will be the spec that's *most implementable* while being *comprehensive enough* to satisfy regulators.
 
-### 3. McKinsey is the idea competitor; CSA ATF is the spec competitor
+### 3. The competitive field has layers, not a single rival
 
-- **McKinsey** threatens to own the *conceptual vocabulary*. If C-suites think in McKinsey's "five pillars" and "six shifts," Admiral needs to speak that language.
-- **CSA ATF** threatens to own the *specification format*. It's open source, on GitHub, backed by a 135K-member organization, and covers the trust/identity layer well.
+- **McKinsey** threatens to own the *conceptual vocabulary* — the C-suite mental model
+- **CSA ATF** threatens to own the *specification format* — open source, on GitHub, 135K-member org
+- **Forrester AEGIS** threatens to own the *compliance narrative* — 39 controls mapped to 5 regulatory frameworks, CISO-native
+- **Gartner AI TRiSM** threatens to own the *market category* — shapes what vendors build and what enterprises buy
+- **KPMG TACO** threatens to own the *classification vocabulary* — how executives talk about agent types
+
+Admiral must be intelligible in all five conversations simultaneously. The strategy: adopt their vocabulary as aliases and cross-references, but never surrender the architecture.
 
 ### 4. Nobody has the enforcement spectrum
 
-Admiral's most defensible idea is the **hooks vs. instructions distinction** — that mechanical enforcement and instructional guidance are architecturally different enforcement classes. No competitor, framework, government document, or consulting firm has articulated this. It's non-obvious and validated. Lead with it.
+Admiral's most defensible idea is the **hooks vs. instructions distinction** — that mechanical enforcement and instructional guidance are architecturally different enforcement classes. Forrester AEGIS comes closest with "machine-executable enforcement" but does not distinguish enforcement *classes* based on reliability under context pressure. No competitor, framework, government document, or consulting firm has fully articulated this distinction. It's non-obvious and validated. Lead with it.
 
 ### 5. Terminology alignment matters
 
@@ -358,8 +501,16 @@ Consider adopting or explicitly mapping to:
 - Singapore's **"action-space"** and **"autonomy"** dimensions
 - OWASP's **Agentic Top 10** risk categories
 - NIST's emerging identity/authorization standards
+- Forrester's **"least agency"** and **"Agent on a Page"** (≈ Admiral's existing concepts)
+- KPMG's **TACO** taxonomy (tag Admiral's 71 roles accordingly)
+- Gartner's **"Guardian Agents"** (≈ Admiral's governance agents)
+- Anthropic's **ASL levels** (≈ Admiral's progressive adoption)
 
 Aligning vocabulary doesn't mean ceding the idea — it means making Admiral the spec that *implements* what these institutions are calling for.
+
+### 6. Doctrine is the product — the spec is the seed
+
+Every competitor validates the same conclusion: **the market wants an operating philosophy, not just software**. ITIL (£380M), SAFe ($25-35M/yr), Zero Trust (multi-billion market segment), TOGAF (60% Fortune 500) — all prove pure doctrine creates massive economic value. The spec is the moat. The ecosystem (certification, training, tool licensing, consulting) is the business. See `monetizing-doctrine-playbook.md` for the full revenue model.
 
 ---
 
@@ -381,11 +532,16 @@ Aligning vocabulary doesn't mean ceding the idea — it means making Admiral the
 - [CSA: Agentic Trust Framework](https://cloudsecurityalliance.org/blog/2026/02/02/the-agentic-trust-framework-zero-trust-governance-for-ai-agents)
 - [WEF: AI Agents in Action](https://www.weforum.org/publications/ai-agents-in-action-foundations-for-evaluation-and-governance/)
 - [OWASP: Agentic Top 10](https://owasp.org/www-project-top-10-for-large-language-model-applications/)
+- [Forrester: Introducing AEGIS](https://www.forrester.com/blogs/introducing-aegis-the-guardrails-cisos-need-for-the-agentic-enterprise/)
+- [Forrester: AEGIS as New Standard](https://www.forrester.com/blogs/forrester-aegis-the-new-standard-for-ai-governance/)
 
 ### Commercial
 - [Credo AI: Agent Registry](https://www.credo.ai/ai-agent-registry)
 
 ### Market Analysis
 - [Gartner: 40% of Enterprise Apps with AI Agents by 2026](https://www.gartner.com/en/newsroom/press-releases/2025-08-26-gartner-predicts-40-percent-of-enterprise-apps-will-feature-task-specific-ai-agents-by-2026-up-from-less-than-5-percent-in-2025)
+- [Gartner: AI Trust, Risk and Security](https://www.gartner.com/en/articles/ai-trust-and-ai-risk)
 - [Fortune: The AI Risk Few Organizations Are Governing](https://fortune.com/2026/03/10/ai-risk-agents-few-organizations/)
 - [IBM: AI Agent Governance Challenges](https://www.ibm.com/think/insights/ai-agent-governance)
+- [KPMG: AI Governance for the Agentic AI Era](https://kpmg.com/us/en/articles/2025/ai-governance-for-the-agentic-ai-era.html)
+- [Anthropic RSP v3.0](https://www.anthropic.com/news/responsible-scaling-policy-v3)

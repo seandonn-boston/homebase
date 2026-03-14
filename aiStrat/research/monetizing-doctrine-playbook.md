@@ -219,6 +219,75 @@ Admiral's doctrine is the same kind of asset. The question isn't "how do I sell 
 
 ---
 
+## Doctrine IS the Product
+
+**Updated March 14, 2026** — after comprehensive review of the competitive landscape (see `agentic-governance-frameworks-2026.md`, `idea-competitors-2026.md`)
+
+### Why Doctrine, Not Software, Is the Right Form Factor
+
+The competitive landscape confirms this: **every major institution (McKinsey, WEF, Singapore, NIST, CSA, Forrester, Gartner, OWASP) is publishing governance philosophy, not governance software**. The market is demanding doctrine — operating principles, frameworks, taxonomies, control catalogs — not another runtime or SDK.
+
+Consider what already exists as software:
+- **CrewAI, LangGraph, AutoGen** — agent orchestration runtimes
+- **Akka** — enterprise-grade distributed agent infrastructure
+- **Credo AI** — AI governance platform with agent registry
+- **Gartner TRiSM vendors** — an entire market category of governance tooling
+
+Admiral-as-software competes against all of these and loses on distribution, funding, and engineering headcount.
+
+Admiral-as-doctrine competes against:
+- McKinsey's five pillars (strategic, not implementable)
+- Singapore IMDA's four dimensions (regulatory, not operational)
+- CSA ATF's five trust elements (security-only)
+- Forrester AEGIS's 39 controls (compliance-only)
+- WEF's classification system (taxonomic, not prescriptive)
+
+**None of them have the full stack**: strategy + context + enforcement + fleet + brain + execution + quality + operations + platform + self-calibration + protocols. Admiral is the only end-to-end operational doctrine.
+
+### What "Doctrine as Product" Actually Means
+
+Doctrine is not a document sitting on a shelf. Doctrine is **the guide for a system**. It tells operators:
+- **What the system is** — roles, boundaries, capabilities (Fleet catalog)
+- **How the system decides** — authority tiers, escalation rules, enforcement spectrum
+- **How the system learns** — Brain architecture, institutional memory
+- **How the system fails** — 20 failure modes with operational responses
+- **How the system scales** — progressive adoption L1-L4
+- **What never changes** — 15 Standing Orders, mechanically enforced
+
+The doctrine doesn't replace software — it **governs** software. Every agent runtime needs governance. No agent runtime ships its own. That gap is the market.
+
+### The Competitive Validation
+
+As of March 2026, the competitive landscape validates doctrine as the right product form:
+
+| Competitor | What they sell | What they DON'T provide (but Admiral does) |
+|---|---|---|
+| McKinsey | Strategic vision | Implementation specification |
+| Singapore IMDA | Regulatory requirements | Operational doctrine |
+| CSA ATF | Security trust model | Full operational governance |
+| Forrester AEGIS | Compliance controls | Role architecture, fleet coordination, memory |
+| WEF | Classification taxonomy | Enforcement mechanisms, standing orders |
+| Gartner TRiSM | Market category / vendor guide | Implementable governance specification |
+| OWASP | Threat taxonomy | Operational responses to threats |
+| KPMG TACO | Agent type classification | Governance doctrine per type |
+| CrewAI/LangGraph | Agent runtime | Agent governance |
+| Akka | Distributed infrastructure | Governance specification |
+
+**Every row has the same gap: operational doctrine.** That's Admiral.
+
+### The Revenue Implication
+
+Doctrine creates a **perpetual licensing surface**. Software has substitutes (switch to a competitor). Doctrine, once adopted, creates organizational lock-in:
+- Roles are designed around it
+- Certifications reference it
+- Compliance audits map to it
+- Training programs teach it
+- Career paths depend on it
+
+ITIL has been generating revenue for 37 years. Zero Trust for 17 years. The specification itself may evolve, but the *ecosystem* compounds.
+
+---
+
 ## Sources
 
 - [ITIL | Wikipedia](https://en.wikipedia.org/wiki/ITIL)
