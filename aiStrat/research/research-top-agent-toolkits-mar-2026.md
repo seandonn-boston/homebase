@@ -1,3 +1,4 @@
+<!-- Admiral Framework v0.3.0-alpha -->
 # Top Uses of AI Agent Tools: Full Suites, Workflows, Configurations & Production Setups — March 2026
 
 A comprehensive research dossier of the most impressive configurations, prompt libraries, workflow templates, CLAUDE.md files, .cursorrules, agent orchestration setups, hooks, skills, slash commands, and production pipelines across the AI coding ecosystem. Evaluated on **ingenuity, effectiveness, integrity, security, creativity, and impressiveness**. Ordered by a triple-weighted balance of **relevance, recency, and community traction** (stars/downloads).

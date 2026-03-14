@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.2.0-alpha -->
+<!-- Admiral Framework v0.3.0-alpha -->
 # Release & Developer Platform Agents
 
 **Category:** Release & Developer Platform

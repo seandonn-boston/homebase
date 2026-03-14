@@ -1,3 +1,4 @@
+<!-- Admiral Framework v0.3.0-alpha -->
 # Admiral Competitive Positioning Strategy
 
 **Date:** March 13, 2026

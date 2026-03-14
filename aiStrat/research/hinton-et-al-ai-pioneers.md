@@ -1,3 +1,4 @@
+<!-- Admiral Framework v0.3.0-alpha -->
 # Comprehensive Chronological Timeline of AI Pioneer Figures
 
 Created: March 2026

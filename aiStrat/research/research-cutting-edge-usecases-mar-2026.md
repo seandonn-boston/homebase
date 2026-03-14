@@ -1,3 +1,4 @@
+<!-- Admiral Framework v0.3.0-alpha -->
 # Cutting-Edge Projects Utilizing AI Agent Fleets — March 2026
 
 A comprehensive research dossier of the best projects and products that are **not strictly AI tools** but heavily leverage AI and fleets of AI agents to achieve their goals. These are products where AI agents are a key enabler, but the product itself serves a non-AI purpose. Evaluated on **ingenuity, effectiveness, real-world impact, and impressiveness**. Ordered by a triple-weighted balance of **relevance, recency, and scale** (stars/downloads/revenue/impact).
