@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-03-13T00:00:00Z",
+  "last_updated": "2026-03-14T07:34:53Z",
   "sources": {
     "anthropic": {
       "type": "model_provider",
@@ -10,8 +10,8 @@
     },
     "openai": {
       "type": "model_provider",
-      "last_scanned": "1970-01-01T00:00:00Z",
-      "known_version": "",
+      "last_scanned": "2026-03-14T07:34:53Z",
+      "known_version": "v0.12.2",
       "enabled": true
     },
     "google-deepmind": {
@@ -22,20 +22,20 @@
     },
     "meta-llama": {
       "type": "model_provider",
-      "last_scanned": "1970-01-01T00:00:00Z",
-      "known_version": "",
+      "last_scanned": "2026-03-14T07:34:53Z",
+      "known_version": "v0.2.0",
       "enabled": true
     },
     "mistralai": {
       "type": "model_provider",
-      "last_scanned": "1970-01-01T00:00:00Z",
-      "known_version": "",
+      "last_scanned": "2026-03-14T07:34:53Z",
+      "known_version": "v1.10.0",
       "enabled": true
     },
     "deepseek-ai": {
       "type": "model_provider",
-      "last_scanned": "1970-01-01T00:00:00Z",
-      "known_version": "",
+      "last_scanned": "2026-03-14T07:34:53Z",
+      "known_version": "v1.0.0",
       "enabled": true
     },
     "claude-code": {
@@ -52,8 +52,8 @@
     },
     "cline": {
       "type": "framework",
-      "last_scanned": "1970-01-01T00:00:00Z",
-      "known_version": "",
+      "last_scanned": "2026-03-14T07:34:53Z",
+      "known_version": "v3.72.0",
       "enabled": true
     },
     "cursor": {
@@ -81,7 +81,16 @@
       "enabled": true
     }
   },
-  "scan_history": [],
+  "scan_history": [
+    {
+      "timestamp": "2026-03-14T07:34:53Z",
+      "scan_type": "full",
+      "status": "success",
+      "findings_count": 20,
+      "high_priority_count": 3,
+      "digest_file": "monitor/digests/2026-03-14.md"
+    }
+  ],
   "watchlist": {
     "repos": [
       "anthropics/claude-code",
