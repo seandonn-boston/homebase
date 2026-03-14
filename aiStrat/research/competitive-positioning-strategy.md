@@ -96,9 +96,31 @@ This doesn't change Admiral's architecture — it adds a tag that KPMG-trained e
 
 ---
 
+### 1H. Gartner AI TRiSM — "Guardian Agents"
+
+**Action:** Acknowledge Gartner's vocabulary in Admiral's Monitor layer documentation.
+
+Gartner's "Guardian Agents" concept (Sentinels and Operatives providing real-time governance) is functionally what Admiral already specifies — governance agents like Sentinel, Arbiter, Loop Breaker, Token Budgeter, and Hallucination Auditor. The difference: Gartner named the market category; Admiral specifies the roles.
+
+Add a note in the Monitor/governance agent sections: *"These governance agents implement what Gartner's AI TRiSM framework calls 'Guardian Agents' — AI systems that monitor and govern other AI systems in real time."*
+
+This matters because Gartner shapes procurement. When a CTO asks their Gartner analyst "do we have Guardian Agents?", the answer should be "yes, your Admiral-governed fleet includes five specialized governance agents."
+
+---
+
+### 1I. Anthropic RSP — AI Safety Levels
+
+**Action:** Map Admiral's progressive adoption (L1-L4) to Anthropic's ASL levels in Section 06.
+
+Anthropic's ASL-1 through ASL-4+ framework governs lab-side model safety. Admiral's L1-L4 governs deployment-side operational governance. They're different scopes but share the same principle: safety scales with capability. Making the mapping explicit positions Admiral as the deployment-side complement to Anthropic's development-side governance.
+
+---
+
 ### What NOT to Adopt
 
 **CSA ATF's "Intern → Principal" metaphor.** Acknowledge it, but don't adopt it. It maps agents to employee role titles, which contradicts Admiral's core thesis that agents are "neither employees nor software." Admiral's trust calibration (Section 33) is more granular — per-category, tied to specific authority tiers, not global role titles. Note it as "a simplified view of trust calibration suitable for security-focused audiences."
+
+**Gartner's four-layer pyramid as organizational structure.** AI TRiSM's layers (Governance → Runtime Inspection → Information Governance → Infrastructure) are a technology purchasing taxonomy, not an operational architecture. Admiral's 11-part doctrine is purpose-built for how agents actually operate. Don't reorganize Admiral to match Gartner's buying guide.
 
 ---
 
@@ -123,7 +145,8 @@ This doesn't change Admiral's architecture — it adds a tag that KPMG-trained e
 | **Cloud Security Alliance** | HIGH | Engage ATF working group. Propose that ATF become a "security profile" within Admiral's broader governance framework. |
 | **Linux Foundation (MCP, A2A)** | MEDIUM-HIGH | Track protocol specs. Participate in working groups to ensure governance use cases are represented. |
 | **WEF** | MEDIUM | Vocabulary alignment (Agent Cards). Convening power, not technical collaboration. |
-| **Forrester** | MEDIUM | AEGIS compliance crosswalk. Forrester is the analyst firm most focused on agentic security. |
+| **Forrester** | MEDIUM-HIGH | AEGIS compliance crosswalk. Forrester is the analyst firm most focused on agentic security. Publishing an AEGIS mapping makes Admiral auditable by security teams. |
+| **Gartner** | MEDIUM | Position Admiral's governance agents as the implementation of Gartner's "Guardian Agents" concept. Get cited in Gartner's AI TRiSM Market Guide. |
 
 ### Platforms to Certify Compatibility With
 
@@ -208,12 +231,15 @@ ADOPT their vocabulary, cite their standards:
   WEF → Agent Card export format
   OWASP → risk mapping table
   NIST → identity standard references
-  Forrester AEGIS → compliance crosswalk
+  Forrester AEGIS → compliance crosswalk (39 controls)
   KPMG TACO → role classification tags
+  Gartner TRiSM → "Guardian Agents" = Admiral's governance agents
+  Anthropic RSP → ASL levels ↔ Admiral's L1-L4
 
 ACKNOWLEDGE but differentiate:
   CSA ATF → simpler view of Admiral's trust calibration
   CrewAI Agent Repos → Admiral's fleet catalog is the governed superset
+  Gartner 4-layer pyramid → purchasing taxonomy, not operational architecture
 
 ENGAGE as standards partner:
   NIST CAISI (highest priority)
@@ -221,6 +247,7 @@ ENGAGE as standards partner:
   Cloud Security Alliance
   Linux Foundation (MCP, A2A)
   Forrester (AEGIS crosswalk)
+  Gartner (AI TRiSM Market Guide citation)
 
 HOLD FIRM — non-negotiable:
   Enforcement spectrum (hooks vs. instructions)
@@ -230,7 +257,7 @@ HOLD FIRM — non-negotiable:
   Human Inflection Point
   "Neither employees nor software"
   Model-agnostic
-  Specification as product
+  Specification as product (doctrine IS the product)
   Progressive adoption with anti-pattern warnings
   Zero-trust as default
 ```
