@@ -121,6 +121,10 @@ This framework is split across fourteen files. This index is the entry point. Ea
 | [`part10-admiral.md`](part10-admiral.md) | Sections 33–35: Admiral Self-Calibration, Human-Expert Routing, Multi-Operator Governance |
 | [`part11-protocols.md`](part11-protocols.md) | Sections 36–41: Standing Orders, Escalation, Handoffs, Human Referral, Paid Resource Authorization, Data Sensitivity |
 | [`intent-engineering.md`](intent-engineering.md) | Intent Engineering: the shared dialect between Admirals and Brains |
+| [`governance-platform.md`](governance-platform.md) | The paradigm shift: ATC, not flight plans. Four pillars. Chaos-first architecture. |
+| [`fleet-control-plane.md`](fleet-control-plane.md) | Real-time operational surface: dashboard, alerts, interventions. |
+| [`progressive-autonomy.md`](progressive-autonomy.md) | Four stages from manual oversight to full autonomy. |
+| [`inevitable-features.md`](inevitable-features.md) | The three features that make Admiral indispensable. |
 | [`appendices.md`](appendices.md) | Pre-Flight Checklist, Quick-Start Sequence, Worked Example |
 
 -----
@@ -325,6 +329,22 @@ Sections are ordered by impact and grouped by relevance.
 | — | Intent Engineering | Structuring instructions around outcomes, values, constraints, failure modes, and judgment boundaries. | |
 | — | The Six Elements of Intent | Goal, Priority, Constraints, Failure Modes, Judgment Boundaries, Values. | |
 | — | The Human Inflection Point | Where the agent's authority ends and the human's begins. This shall not be worked around. | |
+| | **GOVERNANCE PLATFORM** | *The paradigm shift: from toolkit to operating environment.* | [`governance-platform.md`](governance-platform.md) |
+| — | The Paradigm Shift | Infrastructure must handle chaos, not elegance. Air traffic control, not flight plans. | |
+| — | The Four Pillars | Visibility, Control, Policy, Recovery — the foundations of fleet governance. | |
+| — | Chaos-First Architecture | Designing for the messy reality of production agent fleets. | |
+| | **FLEET CONTROL PLANE** | *The real-time operational surface.* | [`fleet-control-plane.md`](fleet-control-plane.md) |
+| — | The Command Center | Fleet status, agent detail, task flow — the single management interface. | |
+| — | Alert System | Classification, fatigue prevention, and actionable notifications. | |
+| — | Operator Interventions | Pause, halt, kill, reroute, override — with audit trail. | |
+| | **PROGRESSIVE AUTONOMY** | *The four stages from manual oversight to full autonomy.* | [`progressive-autonomy.md`](progressive-autonomy.md) |
+| — | The Four Stages | Manual Oversight → Assisted Automation → Partial Autonomy → Full Autonomy. | |
+| — | The Autonomy Matrix | Different capabilities at different stages in the same fleet. | |
+| — | Trust Mechanics | How trust is earned, tracked, and withdrawn per category. | |
+| | **INEVITABLE FEATURES** | *The three features that create operational lock-in through genuine value.* | [`inevitable-features.md`](inevitable-features.md) |
+| — | Fleet-Wide Causality Tracing | From "something broke" to "here is exactly why." | |
+| — | Living Operational Memory | The Brain at three months: institutional wisdom, not just storage. | |
+| — | Predictive Fleet Health | From reactive to proactive: predicting failures before they happen. | |
 | | **APPENDICES** | | [`appendices.md`](appendices.md) |
 | A | Pre-Flight Checklist | Go/no-go gate before fleet deployment. | |
 | B | Quick-Start Sequence | Level-structured operational order for standing up a new fleet. | |

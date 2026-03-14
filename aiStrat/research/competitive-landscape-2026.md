@@ -1,3 +1,4 @@
+<!-- Admiral Framework v0.3.0-alpha -->
 # Admiral Competitive Landscape — March 2026
 
 **Date:** March 13, 2026
