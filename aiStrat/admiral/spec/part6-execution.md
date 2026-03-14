@@ -12,7 +12,7 @@
 
 > **TL;DR** — Break goals into chunks that each consume no more than 40% of an agent's token budget. Each chunk is independently completable, independently verifiable, with explicit entry and exit states.
 
-AI agents do not naturally manage resource depletion. Given a large task, an agent produces high-quality work for the first 60% and rushes the remaining 40%.
+AI agents do not naturally manage resource depletion. In our experience, given a large task, an agent produces high-quality work for roughly the first 60% and rushes the remainder.
 
 ### Chunking Principles
 

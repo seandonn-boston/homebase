@@ -522,7 +522,7 @@ Agents with computer use capability can interact with graphical interfaces — c
 - All computer use actions are logged with screenshots for audit trail
 - Computer use agents have the narrowest Autonomous tier — most actions require Propose-tier approval
 
-**Cost implications:** Computer use is token-intensive (vision tokens for screen reading + action tokens for interaction). Budget accordingly — typically 3-5x the token cost of equivalent CLI operations.
+**Cost implications:** Computer use is token-intensive (vision tokens for screen reading + action tokens for interaction). Budget accordingly — in our experience, roughly 3–5x the token cost of equivalent CLI operations.
 
 ### Extended Thinking
 

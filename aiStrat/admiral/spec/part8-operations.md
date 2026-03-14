@@ -141,13 +141,13 @@ Deterministic Enforcement ──→ Configuration File Strategy ──→ Config
 
 ## Cost Management
 
-> **TL;DR** — The biggest cost lever is LLM-Last design (Boundaries (Part 1)): eliminating 30-60% of LLM calls by routing to deterministic tools. Second: model tier assignment. Third: context size via progressive disclosure. Track spend in dollars, not just tokens.
+> **TL;DR** — The biggest cost lever is LLM-Last design (Boundaries (Part 1)): in our experience, eliminating 30–60% of LLM calls by routing to deterministic tools. Second: model tier assignment. Third: context size via progressive disclosure. Track spend in dollars, not just tokens.
 
 ### Cost Drivers and Levers
 
 | Cost Driver | Lever | Impact |
 |---|---|---|
-| **LLM for deterministic tasks** | LLM-Last design (Boundaries (Part 1)) | **Highest.** Eliminates 30-60% of LLM calls. |
+| **LLM for deterministic tasks** | LLM-Last design (Boundaries (Part 1)) | **Highest.** Can eliminate 30–60% of LLM calls in our experience. |
 | **Model tier** | Demote where quality is indistinguishable at lower tier (Model Selection (Part 4)) | High. Economy-tier at 1/30th cost. |
 | **Context size** | Progressive disclosure, <150 line rule (Configuration File Strategy (Part 2)) | High. Every loaded token is billed. |
 | **Retry and rework** | Sharper criteria and self-healing hooks | Medium. Each retry doubles chunk cost. |
