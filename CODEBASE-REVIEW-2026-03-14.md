@@ -155,7 +155,11 @@ Yet the specification itself has built Level 5 artifacts while at Level 1:
 
 The framework violates its own Boundaries principle: "if it's not needed now, it's a non-goal."
 
-### 2.9 The "Fourteen Files" Claim is Wrong (Low)
+### 2.9 Extended Agent Count Is Wrong (Medium)
+
+The fleet README and multiple documents claim "71 core + 29 extended = 100 total agents." The actual count is **71 core + 34 extended = 105 total agents.** The 5 ecosystem agents in `fleet/agents/extras/ecosystem.md` appear to have been omitted from the count. All 34 extended agents are properly defined — the definitions are correct, but the documentation math is wrong.
+
+### 2.10 The "Fourteen Files" Claim is Wrong (Low)
 
 Index.md line 110: "This framework is split across **fourteen** files." The Table of Contents that follows lists:
 - 12 numbered parts (part1 through part12)
@@ -224,6 +228,7 @@ Two defects were not fully addressed. Defect #3 was partially fixed (one locatio
 | 19 | Medium | `.md-example` files still have v0.3.1-alpha comments, still orphaned | `fleet/agents/command/*.md-example` | 1 |
 | 20 | Low | HTML comment artifact in Part 11 with internal section numbers | `part11-protocols.md` | 7 |
 | 21 | Low | Index.md ToC has empty leading cells in extension rows | `index.md` | 362+ |
+| 22 | Medium | Extended agent count wrong: 34 actual vs 29 claimed | `fleet/README.md`, multiple | — |
 
 ---
 
