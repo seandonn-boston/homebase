@@ -40,10 +40,15 @@ aiStrat is the **Admiral Framework** — a comprehensive specification for AI ag
 - **Current version: v0.4.0-alpha** (pre-release, not yet published)
 - The framework uses [semantic versioning](https://semver.org/) with pre-release labels: `MAJOR.MINOR.PATCH[-label]`
 - The **single source of truth** for the version is `aiStrat/VERSION`. This is a plain text file containing only the version string (e.g., `v0.4.0-alpha`).
-- `admiral/spec/index.md` (line 6) displays the version for readers. Keep it in sync with `VERSION` when bumping.
-- **To bump the version:** update `aiStrat/VERSION` and `admiral/spec/index.md` line 6. That's it — two files. Use git tags (`git tag v0.4.0-alpha`) to mark releases.
-- Per-file version comments (`<!-- Admiral Framework vX.Y.Z -->`) are legacy and no longer enforced by CI. Do not add them to new files. Existing comments may be left in place or removed during normal edits.
-- **MANIFEST.md** is the semantic file catalog. Update it when files are added, removed, renamed, or when their content changes materially (new sections, restructured scope, changed agent counts). It should also be updated on version bumps.
+- **Versions are bumped automatically** on merge to main via `.github/workflows/version-bump.yml`. The bump type is determined by commit messages using [Conventional Commits](https://www.conventionalcommits.org/):
+  - `fix:`, `docs:`, `chore:`, `refactor:`, `ci:`, `style:`, `perf:`, `test:` → **patch** (e.g., v0.4.0 → v0.4.1)
+  - `feat:` → **minor** (e.g., v0.4.0 → v0.5.0)
+  - `BREAKING CHANGE:` in body or `!` after type (e.g., `feat!:`) → **major** (e.g., v0.4.0 → v1.0.0)
+  - No conventional prefix → **patch** (default)
+- The workflow also updates `admiral/spec/index.md` line 6 and creates a git tag.
+- **Manual bumps** are not needed. If you must bump manually, update `aiStrat/VERSION` and `admiral/spec/index.md` line 6.
+- Per-file version comments (`<!-- Admiral Framework vX.Y.Z -->`) are legacy and no longer enforced by CI. Do not add them to new files.
+- **MANIFEST.md** is the semantic file catalog. Update it when files are added, removed, renamed, or when their content changes materially.
 
 ## Working With This Repository
 
