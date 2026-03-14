@@ -53,6 +53,7 @@ fleet/
         ├── README.md        # Index of extended agents with activation instructions
         ├── domain.md        # 7 domain specialists (auth, search, payments, real-time, media, notifications, i18n)
         ├── data.md          # 5 data & analytics agents (pipelines, analytics, ML, validation, visualization)
+        ├── ecosystem.md     # 5 closed-loop data ecosystem agents (engagement, trends, attribution, feedback, health)
         └── scale-extended.md # 17 supplementary scale agents (planetary, temporal, cognitive, regulatory)
 ```
 

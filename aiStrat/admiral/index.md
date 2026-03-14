@@ -4,7 +4,6 @@
 **A Workforce Toolkit for Autonomous AI Agent Fleets**
 
 v0.3.1-alpha · March 2026
-v0.3.1-alpha · March 2026
 
 -----
 
@@ -125,6 +124,7 @@ This framework is split across fourteen files. This index is the entry point. Ea
 | [`fleet-control-plane.md`](fleet-control-plane.md) | Real-time operational surface: dashboard, alerts, interventions. |
 | [`progressive-autonomy.md`](progressive-autonomy.md) | Four stages from manual oversight to full autonomy. |
 | [`inevitable-features.md`](inevitable-features.md) | The three features that make Admiral indispensable. |
+| [`part12-data-ecosystem.md`](part12-data-ecosystem.md) | Sections 42–48: Closed-Loop Architecture, Data Streams, Enrichment & Attribution, Ecosystem Agents, Feedback Loops, Dataset Strategy, Implementation Levels |
 | [`appendices.md`](appendices.md) | Pre-Flight Checklist, Quick-Start Sequence, Worked Example |
 
 -----
@@ -154,6 +154,8 @@ Terms are listed alphabetically. When these terms appear in any part file, they 
 | **Admiral** | The operator of a fleet. May be a human, a meta-agent, or a hybrid. Provides strategic context, sets boundaries, calibrates trust, and holds Escalate-tier authority. |
 | **Agent Card** | A structured description published by an A2A agent declaring its capabilities, accepted input formats, and authentication requirements. Used for agent discovery. |
 | **Anti-pattern** | A documented failure mode arising from a common but counterproductive practice. Each anti-pattern in this framework names the bad practice, describes why it fails, and references the section that prevents it. |
+| **Attribution chain** | The causal link from customer engagement event → AI agent decision → customer outcome. The Attribution Engine (Section 45) creates and maintains these chains. The depth of attribution chains determines the quality of feedback loops. |
+| **Attribution lag** | The time elapsed between an AI agent decision and the customer outcome it influenced. Varies from minutes (direct interaction) to weeks (strategic impact). The attribution pipeline runs continuously to close gaps. |
 | **Autonomous tier** | Decision authority level where the agent proceeds without asking. Logs the decision. Used for low-risk, reversible decisions within established patterns. |
 | **Backtracking** | Recovery strategy where an agent rolls back to a saved checkpoint and tries a fundamentally different path, rather than retrying variations of the failed approach. |
 | **Brain** | The fleet's long-term memory: a Postgres + pgvector database accessible via MCP that stores decisions, outcomes, lessons, failures, and patterns as vector embeddings. Transcends sessions, agents, and context windows. Section 15. |
@@ -161,7 +163,9 @@ Terms are listed alphabetically. When these terms appear in any part file, they 
 | **brain_record** | MCP tool for writing a new entry to the Brain. Requires project, category, title, and content. Embedding is generated automatically. Section 16. |
 | **Boundaries** | Explicit constraints on what a project is NOT: non-goals, hard constraints, resource budgets, quality floors, and the LLM-Last boundary. Section 02. |
 | **Cascade map** | The dependency graph between framework artifacts. When one artifact changes, all downstream artifacts must be reviewed and revised. Section 25. |
+| **Calibration history** | Immutable record of trust calibration changes driven by outcome data. Shows which agents earned or lost autonomy, in what categories, based on what evidence. Part of the closed-loop data ecosystem. Section 45. |
 | **Checkpoint** | A structured summary written at chunk boundaries recording completed tasks, in-progress work, blockers, decisions, assumptions, and resource consumption. Section 24. |
+| **Closed-loop data ecosystem** | The system by which every output (agent decisions, customer outcomes, governance events) becomes an input that improves future outputs. Generates seven proprietary datasets that compound in value. Part 12. |
 | **Chunk** | An independently completable, independently verifiable unit of work. Sized to consume no more than 40% of an agent's token budget. Section 18. |
 | **Completion bias** | Agent produces complete but degraded output near resource limits. See Section 23 (Failure Mode Catalog) for diagnosis and defense. |
 | **Configuration accretion** | Instruction files grow after each incident until agents ignore bloated rules. See Section 23 (Failure Mode Catalog) for diagnosis and defense. |
@@ -178,12 +182,14 @@ Terms are listed alphabetically. When these terms appear in any part file, they 
 | **Deterministic enforcement** | Constraints implemented as hooks, CI gates, linters, or type checkers that fire 100% of the time regardless of context pressure. Contrasted with advisory instructions. Section 08. |
 | **Embedding** | A vector representation of text that captures semantic meaning. Used by the Brain (pgvector) to match queries by meaning, not keywords. Section 15. |
 | **Enforced tier** | Decision authority level handled by hooks, not agent judgment. The agent never makes this decision — the enforcement layer prevents or requires the action deterministically. |
+| **Ecosystem agents** | Five agents managing the closed-loop data ecosystem: Engagement Analyst, Trend Analyst, Attribution Engine, Feedback Synthesizer, Ecosystem Health Monitor. Section 45. |
 | **Escalate tier** | Decision authority level where the agent stops all work and flags to the Admiral immediately. Used for scope changes, budget overruns, security concerns, contradictory requirements. |
 | **Error signature** | A normalized representation of a hook failure used for cycle detection. Recommended: the first line of stderr concatenated with the exit code, with timestamps and line numbers stripped. Used by the self-healing loop (Section 08) to detect when an agent is producing the same failure repeatedly. |
 | **Escalation report** | Structured document produced when an agent exhausts its recovery ladder: blocker, context, approaches attempted, root cause assessment, what's needed, impact, recommendation. Section 22. |
 | **Event-driven agent** | An agent triggered by repository or system events (PR opened, CI failed, scheduled cron) rather than interactive sessions. Requires pre-configured context bootstrapping and narrower authority tiers. Section 31. |
 | **Exemplar** | A tracked repository representing best-in-class agent tooling (e.g., Claude Code, Aider, Cline). The monitor watches exemplars for releases, configuration changes, and design patterns that should inform fleet configuration. Section 17. |
 | **Failure mode** | A systematic way agent fleets fail. Twenty cataloged in Section 23 with primary defenses and warning signs. |
+| **Feedback loop** | A mechanism by which outcomes flow back to improve inputs. Six loops in the data ecosystem: agent calibration, Brain strengthening, model tier optimization, product adaptation, governance optimization, ecosystem intelligence. Section 46. |
 | **Firm guidance** | Constraints in AGENTS.md, system prompts, or tool-specific config files (CLAUDE.md, .cursorrules). High reliability but degradable under context pressure, especially in long sessions. Middle tier of the enforcement spectrum. Section 08. |
 | **Fleet** | A coordinated group of AI agents operating under a single orchestrator on a single project. Typically five to twelve specialists. |
 | **Fleet evaluation** | The practice of measuring whether a fleet configuration produces better outcomes than alternatives, through controlled A/B testing and benchmarking against baselines. Section 32. |
@@ -214,6 +220,7 @@ Terms are listed alphabetically. When these terms appear in any part file, they 
 | **Negative tool list** | Explicit declaration of tools and capabilities an agent does NOT have. Primary defense against phantom capabilities. Section 12. |
 | **Non-goals** | Explicit statements of what the project is NOT. More powerful than goals because they eliminate entire categories of work. Part of Boundaries. Section 02. |
 | **Observability** | Understanding fleet behavior through external outputs — traces for individual operations, logs for event records, metrics for aggregate health. Distinct from monitoring: monitoring detects problems; observability diagnoses them. Section 30. |
+| **Outcome attribution** | The process of connecting a customer outcome to the AI agent decision that caused it. Three types: direct (agent explicitly names the interaction), temporal (outcome within time window), semantic (outcome description matches decision). Section 44. |
 | **Orchestrator** | The coordinating agent that decomposes goals into tasks, routes to specialists, manages progress, and enforces standards. Does not write production code. |
 | **Phantom capabilities** | Agent assumes tools or access it does not have. See Section 23 (Failure Mode Catalog) for diagnosis and defense. |
 | **Progressive disclosure** | Loading strategy where knowledge is provided on-demand via skills rather than front-loaded at startup. Preserves context window capacity. Section 07. |
@@ -258,10 +265,11 @@ The `fleet/` directory provides 71 core agent definitions (plus 29 extended agen
 | Sections 13, 17, 25, 31 (Intelligence) | `monitor/README.md` — ecosystem scanning, quarantine, seed generation |
 | Section 07 (Configuration File Strategy) | `AGENTS.md` — canonical model-agnostic instruction file; `CLAUDE.md` — Claude Code pointer |
 | Section 08 (Deterministic Enforcement) | `hooks/README.md` — hook ecosystem spec; `hooks/manifest.schema.json` — hook manifest schema |
+| Part 12 (Data Ecosystem) | `fleet/agents/extras/ecosystem.md` — closed-loop ecosystem agents; `brain/schema/002_data_ecosystem.sql` — ecosystem schema extension |
 | Section 38 (Handoff Protocol) | `handoff/v1.schema.json` — canonical JSON Schema for handoff validation |
 | Section 10 (Configuration Security) | `attack-corpus/README.md` — attack corpus spec and seed scenarios for Layer 3 |
 
-> **Admiral is the engineering manual. Fleet is the parts catalog. Brain is the memory architecture. Monitor is the intelligence service.** Use the admiral to learn *what to do and why*. Use the fleet to learn *how to do it with specific agents*. Use the brain and monitor specs to understand *how knowledge persists and ecosystem intelligence flows*.
+> **Admiral is the engineering manual. Fleet is the parts catalog. Brain is the memory architecture. Monitor is the intelligence service. The Data Ecosystem is the flywheel.** Use the admiral to learn *what to do and why*. Use the fleet to learn *how to do it with specific agents*. Use the brain and monitor specs to understand *how knowledge persists and ecosystem intelligence flows*. Use the data ecosystem spec to understand *how every output becomes an input that compounds fleet intelligence*.
 
 -----
 
@@ -325,6 +333,14 @@ Sections are ordered by impact and grouped by relevance.
 | 39 | Human Referral Protocol | When and how specialists recommend consulting a human professional. | |
 | 40 | Paid Resource Authorization | Human-authorized access to paid software, licenses, and subscriptions. | |
 | 41 | Data Sensitivity Protocol | Deterministic enforcement preventing PII, secrets, and credentials from entering persistent storage. | |
+| | **PART 12 — THE DATA ECOSYSTEM** | *How the fleet generates compounding intelligence from every interaction.* | [`part12-data-ecosystem.md`](part12-data-ecosystem.md) |
+| 42 | Closed-Loop Architecture | Every output becomes an input. The flywheel that compounds fleet intelligence. | |
+| 43 | Data Streams | Four data streams: customer engagement, trends, AI agent output, Admiral operational. | |
+| 44 | Enrichment & Attribution | Semantic enrichment, outcome attribution, and cross-domain trend extraction. | |
+| 45 | Ecosystem Agents | Five agents that manage the closed-loop feedback pipeline. | |
+| 46 | Feedback Loops | Six loops connecting outcomes back to inputs for continuous improvement. | |
+| 47 | Dataset Strategy | Seven proprietary datasets that compound in value over time. | |
+| 48 | Implementation Levels | Progressive adoption from manual observation to autonomous optimization. | |
 | | **INTENT ENGINEERING** | *The shared dialect between Admirals and Brains.* | [`intent-engineering.md`](intent-engineering.md) |
 | — | Intent Engineering | Structuring instructions around outcomes, values, constraints, failure modes, and judgment boundaries. | |
 | — | The Six Elements of Intent | Goal, Priority, Constraints, Failure Modes, Judgment Boundaries, Values. | |
