@@ -1,4 +1,4 @@
--- Admiral Framework v0.3.1-alpha
+-- Admiral Framework v0.4.0-alpha
 -- Data Ecosystem Schema Extension
 -- Reference: admiral/part12-data-ecosystem.md, Sections 42-48
 --

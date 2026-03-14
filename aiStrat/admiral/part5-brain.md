@@ -1,13 +1,15 @@
-<!-- Admiral Framework v0.3.1-alpha -->
+<!-- Admiral Framework v0.4.0-alpha -->
 # PART 5 — THE BRAIN
 
 *How does the fleet remember?*
 
-*Parts 1–4 define what the fleet is, what it knows, how it's enforced, and who does the work. Part 5 gives the fleet long-term memory — a queryable knowledge system accessible through a standard protocol that any AI agent can speak. It replaces file-based persistence (Section 24) with a permanent knowledge system that captures not just what happened, but what it meant and why it mattered. Set up the Brain before the fleet starts executing (Part 6) so that every decision, lesson, and failure is captured from day one.*
+*Parts 1–4 define what the fleet is, what it knows, how it's enforced, and who does the work. Part 5 gives the fleet long-term memory — a queryable knowledge system accessible through a standard protocol that any AI agent can speak. It replaces file-based persistence (Institutional Memory, Part 8) with a permanent knowledge system that captures not just what happened, but what it meant and why it mattered. Set up the Brain before the fleet starts executing (Part 6) so that every decision, lesson, and failure is captured from day one.*
+
+> **Control Plane surface:** Knowledge health, query patterns, and decay warnings surface in the Control Plane at Level 3+. Operators can see which Brain entries are being retrieved, which are strengthening, and which are decaying from disuse.
 
 -----
 
-## 15 — BRAIN ARCHITECTURE
+## Brain Architecture
 
 > **TL;DR** — A Postgres database with pgvector stores every decision, rationale, outcome, and lesson as vector embeddings that capture meaning, not keywords. One database. One schema. Any project. Any agent. Any time horizon.
 
@@ -29,7 +31,7 @@ Each level should run for at least 2 weeks of active fleet operation before adva
 
 ### Why a Database, Not Files
 
-Institutional Memory (Section 24) defines five file-based persistence patterns — checkpoint files, ledger files, handoff documents, git-based state, and continuous operation. Files work for single-agent, single-project, single-session persistence. They break down when:
+Institutional Memory (Part 8) defines five file-based persistence patterns — checkpoint files, ledger files, handoff documents, git-based state, and continuous operation. Files work for single-agent, single-project, single-session persistence. They break down when:
 
 - **Multiple agents need the same knowledge simultaneously.** Files have no concurrency model. Two agents reading and writing the same checkpoint creates race conditions or stale reads.
 - **Knowledge spans projects.** A lesson learned in Fleet A (e.g., "Prisma migrations must be reversible") is valuable in Fleet B. Files are siloed by project directory.
@@ -37,7 +39,7 @@ Institutional Memory (Section 24) defines five file-based persistence patterns �
 - **History compounds.** After 50 sessions, file-based persistence produces hundreds of checkpoint files no agent can hold in context. A database can answer "what matters now" from any volume of history.
 - **Audit and compliance demand structured records.** Files drift in format. A database enforces schema.
 
-The Brain does not replace files for session-level work. Checkpoint files and handoff documents remain the right tool for intra-session persistence (see Institutional Memory, Section 24). The Brain is where durable knowledge goes — the decisions, rationale, and outcomes that should outlive any single session.
+The Brain does not replace files for session-level work. Checkpoint files and handoff documents remain the right tool for intra-session persistence (see Institutional Memory, Part 8). The Brain is where durable knowledge goes — the decisions, rationale, and outcomes that should outlive any single session.
 
 ### Technology Choice: Postgres + pgvector
 
@@ -70,7 +72,7 @@ See `brain/schema/001_initial.sql` for the canonical schema.
 | **outcome** | The result of a decision or task — success, failure, or partial | "JWT implementation completed. Auth middleware passes all 47 test cases" |
 | **lesson** | A reusable insight extracted from experience | "Prisma migrations fail silently when the database URL contains special characters. Always URL-encode credentials" |
 | **context** | A snapshot of Ground Truth, environment state, or configuration at a point in time | "Tech stack as of 2026-02-15: Next.js 15.2, Postgres 16, pgvector 0.8.0" |
-| **failure** | A failure mode encountered, diagnosis, and resolution | "Specialist drifted into orchestrator decisions (hierarchical drift, Section 23). Root cause: missing 'Does NOT Do' boundary in agent definition" |
+| **failure** | A failure mode encountered, diagnosis, and resolution | "Specialist drifted into orchestrator decisions (hierarchical drift, Failure Mode Catalog, Part 7). Root cause: missing 'Does NOT Do' boundary in agent definition" |
 | **pattern** | A reusable solution or anti-pattern extracted from one or more projects | "Contract-first parallelism reduces handoff rejection rate from 18% to 3% when API contracts are defined before frontend and backend work begins" |
 
 ### Vector Embeddings: Meaning, Not Keywords
@@ -95,7 +97,7 @@ Vector search returns:
 - Use a dedicated embedding model (e.g., text-embedding-3-small at 1536 dimensions, or any open-source alternative).
 - Embed the concatenation of `title + content` — title provides a dense summary, content provides full detail.
 - Re-embed when content is updated. Never serve stale embeddings.
-- Embedding generation is a deterministic tool operation (LLM-Last principle, Section 02) — no flagship model needed.
+- Embedding generation is a deterministic tool operation (LLM-Last principle, Boundaries, Part 1) — no flagship model needed.
 
 ### The Strengthening Model
 
@@ -113,13 +115,13 @@ Knowledge is not static. The Brain tracks which entries are useful and which hav
 
 -----
 
-## 16 — THE KNOWLEDGE PROTOCOL
+## The Knowledge Protocol
 
 > **TL;DR** — An MCP server exposes the Brain to any AI agent using a standard protocol. Agents write decisions, query semantically, and retrieve contextually relevant history — the same way, regardless of which agent, which model, or which tool built them. Humans use SQL. Machines use the API. Agents use MCP.
 
 ### MCP: The Universal Interface
 
-The Model Context Protocol (Section 14) is how agents access tools and data sources. The Brain's MCP server makes the database a first-class tool in any agent's toolkit — no custom integration, no proprietary API, no coupling to a specific agent framework.
+The Model Context Protocol (Protocol Integration, Part 4) is how agents access tools and data sources. The Brain's MCP server makes the database a first-class tool in any agent's toolkit — no custom integration, no proprietary API, no coupling to a specific agent framework.
 
 **Why MCP, not a custom API:**
 
@@ -236,11 +238,11 @@ Before making a Propose-tier or Escalate-tier decision, the agent queries the Br
 
 **Pattern 2: Record at Chunk Boundaries**
 
-At every chunk boundary (Section 18), the agent records durable knowledge:
+At every chunk boundary (Work Decomposition, Part 6), the agent records durable knowledge:
 
 ```
 1. Chunk completes
-2. Agent writes session checkpoint (file-based, Institutional Memory, Section 24) for intra-session use
+2. Agent writes session checkpoint (file-based, Institutional Memory, Part 8) for intra-session use
 3. Agent calls brain_record for any decisions, outcomes, lessons, or failures worth persisting
 4. Brain entries outlive the session; checkpoint file does not need to
 ```
@@ -258,7 +260,7 @@ When starting a new project, the orchestrator queries the Brain without a projec
 
 **Pattern 4: Failure Forensics**
 
-When the recovery ladder (Section 22) reaches Escalate, the agent queries the Brain for similar failures before writing the escalation report:
+When the recovery ladder (Failure Recovery, Part 7) reaches Escalate, the agent queries the Brain for similar failures before writing the escalation report:
 
 ```
 1. Agent exhausts retry → fallback → backtrack → isolate
@@ -388,7 +390,7 @@ The reference implementation format is JSON Web Token (RFC 7519). Implementation
 - This prevents privilege escalation through token sharing.
 
 **Emergency Revocation:**
-- The Emergency Halt Protocol (Section 37) can revoke ALL active tokens fleet-wide in a single action.
+- The Emergency Halt Protocol (Escalation Protocol, Part 11) can revoke ALL active tokens fleet-wide in a single action.
 - Implementation: the identity authority broadcasts a revocation epoch. The Brain MCP server rejects all tokens issued before the revocation epoch timestamp, regardless of their individual `expires_at`.
 - This provides O(1) fleet-wide revocation without enumerating individual tokens.
 
@@ -486,7 +488,7 @@ The end-to-end RAG pipeline (query → embed → search → rank → retrieve �
 
 -----
 
-## 17 — INTELLIGENCE LIFECYCLE
+## Intelligence Lifecycle
 
 > **TL;DR** — Knowledge enters the Brain as raw entries, gets strengthened through use and validation, linked into a knowledge graph, and surfaces to agents as contextually relevant intelligence. The lifecycle turns data into wisdom.
 
@@ -508,7 +510,7 @@ Both channels converge at the same pipeline. External entries arrive as seed can
 
 **1. Capture.** An agent calls `brain_record` with a decision, outcome, lesson, or failure. Content should include the *why*, not just the *what* — rationale is what makes an entry useful to future agents.
 
-**2. Embed.** The MCP server generates a vector embedding of the entry's title and content. This is automatic and immediate. The embedding model is a utility-tier concern (Section 13) — small, fast, cheap.
+**2. Embed.** The MCP server generates a vector embedding of the entry's title and content. This is automatic and immediate. The embedding model is a utility-tier concern (Model Selection, Part 4) — small, fast, cheap.
 
 **3. Store.** The entry and its embedding are written atomically to Postgres. Indexes update. The entry is immediately queryable.
 
@@ -518,13 +520,13 @@ Both channels converge at the same pipeline. External entries arrive as seed can
 
 **6. Link.** Agents or the Admiral create explicit relationships between entries: "this decision *caused* this outcome," "this lesson *contradicts* that earlier lesson," "this pattern *elaborates* that decision." Links turn isolated records into a knowledge graph.
 
-**7. Surface.** The Admiral or orchestrator periodically reviews Brain statistics — most accessed entries, highest usefulness scores, unlinked entries, superseded chains — and promotes key insights into Ground Truth (Section 05) or standing context (Section 06).
+**7. Surface.** The Admiral or orchestrator periodically reviews Brain statistics — most accessed entries, highest usefulness scores, unlinked entries, superseded chains — and promotes key insights into Ground Truth (Part 2) or standing context (Context Profiles, Part 2).
 
-**8. Review.** At regular intervals (or triggered by fleet health metrics, Section 27), the Admiral audits the Brain: stale entries flagged, contradictions resolved, patterns extracted, cross-project knowledge validated.
+**8. Review.** At regular intervals (or triggered by Fleet Health Metrics, Part 8), the Admiral audits the Brain: stale entries flagged, contradictions resolved, patterns extracted, cross-project knowledge validated.
 
 ### What to Capture
 
-Not everything belongs in the Brain. File-based persistence (Institutional Memory, Section 24) handles ephemeral state. The Brain stores durable knowledge.
+Not everything belongs in the Brain. File-based persistence (Institutional Memory, Part 8) handles ephemeral state. The Brain stores durable knowledge.
 
 | Capture | Don't Capture |
 |---|---|
@@ -621,9 +623,9 @@ The Brain does not only learn from the fleet's own experience. The Continuous AI
 
 **How the fleet benefits:**
 
-- **Model Selection (Section 13)** stays current — new releases trigger tier reassessment.
+- **Model Selection (Part 4)** stays current — new releases trigger tier reassessment.
 - **Agent definitions** evolve — patterns extracted from exemplar tools inform prompt design, tool configuration, and boundary definitions.
-- **Ground Truth (Section 05)** is refreshed — ecosystem changes surface as context entries the Admiral can integrate.
+- **Ground Truth (Part 2)** is refreshed — ecosystem changes surface as context entries the Admiral can integrate.
 
 > **ANTI-PATTERN: INTELLIGENCE WITHOUT ACTION** — The Monitor is configured to run daily, digests accumulate, seed candidates pile up — but the Admiral never reviews them and findings never reach the Brain. Intelligence has value only when it changes fleet behavior. Review cadence must match scan cadence.
 
@@ -658,7 +660,7 @@ The Brain's greatest long-term value is knowledge that transfers across projects
 
 ### Migration from File-Based Persistence
 
-For fleets already operating with file-based persistence (Institutional Memory, Section 24), the Brain is additive, not a replacement.
+For fleets already operating with file-based persistence (Institutional Memory, Part 8), the Brain is additive, not a replacement.
 
 **Phase 1: Parallel operation.** Continue file-based checkpoints and handoff documents. Add brain_record calls at chunk boundaries for decisions, lessons, and failures. Agents begin querying the Brain but do not depend on it.
 

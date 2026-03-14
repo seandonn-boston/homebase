@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.3.1-alpha -->
+<!-- Admiral Framework v0.4.0-alpha -->
 # THE GOVERNANCE PLATFORM
 
 *Admiral is not a toolkit. It is the operating environment where AI organizations run.*
@@ -101,11 +101,11 @@ You cannot control what you cannot see.
 
 | Visibility Layer | What It Reveals | Admiral Component |
 |---|---|---|
-| **Fleet status** | Which agents are running, idle, failed, blocked | Fleet Control Plane (Section 30, `fleet-control-plane.md`) |
-| **Task progress** | What work is in flight, what is completed, what is stuck | Traces (Section 30), Orchestrator task board |
-| **Resource consumption** | Token burn rate, budget remaining, cost per agent | Cost Management (Section 26), Token Budgeter |
-| **Decision history** | What was decided, by whom, with what authority | Decision log (Section 24), Brain audit trail |
-| **Failure patterns** | What is breaking, how often, whether it is getting worse | Failure Mode Catalog (Section 23), Recovery metrics |
+| **Fleet status** | Which agents are running, idle, failed, blocked | Fleet Control Plane (Fleet Observability, Part 9; `fleet-control-plane.md`) |
+| **Task progress** | What work is in flight, what is completed, what is stuck | Traces (Fleet Observability, Part 9), Orchestrator task board |
+| **Resource consumption** | Token burn rate, budget remaining, cost per agent | Cost Management (Part 8), Token Budgeter |
+| **Decision history** | What was decided, by whom, with what authority | Decision log (Institutional Memory, Part 8), Brain audit trail |
+| **Failure patterns** | What is breaking, how often, whether it is getting worse | Failure Mode Catalog (Part 7), Recovery metrics |
 
 **The test:** Can an operator, arriving cold, understand the state of the fleet within 60 seconds? If not, visibility is insufficient.
 
@@ -115,7 +115,7 @@ Operators must be able to intervene at any level, at any time.
 
 | Control Type | Mechanism | Latency |
 |---|---|---|
-| **Emergency halt** | Any operator, any tier, immediate (Section 35) | < 1 second |
+| **Emergency halt** | Any operator, any tier, immediate (Multi-Operator Governance, Part 10) | < 1 second |
 | **Task cancellation** | Kill a specific task or agent session | < 5 seconds |
 | **Budget adjustment** | Raise or lower token budgets in real time | Immediate |
 | **Authority override** | Temporarily widen or narrow an agent's decision authority | Next decision |
@@ -131,9 +131,9 @@ Rules that apply regardless of which agents are running or what workflows are ac
 | Policy Layer | Examples | Enforcement |
 |---|---|---|
 | **Hard limits** | Token budgets, tool access restrictions, data sensitivity | Hooks (deterministic, 100%) |
-| **Authority boundaries** | Decision tiers, escalation triggers, approval requirements | Decision Authority (Section 09) |
-| **Quality floors** | Minimum test coverage, review requirements, acceptance criteria | QA pipeline (Section 21) |
-| **Security constraints** | Identity verification, access control, quarantine rules | Zero-trust (Section 10, 16) |
+| **Authority boundaries** | Decision tiers, escalation triggers, approval requirements | Decision Authority (Part 3) |
+| **Quality floors** | Minimum test coverage, review requirements, acceptance criteria | QA pipeline (Quality Assurance, Part 7) |
+| **Security constraints** | Identity verification, access control, quarantine rules | Zero-trust (Configuration Security, Part 3; Knowledge Protocol, Part 5) |
 | **Operational rules** | Standing Orders, handoff protocols, checkpoint requirements | Firm guidance + hooks |
 
 Policy is the bridge between "we want agents to be autonomous" and "we need to sleep at night." Good policy enables autonomy by making the boundaries explicit and enforceable.
@@ -147,7 +147,7 @@ When things break — and they will — the system must recover without human in
 | Recovery Level | Trigger | Response | Human Required? |
 |---|---|---|---|
 | **Self-healing** | Hook detects fixable error (lint, type, test) | Feed error back to agent, retry | No |
-| **Recovery ladder** | Agent-level failure | Retry → Fallback → Backtrack → Isolate → Escalate (Section 22) | Only at Escalate |
+| **Recovery ladder** | Agent-level failure | Retry → Fallback → Backtrack → Isolate → Escalate (Failure Recovery, Part 7) | Only at Escalate |
 | **Fleet recovery** | Multi-agent failure or cascade | Pause affected tasks, reroute, checkpoint state | Depends on severity |
 | **Disaster recovery** | Total fleet failure, budget exhaustion, security breach | Emergency halt, state preservation, post-mortem | Yes |
 
@@ -203,7 +203,7 @@ The framework does not prevent chaos. It observes, manages, and recovers from it
 
 ### Design Implications
 
-**1. No single point of control.** The Orchestrator coordinates, but the system does not depend on it exclusively. Fallback Decomposer Mode (Section 33) activates when the Orchestrator fails. Governance agents operate independently. Hooks fire regardless of orchestration state.
+**1. No single point of control.** The Orchestrator coordinates, but the system does not depend on it exclusively. Fallback Decomposer Mode (Admiral Self-Calibration, Part 10) activates when the Orchestrator fails. Governance agents operate independently. Hooks fire regardless of orchestration state.
 
 **2. Every agent is observable.** There is no "dark" agent — one running without traces, without budget tracking, without policy enforcement. If an agent exists in the fleet, the platform sees it.
 

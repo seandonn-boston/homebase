@@ -1,13 +1,15 @@
-<!-- Admiral Framework v0.3.1-alpha -->
+<!-- Admiral Framework v0.4.0-alpha -->
 # PART 1 — STRATEGY
 
 *What are we building, what are the walls, and how do we know when we're done?*
 
 *These three sections form a closed triangle. Together they answer the only questions that matter before any agent touches a keyboard: the destination, the fences, and the finish line. Every downstream artifact — agent definitions, task decompositions, quality gates — derives from this triangle. If any vertex is missing, the fleet will infer one, and the inference will be subtly wrong.*
 
+> **Control Plane surface:** Mission alignment and boundary violations surface as alerts in the Fleet Control Plane at all adoption levels. When an agent's actions diverge from Mission or cross a Boundary, the Control Plane flags it immediately.
+
 -----
 
-## 01 — MISSION
+## Mission
 
 > **TL;DR** — One sentence that defines what you're building. One sentence that defines success. Without these, every agent decision drifts.
 
@@ -22,7 +24,7 @@ Before any agent writes a line of code or makes a single decision, the fleet nee
 
 ### The Spec-First Pipeline
 
-The Mission is the entry point to the Spec-First Pipeline (Mission → Requirements → Design → Tasks → Implementation). Define at which pipeline stage the fleet takes over. See Section 18 for the full pipeline specification and chunking principles.
+The Mission is the entry point to the Spec-First Pipeline (Mission → Requirements → Design → Tasks → Implementation). Define at which pipeline stage the fleet takes over. See Work Decomposition (Part 6) for the full pipeline specification and chunking principles.
 
 > **TEMPLATE: MISSION STATEMENT**
 >
@@ -40,7 +42,7 @@ The Mission is the entry point to the Spec-First Pipeline (Mission → Requireme
 
 -----
 
-## 02 — BOUNDARIES
+## Boundaries
 
 > **TL;DR** — Non-goals eliminate more bad work than goals create good work. Define what the project is NOT, the resource budgets, and the line between LLM and deterministic tooling.
 
@@ -100,7 +102,7 @@ If a static tool can do it, the LLM should not. A linter catches 100% of formatt
 
 -----
 
-## 03 — SUCCESS CRITERIA
+## Success Criteria
 
 > **TL;DR** — Every task needs a machine-verifiable definition of "done." Without one, agents either under-deliver or loop forever.
 
@@ -133,7 +135,7 @@ The best exit conditions are ones an agent can verify autonomously by running a 
 >
 > No files modified outside `src/features/[feature-name]/`
 
-For criteria that cannot be machine-verified (design quality, UX, readability), assign them to QA verification levels (Section 21).
+For criteria that cannot be machine-verified (design quality, UX, readability), assign them to QA verification levels in Quality Assurance (Part 7).
 
 > **TEMPLATE: TASK ACCEPTANCE CRITERIA**
 >

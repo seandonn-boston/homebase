@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.3.1-alpha -->
+<!-- Admiral Framework v0.4.0-alpha -->
 # INTENT ENGINEERING
 
 *The shared dialect between Admirals and Brains.*
@@ -27,7 +27,7 @@ The difference is not length. The difference is that the second instruction give
 | 2025–2026 | **Context Engineering** | Information flows across a fleet | "What information exists where, when, and why?" |
 | 2026– | **Intent Engineering** | Outcomes, values, and judgment boundaries across an entire system | "What matters, what must not happen, and when must the human decide?" |
 
-Each generation subsumes the previous. Intent engineering does not replace context engineering — it requires it. You still need the five dimensions of context (Section 04). You still need the enforcement spectrum (Section 08). Intent engineering adds a layer above both: the communication of *purpose, priority, and permission boundaries* that allows agents to exercise judgment within defined limits rather than following brittle scripts.
+Each generation subsumes the previous. Intent engineering does not replace context engineering — it requires it. You still need the five dimensions of context (Context Engineering, Part 2). You still need the enforcement spectrum (Deterministic Enforcement, Part 3). Intent engineering adds a layer above both: the communication of *purpose, priority, and permission boundaries* that allows agents to exercise judgment within defined limits rather than following brittle scripts.
 
 -----
 
@@ -58,7 +58,7 @@ What must not happen, regardless of how attractive the shortcut appears. Constra
 - **Weak:** "Deploy to production."
 - **Intent:** "Deploy to production. Do not skip tests, do not bypass the CI pipeline, do not acquire credentials beyond what is already available to you."
 
-Constraints map directly to the enforcement spectrum (Section 08). The most critical constraints should be hooks. The rest should be firm guidance. But even firm guidance is more effective when the agent understands *why* the constraint exists.
+Constraints map directly to the enforcement spectrum (Deterministic Enforcement, Part 3). The most critical constraints should be hooks. The rest should be firm guidance. But even firm guidance is more effective when the agent understands *why* the constraint exists.
 
 ### 4. Failure Modes
 
@@ -67,7 +67,7 @@ What to do when things go wrong. Without explicit failure instructions, agents d
 - **Weak:** (nothing — the instruction assumes success)
 - **Intent:** "If deployment fails, rollback immediately and notify the Admiral. Do not attempt alternative deployment paths without authorization."
 
-This element connects directly to the recovery ladder (Section 22) and the failure mode catalog (Section 23). Intent engineering makes the recovery path part of the instruction, not an afterthought.
+This element connects directly to the recovery ladder (Failure Recovery, Part 7) and the failure mode catalog (Failure Mode Catalog, Part 7). Intent engineering makes the recovery path part of the instruction, not an afterthought.
 
 ### 5. Judgment Boundaries
 
@@ -95,13 +95,13 @@ Intent engineering is not a single document's concern. It is the shared dialect 
 
 | Component | How Intent Engineering Applies |
 |---|---|
-| **Admiral self-calibration** (Section 33) | Intent fluency is the Admiral's primary skill. Every mission statement, boundary, and escalation trigger is an exercise in intent engineering. |
-| **Agent hooks** (Section 08) | Hooks enforce constraints, but the *rationale* in the hook manifest communicates intent. An agent that understands why a hook exists is less likely to fight it. |
-| **Brain knowledge protocol** (Section 16) | Brain entries that capture intent — not just facts — are more useful for future retrieval. "We chose Postgres over MongoDB" is a fact. "We chose Postgres over MongoDB because we valued transactional consistency over schema flexibility for this domain" is intent. |
-| **Fleet routing** (Section 11) | Routing rules that communicate intent ("this task requires security expertise because it touches authentication") produce better specialist output than routing rules that communicate only category ("security task"). |
-| **Input channel listeners** (Section 31) | Event-driven agents need intent-rich context bootstrapping. A CI failure trigger that says "the build broke" is less useful than one that says "the build broke on the authentication module, which is release-blocking." |
-| **Monitoring** (Section 30) | Observability is more useful when you know what the intent was. A trace that shows "agent called API 47 times" becomes diagnostic only when paired with "the intent was to call it once." |
-| **Token brokerage** (Section 26) | Cost management decisions require intent. "This task used 50,000 tokens" is a metric. "This task used 50,000 tokens against a budget of 10,000 because the agent did not understand the scope constraint" is actionable. |
+| **Admiral Self-Calibration** (Part 10) | Intent fluency is the Admiral's primary skill. Every mission statement, boundary, and escalation trigger is an exercise in intent engineering. |
+| **Agent hooks** (Deterministic Enforcement, Part 3) | Hooks enforce constraints, but the *rationale* in the hook manifest communicates intent. An agent that understands why a hook exists is less likely to fight it. |
+| **Brain knowledge protocol** (Knowledge Protocol, Part 5) | Brain entries that capture intent — not just facts — are more useful for future retrieval. "We chose Postgres over MongoDB" is a fact. "We chose Postgres over MongoDB because we valued transactional consistency over schema flexibility for this domain" is intent. |
+| **Fleet routing** (Fleet Composition, Part 4) | Routing rules that communicate intent ("this task requires security expertise because it touches authentication") produce better specialist output than routing rules that communicate only category ("security task"). |
+| **Input channel listeners** (Event-Driven Operations, Part 9) | Event-driven agents need intent-rich context bootstrapping. A CI failure trigger that says "the build broke" is less useful than one that says "the build broke on the authentication module, which is release-blocking." |
+| **Monitoring** (Fleet Observability, Part 9) | Observability is more useful when you know what the intent was. A trace that shows "agent called API 47 times" becomes diagnostic only when paired with "the intent was to call it once." |
+| **Token brokerage** (Cost Management, Part 8) | Cost management decisions require intent. "This task used 50,000 tokens" is a metric. "This task used 50,000 tokens against a budget of 10,000 because the agent did not understand the scope constraint" is actionable. |
 | **Attack corpus** (attack-corpus/) | Attack scenarios are more useful when they capture adversarial *intent*, not just adversarial *inputs*. Understanding what an attacker is trying to achieve helps the fleet defend against novel variations. |
 
 -----
@@ -120,7 +120,7 @@ These inflection points are not bugs in the system. They are features. They are 
 
 **This shall not be worked around.** An agent that encounters a human inflection point must stop and fetch the human angle. Not approximate it. Not infer it from patterns. Not skip it because it would slow down the pipeline. Stop and ask.
 
-The Standing Orders (Section 36) encode many of these inflection points as escalation triggers. Intent engineering is the discipline that makes those triggers *understandable* — not just to the agent executing them, but to the Admiral writing them and the Brain storing them.
+The Standing Orders (Part 11) encode many of these inflection points as escalation triggers. Intent engineering is the discipline that makes those triggers *understandable* — not just to the agent executing them, but to the Admiral writing them and the Brain storing them.
 
 -----
 

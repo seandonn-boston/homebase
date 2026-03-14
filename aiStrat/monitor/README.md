@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.3.1-alpha -->
+<!-- Admiral Framework v0.4.0-alpha -->
 # Continuous AI Landscape Monitor — Architecture Specification
 
 **Automated surveillance of the AI agent ecosystem — with an immune system.**
@@ -227,8 +227,8 @@ Digests follow a fixed markdown template for consistency and machine-parseabilit
 
 | Admiral Section | Monitor Role |
 |---|---|
-| Section 10 — Configuration Security | Five-layer quarantine (3 LLM-airgapped + 1 LLM advisory + antibody) defends against external intelligence poisoning |
-| Section 13 — Model Selection | New model releases trigger tier reassessment |
-| Section 17 — Intelligence Lifecycle | External intelligence channel feeding curated ecosystem data |
-| Section 25 — Adaptation Protocol | Monitor findings may trigger tactical or strategic fleet adaptation |
-| Section 31 — CI/CD Operations | Monitor runs as a scheduled event-driven agent (Pattern 5) |
+| Configuration Security (Part 3) | Five-layer quarantine (3 LLM-airgapped + 1 LLM advisory + antibody) defends against external intelligence poisoning |
+| Model Selection (Part 4) | New model releases trigger tier reassessment |
+| Intelligence Lifecycle (Part 5) | External intelligence channel feeding curated ecosystem data |
+| Strategic Adaptation (Part 8) | Monitor findings may trigger tactical or strategic fleet adaptation |
+| Event-Driven Operations (Part 9) | Monitor runs as a scheduled event-driven agent (Pattern 5) |

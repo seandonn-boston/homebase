@@ -1,13 +1,15 @@
-<!-- Admiral Framework v0.3.1-alpha -->
+<!-- Admiral Framework v0.4.0-alpha -->
 # PART 6 — EXECUTION
 
 *How work gets planned, parallelized, and completed.*
 
 *Strategy says what. Context says how agents know. Enforcement says what's mandatory. Fleet says who. The Brain persists what the fleet learns. Now: how does actual work flow? These three sections cover decomposition, parallelization, and advanced orchestration patterns.*
 
+> **Control Plane surface:** Task decomposition trees and parallel execution status are visible in the Control Plane's Task Flow View (Level 2+). Operators can see how the Orchestrator broke down work, which chunks are assigned to which agents, and where tasks are blocked or queued.
+
 -----
 
-## 18 — WORK DECOMPOSITION
+## Work Decomposition
 
 > **TL;DR** — Break goals into chunks that each consume no more than 40% of an agent's token budget. Each chunk is independently completable, independently verifiable, with explicit entry and exit states.
 
@@ -35,7 +37,7 @@ Each phase can be a separate session with clean context. The output of phase N b
 
 ### Self-Healing Quality Integration
 
-Self-healing loops (specified in Section 08) integrate with execution through the chunking model. Each chunk passes through the self-healing cycle before the next chunk begins.
+Self-healing loops (specified in Deterministic Enforcement, Part 3) integrate with execution through the chunking model. Each chunk passes through the self-healing cycle before the next chunk begins.
 
 > **TEMPLATE: TASK DECOMPOSITION**
 >
@@ -52,7 +54,7 @@ Self-healing loops (specified in Section 08) integrate with execution through th
 
 -----
 
-## 19 — PARALLEL EXECUTION STRATEGY
+## Parallel Execution Strategy
 
 > **TL;DR** — Parallelize when tasks share no state. Serialize when they share files. Always define the interface contract before dispatching parallel work. Thirty minutes on a contract saves hours on rework.
 
@@ -88,7 +90,7 @@ The power of fleet architecture lies in parallelism. But parallelism without coo
 
 -----
 
-## 20 — SWARM PATTERNS
+## Swarm Patterns
 
 > **TL;DR** — Hierarchical fleets (orchestrator + specialists) handle most projects. Swarms and multi-model orchestration extend capabilities for scale and adversarial quality — but add complexity. Don't reach for them unless you need them.
 

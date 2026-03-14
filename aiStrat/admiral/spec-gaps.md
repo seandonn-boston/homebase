@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.3.1-alpha -->
+<!-- Admiral Framework v0.4.0-alpha -->
 # Specification Gaps: Vague Behavioral Claims Needing Concrete Constants
 
 > **Audience:** Spec authors and reviewers. This document identifies sections across the Admiral Framework that make behavioral claims without pinning down concrete numbers, thresholds, or constants. Each gap includes the vague phrase, what should be specified, and a suggested value inferred from context.
@@ -17,7 +17,7 @@
 
 ### 1. Standing Context Ceiling Language
 
-**File:** `part2-context.md`, Section 06 (line ~168)
+**File:** `part2-context.md`, Context Profiles (line ~168)
 **Vague phrase:** "Standing context should **rarely** exceed 50K tokens regardless of window size"
 **Problem:** "Rarely" is undefined. When is it acceptable to exceed 50K?
 
@@ -30,7 +30,7 @@
 
 ### 2. Brain Level Advancement Criteria
 
-**File:** `part5-brain.md`, Section 15 (lines ~25–26)
+**File:** `part5-brain.md`, Brain Architecture (lines ~25–26)
 **Vague phrase:** "If these metrics **don't improve** at the next level, the current level is sufficient"
 **Problem:** "Don't improve" is subjective. What percentage improvement constitutes success?
 
@@ -45,7 +45,7 @@
 
 ### 3. Brain Supersession Rate
 
-**File:** `part5-brain.md`, Section 15
+**File:** `part5-brain.md`, Brain Architecture
 **Vague phrase:** "Supersession rate: **Low and stable** | **High** — knowledge is frequently wrong"
 **Problem:** No quantitative boundary between "low" and "high."
 
@@ -58,7 +58,7 @@
 
 ### 4. Over-Decomposition "Consistently" Trigger
 
-**File:** `part6-execution.md`, Section 18 (line ~18)
+**File:** `part6-execution.md`, Work Decomposition (line ~18)
 **Vague phrase:** "If a chunk **consistently** uses less than 20%, it is over-decomposed"
 **Problem:** "Consistently" is undefined. Once? Twice? Three times?
 
@@ -71,7 +71,7 @@
 
 ### 5. Tactical vs. Strategic Change Classification
 
-**File:** `part8-operations.md`, Section 25 (line ~74)
+**File:** `part8-operations.md`, Strategic Adaptation (line ~74)
 **Vague phrases:**
 - "**Significant** scope change"
 - "**Mission evolution**"
@@ -90,7 +90,7 @@
 
 ### 6. Health Metric Gray Zones
 
-**File:** `part8-operations.md`, Section 27 (line ~240)
+**File:** `part8-operations.md`, Fleet Health Metrics (line ~240)
 **Problem:** Metrics define "Healthy" and "Critical" thresholds but leave the zone between them undefined.
 
 | Metric | Healthy | Undefined Zone | Critical |
@@ -112,7 +112,7 @@
 
 ### 7. Orchestrator Overhead Graduated Response
 
-**File:** `part8-operations.md`, Section 28b (line ~342)
+**File:** `part8-operations.md`, Orchestrator Health Protocol (line ~342)
 **Problem:** Two data points (25% healthy, 60% case study) but no graduated response.
 
 | Threshold | Status | Action |
@@ -129,7 +129,7 @@
 
 ### 8. Context Loading Position
 
-**File:** `part2-context.md`, Section 04 (line ~31)
+**File:** `part2-context.md`, Context Engineering (line ~31)
 **Vague phrase:** "Information loaded **early** frames all subsequent reasoning"
 **Problem:** How early? First 10%? First 100 lines?
 
@@ -141,7 +141,7 @@
 
 ### 9. QA Confidence Level Definitions
 
-**File:** `part7-quality.md`, Section 21
+**File:** `part7-quality.md`, Quality Assurance
 **Vague phrases:**
 - "Verified (tested)" — how many tests?
 - "Assessed (reviewed **carefully**)" — what constitutes careful?
@@ -157,7 +157,7 @@
 
 ### 10. Sycophantic Drift Detection
 
-**File:** `part7-quality.md`, Section 23 (line ~156)
+**File:** `part7-quality.md`, Failure Mode Catalog (line ~156)
 **Vague phrases:**
 - "**Declining** finding counts"
 - "**Softening** language"
@@ -173,7 +173,7 @@
 
 ### 11. Admiral Trust Promotion Threshold
 
-**File:** `part10-admiral.md`, Section 33 (line ~28)
+**File:** `part10-admiral.md`, Admiral Self-Calibration (line ~28)
 **Vague phrase:** "After **consecutive** successful Autonomous decisions in a category, promote similar Propose-tier decisions"
 **Problem:** How many consecutive successes?
 
@@ -186,7 +186,7 @@
 
 ### 12. Context Honesty Confidence Threshold
 
-**File:** `part11-protocols.md`, Section 36 (line ~55)
+**File:** `part11-protocols.md`, Standing Orders (line ~55)
 **Vague phrase:** "If you don't have **enough** context to complete a task, say so immediately"
 **Problem:** "Enough" is subjective.
 
@@ -199,7 +199,7 @@
 
 ### 13. Headless Agent Authority Narrowing
 
-**File:** `part9-platform.md`, Section 31 (line ~261)
+**File:** `part9-platform.md`, Event-Driven Operations (line ~261)
 **Vague phrase:** "Headless agents default to **narrower** Autonomous tiers"
 **Problem:** How much narrower? One tier? Two?
 
@@ -214,7 +214,7 @@
 
 ### 14. Escalation Rate Improvement Expectation
 
-**File:** `part8-operations.md`, Section 27 (line ~249)
+**File:** `part8-operations.md`, Fleet Health Metrics (line ~249)
 **Vague phrase:** "Escalation Rate: **Decreasing over time** is healthy"
 **Problem:** At what rate should it decrease?
 
@@ -258,4 +258,4 @@
 
 - Constants registry: `reference-constants.md`
 - Standing orders enforcement: `standing-orders-enforcement-map.md`
-- Enforcement spectrum: `part3-enforcement.md`, Section 08
+- Enforcement spectrum: `part3-enforcement.md`, Deterministic Enforcement

@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.3.1-alpha -->
+<!-- Admiral Framework v0.4.0-alpha -->
 # Model Tier Assignments
 
 **Matching model capability to agent role requirements.**
@@ -116,7 +116,7 @@ No default assignments. Use for high-volume batch variations of Tier 2/3 tasks w
 - First-pass quality rate for the role drops below acceptable threshold
 - Rework cost exceeds the cost difference between tiers — *this is the economic signal: if rework from wrong-tier output costs more than the tier upgrade, the upgrade pays for itself*
 - The agent consistently requires human correction on judgment calls
-- Error patterns indicate reasoning limitations rather than knowledge gaps — *knowledge gaps are fixed with better context (Section 04); reasoning gaps require a more capable model*
+- Error patterns indicate reasoning limitations rather than knowledge gaps — *knowledge gaps are fixed with better context (Context Engineering); reasoning gaps require a more capable model*
 
 ### Demote (move to lower tier) when:
 
@@ -133,7 +133,7 @@ The Continuous AI Landscape Monitor (`monitor/`) tracks releases across 11 model
 
 1. Review the release capabilities, benchmarks, and pricing.
 2. Assess whether any current tier assignment should change (promote or demote).
-3. If a Strategic Shift (see Adaptation Protocol, Section 25), cascade through fleet artifacts.
+3. If a Strategic Shift (see Adaptation Protocol, Strategic Adaptation), cascade through fleet artifacts.
 4. Record the tier decision in the Brain with rationale.
 
 ### How to test:
@@ -225,4 +225,4 @@ When the primary model API recovers:
 
 ### Enforcement
 
-Model tier assignments and degradation policies are enforced via the `SessionStart: tier_validation` hook (Section 08). The hook validates the instantiated model against the tier specified here and consults the degradation policy on failure.
+Model tier assignments and degradation policies are enforced via the `SessionStart: tier_validation` hook (Deterministic Enforcement). The hook validates the instantiated model against the tier specified here and consults the degradation policy on failure.

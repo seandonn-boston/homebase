@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.3.1-alpha -->
+<!-- Admiral Framework v0.4.0-alpha -->
 # THE THREE INEVITABLE FEATURES
 
 *The features that make engineering teams say: "Once you have this, you can't go back."*
@@ -71,9 +71,9 @@ Once a team has this capability, asking them to go back to log-reading and guess
 
 ### Specification Anchor
 
-This feature builds on Section 30 (Fleet Observability) with these extensions:
+This feature builds on Fleet Observability (Part 9) with these extensions:
 
-| Component | Section 30 | This Feature |
+| Component | Fleet Observability (Part 9) | This Feature |
 |---|---|---|
 | Traces | Per-task recording | Cross-task causality chains |
 | Root cause | Manual analysis | Automated reverse causal chain construction |
@@ -221,12 +221,12 @@ Predictive health does not require machine learning or complex forecasting. Most
 
 ### Specification Anchor
 
-This feature extends Section 27 (Fleet Health Metrics) and Section 30 (Fleet Observability):
+This feature extends Fleet Health Metrics (Part 8) and Fleet Observability (Part 9):
 
 | Component | Current Spec | Predictive Extension |
 |---|---|---|
-| Metrics (Section 27) | Current values and thresholds | Trend extrapolation and forecasted threshold crossings |
-| Observability (Section 30) | What happened and what is happening | What will happen if current trends continue |
+| Metrics (Fleet Health Metrics, Part 8) | Current values and thresholds | Trend extrapolation and forecasted threshold crossings |
+| Observability (Fleet Observability, Part 9) | What happened and what is happening | What will happen if current trends continue |
 | Alerts | Triggered when thresholds are crossed | Triggered when thresholds are forecasted to be crossed |
 | Control Plane | Shows current state | Shows current state and projected state |
 
@@ -259,7 +259,7 @@ After three months of operation, these three features create a system that is se
 
 | Feature | When to Build | Prerequisite |
 |---|---|---|
-| **Causality Tracing** | First — this is the foundation | Section 30 observability infrastructure |
+| **Causality Tracing** | First — this is the foundation | Fleet Observability (Part 9) infrastructure |
 | **Living Memory** | Second — feeds on traces | Brain (Part 5) at Level 2 minimum |
 | **Predictive Health** | Third — requires operational history | 30+ days of trace and metric data |
 

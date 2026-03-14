@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.3.1-alpha -->
+<!-- Admiral Framework v0.4.0-alpha -->
 # Standing Orders → Enforcement Mechanism Map
 
 > **Audience:** Implementers and auditors verifying that standing orders have deterministic enforcement where required. This document maps each of the 15 standing orders to its enforcement mechanism (or documents the gap).
@@ -11,7 +11,7 @@
 - **Partially enforced:** 1 of 15 (7%)
 - **Advisory only (no hook):** 10 of 15 (67%)
 
-The enforcement spectrum (part3-enforcement.md, Section 08) classifies constraints as requiring either **hard enforcement** (hooks) or **soft enforcement** (standing orders + agent compliance). Safety-critical orders should trend toward hard enforcement as the framework matures.
+The enforcement spectrum (part3-enforcement.md, Deterministic Enforcement) classifies constraints as requiring either **hard enforcement** (hooks) or **soft enforcement** (standing orders + agent compliance). Safety-critical orders should trend toward hard enforcement as the framework matures.
 
 -----
 
@@ -44,7 +44,7 @@ The enforcement spectrum (part3-enforcement.md, Section 08) classifies constrain
 These standing orders are classified as Safety-tier (highest priority) but lack deterministic enforcement:
 
 **SO 3 — Scope Boundaries**
-- Part 3, Section 08 explicitly classifies "Scope boundaries" as requiring hard enforcement via hooks.
+- Part 3, Deterministic Enforcement explicitly classifies "Scope boundaries" as requiring hard enforcement via hooks.
 - No hook currently validates that an agent operates within its assigned scope.
 - **Recommended:** Implement a `scope_boundary_gate` (PreToolUse) that validates file paths and tool operations against the agent's declared scope.
 
@@ -114,7 +114,7 @@ This progression mirrors the framework's own enforcement spectrum: start with do
 ## Cross-References
 
 - Standing Orders source: `part11-protocols.md`
-- Enforcement spectrum: `part3-enforcement.md`, Section 08
+- Enforcement spectrum: `part3-enforcement.md`, Deterministic Enforcement
 - Hook implementations: `hooks/` directory
 - Hook manifest schema: `hooks/manifest.schema.json`
 - Reference constants for hook behavior: `reference-constants.md`

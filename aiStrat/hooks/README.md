@@ -1,13 +1,13 @@
-<!-- Admiral Framework v0.3.1-alpha -->
+<!-- Admiral Framework v0.4.0-alpha -->
 # Hook Ecosystem
 
 **Manifest-first hook management for the Admiral Framework.**
 
-Hooks are the deterministic enforcement layer — they fire every time, regardless of context pressure. "Deterministic" means: an instruction in AGENTS.md can be forgotten as the session lengthens and context pressure builds; a hook fires on every invocation regardless of what the agent has or hasn't remembered. This is the fundamental insight of the enforcement spectrum (Section 08) — any constraint that must hold with zero exceptions must be a hook, not an instruction.
+Hooks are the deterministic enforcement layer — they fire every time, regardless of context pressure. "Deterministic" means: an instruction in AGENTS.md can be forgotten as the session lengthens and context pressure builds; a hook fires on every invocation regardless of what the agent has or hasn't remembered. This is the fundamental insight of the enforcement spectrum (Deterministic Enforcement) — any constraint that must hold with zero exceptions must be a hook, not an instruction.
 
 This document specifies the hook ecosystem: how hooks declare their capabilities, how the runtime discovers and validates them, and how hook dependencies are resolved.
 
-For hook lifecycle events, execution model, and contract specification, see `admiral/part3-enforcement.md` (Section 08).
+For hook lifecycle events, execution model, and contract specification, see `admiral/part3-enforcement.md` (Deterministic Enforcement).
 
 -----
 
@@ -85,7 +85,7 @@ When multiple hooks bind to the same lifecycle event:
 
 1. Dependencies execute first (topological sort).
 2. Among hooks at the same dependency level, execution follows declaration order.
-3. First failure stops the chain (fail-fast) — consistent with the hook chaining behavior in Section 08.
+3. First failure stops the chain (fail-fast) — consistent with the hook chaining behavior in Deterministic Enforcement.
 
 ### Hook State Propagation
 
@@ -126,7 +126,7 @@ This extension is planned for a future release. For now, the simple version stri
 
 ## Reference Manifests
 
-The following 8 hooks are specified in `admiral/part3-enforcement.md` (Section 08). Their manifests would be:
+The following 8 hooks are specified in `admiral/part3-enforcement.md` (Deterministic Enforcement). Their manifests would be:
 
 **token_budget_tracker:**
 ```json

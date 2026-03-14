@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.3.1-alpha -->
+<!-- Admiral Framework v0.4.0-alpha -->
 # APPENDICES
 
 -----
@@ -7,7 +7,7 @@
 
 Before deploying, verify the items for your adoption level. Each level includes all items from previous levels. **Only check items for your current level** — checking ahead encourages premature implementation.
 
-> **Bootstrap note:** This checklist validates that Standing Orders (Section 36) are loaded, but using the checklist effectively presupposes familiarity with Standing Orders. Bootstrap sequence: (1) read Standing Orders in Part 11, Section 36; (2) configure your agent's context to include them; (3) run this Pre-Flight Checklist to verify completeness.
+> **Bootstrap note:** This checklist validates that Standing Orders (Part 11) are loaded, but using the checklist effectively presupposes familiarity with Standing Orders. Bootstrap sequence: (1) read Standing Orders in Part 11; (2) configure your agent's context to include them; (3) run this Pre-Flight Checklist to verify completeness.
 
 ### Level 1: Disciplined Solo
 
@@ -88,13 +88,13 @@ Everything from Level 1, plus:
 > 2. **Deployment requirements** (running MCP servers, probe testing, populated fleet rosters) — require runtime infrastructure.
 >
 > Specific gaps identified during implementation:
-> - **Section 04** "tested with probes": No probe framework is defined in the spec. `AgentDefinition.prompt_anchor` provides the structure; probe testing requires a runtime harness (arguably Level 3).
-> - **Section 11** "5-12 agents": The model supports 1-12 agents. Populating a roster with concrete agent definitions is a configuration task, not a framework task. Consider clarifying the distinction.
-> - **Section 22** "Recovery ladder": The spec's 5-step ladder (Retry → Fallback → Backtrack → Isolate → Escalate) is cross-cutting — it touches context management, fleet routing, and escalation protocol. The model enforces no-skip progression but the runtime integration spans multiple systems.
+> - **Context Engineering** "tested with probes": No probe framework is defined in the spec. `AgentDefinition.prompt_anchor` provides the structure; probe testing requires a runtime harness (arguably Level 3).
+> - **Fleet Composition** "5-12 agents": The model supports 1-12 agents. Populating a roster with concrete agent definitions is a configuration task, not a framework task. Consider clarifying the distinction.
+> - **Failure Recovery** "Recovery ladder": The spec's 5-step ladder (Retry → Fallback → Backtrack → Isolate → Escalate) is cross-cutting — it touches context management, fleet routing, and escalation protocol. The model enforces no-skip progression but the runtime integration spans multiple systems.
 > - **Time estimates**: The "~2 hours per item" estimate does not account for cross-model validation (e.g., context budget ↔ agent definition) or test writing. Realistic implementation is 3-4 hours per item with tests.
-> - **Section 14** "A2A configured if needed": A2A is primarily a Level 3+ concern (cross-process communication between governance agents). The model exists for when it is needed. The spec's "if needed" qualifier means this is conditionally complete at Level 2.
+> - **Protocol Integration** "A2A configured if needed": A2A is primarily a Level 3+ concern (cross-process communication between governance agents). The model exists for when it is needed. The spec's "if needed" qualifier means this is conditionally complete at Level 2.
 > - **Standing Order 12** has exactly 7 rules (verified in reference implementation). Like SO 11's 6 rules, this is a fixed count that implementations should validate.
-> - **LLM-Last boundary enforcement** (Section 02) is a documentation concern — it defines which tools are deterministic vs. which require LLM judgment. It does not require a hook or runtime check until Level 3+ when governance agents verify compliance.
+> - **LLM-Last boundary enforcement** (Boundaries, Part 1) is a documentation concern — it defines which tools are deterministic vs. which require LLM judgment. It does not require a hook or runtime check until Level 3+ when governance agents verify compliance.
 > - **Async hook execution** is deferred to Level 3+. The manifest schema accepts the `async` field for forward compatibility, but Level 1–2 runtimes should execute all hooks synchronously.
 
 ### Level 3: Governed Fleet
@@ -109,7 +109,7 @@ Everything from Levels 1–2, plus:
 **Part 8 — Operations**
 
 - [ ] **Cost Management (26):** Per-session and per-phase budgets. Cost tracking in place. LLM-Last implemented.
-- [ ] **Metered Service Broker (26):** If the fleet shares pooled API keys or subscription accounts, deploy a service broker with credential vault, session management, and fair-split billing. See Section 26, "Metered Service Broker."
+- [ ] **Metered Service Broker (26):** If the fleet shares pooled API keys or subscription accounts, deploy a service broker with credential vault, session management, and fair-split billing. See Cost Management (Part 8), "Metered Service Broker."
 - [ ] **Fleet Health Metrics (27):** Metrics selected. Collection rhythm defined.
 - [ ] **Fleet Scaling (28):** Lifecycle phase identified. Scaling signals understood. Size upper bound set.
 
@@ -174,18 +174,18 @@ Structured around the four Adoption Levels (see index.md). Complete each level b
 3. **Boundaries (02)** — What you are NOT building. Resource budgets.
 4. **Success Criteria (03)** — Machine-verifiable definition of "done."
 5. **Configuration File Strategy (07)** — Create AGENTS.md (<150 lines). Tool-specific pointers configured. Reference Standing Orders from AGENTS.md.
-6. **Deterministic Enforcement (08)** — Classify constraints (see classification decision process in Section 08). **Deploy** hooks for safety-critical ones as live enforcement in your agent runtime (e.g., `.claude/hooks/` for Claude Code, equivalent for other platforms). "Deploy" means the hooks run and block violations in real sessions — not just that the hook code exists and passes tests. Only deploy `Level 1` hooks (token budget, loop detection, context health). Standing Orders define the *content* that hooks enforce.
+6. **Deterministic Enforcement (08)** — Classify constraints (see classification decision process in Deterministic Enforcement, Part 3). **Deploy** hooks for safety-critical ones as live enforcement in your agent runtime (e.g., `.claude/hooks/` for Claude Code, equivalent for other platforms). "Deploy" means the hooks run and block violations in real sessions — not just that the hook code exists and passes tests. Only deploy `Level 1` hooks (token budget, loop detection, context health). Standing Orders define the *content* that hooks enforce.
 7. **Configuration Security (10)** — Audit configs. Pin MCP servers (if applicable at this level). Set CODEOWNERS.
 
 > **Critical sequencing insight (from implementation):** Implementers naturally organize work by *code architecture* (data models → engine → tests). Admiral organizes by *operational maturity*. These are different orderings. If you build the hook engine before creating AGENTS.md and loading Standing Orders, you have infrastructure without governance — the dogfooding loop is broken. **Create AGENTS.md and Standing Orders first**, then build the infrastructure to enforce them.
 
 **You can start working here.** One agent with clear Identity, Scope, Boundaries, and hooks.
 
-> **Note on Identity Tokens:** At Level 1, simplified identity (agent-id + role, no cryptographic signing) is sufficient. Full cryptographic token signing with expiry and cross-project access control is a Level 3 concern (Section 09, vulnerability 8.3.2), deployed alongside the complete Brain. However, the identity *model* should be defined at Level 1 so it can be progressively hardened. **Do not implement cryptographic identity at Level 1** — it has no consumer until zero-trust access control is deployed at Level 3.
+> **Note on Identity Tokens:** At Level 1, simplified identity (agent-id + role, no cryptographic signing) is sufficient. Full cryptographic token signing with expiry and cross-project access control is a Level 3 concern (Decision Authority, Part 3; vulnerability 8.3.2), deployed alongside the complete Brain. However, the identity *model* should be defined at Level 1 so it can be progressively hardened. **Do not implement cryptographic identity at Level 1** — it has no consumer until zero-trust access control is deployed at Level 3.
 
 > **Level 1 scope boundary — do NOT build these yet:**
-> - Handoff protocols or session handoff documents (Section 38) — there is one agent, no one to hand off to.
-> - Escalation routing or escalation reports (Section 37) — there is one agent, no chain to escalate through.
+> - Handoff protocols or session handoff documents (Handoff Protocol, Part 11) — there is one agent, no one to hand off to.
+> - Escalation routing or escalation reports (Escalation Protocol, Part 11) — there is one agent, no chain to escalate through.
 > - Governance heartbeat monitor hook — there are no governance agents until Level 3.
 > - Tier validation hook — there is no fleet roster or model tier assignments until Level 2.
 > - Identity validation hook with hash checking — simplified identity (agent-id + role) is sufficient.
@@ -474,7 +474,7 @@ These case studies are synthesized from patterns observed across multiple agent 
 
 **What went right:**
 - Core data models faithfully replicate every spec section (8 model files, Pydantic validation).
-- Hook engine implements full Section 08: discovery, topological dependency resolution, fail-fast chain execution, self-healing with cycle detection.
+- Hook engine implements full Deterministic Enforcement (Part 3): discovery, topological dependency resolution, fail-fast chain execution, self-healing with cycle detection.
 - All 8 hook implementations match their spec definitions exactly.
 - Identity tokens use HMAC-SHA256 signing, session-scoped, non-delegable — per vulnerability 8.3.2 mitigation.
 - 89 tests passing on first commit.
@@ -491,9 +491,9 @@ These case studies are synthesized from patterns observed across multiple agent 
 - Created `admiral/AGENTS.md` (85 lines, under 150-line rule) with Mission, Boundaries, Success Criteria, Standing Orders reference, Enforcement Classification.
 - Created `admiral/CLAUDE.md` as thin pointer.
 - Modeled all 15 Standing Orders as structured data with loader, priority sorting, and context injection renderer — validating that Standing Orders can be programmatically injected into every agent context.
-- Modeled EscalationReport and EmergencyHaltReport per Section 37, confirming the escalation protocol is implementable as specified.
+- Modeled EscalationReport and EmergencyHaltReport per Escalation Protocol (Part 11), confirming the escalation protocol is implementable as specified.
 - Added schema validation tests against authoritative JSON schemas in `aiStrat/`.
-- Set `.github/CODEOWNERS` per Section 10.
+- Set `.github/CODEOWNERS` per Configuration Security (Part 3).
 - Applied 4 spec patches (SPEC-1 through SPEC-4) to aiStrat/ to fix the gaps that caused these errors.
 - *Note: The reference implementation (`broker/` POC) was subsequently removed. Its learnings are captured in the spec; the spec is the deliverable.*
 
@@ -505,7 +505,7 @@ These case studies are synthesized from patterns observed across multiple agent 
 
 A review of the completed Phase 1 against the Level 1 spec found three categories of issues:
 
-1. **Over-engineering beyond Level 1:** HMAC-SHA256 identity tokens (Level 4), governance heartbeat monitor (Level 3), tier validation hook (Level 2), escalation/handoff protocols (Level 2+), and 15 empty placeholder packages for future levels. Root causes traced to spec structure: reading path said "Full file" for part3-enforcement.md (Sections 08-10), SO 6 hyperlinked directly to Section 37. Spec patched: reading path narrowed to "Section 08 only," SO 6 made self-contained, level tags added to hook specs, Pre-Flight Checklist restructured by level with negative checklist.
+1. **Over-engineering beyond Level 1:** HMAC-SHA256 identity tokens (Level 4), governance heartbeat monitor (Level 3), tier validation hook (Level 2), escalation/handoff protocols (Level 2+), and 15 empty placeholder packages for future levels. Root causes traced to spec structure: reading path said "Full file" for part3-enforcement.md (Deterministic Enforcement through Configuration Security), SO 6 hyperlinked directly to Escalation Protocol (Part 11). Spec patched: reading path narrowed to "Deterministic Enforcement only," SO 6 made self-contained, level tags added to hook specs, Pre-Flight Checklist restructured by level with negative checklist.
 
 2. **Implementation bugs:** Standing Order 11 missing its 6th rule (Context Profile). `HookEngine.discover()` warned on incomplete manifests instead of rejecting per spec. Error signatures used full stdout instead of first-line-plus-exit-code per glossary. All fixed.
 
@@ -529,7 +529,7 @@ The Admiral Framework is platform-agnostic. These patterns show how to apply Adm
 
 Regardless of which tool you use, the foundation is the same:
 
-- **AGENTS.md** → Section 07, Configuration File Strategy (Part 2 — Context). The canonical, model-agnostic instruction file. Keep under 150 lines.
+- **AGENTS.md** → Configuration File Strategy (Part 2 — Context). The canonical, model-agnostic instruction file. Keep under 150 lines.
 - Tool-specific entry points (CLAUDE.md, .cursorrules, etc.) → Thin pointers to AGENTS.md plus tool-specific configuration only.
 - For tools that don't natively read AGENTS.md, the tool-specific file opens with "Read AGENTS.md for full project instructions."
 - Sync tools (Ruler, rule-porter) can automate distribution if maintaining multiple tool-specific files becomes a burden.
@@ -537,10 +537,10 @@ Regardless of which tool you use, the foundation is the same:
 ### Pattern 1: Admiral with Claude Code
 
 - **CLAUDE.md** → Pointer to AGENTS.md + Claude Code-specific config (hooks, `.claude/` directory, permissions).
-- **Hooks** → Part 3 Deterministic Enforcement. Claude Code hooks map directly to the Hook Execution Model (Section 08). PreToolUse, PostToolUse, and other lifecycle hooks ARE the enforcement layer.
-- **Skills** (`.claude/skills/*.md`) → Part 2 Progressive Disclosure (Section 07). Skills are the native mechanism for on-demand context loading.
-- **Agent definitions** (`.claude/agents/*.md`) → Part 4 Fleet Composition (Section 11). Define agent roles with Identity, Scope, Does NOT Do, Output routing.
-- **Claude Code's built-in subagent** → Swarm Patterns (Section 20). The Agent tool enables parallel work with coordination.
+- **Hooks** → Part 3 Deterministic Enforcement. Claude Code hooks map directly to the Hook Execution Model (Deterministic Enforcement, Part 3). PreToolUse, PostToolUse, and other lifecycle hooks ARE the enforcement layer.
+- **Skills** (`.claude/skills/*.md`) → Part 2 Progressive Disclosure (Configuration File Strategy). Skills are the native mechanism for on-demand context loading.
+- **Agent definitions** (`.claude/agents/*.md`) → Part 4 Fleet Composition. Define agent roles with Identity, Scope, Does NOT Do, Output routing.
+- **Claude Code's built-in subagent** → Swarm Patterns (Part 6). The Agent tool enables parallel work with coordination.
 
 > **Note:** Claude Code is the closest native implementation of the Admiral model. Most framework concepts map directly to Claude Code features. As of March 2026, Claude Code does not natively read AGENTS.md — use the CLAUDE.md pointer pattern.
 
@@ -581,7 +581,7 @@ These pitfalls were discovered during the reference implementation (Case Study 4
 |---|---|---|
 | **Infrastructure before config** | You build hooks, models, and engines — then realize you have no Mission, no Boundaries, no Standing Orders. The fleet operates at Level 0 despite having Level 1 code. | Define AGENTS.md and Standing Orders first (30 min). Then build the code that enforces them (1-2 days). |
 | **Organizing by code architecture** | Grouping code as models → hooks → fleet → governance → protocols. Standing Orders end up in the last package because they're in Part 11 of the spec. | Organize by adoption level: config → enforcement → coordination → governance → persistence. Standing Orders are Level 1 despite their Part 11 position. |
-| **Deferring Standing Orders** | "We'll add Standing Orders in Phase 4 with the other protocols." But the spec says Standing Orders are Level 1 — they define what hooks enforce. Without them, hooks have no semantic content. | Standing Orders are the content. Hooks are the enforcement. You need both at Level 1. See Section 36 and the co-requirement note in Section 08. |
+| **Deferring Standing Orders** | "We'll add Standing Orders in Phase 4 with the other protocols." But the spec says Standing Orders are Level 1 — they define what hooks enforce. Without them, hooks have no semantic content. | Standing Orders are the content. Hooks are the enforcement. You need both at Level 1. See Standing Orders (Part 11) and the co-requirement note in Deterministic Enforcement (Part 3). |
 
 **Python-Specific Pitfalls:**
 
@@ -596,7 +596,7 @@ These pitfalls were discovered during the reference implementation (Case Study 4
 
 | Pitfall | What Happens | Fix |
 |---|---|---|
-| **Self-healing without cycle detection** | The self-healing loop retries the same failing fix forever. Token budget burns to zero with no progress. | Track `(hook_name, hash(error_output))` tuples. If the same error recurs after a fix attempt, break immediately. Max 3 retries per hook, 10 per session. See Section 08 implementation parameters. |
+| **Self-healing without cycle detection** | The self-healing loop retries the same failing fix forever. Token budget burns to zero with no progress. | Track `(hook_name, hash(error_output))` tuples. If the same error recurs after a fix attempt, break immediately. Max 3 retries per hook, 10 per session. See Deterministic Enforcement (Part 3) implementation parameters. |
 | **Config time ≠ build time** | "Level 1 in 30 minutes" is true for configuration (AGENTS.md, Standing Orders, Ground Truth). Code implementation takes 1-2 days. Implementers expect runnable code in 30 minutes, then discover the gap. | Distinguish config time from build time in project planning. 30 minutes gets you governed. 1-2 days gets you automated. |
 | **Standing Orders bootstrap problem** | Standing Orders define what hooks enforce. Hooks fire at SessionStart. If Standing Orders loading is itself a hook, you have a circular dependency. | Standing Orders loading is a pre-hook bootstrap step, not a hook. Load Standing Orders → discover hooks → resolve dependencies → execute hooks. |
 
@@ -631,7 +631,7 @@ When upgrading a fleet to a new MAJOR version:
 
 1. **Read the changelog.** Identify breaking changes that affect your adoption level. Level 1 fleets are affected only by Standing Order changes; Level 4 fleets may need Brain schema migrations.
 2. **Update Standing Orders first.** These are the operational core — agents must operate under the new orders before other changes propagate.
-3. **Follow the Cascade Map** (Section 25). Changes propagate: Standing Orders → Agent Definitions → Routing Rules → Interface Contracts → Brain Schema.
+3. **Follow the Cascade Map** (Strategic Adaptation, Part 8). Changes propagate: Standing Orders → Agent Definitions → Routing Rules → Interface Contracts → Brain Schema.
 4. **Re-run the Pre-Flight Checklist** (Appendix A) against the new version.
 5. **Reset trust calibration** for any agents whose scope or authority changed.
 
@@ -657,8 +657,8 @@ This appendix maps every major framework component to its real-world implementat
 | **AGENTS.md / config files** | 1 | Any AI coding tool, any text editor | None — write markdown, commit to repo. Tool-specific pointers (CLAUDE.md, etc.) as needed. |
 | **Hooks (PreToolUse / PostToolUse)** | 1 | Agent runtime hooks (e.g., Claude Code hooks), shell scripts, CI gates | Write hook scripts, version-control alongside fleet config |
 | **Standing Orders** | 1 | System prompt content, AGENTS.md | None — text loaded into agent context |
-| **Agent definitions** | 1 | AGENTS.md sections, tool-specific agent files, Agent SDK agent constructors | Write agent specifications per prompt anatomy (Section 04) |
-| **Self-healing quality loops** | 1 | Hook exit codes + agent retry (Section 08) | Configure hooks for linter/type-checker/test; retry logic is built-in |
+| **Agent definitions** | 1 | AGENTS.md sections, tool-specific agent files, Agent SDK agent constructors | Write agent specifications per prompt anatomy (Context Engineering, Part 2) |
+| **Self-healing quality loops** | 1 | Hook exit codes + agent retry (Deterministic Enforcement, Part 3) | Configure hooks for linter/type-checker/test; retry logic is built-in |
 | **Recovery ladder** | 1 | Agent instructions + hooks | Define fallback/backtrack strategies per agent; hook enforcement for max retries |
 | **Brain Level 1 (file-based)** | 1 | JSON files + grep + git | Create `.brain/` directory, write JSON files (see `brain/level1-spec.md`) |
 | **Routing rules** | 2 | Custom orchestrator logic, Agent SDK handoffs | Implement routing decision tree; map task types to agent roles |
@@ -685,6 +685,16 @@ This appendix maps every major framework component to its real-world implementat
 
 ### Version History
 
+**v0.4.0-alpha (March 2026)**
+
+- **Removed dual numbering system.** Eliminated the parallel numbering scheme (Parts + global Sections 01-48) across the entire specification. All cross-references now use descriptive names with Part identifiers (e.g., "Deterministic Enforcement (Part 3)" instead of "Section 08"). Approximately 344 section references rewritten across ~40 files.
+- **Elevated Fleet Control Plane as a core concept.** The Control Plane is now defined progressively across all five adoption levels: Level 1 (CLI Dashboard), Level 2 (Fleet Dashboard), Level 3 (Governance Dashboard), Level 4 (Operations Dashboard), Level 5 (Federation Dashboard). Control Plane surface notes added to all 12 Part files. Rewrote `fleet-control-plane.md` with progressive level structure.
+- **Consolidated research directories.** Moved 8 research files from `aiStrat/research/` to root `research/` directory. Research files are no longer spec artifacts and do not carry version headers.
+- **Fixed CI/CD workflow.** Dynamic version extraction from `index.md`, YAML validation dependency fix, broken link validation now fails on errors.
+- **Updated `.gitignore`.** Added standard exclusions for dependencies, build output, IDE files, and OS artifacts.
+- **MANIFEST rewrite.** Updated file inventory, removed stale entries, added missing files.
+- **Control plane TypeScript reference.** Updated reference implementation with XSS fixes, proper URL parsing, JSON-lines output mode, and event retention limits.
+
 **v0.3.1-alpha (March 2026)**
 
 - **Organizational thesis added.** Created `admiral/thesis.md` articulating the core proposition that AI agents are permanent operational infrastructure, not transient tools.
@@ -709,6 +719,6 @@ This appendix maps every major framework component to its real-world implementat
 
 -----
 
-*The Fleet Admiral Framework · v0.3.1-alpha*
+*The Fleet Admiral Framework · v0.4.0-alpha*
 
 *Context is the currency of autonomous AI. Intent is its purpose. The Brain is where both compound.*

@@ -1,13 +1,15 @@
-<!-- Admiral Framework v0.3.1-alpha -->
+<!-- Admiral Framework v0.4.0-alpha -->
 # PART 12 — THE DATA ECOSYSTEM
 
 *How the fleet generates compounding intelligence from every interaction.*
 
 *Parts 1–11 define a governed fleet that executes, remembers, and adapts. Part 12 closes the loop — every customer interaction, every AI output, every governance event becomes a data signal that flows back into the system. The fleet does not just consume data; it generates unique, constantly refreshing datasets that no competitor can replicate because they emerge from the specific intersection of your customers, your agents, and your operational context.*
 
+> **Control Plane surface:** Feedback loop health, data pipeline metrics, and dataset growth surface in the Control Plane at Level 4+. Operators can see which loops are active, whether attribution is keeping pace with outcomes, and overall ecosystem health.
+
 -----
 
-## 42 — CLOSED-LOOP ARCHITECTURE
+## Closed-Loop Architecture
 
 > **TL;DR** — Every output becomes an input. Customer engagement generates signals. AI agents process signals into decisions. Decisions produce outcomes. Outcomes generate new engagement. The Brain captures the full cycle. The fleet gets smarter with every rotation.
 
@@ -93,9 +95,9 @@ Most organizations treat AI as a tool — it consumes data, produces output, and
 
 -----
 
-## 43 — DATA STREAMS
+## Data Streams
 
-> **TL;DR** — Four data streams feed the ecosystem. Each has defined schemas, capture points, processing pipelines, and Brain integration. Stream data flows through the quarantine system (Section 10) before entering the Brain.
+> **TL;DR** — Four data streams feed the ecosystem. Each has defined schemas, capture points, processing pipelines, and Brain integration. Stream data flows through the quarantine system (Configuration Security, Part 3) before entering the Brain.
 
 ### Stream 1: Customer Engagement
 
@@ -132,12 +134,12 @@ Customer engagement data captures every meaningful interaction between customers
 }
 ```
 
-**Brain Integration:** Engagement events are not stored individually in the Brain (that would be a firehose). Instead, the **Engagement Analyst agent** (Section 45) aggregates events into Brain entries:
+**Brain Integration:** Engagement events are not stored individually in the Brain (that would be a firehose). Instead, the **Engagement Analyst agent** (Ecosystem Agents) aggregates events into Brain entries:
 - `pattern` entries for recurring engagement behaviors
 - `outcome` entries when engagement correlates with business outcomes
 - `lesson` entries when engagement reveals product or agent gaps
 
-**Privacy Boundary:** Customer engagement data passes through the Data Sensitivity Protocol (Section 41) before any aggregation. Customer IDs are anonymized at capture. PII never enters the Brain — the sensitive data guard (database trigger) provides defense-in-depth.
+**Privacy Boundary:** Customer engagement data passes through the Data Sensitivity Protocol (Data Sensitivity Classification, Part 11) before any aggregation. Customer IDs are anonymized at capture. PII never enters the Brain — the sensitive data guard (database trigger) provides defense-in-depth.
 
 ### Stream 2: Customer Trends
 
@@ -188,7 +190,7 @@ Trend data emerges from aggregated engagement data over time. It reveals where c
 - `context` entries for baseline trend data that agents need for decision-making
 - `failure` entries when trends reveal problems (churn spikes, adoption stalls)
 
-**Trend-to-Adaptation Bridge:** When trend data triggers a threshold (defined per project in Ground Truth), the Trend Analyst agent generates an adaptation recommendation classified per Section 25:
+**Trend-to-Adaptation Bridge:** When trend data triggers a threshold (defined per project in Ground Truth), the Trend Analyst agent generates an adaptation recommendation classified per Strategic Adaptation (Part 8):
 - Tactical: "Feature X usage dropped 15% this week — investigate UX friction"
 - Strategic: "Customer segment Y is migrating to competitor pattern Z — fleet pivot needed"
 
@@ -290,7 +292,7 @@ The fleet's governance infrastructure generates its own data stream — one that
 
 -----
 
-## 44 — ENRICHMENT & ATTRIBUTION
+## Enrichment & Attribution
 
 > **TL;DR** — Raw data becomes intelligence through three processes: semantic enrichment (embedding and linking), outcome attribution (connecting decisions to results), and trend extraction (detecting patterns across time). These processes are continuous, not batch.
 
@@ -354,7 +356,7 @@ The enrichment pipeline computes trends across all four data domains:
 
 -----
 
-## 45 — ECOSYSTEM AGENTS
+## Ecosystem Agents
 
 > **TL;DR** — Five specialized agents manage the data ecosystem. They are distinct from the existing Data & Analytics agents (which handle general-purpose data engineering). These agents operate specifically on the closed-loop feedback pipeline.
 
@@ -406,7 +408,7 @@ The enrichment pipeline computes trends across all four data domains:
 **Scope:**
 - Compute time-series trends across engagement, agent output, and operational data
 - Detect cross-domain correlations (e.g., agent confidence vs. customer outcomes)
-- Generate adaptation recommendations classified by Section 25 tiers
+- Generate adaptation recommendations classified by Strategic Adaptation (Part 8) tiers
 - Maintain trend baselines and anomaly thresholds
 - Produce trend reports for Admiral review
 
@@ -455,8 +457,8 @@ The enrichment pipeline computes trends across all four data domains:
 
 **Scope:**
 - Analyze attributed outcome data to generate fleet calibration signals
-- Produce agent trust calibration recommendations (per Section 33)
-- Generate model tier optimization recommendations (per Section 13)
+- Produce agent trust calibration recommendations (per Admiral Self-Calibration, Part 10)
+- Generate model tier optimization recommendations (per Model Selection, Part 4)
 - Identify Brain entries that should be strengthened, superseded, or reviewed
 - Produce periodic synthesis reports for Admiral review
 
@@ -502,7 +504,7 @@ The enrichment pipeline computes trends across all four data domains:
 
 -----
 
-## 46 — FEEDBACK LOOPS
+## Feedback Loops
 
 > **TL;DR** — Six feedback loops connect outcomes back to inputs. Each loop has a defined cadence, trigger, and effect. The loops are the mechanism by which the ecosystem compounds — without them, data capture is just storage.
 
@@ -510,7 +512,7 @@ The enrichment pipeline computes trends across all four data domains:
 
 **Cadence:** Continuous (triggered by attribution completion)
 **Signal:** Attributed outcomes reveal agent decision quality
-**Effect:** Trust calibration adjustments per Section 33
+**Effect:** Trust calibration adjustments per Admiral Self-Calibration (Part 10)
 
 ```
 Agent Decision → Customer Outcome → Attribution → Performance Score
@@ -542,7 +544,7 @@ Brain entries that consistently lead to good outcomes accumulate usefulness sign
 
 **Cadence:** Weekly (batch analysis)
 **Signal:** Quality-per-dollar metrics across model tiers
-**Effect:** Model tier reassignment recommendations per Section 13
+**Effect:** Model tier reassignment recommendations per Model Selection (Part 4)
 
 ```
 Task assigned to Model Tier → Agent produces output → Outcome quality scored
@@ -558,7 +560,7 @@ If Tier 3 (Utility) models produce outcomes indistinguishable from Tier 2 (Workh
 
 **Cadence:** Daily (trend analysis) to weekly (strategic review)
 **Signal:** Customer trend data reveals product gaps or opportunities
-**Effect:** Adaptation recommendations per Section 25
+**Effect:** Adaptation recommendations per Strategic Adaptation (Part 8)
 
 ```
 Customer uses product → Engagement data captured → Trends computed
@@ -598,13 +600,13 @@ AI ecosystem evolves → Monitor detects change → Seed candidate generated
     └──── Fleet adapted to ecosystem reality ◄───────────┘
 ```
 
-This loop extends the existing Monitor (Section 17) by feeding Monitor intelligence not just into the Brain but into the full feedback pipeline. A new model release doesn't just become a Brain entry — it triggers a model tier reassessment (Loop 3), which may change agent assignments (Loop 1), which changes outcome patterns (Loop 2), which further optimizes the system.
+This loop extends the existing Monitor (Intelligence Lifecycle, Part 5) by feeding Monitor intelligence not just into the Brain but into the full feedback pipeline. A new model release doesn't just become a Brain entry — it triggers a model tier reassessment (Loop 3), which may change agent assignments (Loop 1), which changes outcome patterns (Loop 2), which further optimizes the system.
 
 **Compounding Effect:** The fleet stays current with the AI ecosystem automatically, rather than requiring manual review and update cycles.
 
 -----
 
-## 47 — DATASET STRATEGY
+## Dataset Strategy
 
 > **TL;DR** — The closed-loop ecosystem generates seven proprietary datasets. Each dataset compounds in value over time because it captures the unique intersection of your customers, your agents, and your operational context. These datasets are strategic assets, not byproducts.
 
@@ -624,8 +626,8 @@ This loop extends the existing Monitor (Section 17) by feeding Monitor intellige
 
 Each dataset follows a lifecycle that ensures freshness and prevents unbounded growth:
 
-**1. Capture** → Data enters via one of the four streams (Section 43).
-**2. Enrich** → Semantic embedding, cross-linking, and tagging (Section 44).
+**1. Capture** → Data enters via one of the four streams (Data Streams).
+**2. Enrich** → Semantic embedding, cross-linking, and tagging (Enrichment & Attribution).
 **3. Store** → Brain entries with appropriate category, metadata, and sensitivity.
 **4. Strengthen** → Entries that prove useful accumulate usefulness signals.
 **5. Decay** → Entries not accessed within the decay window (90 days default) are flagged.
@@ -646,7 +648,7 @@ Each dataset follows a lifecycle that ensures freshness and prevents unbounded g
 
 ### Data Retention & Compliance
 
-All datasets operate under the Data Sensitivity Protocol (Section 41):
+All datasets operate under the Data Sensitivity Protocol (Data Sensitivity Classification, Part 11):
 - Customer data is anonymized at capture — no PII enters the Brain
 - The sensitive data guard trigger (database level) provides defense-in-depth
 - Regulatory purge support (`purge_regulation` field) handles right-to-erasure requests
@@ -657,7 +659,7 @@ All datasets operate under the Data Sensitivity Protocol (Section 41):
 
 -----
 
-## 48 — IMPLEMENTATION LEVELS
+## Implementation Levels
 
 > **TL;DR** — The data ecosystem follows Admiral's progressive adoption model. Start at Level 1 with manual observation. Graduate when you need automated feedback.
 
@@ -688,13 +690,13 @@ All datasets operate under the Data Sensitivity Protocol (Section 41):
 
 | Admiral Section | Data Ecosystem Role |
 |---|---|
-| Section 05 — Ground Truth | Data ecosystem configuration (thresholds, freshness requirements, attribution rules) becomes part of Ground Truth |
-| Section 09 — Decision Authority | Ecosystem agents follow standard decision authority tiers; calibration loop adjusts tiers based on outcome data |
-| Section 10 — Configuration Security | All external data passes through quarantine; ecosystem does not bypass immune system |
-| Section 13 — Model Selection | Model tier optimization loop (Loop 3) uses outcome data to recommend tier changes |
-| Section 15 — Brain Architecture | Ecosystem uses standard Brain schema with additional metadata tags for attribution and stream identification |
-| Section 17 — Intelligence Lifecycle | Ecosystem extends the lifecycle with outcome attribution and feedback synthesis |
-| Section 24 — Institutional Memory | Ecosystem data persists across sessions through the Brain — checkpoints reference ecosystem state |
-| Section 25 — Adaptation Protocol | Trend data and feedback synthesis trigger adaptation recommendations |
-| Section 27 — Fleet Health Metrics | Ecosystem Health Monitor extends fleet health with data pipeline metrics |
-| Section 33 — Admiral Self-Calibration | Calibration loop provides data-driven input to trust calibration decisions |
+| Ground Truth (Part 2) | Data ecosystem configuration (thresholds, freshness requirements, attribution rules) becomes part of Ground Truth |
+| Decision Authority (Part 3) | Ecosystem agents follow standard decision authority tiers; calibration loop adjusts tiers based on outcome data |
+| Configuration Security (Part 3) | All external data passes through quarantine; ecosystem does not bypass immune system |
+| Model Selection (Part 4) | Model tier optimization loop (Loop 3) uses outcome data to recommend tier changes |
+| Brain Architecture (Part 5) | Ecosystem uses standard Brain schema with additional metadata tags for attribution and stream identification |
+| Intelligence Lifecycle (Part 5) | Ecosystem extends the lifecycle with outcome attribution and feedback synthesis |
+| Institutional Memory (Part 8) | Ecosystem data persists across sessions through the Brain — checkpoints reference ecosystem state |
+| Strategic Adaptation (Part 8) | Trend data and feedback synthesis trigger adaptation recommendations |
+| Fleet Health Metrics (Part 8) | Ecosystem Health Monitor extends fleet health with data pipeline metrics |
+| Admiral Self-Calibration (Part 10) | Calibration loop provides data-driven input to trust calibration decisions |

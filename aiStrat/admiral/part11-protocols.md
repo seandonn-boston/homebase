@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.3.1-alpha -->
+<!-- Admiral Framework v0.4.0-alpha -->
 # PART 11 — PROTOCOLS
 
 *The universal operating rules every agent follows.*
@@ -7,13 +7,15 @@
 
 <!-- Six protocol areas: 36 Standing Orders | 37 Escalation | 38 Handoff | 39 Human Referral | 40 Paid Resources | 41 Data Sensitivity -->
 
-> **Sequencing note:** Standing Orders (Section 36) are a **Level 1 requirement**, not a Level 4 afterthought. They appear in Part 11 because they are protocols — but they are needed at adoption Level 1 alongside Sections 01-03 and 08. If you are implementing Admiral, Standing Orders should be among the first things you build, not the last. The Minimum Viable Reading Path (index.md) already reflects this, but if you are reading parts sequentially, read Section 36 before implementing anything from Parts 4-10.
+> **Control Plane surface:** Escalation and handoff events are logged and visible in the Control Plane event stream (Level 2+). Standing Order enforcement status is shown in the Control Plane's policy management interface (Level 3+).
+
+> **Sequencing note:** Standing Orders are a **Level 1 requirement**, not a Level 4 afterthought. They appear in Part 11 because they are protocols — but they are needed at adoption Level 1 alongside Mission, Boundaries, Success Criteria (Part 1) and Deterministic Enforcement (Part 3). If you are implementing Admiral, Standing Orders should be among the first things you build, not the last. The Minimum Viable Reading Path (index.md) already reflects this, but if you are reading parts sequentially, read Standing Orders before implementing anything from Parts 4-10.
 >
 > **Implementation lesson (Admiral-builds-Admiral, March 2026):** An early reference implementation initially deferred Standing Orders to Phase 4 because of their structural position in Part 11. This was a design error — Phase 1 was functionally complete but operationally ungoverned. The corrective: implement Standing Orders as a data model with a loader and renderer so they can be injected into every agent's context programmatically. Standing Orders should be among the first things built, not the last.
 
 -----
 
-## 36 — STANDING ORDERS
+## Standing Orders
 
 > **TL;DR** — Fifteen rules loaded into every agent's standing context. Non-negotiable. Project-specific instructions layer on top but cannot contradict them.
 
@@ -59,7 +61,7 @@ In practice, conflicts are rare because the orders are designed to be complement
 
 ### 5. Decision Authority
 
-Follow the four-tier authority model for every decision (see Section 09 for full framework):
+Follow the four-tier authority model for every decision (see Decision Authority (Part 3) for full framework):
 
 | Tier | Action | When |
 |---|---|---|
@@ -72,13 +74,13 @@ When in doubt between tiers, choose the more conservative tier (Propose over Aut
 
 ### 6. Recovery Protocol
 
-When something goes wrong, follow this ladder in order (see Section 22 for detailed treatment):
+When something goes wrong, follow this ladder in order (see Failure Recovery (Part 7) for detailed treatment):
 
 1. **Retry with variation** — try a different approach (2–3 attempts max, each genuinely different)
 2. **Fallback** — use a simpler, less optimal approach that still satisfies requirements
 3. **Backtrack** — roll back to the last checkpoint and try a fundamentally different path
 4. **Isolate and skip** — mark the task as blocked, document the blocker, move to the next task
-5. **Escalate** — produce a structured escalation report and stop. At minimum, state: what is blocked, what you tried, and what you need. (The full escalation report format is defined in [Section 37](#37--escalation-protocol) — a Level 2+ concern for multi-agent routing. At Level 1, escalation means stopping work and reporting to the Admiral directly.)
+5. **Escalate** — produce a structured escalation report and stop. At minimum, state: what is blocked, what you tried, and what you need. (The full escalation report format is defined in [Escalation Protocol](#escalation-protocol) — a Level 2+ concern for multi-agent routing. At Level 1, escalation means stopping work and reporting to the Admiral directly.)
 
 Do not loop at any step. If retries don't work, move down the ladder. Do not skip steps.
 
@@ -122,7 +124,7 @@ OUTPUT GOES TO: [Next recipient]
 ### 11. Context Discovery
 
 - Before producing any output, confirm you have the project context needed for your task. If context has not been provided, request it from the Orchestrator or Context Curator before proceeding. *(At Adoption Levels 1–2 where no Orchestrator or Context Curator exists, the agent performs context discovery autonomously using available project files — AGENTS.md, CLAUDE.md or equivalent, README, Ground Truth documents, etc.)*
-- Learn the project's structure, conventions, tech stack, and constraints from Ground Truth (Section 05) — do not infer them from code alone and do not assume defaults.
+- Learn the project's structure, conventions, tech stack, and constraints from Ground Truth (Part 2) — do not infer them from code alone and do not assume defaults.
 - Identify where your domain-specific data lives in this project. If you are a Database Agent, learn the schema. If you are a Frontend Implementer, learn the component structure. If you are a Security Auditor, learn the threat model and trust boundaries. Do not act on a project you have not learned.
 - When project context is ambiguous or contradictory, flag it immediately. Do not resolve ambiguity by guessing — resolve it by asking.
 - Your Context Profile (standing, on-demand, session) defines what you need. If any of it is missing, you are context-starved and must say so before continuing.
@@ -178,7 +180,7 @@ OUTPUT GOES TO: [Next recipient]
 
 -----
 
-## 37 — ESCALATION PROTOCOL
+## Escalation Protocol
 
 > **TL;DR** — Escalation is not failure. It is the fleet's mechanism for routing decisions to the entity with the right authority. Suppressing escalation is the actual failure.
 
@@ -311,7 +313,7 @@ AWAITING: Admiral direction. All work ceased.
 
 -----
 
-## 38 — HANDOFF PROTOCOL
+## Handoff Protocol
 
 > **TL;DR** — Every time one agent's output becomes another agent's input, it must follow a structured format. Unstructured handoffs produce the "I assumed you would give me X" failure mode.
 
@@ -388,7 +390,7 @@ OPEN QUESTIONS:
 - **Returns:** Acknowledgment or rerouting instructions
 
 #### Any Agent → Orchestrator (Blocked)
-- **Deliverable:** Escalation report (see Section 37)
+- **Deliverable:** Escalation report (see Escalation Protocol)
 - **Context:** Approaches attempted, root cause assessment
 - **Returns:** Resolution or rerouting
 
@@ -450,7 +452,7 @@ Agents continue to see and produce the text format. The runtime handles JSON ser
 
 -----
 
-## 39 — HUMAN REFERRAL PROTOCOL
+## Human Referral Protocol
 
 > **TL;DR** — Knowing the boundary between "I can help with this" and "you need a human for this" is the specialist's most important capability. An agent that never recommends human consultation is overestimating itself.
 
@@ -528,7 +530,7 @@ This protocol integrates with Standing Order 4 (Context Honesty) and Standing Or
 
 -----
 
-## 40 — PAID RESOURCE AUTHORIZATION PROTOCOL
+## Paid Resource Authorization Protocol
 
 > **TL;DR** — When fleet work requires paid software, licensed tools, or subscription services, agents must never approve transactions autonomously. All paid resource usage requires explicit human authorization and structured access through a resource broker.
 
@@ -536,7 +538,7 @@ This protocol integrates with Standing Order 4 (Context Honesty) and Standing Or
 
 AI agent fleets routinely need access to paid tools, licensed software, and subscription services — IDEs, cloud services, SaaS platforms, API endpoints with usage fees, and specialized tooling. These resources have real financial costs. **No agent may autonomously approve, initiate, or authorize any transaction involving paid resources.**
 
-Paid resource access is always **Escalate-tier** under the Decision Authority framework (Section 09). There are no exceptions.
+Paid resource access is always **Escalate-tier** under the Decision Authority framework (Decision Authority (Part 3)). There are no exceptions.
 
 ### What Counts as a Paid Resource
 
@@ -596,7 +598,7 @@ Sessions that exceed max duration are expired automatically by the broker.
 - **Least privilege** — Minimum scope for the stated task. Read-only when write is not justified.
 - **Assume breach** — Limit blast radius through scope constraints, duration limits, and monitoring.
 - **No implicit trust inheritance** — Authorization for one resource does not grant access to another.
-- **All access is temporary** — No agent retains persistent access. The broker revokes access on task completion, and sweeps all grants at fleet session end. Emergency revocation (Section 37) revokes all access fleet-wide immediately.
+- **All access is temporary** — No agent retains persistent access. The broker revokes access on task completion, and sweeps all grants at fleet session end. Emergency revocation (Escalation Protocol) revokes all access fleet-wide immediately.
 - **Sensitive data** (PII, credentials, financial/health records) is always single-task-scoped and cannot be pooled or extended without fresh Admiral authorization.
 
 ### Anti-Patterns
@@ -610,7 +612,7 @@ Sessions that exceed max duration are expired automatically by the broker.
 
 -----
 
-## 41 — DATA SENSITIVITY PROTOCOL
+## Data Sensitivity Protocol
 
 > **TL;DR** — The fleet must never store PII, passwords, secrets, credentials, or any other sensitive information in the Brain, logs, checkpoints, handoffs, or any persistent storage. This is enforced deterministically — not by instruction, but by code.
 
@@ -646,7 +648,7 @@ Layer 2: Database Trigger (schema/001_initial.sql)
     │  SQL-level pattern matching as safety net
     │  Rejects INSERT/UPDATE containing sensitive patterns
     ▼
-Layer 3: Agent Standing Orders (Section 36.10)
+Layer 3: Agent Standing Orders (Standing Orders, SO 10)
     │  "Never store secrets, credentials, or PII"
     │  Advisory — the deterministic layers above enforce it
 ```

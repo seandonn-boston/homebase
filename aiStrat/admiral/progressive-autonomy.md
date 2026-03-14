@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.3.1-alpha -->
+<!-- Admiral Framework v0.4.0-alpha -->
 # PROGRESSIVE AUTONOMY FRAMEWORK
 
 *The four stages from manual oversight to full autonomy — and why infrastructure must support all of them simultaneously.*
@@ -50,7 +50,7 @@ Stage 4: Full Autonomy
 | **Routing** | Humans assign tasks to specific agents. |
 | **Budget** | Humans approve each significant token expenditure. |
 
-**Why this stage exists:** The operator does not yet know which failures are common, which are catastrophic, and which are noise. They need to see every decision to build intuition. This maps directly to the Novice stage of Admiral Self-Calibration (Section 33).
+**Why this stage exists:** The operator does not yet know which failures are common, which are catastrophic, and which are noise. They need to see every decision to build intuition. This maps directly to the Novice stage of Admiral Self-Calibration (Part 10).
 
 **Operator experience:** Every agent output crosses the operator's desk. This is slow but safe. The operator builds a mental model of what agents do well and where they fail.
 
@@ -80,7 +80,7 @@ Stage 4: Full Autonomy
 **Operator experience:** The daily work shifts from reviewing every output to reviewing exceptions. The operator focuses on the 20-30% of decisions that are genuinely hard. Most of the fleet's output is accepted without review.
 
 **Infrastructure requirements:**
-- Autonomous tier widened per category based on track record (Section 33)
+- Autonomous tier widened per category based on track record (Admiral Self-Calibration, Part 10)
 - Exception queue — only non-routine items surface for review
 - Pattern recognition — the system identifies which proposals the operator always accepts and suggests promoting them to Autonomous
 - Budget dashboards replacing per-item approval
@@ -135,7 +135,7 @@ Stage 4: Full Autonomy
 - Autonomous fleet scaling and de-scaling based on workload
 - Cross-fleet coordination for multi-project operations
 - Long-term trend analysis and strategic recommendations
-- Meta-agent Admiral capabilities (Section 33)
+- Meta-agent Admiral capabilities (Admiral Self-Calibration, Part 10)
 
 **Critical constraint:** Full autonomy does not mean unsupervised. The Fleet Control Plane remains active. Alerts still fire. Emergency halt is always available. Full autonomy means the fleet does not need humans for operational decisions — but humans retain strategic authority and emergency override.
 

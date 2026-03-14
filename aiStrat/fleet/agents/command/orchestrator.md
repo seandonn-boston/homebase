@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.3.1-alpha -->
+<!-- Admiral Framework v0.4.0-alpha -->
 # Orchestrator
 
 **Category:** Command & Coordination
@@ -131,7 +131,7 @@ When the Orchestrator is unresponsive (3 consecutive missed heartbeats over 30 s
 2. The detecting agent initiates governance escalation per the Orchestrator Degradation Escalation protocol (governance.md).
 
 ### Failover Phase
-3. The Admiral enters **Fallback Decomposer Mode** (part10-admiral.md, Section 33).
+3. The Admiral enters **Fallback Decomposer Mode** (part10-admiral.md, Admiral Self-Calibration).
 4. The Admiral performs coarse-grained task decomposition: breaks the current goal into 1–3 macro-tasks and routes directly to Tier 1 specialists.
 5. Governance agents continue monitoring at normal rate throughout the outage.
 
