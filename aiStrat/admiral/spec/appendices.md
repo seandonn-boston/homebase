@@ -697,7 +697,7 @@ This appendix maps every major framework component to its real-world implementat
 
 **v0.3.1-alpha (March 2026)**
 
-- **Organizational thesis added.** Created `admiral/thesis.md` articulating the core proposition that AI agents are permanent operational infrastructure, not transient tools.
+- **Organizational thesis added.** Created `admiral/extensions/thesis.md` articulating the core proposition that AI agents are permanent operational infrastructure, not transient tools.
 - **Future operations analysis added.** Created `research/future-operations.md` mapping the transition from current state to full Admiral deployment.
 - **Version header consistency.** Applied `v0.3.1-alpha` headers to all spec files within `aiStrat/` that were missed during the v0.3.0 → v0.3.1 bump. CI version check now matches the actual framework version.
 
