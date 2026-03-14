@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.3.0-alpha -->
+<!-- Admiral Framework v0.3.1-alpha -->
 # Hook Ecosystem
 
 **Manifest-first hook management for the Admiral Framework.**
@@ -108,9 +108,9 @@ The `input_contract` field is a simple version string (`v1`, `v2`, etc.) that in
 - Breaking changes to the input format require a new version string.
 - Non-breaking additions (new optional fields) are permitted within a version.
 
-For v0.2.0, contract versions are convention-based strings. No formal JSON Schema validation of hook payloads is performed at runtime.
+Contract versions are currently convention-based strings. No formal JSON Schema validation of hook payloads is performed at runtime.
 
-### Future Extension: Schema Registry (v0.3.0+)
+### Future Extension: Schema Registry
 
 When hook ecosystem complexity warrants formal payload validation, the `input_contract` field can be extended to reference a JSON Schema in `hooks/schemas/`:
 
@@ -120,7 +120,7 @@ When hook ecosystem complexity warrants formal payload validation, the `input_co
 }
 ```
 
-This extension is planned for v0.3.0+. For v0.2.0, the simple version string is sufficient.
+This extension is planned for a future release. For now, the simple version string is sufficient.
 
 -----
 

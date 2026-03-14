@@ -67,7 +67,7 @@ These help you **build and run** multi-agent systems. They don't provide governa
 | Decision authority | Not modeled | Four-tier taxonomy (Enforced → Autonomous → Propose → Escalate) |
 | Enforcement | Platform-level (access control) | Mechanical (hooks) vs. instructional (prompts) distinction |
 | Memory | Short-term and long-term per crew | Institutional memory with Postgres+pgvector (Brain architecture) |
-| Maturity | Production. 60% of US Fortune 500. | v0.2.0-alpha specification |
+| Maturity | Production. 60% of US Fortune 500. | v0.3.1-alpha specification |
 | Pricing | $99/mo – $120K/yr | TBD |
 
 **Agent Repositories** (Enterprise feature) let organizations store and reuse agent definitions — functionally similar to Admiral's fleet catalog, but without the governance doctrine wrapping them.
@@ -121,7 +121,7 @@ These help you **build and run** multi-agent systems. They don't provide governa
 | Orchestration | Handoffs between agents | Role-based routing with capability matching |
 | Observability | Built-in tracing | Five-layer monitoring |
 | Model lock-in | OpenAI models only | Model-agnostic |
-| Maturity | Production (SDK); Frontier newly launched | v0.2.0-alpha specification |
+| Maturity | Production (SDK); Frontier newly launched | v0.3.1-alpha specification |
 
 **Threat level: HIGH.** OpenAI's distribution advantage is enormous. Frontier directly targets Admiral's "governance for agent teams" positioning. However, it's locked to OpenAI's ecosystem, and Admiral's model-agnostic stance is a differentiator for enterprises running heterogeneous stacks.
 
@@ -209,7 +209,7 @@ These provide **compliance, risk, and policy enforcement** for AI systems broadl
 | Decision authority | Not explicitly modeled as taxonomy | Four-tier: Enforced → Autonomous → Propose → Escalate |
 | Memory/learning | Not a focus | Institutional memory (Brain) — fleet knowledge accumulation |
 | Integrations | Snowflake, Databricks, AWS, Azure, ServiceNow, Jira | Specification-level (implementation-agnostic) |
-| Maturity | Production, Forrester Leader, enterprise customers | v0.2.0-alpha specification |
+| Maturity | Production, Forrester Leader, enterprise customers | v0.3.1-alpha specification |
 | Market | AI governance ($7.4B by 2030) | Agent operations (subset of agent + governance markets) |
 
 **Key distinction:** Credo AI approaches from **compliance/risk** (regulators, auditors, CISOs). Admiral approaches from **operations/doctrine** (engineering teams, fleet operators). They solve different "why" questions — Credo AI: "Are we compliant?" Admiral: "Are our agents operating effectively and safely?"
@@ -239,7 +239,7 @@ These provide **compliance, risk, and policy enforcement** for AI systems broadl
 | Role architecture | No | Yes — 71 roles with authority scoping |
 | Decision authority | No | Four-tier taxonomy |
 | Compliance | FedRAMP (In Process), Forrester-recognized | Framework-level compliance design |
-| Maturity | Production, Fortune 500 customers, FedRAMP path | v0.2.0-alpha specification |
+| Maturity | Production, Fortune 500 customers, FedRAMP path | v0.3.1-alpha specification |
 
 **Threat level: MEDIUM.** Zenity is security-focused (CISO buyer), while Admiral is operations-focused (engineering/platform team buyer). Different buyer, different value prop. But if Zenity expands from "secure agents" to "govern agents," the overlap grows.
 

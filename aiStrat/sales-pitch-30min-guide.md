@@ -1,4 +1,4 @@
-<!-- Admiral Framework v0.3.0-alpha -->
+<!-- Admiral Framework v0.3.1-alpha -->
 # Admiral Sales Pitch — 30-Minute Conversation Guide
 
 **Audience:** Someone in tech with strong technical familiarity — comfortable with infrastructure concepts, software architecture, and AI terminology.
@@ -91,7 +91,7 @@
 
 ### Development Status — Be Honest and Specific
 
-> "I'm at v0.3.0-alpha. Here's what that means in plain English:"
+> "I'm at v0.3.1-alpha. Here's what that means in plain English:"
 
 **What exists today:**
 - The complete specification — 15,000+ lines across 70+ files. Think of it as the full architectural blueprint.
