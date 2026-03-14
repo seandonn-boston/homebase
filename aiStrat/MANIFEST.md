@@ -213,7 +213,7 @@ benchmarks.md - admiral/doctrine - 2026-03-13:
 Framework benchmarks for measuring Admiral-governed fleet effectiveness. Seven core
 metrics (governance overhead, first-pass quality, recovery success rate, context
 efficiency, enforcement coverage, coordination overhead, knowledge reuse) with targets
-and red flags. Competitive differentiators. Measurement cadence by adoption level.
+and red flags. Competitive differentiators. Measurement cadence by adoption profile.
 Baseline expectations across fleet maturity phases.
 aiStrat/admiral/reference/benchmarks.md
 ```
@@ -250,7 +250,7 @@ independently, operators govern), Stage 4 (Full Autonomy — fleet self-governin
 operators set strategy). The Autonomy Matrix (different capabilities at different
 stages in the same fleet). Trust mechanics (accumulation, per-category tracking,
 decay). Stage transition prerequisites and reversion triggers. Infrastructure
-requirements by stage. Orthogonal to adoption levels.
+requirements by stage. Orthogonal to adoption profiles.
 aiStrat/admiral/extensions/progressive-autonomy.md
 ```
 

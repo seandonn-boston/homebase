@@ -30,7 +30,7 @@ See [`thesis.md`](../extensions/thesis.md) for the full analysis and [`research/
 
 -----
 
-## Component Scaling
+## Per-Component Scaling
 
 You don't need to read 200 pages before deploying your first agent. Each component scales independently — pick the level that matches your need for each one. Start with the Starter profile. Advance individual components when you hit their limits.
 

@@ -36,7 +36,7 @@ aiStrat is the **Admiral Framework** — a comprehensive specification for AI ag
 
 ## Versioning
 
-- **Current version: v0.4.3-alpha** (pre-release, not yet published)
+- **Current version: v0.5.0-alpha** (pre-release, not yet published)
 - The framework uses [semantic versioning](https://semver.org/) with pre-release labels: `MAJOR.MINOR.PATCH[-label]`
 - The **single source of truth** for the version is `aiStrat/VERSION`. This is a plain text file containing only the version string (e.g., `v0.4.0-alpha`).
 - **Versions are bumped automatically** on merge to main via `.github/workflows/version-bump.yml`. The bump type is determined by commit messages using [Conventional Commits](https://www.conventionalcommits.org/):
@@ -62,6 +62,6 @@ aiStrat is the **Admiral Framework** — a comprehensive specification for AI ag
 - **Zero-trust continuous verification** — Trust is never assumed, always earned, continuously re-evaluated
 - **Defense in depth** — Multiple independent security layers, each sufficient to catch what others miss
 - **Context is currency** — Agents are limited by context, not capability; context engineering is the primary lever
-- **Progressive adoption** — Five adoption levels from single-agent to enterprise; never demand all-or-nothing
+- **Progressive adoption** — Seven independently-scaling components with five Quick-Start Profiles from single-agent to enterprise; never demand all-or-nothing
 - **Specification as product** — The spec IS the deliverable; implementations are downstream consumers of this spec
 - **Tool-agnostic by default** — The framework targets AI agent capabilities, not specific vendors. Vendor-specific implementations are examples of general patterns, not the patterns themselves.

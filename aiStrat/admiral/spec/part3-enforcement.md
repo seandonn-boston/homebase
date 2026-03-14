@@ -351,8 +351,8 @@ Every orchestrator needs a clear decision envelope: what it may decide autonomou
 > 2. **Runtime authority binding:** Authority tiers are bound to the agent's identity
 >    at session start, not read from Brain entries or configuration files during
 >    execution. An agent cannot change its own authority tier mid-session.
->    At E1–E3, identity may be a simple agent-id + role string set by the
->    runtime. At E4, identity is a cryptographically signed token (see Knowledge Protocol, Part 5).
+>    At E1–E2, identity may be a simple agent-id + role string set by the
+>    runtime. At E3 with S2+ security, identity is a cryptographically signed token (see Knowledge Protocol, Part 5).
 >    The requirement is immutable binding, not cryptographic signing — the signing
 >    sophistication scales with component level.
 >
@@ -366,7 +366,7 @@ Every orchestrator needs a clear decision envelope: what it may decide autonomou
 >    }
 >    ```
 >    This is set once at session start and never modified. No signing, no expiry,
->    no cross-project access control. Add HMAC-SHA256 signing at E4 when
+>    no cross-project access control. Add HMAC-SHA256 signing at E3/S2 when
 >    zero-trust access control is deployed — not before.
 > 3. **Orchestrator-level validation:** The Orchestrator validates that every task
 >    assignment includes the correct authority tier for the receiving agent. If a
