@@ -39,11 +39,11 @@ aiStrat is the **Admiral Framework** — a comprehensive specification for AI ag
 
 - **Current version: v0.4.0-alpha** (pre-release, not yet published)
 - The framework uses [semantic versioning](https://semver.org/) with pre-release labels: `MAJOR.MINOR.PATCH[-label]`
-- The authoritative version string lives in `admiral/spec/index.md` (line 6). All other version references must match it.
-- **Version appears in 3 locations:** `admiral/spec/index.md` (line 6, display version), `admiral/spec/appendices.md` (Appendix F footer), and as an HTML comment `<!-- Admiral Framework vX.Y.Z-label -->` on line 1 of every `.md` file within `aiStrat/` (or SQL comment `-- Admiral Framework vX.Y.Z-label` on line 1 of every `.sql` file).
-- **Version scope:** Version comments apply only to files within `aiStrat/`. Strategy documents (`research/`, `thesis/`) and sales materials at the repository root are not spec artifacts and are excluded from version stamping.
+- The **single source of truth** for the version is `aiStrat/VERSION`. This is a plain text file containing only the version string (e.g., `v0.4.0-alpha`).
+- `admiral/spec/index.md` (line 6) displays the version for readers. Keep it in sync with `VERSION` when bumping.
+- **To bump the version:** update `aiStrat/VERSION` and `admiral/spec/index.md` line 6. That's it — two files. Use git tags (`git tag v0.4.0-alpha`) to mark releases.
+- Per-file version comments (`<!-- Admiral Framework vX.Y.Z -->`) are legacy and no longer enforced by CI. Do not add them to new files. Existing comments may be left in place or removed during normal edits.
 - **MANIFEST.md** is the semantic file catalog. Update it when files are added, removed, renamed, or when their content changes materially (new sections, restructured scope, changed agent counts). It should also be updated on version bumps.
-- When bumping versions, update all markers: `grep -rn "v0\.[0-9]" aiStrat/ --include="*.md" --include="*.sql"` should show only the current version.
 
 ## Working With This Repository
 
