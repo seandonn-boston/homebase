@@ -21,11 +21,12 @@ jobs:
       - name: Version consistency
         run: |
           echo "=== Checking version consistency ==="
-          VERSION="v0.3.0-alpha"
+          VERSION="v0.3.1-alpha"
 
           ERRORS=0
 
           # Check .md files in aiStrat/ for version comment on line 1
+          # Exclude research/ and thesis/ — not spec artifacts per AGENTS.md
           while IFS= read -r file; do
             FIRST_LINE=$(head -1 "$file")
             if [[ "$FIRST_LINE" != *"Admiral Framework $VERSION"* ]]; then
@@ -33,7 +34,7 @@ jobs:
               echo "  Found: $FIRST_LINE"
               ERRORS=$((ERRORS + 1))
             fi
-          done < <(find aiStrat/ -name "*.md" -not -path "*/node_modules/*")
+          done < <(find aiStrat/ -name "*.md" -not -path "*/node_modules/*" -not -path "*/research/*" -not -path "*/thesis/*")
 
           # Check .sql files
           while IFS= read -r file; do
