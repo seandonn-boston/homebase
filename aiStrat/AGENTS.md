@@ -39,11 +39,16 @@ aiStrat is the **Admiral Framework** — a comprehensive specification for AI ag
 
 - **Current version: v0.4.0-alpha** (pre-release, not yet published)
 - The framework uses [semantic versioning](https://semver.org/) with pre-release labels: `MAJOR.MINOR.PATCH[-label]`
-- The authoritative version string lives in `admiral/spec/index.md` (line 6). All other version references must match it.
-- **Version appears in 3 locations:** `admiral/spec/index.md` (line 6, display version), `admiral/spec/appendices.md` (Appendix F footer), and as an HTML comment `<!-- Admiral Framework vX.Y.Z-label -->` on line 1 of every `.md` file within `aiStrat/` (or SQL comment `-- Admiral Framework vX.Y.Z-label` on line 1 of every `.sql` file).
-- **Version scope:** Version comments apply only to files within `aiStrat/`. Strategy documents (`research/`, `thesis/`) and sales materials at the repository root are not spec artifacts and are excluded from version stamping.
-- **MANIFEST.md** is the semantic file catalog. Update it when files are added, removed, renamed, or when their content changes materially (new sections, restructured scope, changed agent counts). It should also be updated on version bumps.
-- When bumping versions, update all markers: `grep -rn "v0\.[0-9]" aiStrat/ --include="*.md" --include="*.sql"` should show only the current version.
+- The **single source of truth** for the version is `aiStrat/VERSION`. This is a plain text file containing only the version string (e.g., `v0.4.0-alpha`).
+- **Versions are bumped automatically** on merge to main via `.github/workflows/version-bump.yml`. The bump type is determined by commit messages using [Conventional Commits](https://www.conventionalcommits.org/):
+  - `fix:`, `docs:`, `chore:`, `refactor:`, `ci:`, `style:`, `perf:`, `test:` → **patch** (e.g., v0.4.0 → v0.4.1)
+  - `feat:` → **minor** (e.g., v0.4.0 → v0.5.0)
+  - `BREAKING CHANGE:` in body or `!` after type (e.g., `feat!:`) → **major** (e.g., v0.4.0 → v1.0.0)
+  - No conventional prefix → **patch** (default)
+- The workflow also updates `admiral/spec/index.md` line 6 and creates a git tag.
+- **Manual bumps** are not needed. If you must bump manually, update `aiStrat/VERSION` and `admiral/spec/index.md` line 6.
+- Per-file version comments (`<!-- Admiral Framework vX.Y.Z -->`) are legacy and no longer enforced by CI. Do not add them to new files.
+- **MANIFEST.md** is the semantic file catalog. Update it when files are added, removed, renamed, or when their content changes materially.
 
 ## Working With This Repository
 

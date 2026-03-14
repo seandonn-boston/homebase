@@ -1,0 +1,116 @@
+name: Version Bump
+
+# Automatically bumps the version in aiStrat/VERSION on merge to main.
+# Reads commit messages from the merged PR to determine bump type:
+#   - BREAKING CHANGE or !: suffix → major
+#   - feat: → minor
+#   - fix:, docs:, chore:, refactor:, test:, ci:, style:, perf: → patch
+#   - No conventional prefix → patch (default)
+#
+# Creates a git tag for the new version.
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  bump:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Determine bump type from commits
+        id: bump
+        run: |
+          # Get all commit messages from the merged PR
+          COMMITS=$(git log --format='%s%n%b' origin/main..HEAD 2>/dev/null || echo "")
+
+          # If no commits found (already merged), use PR title + body
+          if [ -z "$COMMITS" ]; then
+            COMMITS="${{ github.event.pull_request.title }}"
+          fi
+
+          BUMP="patch"
+
+          # Check for breaking changes (highest priority)
+          if echo "$COMMITS" | grep -qiE '(BREAKING CHANGE|^[a-z]+(\(.+\))?!:)'; then
+            BUMP="major"
+          # Check for feat: (minor bump)
+          elif echo "$COMMITS" | grep -qiE '^feat(\(.+\))?:'; then
+            BUMP="minor"
+          fi
+          # Everything else (fix, docs, chore, refactor, etc.) stays patch
+
+          echo "type=$BUMP" >> "$GITHUB_OUTPUT"
+          echo "Bump type: $BUMP"
+
+      - name: Bump version
+        id: version
+        run: |
+          CURRENT=$(cat aiStrat/VERSION | tr -d '[:space:]')
+          echo "Current version: $CURRENT"
+
+          # Strip leading 'v' for parsing
+          SEMVER="${CURRENT#v}"
+
+          # Extract components: version-prelabel
+          BASE="${SEMVER%%-*}"
+          LABEL=""
+          if [[ "$SEMVER" == *-* ]]; then
+            LABEL="${SEMVER#*-}"
+          fi
+
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$BASE"
+
+          case "${{ steps.bump.outputs.type }}" in
+            major)
+              MAJOR=$((MAJOR + 1))
+              MINOR=0
+              PATCH=0
+              ;;
+            minor)
+              MINOR=$((MINOR + 1))
+              PATCH=0
+              ;;
+            patch)
+              PATCH=$((PATCH + 1))
+              ;;
+          esac
+
+          NEW="v${MAJOR}.${MINOR}.${PATCH}"
+          if [ -n "$LABEL" ]; then
+            NEW="${NEW}-${LABEL}"
+          fi
+
+          echo "$NEW" > aiStrat/VERSION
+          echo "new=$NEW" >> "$GITHUB_OUTPUT"
+          echo "New version: $NEW"
+
+      - name: Update index.md display version
+        run: |
+          NEW="${{ steps.version.outputs.new }}"
+          # Update line 6 of index.md which has the display version
+          sed -i "6s/v[0-9]*\.[0-9]*\.[0-9]*[^ ]*/$NEW/" aiStrat/admiral/spec/index.md
+
+      - name: Commit and tag
+        run: |
+          NEW="${{ steps.version.outputs.new }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add aiStrat/VERSION aiStrat/admiral/spec/index.md
+          if git diff --cached --quiet; then
+            echo "No version change needed"
+            exit 0
+          fi
+          git commit -m "bump: $NEW"
+          git tag "$NEW"
+          git push && git push --tags

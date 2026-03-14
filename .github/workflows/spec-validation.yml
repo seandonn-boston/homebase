@@ -18,47 +18,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Version consistency
+      - name: Version check
         run: |
-          echo "=== Checking version consistency ==="
-
-          # Extract canonical version from index.md line 6
-          VERSION=$(sed -n '6p' aiStrat/admiral/spec/index.md | grep -oP 'v[0-9]+\.[0-9]+\.[0-9]+-[a-z]+')
-          if [ -z "$VERSION" ]; then
-            echo "FAIL: Could not extract version from aiStrat/admiral/spec/index.md line 6"
+          echo "=== Checking VERSION file ==="
+          if [ ! -f "aiStrat/VERSION" ]; then
+            echo "FAIL: aiStrat/VERSION file not found"
             exit 1
           fi
-          echo "Canonical version: $VERSION"
-
-          ERRORS=0
-
-          # Check .md files in aiStrat/ for version comment on line 1
-          while IFS= read -r file; do
-            FIRST_LINE=$(head -1 "$file")
-            if [[ "$FIRST_LINE" != *"Admiral Framework $VERSION"* ]]; then
-              echo "FAIL: $file — line 1 does not contain '$VERSION'"
-              echo "  Found: $FIRST_LINE"
-              ERRORS=$((ERRORS + 1))
-            fi
-          done < <(find aiStrat/ -name "*.md" -not -path "*/node_modules/*")
-
-          # Check .sql files
-          while IFS= read -r file; do
-            FIRST_LINE=$(head -1 "$file")
-            if [[ "$FIRST_LINE" != *"Admiral Framework $VERSION"* ]]; then
-              echo "FAIL: $file — line 1 does not contain '$VERSION'"
-              echo "  Found: $FIRST_LINE"
-              ERRORS=$((ERRORS + 1))
-            fi
-          done < <(find aiStrat/ -name "*.sql")
-
-          if [ $ERRORS -gt 0 ]; then
-            echo ""
-            echo "FAILED: $ERRORS file(s) have incorrect version strings"
+          VERSION=$(cat aiStrat/VERSION | tr -d '[:space:]')
+          if ! echo "$VERSION" | grep -qP '^v[0-9]+\.[0-9]+\.[0-9]+(-[a-z0-9.]+)?$'; then
+            echo "FAIL: VERSION '$VERSION' is not valid semver"
             exit 1
-          else
-            echo "PASSED: All files have correct version string"
           fi
+          echo "PASSED: VERSION is $VERSION"
 
       - name: JSON validation
         run: |
