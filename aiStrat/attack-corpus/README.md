@@ -235,12 +235,12 @@ Chaos Agent receives system-under-test description
 
 ## Storage
 
-| Adoption Level | Storage | Mechanism |
+| Brain Level | Storage | Mechanism |
 |---|---|---|
-| Level 1 (file-based) | This directory | Seed entries as YAML/JSON files |
-| Level 2+ (Brain) | Brain semantic memory | Category: `failure` with metadata tag `{"corpus": "attack"}`; seed corpus loaded as bootstrap entries |
+| B1 (file-based) | This directory | Seed entries as YAML/JSON files |
+| B2+ (Brain) | Brain semantic memory | Category: `failure` with metadata tag `{"corpus": "attack"}`; seed corpus loaded as bootstrap entries |
 
-At Level 2+, the Brain's semantic search enables the Chaos Agent to find scenarios *relevant* to the current system — not just replay old tests. The `brain_query` tool with vector similarity search matches system-under-test descriptions against corpus entry triggers and contexts.
+At B2+, the Brain's semantic search enables the Chaos Agent to find scenarios *relevant* to the current system — not just replay old tests. The `brain_query` tool with vector similarity search matches system-under-test descriptions against corpus entry triggers and contexts.
 
 A local file cache of critical corpus entries should be maintained for resilience — the corpus must be available even if the Brain is temporarily unreachable.
 

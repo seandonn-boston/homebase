@@ -1,4 +1,4 @@
-// Reference implementation sketch for the Level 1-2 Fleet Control Plane.
+// Reference implementation sketch for the CP1-CP2 Fleet Control Plane.
 // See aiStrat/admiral/extensions/fleet-control-plane.md for the full specification.
 //
 // NOTE: The canonical control plane implementation is at /control-plane/ (repo root).

@@ -104,7 +104,7 @@ The `prompt-anatomy.md` file provides the assembly pattern for building complete
 
 An additional **34 extended agents** are held in reserve in `agents/extras/` — domain specialists (7), data & analytics (5), ecosystem agents (5), and supplementary scale agents (17). See `agents/extras/README.md` for activation instructions.
 
-> **Adoption guidance:** See the [Adoption Levels](../admiral/spec/index.md#adoption-levels) in the Admiral Framework for a progressive path from single-agent to full fleet.
+> **Adoption guidance:** See the [Per-Component Scaling](../admiral/spec/index.md#per-component-scaling) in the Admiral Framework for a progressive path from single-agent to full fleet.
 
 ### Core Fleet (Minimum Viable Deployment)
 
