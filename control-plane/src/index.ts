@@ -13,7 +13,7 @@
 
 export { EventStream, AgentEvent, EventType, EventListener } from "./events";
 export { AgentInstrumentation, InstrumentationConfig } from "./instrumentation";
-export { RunawayDetector, DetectorConfig, Alert } from "./runaway-detector";
+export { RunawayDetector, DetectorConfig, Alert, ControlChart, SPCMonitor } from "./runaway-detector";
 export { ExecutionTrace, TraceNode, TraceStats } from "./trace";
 export { AdmiralServer } from "./server";
 
