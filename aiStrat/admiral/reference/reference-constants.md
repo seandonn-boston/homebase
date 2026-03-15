@@ -131,7 +131,7 @@ The `token_budget_tracker` hook issues alerts at two thresholds:
 
 Both thresholds use `>=` (inclusive). Alerts are advisory (exit 0); they do not block actions. The alert type is a string literal in the hook's JSON stdout under the `"alert"` key. An agent may receive both alerts in a single session as utilization crosses each threshold.
 
-The `token_budget_gate` hook (PreToolUse) blocks at 100% utilization with exit code 2. At 99.99% utilization, the gate allows the action.
+**Note (March 2026):** The `token_budget_gate` hook (PreToolUse hard block at 100%) has been removed. It created unrecoverable deadlocks — once budget was exhausted, all tool use was blocked including recovery attempts. Budget enforcement is now entirely advisory: the PreToolUse adapter emits warnings via `additionalContext` when budget is exceeded, and the PostToolUse tracker emits system message alerts. Sessions can run "over budget" (see Fleet Control Plane — Session Thermal Model). Default `token_budget: 0` means unlimited.
 
 -----
 

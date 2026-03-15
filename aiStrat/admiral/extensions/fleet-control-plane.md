@@ -66,8 +66,8 @@ Even at CP1, the Control Plane watches for runaway behavior:
 | Detection | Trigger | Response |
 |---|---|---|
 | **Loop detection** | Same error signature 3+ times in sequence | Alert + auto-pause after 5 |
-| **Token budget alert** | 80% of budget consumed | Warning displayed in status |
-| **Token budget enforcement** | 100% of budget consumed | Agent halted |
+| **Token budget advisory** | 90% of budget consumed | Warning displayed in status |
+| **Token budget checkpoint** | 100% of budget consumed | Agent warned, user asked to confirm continuation |
 | **Time limit** | Configurable max session duration | Warning at 80%, halt at 100% |
 | **Idle detection** | No events for configurable interval | Warning displayed |
 
@@ -187,6 +187,36 @@ The most dangerous failure mode for an alert system is alert fatigue — when op
 | **Pause fleet** | All agents | Yes (resume) |
 | **Kill task** | Single task and its sub-tasks | No (task must be re-queued) |
 | **Adjust budget** | Single agent or fleet-wide | Yes |
+
+### Session Thermal Model — "Running Hot"
+
+The shift from hard budget enforcement to advisory checkpoints (see implementation note below) introduces a thermal metaphor for session resource consumption. Sessions don't hit a wall — they run hot.
+
+**Design note (March 2026):** The original `token_budget_gate` hook hard-blocked all tool use at 100% budget utilization, creating an unrecoverable deadlock — the agent couldn't even reset its own budget or ask the user for help. The gate was replaced with an advisory checkpoint that warns via `additionalContext` and asks the user whether to continue. Budget defaults to 0 (unlimited). This means sessions can run "hot" — over budget but still operational — which creates novel dashboard opportunities.
+
+#### Dashboard Concepts
+
+| Visualization | Metaphor | What It Shows |
+|---|---|---|
+| **Thermal gauge** | Engine temperature | Real-time token burn rate — green/yellow/red/overclocked |
+| **Heat map (fleet)** | Infrared camera | Which agents are running hot across the fleet |
+| **Burn rate sparkline** | Tachometer | Token consumption velocity over time (acceleration = concern) |
+| **Budget overshoot indicator** | Redline RPM | How far past nominal budget a session is running |
+| **Thermal history** | Engine dyno chart | Post-session analysis of when and why sessions ran hot |
+
+#### Operator Controls (Fine-Tuning)
+
+Admirals who want direct control over budget behavior can tune these per-agent or fleet-wide:
+
+| Control | Range | Effect |
+|---|---|---|
+| **Budget ceiling** | 0 (unlimited) to N tokens | Advisory warning threshold — never a hard block |
+| **Warning threshold** | 0–100% of budget | When the first "approaching budget" advisory fires |
+| **Overshoot tolerance** | 0–∞% over budget | How far past budget before escalation severity increases |
+| **Burn rate alert** | tokens/minute threshold | Alert when token velocity exceeds expected rate |
+| **Cool-down policy** | Auto-pause / warn / log | What happens when a session has been running hot for too long |
+
+The key insight: budgets become **descriptive** (how much did this cost?) rather than **prescriptive** (how much can this cost?). Prescriptive limits that hard-block create brittleness. Descriptive budgets with advisory checkpoints give operators visibility and agency without deadlock risk.
 
 -----
 
