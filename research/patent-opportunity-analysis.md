@@ -9,16 +9,22 @@
 
 ## Executive Summary
 
-The Admiral Framework contains several novel technical innovations for governing autonomous AI agent fleets. This analysis identifies **seven primary patent opportunities** across enforcement architecture, institutional memory, fleet governance, and operational methodology. The strongest candidates are the Enforcement Spectrum (deterministic hooks vs. advisory instructions) and the Brain's fleet-wide institutional memory architecture — both represent novel technical solutions to problems that no prior art adequately addresses.
+The Admiral Framework contains **23 distinct patentable innovations** across enforcement architecture, institutional memory, fleet governance, agent identity, operational methodology, and coordination protocols. They fall into three tiers:
+
+- **Tier 1 (7 opportunities):** High-novelty architectural innovations — the core IP. These justify standalone provisional patent filings.
+- **Tier 2 (9 opportunities):** Medium-high-novelty operational innovations — strong as standalone filings or as dependent claims on Tier 1 patents.
+- **Tier 3 (7 opportunities):** Medium-novelty protocol and methodology innovations — best as dependent claims, defensive publications, or trade secrets.
+
+The strongest candidates remain the Enforcement Spectrum (#1) and the Brain (#2). But the expanded analysis reveals that Admiral's full innovation surface is significantly broader than initially assessed — particularly in agent identity (#8), quarantine defense (#9), context management (#10), and fleet coordination (#11–#14).
 
 This analysis covers **two strategic scenarios**:
 
 1. **Doctrine-as-product** — Admiral remains a specification/certification business (the ITIL/TOGAF model). Patents provide defensive protection and licensing leverage.
 2. **Full platform** — Admiral becomes running software: a governance runtime, Brain service, and control plane that enterprises deploy. Patents become core competitive moats protecting product revenue.
 
-The full-platform scenario significantly increases the value and urgency of patent filings — particularly for the Data Ecosystem (Opportunity #6), which escalates from "trade secret" to a top-tier filing candidate when it protects a revenue-generating SaaS product rather than an internal methodology.
+The full-platform scenario significantly increases the value and urgency of patent filings — particularly for the Data Ecosystem (#6), Agent Identity (#8), and Governance Agents (#14), which escalate from secondary concerns to top-tier filing candidates when they protect revenue-generating software.
 
-**Recommended priority:** File provisional patents on the top 4 opportunities within 90 days to establish priority dates. The filing order and scope depend on which strategic path Admiral pursues (see [Strategic Scenarios](#strategic-scenarios-doctrine-vs-full-platform) below).
+**Recommended priority:** File provisional patents on the top 5–7 opportunities within 90 days to establish priority dates. The filing order depends on which strategic path Admiral pursues (see [Strategic Scenarios](#strategic-scenarios-doctrine-vs-full-platform) below).
 
 ---
 
@@ -248,6 +254,357 @@ A **seven-component independent scaling architecture** for AI agent governance (
 
 ---
 
+## Tier 2 Opportunities: Operational Innovations (#8–#16)
+
+These innovations are concrete, implementable, and novel in the AI agent governance context. Each is strong enough for a standalone provisional filing but may also serve as dependent claims on Tier 1 patents.
+
+---
+
+### Patent Opportunity #8: Intent Engineering Methodology
+
+**Spec source:** Part 2 (Intent Engineering), Part 6 (Work Decomposition)
+**Implementation:** Standing orders, mission templates, spec-first pipeline
+
+**Innovation:** A **formalized discipline for structuring human-to-AI instructions** using a Six Elements framework (Goal, Priority, Constraints, Failure Modes, Judgment Boundaries, Values). This represents the evolution beyond "prompt engineering" — it decomposes fuzzy human intent into precise, verifiable agent objectives with explicit failure mode definitions.
+
+**Novel Claims:**
+
+- **Claim 1:** A method for decomposing human intent into six structured elements (goal, priority hierarchy, constraints, anticipated failure modes, judgment boundaries, and values/principles) before issuing instructions to an AI agent, wherein the system validates that all six elements are explicitly defined and rejects incomplete specifications.
+- **Claim 2:** A verification system that evaluates AI agent output against the structured intent specification, detecting misalignment between stated goals and agent behavior by comparing outputs against each of the six intent elements independently.
+- **Claim 3:** A cross-framework intent specification format that is agent-runtime-agnostic — the same structured intent document works with any agent framework (Claude Code, CrewAI, LangGraph, AutoGen) because it specifies *what* the agent should achieve and *how to judge success*, not *how* the agent should process instructions internally.
+
+**Strength:** Novelty **Medium-High** | Defensibility **High** | Prior art risk **Low** (no competitor has formalized this as a discipline; "prompt engineering" and "context engineering" are informal practices, not structured methodologies)
+
+**Priority: HIGH — Standalone filing. This names and owns a discipline that will become a professional certification category. Filing first establishes Admiral as the originator.**
+
+---
+
+### Patent Opportunity #9: Agent Identity Architecture with Non-Delegable Tokens
+
+**Spec source:** Part 3 (Configuration Security), Part 10 (Admiral as Meta-Agent)
+**Implementation:** Session start hooks, identity binding in control plane
+
+**Innovation:** A **zero-trust identity system for AI agents** where identity is cryptographically bound at session start and becomes immutable mid-session. Identity tokens are non-delegable (agents cannot pass their auth context to other agents), and authority tiers are cryptographically bound to identity at higher enforcement levels. This prevents agents from self-escalating authority, impersonating higher-tier agents, or delegating their permissions to sub-agents.
+
+**Novel Claims:**
+
+- **Claim 1:** A method for issuing cryptographic identity tokens to AI agents comprising: (a) binding the token to a specific role from a predefined catalog, project scope, authority tier, session ID, and organizational boundary; (b) making the token immutable after session initialization; (c) preventing token delegation — an agent receiving a task from another agent operates under its own identity and authority, not the delegator's.
+- **Claim 2:** An authority self-escalation prevention mechanism wherein: (a) no agent can modify its own authority tier or role assignment during a session; (b) authority changes require out-of-band human approval through a separate channel; (c) the system detects and blocks attempts to influence authority through prompt injection, social engineering of other agents, or tool-use-based escalation.
+- **Claim 3:** A fleet-wide identity verification system wherein every inter-agent communication, API call, and tool invocation includes the agent's identity token, enabling: complete audit trails attributing every action to a specific agent identity; authority validation at every interaction point; and automatic rejection of actions that exceed the agent's bound authority tier.
+
+**Strength:** Novelty **High** | Defensibility **High** | Prior art risk **Low** (NIST NCCoE and CSA ATF address agent identity conceptually; Admiral specifies a concrete, implementable architecture with non-delegable tokens — a concept that doesn't exist in current AI agent frameworks)
+
+**Priority: HIGH — Standalone filing. Agent identity is an emerging critical concern (NIST, CSA, WEF all flagging it). Filing first on a concrete architecture positions Admiral as the reference implementation.**
+
+---
+
+### Patent Opportunity #10: Five-Layer Quarantine Immune System for External Intelligence
+
+**Spec source:** Part 3 (Configuration Security — External Intelligence Quarantine), Part 9 (AI Landscape Monitor)
+**Implementation:** `admiral/lib/injection_detect.sh`, quarantine validation pipeline
+
+**Innovation:** A **five-layer defense-in-depth architecture** for protecting AI agent knowledge bases from poisoned or adversarial external intelligence:
+
+1. **Layer 1:** Deterministic structural validation (format, schema, field presence)
+2. **Layer 2:** Injection pattern detection via 70+ regex patterns (prompt injection, authority spoofing, data exfiltration, context manipulation)
+3. **Layer 3:** LLM-airgapped semantic analysis (Bayesian classification, TF-IDF authority-pattern scoring, credential fabrication detection) — **no LLM involved**
+4. **Layer 4:** LLM advisory layer that can **only reject, never approve** (breaking the circular dependency where an LLM judges content designed to manipulate LLMs)
+5. **Layer 5:** Antibody generation — detected attacks are converted into Brain FAILURE entries, training the system to recognize similar future attacks
+
+**Critical design principle:** Layers 1–3 are completely LLM-free, breaking the circular dependency where an AI judges adversarial content specifically designed to fool AIs.
+
+**Novel Claims:**
+
+- **Claim 1:** A multi-layer defense system for AI agent knowledge bases wherein the load-bearing security layers (structural validation, pattern detection, and semantic analysis) operate without any LLM engagement, and a subsequent LLM advisory layer has reject-only authority — ensuring that content designed to manipulate LLMs cannot influence its own admission into the knowledge base.
+- **Claim 2:** An antibody generation mechanism wherein detected adversarial content is automatically converted into a FAILURE knowledge entry documenting the attack pattern, vector, and signatures — enabling the defense system to recognize similar attacks in the future without manual rule updates.
+- **Claim 3:** A curated injection detection pattern library specifically calibrated for AI agent contexts, covering prompt injection, authority spoofing, role override, system prompt extraction, and meta-level instruction manipulation — categories that don't exist in traditional web application security (OWASP).
+
+**Strength:** Novelty **High** | Defensibility **High** | Prior art risk **Low** (no prior art addresses LLM-airgapped defense for agent knowledge bases; traditional security doesn't cover prompt injection or authority spoofing)
+
+**Priority: HIGH — Standalone filing. AI agent security is a greenfield patent space. The LLM-airgapped design principle is a genuine architectural insight that competitors will eventually need.**
+
+---
+
+### Patent Opportunity #11: Context Window Stratification with Primacy/Recency Loading
+
+**Spec source:** Part 2 (Context Window Strategy — Loading Order Protocol)
+**Implementation:** Session start hooks, context baseline/health check hooks
+
+**Innovation:** A **cognitive-science-informed context management architecture** for AI agents that deliberately layers information to exploit primacy and recency effects in language models:
+
+- **Standing context** (identity, constraints, standing orders) loaded **first** — primacy effect establishes the behavioral frame
+- **Reference material** (ground truth, history, knowledge) loaded **in the middle**
+- **Current task** loaded **last** — recency effect ensures task focus
+
+Complemented by scaling-aware budgets (15–25% standing context with absolute ceiling of 50K tokens regardless of window size, 50–65% session context, 20–30% working context) and periodic health monitoring that detects when critical sections have been lost from context.
+
+**Novel Claims:**
+
+- **Claim 1:** A method for loading information into an AI agent's context window in a deliberate order designed to exploit cognitive effects in language models, comprising: identity and constraint information loaded first (primacy), reference material loaded in the middle, and current task loaded last (recency) — where the loading order is enforced programmatically and not modifiable by the agent.
+- **Claim 2:** A context health monitoring system comprising: (a) a baseline measurement at session start recording initial utilization and confirming presence of critical sections (Identity, Authority, Constraints); (b) periodic health checks (every N tool calls) that re-validate critical section presence and utilization levels; (c) automatic alerts when utilization exceeds a safety threshold (85%) or when critical sections have been displaced from context.
+- **Claim 3:** A context sacrifice ordering protocol that specifies which information to discard first when context window pressure increases, ensuring safety-critical constraints are never sacrificed before lower-priority working context — with the sacrifice order enforced deterministically rather than left to the LLM's judgment.
+
+**Strength:** Novelty **Medium-High** | Defensibility **Medium-High** | Prior art risk **Low-Medium** (Anthropic and others discuss "context engineering" informally; no one has formalized the loading order, sacrifice protocol, or health monitoring as a patent-grade system)
+
+**Priority: MEDIUM-HIGH — Strong as standalone or as dependent claims on #1 (Enforcement Spectrum). The context health monitoring is implemented and running in production hooks.**
+
+---
+
+### Patent Opportunity #12: Agent-to-Agent Protocol (A2A) with Verified Agent Cards
+
+**Spec source:** Part 4 (Protocol Integration — A2A)
+**Implementation:** Protocol specification with JSON-RPC 2.0 over HTTPS
+
+**Innovation:** A **structured agent-to-agent communication protocol** where every agent publishes a machine-readable Agent Card declaring identity (verified name, role, fleet membership, public key), capabilities (input/output schemas), authentication method (API Key, OAuth 2.0, mTLS), and availability status (available/busy/offline, queue depth, ETA). All messages are cryptographically signed with the sender's private key; unsigned messages are rejected. This enables cross-fleet, cross-organization agent collaboration without centralized coordination.
+
+**Novel Claims:**
+
+- **Claim 1:** A protocol for AI agent-to-agent communication comprising: (a) machine-readable Agent Cards publishing identity, capabilities, authentication method, and availability; (b) cryptographically signed messages where unsigned messages are rejected; (c) structured task delegation including sender identity, trace ID, task description, deadline, and budget remaining.
+- **Claim 2:** A cross-organization agent federation mechanism wherein agents from different organizations can discover each other via published Agent Cards, verify identity via cryptographic signatures, and collaborate on tasks without centralized coordination — while maintaining each organization's governance constraints and authority boundaries.
+
+**Strength:** Novelty **Medium-High** | Defensibility **Medium** | Prior art risk **Medium** (Google A2A protocol exists but doesn't include cryptographic identity verification or governance-aware federation)
+
+**Priority: MEDIUM — Stronger as dependent claims on #9 (Agent Identity). The Agent Card concept differentiates from Google's A2A by adding verified identity and governance constraints.**
+
+---
+
+### Patent Opportunity #13: Fleet Catalog with Role Architecture and Interface Contracts
+
+**Spec source:** Part 6 (Fleet Catalog), Part 8 (Fleet Configuration)
+**Implementation:** Role definitions, routing rules
+
+**Innovation:** A **pre-defined catalog of 71 specialized agent roles** with: capability declarations (what each role can/cannot do), interface contracts (sender-delivers/receiver-returns schemas for handoffs), authority scoping (which decision tiers each role operates at), and routing rules (how tasks are assigned to roles based on task characteristics). The interface contracts are the key innovation — they define what the sending agent must provide and what the receiving agent must return, enabling contract verification before work acceptance.
+
+**Novel Claims:**
+
+- **Claim 1:** A system for defining reusable AI agent roles comprising: (a) a catalog of pre-defined role specifications each with capability declarations, authority scope, and interface contracts; (b) interface contracts specifying sender-delivers schemas (what the delegating agent must provide) and receiver-returns schemas (what the executing agent must produce); (c) contract validation that rejects task handoffs where the sender's output doesn't match the receiver's expected input.
+- **Claim 2:** A task-to-role routing system that matches incoming tasks to appropriate agent roles based on: task domain, required capabilities, authority tier needed, current agent availability, and historical success rate of each role on similar tasks.
+
+**Strength:** Novelty **Medium** | Defensibility **Medium** | Prior art risk **Medium** (CrewAI has roles; microservice interface contracts exist broadly; the combination with authority scoping and contract validation for AI agents is novel)
+
+**Priority: MEDIUM — Best as dependent claims on #3 (Decision Authority). The interface contract pattern is the strongest novel element.**
+
+---
+
+### Patent Opportunity #14: Governance Agents — Dedicated Adversarial and Monitoring Agent Class
+
+**Spec source:** Part 8 (Fleet Operations), Part 10 (Admiral Self-Calibration)
+**Implementation:** Control plane monitoring, runaway detector
+
+**Innovation:** A **specialized class of AI agents that exist solely to monitor, audit, and protect operational agents** — running alongside the fleet but operating independently of operational agent context (preventing governance agents from being compromised by poisoned data). Eight specialized governance roles:
+
+1. **Drift Monitor** — detects behavioral drift from established patterns
+2. **Hallucination Auditor** — verifies factual claims against ground truth
+3. **Bias Sentinel** — flags discriminatory or biased outputs
+4. **Loop Breaker** — detects infinite retry patterns (implemented as `runaway-detector.ts`)
+5. **Context Health Monitor** — tracks context window pressure (implemented as `context_health_check.sh`)
+6. **Contradiction Detector** — flags conflicting outputs between agents
+7. **Red Team Agent** — adversarial testing of other agents
+8. **Penetration Tester** — security probing of agent tool access
+
+**Novel Claims:**
+
+- **Claim 1:** A governance agent architecture comprising: (a) a class of AI agents deployed alongside operational agents that monitor, audit, and constrain operational agent behavior; (b) governance agents operating with independent context from operational agents (preventing data poisoning from affecting governance); (c) governance agent heartbeat monitoring ensuring the governance layer itself remains alive and functioning.
+- **Claim 2:** A fleet behavioral drift detection method wherein a governance agent compares current agent behavior against historical behavioral fingerprints, detecting gradual drift that wouldn't trigger individual-action policy violations but represents a pattern-level departure from expected behavior.
+
+**Strength:** Novelty **Medium-High** | Defensibility **Medium-High** | Prior art risk **Medium** (Gartner conceptualizes "Guardian Agents"; Admiral specifies 8 concrete roles with independent context isolation)
+
+**Priority: MEDIUM-HIGH — Standalone filing. The governance agent concept is emerging across the industry (Gartner, WEF); filing first on a concrete architecture with 8 specialized roles establishes priority.**
+
+---
+
+### Patent Opportunity #15: Multi-Agent Handoff Protocol with Contract Verification
+
+**Spec source:** Part 6 (Work Decomposition — Handoff Protocol), Part 7 (Quality Assurance)
+**Implementation:** Task routing, chunk-level handoffs
+
+**Innovation:** A **canonical structured handoff protocol** for intra-fleet task delegation comprising: JSON-schema task handoff format with sender-delivers/receiver-returns contracts, misalignment detection between sender intent and receiver interpretation, conflict resolution via dedicated Mediator agent, and handoff verification before work acceptance.
+
+**Novel Claims:**
+
+- **Claim 1:** A method for AI agents to exchange work comprising: (a) a structured handoff format including task specification, sender-delivers data package, expected receiver-returns schema, deadline, and budget; (b) receiver-side validation that the sender's data package matches the expected input contract before accepting the task; (c) automatic escalation to a Mediator agent when sender intent and receiver interpretation conflict.
+- **Claim 2:** A handoff verification system that detects misalignment between what a sending agent intended to delegate and what a receiving agent understood, using structured comparison of intent fields rather than semantic similarity — enabling early detection of miscommunication before work begins.
+
+**Strength:** Novelty **Medium** | Defensibility **Medium** | Prior art risk **Medium** (microservice contracts, message schemas exist; AI-agent-specific handoff with intent verification is novel)
+
+**Priority: MEDIUM — Dependent claims on #13 (Fleet Catalog). The verification/mediation aspects are the strongest novel elements.**
+
+---
+
+### Patent Opportunity #16: Orchestrator Degradation with Fallback Decomposer Mode
+
+**Spec source:** Part 8 (Orchestrator Health Protocol), Part 10 (Fallback Decomposer Mode)
+**Implementation:** Health monitoring, heartbeat checks
+
+**Innovation:** A **graceful degradation mechanism** for multi-agent fleet orchestration. When the Orchestrator becomes unresponsive (3 consecutive missed heartbeats), the Admiral activates Fallback Decomposer Mode: coarse-grained decomposition (1–3 macro-tasks instead of fine-grained), routing to Tier 1 specialists only, serial execution only (no parallel coordination), and a 5-minute duration limit before escalating. When the Orchestrator recovers, the Admiral produces a SESSION HANDOFF document transferring in-flight state back. This prevents fleet stalls without requiring full orchestrator redundancy.
+
+**Novel Claims:**
+
+- **Claim 1:** A failover method for AI agent fleet orchestration comprising: (a) heartbeat monitoring of the orchestrator component; (b) automatic activation of a degraded-mode decomposer when the orchestrator becomes unresponsive; (c) the degraded decomposer operating with reduced capabilities (fewer, larger tasks; serial-only execution; restricted agent tier routing); (d) automatic state handoff back to the primary orchestrator upon recovery.
+
+**Strength:** Novelty **Medium** | Defensibility **Medium** | Prior art risk **Medium-High** (leader election and failover exist broadly in distributed systems; the AI-agent-specific decomposer degradation is novel)
+
+**Priority: MEDIUM — Dependent claims on #14 (Governance Agents) or as part of a broader fleet operations patent.**
+
+---
+
+## Tier 3 Opportunities: Protocol and Methodology Innovations (#17–#23)
+
+These innovations are valuable but have higher prior art risk or lower individual defensibility. They are best protected as dependent claims on Tier 1/2 patents, defensive publications, or trade secrets.
+
+---
+
+### Patent Opportunity #17: Metered Service Broker with Per-Second Billing and Fair-Split Allocation
+
+**Spec source:** Part 8 (Cost Management — Metered Service Broker)
+**Implementation:** Budget tracking in hooks and control plane
+
+**Innovation:** A four-component system (Credential Vault, Session Broker, Billing Engine, Data Store) managing pooled access to external subscriptions (LLM API keys, SaaS platforms, cloud resources). Credentials are encrypted at rest and checked in/out to prevent concurrent overuse. Billing is per-second metered: `duration_seconds × (monthly_cost_cents / 2,592,000)`. Usage ledger is immutable and append-only.
+
+**Novel Claims:**
+
+- **Claim 1:** A credential management and billing system for AI agent fleets comprising: (a) encrypted credential vault with check-in/check-out preventing concurrent overuse; (b) per-second metered billing proportional to actual usage duration; (c) immutable, append-only usage ledger enabling audit and fair-split cost allocation across agents and teams.
+
+**Strength:** Novelty **Medium** | Prior art risk **Medium-High** (cloud billing, credential vaults exist broadly)
+
+**Priority: LOW-MEDIUM — Dependent claims on a broader fleet operations patent.**
+
+---
+
+### Patent Opportunity #18: Continuous AI Landscape Monitor with Quarantined Seed Candidates
+
+**Spec source:** Part 9 (CI/CD & Event-Driven Operations — AI Landscape Monitor)
+**Implementation:** Monitoring scripts, RSS scanning
+
+**Innovation:** A daily + weekly deep-scan agent that monitors 11 model providers and 20+ exemplar repos, discovers releases, extracts agent configuration patterns, and scans RSS feeds. All external content is automatically subjected to the five-layer immune system (#10) before generating seed candidates. Results arrive with `approved: False`, requiring Admiral review before Brain activation. Scanning is deterministic (LLM-Last), and findings are persisted to git for temporal tracking.
+
+**Novel Claims:**
+
+- **Claim 1:** An automated landscape monitoring system for AI agent ecosystems comprising: (a) deterministic scanning of model provider release feeds, code repositories, and industry publications; (b) automatic quarantine of all discovered content through a multi-layer defense system before any content enters the knowledge base; (c) seed candidate generation with mandatory human approval before activation.
+
+**Strength:** Novelty **Medium** | Prior art risk **Medium** (competitive intelligence tools exist; the agent-governance-specific quarantined pipeline is novel)
+
+**Priority: LOW-MEDIUM — Best as dependent claims on #10 (Quarantine Immune System).**
+
+---
+
+### Patent Opportunity #19: Spec-First Pipeline with Phase Artifacts
+
+**Spec source:** Part 1 (The Spec-First Pipeline), Part 6 (Work Decomposition)
+**Implementation:** Mission templates, work decomposition protocol
+
+**Innovation:** A multi-phase execution model where work phases produce intermediate artifacts that feed the next phase: (1) Requirements Spec → what the feature must do with acceptance criteria; (2) Design Spec → architecture and API contracts; (3) Task Decomposition → chunks with entry/exit states; (4) Implementation → executes chunks. Each phase is independently completable as a separate session with clean context. The pipeline entry point is defined in the Mission statement.
+
+**Novel Claims:**
+
+- **Claim 1:** A multi-phase AI agent work execution model comprising: (a) sequential phases each producing a defined intermediate artifact; (b) artifacts serving as input contracts for the next phase; (c) each phase independently completable in a separate agent session with clean context; (d) a configurable pipeline entry point defining where agent involvement begins.
+
+**Strength:** Novelty **Medium** | Prior art risk **Medium-High** (phased software development is well-established; the agent-session-specific application is novel)
+
+**Priority: LOW — Better as published methodology or defensive publication.**
+
+---
+
+### Patent Opportunity #20: Strategic Adaptation Protocol with Cascade Map
+
+**Spec source:** Part 8 (Adaptation Protocol — The Cascade Map)
+**Implementation:** Artifact dependency tracking
+
+**Innovation:** When an artifact changes (Mission, Boundaries, Ground Truth), downstream artifacts become stale. The framework defines an explicit dependency graph showing which artifacts depend on which. The cascade rule: update an artifact, then review every downstream artifact in dependency order. Strategic Shifts trigger Fleet Pause Protocol: complete current chunk, pause, update artifacts top-down, run Pre-Flight Checklist, rebrief agents, resume.
+
+**Novel Claims:**
+
+- **Claim 1:** A change management protocol for AI agent fleet configuration comprising: (a) a dependency graph mapping relationships between configuration artifacts; (b) automatic staleness detection when upstream artifacts change; (c) enforced top-down cascade ordering; (d) Fleet Pause Protocol that safely halts agent operations during strategic changes.
+
+**Strength:** Novelty **Medium** | Prior art risk **Medium-High** (dependency management exists broadly; fleet-specific cascade with pause protocol is novel)
+
+**Priority: LOW-MEDIUM — Dependent claims on #16 (Orchestrator Degradation) or a broader fleet operations patent.**
+
+---
+
+### Patent Opportunity #21: Agentic Engineering Ladder (9-Rung Progression)
+
+**Spec source:** `thesis/agentic-engineering-ladder.md`
+**Implementation:** Conceptual framework; supports certification program
+
+**Innovation:** A **nine-rung maturity model** for AI system development: Prompt Engineering → Context Engineering → Intent Engineering → Constraint Engineering → Outcome Engineering → Evaluation Engineering → Simulation Engineering → Autonomy Engineering → Institutional Engineering. Each rung solves different failure modes, has explicit dependencies, and the model prohibits skipping rungs.
+
+**Novel Claims:**
+
+- **Claim 1:** A nine-stage maturity framework for AI agent system development comprising sequential capability levels with explicit dependencies, wherein each level addresses distinct failure modes and advancement requires demonstrated competence at the current level — with anti-pattern detection that warns when practitioners attempt to skip levels.
+
+**Strength:** Novelty **Medium-High** | Prior art risk **Medium** (maturity models exist broadly; no nine-rung AI engineering progression exists) | Defensibility **Medium** (taxonomy is defensible; individual rung concepts have analogs)
+
+**Priority: MEDIUM — Stronger as published methodology supporting the certification business than as a standalone patent. Consider defensive publication to prevent competitors from patenting it.**
+
+---
+
+### Patent Opportunity #22: Fleet Pause/Resume Protocol with Checkpoint Continuity
+
+**Spec source:** Part 8 (Fleet Operations), Part 7 (Checkpointing)
+**Implementation:** Checkpoint files, session handoff documents
+
+**Innovation:** A system for safely pausing an entire agent fleet mid-execution and resuming without state loss or inconsistency. Checkpoint files capture agent state at clean boundaries (between chunks, not mid-chunk). Pause protocol ensures all agents reach safe points before halting. Resume protocol rehydrates agents from checkpoints with continuity verification preventing duplicate execution.
+
+**Novel Claims:**
+
+- **Claim 1:** A method for pausing and resuming multi-agent AI systems comprising: (a) checkpoint creation at defined safe boundaries in agent execution; (b) coordinated pause ensuring all agents reach safe points before halting; (c) resume with continuity verification preventing duplicate execution of already-completed work.
+
+**Strength:** Novelty **Medium** | Prior art risk **Medium-High** (checkpointing and pause/resume exist in distributed systems; fleet-level coordination of AI agent state is novel)
+
+**Priority: LOW — Dependent claims on #16 (Orchestrator Degradation) or broader fleet operations patent.**
+
+---
+
+### Patent Opportunity #23: Execution Trace Forest Builder
+
+**Spec source:** Part 7 (Quality Assurance — Observability)
+**Implementation:** `control-plane/src/trace.ts`
+
+**Innovation:** An algorithm that reconstructs hierarchical reasoning trees from flat, time-ordered agent event streams. Groups events by agent, nests tool_called and tool_result under task_assigned, builds multiple independent trees (a forest) when agents operate in parallel. Renders as ASCII trees for human visualization and programmatically as TraceNode structures.
+
+**Novel Claims:**
+
+- **Claim 1:** A method for reconstructing hierarchical agent reasoning structure from flat event streams comprising: (a) grouping events by agent identity; (b) nesting tool invocations under task assignments based on temporal ordering; (c) building a forest of independent trees when multiple agents operate in parallel; (d) rendering the forest as both human-readable visualization and programmatic data structure.
+
+**Strength:** Novelty **Medium** | Prior art risk **Medium-High** (trace visualization exists in distributed tracing — Jaeger, Zipkin; AI agent reasoning tree reconstruction is a novel application)
+
+**Priority: LOW — Dependent claims on #14 (Governance Agents) as part of observability. Better as open-source contribution than patent.**
+
+---
+
+## Complete Patent Opportunity Summary
+
+| # | Innovation | Tier | Novelty | Priority | Best Protection |
+|---|---|---|---|---|---|
+| **1** | Enforcement Spectrum | 1 | High | HIGHEST | Standalone utility patent |
+| **2** | Brain Architecture | 1 | High | HIGH | Standalone utility patent |
+| **3** | Decision Authority + Trust | 1 | Medium-High | HIGH | Standalone utility patent |
+| **4** | Self-Healing Loops + Recovery | 1 | Medium | MEDIUM | Dependent claims on #1 |
+| **5** | Standing Orders | 1 | Medium | MEDIUM | Dependent claims on #1 |
+| **6** | Data Ecosystem + Attribution | 1 | Medium–High | MEDIUM / HIGH* | Trade secret or standalone* |
+| **7** | Progressive Scaling | 1 | Medium | LOW | Defensive publication |
+| **8** | Intent Engineering | 2 | Medium-High | HIGH | Standalone utility patent |
+| **9** | Agent Identity + Non-Delegable Tokens | 2 | High | HIGH | Standalone utility patent |
+| **10** | Quarantine Immune System (5-Layer) | 2 | High | HIGH | Standalone utility patent |
+| **11** | Context Window Stratification | 2 | Medium-High | MEDIUM-HIGH | Standalone or dependent on #1 |
+| **12** | A2A Protocol + Agent Cards | 2 | Medium-High | MEDIUM | Dependent on #9 |
+| **13** | Fleet Catalog + Interface Contracts | 2 | Medium | MEDIUM | Dependent on #3 |
+| **14** | Governance Agents | 2 | Medium-High | MEDIUM-HIGH | Standalone utility patent |
+| **15** | Handoff Protocol + Verification | 2 | Medium | MEDIUM | Dependent on #13 |
+| **16** | Orchestrator Degradation | 2 | Medium | MEDIUM | Dependent on #14 |
+| **17** | Metered Service Broker | 3 | Medium | LOW-MEDIUM | Dependent claims |
+| **18** | AI Landscape Monitor | 3 | Medium | LOW-MEDIUM | Dependent on #10 |
+| **19** | Spec-First Pipeline | 3 | Medium | LOW | Defensive publication |
+| **20** | Cascade Map / Adaptation Protocol | 3 | Medium | LOW-MEDIUM | Dependent claims |
+| **21** | Agentic Engineering Ladder | 3 | Medium-High | MEDIUM | Defensive publication or standalone |
+| **22** | Fleet Pause/Resume | 3 | Medium | LOW | Dependent claims |
+| **23** | Execution Trace Forest | 3 | Medium | LOW | Open-source / dependent claims |
+
+*Opportunity #6 priority depends on strategic scenario — see below.
+
+---
+
 ## Strategic Scenarios: Doctrine vs. Full Platform
 
 The patent strategy differs substantially depending on whether Admiral remains a specification or becomes running software. Both scenarios are viable; the key is that the full-platform scenario makes patents significantly more valuable and urgent.
@@ -269,14 +626,18 @@ Admiral remains a specification, certification, and consulting business. Revenue
 | Priority | Opportunity | Type | Timeline |
 |---|---|---|---|
 | **1** | #1 Enforcement Spectrum | Utility patent (provisional first) | File provisional within 30 days |
-| **2** | #2 Brain Architecture | Utility patent (provisional first) | File provisional within 60 days |
-| **3** | #3 Decision Authority + Trust Calibration | Utility patent (provisional first) | File provisional within 90 days |
-| **4** | #4 Self-Healing Loops | Dependent claims on #1 | Include in #1 full application |
-| **5** | #5 Standing Orders | Dependent claims on #1 | Include in #1 full application |
-| **6** | #6 Data Ecosystem | Trade secret | Document internally; don't publish claims |
-| **7** | #7 Progressive Scaling | Defensive publication | Include in open spec |
+| **2** | #2 Brain Architecture | Utility patent (provisional first) | File provisional within 45 days |
+| **3** | #8 Intent Engineering | Utility patent (provisional first) | File provisional within 60 days |
+| **4** | #3 Decision Authority + Trust Calibration | Utility patent (provisional first) | File provisional within 75 days |
+| **5** | #9 Agent Identity | Utility patent (provisional first) | File provisional within 90 days |
+| **6** | #10 Quarantine Immune System | Utility patent (provisional first) | File provisional within 90 days |
+| **7** | #4 Self-Healing Loops | Dependent claims on #1 | Include in #1 full application |
+| **8** | #5 Standing Orders, #11 Context Stratification | Dependent claims on #1 | Include in #1 full application |
+| **9** | #6 Data Ecosystem | Trade secret | Document internally; don't publish claims |
+| **10** | #7 Progressive Scaling, #19 Spec-First, #21 Ladder | Defensive publication | Include in open spec |
+| **11** | #12–#18, #20, #22–#23 | Dependent claims or trade secrets | Include in relevant full applications |
 
-**Estimated cost:** $15,000–$39,000 for top 3 provisionals. $60,000–$129,000 through full utility.
+**Estimated cost:** $24,000–$78,000 for top 6 provisionals. $105,000–$258,000 through full utility.
 
 ---
 
@@ -300,16 +661,25 @@ Admiral becomes a governance SaaS product — a runtime that intercepts agent ac
 | Priority | Opportunity | Type | Timeline |
 |---|---|---|---|
 | **1** | #1 Enforcement Spectrum | Utility patent (provisional first) | File provisional within 30 days |
-| **2** | #2 Brain Architecture | Utility patent (provisional first) | File provisional within 45 days |
-| **3** | #6 Data Ecosystem + Attribution | Utility patent (provisional first) | File provisional within 60 days |
-| **4** | #3 Decision Authority + Trust Calibration | Utility patent (provisional first) | File provisional within 90 days |
-| **5** | #4 Self-Healing Loops | Dependent claims on #1 | Include in #1 full application |
-| **6** | #5 Standing Orders | Dependent claims on #1 | Include in #1 full application |
-| **7** | #7 Progressive Scaling | Defensive publication | Include in open spec |
+| **2** | #2 Brain Architecture | Utility patent (provisional first) | File provisional within 35 days |
+| **3** | #9 Agent Identity + Non-Delegable Tokens | Utility patent (provisional first) | File provisional within 45 days |
+| **4** | #6 Data Ecosystem + Attribution | Utility patent (provisional first) | File provisional within 55 days |
+| **5** | #10 Quarantine Immune System | Utility patent (provisional first) | File provisional within 65 days |
+| **6** | #3 Decision Authority + Trust Calibration | Utility patent (provisional first) | File provisional within 75 days |
+| **7** | #8 Intent Engineering | Utility patent (provisional first) | File provisional within 85 days |
+| **8** | #14 Governance Agents | Utility patent (provisional first) | File provisional within 90 days |
+| **9** | #4 Self-Healing, #5 Standing Orders, #11 Context | Dependent claims on #1 | Include in #1 full application |
+| **10** | #12 A2A Protocol | Dependent claims on #9 | Include in #9 full application |
+| **11** | #13 Fleet Catalog, #15 Handoff Protocol | Dependent claims on #3 | Include in #3 full application |
+| **12** | #16–#18, #20, #22–#23 | Dependent claims or trade secrets | Include in relevant full applications |
+| **13** | #7 Progressive Scaling, #19 Spec-First, #21 Ladder | Defensive publication | Include in open spec |
 
-**Estimated cost:** $20,000–$52,000 for top 4 provisionals. $80,000–$172,000 through full utility.
+**Estimated cost:** $32,000–$104,000 for top 8 provisionals. $152,000–$344,000 through full utility.
 
-**The difference:** In the full-platform scenario, Opportunity #6 (Data Ecosystem) jumps from "trade secret" to the #3 filing priority. When you're running a platform, the closed-loop attribution pipeline is not a theoretical architecture — it's the mechanism that generates your most valuable asset (cross-organization intelligence). Patenting the mechanism prevents competitors from legally replicating the flywheel, even if they have better distribution, more engineers, and deeper pockets.
+**The difference:** In the full-platform scenario, three opportunities escalate significantly:
+- **#6 (Data Ecosystem)** jumps from "trade secret" to the #4 filing priority — you're patenting the mechanism that generates your most valuable asset.
+- **#9 (Agent Identity)** jumps to #3 — when you're running a platform that manages agent credentials, non-delegable tokens become core product differentiation.
+- **#14 (Governance Agents)** becomes a standalone filing — when you're selling governance-as-a-service, the specialized agent class *is* the product.
 
 ---
 
@@ -318,10 +688,11 @@ Admiral becomes a governance SaaS product — a runtime that intercepts agent ac
 You don't have to choose today. Provisional patents cover both scenarios — the claims are broad enough to support either path. The decision point comes at **month 10–11**, when provisionals expire and you must file full utility patents. By then, you'll have market signal on which path Admiral is taking.
 
 **What to do now regardless of scenario:**
-1. File the top 3 provisionals (Enforcement Spectrum, Brain, Decision Authority) — these are high-priority in both scenarios
-2. Prepare the Data Ecosystem provisional — file it if you're leaning toward full platform, hold it as trade secret if staying doctrine-only
-3. Document invention dates for all 7 opportunities (git history, spec drafts, design notes)
-4. Begin trademark filings (valuable in both scenarios)
+1. File the top 5 provisionals (Enforcement Spectrum, Brain, Intent Engineering, Decision Authority, Agent Identity) — these are high-priority in both scenarios
+2. File Quarantine Immune System provisional — high-priority in both scenarios and a greenfield patent space
+3. Prepare the Data Ecosystem and Governance Agents provisionals — file if leaning toward full platform, hold as trade secrets if staying doctrine-only
+4. Document invention dates for all 23 opportunities (git history, spec drafts, design notes)
+5. Begin trademark filings (valuable in both scenarios)
 
 ---
 
@@ -430,24 +801,32 @@ Set up patent monitoring (e.g., Google Patents alerts) for these classification 
 
 ## Next Steps
 
-### Immediate (Both Scenarios)
+### Immediate (Both Scenarios) — Days 1–30
 
-1. **Engage patent counsel** — Share this analysis with a patent attorney specializing in software/AI patents. They will refine claims and conduct formal prior art searches.
-2. **File Opportunity #1 provisional** — The Enforcement Spectrum is the strongest, most novel, and most defensible innovation. Establish priority date immediately.
-3. **File Opportunity #2 provisional** — Brain Architecture. High priority in both scenarios.
-4. **Document invention dates** — Gather git commit history, spec drafts, and design documents that establish when each innovation was first conceived and reduced to practice. Key dates: first commit of Part 3 (enforcement spec), first commit of Part 5 (Brain spec), first commit of Part 12 (data ecosystem). These establish reduction to practice.
+1. **Engage patent counsel** — Share this analysis with a patent attorney specializing in software/AI patents. They will refine claims and conduct formal prior art searches. The 23-opportunity inventory gives them a complete picture to prioritize.
+2. **File Opportunity #1 provisional** — The Enforcement Spectrum is the strongest, most novel, and most defensible innovation. Include #4 (Self-Healing) and #5 (Standing Orders) as dependent claims.
+3. **File Opportunity #2 provisional** — Brain Architecture. Include quarantine claims that overlap with #10.
+4. **Document invention dates for all 23 opportunities** — Gather git commit history, spec drafts, and design documents. Key dates: first commits of Part 2 (context/intent), Part 3 (enforcement/identity/quarantine), Part 4 (A2A), Part 5 (Brain), Part 6 (fleet catalog/handoffs), Part 8 (fleet operations/broker), Part 9 (landscape monitor), Part 10 (governance agents), Part 12 (data ecosystem). These establish reduction to practice.
 5. **Begin trademark filings** — "Admiral Framework" and "Intent Engineering" are the strongest candidates. File intent-to-use applications.
 6. **Monitor competitor filings** — Set up automated patent alerts for the classification codes above.
 
-### If Leaning Toward Full Platform
+### Days 30–90 (Both Scenarios)
 
-7. **File Opportunity #6 provisional** — Data Ecosystem with outcome attribution and cross-organization intelligence. This becomes a top-tier filing when protecting a running product.
-8. **File Opportunity #3 provisional** — Decision Authority with per-category trust calibration.
-9. **Begin building patent-supporting implementations** — Working code strengthens patent applications. The control plane MVP, hook implementations, and Brain Level 1 already provide this for Opportunities #1, #2, and #3. Build a minimal attribution pipeline prototype to support Opportunity #6.
+7. **File Opportunity #8 provisional** — Intent Engineering. This names a discipline. Whoever files first owns the methodology.
+8. **File Opportunity #9 provisional** — Agent Identity with non-delegable tokens. Greenfield patent space that NIST and CSA are circling but haven't formalized.
+9. **File Opportunity #10 provisional** — Quarantine Immune System. The LLM-airgapped design principle is a genuine architectural insight that will become industry-standard. File before someone publishes it.
+10. **File Opportunity #3 provisional** — Decision Authority with per-category trust calibration.
+
+### If Leaning Toward Full Platform — Days 30–90
+
+11. **File Opportunity #6 provisional** — Data Ecosystem with outcome attribution and cross-organization intelligence.
+12. **File Opportunity #14 provisional** — Governance Agents. When selling governance-as-a-service, this specialized agent class *is* the product.
+13. **Begin building patent-supporting implementations** — Working code strengthens patent applications. The control plane MVP, hook implementations, and Brain Level 1 already support #1, #2, #3. Build: (a) minimal attribution pipeline prototype for #6; (b) agent identity token system for #9; (c) governance agent harness for #14.
 
 ### Month 10–11 Decision Point
 
-10. **Decide full utility filings** — Provisionals expire at 12 months. By month 10, assess market traction and strategic direction. Convert the provisionals that align with Admiral's path to full utility patent applications. Let the others lapse (or file defensive publications to prevent competitors from patenting them).
+14. **Decide full utility filings** — Provisionals expire at 12 months. By month 10, assess market traction and strategic direction. Convert the provisionals that align with Admiral's path to full utility patent applications. Let the rest lapse (or file defensive publications to prevent competitors from patenting them).
+15. **Bundle dependent claims into full applications** — When converting provisionals to full utility patents, include the Tier 2/3 opportunities as dependent claims: #11 (Context) and #5 (Standing Orders) into #1; #12 (A2A) into #9; #13 (Fleet Catalog) and #15 (Handoff) into #3; #16 (Orchestrator Degradation) and #18 (Landscape Monitor) into #14 or #10.
 
 ---
 
