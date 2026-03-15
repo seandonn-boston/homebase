@@ -9,6 +9,7 @@
     "Identify where your domain-specific data lives in this project.",
     "When project context is ambiguous or contradictory, flag it immediately. Do not resolve ambiguity by guessing — resolve it by asking.",
     "Your Context Profile defines what you need. If any of it is missing, you are context-starved and must say so before continuing.",
-    "Never assume project context carries over from a prior session. Verify it. Context is perishable."
+    "Never assume project context carries over from a prior session. Verify it. Context is perishable.",
+    "When context is insufficient, follow the Context Source Routing chain: (1) Check loaded context — standing, session, and working context already in your window. (2) Query the Brain — call brain_query for precedent, cross-session knowledge, and durable lessons. (3) Escalate — if neither source resolves the gap, flag missing context to the Orchestrator or human operator. Do not skip steps."
   ]
 }

@@ -186,6 +186,31 @@ The budget percentages above are reference points calibrated for 200K-token cont
 - **Loaded on request:** Full architectural history, cross-system diagrams, comprehensive reference.
 - **Never loaded:** Other agents' internal context, other projects' artifacts, historical sessions older than the last checkpoint.
 
+### Context Source Routing
+
+Not all missing context should be solved the same way. Before an agent acts on incomplete information, it must determine **where** to look — not just **whether** something is missing. Follow this chain in order:
+
+**Step 1 — Check loaded context.** The answer may already be in standing, session, or working context. Search before querying external sources. Use loaded context when:
+- The information concerns current task artifacts (code, specs, configs already in view)
+- The question is about the agent's own scope, authority, or constraints
+- The data was loaded at session start or during a recent context refresh
+
+**Step 2 — Query the Brain.** If loaded context is insufficient, call `brain_query` before proceeding. Query the Brain when:
+- Making a **Propose-tier or Escalate-tier** decision (mandatory — see Part 5 anti-pattern: Brain Bypass)
+- The task involves **precedent** — "has this been decided before?" or "what happened last time?"
+- The agent needs **cross-project or cross-session** knowledge
+- Confidence is below 80% and the missing information is **durable knowledge** (decisions, patterns, lessons), not ephemeral state
+- Before creating a new pattern or convention that may already exist as a recorded lesson
+
+**Step 3 — Escalate to human.** If neither loaded context nor the Brain resolves the gap:
+- The information requires **business or product judgment** not captured in any store
+- The question involves **access or authorization** the agent cannot self-resolve
+- Flag the gap per SO-04 (Context Honesty) and SO-06 (Recovery Protocol)
+
+> **Do not skip steps.** Jumping to Step 3 without checking the Brain wastes human attention. Jumping to Step 2 without checking loaded context wastes retrieval budget and adds latency. The chain is sequential for a reason.
+
+> **ANTI-PATTERN: CONTEXT SOURCE CONFUSION** — An agent queries the Brain for information already present in its standing context, or escalates to a human for a question the Brain could answer. Both waste resources and signal poor context awareness. The routing chain above prevents this by enforcing lookup order. **Defense:** Standing Order 11 (Context Discovery) includes the routing chain as a required protocol.
+
 ### Context Refresh Points
 
 - **After completing each chunk.** Checkpoint, then reload with updated session context.
