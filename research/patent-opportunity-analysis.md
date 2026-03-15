@@ -1,6 +1,7 @@
 # Admiral Framework — Patent Opportunity Analysis
 
 **Date:** March 15, 2026
+**Updated:** March 15, 2026 — expanded to cover full-platform scenario alongside doctrine-only strategy
 **Status:** Initial analysis
 **Purpose:** Identify patentable innovations in the Admiral Framework and assess IP protection strategies
 
@@ -10,7 +11,14 @@
 
 The Admiral Framework contains several novel technical innovations for governing autonomous AI agent fleets. This analysis identifies **seven primary patent opportunities** across enforcement architecture, institutional memory, fleet governance, and operational methodology. The strongest candidates are the Enforcement Spectrum (deterministic hooks vs. advisory instructions) and the Brain's fleet-wide institutional memory architecture — both represent novel technical solutions to problems that no prior art adequately addresses.
 
-**Recommended priority:** File provisional patents on the top 3 opportunities within 90 days to establish priority dates, then pursue full utility patents on the strongest 1–2 candidates.
+This analysis covers **two strategic scenarios**:
+
+1. **Doctrine-as-product** — Admiral remains a specification/certification business (the ITIL/TOGAF model). Patents provide defensive protection and licensing leverage.
+2. **Full platform** — Admiral becomes running software: a governance runtime, Brain service, and control plane that enterprises deploy. Patents become core competitive moats protecting product revenue.
+
+The full-platform scenario significantly increases the value and urgency of patent filings — particularly for the Data Ecosystem (Opportunity #6), which escalates from "trade secret" to a top-tier filing candidate when it protects a revenue-generating SaaS product rather than an internal methodology.
+
+**Recommended priority:** File provisional patents on the top 4 opportunities within 90 days to establish priority dates. The filing order and scope depend on which strategic path Admiral pursues (see [Strategic Scenarios](#strategic-scenarios-doctrine-vs-full-platform) below).
 
 ---
 
@@ -182,18 +190,36 @@ A **closed-loop architecture** where every AI agent output becomes an input to a
 
 - **Claim 1:** A closed-loop data ecosystem for AI agent fleets comprising: (a) a data capture layer that records every agent action, decision rationale, and outcome; (b) an enrichment layer that embeds, links, scores, and attributes data to specific agent decisions; (c) feedback signals that flow back into agent behavior calibration and product improvement; (d) the system tracks which specific agent decisions drove which customer outcomes (outcome attribution).
 - **Claim 2:** A method for generating proprietary datasets from AI agent fleet operations comprising: customer engagement data, AI decision data (what agents decided and why), outcome attribution data (which decisions drove which outcomes), governance event data, fleet performance data, knowledge evolution data, and feedback loop data — where the combination of these datasets is unique to each deployment and compounds in value over time.
+- **Claim 3:** A cross-organization intelligence aggregation method comprising: (a) anonymized governance event data collected from multiple independent AI agent fleet deployments; (b) pattern extraction across deployments identifying common failure modes, runaway patterns, inefficient agent workflows, and effective authority structures; (c) feeding extracted cross-organization patterns back into individual fleet governance as calibration signals — where the pattern intelligence is unavailable to any single organization because it requires data from many independent fleets.
+- **Claim 4:** An outcome attribution pipeline for AI agent decisions comprising: (a) linking a specific agent decision (with recorded rationale, authority tier, and context) to a downstream customer or business outcome; (b) computing attribution scores across multiple agent decisions that contributed to a single outcome; (c) using attribution data to automatically adjust agent decision authority, model tier assignment, and governance thresholds — creating a self-optimizing governance system.
 
 ### Strength Assessment
+
+#### Doctrine-Only Scenario
 
 | Factor | Rating | Notes |
 |---|---|---|
 | Novelty | **Medium** | Data feedback loops exist broadly; the AI agent fleet context with outcome attribution is novel |
 | Non-obviousness | **Medium** | Individual concepts exist; the specific seven-dataset flywheel for agent fleets is less obvious |
-| Utility | **High** | Creates the data moat described in competitive analysis |
+| Utility | **Medium** | Theoretical value — no running system generating the data |
 | Defensibility | **Medium** | Architecture is defensible; "collect data and learn from it" is general |
 | Prior art risk | **Medium-High** | MLOps feedback loops, A/B testing attribution, and data flywheel concepts exist |
 
-**Priority: MEDIUM — Stronger as a trade secret than a patent. The architecture is replicable; the accumulated data is the real moat.**
+**Doctrine-only priority: MEDIUM — Stronger as a trade secret than a patent when no running platform exists.**
+
+#### Full-Platform Scenario
+
+| Factor | Rating | Notes |
+|---|---|---|
+| Novelty | **Medium-High** | Cross-organization agent fleet intelligence with outcome attribution has no direct prior art |
+| Non-obviousness | **High** | The combination of outcome attribution + cross-org pattern extraction + self-optimizing governance is non-obvious |
+| Utility | **Very High** | Directly protects the revenue-generating data flywheel — the core competitive moat |
+| Defensibility | **High** | A running platform with accumulated data makes the patent concrete, not theoretical |
+| Prior art risk | **Medium** | MLOps concepts exist, but agent-fleet-specific outcome attribution with governance feedback is distinct |
+
+**Full-platform priority: HIGH — File provisional patent. This protects the mechanism that generates Admiral's most valuable asset (cross-organization intelligence). Without it, a competitor with better distribution (Microsoft, Google) can legally build the same pipeline and out-accumulate you on data. The patent forces them to license or design around, buying time for your data moat to compound.**
+
+**Why this changes between scenarios:** In the doctrine-only world, the data ecosystem is a design on paper — the accumulated data is the moat, and you can't patent data. In the full-platform world, you're patenting the *mechanism that generates the moat* — the attribution pipeline, the cross-org aggregation, the self-optimizing governance loop. That mechanism is concrete, implementable, and directly tied to product revenue. A competitor who copies the mechanism can replicate your moat. A patent on the mechanism forces them to find a different path.
 
 ---
 
@@ -222,9 +248,23 @@ A **seven-component independent scaling architecture** for AI agent governance (
 
 ---
 
-## Strategic Recommendations
+## Strategic Scenarios: Doctrine vs. Full Platform
 
-### Priority Filing Order
+The patent strategy differs substantially depending on whether Admiral remains a specification or becomes running software. Both scenarios are viable; the key is that the full-platform scenario makes patents significantly more valuable and urgent.
+
+### Scenario A: Doctrine-as-Product
+
+Admiral remains a specification, certification, and consulting business. Revenue comes from advisory, training, certification, and ecosystem licensing (the ITIL/SAFe/TOGAF model from `monetizing-doctrine-playbook.md`).
+
+**What patents do here:**
+- **Defensive protection** — prevent a competitor from patenting your ideas and suing you
+- **Licensing leverage** — framework vendors (CrewAI, LangGraph) pay to implement Admiral-compatible governance
+- **Acquisition value** — IP portfolio increases exit multiple
+- **Certification moat** — patents on the methodology make "Admiral Certified" harder to replicate as a competing standard
+
+**Key risk patents address:** A well-funded competitor (McKinsey, Gartner, Deloitte) publishes a competing governance framework, patents the concepts, and locks you out of your own innovation space.
+
+**Filing priority (Doctrine):**
 
 | Priority | Opportunity | Type | Timeline |
 |---|---|---|---|
@@ -234,23 +274,80 @@ A **seven-component independent scaling architecture** for AI agent governance (
 | **4** | #4 Self-Healing Loops | Dependent claims on #1 | Include in #1 full application |
 | **5** | #5 Standing Orders | Dependent claims on #1 | Include in #1 full application |
 | **6** | #6 Data Ecosystem | Trade secret | Document internally; don't publish claims |
-| **7** | #7 Progressive Scaling | Published methodology | Include in open spec; defensive publication |
+| **7** | #7 Progressive Scaling | Defensive publication | Include in open spec |
 
-### Estimated Costs
+**Estimated cost:** $15,000–$39,000 for top 3 provisionals. $60,000–$129,000 through full utility.
 
-| Action | Estimated Cost | Timeline |
+---
+
+### Scenario B: Full Platform
+
+Admiral becomes a governance SaaS product — a runtime that intercepts agent actions across any framework, a Brain service that accumulates fleet intelligence, a control plane with enforcement, observability, and trust calibration. Enterprises pay annual subscriptions.
+
+**What patents do here:**
+- **Core product protection** — competitors cannot legally replicate your enforcement runtime, Brain architecture, or attribution pipeline without licensing
+- **Platform lock-in** — customers using patented methods through your platform face legal risk if they build in-house alternatives (the method itself is patented, not just your implementation)
+- **Licensing as revenue stream** — if CrewAI or LangGraph want to offer native "Admiral-compatible governance," they license your patents; this can become a significant revenue line (Qualcomm model: patent licensing generates more profit than product sales)
+- **Competitive deterrent** — Microsoft, Google, or OpenAI adding similar governance features to their platforms face infringement risk; forces them to acquire, license, or design around
+- **Acquisition leverage** — dramatically increases valuation. A $10M ARR SaaS with no patents might sell for $80–150M. The same company with granted patents on foundational methods in a $7.4B market commands a premium that reflects the legal right to exclude competitors from the category. Patents turned Motorola's declining hardware business into a $12.5B Google acquisition.
+
+**Key risk patents address:** Google ships "Agent Governance" in Vertex AI using enforcement tiers suspiciously similar to yours. Microsoft adds a "Fleet Brain" to Azure Agent Framework. Without patents, you watch them commoditize your innovation with their distribution advantage. With patents, you negotiate licensing deals or force design-arounds that leave your implementation superior.
+
+**The compounding effect:** The Brain patent (#2) protects the architecture. The Data Ecosystem patent (#6) protects the mechanism that generates cross-organization intelligence. Together, they create a legal barrier around Admiral's most powerful competitive dynamic: the platform that legally monopolizes the best method for accumulating fleet intelligence is the only platform that can accumulate it. The patent protects the flywheel, and the flywheel generates the data moat. That's a double lock that no amount of engineering talent at a competitor can overcome without either licensing or inventing a fundamentally different approach.
+
+**Filing priority (Full Platform):**
+
+| Priority | Opportunity | Type | Timeline |
+|---|---|---|---|
+| **1** | #1 Enforcement Spectrum | Utility patent (provisional first) | File provisional within 30 days |
+| **2** | #2 Brain Architecture | Utility patent (provisional first) | File provisional within 45 days |
+| **3** | #6 Data Ecosystem + Attribution | Utility patent (provisional first) | File provisional within 60 days |
+| **4** | #3 Decision Authority + Trust Calibration | Utility patent (provisional first) | File provisional within 90 days |
+| **5** | #4 Self-Healing Loops | Dependent claims on #1 | Include in #1 full application |
+| **6** | #5 Standing Orders | Dependent claims on #1 | Include in #1 full application |
+| **7** | #7 Progressive Scaling | Defensive publication | Include in open spec |
+
+**Estimated cost:** $20,000–$52,000 for top 4 provisionals. $80,000–$172,000 through full utility.
+
+**The difference:** In the full-platform scenario, Opportunity #6 (Data Ecosystem) jumps from "trade secret" to the #3 filing priority. When you're running a platform, the closed-loop attribution pipeline is not a theoretical architecture — it's the mechanism that generates your most valuable asset (cross-organization intelligence). Patenting the mechanism prevents competitors from legally replicating the flywheel, even if they have better distribution, more engineers, and deeper pockets.
+
+---
+
+### When to Decide
+
+You don't have to choose today. Provisional patents cover both scenarios — the claims are broad enough to support either path. The decision point comes at **month 10–11**, when provisionals expire and you must file full utility patents. By then, you'll have market signal on which path Admiral is taking.
+
+**What to do now regardless of scenario:**
+1. File the top 3 provisionals (Enforcement Spectrum, Brain, Decision Authority) — these are high-priority in both scenarios
+2. Prepare the Data Ecosystem provisional — file it if you're leaning toward full platform, hold it as trade secret if staying doctrine-only
+3. Document invention dates for all 7 opportunities (git history, spec drafts, design notes)
+4. Begin trademark filings (valuable in both scenarios)
+
+---
+
+### Revenue Impact Comparison
+
+| Revenue Stream | Doctrine-Only | Full Platform |
 |---|---|---|
-| Patent search (prior art) per opportunity | $2,000–$5,000 | 2–4 weeks |
-| Provisional patent filing (each) | $3,000–$8,000 | 4–6 weeks after search |
-| Full utility patent (each) | $15,000–$30,000 | 12–18 months after provisional |
-| Total for top 3 provisionals | $15,000–$39,000 | 90 days |
-| Total through full utility (top 3) | $60,000–$129,000 | 18–24 months |
+| **Advisory/consulting** | $200–500/hr | Less emphasis (product-led) |
+| **Certification** | $200–2,000/person | Bundled with platform or separate |
+| **Ecosystem licensing** | $10K–100K/yr per partner | $10K–100K/yr per partner |
+| **Platform subscriptions** | N/A | $10K–120K/yr per enterprise |
+| **Patent licensing** | Defensive + modest licensing | Major revenue line — framework vendors pay to implement |
+| **Cross-org intelligence** | N/A | Premium tier — aggregated fleet intelligence |
+| **Acquisition multiple** | 3–8x revenue (services/certification) | 10–30x revenue (SaaS + IP) |
+
+The full-platform scenario has higher revenue potential and a higher exit multiple, but requires significantly more capital and engineering to build. Patents protect the investment in either case but are dramatically more valuable when protecting a running product with paying customers.
+
+---
+
+## Strategic Recommendations
 
 ### IP Protection Strategy Beyond Patents
 
 | Method | What It Protects | Cost |
 |---|---|---|
-| **Trade secrets** | Implementation details, threshold values, operational playbooks | $0 (documentation discipline) |
+| **Trade secrets** | Implementation details, threshold values, operational playbooks, cross-org intelligence algorithms | $0 (documentation discipline) |
 | **Defensive publication** | Progressive scaling methodology, adoption profiles | $500–$2,000 per publication |
 | **Copyright** | Spec text, standing orders text, fleet catalog, training materials | Automatic (registration $35–$85/work) |
 | **Trademark** | "Admiral Framework," "Enforcement Spectrum," "Intent Engineering," "The Brain" | $250–$400 per mark (USPTO) |
@@ -292,11 +389,21 @@ The following terms should be evaluated for trademark registration:
 
 ### Defensive Patent Pledge Recommendation
 
-Given that Admiral's strategy includes open specification (the "ITIL/TOGAF model" from `monetizing-doctrine-playbook.md`), consider a **defensive patent pledge** modeled after Google's or Tesla's approaches:
+The pledge approach depends on the strategic scenario:
+
+**Doctrine-only:** A broad defensive pledge encourages ecosystem adoption without chilling open-source contribution.
 
 > "Admiral patents will not be asserted against any entity that does not first assert patents against Admiral or its users."
 
-This protects the open ecosystem while maintaining defensive IP. It also aligns with the "specification as product" strategy — the spec stays open, the ecosystem builds around it, and patents protect against hostile actors without chilling adoption.
+This is the Google/Tesla model. It protects the open ecosystem while maintaining defensive IP. Ideal when your revenue comes from certification and licensing, not product subscriptions.
+
+**Full platform:** A narrower pledge that permits licensing while still protecting the open spec.
+
+> "Admiral specification patents will not be asserted against any entity implementing the open Admiral specification for internal use. Commercial platform implementations require a license."
+
+This is closer to the Oracle/Java model or the MPEG-LA model — the standard is open, but commercial implementations of the patented methods require licensing. It protects your SaaS revenue while still allowing the spec to spread freely, which drives the certification and ecosystem businesses.
+
+**The tension:** A broad pledge maximizes ecosystem adoption (good for doctrine-as-product). A narrow pledge maximizes product revenue protection (good for full platform). If you're uncertain which path Admiral takes, start with the broad pledge — you can always narrow it later by issuing licenses to specific commercial use cases, but you can't easily broaden a narrow pledge without losing credibility.
 
 ---
 
@@ -323,11 +430,24 @@ Set up patent monitoring (e.g., Google Patents alerts) for these classification 
 
 ## Next Steps
 
+### Immediate (Both Scenarios)
+
 1. **Engage patent counsel** — Share this analysis with a patent attorney specializing in software/AI patents. They will refine claims and conduct formal prior art searches.
 2. **File Opportunity #1 provisional** — The Enforcement Spectrum is the strongest, most novel, and most defensible innovation. Establish priority date immediately.
-3. **Document invention dates** — Gather git commit history, spec drafts, and design documents that establish when each innovation was first conceived and reduced to practice.
-4. **Begin trademark filings** — "Admiral Framework" and "Intent Engineering" are the strongest candidates. File intent-to-use applications.
-5. **Monitor competitor filings** — Set up automated patent alerts for the classification codes above.
+3. **File Opportunity #2 provisional** — Brain Architecture. High priority in both scenarios.
+4. **Document invention dates** — Gather git commit history, spec drafts, and design documents that establish when each innovation was first conceived and reduced to practice. Key dates: first commit of Part 3 (enforcement spec), first commit of Part 5 (Brain spec), first commit of Part 12 (data ecosystem). These establish reduction to practice.
+5. **Begin trademark filings** — "Admiral Framework" and "Intent Engineering" are the strongest candidates. File intent-to-use applications.
+6. **Monitor competitor filings** — Set up automated patent alerts for the classification codes above.
+
+### If Leaning Toward Full Platform
+
+7. **File Opportunity #6 provisional** — Data Ecosystem with outcome attribution and cross-organization intelligence. This becomes a top-tier filing when protecting a running product.
+8. **File Opportunity #3 provisional** — Decision Authority with per-category trust calibration.
+9. **Begin building patent-supporting implementations** — Working code strengthens patent applications. The control plane MVP, hook implementations, and Brain Level 1 already provide this for Opportunities #1, #2, and #3. Build a minimal attribution pipeline prototype to support Opportunity #6.
+
+### Month 10–11 Decision Point
+
+10. **Decide full utility filings** — Provisionals expire at 12 months. By month 10, assess market traction and strategic direction. Convert the provisionals that align with Admiral's path to full utility patent applications. Let the others lapse (or file defensive publications to prevent competitors from patenting them).
 
 ---
 
