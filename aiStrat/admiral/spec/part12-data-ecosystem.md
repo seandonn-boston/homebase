@@ -645,6 +645,140 @@ Each dataset follows a lifecycle that ensures freshness and prevents unbounded g
 | Operational Genome | 1 hour | Operational event stream | Alert Ecosystem Health Monitor |
 | Cross-Domain Insight Graph | 24 hours | Scheduled graph computation | Recompute from component datasets |
 
+### Dataset Record Schemas
+
+The four data streams (above) define event-level schemas for raw capture. The seven proprietary datasets aggregate, enrich, and link those events into higher-order records. Below are schemas for the two most strategically valuable datasets — the Decision Registry and the Outcome Ledger — which together form the backbone of outcome attribution.
+
+**Decision Registry Record:**
+
+```json
+{
+  "decision_id": "uuid",
+  "recorded_at": "ISO-8601",
+  "agent_id": "string",
+  "session_id": "string",
+  "project": "string",
+  "decision": {
+    "summary": "string",
+    "category": "architecture | implementation | configuration | routing | escalation | other",
+    "alternatives_considered": ["string"],
+    "chosen_alternative": "string",
+    "rationale": "string",
+    "confidence": "float (0.0-1.0)"
+  },
+  "authority": {
+    "tier_used": "autonomous | propose | escalate",
+    "approval_required": "boolean",
+    "approved_by": "string | null",
+    "approval_latency_ms": "int | null"
+  },
+  "context_consumed": {
+    "brain_entries_consulted": ["uuid"],
+    "standing_context_tokens": "int",
+    "working_context_tokens": "int"
+  },
+  "outcome_link": {
+    "outcome_id": "uuid | null",
+    "attribution_confidence": "float | null",
+    "attribution_type": "direct | temporal | semantic | null"
+  },
+  "resource_cost": {
+    "tokens_input": "int",
+    "tokens_output": "int",
+    "model_tier": "tier1 | tier2 | tier3",
+    "cost_usd": "float"
+  }
+}
+```
+
+**Outcome Ledger Record:**
+
+```json
+{
+  "outcome_id": "uuid",
+  "recorded_at": "ISO-8601",
+  "outcome_type": "customer_success | customer_failure | operational_improvement | operational_regression | neutral",
+  "source_stream": "engagement | trend | agent_output | operational",
+  "description": "string",
+  "metrics": {
+    "primary_metric": "string",
+    "primary_value": "float",
+    "baseline_value": "float",
+    "delta_pct": "float"
+  },
+  "attribution": {
+    "decision_ids": ["uuid"],
+    "attribution_method": "direct | temporal | semantic",
+    "confidence": "float (0.0-1.0)",
+    "attribution_lag_hours": "float"
+  },
+  "brain_impact": {
+    "entries_strengthened": ["uuid"],
+    "entries_superseded": ["uuid"],
+    "entries_created": ["uuid"]
+  }
+}
+```
+
+### Worked Example: Agent Calibration Loop (Loop 1)
+
+This example traces a complete rotation of Loop 1 — from agent decision through customer outcome to trust calibration adjustment.
+
+**Step 1: Agent Decision.** The Backend Implementer agent (Agent ID: `backend-impl`) is assigned a database migration task. It consults the Brain, finds 3 relevant entries about the project's migration patterns, and decides to use a zero-downtime migration strategy. Confidence: 0.88. Authority tier: Autonomous.
+
+```
+Decision Registry entry created:
+  decision_id: "d-4a7f..."
+  agent_id: "backend-impl"
+  decision.summary: "Use zero-downtime migration with shadow table strategy"
+  decision.confidence: 0.88
+  authority.tier_used: "autonomous"
+  context_consumed.brain_entries_consulted: ["b-112...", "b-347...", "b-891..."]
+```
+
+**Step 2: Outcome Observation.** 48 hours later, operational monitoring shows the migration completed with zero downtime and no data integrity issues. The QA Agent confirms all post-migration tests pass. An engagement event shows no customer-reported issues.
+
+```
+Outcome Ledger entry created:
+  outcome_id: "o-8c3e..."
+  outcome_type: "operational_improvement"
+  description: "Zero-downtime migration completed successfully, 0 data integrity issues, 0 customer reports"
+  metrics.primary_metric: "downtime_seconds"
+  metrics.primary_value: 0
+  metrics.baseline_value: 120 (previous migration average)
+```
+
+**Step 3: Attribution.** The Attribution Engine links the outcome to the decision. The temporal window (48 hours) and direct task relationship yield high confidence.
+
+```
+Outcome Ledger updated:
+  attribution.decision_ids: ["d-4a7f..."]
+  attribution.method: "direct"
+  attribution.confidence: 0.95
+  attribution.lag_hours: 48
+
+Decision Registry updated:
+  outcome_link.outcome_id: "o-8c3e..."
+  outcome_link.attribution_confidence: 0.95
+  outcome_link.attribution_type: "direct"
+```
+
+**Step 4: Brain Strengthening.** The 3 Brain entries that informed the decision are strengthened (usefulness scores increase). The decision itself is recorded as a new Brain `decision` entry with a positive outcome link.
+
+**Step 5: Feedback Synthesis.** The Feedback Synthesizer observes that `backend-impl` has now made 6 consecutive successful Autonomous decisions in the "database-migration" category (threshold: 5). It generates a calibration recommendation:
+
+```
+Recommendation: Expand backend-impl Autonomous tier
+  Category: database-migration
+  Evidence: 6/6 successful outcomes, mean confidence 0.85, 0 escalations
+  Proposed change: Promote "schema-change" decisions from Propose → Autonomous
+    (currently backend-impl must propose schema changes for Admiral approval)
+```
+
+**Step 6: Admiral Review.** The Admiral reviews the recommendation, approves the trust expansion. `backend-impl` now has Autonomous authority for schema changes in the database-migration category. The Calibration History dataset records the change with full evidence chain.
+
+**Loop complete.** The fleet is now slightly more autonomous in an area where it has demonstrated competence. The next rotation will test whether this expanded autonomy produces good outcomes — if it does, trust compounds further. If it doesn't, the counter resets.
+
 ### Data Retention & Compliance
 
 All datasets operate under the Data Sensitivity Protocol (Data Sensitivity Classification, Part 11):

@@ -34,7 +34,7 @@ Spec reference: `aiStrat/admiral/spec/part11-protocols.md`
 
 ## Boundaries
 
-- Do NOT modify spec files in `aiStrat/` without explicit approval (spec is frozen at v0.5.3-alpha)
+- Do NOT modify spec files in `aiStrat/` without explicit approval
 - Do NOT add runtime dependencies to control-plane (zero-dependency policy)
 - Do NOT store secrets, credentials, or PII in any file
 - Do NOT modify `.github/workflows/` without approval
@@ -63,5 +63,3 @@ Spec reference: `aiStrat/admiral/spec/part11-protocols.md`
 - Hook contracts: `aiStrat/admiral/spec/part3-enforcement.md`
 - Brain entry format: `aiStrat/brain/level1-spec.md`
 - Standing Orders text: `aiStrat/admiral/spec/part11-protocols.md`
-- Implementation plan: `PLAN.md` (phases, scope, exit criteria)
-- Detailed plan: `PLAN2.md` (task decomposition, dependency graph)

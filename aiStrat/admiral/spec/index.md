@@ -2,7 +2,7 @@
 
 **A Workforce Toolkit for Autonomous AI Agent Fleets**
 
-v0.5.3-alpha · March 2026
+v0.8.1-alpha · March 2026
 
 -----
 
@@ -16,6 +16,20 @@ Pick the parts you need. A two-person team might use only the enforcement spectr
 
 -----
 
+## Framework Lenses
+
+Admiral is described through three different decompositions depending on context. These are complementary views of the same system, not competing taxonomies.
+
+| Lens | Count | Names | Used Where | Purpose |
+|---|---|---|---|---|
+| **Repository Pillars** | 3 | Doctrine (`admiral/`), Fleet (`fleet/`), Design Artifacts (`brain/`, `monitor/`) | AGENTS.md, README.md | Organizes the file structure — where things live |
+| **Pitch Pillars** | 5 | Role Architecture, Decision Authority & Enforcement, Visibility & Control Plane, Coordination & Execution, Institutional Memory (Brain) | Sales conversations, external communication | Explains what Admiral does — capability framing for non-technical audiences |
+| **Scaling Components** | 7 | Brain, Fleet, Enforcement, Control Plane, Security, Protocols, Data Ecosystem | Per-Component Scaling (below), Quick-Start Profiles | Defines what you deploy and at what level — the operational building blocks |
+
+The three Repository Pillars contain the seven Scaling Components. The five Pitch Pillars regroup the same capabilities for audience clarity. All three lenses describe the same framework.
+
+-----
+
 ## Thesis
 
 Admiral is **the operational infrastructure for AI workforces.**
@@ -26,7 +40,7 @@ Admiral enables a new form of organization: **the hybrid organization where AI a
 
 The new behavior Admiral enables: *treating AI capacity as an operational workforce, not a feature.*
 
-See [`thesis.md`](../extensions/thesis.md) for the full analysis and [`research/future-operations.md`](../../../research/future-operations.md) for the underlying thought experiment.
+See [`thesis.md`](../extensions/thesis.md) for the full analysis. *External reference: `research/future-operations.md` in the homebase repo root contains the underlying thought experiment.*
 
 -----
 

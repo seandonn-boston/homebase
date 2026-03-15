@@ -2,6 +2,8 @@
 
 **Category:** Scale
 
+> **Maturity: Exploratory** — These agents represent analytical concepts that have not been validated in production deployments. They are included as part of the fleet catalog to illustrate the range of agent-addressable analysis, not as proven operational patterns. Treat them as starting points for experimentation, not as deployment-ready specifications.
+
 These agents reason about dimensions that no individual human naturally perceives — full failure topologies, deep combinatorial state spaces, multi-year decay curves, emergent system behaviors, security attack surfaces, and schema evolution trajectories. Their value is in surfacing the structural realities that become visible only when the observer can hold the entire system in view simultaneously.
 
 These are not continuous fleet members. They are deployed for specific review cycles, capacity planning sessions, pre-launch audits, or when a fleet needs to understand a dimension of its system that is invisible at normal human working scale.
