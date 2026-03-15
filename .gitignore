@@ -26,6 +26,11 @@ Thumbs.db
 # Logs
 *.log
 
+# Adoption simulation generated output (regenerate with score.sh + generate-reports.sh)
+research/adoption-sim/results/
+research/adoption-sim/reports/
+research/adoption-sim/data/fortune500-scored.json
+
 # Monitor: state and digests are committed deliberately via CI,
 # but seed candidates should be reviewed before committing
 # aiStrat/monitor/digests/seed-candidates-*.py
