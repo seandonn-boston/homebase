@@ -44,6 +44,16 @@ Revised: March 2026
 - **Details:** "Efficient Estimation of Word Representations in Vector Space." Introduced efficient word embeddings that captured semantic relationships. Author: Tomas Mikolov et al. (Google). Foundation for all subsequent NLP work.
 - [arXiv 1301.3781](https://arxiv.org/abs/1301.3781)
 
+### [RESEARCH] Word2Vec Patent Filed (US9,037,464)
+- **Date:** March 15, 2013 (filed); May 19, 2015 (granted)
+- **Details:** "Computing numeric representations of words in a high-dimensional space." Google patented the Word2Vec technique for generating dense vector representations of words. Inventors: Tomas Mikolov, Kai Chen, Gregory Corrado, Jeffrey Dean. Assigned to Google Inc. The patent covers the skip-gram and continuous bag-of-words architectures that became foundational for all subsequent NLP embeddings. Google released the code under Apache 2.0 license.
+- [Google Patents US9037464](https://patents.google.com/patent/US9037464B2/en)
+
+### [RESEARCH] Dropout Patent Filed (US9,406,017)
+- **Date:** December 24, 2012 (filed); August 2, 2016 (granted)
+- **Details:** "System and method for addressing overfitting in a neural network." Google patented the dropout regularization technique — randomly disabling feature detectors during training to prevent overfitting. Inventors: Geoffrey Hinton, Alexander Krizhevsky, Ilya Sutskever. Continuation patents filed in 2013, 2016, 2019, and 2021 (US10366329B2, US10977557B2, US11829882B2). Not included in Google's Open Patent Non-Assertion Pledge.
+- [Google Patents US9406017](https://patents.google.com/patent/US9406017B2/en)
+
 ### [RESEARCH] ZFNet Wins ILSVRC 2013
 - **Date:** 2013
 - **Details:** Matthew Zeiler and Rob Fergus (NYU) won ILSVRC 2013. Introduced visualization techniques for understanding CNNs. Top-5 error: 11.7%.
@@ -87,6 +97,11 @@ Revised: March 2026
 
 ## 2016
 
+### [INFRA] Google Announces Tensor Processing Unit (TPU)
+- **Date:** May 18, 2016 (announced at Google I/O)
+- **Details:** Google revealed it had been using custom AI accelerator chips (TPUs) in its data centers for over a year. The TPU is an application-specific integrated circuit (ASIC) designed specifically for neural network inference and training, offering orders-of-magnitude speedups over general-purpose CPUs. Key patent: US20180341484A1 ("Tensor Processor Instruction Set Architecture," published November 2018). Google's TPU-related patent filings rose 2.7x between 2018 and 2023, peaking at ~400 filings in 2023. TPUs power Google Search, Photos, Translate, AlphaGo, and all Gemini models.
+- [Google Patents US20180341484A1](https://patents.google.com/patent/US20180341484A1/en)
+
 ### [POLICY] Obama OSTP Report: "Preparing for the Future of AI"
 - **Date:** October 12, 2016
 - **Details:** Landmark 58-page report examining the state of AI with 23 policy recommendations. Followed five public workshops and 161 public comments. Led by Ed Felten, Deputy U.S. CTO. Companion "National AI R&D Strategic Plan" released same month. Follow-up report on AI, Automation, and the Economy released December 2016. Obama administration did NOT issue a formal executive order on AI but laid the groundwork for all subsequent administrations.
@@ -104,6 +119,11 @@ Revised: March 2026
 - **Date:** June 12, 2017 (arXiv); NeurIPS 2017
 - **Details:** Introduced the Transformer architecture based solely on attention mechanisms; replaced RNNs/CNNs for sequence processing. Foundation of ALL modern LLMs, vision transformers, and generative models. Authors: Vaswani, Shazeer, Parmar, Uszkoreit, Jones, Gomez, Kaiser, Polosukhin (Google Brain / Google Research). All 8 authors later left Google for startups.
 - [arXiv 1706.03762](https://arxiv.org/abs/1706.03762)
+
+### [RESEARCH] Google Transformer Patent Filed (US10,452,978)
+- **Date:** October 27, 2017 (filed); October 22, 2019 (granted)
+- **Details:** "Attention-based sequence transduction neural networks." The single most valuable AI patent in existence — protects the Transformer architecture described in "Attention Is All You Need." Inventors: Aidan Gomez, Jakob Uszkoreit, Llion Jones, Illia Polosukhin, Ashish Vaswani, Niki Parmar, Lukasz Kaiser, Noam Shazeer. Assigned to Google LLC. Has accrued hundreds of forward citations; virtually every major LLM or generative AI patent filed since 2017 references it. Continuation patent US10,719,764B2 filed 2019. Google grants patent rights to users of its open-source code (TensorFlow, JAX) but retains rights against independent implementors. Google has not enforced the patent, likely due to mutual assured destruction with other big tech patent portfolios.
+- [Google Patents US10452978](https://patents.google.com/patent/US10452978B2/en)
 
 ### [RESEARCH] Sparsely-Gated Mixture-of-Experts Paper
 - **Date:** January 23, 2017
@@ -153,6 +173,20 @@ Revised: March 2026
 - **Details:** "Language Models are Unsupervised Multitask Learners." 1.5B parameters; 10x scale-up of GPT-1. OpenAI initially withheld full model from release due to misuse concerns — the first major "responsible release" debate for LLMs. Authors: Radford, Wu, Child, Luan, Amodei, Sutskever.
 - [OpenAI](https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf)
 
+### [RESEARCH] Batch Normalization Patent Granted (US10,417,562)
+- **Date:** September 17, 2019 (granted); filed February 1, 2016
+- **Details:** "Batch normalization layers." Google patented the batch normalization technique that accelerates deep network training by normalizing layer inputs, mitigating problems caused by shifting distributions during training. Inventors: Sergey Ioffe, Corinna Cortes. Assigned to Google LLC. The technique, first published in Ioffe & Szegedy's 2015 paper "Batch Normalization: Accelerating Deep Network Training," became standard in virtually all deep learning architectures. The patent drew controversy — commentators compared it to "patenting the idea of a chair."
+- [USPTO Patent Grant US10,417,562](https://uspto.report/patent/grant/10,417,562)
+
+### [RESEARCH] Adversarial Training Patent Granted (US10,521,718)
+- **Date:** December 31, 2019 (granted)
+- **Details:** "Adversarial training of neural networks." Google patented methods for adversarial training, building on Ian Goodfellow's foundational GAN framework (2014). While the original GAN paper was academic research at Université de Montréal, Google secured patent rights to the broader adversarial training methodology. Assigned to Google Inc.
+- [Free Patents Online US10521718](https://www.freepatentsonline.com/10521718.html)
+
+### [RESEARCH] Tesla Autopilot Training Data Patent Filed
+- **Date:** September 13, 2019 (filed)
+- **Details:** "System and method for obtaining training data." Tesla patented its fleet-learning approach to sourcing self-driving training data from its vehicles in the field. Inventor: Andrej Karpathy (Tesla's head of AI and Autopilot software). This patent covers the method of using Tesla's fleet of consumer vehicles as a distributed data collection platform for training autonomous driving neural networks.
+
 ---
 
 ## 2020
@@ -200,6 +234,11 @@ Revised: March 2026
 - **Date:** July 15, 2021
 - **Details:** "Highly accurate protein structure prediction with AlphaFold." Solved the protein-folding problem; >40,000 citations. Code open-sourced. Won CASP14 competition in November/December 2020 by wide margin.
 - [Nature](https://www.nature.com/articles/s41586-021-03819-2)
+
+### [RESEARCH] DeepMind AlphaFold Patent Portfolio Filed
+- **Date:** 2020–2021 (multiple filings)
+- **Details:** Google DeepMind filed extensive patent applications across multiple jurisdictions for AlphaFold's protein structure prediction methods. Key filings include: US20210398606A1 ("Protein Structure Prediction Using Geometric Attention Neural Networks"), US20220415453A1 ("Determining Atom Coordinates of Macromolecules from Images Using Auto-Encoders"), and JP7132430B2 ("Machine Learning for Determining Protein Structures"). Additional filings: 16/701,070; PCT/EP2020/084238; PCT/EP2021/072552; EP21766396.2; US18/025,689; CN202180067160.6. All filed under DeepMind Technologies Limited. AlphaFold has been cited in >400 successful patent applications by third parties. Hassabis and Jumper won the 2024 Nobel Prize in Chemistry for this work.
+- [Google Patents US20210398606A1](https://patents.google.com/patent/US20210398606A1/en)
 
 ### [RESEARCH] Switch Transformers Paper
 - **Date:** January 11, 2021 (arXiv); JMLR 2022
@@ -664,6 +703,11 @@ Revised: March 2026
 - **Date:** August 1, 2024
 - **Details:** Passed European Parliament March 13, 2024. European Council formally adopted May 21, 2024. Prohibitions on certain AI systems apply February 2, 2025. GPAI model obligations apply August 2, 2025. Full application (high-risk systems, enforcement) August 2, 2026. Risk-based classification; extraterritorial application (like GDPR).
 - [EU Parliament](https://www.europarl.europa.eu/topics/en/article/20230601STO93804/eu-ai-act-first-regulation-on-artificial-intelligence)
+
+### [RESEARCH] OpenAI Patent Portfolio Emerges
+- **Date:** 2024 (patents granted)
+- **Details:** OpenAI has amassed 110 patents globally, with 42 granted. Key patents include: US11983488B1 and US11886826B1 (text generation/editing with LLMs), US11922550B1 (image generation — most cited in portfolio, 36 forward citations from Google, Adobe, others), US12008341B2 (code generation), US12051205B1 (multimodal model interaction), US12406207B2 ("Systems and Methods for Generating Customized AI Models" — the patent behind Custom GPTs). OpenAI has publicly pledged to use its patents only defensively.
+- [OpenAI Patent Approach](https://openai.com/approach-to-patents/)
 
 ### [RESEARCH] AlphaFold 3 Published in Nature
 - **Date:** May 8, 2024
@@ -1434,6 +1478,46 @@ Revised: March 2026
 ---
 
 ## Key Industry Trends (2010–2026)
+
+### AI Patents Landscape
+
+The intellectual property landscape of AI reveals a concentrated patent moat held primarily by Google/Alphabet, with significant portfolios at IBM, NVIDIA, Microsoft, and emerging holdings at OpenAI, Tesla, and DeepMind.
+
+**Foundational AI Patents (chronological by filing date):**
+
+| Patent | Title | Inventors | Assignee | Filed | Granted |
+|--------|-------|-----------|----------|-------|---------|
+| US6285999B1 | Method for node ranking in a linked database (PageRank) | Lawrence Page | Stanford University | 1998 | 2001 (expired 2019) |
+| US5067164 | Hierarchical Constrained Automatic Learning Neural Network | Yann LeCun et al. | AT&T Bell Labs | 1989 | 1991 |
+| US5625708 | Symbol recognition using multidimensional preprocessing (CNN) | Yann LeCun | AT&T Bell Labs | 1992 | 1997 |
+| US9037464B2 | Computing numeric representations of words (Word2Vec) | Tomas Mikolov, Kai Chen, Gregory Corrado, Jeffrey Dean | Google Inc. | 2013 | 2015 |
+| US9406017B2 | Addressing overfitting in a neural network (Dropout) | Geoffrey Hinton, Alexander Krizhevsky, Ilya Sutskever | Google Inc. | 2012 | 2016 |
+| US10417562B2 | Batch normalization layers | Sergey Ioffe, Corinna Cortes | Google LLC | 2016 | 2019 |
+| US10452978B2 | Attention-based sequence transduction neural networks (Transformer) | Vaswani, Shazeer, Parmar, Uszkoreit, Jones, Gomez, Kaiser, Polosukhin | Google LLC | 2017 | 2019 |
+| US10521718B2 | Adversarial training of neural networks | (Google researchers) | Google Inc. | — | 2019 |
+| US10740433B2 | Universal Transformers | (Google researchers) | Google LLC | 2019 | 2020 |
+| US11922550B1 | Image generation (most-cited OpenAI patent) | (OpenAI researchers) | OpenAI | — | 2024 |
+| US12406207B2 | Generating Customized AI Models (Custom GPTs) | (OpenAI researchers) | OpenAI | — | 2024 |
+
+**Patent Portfolio by Company (as of 2025-2026):**
+
+| Company | Total AI Patents | Notable Holdings |
+|---------|-----------------|------------------|
+| **Google/Alphabet** | 1,837+ AI patent applications (most in industry) | Transformer, Dropout, Batch Norm, Word2Vec, TPU (~400 filings in 2023 alone), AlphaFold |
+| **Intel** | 1,212 AI patents | Diverse AI hardware and software |
+| **IBM** | 9,130 patents in 2020 alone (28th straight year atop charts) | Watson NLP (US9384450), $400M+ licensing empire |
+| **NVIDIA** | 17,324 patents globally (9,185 granted) | Tensor cores, GPU architectures, autonomous vehicle safety (US20190258251A1 — 527 forward citations), Vision Transformer (US12547893, Feb 2026) |
+| **Tencent** | 773 AI patents | Video, social media, gaming AI |
+| **OpenAI** | 110 patents (42 granted) | LLM text/image/code generation, Custom GPTs; defensive-only pledge |
+| **Tesla** | Extensive Autopilot/FSD portfolio | Fleet training data collection, 3D feature prediction (US20240304003), AI chip (HW3 neural net accelerator) |
+| **DeepMind** | Multiple jurisdictions | AlphaFold protein prediction, AlphaGo reinforcement learning |
+
+**Key Patent Trends:**
+- GenAI patent filings increased >800% since the 2017 Transformer paper — from 733 patent families in 2014 to >14,000 in 2023
+- Google holds the single most strategic patent position in AI via the Transformer patent (US10452978B2), effectively granting it royalty leverage over the entire LLM industry
+- Only ~76 patents exist for diffusion models despite the technology's rapid rise — a surprisingly sparse landscape
+- US law requires natural persons as inventors; DABUS (AI inventor) patent applications rejected by USPTO and most global courts
+- Foundational techniques (backpropagation, LSTM, Hopfield networks, attention mechanism) were disseminated via academic papers and never directly patented, creating the open scientific foundation upon which patented inventions like the Transformer were built
 
 ### Technical Trajectory
 1. **The deep learning arc:** ILSVRC 2010 (28.2% error, traditional methods) → AlexNet 2012 (15.3%, GPUs + deep learning) → ResNet 2015 (3.57%, surpasses human) → Transformers 2017 (attention replaces CNNs/RNNs) → GPT-3 2020 (scaling emergence) → ChatGPT 2022 (mass adoption)

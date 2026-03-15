@@ -2,7 +2,7 @@
 
 Created: March 2026
 
-> Profiles of 20 key figures in AI history — their education, career trajectories, publications, awards, interconnections, and dramatic moments through early 2026.
+> Profiles of 27 key figures in AI history — their education, career trajectories, publications, patents, awards, interconnections, and dramatic moments through early 2026.
 
 ---
 
@@ -342,7 +342,98 @@ Created: March 2026
 
 ---
 
-## V. KEY THEMATIC THREADS
+## V. AI PATENT INNOVATORS
+
+### Tomáš Mikolov (b. October 8, 1982, Šumperk, Czech Republic)
+- **Education:** Ph.D. Artificial Intelligence, Brno University of Technology (2012) -- thesis on "Statistical Language Models Based on Neural Networks"
+- **Career:**
+  - **Google Brain** (2012-2014) -- developed **Word2Vec** (2013), patented as US9,037,464 ("Computing numeric representations of words in a high-dimensional space"). Co-inventors: Kai Chen, Gregory Corrado, Jeffrey Dean. The skip-gram and continuous bag-of-words architectures became foundational for all subsequent NLP embeddings.
+  - **Facebook AI Research (FAIR)** (2014-2020) -- developed fastText (word representations for 157 languages), worked on fundamental AI research and communication-based learning
+  - **Czech Technical University, CIIRC** (2020-2025) -- senior researcher and head of basic AI research, focused on scalable architectures for general intelligence
+  - Co-founded **BottleCap AI** (April 2025) -- Chief Scientific Officer, developing algorithms to reduce LLM training costs by up to 50%
+- **Key Patent:** US9,037,464 (Word2Vec) -- assigned to Google Inc., filed March 15, 2013, granted May 19, 2015. Code released under Apache 2.0 license.
+- **Awards:** NeurIPS 2023 Test of Time Award (Word2Vec), 2019 Neuron Award for scientific discovery in AI, 2024 Czech AI Award for lifetime contributions. 188,000+ citations.
+- **Philosophy:** Believes new methods, not just more computing power, will shape AI's future. Views evolutionary principles as a path toward general AI.
+- **Connection:** Worked at Google alongside Jeffrey Dean; Word2Vec was a precursor technology enabling the NLP revolution that led to Transformers and LLMs
+
+---
+
+### Sergey Ioffe (b. Russia)
+- **Education:** Ph.D. Machine Learning and Computer Vision, UC Berkeley (1996-2001)
+- **Career:**
+  - Fujifilm Holdings Corporation (pre-Google)
+  - **Google** (2006-present) -- researcher in computer vision and deep learning
+- **Key Publication & Patent:** Co-authored "Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift" (ICML 2015) with Christian Szegedy. Patented as **US10,417,562** ("Batch normalization layers"), co-invented with Corinna Cortes, assigned to Google LLC, granted September 17, 2019. Batch normalization allowed much higher learning rates, less careful initialization, and in some cases eliminated the need for dropout. Applied to image classification, it achieved the same accuracy with 14x fewer training steps.
+- **Other Research:** Batch Renormalization (NeurIPS 2017), co-authored Inception-v4 and Inception-ResNet architectures, probabilistic linear discriminant analysis
+- **Awards:** ICML 2025 Test-of-Time Award (for Batch Normalization paper, with Christian Szegedy). 96 publications, 40,000+ citations.
+- **Connection:** Google colleague of Christian Szegedy (GoogLeNet/Inception architect); batch normalization became a standard component in virtually all deep learning architectures
+
+---
+
+### Illia Polosukhin (b. Ukraine)
+- **Education:** M.S. Applied Mathematics and Computer Science, Kharkiv Polytechnic Institute. ICPC champion.
+- **Career:**
+  - Salford Systems (2008) -- predictive analytics and data mining
+  - **Google AI** (2014-2017) -- worked on TensorFlow, led teams on deep learning and NLU, improved Google Search question-answering capabilities
+  - Co-authored **"Attention Is All You Need"** (2017) -- one of the eight Transformer co-authors. Named on Google's Transformer patent **US10,452,978B2**.
+  - Co-founded **Near.ai** (2017) with Alexander Skidanov -- initially AI-focused, pivoted to blockchain
+  - Co-founded **NEAR Protocol** (launched 2020) -- layer-1 blockchain with sharding for scalability. Raised >$550M.
+  - Appointed **CEO of NEAR Foundation** (November 2023) -- focused on "user-owned AI" optimizing for privacy and user sovereignty
+- **Philanthropy:** Founded **Unchain Fund** during the Ukraine conflict, raising ~$10M for humanitarian aid via blockchain
+- **Connection:** Transformer co-author; one of the "Transformer 8" who all left Google for startups. Became obsessed with AI at age 10 after seeing *The Matrix*.
+
+---
+
+### Aidan Gomez (b. ~1997, Brighton, Ontario, Canada)
+- **Education:** B.Sc. Computer Science and Mathematics, University of Toronto (2013-2018); Ph.D. Computer Science, University of Oxford (granted 2024) -- paused studies to launch Cohere
+- **Career:**
+  - **Google Brain** intern (2017) -- at age 20, co-authored **"Attention Is All You Need"** as the youngest of the eight Transformer authors. Named on Google's Transformer patent **US10,452,978B2**. Collaborated with Hinton, Dean, Vaswani, Shazeer.
+  - Co-founded **Cohere** (2019) with Ivan Zhang and Nick Frosst (a former Hinton student) -- enterprise AI company helping businesses implement LLMs into chatbots, search, and products. Raised ~$1.6B at $7B+ valuation (as of September 2025).
+  - Elected to **Rivian board** (April 2025)
+- **Awards:** TIME 100 AI (2023), Forbes 30 Under 30, MIT Technology Review Innovators Under 35, #1 on Maclean's AI Trailblazers Power List (2023)
+- **AI Risk Position:** Considers existential risk warnings "overblown"; believes real risks involve automated misinformation spread on social media
+- **Connection:** Transformer co-author; attended University of Toronto (Hinton's institution); co-founded Cohere with Hinton's student Nick Frosst
+
+---
+
+### Niki Parmar (b. Pune, India)
+- **Education:** B.E. Information Technology, Pune Institute of Computer Technology; M.S. Computer Science, University of Southern California (2015)
+- **Career:**
+  - **Google** (2015-2021) -- joined as software engineer at age 24; transitioned to **Google Brain** (2017) as Research Software Engineer
+  - Co-authored **"Attention Is All You Need"** (2017) -- one of the eight Transformer co-authors. Named on Google's Transformer patent **US10,452,978B2**. Led scaling of transformer models and extended architecture to image generation and computer vision.
+  - Co-founded **Adept AI** (2021) -- CTO; backed by >$350M to build universal AI collaborator using natural language
+  - Co-founded **Essential AI** (2023) with Ashish Vaswani -- enterprise LLMs for workflows. $56.5M Series A led by March Capital, with NVIDIA, Google, and AMD participation.
+  - Joined **Anthropic** (December 2024) -- Member of Technical Staff, focusing on frontier capabilities and RL research. Contributed to Claude 3.7 development.
+- **Connection:** Transformer co-author; co-founded two companies with Vaswani; first interest in ML from Andrew Ng and Peter Norvig MOOCs; now at Anthropic
+
+---
+
+### Alex Krizhevsky (b. 1986, Ukraine)
+- **Education:** B.Sc. and M.Sc. Computer Science, University of Toronto -- PhD student under **Geoffrey Hinton**
+- **Career:**
+  - Co-invented **AlexNet** (2012) with Hinton and Sutskever -- the CNN that won ILSVRC 2012 and launched the deep learning revolution
+  - Co-founded **DNNresearch** (2012) with Hinton and Sutskever, acquired by Google for $44M (2013)
+  - Named on **Dropout patent US9,406,017B2** -- co-inventor with Hinton and Sutskever. Continuation patents filed through 2021.
+  - **Google** (2013-2017) -- worked on deep learning infrastructure
+  - Left industry (~2017) -- largely withdrew from public AI research
+- **Key Patent:** US9,406,017B2 ("System and method for addressing overfitting in a neural network" -- Dropout), assigned to Google Inc., filed December 24, 2012, granted August 2, 2016. Not included in Google's Open Patent Non-Assertion Pledge.
+- **Awards:** NeurIPS 2012 Best Paper (AlexNet)
+- **Connection:** Hinton's PhD student; co-invented AlexNet with Sutskever; the three formed the nucleus of DNNresearch that catalyzed Google's AI investments
+
+---
+
+### Lawrence Page (b. March 26, 1973, Lansing, Michigan, USA)
+- **Education:** B.S. Computer Engineering, University of Michigan (1995); M.S. Computer Science, Stanford University (1998) -- did not complete PhD but the PageRank algorithm emerged from his doctoral research
+- **Career:**
+  - Co-founded **Google** (1998) with Sergey Brin -- grew from Stanford dorm project to world's dominant search engine
+  - **CEO of Google** (1998-2001, 2011-2015); **CEO of Alphabet** (2015-2019)
+- **Key Patent:** **US6,285,999B1** ("Method for node ranking in a linked database" -- PageRank), filed January 9, 1998, granted September 4, 2001, expired June 4, 2019. Assigned to Stanford University, which received 1.8 million shares of Google stock for a long-term patent license. While PageRank is a graph algorithm, not an AI technique per se, it was one of the earliest large-scale applications of mathematical ranking to web-scale data and laid the infrastructure and economic foundation that enabled Google's later AI dominance -- from Google Brain to TPUs to the Transformer to Gemini.
+- **AI Legacy:** Google's AI supremacy traces directly to the revenue generated by PageRank-powered search, which funded Google Brain, DeepMind's acquisition ($500M, 2014), TPU development, and the research environment where the Transformer was invented
+- **Connection:** Co-founded the company that would employ Hinton, Dean, Vaswani, Shazeer, Mikolov, Ioffe, and virtually every other Google AI patent holder
+
+---
+
+## VI. KEY THEMATIC THREADS
 
 ### The "Toronto School" / Hinton's Lab
 Geoffrey Hinton's University of Toronto lab is the single most influential node in the AI pioneer network. Notable graduates/postdocs include:
@@ -428,3 +519,35 @@ An unprecedented year: AI work recognized across two Nobel categories:
 
 ### 2025 Queen Elizabeth Prize for Engineering
 Awarded jointly to: Geoffrey Hinton, Yoshua Bengio, Yann LeCun, John Hopfield, Fei-Fei Li, Jensen Huang, and Bill Dally -- bringing together many of these pioneers in a single honor.
+
+---
+
+### Google's AI Patent Moat
+Google/Alphabet holds the most strategically important AI patent portfolio in the world, built largely on the work of pioneers profiled above:
+- **Transformer** (US10452978B2) -- Vaswani, Shazeer, Parmar, Uszkoreit, Jones, Gomez, Kaiser, Polosukhin
+- **Dropout** (US9406017B2) -- Hinton, Krizhevsky, Sutskever
+- **Word2Vec** (US9037464B2) -- Mikolov, Chen, Corrado, Dean
+- **Batch Normalization** (US10417562B2) -- Ioffe, Cortes
+- **Adversarial Training** (US10521718B2) -- building on Goodfellow's GAN framework
+- **TPU** architecture (~400 patent filings in 2023 alone)
+- **AlphaFold** protein prediction (multiple international filings by DeepMind)
+
+Google has not enforced the Transformer patent -- likely because enforcement would trigger retaliatory patent claims from Microsoft, Amazon, and others (mutually assured destruction). Users of Google's open-source code (TensorFlow, JAX) receive implicit patent licenses, but third parties who independently implemented Transformer architectures by only referring to the paper are technically exposed.
+
+The irony: many of these patents were invented by researchers who subsequently left Google. All eight Transformer authors departed for startups. Hinton resigned to speak freely about AI risks. Sutskever co-founded OpenAI and then SSI. Krizhevsky withdrew from the field. Mikolov returned to the Czech Republic. Yet Google retains the patent rights to their inventions.
+
+---
+
+### The Academic-to-Patent Pipeline
+A recurring pattern: foundational AI techniques were published freely as academic research, then later patented by the companies that employed the researchers:
+- **Backpropagation** (1986, academic) → never patented
+- **Hopfield networks** (1982, academic) → never patented
+- **LSTM** (1997, academic) → never patented
+- **Attention mechanism** (2014, academic) → never patented
+- **GANs** (2014, academic at Montreal) → adversarial training later patented by Google
+- **Word2Vec** (2013, at Google) → patented immediately
+- **Dropout** (2012, at Google/Toronto) → patented immediately
+- **Batch Normalization** (2015, at Google) → patented
+- **Transformer** (2017, at Google) → patented
+
+The inflection point was ~2012-2013: before that, AI innovations were primarily shared as academic papers. After Google hired Hinton (2013) and the deep learning revolution began generating commercial value, patent filing became standard practice for corporate AI labs.
