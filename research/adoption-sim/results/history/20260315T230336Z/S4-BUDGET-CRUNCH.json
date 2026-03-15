@@ -1,0 +1,522 @@
+[
+  {
+    "company": "Walmart",
+    "ticker": "WMT",
+    "sector": "Consumer Discretionary",
+    "scenario_id": "S4-BUDGET-CRUNCH",
+    "scenario_name": "Budget Crunch",
+    "base_score": 59,
+    "scenario_adjusted": 44,
+    "walkaway_deduction": 30,
+    "final_score": 14,
+    "tier": "walk-away",
+    "walkaway_reasons": [
+      "Build internally (-30): >5000 engineers with platform team"
+    ],
+    "scored_at": "20260315T230336Z"
+  },
+  {
+    "company": "Amazon",
+    "ticker": "AMZN",
+    "sector": "Consumer Discretionary",
+    "scenario_id": "S4-BUDGET-CRUNCH",
+    "scenario_name": "Budget Crunch",
+    "base_score": 73,
+    "scenario_adjusted": 58,
+    "walkaway_deduction": 30,
+    "final_score": 28,
+    "tier": "unlikely",
+    "walkaway_reasons": [
+      "Build internally (-30): >5000 engineers with platform team"
+    ],
+    "scored_at": "20260315T230336Z"
+  },
+  {
+    "company": "Apple",
+    "ticker": "AAPL",
+    "sector": "Information Technology",
+    "scenario_id": "S4-BUDGET-CRUNCH",
+    "scenario_name": "Budget Crunch",
+    "base_score": 62,
+    "scenario_adjusted": 47,
+    "walkaway_deduction": 30,
+    "final_score": 17,
+    "tier": "walk-away",
+    "walkaway_reasons": [
+      "Build internally (-30): >5000 engineers with platform team"
+    ],
+    "scored_at": "20260315T230336Z"
+  },
+  {
+    "company": "UnitedHealth Group",
+    "ticker": "UNH",
+    "sector": "Health Care",
+    "scenario_id": "S4-BUDGET-CRUNCH",
+    "scenario_name": "Budget Crunch",
+    "base_score": 73,
+    "scenario_adjusted": 58,
+    "walkaway_deduction": 30,
+    "final_score": 28,
+    "tier": "unlikely",
+    "walkaway_reasons": [
+      "Build internally (-30): >5000 engineers with platform team"
+    ],
+    "scored_at": "20260315T230336Z"
+  },
+  {
+    "company": "Berkshire Hathaway",
+    "ticker": "BRK.B",
+    "sector": "Financials",
+    "scenario_id": "S4-BUDGET-CRUNCH",
+    "scenario_name": "Budget Crunch",
+    "base_score": 45,
+    "scenario_adjusted": 30,
+    "walkaway_deduction": 60,
+    "final_score": 0,
+    "tier": "walk-away",
+    "walkaway_reasons": [
+      "No agents (-40): Zero agent tooling signals",
+      "Compliance-only governance (-20): No operational governance posture"
+    ],
+    "scored_at": "20260315T230336Z"
+  },
+  {
+    "company": "ExxonMobil",
+    "ticker": "XOM",
+    "sector": "Energy",
+    "scenario_id": "S4-BUDGET-CRUNCH",
+    "scenario_name": "Budget Crunch",
+    "base_score": 50,
+    "scenario_adjusted": 35,
+    "walkaway_deduction": 20,
+    "final_score": 15,
+    "tier": "walk-away",
+    "walkaway_reasons": [
+      "Compliance-only governance (-20): No operational governance posture"
+    ],
+    "scored_at": "20260315T230336Z"
+  },
+  {
+    "company": "Alphabet",
+    "ticker": "GOOGL",
+    "sector": "Communication Services",
+    "scenario_id": "S4-BUDGET-CRUNCH",
+    "scenario_name": "Budget Crunch",
+    "base_score": 78,
+    "scenario_adjusted": 63,
+    "walkaway_deduction": 30,
+    "final_score": 33,
+    "tier": "unlikely",
+    "walkaway_reasons": [
+      "Build internally (-30): >5000 engineers with platform team"
+    ],
+    "scored_at": "20260315T230336Z"
+  },
+  {
+    "company": "Microsoft",
+    "ticker": "MSFT",
+    "sector": "Information Technology",
+    "scenario_id": "S4-BUDGET-CRUNCH",
+    "scenario_name": "Budget Crunch",
+    "base_score": 77,
+    "scenario_adjusted": 62,
+    "walkaway_deduction": 30,
+    "final_score": 32,
+    "tier": "unlikely",
+    "walkaway_reasons": [
+      "Build internally (-30): >5000 engineers with platform team"
+    ],
+    "scored_at": "20260315T230336Z"
+  },
+  {
+    "company": "JPMorgan Chase",
+    "ticker": "JPM",
+    "sector": "Financials",
+    "scenario_id": "S4-BUDGET-CRUNCH",
+    "scenario_name": "Budget Crunch",
+    "base_score": 83,
+    "scenario_adjusted": 68,
+    "walkaway_deduction": 30,
+    "final_score": 38,
+    "tier": "unlikely",
+    "walkaway_reasons": [
+      "Build internally (-30): >5000 engineers with platform team"
+    ],
+    "scored_at": "20260315T230336Z"
+  },
+  {
+    "company": "Meta Platforms",
+    "ticker": "META",
+    "sector": "Communication Services",
+    "scenario_id": "S4-BUDGET-CRUNCH",
+    "scenario_name": "Budget Crunch",
+    "base_score": 74,
+    "scenario_adjusted": 59,
+    "walkaway_deduction": 45,
+    "final_score": 14,
+    "tier": "walk-away",
+    "walkaway_reasons": [
+      "Build internally (-30): >5000 engineers with platform team",
+      "Open-source only (-15): Prefers free/OSS AI tools"
+    ],
+    "scored_at": "20260315T230336Z"
+  },
+  {
+    "company": "Tesla",
+    "ticker": "TSLA",
+    "sector": "Consumer Discretionary",
+    "scenario_id": "S4-BUDGET-CRUNCH",
+    "scenario_name": "Budget Crunch",
+    "base_score": 60,
+    "scenario_adjusted": 45,
+    "walkaway_deduction": 50,
+    "final_score": 0,
+    "tier": "walk-away",
+    "walkaway_reasons": [
+      "Build internally (-30): >5000 engineers with platform team",
+      "Compliance-only governance (-20): No operational governance posture"
+    ],
+    "scored_at": "20260315T230336Z"
+  },
+  {
+    "company": "Bank of America",
+    "ticker": "BAC",
+    "sector": "Financials",
+    "scenario_id": "S4-BUDGET-CRUNCH",
+    "scenario_name": "Budget Crunch",
+    "base_score": 78,
+    "scenario_adjusted": 63,
+    "walkaway_deduction": 30,
+    "final_score": 33,
+    "tier": "unlikely",
+    "walkaway_reasons": [
+      "Build internally (-30): >5000 engineers with platform team"
+    ],
+    "scored_at": "20260315T230336Z"
+  },
+  {
+    "company": "Goldman Sachs",
+    "ticker": "GS",
+    "sector": "Financials",
+    "scenario_id": "S4-BUDGET-CRUNCH",
+    "scenario_name": "Budget Crunch",
+    "base_score": 80,
+    "scenario_adjusted": 65,
+    "walkaway_deduction": 30,
+    "final_score": 35,
+    "tier": "unlikely",
+    "walkaway_reasons": [
+      "Build internally (-30): >5000 engineers with platform team"
+    ],
+    "scored_at": "20260315T230336Z"
+  },
+  {
+    "company": "Nvidia",
+    "ticker": "NVDA",
+    "sector": "Information Technology",
+    "scenario_id": "S4-BUDGET-CRUNCH",
+    "scenario_name": "Budget Crunch",
+    "base_score": 70,
+    "scenario_adjusted": 55,
+    "walkaway_deduction": 30,
+    "final_score": 25,
+    "tier": "unlikely",
+    "walkaway_reasons": [
+      "Build internally (-30): >5000 engineers with platform team"
+    ],
+    "scored_at": "20260315T230336Z"
+  },
+  {
+    "company": "Salesforce",
+    "ticker": "CRM",
+    "sector": "Information Technology",
+    "scenario_id": "S4-BUDGET-CRUNCH",
+    "scenario_name": "Budget Crunch",
+    "base_score": 73,
+    "scenario_adjusted": 58,
+    "walkaway_deduction": 30,
+    "final_score": 28,
+    "tier": "unlikely",
+    "walkaway_reasons": [
+      "Build internally (-30): >5000 engineers with platform team"
+    ],
+    "scored_at": "20260315T230336Z"
+  },
+  {
+    "company": "Oracle",
+    "ticker": "ORCL",
+    "sector": "Information Technology",
+    "scenario_id": "S4-BUDGET-CRUNCH",
+    "scenario_name": "Budget Crunch",
+    "base_score": 66,
+    "scenario_adjusted": 51,
+    "walkaway_deduction": 30,
+    "final_score": 21,
+    "tier": "unlikely",
+    "walkaway_reasons": [
+      "Build internally (-30): >5000 engineers with platform team"
+    ],
+    "scored_at": "20260315T230336Z"
+  },
+  {
+    "company": "IBM",
+    "ticker": "IBM",
+    "sector": "Information Technology",
+    "scenario_id": "S4-BUDGET-CRUNCH",
+    "scenario_name": "Budget Crunch",
+    "base_score": 67,
+    "scenario_adjusted": 52,
+    "walkaway_deduction": 45,
+    "final_score": 7,
+    "tier": "walk-away",
+    "walkaway_reasons": [
+      "Build internally (-30): >5000 engineers with platform team",
+      "Open-source only (-15): Prefers free/OSS AI tools"
+    ],
+    "scored_at": "20260315T230336Z"
+  },
+  {
+    "company": "Accenture",
+    "ticker": "ACN",
+    "sector": "Information Technology",
+    "scenario_id": "S4-BUDGET-CRUNCH",
+    "scenario_name": "Budget Crunch",
+    "base_score": 72,
+    "scenario_adjusted": 57,
+    "walkaway_deduction": 30,
+    "final_score": 27,
+    "tier": "unlikely",
+    "walkaway_reasons": [
+      "Build internally (-30): >5000 engineers with platform team"
+    ],
+    "scored_at": "20260315T230336Z"
+  },
+  {
+    "company": "Intel",
+    "ticker": "INTC",
+    "sector": "Information Technology",
+    "scenario_id": "S4-BUDGET-CRUNCH",
+    "scenario_name": "Budget Crunch",
+    "base_score": 55,
+    "scenario_adjusted": 40,
+    "walkaway_deduction": 45,
+    "final_score": 0,
+    "tier": "walk-away",
+    "walkaway_reasons": [
+      "Build internally (-30): >5000 engineers with platform team",
+      "Open-source only (-15): Prefers free/OSS AI tools"
+    ],
+    "scored_at": "20260315T230336Z"
+  },
+  {
+    "company": "Adobe",
+    "ticker": "ADBE",
+    "sector": "Information Technology",
+    "scenario_id": "S4-BUDGET-CRUNCH",
+    "scenario_name": "Budget Crunch",
+    "base_score": 68,
+    "scenario_adjusted": 53,
+    "walkaway_deduction": 30,
+    "final_score": 23,
+    "tier": "unlikely",
+    "walkaway_reasons": [
+      "Build internally (-30): >5000 engineers with platform team"
+    ],
+    "scored_at": "20260315T230336Z"
+  },
+  {
+    "company": "Wells Fargo",
+    "ticker": "WFC",
+    "sector": "Financials",
+    "scenario_id": "S4-BUDGET-CRUNCH",
+    "scenario_name": "Budget Crunch",
+    "base_score": 73,
+    "scenario_adjusted": 58,
+    "walkaway_deduction": 30,
+    "final_score": 28,
+    "tier": "unlikely",
+    "walkaway_reasons": [
+      "Build internally (-30): >5000 engineers with platform team"
+    ],
+    "scored_at": "20260315T230336Z"
+  },
+  {
+    "company": "Citigroup",
+    "ticker": "C",
+    "sector": "Financials",
+    "scenario_id": "S4-BUDGET-CRUNCH",
+    "scenario_name": "Budget Crunch",
+    "base_score": 71,
+    "scenario_adjusted": 56,
+    "walkaway_deduction": 30,
+    "final_score": 26,
+    "tier": "unlikely",
+    "walkaway_reasons": [
+      "Build internally (-30): >5000 engineers with platform team"
+    ],
+    "scored_at": "20260315T230336Z"
+  },
+  {
+    "company": "Morgan Stanley",
+    "ticker": "MS",
+    "sector": "Financials",
+    "scenario_id": "S4-BUDGET-CRUNCH",
+    "scenario_name": "Budget Crunch",
+    "base_score": 80,
+    "scenario_adjusted": 65,
+    "walkaway_deduction": 30,
+    "final_score": 35,
+    "tier": "unlikely",
+    "walkaway_reasons": [
+      "Build internally (-30): >5000 engineers with platform team"
+    ],
+    "scored_at": "20260315T230336Z"
+  },
+  {
+    "company": "General Electric",
+    "ticker": "GE",
+    "sector": "Industrials",
+    "scenario_id": "S4-BUDGET-CRUNCH",
+    "scenario_name": "Budget Crunch",
+    "base_score": 63,
+    "scenario_adjusted": 48,
+    "walkaway_deduction": 30,
+    "final_score": 18,
+    "tier": "walk-away",
+    "walkaway_reasons": [
+      "Build internally (-30): >5000 engineers with platform team"
+    ],
+    "scored_at": "20260315T230336Z"
+  },
+  {
+    "company": "Dell Technologies",
+    "ticker": "DELL",
+    "sector": "Information Technology",
+    "scenario_id": "S4-BUDGET-CRUNCH",
+    "scenario_name": "Budget Crunch",
+    "base_score": 56,
+    "scenario_adjusted": 41,
+    "walkaway_deduction": 50,
+    "final_score": 0,
+    "tier": "walk-away",
+    "walkaway_reasons": [
+      "Build internally (-30): >5000 engineers with platform team",
+      "Compliance-only governance (-20): No operational governance posture"
+    ],
+    "scored_at": "20260315T230336Z"
+  },
+  {
+    "company": "Johnson & Johnson",
+    "ticker": "JNJ",
+    "sector": "Health Care",
+    "scenario_id": "S4-BUDGET-CRUNCH",
+    "scenario_name": "Budget Crunch",
+    "base_score": 67,
+    "scenario_adjusted": 52,
+    "walkaway_deduction": 30,
+    "final_score": 22,
+    "tier": "unlikely",
+    "walkaway_reasons": [
+      "Build internally (-30): >5000 engineers with platform team"
+    ],
+    "scored_at": "20260315T230336Z"
+  },
+  {
+    "company": "Procter & Gamble",
+    "ticker": "PG",
+    "sector": "Consumer Staples",
+    "scenario_id": "S4-BUDGET-CRUNCH",
+    "scenario_name": "Budget Crunch",
+    "base_score": 46,
+    "scenario_adjusted": 31,
+    "walkaway_deduction": 20,
+    "final_score": 11,
+    "tier": "walk-away",
+    "walkaway_reasons": [
+      "Compliance-only governance (-20): No operational governance posture"
+    ],
+    "scored_at": "20260315T230336Z"
+  },
+  {
+    "company": "Verizon",
+    "ticker": "VZ",
+    "sector": "Communication Services",
+    "scenario_id": "S4-BUDGET-CRUNCH",
+    "scenario_name": "Budget Crunch",
+    "base_score": 56,
+    "scenario_adjusted": 41,
+    "walkaway_deduction": 50,
+    "final_score": 0,
+    "tier": "walk-away",
+    "walkaway_reasons": [
+      "Build internally (-30): >5000 engineers with platform team",
+      "Compliance-only governance (-20): No operational governance posture"
+    ],
+    "scored_at": "20260315T230336Z"
+  },
+  {
+    "company": "Boeing",
+    "ticker": "BA",
+    "sector": "Industrials",
+    "scenario_id": "S4-BUDGET-CRUNCH",
+    "scenario_name": "Budget Crunch",
+    "base_score": 50,
+    "scenario_adjusted": 35,
+    "walkaway_deduction": 30,
+    "final_score": 5,
+    "tier": "walk-away",
+    "walkaway_reasons": [
+      "Build internally (-30): >5000 engineers with platform team"
+    ],
+    "scored_at": "20260315T230336Z"
+  },
+  {
+    "company": "Walt Disney",
+    "ticker": "DIS",
+    "sector": "Communication Services",
+    "scenario_id": "S4-BUDGET-CRUNCH",
+    "scenario_name": "Budget Crunch",
+    "base_score": 50,
+    "scenario_adjusted": 35,
+    "walkaway_deduction": 50,
+    "final_score": 0,
+    "tier": "walk-away",
+    "walkaway_reasons": [
+      "Build internally (-30): >5000 engineers with platform team",
+      "Compliance-only governance (-20): No operational governance posture"
+    ],
+    "scored_at": "20260315T230336Z"
+  },
+  {
+    "company": "PepsiCo",
+    "ticker": "PEP",
+    "sector": "Consumer Staples",
+    "scenario_id": "S4-BUDGET-CRUNCH",
+    "scenario_name": "Budget Crunch",
+    "base_score": 37,
+    "scenario_adjusted": 22,
+    "walkaway_deduction": 20,
+    "final_score": 2,
+    "tier": "walk-away",
+    "walkaway_reasons": [
+      "Compliance-only governance (-20): No operational governance posture"
+    ],
+    "scored_at": "20260315T230336Z"
+  },
+  {
+    "company": "Home Depot",
+    "ticker": "HD",
+    "sector": "Consumer Discretionary",
+    "scenario_id": "S4-BUDGET-CRUNCH",
+    "scenario_name": "Budget Crunch",
+    "base_score": 46,
+    "scenario_adjusted": 31,
+    "walkaway_deduction": 20,
+    "final_score": 11,
+    "tier": "walk-away",
+    "walkaway_reasons": [
+      "Compliance-only governance (-20): No operational governance posture"
+    ],
+    "scored_at": "20260315T230336Z"
+  }
+]
