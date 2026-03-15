@@ -149,6 +149,114 @@ grep -rl "prisma" .brain/
 
 -----
 
+## Event-Driven Operations at B1
+
+B1 implements lightweight versions of the Brain's event-driven operations (see Part 5, Event-Driven Operations). These are filesystem-based approximations of what becomes automated at B2+.
+
+### Demand Signal
+
+Every Brain query should be logged to `.brain/_demand/`. This makes the graduation criteria (missed retrieval rate) measurable rather than anecdotal.
+
+**Demand record format:**
+
+```json
+{
+  "query": "authentication approach",
+  "agent": "architect",
+  "project": "taskflow",
+  "results_found": 2,
+  "timestamp": "2026-03-05T14:25:00Z"
+}
+```
+
+**Naming convention:** `{YYYYMMDD-HHmmss}-query-{slug}.json`
+
+**Shell wrapper (optional):**
+
+```bash
+brain_log_query() {
+  local query="$1" project="$2" results_found="$3" agent="${4:-manual}"
+  local timestamp=$(date -u +%Y%m%d-%H%M%S)
+  local slug=$(echo "$query" | tr '[:upper:]' '[:lower:]' | tr ' ' '-' | cut -c1-30)
+  local dir=".brain/_demand"
+  local file="${dir}/${timestamp}-query-${slug}.json"
+
+  mkdir -p "$dir"
+  cat > "$file" <<EOF
+{
+  "query": "${query}",
+  "agent": "${agent}",
+  "project": "${project}",
+  "results_found": ${results_found},
+  "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+}
+EOF
+}
+```
+
+**Analyzing demand signals at B1:**
+
+```bash
+# Count queries with zero results (knowledge gaps)
+grep -rl '"results_found": 0' .brain/_demand/ | wc -l
+
+# Count total queries
+ls .brain/_demand/ | wc -l
+
+# Calculate missed retrieval rate
+# (zero-result queries / total queries) — advance to B2 when >30%
+```
+
+### Contradiction Scan
+
+Before recording a new Brain entry, scan for existing entries with overlapping content. At B1 this is a keyword-based approximation.
+
+**Procedure:**
+
+```bash
+brain_check_conflicts() {
+  local project="$1" tags="$2"
+  # Search for entries sharing tags with the new entry
+  for tag in $tags; do
+    grep -rl "\"$tag\"" ".brain/${project}/" 2>/dev/null
+  done | sort | uniq -c | sort -rn
+  # Entries appearing multiple times share multiple tags — review these
+}
+```
+
+Usage: `brain_check_conflicts "taskflow" "auth jwt api"` — returns entries sharing 2+ tags, sorted by overlap count. The writing agent reviews flagged entries before committing the new record.
+
+**When conflicts are found:** The agent should either supersede the old entry (add a `superseded_by` note in the old entry's metadata) or document why both entries are valid (different context justifies different conclusions).
+
+### Self-Instrumentation
+
+The `_meta` namespace stores Brain health data as standard Brain entries.
+
+**Directory:** `.brain/_meta/`
+
+**What to record:**
+
+- Health snapshots at session boundaries (entry count, categories breakdown, oldest entry age)
+- Knowledge gaps detected from demand signal analysis
+- Graduation criteria assessments (current missed retrieval rate)
+
+**Example health snapshot:**
+
+```json
+{
+  "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "project": "_meta",
+  "category": "context",
+  "title": "Brain health snapshot 2026-03-15",
+  "content": "Entry count: 47 (12 decision, 8 outcome, 15 lesson, 3 context, 6 failure, 3 pattern). Demand signals: 23 queries logged, 4 zero-result (17% miss rate, below 30% graduation threshold). Oldest entry: 2026-03-01. No supersession chains detected.",
+  "metadata": { "tags": ["brain-health", "self-instrumentation"] },
+  "source_agent": "admiral",
+  "created_at": "2026-03-15T00:00:00Z"
+}
+```
+
+-----
+
 ## Limitations
 
 B1 is deliberately minimal. These limitations are features, not bugs — they define exactly when to graduate.

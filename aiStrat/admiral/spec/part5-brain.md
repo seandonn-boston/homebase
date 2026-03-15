@@ -675,4 +675,86 @@ For fleets already operating with file-based persistence (Institutional Memory, 
 
 -----
 
+## Event-Driven Operations
+
+> **TL;DR** — Brain reads and writes are not passive. Every query emits a demand signal. Every record triggers a contradiction scan. Every operation feeds self-instrumentation. These side-effects are what turn a knowledge store into a knowledge *system*.
+
+### Demand Signal (Read Hooks)
+
+Every `brain_query` operation generates a **demand record** as a side-effect. This is not access logging — it captures *what the fleet needs to know*, regardless of whether the Brain has the answer.
+
+**Demand record fields:**
+
+| Field | Type | Description |
+|---|---|---|
+| `query_text` | string | The natural language query as submitted |
+| `agent_id` | string | Verified identity of the querying agent |
+| `project` | string | Project scope of the query |
+| `results_returned` | integer | Number of entries returned (0 = knowledge gap) |
+| `max_similarity` | float | Highest similarity score among results (0.0 if no results) |
+| `timestamp` | ISO 8601 | When the query was executed |
+
+**What demand signals reveal over time:**
+
+- **Knowledge gaps:** Queries that consistently return 0 results or low similarity scores indicate topics the fleet needs to know about but hasn't recorded. These are the Brain's blind spots.
+- **Over-reliance:** Entries that appear in results disproportionately often may indicate the fleet is anchoring on a single precedent rather than developing independent analysis. Flag when any single entry appears in >20% of query results over a rolling 7-day window.
+- **Decay candidates:** Entries that once appeared in results but no longer do (because newer, higher-usefulness entries have displaced them) are natural decay candidates.
+- **Retrieval failure rate:** The ratio of queries returning 0 results to total queries. At B1, this is the primary graduation criterion (advance to B2 when >30%). At B2+, it measures embedding quality.
+
+**B1 implementation:** Append demand records to `.brain/_demand/` as lightweight JSON files. One file per query, same timestamp-slug naming convention. These files are inputs to the graduation criteria — they make "missed retrievals" measurable rather than anecdotal.
+
+**B2+ implementation:** Demand records are stored in a dedicated `demand_log` table. Aggregation queries surface knowledge gaps, over-reliance patterns, and retrieval failure rates. The `brain_status` tool includes demand signal summaries.
+
+### Contradiction Scan (Write Hooks)
+
+Every `brain_record` operation triggers a **contradiction scan** before the entry is committed. The scan searches for existing entries that may conflict with the new entry.
+
+**Scan procedure:**
+
+1. **Tag overlap search:** Find existing entries with overlapping tags in the same project. At B1, this is a keyword match against filenames and `metadata.tags`. At B2+, this is a vector similarity search.
+2. **Category-aware filtering:** Focus on entries of the same category (a new `decision` is most likely to contradict an existing `decision` on the same topic, not an `outcome` or `lesson`).
+3. **Conflict detection:** If any existing entry covers the same topic with a different conclusion, the scan flags the conflict.
+4. **Response:** The conflict flag is returned to the writing agent alongside the new entry confirmation. The writing agent must either:
+   - Acknowledge the conflict and explain why the new entry supersedes the old one (triggering `brain_supersede`)
+   - Acknowledge the conflict as a legitimate divergence (different context justifies different conclusion)
+   - Withdraw the new entry if the existing entry is still correct
+
+**What contradiction scans prevent:**
+
+- **Silent knowledge drift:** Two entries on the same topic reaching different conclusions, with no link between them. Future agents may retrieve either one depending on query phrasing, producing inconsistent fleet behavior.
+- **Decision amnesia:** An agent making a decision that was already made differently in a prior session, without awareness of the precedent.
+- **Supersession neglect:** Old entries that should be superseded remaining active because no one checked.
+
+**B1 implementation:** On `brain_record`, run `grep -l` against `.brain/{project}/` for entries sharing 2+ tags with the new entry. Return filenames of potential conflicts in the shell wrapper output. The writing agent reviews manually.
+
+**B2+ implementation:** On `brain_record`, the MCP server performs a vector similarity search scoped to the same project and category. Entries with similarity >0.80 to the new entry are returned as potential conflicts. If any conflicts have a `contradicts` relationship type available, the link is suggested automatically.
+
+### Self-Instrumentation (_meta Namespace)
+
+The Brain records knowledge about itself in a reserved `_meta` project namespace. This is not a separate system — it uses the same entry format, same categories, same retrieval interface. The Brain is its own subject.
+
+**What `_meta` captures:**
+
+| Category | Example Entry | Trigger |
+|---|---|---|
+| `context` | Health snapshot: write rate, read rate, entry count, stale count | Periodic (once per session or daily) |
+| `failure` | Knowledge gap detected: 5 queries about "deployment rollback" returned 0 results this week | Demand signal aggregation |
+| `pattern` | Query pattern: 73% of queries are `decision`-category, only 4% are `failure`-category | Demand signal aggregation |
+| `outcome` | Graduation criteria: missed retrieval rate at 24% (below 30% threshold) | Periodic assessment |
+| `decision` | Retention decision: 12 entries older than 90 days reviewed, 3 superseded, 9 retained | Admiral review |
+
+**Why self-instrumentation matters:**
+
+- **Brain health is fleet knowledge.** A Brain with degrading retrieval quality affects every agent's decision-making. Recording this as a Brain entry means agents can query "is the Brain healthy?" the same way they query any other topic.
+- **Graduation criteria become auditable.** Instead of anecdotal tracking of missed retrievals, the `_meta` namespace contains concrete `outcome` entries documenting the graduation assessment over time.
+- **Gap analysis is persistent.** When demand signals reveal a knowledge gap, the `_meta/failure` entry persists until the gap is filled — preventing the same blind spot from being discovered and forgotten across sessions.
+
+**B1 implementation:** `.brain/_meta/` directory. Health snapshots recorded at session boundaries by the Admiral or SessionStart hook. Knowledge gap entries created when demand signal analysis (grep across `_demand/` files) reveals patterns.
+
+**B2+ implementation:** `_meta` is a reserved project namespace. Brain MCP tools write self-instrumentation entries automatically. `brain_status` output is also recorded as a `_meta/context` entry. Governance agents (Context Health Monitor, specifically) can query `_meta` for Brain health trends.
+
+**Access control:** `_meta` entries are readable by all agents (Brain health affects everyone). Only the Admiral, orchestrator, and the Brain MCP server itself can write to `_meta`. This prevents agents from polluting the self-instrumentation namespace.
+
+-----
+
 *Context is the currency of autonomous AI. The Brain is where that currency compounds.*
