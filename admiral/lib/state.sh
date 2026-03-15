@@ -27,7 +27,7 @@ init_session_state() {
   "session_id": "",
   "started_at": 0,
   "tokens_used": 0,
-  "token_budget": 200000,
+  "token_budget": 0,
   "tool_call_count": 0,
   "hook_state": {
     "loop_detector": { "error_counts": {}, "total_errors": 0 },
@@ -35,8 +35,6 @@ init_session_state() {
   },
   "context": {
     "standing_context_tokens": 0,
-    "total_capacity": 200000,
-    "current_utilization": 0.0,
     "standing_context_present": []
   }
 }
