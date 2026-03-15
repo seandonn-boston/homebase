@@ -149,9 +149,9 @@ grep -rl "prisma" .brain/
 
 -----
 
-## Event-Driven Operations at B1
+## The Möbius Loop at B1
 
-B1 implements lightweight versions of the Brain's event-driven operations (see Part 5, Event-Driven Operations). These are filesystem-based approximations of what becomes automated at B2+.
+B1 implements lightweight versions of the Brain's Möbius Loop (see Part 5, The Möbius Loop). These are filesystem-based approximations of what becomes automated at B2+.
 
 ### Recursion Prevention at B1
 

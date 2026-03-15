@@ -694,9 +694,9 @@ For fleets already operating with file-based persistence (Institutional Memory, 
 
 -----
 
-## Event-Driven Operations
+## The Möbius Loop
 
-> **TL;DR** — Brain reads and writes are not passive. Every query emits a demand signal. Every record triggers a contradiction scan. Every operation feeds self-instrumentation. These side-effects are what turn a knowledge store into a knowledge *system*.
+> **TL;DR** — Brain reads and writes are not passive. Every query emits a demand signal. Every record triggers a contradiction scan. Every operation feeds self-instrumentation. These side-effects are the **Möbius Loop** — the mechanism that turns a knowledge store into a self-improving knowledge *system*. Reads become writes. Writes become reads. The Brain observes itself. Consuming knowledge and improving knowledge are one continuous surface.
 
 ### Recursion Prevention
 
