@@ -679,6 +679,32 @@ For fleets already operating with file-based persistence (Institutional Memory, 
 
 > **TL;DR** — Brain reads and writes are not passive. Every query emits a demand signal. Every record triggers a contradiction scan. Every operation feeds self-instrumentation. These side-effects are what turn a knowledge store into a knowledge *system*.
 
+### Recursion Prevention
+
+Event-driven operations create side-effects on Brain operations. Without explicit boundaries, side-effects can trigger further operations that trigger further side-effects — an infinite loop. This section defines the invariants that prevent recursion.
+
+**The core rule: side-effects are terminal.** A side-effect produced by a Brain operation MUST NOT trigger another side-effect. Concretely:
+
+| Operation | Side-Effect | Side-Effect Classification | Can Trigger Further Side-Effects? |
+|---|---|---|---|
+| `brain_query` | Demand signal record | **Operational write** | No |
+| `brain_record` | Contradiction scan | **Operational read** | No |
+| `brain_record` to `_meta` | (none) | — | N/A |
+| `brain_supersede` | (none beyond the supersession itself) | — | N/A |
+
+**Three classes of Brain operation:**
+
+1. **Agent-initiated** — An agent calls `brain_query`, `brain_record`, `brain_retrieve`, etc. These trigger side-effects (demand signal, contradiction scan).
+2. **Operational** — Side-effects of agent-initiated operations. Demand signal writes and contradiction scan reads are operational. Operational operations NEVER trigger further side-effects. They bypass the event-driven hooks entirely.
+3. **Scheduled** — Self-instrumentation writes to `_meta`, triggered by session boundaries or periodic assessment. These are agent-initiated by the Admiral or a SessionStart hook — they trigger contradiction scans (which are operational and terminate), but they do NOT emit demand signals (they are not queries).
+
+**Implementation requirements:**
+
+- **B1:** Structural separation enforces this. Demand signals write to `.brain/_demand/` (not via `brain_record`, so no contradiction scan). Contradiction scans use `grep` (not via `brain_query`, so no demand signal). Self-instrumentation uses `brain_record` to `_meta/` (triggers a contradiction scan via grep, which terminates). No path exists for recursion.
+- **B2+:** The MCP server MUST tag each internal operation with an `origin` field: `agent`, `operational`, or `scheduled`. The event-driven hooks check this field and skip side-effects for `operational` origins. This is a hard enforcement — not advisory. A missing `origin` field defaults to `agent` (safe direction: more side-effects, not fewer, preventing silent data loss from miscategorized operations).
+
+**Why this matters:** At B1, recursion prevention is accidental — an artifact of using separate directories and grep. At B2+, where all operations flow through the same MCP server and database, recursion prevention must be explicit and enforced. The `origin` field is the mechanism.
+
 ### Demand Signal (Read Hooks)
 
 Every `brain_query` operation generates a **demand record** as a side-effect. This is not access logging — it captures *what the fleet needs to know*, regardless of whether the Brain has the answer.

@@ -153,6 +153,16 @@ grep -rl "prisma" .brain/
 
 B1 implements lightweight versions of the Brain's event-driven operations (see Part 5, Event-Driven Operations). These are filesystem-based approximations of what becomes automated at B2+.
 
+### Recursion Prevention at B1
+
+Side-effects must not trigger further side-effects. At B1, this is enforced by structural separation:
+
+- **Demand signals** write to `.brain/_demand/` — a separate directory, not via `brain_record`. No contradiction scan is triggered.
+- **Contradiction scans** use `grep` against `.brain/{project}/` — a direct filesystem read, not via `brain_query`. No demand signal is emitted.
+- **Self-instrumentation** writes to `.brain/_meta/` via `brain_record` — this triggers a contradiction scan (grep), which terminates. It does not emit a demand signal because it is not a query.
+
+No path exists for infinite recursion at B1. At B2+, this structural separation is replaced by an explicit `origin` field on each operation (see Part 5, Recursion Prevention).
+
 ### Demand Signal
 
 Every Brain query should be logged to `.brain/_demand/`. This makes the graduation criteria (missed retrieval rate) measurable rather than anecdotal.
