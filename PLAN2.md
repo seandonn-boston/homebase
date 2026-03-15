@@ -11,7 +11,7 @@ Phases 1-3 of PLAN.md are complete: the spec (v0.5.3-alpha) is clean, concrete, 
 
 ---
 
-## Phase 4: MVP (Starter Profile) — STATUS: MOSTLY COMPLETE
+## Phase 4: MVP (Starter Profile) — STATUS: COMPLETE (pending cold validation)
 
 **Target:** B1 F1 E1 CP1 S1 P1 DE1
 **Sessions used:** 1 (compressed 4.0-4.3 into single session)
@@ -94,10 +94,10 @@ Phases 1-3 of PLAN.md are complete: the spec (v0.5.3-alpha) is clean, concrete, 
 - [x] Hook demonstrably prevents a bad outcome (budget exhaustion blocked)
 
 **Remaining (Phase 4.4 gaps):**
-- [ ] **QUICKSTART.md update** — `aiStrat/QUICKSTART.md` references old paths (e.g., `"matcher": "*"` instead of `"matcher": ""`, inline hook config instead of adapter pattern). Needs updating to reference actual implementation in `.hooks/` and `admiral/`.
-- [ ] **End-to-end example document** — Integration test output verified but not committed as a standalone document showing governance in action. Create `admiral/examples/e2e-session-log.md` with real output.
-- [ ] **Version bump to v0.6.0-alpha** — `package.json` in `control-plane/` still at v0.1.0. Bump and tag.
-- [ ] **QUICKSTART.md cold validation** — Have someone unfamiliar with Admiral follow it and succeed. Can only validate after QUICKSTART.md is updated.
+- [x] **QUICKSTART.md update** — Updated to reference adapter pattern, `.hooks/` directory, correct `matcher: ""` syntax, `$CLAUDE_PROJECT_DIR`, and actual hook implementations.
+- [x] **End-to-end example document** — Created `admiral/examples/e2e-session-log.md` documenting full session lifecycle: start → tracking → 80% warning → 90% escalation → 100% hard block → loop detection → context health.
+- [x] **Version bump to v0.6.0-alpha** — `control-plane/package.json` bumped from v0.1.0 to v0.6.0-alpha.
+- [ ] **QUICKSTART.md cold validation** — Have someone unfamiliar with Admiral follow it and succeed. Ready to validate now that QUICKSTART.md is updated.
 
 ---
 
@@ -237,12 +237,12 @@ Contract-first. Define all interfaces before parallel work begins.
 
 ### Immediate (close Phase 4.4 gaps):
 
-| # | Task | Priority | Est. Effort |
+| # | Task | Priority | Status |
 |---|---|---|---|
-| 1 | **Update `aiStrat/QUICKSTART.md`** to reference actual implementation paths (`.hooks/`, `admiral/`, adapter pattern, `settings.local.json` hook format) | High | 30 min |
-| 2 | **Create `admiral/examples/e2e-session-log.md`** with real integration test output showing governance in action | High | 20 min |
-| 3 | **Version bump** control-plane `package.json` to v0.6.0-alpha, git tag | Medium | 5 min |
-| 4 | **QUICKSTART.md cold validation** — have someone unfamiliar follow it | Medium | External |
+| 1 | ~~Update `aiStrat/QUICKSTART.md`~~ | High | DONE |
+| 2 | ~~Create `admiral/examples/e2e-session-log.md`~~ | High | DONE |
+| 3 | ~~Version bump to v0.6.0-alpha~~ | Medium | DONE |
+| 4 | **QUICKSTART.md cold validation** — have someone unfamiliar follow it | Medium | External (ready to validate) |
 
 ### Phase 5 (in order):
 
