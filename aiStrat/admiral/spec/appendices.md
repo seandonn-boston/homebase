@@ -742,6 +742,6 @@ This appendix maps every major framework component to its real-world implementat
 
 -----
 
-*The Fleet Admiral Framework · v0.6.0-alpha
+*The Fleet Admiral Framework · v0.6.1-alpha
 
 *Context is the currency of autonomous AI. Intent is its purpose. The Brain is where both compound.*
