@@ -37,6 +37,17 @@ This distinction — between advisory instructions and deterministic enforcement
 | **PrePush** | Before pushing to remote | Branch protection, review requirements |
 | **Periodic** | On a configurable interval (not tied to tool use or task lifecycle) | Governance heartbeat monitoring, scheduled health checks |
 
+### Hook-Brain Integration
+
+Hooks and the Brain serve complementary enforcement roles. Hooks enforce **behavioral constraints** (budget limits, loop detection, scope boundaries). The Brain enforces **institutional memory** (precedent, prior decisions, lessons learned). When combined, they close a critical gap: an agent can pass every hook check and still make a decision that contradicts a lesson learned three sessions ago.
+
+The `brain_context_router` hook (PostToolUse, advisory) bridges this gap by detecting when an agent writes a Propose-tier or Escalate-tier decision without a preceding `brain_query` in the session. It emits two advisory alerts:
+
+- **BRAIN BYPASS:** No `brain_query` has been called this session, but a Propose/Escalate marker was detected in a Write or Edit operation.
+- **BRAIN STALE:** A `brain_query` occurred but was more than 20 tool calls ago — the agent's institutional memory may be outdated for the current decision.
+
+This hook does not block execution (E1 enforcement tier: advisory only). It reminds agents of their obligation under SO-05 and SO-11 to consult institutional memory before high-tier decisions.
+
 ### Hook Execution Model
 
 Hooks are executable programs — shell scripts, Python scripts, or compiled binaries — invoked by the agent runtime at defined lifecycle points. They are not advisory callbacks. They are deterministic gates.

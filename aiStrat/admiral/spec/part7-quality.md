@@ -72,8 +72,8 @@ The ladder preserves agent autonomy for as long as possible and escalates only w
 1. **Retry with variation.** Meaningfully different alternative (not the same approach repeated). Max 2–3 retries. Log each.
 2. **Fallback to simpler approach.** Known-safe fallback producing lesser but acceptable result. Defined in advance.
 3. **Backtrack.** Roll back to last known-good state. Try a different path entirely. Distinct from retry — abandons the current approach.
-4. **Isolate and skip.** Mark task as blocked with structured report. Move to next task. Surface at checkpoint.
-5. **Escalate to Admiral.** Structured escalation report per [Escalation Protocol (Part 11)](part11-protocols.md) format. No further creative solutions.
+4. **Isolate and skip.** Before isolating, call `brain_query` describing the failure — the Brain may surface a resolution from a prior session or project (see Failure Forensics, Part 5). If no precedent is found, mark task as blocked with structured report. Move to next task. Surface at checkpoint.
+5. **Escalate to Admiral.** Before writing the escalation report, call `brain_query` if not already done at Step 4. Include a "Brain Consulted" section in the escalation report showing what was queried and what was found. Structured escalation report per [Escalation Protocol (Part 11)](part11-protocols.md) format. No further creative solutions.
 
 > **Recovery progression rule:** Recovery records must advance exactly one rung at a time. A record at "retry" whose next step is "backtrack" (skipping "fallback") is invalid. A record whose next step points backward (e.g., fallback → retry) is also invalid. Enforce this at record creation, not as advisory guidance. The rule ensures escalation reports contain evidence of genuine effort at each rung.
 

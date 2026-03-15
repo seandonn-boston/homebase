@@ -15,6 +15,12 @@ APPROACHES ATTEMPTED:
 2. [What you tried second and why it failed]
 3. [What you tried third and why it failed]
 
+BRAIN CONSULTED:
+[Required. List brain_query calls made before escalating, with results.]
+- Query: [What you searched for]
+- Results: [What was found, or "No precedent found"]
+[If multiple queries were made, list each. If no Brain query was made, explain why.]
+
 ROOT CAUSE ASSESSMENT:
 [Your best understanding of why the blocker exists]
 

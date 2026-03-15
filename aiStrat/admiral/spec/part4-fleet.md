@@ -124,6 +124,19 @@ Equally important: what the agent does NOT have. Agents will hallucinate capabil
 | **Sequential Thinking** | Deliberative reasoning through thought sequences | No side effects | No external access |
 | **Filesystem MCP** | File read/write operations | Scoped to project directory only | No access outside project root |
 
+### Brain Tools (Universal)
+
+The following Brain tools are available to **all agents** regardless of role, and are the primary interface to institutional memory. They are provided via MCP server (B2+) or CLI (B1).
+
+| Tool | Purpose | When to Use |
+|---|---|---|
+| `brain_query` | Semantic search across Brain entries | Before Propose/Escalate decisions; when confidence is low; when checking for precedent |
+| `brain_record` | Create a new Brain entry | At chunk boundaries; after significant decisions; after resolving novel failures |
+| `brain_retrieve` | Fetch specific entry by ID with link traversal | When a `brain_query` result references linked entries |
+| `brain_strengthen` | Signal that a retrieved entry was useful | After using a Brain entry to inform a decision |
+
+See Part 5 (Brain Architecture) for full tool contracts and the Context Source Routing chain (Part 2) for when to query.
+
 ### Tool Interaction Contracts
 
 - **Ownership boundaries:** Which agent owns write access to which files.
