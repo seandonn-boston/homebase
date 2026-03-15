@@ -27,8 +27,8 @@ The enforcement spectrum (part3-enforcement.md, Deterministic Enforcement) class
 | 7 | Checkpointing | Operational | **No hook** | Advisory — agents must produce checkpoints; no automated validation that they occur |
 | 8 | Quality Standards | Quality | **No hook** | Advisory — "every code change must pass automated checks" but enforcement delegated to project CI, not Admiral hooks |
 | 9 | Communication Format | Operational | **No hook** | Advisory — structured format documented but no parser/validator enforces it |
-| 10 | Prohibitions | Safety | **Partial** | `token_budget_gate` (PreToolUse) enforces budget exhaustion prohibition; remaining 4 prohibitions are advisory only |
-| 11 | Context Discovery | Operational | **Enforced** | `context_baseline` (SessionStart) + `context_health_check` (PostToolUse) — validates critical context presence |
+| 10 | Prohibitions | Safety | **Partial** | `token_budget_checkpoint` (PreToolUse) warns on budget exhaustion; remaining 4 prohibitions are advisory only |
+| 11 | Context Discovery | Operational | **Advisory** | `context_baseline` (SessionStart) + `context_health_check` (PostToolUse) — warns if critical context missing (advisory, never blocks) |
 | 12 | Zero-Trust Self-Protection | Safety | **No hook** | Advisory — establishes principles but relies on agent judgment for risk assessment |
 | 13 | Bias Awareness | Integrity | **No hook** | Advisory — metacognitive discipline with no deterministic enforcement |
 | 14 | Compliance, Ethics, Legal | Safety | **No hook** | Advisory — critical safety boundary but relies on agent judgment |
@@ -48,7 +48,7 @@ These standing orders are classified as Safety-tier (highest priority) but lack 
 - **Recommended:** Implement a `scope_boundary_gate` (PreToolUse) that validates file paths and tool operations against the agent's declared scope.
 
 **SO 10 — Prohibitions (4 of 5 unenforced)**
-- Only budget exhaustion is hook-enforced (`token_budget_gate`).
+- Budget exhaustion is monitored via `token_budget_checkpoint` (advisory warning, not blocking).
 - Unenforced prohibitions:
   1. No file modifications outside assigned scope
   2. No disabling enforcement mechanisms

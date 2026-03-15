@@ -47,17 +47,32 @@ TMPL
 }
 
 # Load session state into a variable (outputs JSON to stdout)
+# Fail-open: if state is missing or corrupt, reinitialize and continue.
 load_state() {
   if [ ! -f "$STATE_FILE" ]; then
     init_session_state "unknown"
   fi
-  cat "$STATE_FILE"
+  local content
+  content=$(cat "$STATE_FILE" 2>/dev/null) || content='{}'
+  # Validate JSON — if corrupt, reinitialize
+  if ! echo "$content" | jq empty 2>/dev/null; then
+    init_session_state "recovery-$(date +%s)"
+    content=$(cat "$STATE_FILE" 2>/dev/null) || content='{}'
+  fi
+  echo "$content"
 }
 
 # Save session state from stdin
+# Atomic write with validation — only overwrites if new content is valid JSON.
 save_state() {
   ensure_admiral_dir
-  cat > "${STATE_FILE}.tmp" && mv "${STATE_FILE}.tmp" "$STATE_FILE"
+  local content
+  content=$(cat)
+  # Validate before writing — never save corrupt state
+  if echo "$content" | jq empty 2>/dev/null; then
+    echo "$content" > "${STATE_FILE}.tmp" && mv "${STATE_FILE}.tmp" "$STATE_FILE"
+  fi
+  # If validation fails, silently keep the existing state file (fail-open)
 }
 
 # Read a specific field from session state

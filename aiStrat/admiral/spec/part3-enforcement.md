@@ -80,13 +80,17 @@ Agent action
 | **Quality** | Run linter on save, tests before commit, type-check before merge | Write clean code, follow naming conventions |
 | **Scope** | Block modifications outside assigned directories | Stay focused on the current task |
 | **Process** | Require test existence before implementation accepted | Write tests for new features |
-| **Cost** | Kill session after token budget exceeded | Be mindful of token usage |
+| **Cost** | Warn and checkpoint when token budget exceeded | Be mindful of token usage |
 
 > **Enforcement coverage rule:** Security and scope constraints MUST be hook-enforced. Any constraint classified under the SECURITY or SCOPE categories that is assigned to INSTRUCTION or GUIDANCE enforcement level represents a compliance gap. Validate enforcement coverage at configuration time, not at runtime — a miscategorized security constraint discovered during an incident is too late.
 
 ### Reference Hook Implementations
 
-The enforcement classifications above (e.g., "Kill session after token budget exceeded") require concrete hook specifications. The following hooks implement the deterministic enforcement for token budgets, loop detection, and context health — three areas where advisory instructions are insufficient and hook-based enforcement is mandatory.
+The enforcement classifications above require concrete hook specifications. The following hooks implement deterministic monitoring for token budgets, loop detection, and context health — three areas where advisory instructions alone are insufficient and hook-based awareness is essential.
+
+> **Anti-deadlock design principle:** No hook may hard-block tool use in a way that prevents recovery. A hook that blocks ALL tool use (exit 2 on PreToolUse or PostToolUse) creates an unrecoverable deadlock — the agent cannot reset state, ask the user for help, or take any corrective action. All enforcement hooks MUST be advisory-only (exit 0) with warnings delivered via `additionalContext` (PreToolUse) or `systemMessage` (PostToolUse). Budgets, loop detection, and health checks are **checkpoints**, not walls. The operator retains agency to continue past any threshold.
+>
+> **Fail-open principle:** Hook infrastructure failures (missing state files, corrupt JSON, hook timeouts) MUST allow tool use to continue. A monitoring system that breaks the system it monitors is worse than no monitoring at all. Hooks should validate state before reading, recover from corruption automatically, and isolate failures so one hook cannot cascade into another.
 
 > **Enforcement level annotations:** Each hook below is tagged with the enforcement level at which it should be **deployed**. Hooks tagged **E1** are part of the Disciplined Solo checklist. Hooks tagged **E2+** or **E3+** should not be implemented until their consumers exist (e.g., do not deploy `governance_heartbeat_monitor` until governance agents are running, do not deploy `tier_validation` until a fleet roster with multiple agents exists). Reading ahead is fine; building ahead wastes effort and adds complexity with no consumer.
 
@@ -103,14 +107,20 @@ PostToolUse: token_budget_tracker
               At 90% utilization: stdout escalation alert for Orchestrator.
   Timeout:    5 seconds.
 
-PreToolUse: token_budget_gate
+PreToolUse: token_budget_checkpoint
   Format:     Shell script or Python. Version-controlled.
   Invocation: Synchronous. Fires before every tool invocation.
   Input:      { "event": "PreToolUse", "tool": "...", "params": { ... },
                 "agent_identity": "...", "session_state": { "tokens_used": N, "token_budget": M } }
-  Output:     Exit 0: budget available, proceed.
-              Exit non-zero (block): "Token budget exhausted: {used}/{limit}. Session terminated."
+  Output:     ALWAYS exit 0 (allow). NEVER exit 2 (block).
+              When budget exceeded: emit additionalContext with token usage details,
+              estimated cost of current tool, overage amount, and instruction to
+              inform the user and ask whether to continue.
+              When budget is 0 (unlimited): no output, immediate allow.
   Timeout:    5 seconds.
+  Note:       Replaces the original token_budget_gate which used exit 2 to hard-block
+              at 100% utilization. Hard-blocking created unrecoverable deadlocks —
+              the agent could not reset state, ask the user, or take any action.
 ```
 
 **Retry Loop Detection Hook:** `E1`
@@ -121,13 +131,17 @@ PostToolUse: loop_detector
   Invocation: Synchronous. Fires after every tool invocation.
   Input:      { "event": "PostToolUse", "tool": "...", "result": { "exit_code": N, "error": "..." },
                 "agent_identity": "...", "trace_id": "..." }
-  Output:     Exit 0: no loop detected.
-              Exit non-zero: "Loop detected: error signature '{sig}' repeated {count} times.
-              Moving to recovery ladder (Failure Recovery, Part 7)."
+  Output:     ALWAYS exit 0. NEVER exit 2 (block).
+              When loop detected: emit advisory alert via JSON stdout with warning message
+              suggesting recovery ladder (Failure Recovery, Part 7).
   Behavior:   Tracks (agent_id, error_signature) tuples across invocations.
-              Triggers when: same error recurs 3+ times, OR total retry count across all
+              Warns when: same error recurs 3+ times, OR total error count across all
               error signatures in a session exceeds configurable maximum (default: 10).
-              This hook makes the cycle detection specified above enforceable rather than advisory.
+              Successful tool calls DECAY the total error count (default: -1 per success,
+              floor 0) to prevent monotonic accumulation from creating inevitable deadlocks
+              in long-running sessions.
+              This hook makes cycle detection visible and actionable, not enforceable —
+              the agent and user retain agency to continue past warnings.
   Timeout:    5 seconds.
 ```
 
@@ -148,11 +162,12 @@ PostToolUse: context_health_check
   Format:     Shell script or Python. Version-controlled.
   Invocation: Synchronous. Fires every N tool invocations (configurable, default: 10).
   Input:      { "event": "PostToolUse", "tool": "...", "agent_identity": "...",
-                "context": { "current_utilization": P, "standing_context_present": [...] } }
-  Output:     Exit 0: context health acceptable.
-              Exit non-zero: "Context health critical" — triggers when:
-              (a) utilization exceeds threshold (default: 85%) without sacrifice order activation, OR
-              (b) critical context (Identity, Authority, Constraints) is missing from active context.
+                "context": { "standing_context_present": [...] } }
+  Output:     ALWAYS exit 0. NEVER exit non-zero.
+              When issues detected: emit advisory alert via JSON stdout with warning message.
+              Checks: critical context (Identity, Authority, Constraints) present in standing context.
+              Issues are reported as advisory alerts, not failures — context degradation is
+              exactly when the agent most needs tools to remain functional.
   Timeout:    10 seconds.
 ```
 
@@ -231,11 +246,11 @@ Governance agents (`fleet/agents/governance.md`) analyze patterns and recommend 
 
 Every hook must ship with a `hook.manifest.json` conforming to `hooks/manifest.schema.json`. The manifest declares the hook's capabilities, dependencies, and contract version — enabling the runtime to discover, validate, and order hooks automatically.
 
-**Example manifest** (for the `token_budget_gate` hook above):
+**Example manifest** (for the `token_budget_checkpoint` hook above):
 
 ```json
 {
-  "name": "token_budget_gate",
+  "name": "token_budget_checkpoint",
   "version": "1.0.0",
   "events": ["PreToolUse"],
   "timeout_ms": 5000,
