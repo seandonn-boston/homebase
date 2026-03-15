@@ -6,169 +6,106 @@ Phases 1-3 of PLAN.md are complete: the spec (v0.5.3-alpha) is clean, concrete, 
 
 **PLAN.md defines the scope strictly:**
 - **MVP (Phase 4):** Starter profile (B1 F1 E1 CP1 S1 P1 DE1) — one governed agent with enforced hooks
-- **v1.0 (Phase 5):** Team profile — multi-agent routing, handoff/escalation protocols, Brain L1, 3+ hooks, health dashboard
-- **Explicitly NOT v1.0:** B2/B3, A2A mTLS, ecosystem agents, feedback loops, multi-operator governance, quarantine immune system, progressive autonomy automation
-
-**What already exists:**
-- `control-plane/` — TypeScript CP with event stream, runaway detector, execution trace, dashboard HTML (v0.1.0)
-- `aiStrat/hooks/` — 13 hook spec directories with `hook.manifest.json` files (specs only, no executables)
-- `aiStrat/brain/level1-spec.md` and `level2-spec.md` — Complete B1/B2 specs with code examples
-- `aiStrat/hooks/manifest.schema.json` — JSON Schema for hook manifests
-- `.claude/settings.local.json` — Exists (permissions only, no hooks configured)
-
-**What does NOT exist:**
-- No `.admiral/` directory, no `.brain/` directory, no `.hooks/` directory
-- No executable hook scripts
-- No Standing Orders data files or loader
-- No root-level AGENTS.md (only `aiStrat/AGENTS.md` for the spec project)
-- No Brain CLI tools
-- No multi-agent orchestration
+- **v1.0 (Phase 5):** Team profile — multi-agent routing, handoff/escalation protocols, B2 Brain, 3+ hooks, health dashboard
+- **Explicitly NOT v1.0:** B3, A2A mTLS, ecosystem agents, feedback loops, multi-operator governance, quarantine immune system, progressive autonomy automation
 
 ---
 
-## File Deletion
-
-Delete `CODEBASE-REVIEW-*.md` if any exist in repo root (user requested review file deletion).
-
----
-
-## Phase 4: MVP (Starter Profile)
+## Phase 4: MVP (Starter Profile) — STATUS: MOSTLY COMPLETE
 
 **Target:** B1 F1 E1 CP1 S1 P1 DE1
-**Sessions:** 5-7
+**Sessions used:** 1 (compressed 4.0-4.3 into single session)
 **Exit criteria:** A governed solo agent running with all E1 hooks firing deterministically. End-to-end example with actual output. QUICKSTART.md validated cold.
 
-### 4.0 — Config Before Code (1 session)
+### 4.0 — Config Before Code — COMPLETE
 
-The spec says "Config before code." Dog-food Admiral to build Admiral.
-
-**Deliverables:**
-1. Root `AGENTS.md` for homebase repo (governs the implementation work)
-2. Standing Orders data files — 15 files in `admiral/standing-orders/`, one per SO, with structured metadata
-3. `.admiral/` directory with template `session_state.json`
-4. `.brain/` directory with `homebase/` and `_global/` subdirectories
-5. `.gitignore` updates (`.admiral/session_state.json` runtime state ignored, templates tracked)
-
-**Interface contracts (defined here, consumed by 4.1-4.2):**
-- Session state JSON schema (from `reference-constants.md`)
-- Hook adapter stdin/stdout contract per event type
-- Brain entry JSON format (from `level1-spec.md`)
-
-**Key files:**
-- `aiStrat/admiral/reference/reference-constants.md` — session state schema, hook contracts
-- `aiStrat/brain/level1-spec.md` — B1 entry format and directory structure
-- `aiStrat/admiral/spec/part11-protocols.md` — Standing Orders text (lines 15-178)
-
-**Verify:** AGENTS.md <150 lines, SO files parse, session state template valid JSON, `.brain/` structure matches level1-spec.md
-
----
-
-### 4.1 — Hook Runtime + E1 Hooks (2 sessions)
-
-This is the highest-uncertainty work. The adapter pattern between Claude Code's hook system and Admiral's hook contracts is architecturally critical.
-
-**Session 4.1a: Hook Adapter + Session Start**
-
-| Deliverable | Details |
-|---|---|
-| `pre_tool_use_adapter.sh` | Reads Claude Code PreToolUse payload, loads session state, fires `token_budget_gate` |
-| `post_tool_use_adapter.sh` | Reads PostToolUse payload, fires `token_budget_tracker` → `loop_detector` → (every 10th) `context_health_check` |
-| `session_start_adapter.sh` | Resets session state, fires `context_baseline`, outputs Standing Orders for context injection |
-| Session state utilities | Bash functions for read/write `.admiral/session_state.json` via `jq` |
-| `context_baseline.sh` | Records initial context metrics (10s timeout) |
-| `.claude/settings.local.json` | Updated with hook registrations pointing to adapters |
-
-**Session 4.1b: All E1 Hooks**
-
-| Hook | Event | Timeout | Behavior |
-|---|---|---|---|
-| `token_budget_gate.sh` | PreToolUse | 5s | Exit 2 when `tokens_used >= token_budget` |
-| `token_budget_tracker.sh` | PostToolUse | 5s | Estimate tokens, update state, warn at 80%, escalate at 90% |
-| `loop_detector.sh` | PostToolUse | 5s | Track `(agent_id, error_sig)` tuples. Trigger at 3 same-error or 10 total |
-| `context_health_check.sh` | PostToolUse (every 10th) | 10s | Check utilization >85%, validate critical sections present |
-
-**Self-healing infrastructure:** Post-tool adapter tracks `(hook_name, error_sig)` tuples — MAX_RETRIES=3 per error, MAX_SESSION_RETRIES=10.
-
-**Exit codes:** 0=pass, 1=soft fail, 2=hard block
-
-**Key files:**
-- `aiStrat/admiral/spec/part3-enforcement.md` — Hook execution model, exit codes, self-healing loops
-- `aiStrat/hooks/*/hook.manifest.json` — Existing manifest specs for each hook
-- `aiStrat/admiral/reference/reference-constants.md` — Token estimates per tool, timeout values
-
-**Verify:** All hooks fire via Claude Code. Budget gate blocks at 100%. Tracker warns at 80%. Loop detector triggers after 3 identical errors. Context health fires every 10th call.
-
----
-
-### 4.2 — B1 Brain + F1 Fleet (1 session)
-
-**Can parallel with 4.1b** — different directories, no shared state.
-
-| Deliverable | Details |
-|---|---|
-| `brain_record` script | Creates JSON in `.brain/{project}/` with naming `{YYYYMMDD-HHmmss}-{category}-{slug}.json`. Validates required fields. UUID via `uuidgen`. |
-| `brain_query` script | Keyword search via `grep -rl` across `.brain/`. Filter by project/category. Formatted output. |
-| `brain_retrieve` script | Read specific entry by filename or ID |
-| `brain_audit` script | List entries >90 days since creation with no updates (decay awareness) |
-| Agent identity template | `agent-identity.json` with: agent_id, role, authority_tier, project |
-| CLAUDE.md update | Point to root AGENTS.md |
-
-**Key files:**
-- `aiStrat/brain/level1-spec.md` — Entry format, directory structure, naming convention, operations
-
-**Verify:** `brain_record` creates valid JSON. `brain_query` finds entries by keyword. Identity loads at session start.
-
----
-
-### 4.3 — Protocols, Security, CP1 (1 session)
-
-| Component | Deliverable | Details |
+| Deliverable | Status | Location |
 |---|---|---|
-| **P1** | Escalation report template | Structured markdown matching Part 11 format |
-| **P1** | Emergency Halt behavior | Exit 2 with specific message format for data destruction, security breach, compliance violation |
-| **P1** | Decision Authority table | Markdown format with the 4 tiers, validatable |
-| **S1** | Injection detection patterns | 15-20 regex patterns for prompt injection, command injection, authority-spoofing |
-| **S1** | Manifest validation | Validate hook manifests against `manifest.schema.json` at discovery |
-| **CP1** | Event logging | Hooks log to `.admiral/event_log.jsonl` (tool calls, hook firings, escalations) |
-| **CP1** | Trace ID | UUID generated at session start, propagated through all events |
-| **CP1** | Session summary script | Reads event log + session state, produces human-readable summary |
-| **DE1** | Checkpoint template | JSON with: completed, in_progress, blocked, decisions, assumptions, resources |
+| Root `AGENTS.md` | Done (67 lines) | `/AGENTS.md` |
+| 15 Standing Orders JSON files | Done | `admiral/standing-orders/so01-*.json` through `so15-*.json` |
+| Session state template | Done | `.admiral/session_state.json.template` |
+| `.brain/` directory structure | Done | `.brain/homebase/`, `.brain/_global/` |
+| `.gitignore` updates | Done | Runtime state ignored, templates tracked |
+| `CLAUDE.md` pointer | Done | `/CLAUDE.md` |
 
-**Key files:**
-- `aiStrat/admiral/spec/part11-protocols.md` — Escalation format, Emergency Halt triggers
-- `control-plane/src/` — Existing TS code to understand CP patterns
+### 4.1 — Hook Runtime + E1 Hooks — COMPLETE
 
-**Verify:** Escalation template renders. Injection patterns catch basic prompt injection. Event log captures hook firings. Trace ID appears in all log entries.
+**Adapters (translate Claude Code ↔ Admiral contracts):**
+
+| Script | Event | Status |
+|---|---|---|
+| `.hooks/session_start_adapter.sh` | SessionStart | Done — resets state, injects all 15 SOs via `systemMessage` |
+| `.hooks/pre_tool_use_adapter.sh` | PreToolUse | Done — fires `token_budget_gate`, exit 2 blocks |
+| `.hooks/post_tool_use_adapter.sh` | PostToolUse | Done — fires tracker → loop_detector → health_check (every 10th) |
+
+**E1 Hooks:**
+
+| Hook | Verified Behavior |
+|---|---|
+| `token_budget_gate.sh` | Blocks at 100% utilization (exit 2). Passes below 100%. |
+| `token_budget_tracker.sh` | Warns at 80%, escalates at 90%. Token estimates per tool type (Read=1000, Agent=5000, etc.) |
+| `loop_detector.sh` | Tracks `(agent_id, error_sig)` tuples. Triggers at 3 same-error or 10 total. |
+| `context_health_check.sh` | Fires every 10th call. Detects utilization >85% and missing critical sections (Identity/Authority/Constraints). |
+| `context_baseline.sh` | Records initial context metrics at session start. |
+
+**Shared libraries:**
+
+| Library | Purpose |
+|---|---|
+| `admiral/lib/state.sh` | Session state CRUD, token estimation, error signature computation |
+| `admiral/lib/standing_orders.sh` | SO loader + renderer for context injection |
+
+**Claude Code registration:** `.claude/settings.local.json` has all three hook events configured.
+
+### 4.2 — B1 Brain + F1 Fleet — COMPLETE
+
+| Tool | Status | Location |
+|---|---|---|
+| `brain_record` | Done — creates JSON entries with UUID, timestamp, category validation | `admiral/bin/brain_record` |
+| `brain_query` | Done — keyword search with project/category filtering | `admiral/bin/brain_query` |
+| `brain_retrieve` | Done — lookup by filename, ID, or partial match | `admiral/bin/brain_retrieve` |
+| `brain_audit` | Done — 90-day decay awareness report | `admiral/bin/brain_audit` |
+| Agent identity template | Done | `admiral/templates/agent-identity.json` |
+| Checkpoint template | Done | `admiral/templates/checkpoint.json` |
+| Dog-food brain entries | Done (5 entries) | `.brain/homebase/` |
+
+### 4.3 — Protocols, Security, CP1 — COMPLETE
+
+| Component | Deliverable | Status | Location |
+|---|---|---|---|
+| **P1** | Escalation report template | Done | `admiral/templates/escalation-report.md` |
+| **P1** | Decision authority table | Done | `admiral/templates/decision-authority.md` |
+| **S1** | Injection detection (18 patterns) | Done | `admiral/lib/injection_detect.sh` |
+| **S1** | Manifest validation | Done (in `injection_detect.sh`) | `admiral/lib/injection_detect.sh` |
+| **CP1** | Event logging (.jsonl) | Done | Hooks log to `.admiral/event_log.jsonl` |
+| **CP1** | Trace ID generation | Done | Session start generates UUID, propagated through events |
+| **CP1** | Session summary | Done | `admiral/bin/session_summary` |
+| **DE1** | Checkpoint template | Done | `admiral/templates/checkpoint.json` |
+
+### 4.4 — Integration + Dog-fooding — PARTIALLY COMPLETE
+
+**Completed:**
+- [x] End-to-end integration test verified: session start → tool tracking → 80% warning → 90% escalation → 100% hard block (exit 2)
+- [x] 5 brain entries recorded from implementation decisions (dog-fooding B1)
+- [x] `npm run build` passes for control-plane
+- [x] At least one hook fires deterministically on every qualifying event
+- [x] Standing Orders loaded and verified in agent context (all 15 injected)
+- [x] Decision authority tiers enforced (budget gate = Enforced tier)
+- [x] Hook demonstrably prevents a bad outcome (budget exhaustion blocked)
+
+**Remaining (Phase 4.4 gaps):**
+- [ ] **QUICKSTART.md update** — `aiStrat/QUICKSTART.md` references old paths (e.g., `"matcher": "*"` instead of `"matcher": ""`, inline hook config instead of adapter pattern). Needs updating to reference actual implementation in `.hooks/` and `admiral/`.
+- [ ] **End-to-end example document** — Integration test output verified but not committed as a standalone document showing governance in action. Create `admiral/examples/e2e-session-log.md` with real output.
+- [ ] **Version bump to v0.6.0-alpha** — `package.json` in `control-plane/` still at v0.1.0. Bump and tag.
+- [ ] **QUICKSTART.md cold validation** — Have someone unfamiliar with Admiral follow it and succeed. Can only validate after QUICKSTART.md is updated.
 
 ---
 
-### 4.4 — Integration + Dog-fooding (1-2 sessions)
+## Phase 5: v1.0 (Team Profile) — NOT STARTED
 
-**Entry:** All 4.0-4.3 complete and individually verified.
-
-**Deliverables:**
-1. End-to-end integration test with a real Claude Code session — hooks fire, agent works under governance, hook intervenes, task completes
-2. QUICKSTART.md cold validation — follow it from scratch on clean project, document gaps, fix any issues
-3. Real session log committed to repo showing governance in action
-4. First brain entries — record decisions from 4.0-4.3 as B1 entries (dog-fooding)
-5. Bug fixes from integration
-6. `npm run build` passes for control-plane
-7. Version bump to v0.6.0-alpha
-
-**Exit criteria (from PLAN.md):**
-- [ ] At least one hook fires deterministically on every qualifying event
-- [ ] Standing Orders loaded and verified in agent context
-- [ ] Decision authority tiers enforced (not just documented)
-- [ ] End-to-end example documented with actual output
-- [ ] Hook demonstrably prevents a bad outcome that advisory instructions would miss
-
----
-
-## Phase 5: v1.0 (Team Profile)
-
-**Target:** Multi-agent routing, handoff/escalation, Brain L1, 3+ hooks, health dashboard
+**Target:** Multi-agent routing, handoff/escalation, B2 Brain, 3+ hooks, health dashboard
 **Sessions:** 9-14
-**Entry:** Phase 4 complete and validated.
+**Entry:** Phase 4.4 gaps closed.
 **Exit:** A team of 3 developers uses Admiral on a real 2-week project. Governance overhead <15% of tokens.
 
 ### 5.0 — Interface Contracts (1 session)
@@ -278,38 +215,47 @@ Contract-first. Define all interfaces before parallel work begins.
 ## Dependency Graph
 
 ```
-4.0 Config Before Code
- ├── 4.1a Adapter + SessionStart
- │    └── 4.1b E1 Hooks (budget, loop, context)
- ├── 4.2 B1 Brain + F1 Fleet  ←── parallel with 4.1b
- └── 4.3 Protocols/Security/CP1  ←── after 4.1, partial parallel with 4.2
-      └── 4.4 Integration + Dog-fooding
-           └── 5.0 Interface Contracts
+4.0 Config Before Code                              ✅ DONE
+ ├── 4.1a Adapter + SessionStart                    ✅ DONE
+ │    └── 4.1b E1 Hooks (budget, loop, context)     ✅ DONE
+ ├── 4.2 B1 Brain + F1 Fleet                        ✅ DONE
+ └── 4.3 Protocols/Security/CP1                     ✅ DONE
+      └── 4.4 Integration + Dog-fooding             ⚠️  GAPS (see below)
+           └── 5.0 Interface Contracts              ⬜ NOT STARTED
                 ├── 5.1 F2 Fleet + Orchestrator  ──┐
                 ├── 5.2 P2 Protocols + 3rd Hook    ├── parallel tracks
                 ├── 5.3 B2 Brain Upgrade           │
-                └── 5.4 Health Dashboard       ────┘ (after 5.1 for agent data, 5.3 for brain data)
+                └── 5.4 Health Dashboard       ────┘
                      └── 5.5 Real Project + Case Study
 ```
 
-**Parallelization savings:**
-- Phase 4: 4.1b ∥ 4.2 saves ~1 session
-- Phase 5: 5.1 ∥ 5.2 ∥ 5.3 saves ~4 sessions
-- Compressed total: ~10-14 sessions (vs 14-20 sequential)
+**Phase 5 parallelization:** 5.1 ∥ 5.2 ∥ 5.3 saves ~4 sessions. Compressed Phase 5: ~6-8 sessions.
 
 ---
 
-## Verification Plan
+## Remaining Work Summary
 
-### After Phase 4 (MVP):
-1. Fresh clone of repo → follow QUICKSTART.md → governed agent running in <2 hours
-2. Assign task → hook fires on every tool call → budget gate blocks when budget near exhaustion
-3. Introduce deliberate error loop → loop detector breaks cycle after 3 repeats
-4. Review `.admiral/event_log.jsonl` → trace ID consistent, all hook firings recorded
-5. Review `.brain/homebase/` → at least 3 brain entries from dog-fooding
-6. `npm run build` passes for control-plane
+### Immediate (close Phase 4.4 gaps):
 
-### After Phase 5 (v1.0):
+| # | Task | Priority | Est. Effort |
+|---|---|---|---|
+| 1 | **Update `aiStrat/QUICKSTART.md`** to reference actual implementation paths (`.hooks/`, `admiral/`, adapter pattern, `settings.local.json` hook format) | High | 30 min |
+| 2 | **Create `admiral/examples/e2e-session-log.md`** with real integration test output showing governance in action | High | 20 min |
+| 3 | **Version bump** control-plane `package.json` to v0.6.0-alpha, git tag | Medium | 5 min |
+| 4 | **QUICKSTART.md cold validation** — have someone unfamiliar follow it | Medium | External |
+
+### Phase 5 (in order):
+
+| # | Sub-Phase | Sessions | Dependencies | Key Spec Files |
+|---|---|---|---|---|
+| 5 | **5.0 Interface Contracts** — fleet roster, handoff, escalation, A2A schemas | 1 | Phase 4.4 gaps closed | `part4-fleet.md`, `part11-protocols.md` |
+| 6 | **5.1 F2 Fleet + Orchestrator** — roster config, routing engine, A2A messaging, task queue | 2-3 | 5.0 | `part4-fleet.md`, `aiStrat/fleet/` |
+| 7 | **5.2 P2 Protocols + 3rd Hook** — handoff validation, structured escalation, scope boundary hook | 1-2 | 5.0 | `part11-protocols.md` |
+| 8 | **5.3 B2 Brain Upgrade** — SQLite schema, B1→B2 migration, semantic search, MCP server | 2-3 | 5.0 | `level2-spec.md`, `brain/schema/` |
+| 9 | **5.4 Health Dashboard** — multi-agent event stream, REST API, dashboard UI, alerts | 2-3 | 5.1, 5.3 | `part8-operations.md`, `control-plane/src/` |
+| 10 | **5.5 Real Project + Case Study** — 2-week real project, post-mortem, v1.0.0 release | 2 | All of above | — |
+
+### Phase 5 verification (after completion):
 1. Orchestrator assigns task to specialist → specialist completes → handoff validated → result accepted
 2. Deliberate scope-change request → escalation report generated → routed to Admiral
 3. Health dashboard shows live metrics for 2+ agents
