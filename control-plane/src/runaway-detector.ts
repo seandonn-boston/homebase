@@ -138,14 +138,41 @@ export class ControlChart {
   }
 
   /**
+   * Compute mean of all samples EXCEPT the latest.
+   * Used for violation checks — the latest point is tested against
+   * the baseline, not against a distribution that includes itself.
+   */
+  private getBaselineMean(): number {
+    if (this.samples.length < 2) return 0;
+    const baseline = this.samples.slice(0, -1);
+    const sum = baseline.reduce((s, sample) => s + sample.value, 0);
+    return sum / baseline.length;
+  }
+
+  /**
+   * Compute standard deviation of all samples EXCEPT the latest.
+   */
+  private getBaselineStdDev(): number {
+    if (this.samples.length < 3) return 0;
+    const baseline = this.samples.slice(0, -1);
+    const mean = this.getBaselineMean();
+    const variance =
+      baseline.reduce((s, sample) => s + (sample.value - mean) ** 2, 0) /
+      (baseline.length - 1);
+    return Math.sqrt(variance);
+  }
+
+  /**
    * Check if the latest value violates control limits.
+   * Control limits are computed from the BASELINE (all samples except
+   * the latest), so a single spike cannot dilute its own detection.
    * Returns null if no violation, or a description of the violation.
    */
   checkLatest(sigma: number): SPCViolation | null {
     if (this.samples.length < 2) return null;
     const latest = this.samples[this.samples.length - 1];
-    const mean = this.getMean();
-    const stdDev = this.getStdDev();
+    const mean = this.getBaselineMean();
+    const stdDev = this.getBaselineStdDev();
 
     if (stdDev === 0) return null; // No variation — no violation possible
 
@@ -276,39 +303,40 @@ export class SPCMonitor {
     const agentIntervals = this.currentInterval.get(agentId)!;
     const agentCharts = this.charts.get(agentId)!;
 
-    agentIntervals.set(metric, (agentIntervals.get(metric) ?? 0) + count);
-
-    // Check if interval has elapsed
+    // Check if interval has elapsed BEFORE adding current count.
+    // This ensures the flushed value represents the PREVIOUS interval
+    // cleanly, without contamination from the current event.
     const lastFlush = this.lastFlush.get(agentId)!;
-    if (timestamp - lastFlush < this.intervalMs) {
-      return null; // Still accumulating
-    }
-
-    // Flush: push accumulated counts to control charts
-    this.lastFlush.set(agentId, timestamp);
     let violation: SPCViolation | null = null;
 
-    for (const [metricName, value] of agentIntervals) {
-      if (!agentCharts.has(metricName)) {
-        agentCharts.set(metricName, new ControlChart());
-      }
-      const chart = agentCharts.get(metricName)!;
-      chart.addSample(timestamp, value);
+    if (timestamp - lastFlush >= this.intervalMs) {
+      // Flush: push accumulated counts from the previous interval
+      this.lastFlush.set(agentId, timestamp);
 
-      // Only check for violations after minimum samples collected
-      if (chart.getSampleCount() >= this.minSamples) {
-        const v = chart.checkLatest(this.sigmaLimit);
-        // Return the first violation found (most recent metric)
-        if (v && metricName === metric) {
-          violation = v;
+      for (const [metricName, value] of agentIntervals) {
+        if (!agentCharts.has(metricName)) {
+          agentCharts.set(metricName, new ControlChart());
+        }
+        const chart = agentCharts.get(metricName)!;
+        chart.addSample(timestamp, value);
+
+        // Only check for violations after minimum samples collected
+        if (chart.getSampleCount() >= this.minSamples) {
+          const v = chart.checkLatest(this.sigmaLimit);
+          if (v && metricName === metric) {
+            violation = v;
+          }
         }
       }
+
+      // Reset interval accumulators
+      for (const key of agentIntervals.keys()) {
+        agentIntervals.set(key, 0);
+      }
     }
 
-    // Reset interval accumulators
-    for (const key of agentIntervals.keys()) {
-      agentIntervals.set(key, 0);
-    }
+    // Add current event's count to the NEW interval's accumulator
+    agentIntervals.set(metric, (agentIntervals.get(metric) ?? 0) + count);
 
     return violation;
   }
