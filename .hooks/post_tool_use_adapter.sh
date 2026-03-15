@@ -45,13 +45,8 @@ if [ -x "$SCRIPT_DIR/token_budget_tracker.sh" ]; then
   fi
 fi
 
-# Update utilization
+# Update tokens_used for event logging
 TOKENS_USED=$(echo "$STATE" | jq -r '.tokens_used')
-TOKEN_BUDGET=$(echo "$STATE" | jq -r '.token_budget')
-if [ "$TOKEN_BUDGET" -gt 0 ]; then
-  UTILIZATION=$(echo "$STATE" | jq --argjson u "$TOKENS_USED" --argjson b "$TOKEN_BUDGET" '.context.current_utilization = ($u / $b)')
-  STATE="$UTILIZATION"
-fi
 
 # --- Hook 2: loop_detector ---
 if [ -x "$SCRIPT_DIR/loop_detector.sh" ]; then
