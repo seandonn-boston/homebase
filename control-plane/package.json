@@ -1,6 +1,6 @@
 {
   "name": "@admiral/control-plane",
-  "version": "0.1.0",
+  "version": "0.6.0-alpha",
   "description": "Admiral Control Plane MVP — Agent observability, runaway detection, and execution trace visualization",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
