@@ -12,90 +12,90 @@
 
 | Sector | Avg Score | Companies | Strong | Moderate | Conditional | Unlikely | Walk-Away |
 |---|---|---|---|---|---|---|---|
-| Information Technology | 35.3 | 3 | 0 | 0 | 1 | 2 | 0 |
-| Financials | 34 | 8 | 0 | 0 | 3 | 3 | 2 |
-| Communication Services | 30.3 | 6 | 0 | 0 | 2 | 3 | 1 |
-| Health Care | 28.2 | 10 | 0 | 0 | 1 | 9 | 0 |
-| Consumer Discretionary | 20 | 7 | 0 | 0 | 0 | 4 | 3 |
-| Consumer Staples | 19.6 | 7 | 0 | 0 | 0 | 3 | 4 |
-| Industrials | 11.3 | 4 | 0 | 0 | 0 | 2 | 2 |
-| Energy | 3.2 | 5 | 0 | 0 | 0 | 0 | 5 |
+| Financials | 38 | 7 | 0 | 0 | 5 | 1 | 1 |
+| Information Technology | 24.5 | 10 | 0 | 0 | 1 | 6 | 3 |
+| Health Care | 18.6 | 8 | 0 | 0 | 0 | 4 | 4 |
+| Energy | 16.7 | 3 | 0 | 0 | 0 | 2 | 1 |
+| Consumer Staples | 14.2 | 5 | 0 | 0 | 0 | 0 | 5 |
+| Industrials | 12.3 | 4 | 0 | 0 | 0 | 2 | 2 |
+| Communication Services | 10.8 | 6 | 0 | 0 | 0 | 2 | 4 |
+| Consumer Discretionary | 10.4 | 7 | 0 | 0 | 0 | 1 | 6 |
 
 ### S2-REGULATORY
 
 | Sector | Avg Score | Companies | Strong | Moderate | Conditional | Unlikely | Walk-Away |
 |---|---|---|---|---|---|---|---|
-| Information Technology | 59.3 | 3 | 0 | 1 | 2 | 0 | 0 |
-| Communication Services | 55.8 | 6 | 0 | 2 | 3 | 1 | 0 |
-| Health Care | 54.2 | 10 | 0 | 1 | 9 | 0 | 0 |
-| Financials | 53.6 | 8 | 0 | 5 | 1 | 1 | 1 |
-| Consumer Staples | 50.4 | 7 | 0 | 0 | 7 | 0 | 0 |
-| Consumer Discretionary | 48.7 | 7 | 0 | 2 | 3 | 2 | 0 |
-| Industrials | 39.3 | 4 | 0 | 0 | 2 | 2 | 0 |
-| Energy | 22.8 | 5 | 0 | 0 | 1 | 2 | 2 |
+| Financials | 56.7 | 7 | 0 | 5 | 1 | 0 | 1 |
+| Health Care | 50.9 | 8 | 0 | 0 | 7 | 1 | 0 |
+| Energy | 50.7 | 3 | 0 | 0 | 3 | 0 | 0 |
+| Information Technology | 49 | 10 | 0 | 3 | 4 | 3 | 0 |
+| Consumer Staples | 45.8 | 5 | 0 | 0 | 5 | 0 | 0 |
+| Consumer Discretionary | 40.9 | 7 | 0 | 0 | 4 | 3 | 0 |
+| Communication Services | 39.7 | 6 | 0 | 0 | 2 | 4 | 0 |
+| Industrials | 35.8 | 4 | 0 | 0 | 2 | 2 | 0 |
 
 ### S3-AGENT-EXPLOSION
 
 | Sector | Avg Score | Companies | Strong | Moderate | Conditional | Unlikely | Walk-Away |
 |---|---|---|---|---|---|---|---|
-| Information Technology | 51.7 | 3 | 0 | 0 | 3 | 0 | 0 |
-| Financials | 48.5 | 8 | 0 | 2 | 4 | 1 | 1 |
-| Communication Services | 46.7 | 6 | 0 | 2 | 3 | 1 | 0 |
-| Health Care | 44.7 | 10 | 0 | 1 | 5 | 4 | 0 |
-| Consumer Staples | 36.1 | 7 | 0 | 0 | 1 | 6 | 0 |
-| Consumer Discretionary | 36 | 7 | 0 | 0 | 3 | 2 | 2 |
-| Industrials | 27.3 | 4 | 0 | 0 | 1 | 1 | 2 |
-| Energy | 10.8 | 5 | 0 | 0 | 0 | 1 | 4 |
+| Financials | 50.9 | 7 | 0 | 2 | 4 | 0 | 1 |
+| Information Technology | 38.8 | 10 | 0 | 0 | 7 | 1 | 2 |
+| Health Care | 34.8 | 8 | 0 | 0 | 2 | 5 | 1 |
+| Energy | 33.3 | 3 | 0 | 0 | 0 | 3 | 0 |
+| Consumer Staples | 30.8 | 5 | 0 | 0 | 0 | 5 | 0 |
+| Communication Services | 25.8 | 6 | 0 | 0 | 2 | 0 | 4 |
+| Consumer Discretionary | 25 | 7 | 0 | 0 | 1 | 3 | 3 |
+| Industrials | 23.8 | 4 | 0 | 0 | 2 | 0 | 2 |
 
 ### S4-BUDGET-CRUNCH
 
 | Sector | Avg Score | Companies | Strong | Moderate | Conditional | Unlikely | Walk-Away |
 |---|---|---|---|---|---|---|---|
-| Financials | 20.9 | 8 | 0 | 0 | 0 | 6 | 2 |
-| Information Technology | 20.3 | 3 | 0 | 0 | 0 | 1 | 2 |
-| Communication Services | 17 | 6 | 0 | 0 | 0 | 2 | 4 |
-| Health Care | 13.2 | 10 | 0 | 0 | 0 | 1 | 9 |
-| Consumer Discretionary | 9.3 | 7 | 0 | 0 | 0 | 2 | 5 |
-| Consumer Staples | 5 | 7 | 0 | 0 | 0 | 0 | 7 |
-| Industrials | 3.8 | 4 | 0 | 0 | 0 | 0 | 4 |
-| Energy | 0.2 | 5 | 0 | 0 | 0 | 0 | 5 |
+| Financials | 25.1 | 7 | 0 | 0 | 0 | 6 | 1 |
+| Information Technology | 13.5 | 10 | 0 | 0 | 0 | 4 | 6 |
+| Communication Services | 5.8 | 6 | 0 | 0 | 0 | 0 | 6 |
+| Health Care | 5.8 | 8 | 0 | 0 | 0 | 0 | 8 |
+| Industrials | 4.8 | 4 | 0 | 0 | 0 | 0 | 4 |
+| Energy | 3.7 | 3 | 0 | 0 | 0 | 0 | 3 |
+| Consumer Discretionary | 1.9 | 7 | 0 | 0 | 0 | 0 | 7 |
+| Consumer Staples | 0.6 | 5 | 0 | 0 | 0 | 0 | 5 |
 
 ### S5-COMPETITOR-CAPTURE
 
 | Sector | Avg Score | Companies | Strong | Moderate | Conditional | Unlikely | Walk-Away |
 |---|---|---|---|---|---|---|---|
-| Information Technology | 41.3 | 3 | 0 | 0 | 2 | 1 | 0 |
-| Financials | 38.9 | 8 | 0 | 1 | 5 | 1 | 1 |
-| Communication Services | 36.2 | 6 | 0 | 0 | 2 | 3 | 1 |
-| Health Care | 33.8 | 10 | 0 | 0 | 2 | 8 | 0 |
-| Consumer Staples | 25.3 | 7 | 0 | 0 | 0 | 6 | 1 |
-| Consumer Discretionary | 25 | 7 | 0 | 0 | 2 | 3 | 2 |
-| Industrials | 16.3 | 4 | 0 | 0 | 0 | 2 | 2 |
-| Energy | 4.6 | 5 | 0 | 0 | 0 | 1 | 4 |
+| Financials | 42.3 | 7 | 0 | 0 | 6 | 0 | 1 |
+| Information Technology | 29.1 | 10 | 0 | 0 | 5 | 2 | 3 |
+| Health Care | 24.1 | 8 | 0 | 0 | 0 | 6 | 2 |
+| Energy | 22.7 | 3 | 0 | 0 | 0 | 2 | 1 |
+| Consumer Staples | 19.8 | 5 | 0 | 0 | 0 | 3 | 2 |
+| Communication Services | 15 | 6 | 0 | 0 | 1 | 1 | 4 |
+| Industrials | 15 | 4 | 0 | 0 | 0 | 2 | 2 |
+| Consumer Discretionary | 14.7 | 7 | 0 | 0 | 0 | 2 | 5 |
 
 ### S6-INCIDENT-CATALYST
 
 | Sector | Avg Score | Companies | Strong | Moderate | Conditional | Unlikely | Walk-Away |
 |---|---|---|---|---|---|---|---|
-| Information Technology | 63.3 | 3 | 0 | 2 | 1 | 0 | 0 |
-| Communication Services | 60 | 6 | 0 | 2 | 4 | 0 | 0 |
-| Health Care | 59.2 | 10 | 1 | 5 | 4 | 0 | 0 |
-| Financials | 58.1 | 8 | 1 | 5 | 1 | 0 | 1 |
-| Consumer Staples | 54.7 | 7 | 0 | 2 | 5 | 0 | 0 |
-| Consumer Discretionary | 52.9 | 7 | 0 | 3 | 2 | 2 | 0 |
-| Industrials | 43.8 | 4 | 0 | 0 | 2 | 2 | 0 |
-| Energy | 26.8 | 5 | 0 | 0 | 1 | 2 | 2 |
+| Financials | 61.6 | 7 | 0 | 6 | 0 | 0 | 1 |
+| Health Care | 55.1 | 8 | 0 | 3 | 4 | 1 | 0 |
+| Energy | 54.7 | 3 | 0 | 0 | 3 | 0 | 0 |
+| Information Technology | 53.2 | 10 | 0 | 5 | 3 | 2 | 0 |
+| Consumer Staples | 50.2 | 5 | 0 | 0 | 5 | 0 | 0 |
+| Consumer Discretionary | 45.3 | 7 | 0 | 0 | 5 | 2 | 0 |
+| Communication Services | 43.8 | 6 | 0 | 1 | 1 | 4 | 0 |
+| Industrials | 40.3 | 4 | 0 | 0 | 2 | 2 | 0 |
 
 ### S7-WALK-AWAY
 
 | Sector | Avg Score | Companies | Strong | Moderate | Conditional | Unlikely | Walk-Away |
 |---|---|---|---|---|---|---|---|
-| Information Technology | 46.7 | 3 | 0 | 0 | 3 | 0 | 0 |
-| Financials | 44.1 | 8 | 0 | 2 | 4 | 1 | 1 |
-| Communication Services | 41.7 | 6 | 0 | 0 | 5 | 0 | 1 |
-| Health Care | 39.7 | 10 | 0 | 1 | 3 | 6 | 0 |
-| Consumer Staples | 31.1 | 7 | 0 | 0 | 1 | 6 | 0 |
-| Consumer Discretionary | 31 | 7 | 0 | 0 | 2 | 3 | 2 |
-| Industrials | 22.3 | 4 | 0 | 0 | 0 | 2 | 2 |
-| Energy | 7.8 | 5 | 0 | 0 | 0 | 1 | 4 |
+| Financials | 46.6 | 7 | 0 | 1 | 5 | 0 | 1 |
+| Information Technology | 34 | 10 | 0 | 0 | 5 | 2 | 3 |
+| Health Care | 29.8 | 8 | 0 | 0 | 1 | 6 | 1 |
+| Energy | 28.3 | 3 | 0 | 0 | 0 | 3 | 0 |
+| Consumer Staples | 25.8 | 5 | 0 | 0 | 0 | 5 | 0 |
+| Communication Services | 20.8 | 6 | 0 | 0 | 2 | 0 | 4 |
+| Consumer Discretionary | 20 | 7 | 0 | 0 | 1 | 3 | 3 |
+| Industrials | 18.8 | 4 | 0 | 0 | 0 | 2 | 2 |
 

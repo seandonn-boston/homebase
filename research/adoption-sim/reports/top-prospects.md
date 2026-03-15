@@ -12,41 +12,41 @@
 
 | Rank | Company | Ticker | Sector | Score | Tier |
 |---|---|---|---|---|---|
-| 1 | Freddie Mac | FMCC | Financials | 54 | conditional |
-| 2 | Humana | HUM | Health Care | 53 | conditional |
-| 3 | Fannie Mae | FNMA | Financials | 51 | conditional |
-| 4 | Meta Platforms | META | Communication Services | 45 | conditional |
-| 5 | Alphabet | GOOGL | Communication Services | 44 | conditional |
-| 6 | Microsoft | MSFT | Information Technology | 43 | conditional |
-| 7 | Wells Fargo | WFC | Financials | 40 | conditional |
-| 8 | Amazon | AMZN | Consumer Discretionary | 39 | unlikely |
-| 9 | JPMorgan Chase | JPM | Financials | 38 | unlikely |
-| 10 | Citigroup | C | Financials | 37 | unlikely |
-| 11 | Tesla | TSLA | Consumer Discretionary | 36 | unlikely |
-| 12 | Bank of America | BAC | Financials | 35 | unlikely |
-| 13 | UnitedHealth Group | UNH | Health Care | 34 | unlikely |
-| 14 | Apple | AAPL | Information Technology | 34 | unlikely |
-| 15 | Johnson & Johnson | JNJ | Health Care | 33 | unlikely |
-| 16 | Verizon Communications | VZ | Communication Services | 30 | unlikely |
-| 17 | AT&T | T | Communication Services | 30 | unlikely |
-| 18 | Walmart | WMT | Consumer Staples | 29 | unlikely |
-| 19 | Dell Technologies | DELL | Information Technology | 29 | unlikely |
-| 20 | Elevance Health | ELV | Health Care | 28 | unlikely |
+| 1 | JPMorgan Chase | JPM | Financials | 51 | conditional |
+| 2 | Bank of America | BAC | Financials | 48 | conditional |
+| 3 | Goldman Sachs | GS | Financials | 44 | conditional |
+| 4 | Wells Fargo | WFC | Financials | 43 | conditional |
+| 5 | Salesforce | CRM | Information Technology | 43 | conditional |
+| 6 | Morgan Stanley | MS | Financials | 41 | conditional |
+| 7 | Citigroup | C | Financials | 39 | unlikely |
+| 8 | Oracle | ORCL | Information Technology | 39 | unlikely |
+| 9 | Apple | AAPL | Information Technology | 36 | unlikely |
+| 10 | Adobe | ADBE | Information Technology | 36 | unlikely |
+| 11 | Alphabet | GOOGL | Communication Services | 34 | unlikely |
+| 12 | Microsoft | MSFT | Information Technology | 34 | unlikely |
+| 13 | Meta Platforms | META | Communication Services | 31 | unlikely |
+| 14 | Johnson & Johnson | JNJ | Health Care | 30 | unlikely |
+| 15 | Amazon | AMZN | Consumer Discretionary | 28 | unlikely |
+| 16 | IBM | IBM | Information Technology | 26 | unlikely |
+| 17 | Accenture | ACN | Information Technology | 26 | unlikely |
+| 18 | Boeing | BA | Industrials | 25 | unlikely |
+| 19 | Cigna Group | CI | Health Care | 24 | unlikely |
+| 20 | General Electric | GE | Industrials | 24 | unlikely |
 
 ### Bottom 10 (Most Likely Walk-Aways)
 
 | Rank | Company | Ticker | Sector | Score | Tier | Walk-Away Reasons |
 |---|---|---|---|---|---|---|
-| - | Berkshire Hathaway | BRK.B | Financials | 0 | walk-away | Build internally (-30): >5000 engineers with platform team; No agents (-40): Zero agent tooling signals |
-| - | Exxon Mobil | XOM | Energy | 0 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
-| - | Chevron | CVX | Energy | 0 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
+| - | Berkshire Hathaway | BRK.B | Financials | 0 | walk-away | No agents (-40): Zero agent tooling signals; Compliance-only governance (-20): No operational governance posture |
+| - | CVS Health | CVS | Health Care | 0 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
 | - | Ford Motor | F | Consumer Discretionary | 0 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
+| - | Verizon | VZ | Communication Services | 0 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
+| - | AT&T | T | Communication Services | 0 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
 | - | Home Depot | HD | Consumer Discretionary | 0 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
-| - | Phillips 66 | PSX | Energy | 0 | walk-away | No agents (-40): Zero agent tooling signals; Compliance-only governance (-20): No operational governance posture |
-| - | Valero Energy | VLO | Energy | 0 | walk-away | No agents (-40): Zero agent tooling signals; Compliance-only governance (-20): No operational governance posture |
+| - | Comcast | CMCSA | Communication Services | 0 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
+| - | Dell Technologies | DELL | Information Technology | 0 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture; Open-source only (-15): Prefers free/OSS AI tools |
 | - | UPS | UPS | Industrials | 0 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
 | - | FedEx | FDX | Industrials | 0 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
-| - | Comcast | CMCSA | Communication Services | 5 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
 
 ---
 
@@ -56,41 +56,41 @@
 
 | Rank | Company | Ticker | Sector | Score | Tier |
 |---|---|---|---|---|---|
-| 1 | Freddie Mac | FMCC | Financials | 77 | moderate-prospect |
-| 2 | Humana | HUM | Health Care | 76 | moderate-prospect |
-| 3 | Fannie Mae | FNMA | Financials | 73 | moderate-prospect |
-| 4 | Meta Platforms | META | Communication Services | 69 | moderate-prospect |
-| 5 | Alphabet | GOOGL | Communication Services | 68 | moderate-prospect |
-| 6 | Microsoft | MSFT | Information Technology | 67 | moderate-prospect |
-| 7 | Amazon | AMZN | Consumer Discretionary | 63 | moderate-prospect |
-| 8 | Wells Fargo | WFC | Financials | 62 | moderate-prospect |
-| 9 | JPMorgan Chase | JPM | Financials | 60 | moderate-prospect |
-| 10 | Citigroup | C | Financials | 60 | moderate-prospect |
-| 11 | Tesla | TSLA | Consumer Discretionary | 60 | moderate-prospect |
-| 12 | Apple | AAPL | Information Technology | 58 | conditional |
-| 13 | Bank of America | BAC | Financials | 58 | conditional |
-| 14 | UnitedHealth Group | UNH | Health Care | 57 | conditional |
-| 15 | McKesson | MCK | Health Care | 57 | conditional |
-| 16 | PepsiCo | PEP | Consumer Staples | 57 | conditional |
-| 17 | Lowe's | LOW | Consumer Discretionary | 56 | conditional |
-| 18 | Johnson & Johnson | JNJ | Health Care | 56 | conditional |
-| 19 | Cencora | COR | Health Care | 55 | conditional |
-| 20 | Cardinal Health | CAH | Health Care | 55 | conditional |
+| 1 | JPMorgan Chase | JPM | Financials | 71 | moderate-prospect |
+| 2 | Bank of America | BAC | Financials | 68 | moderate-prospect |
+| 3 | Salesforce | CRM | Information Technology | 67 | moderate-prospect |
+| 4 | Goldman Sachs | GS | Financials | 64 | moderate-prospect |
+| 5 | Wells Fargo | WFC | Financials | 63 | moderate-prospect |
+| 6 | Oracle | ORCL | Information Technology | 62 | moderate-prospect |
+| 7 | Morgan Stanley | MS | Financials | 61 | moderate-prospect |
+| 8 | Adobe | ADBE | Information Technology | 60 | moderate-prospect |
+| 9 | Apple | AAPL | Information Technology | 59 | conditional |
+| 10 | Citigroup | C | Financials | 59 | conditional |
+| 11 | Alphabet | GOOGL | Communication Services | 58 | conditional |
+| 12 | Cigna Group | CI | Health Care | 58 | conditional |
+| 13 | Microsoft | MSFT | Information Technology | 58 | conditional |
+| 14 | McKesson | MCK | Health Care | 57 | conditional |
+| 15 | Centene | CNC | Health Care | 57 | conditional |
+| 16 | ExxonMobil | XOM | Energy | 55 | conditional |
+| 17 | Chevron | CVX | Energy | 54 | conditional |
+| 18 | Meta Platforms | META | Communication Services | 54 | conditional |
+| 19 | Johnson & Johnson | JNJ | Health Care | 54 | conditional |
+| 20 | Amazon | AMZN | Consumer Discretionary | 52 | conditional |
 
 ### Bottom 10 (Most Likely Walk-Aways)
 
 | Rank | Company | Ticker | Sector | Score | Tier | Walk-Away Reasons |
 |---|---|---|---|---|---|---|
-| - | Berkshire Hathaway | BRK.B | Financials | 0 | walk-away | Build internally (-30): >5000 engineers with platform team; No agents (-40): Zero agent tooling signals |
-| - | Phillips 66 | PSX | Energy | 4 | walk-away | No agents (-40): Zero agent tooling signals; Compliance-only governance (-10, reduced by regulatory pressure) |
-| - | Valero Energy | VLO | Energy | 4 | walk-away | No agents (-40): Zero agent tooling signals; Compliance-only governance (-10, reduced by regulatory pressure) |
-| - | Chevron | CVX | Energy | 27 | unlikely | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-10, reduced by regulatory pressure) |
-| - | Exxon Mobil | XOM | Energy | 29 | unlikely | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-10, reduced by regulatory pressure) |
+| - | Berkshire Hathaway | BRK.B | Financials | 11 | walk-away | No agents (-40): Zero agent tooling signals; Compliance-only governance (-10, reduced by regulatory pressure) |
+| - | Dell Technologies | DELL | Information Technology | 21 | unlikely | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-10, reduced by regulatory pressure); Open-source only (-15): Prefers free/OSS AI tools |
+| - | FedEx | FDX | Industrials | 23 | unlikely | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-10, reduced by regulatory pressure) |
+| - | UPS | UPS | Industrials | 24 | unlikely | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-10, reduced by regulatory pressure) |
+| - | Intel | INTC | Information Technology | 24 | unlikely | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-10, reduced by regulatory pressure); Open-source only (-15): Prefers free/OSS AI tools |
+| - | Home Depot | HD | Consumer Discretionary | 25 | unlikely | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-10, reduced by regulatory pressure) |
+| - | Walt Disney | DIS | Communication Services | 30 | unlikely | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-10, reduced by regulatory pressure) |
 | - | Ford Motor | F | Consumer Discretionary | 31 | unlikely | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-10, reduced by regulatory pressure) |
-| - | Home Depot | HD | Consumer Discretionary | 31 | unlikely | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-10, reduced by regulatory pressure) |
-| - | UPS | UPS | Industrials | 31 | unlikely | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-10, reduced by regulatory pressure) |
-| - | FedEx | FDX | Industrials | 33 | unlikely | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-10, reduced by regulatory pressure) |
-| - | Comcast | CMCSA | Communication Services | 38 | unlikely | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-10, reduced by regulatory pressure) |
+| - | Comcast | CMCSA | Communication Services | 31 | unlikely | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-10, reduced by regulatory pressure) |
+| - | CVS Health | CVS | Health Care | 32 | unlikely | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-10, reduced by regulatory pressure) |
 
 ---
 
@@ -100,41 +100,41 @@
 
 | Rank | Company | Ticker | Sector | Score | Tier |
 |---|---|---|---|---|---|
-| 1 | Freddie Mac | FMCC | Financials | 71 | moderate-prospect |
-| 2 | Humana | HUM | Health Care | 69 | moderate-prospect |
-| 3 | Fannie Mae | FNMA | Financials | 67 | moderate-prospect |
-| 4 | Alphabet | GOOGL | Communication Services | 61 | moderate-prospect |
-| 5 | Meta Platforms | META | Communication Services | 61 | moderate-prospect |
-| 6 | Microsoft | MSFT | Information Technology | 59 | conditional |
-| 7 | Amazon | AMZN | Consumer Discretionary | 56 | conditional |
-| 8 | Wells Fargo | WFC | Financials | 56 | conditional |
-| 9 | JPMorgan Chase | JPM | Financials | 55 | conditional |
-| 10 | Citigroup | C | Financials | 54 | conditional |
-| 11 | Tesla | TSLA | Consumer Discretionary | 53 | conditional |
-| 12 | Bank of America | BAC | Financials | 52 | conditional |
-| 13 | Apple | AAPL | Information Technology | 51 | conditional |
-| 14 | UnitedHealth Group | UNH | Health Care | 50 | conditional |
-| 15 | Johnson & Johnson | JNJ | Health Care | 50 | conditional |
-| 16 | Verizon Communications | VZ | Communication Services | 46 | conditional |
-| 17 | AT&T | T | Communication Services | 46 | conditional |
-| 18 | Walmart | WMT | Consumer Staples | 45 | conditional |
-| 19 | Elevance Health | ELV | Health Care | 45 | conditional |
-| 20 | Dell Technologies | DELL | Information Technology | 45 | conditional |
+| 1 | JPMorgan Chase | JPM | Financials | 66 | moderate-prospect |
+| 2 | Bank of America | BAC | Financials | 63 | moderate-prospect |
+| 3 | Salesforce | CRM | Information Technology | 59 | conditional |
+| 4 | Goldman Sachs | GS | Financials | 59 | conditional |
+| 5 | Wells Fargo | WFC | Financials | 58 | conditional |
+| 6 | Morgan Stanley | MS | Financials | 56 | conditional |
+| 7 | Oracle | ORCL | Information Technology | 55 | conditional |
+| 8 | Citigroup | C | Financials | 54 | conditional |
+| 9 | Adobe | ADBE | Information Technology | 53 | conditional |
+| 10 | Apple | AAPL | Information Technology | 52 | conditional |
+| 11 | Microsoft | MSFT | Information Technology | 51 | conditional |
+| 12 | Alphabet | GOOGL | Communication Services | 50 | conditional |
+| 13 | Meta Platforms | META | Communication Services | 47 | conditional |
+| 14 | Johnson & Johnson | JNJ | Health Care | 47 | conditional |
+| 15 | Amazon | AMZN | Consumer Discretionary | 45 | conditional |
+| 16 | IBM | IBM | Information Technology | 43 | conditional |
+| 17 | Accenture | ACN | Information Technology | 43 | conditional |
+| 18 | General Electric | GE | Industrials | 41 | conditional |
+| 19 | Boeing | BA | Industrials | 41 | conditional |
+| 20 | Cigna Group | CI | Health Care | 40 | conditional |
 
 ### Bottom 10 (Most Likely Walk-Aways)
 
 | Rank | Company | Ticker | Sector | Score | Tier | Walk-Away Reasons |
 |---|---|---|---|---|---|---|
-| - | Berkshire Hathaway | BRK.B | Financials | 0 | walk-away | Build internally (-30): >5000 engineers with platform team; No agents (-40): Zero agent tooling signals |
-| - | Phillips 66 | PSX | Energy | 0 | walk-away | No agents (-40): Zero agent tooling signals; Compliance-only governance (-20): No operational governance posture |
-| - | Valero Energy | VLO | Energy | 0 | walk-away | No agents (-40): Zero agent tooling signals; Compliance-only governance (-20): No operational governance posture |
-| - | Chevron | CVX | Energy | 10 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
-| - | Exxon Mobil | XOM | Energy | 12 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
+| - | Berkshire Hathaway | BRK.B | Financials | 0 | walk-away | No agents (-40): Zero agent tooling signals; Compliance-only governance (-20): No operational governance posture |
+| - | Dell Technologies | DELL | Information Technology | 3 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture; Open-source only (-15): Prefers free/OSS AI tools |
+| - | FedEx | FDX | Industrials | 6 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
+| - | Home Depot | HD | Consumer Discretionary | 7 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
+| - | UPS | UPS | Industrials | 7 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
+| - | Intel | INTC | Information Technology | 7 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture; Open-source only (-15): Prefers free/OSS AI tools |
+| - | Walt Disney | DIS | Communication Services | 13 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
 | - | Ford Motor | F | Consumer Discretionary | 14 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
-| - | Home Depot | HD | Consumer Discretionary | 14 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
-| - | UPS | UPS | Industrials | 14 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
-| - | FedEx | FDX | Industrials | 16 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
-| - | Comcast | CMCSA | Communication Services | 21 | unlikely | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
+| - | Comcast | CMCSA | Communication Services | 14 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
+| - | CVS Health | CVS | Health Care | 15 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
 
 ---
 
@@ -144,41 +144,41 @@
 
 | Rank | Company | Ticker | Sector | Score | Tier |
 |---|---|---|---|---|---|
-| 1 | Freddie Mac | FMCC | Financials | 39 | unlikely |
-| 2 | Humana | HUM | Health Care | 38 | unlikely |
-| 3 | Fannie Mae | FNMA | Financials | 36 | unlikely |
-| 4 | Meta Platforms | META | Communication Services | 30 | unlikely |
-| 5 | Alphabet | GOOGL | Communication Services | 29 | unlikely |
-| 6 | Microsoft | MSFT | Information Technology | 28 | unlikely |
-| 7 | Wells Fargo | WFC | Financials | 25 | unlikely |
-| 8 | Amazon | AMZN | Consumer Discretionary | 24 | unlikely |
-| 9 | JPMorgan Chase | JPM | Financials | 23 | unlikely |
-| 10 | Citigroup | C | Financials | 22 | unlikely |
-| 11 | Tesla | TSLA | Consumer Discretionary | 21 | unlikely |
-| 12 | Bank of America | BAC | Financials | 20 | unlikely |
-| 13 | UnitedHealth Group | UNH | Health Care | 19 | walk-away |
-| 14 | Apple | AAPL | Information Technology | 19 | walk-away |
-| 15 | Johnson & Johnson | JNJ | Health Care | 18 | walk-away |
-| 16 | Verizon Communications | VZ | Communication Services | 15 | walk-away |
-| 17 | AT&T | T | Communication Services | 15 | walk-away |
-| 18 | Walmart | WMT | Consumer Staples | 14 | walk-away |
-| 19 | Dell Technologies | DELL | Information Technology | 14 | walk-away |
-| 20 | Elevance Health | ELV | Health Care | 13 | walk-away |
+| 1 | JPMorgan Chase | JPM | Financials | 36 | unlikely |
+| 2 | Bank of America | BAC | Financials | 33 | unlikely |
+| 3 | Goldman Sachs | GS | Financials | 29 | unlikely |
+| 4 | Wells Fargo | WFC | Financials | 28 | unlikely |
+| 5 | Salesforce | CRM | Information Technology | 28 | unlikely |
+| 6 | Morgan Stanley | MS | Financials | 26 | unlikely |
+| 7 | Citigroup | C | Financials | 24 | unlikely |
+| 8 | Oracle | ORCL | Information Technology | 24 | unlikely |
+| 9 | Apple | AAPL | Information Technology | 21 | unlikely |
+| 10 | Adobe | ADBE | Information Technology | 21 | unlikely |
+| 11 | Alphabet | GOOGL | Communication Services | 19 | walk-away |
+| 12 | Microsoft | MSFT | Information Technology | 19 | walk-away |
+| 13 | Meta Platforms | META | Communication Services | 16 | walk-away |
+| 14 | Johnson & Johnson | JNJ | Health Care | 15 | walk-away |
+| 15 | Amazon | AMZN | Consumer Discretionary | 13 | walk-away |
+| 16 | IBM | IBM | Information Technology | 11 | walk-away |
+| 17 | Accenture | ACN | Information Technology | 11 | walk-away |
+| 18 | Boeing | BA | Industrials | 10 | walk-away |
+| 19 | Cigna Group | CI | Health Care | 9 | walk-away |
+| 20 | General Electric | GE | Industrials | 9 | walk-away |
 
 ### Bottom 10 (Most Likely Walk-Aways)
 
 | Rank | Company | Ticker | Sector | Score | Tier | Walk-Away Reasons |
 |---|---|---|---|---|---|---|
-| - | Berkshire Hathaway | BRK.B | Financials | 0 | walk-away | Build internally (-30): >5000 engineers with platform team; No agents (-40): Zero agent tooling signals |
-| - | Exxon Mobil | XOM | Energy | 0 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
+| - | UnitedHealth Group | UNH | Health Care | 0 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
+| - | Berkshire Hathaway | BRK.B | Financials | 0 | walk-away | No agents (-40): Zero agent tooling signals; Compliance-only governance (-20): No operational governance posture |
+| - | CVS Health | CVS | Health Care | 0 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
 | - | Costco | COST | Consumer Staples | 0 | walk-away | Compliance-only governance (-20): No operational governance posture |
-| - | Chevron | CVX | Energy | 0 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
+| - | General Motors | GM | Consumer Discretionary | 0 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
 | - | Ford Motor | F | Consumer Discretionary | 0 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
-| - | Home Depot | HD | Consumer Discretionary | 0 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
-| - | Phillips 66 | PSX | Energy | 0 | walk-away | No agents (-40): Zero agent tooling signals; Compliance-only governance (-20): No operational governance posture |
-| - | Valero Energy | VLO | Energy | 0 | walk-away | No agents (-40): Zero agent tooling signals; Compliance-only governance (-20): No operational governance posture |
-| - | Comcast | CMCSA | Communication Services | 0 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
-| - | UPS | UPS | Industrials | 0 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
+| - | Verizon | VZ | Communication Services | 0 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
+| - | AT&T | T | Communication Services | 0 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
+| - | Kroger | KR | Consumer Staples | 0 | walk-away | Compliance-only governance (-20): No operational governance posture |
+| - | Marathon Petroleum | MPC | Energy | 0 | walk-away | Compliance-only governance (-20): No operational governance posture |
 
 ---
 
@@ -188,41 +188,41 @@
 
 | Rank | Company | Ticker | Sector | Score | Tier |
 |---|---|---|---|---|---|
-| 1 | Freddie Mac | FMCC | Financials | 60 | moderate-prospect |
-| 2 | Humana | HUM | Health Care | 58 | conditional |
-| 3 | Fannie Mae | FNMA | Financials | 56 | conditional |
-| 4 | Meta Platforms | META | Communication Services | 51 | conditional |
-| 5 | Alphabet | GOOGL | Communication Services | 50 | conditional |
-| 6 | Microsoft | MSFT | Information Technology | 49 | conditional |
-| 7 | Amazon | AMZN | Consumer Discretionary | 45 | conditional |
-| 8 | Wells Fargo | WFC | Financials | 45 | conditional |
-| 9 | JPMorgan Chase | JPM | Financials | 44 | conditional |
-| 10 | Citigroup | C | Financials | 43 | conditional |
-| 11 | Tesla | TSLA | Consumer Discretionary | 42 | conditional |
-| 12 | Bank of America | BAC | Financials | 41 | conditional |
-| 13 | UnitedHealth Group | UNH | Health Care | 40 | conditional |
-| 14 | Apple | AAPL | Information Technology | 40 | conditional |
-| 15 | Johnson & Johnson | JNJ | Health Care | 39 | unlikely |
-| 16 | Verizon Communications | VZ | Communication Services | 36 | unlikely |
-| 17 | AT&T | T | Communication Services | 36 | unlikely |
-| 18 | Dell Technologies | DELL | Information Technology | 35 | unlikely |
-| 19 | Walmart | WMT | Consumer Staples | 34 | unlikely |
-| 20 | Elevance Health | ELV | Health Care | 34 | unlikely |
+| 1 | JPMorgan Chase | JPM | Financials | 56 | conditional |
+| 2 | Bank of America | BAC | Financials | 53 | conditional |
+| 3 | Salesforce | CRM | Information Technology | 49 | conditional |
+| 4 | Goldman Sachs | GS | Financials | 49 | conditional |
+| 5 | Wells Fargo | WFC | Financials | 48 | conditional |
+| 6 | Morgan Stanley | MS | Financials | 46 | conditional |
+| 7 | Citigroup | C | Financials | 44 | conditional |
+| 8 | Oracle | ORCL | Information Technology | 44 | conditional |
+| 9 | Adobe | ADBE | Information Technology | 42 | conditional |
+| 10 | Apple | AAPL | Information Technology | 41 | conditional |
+| 11 | Alphabet | GOOGL | Communication Services | 40 | conditional |
+| 12 | Microsoft | MSFT | Information Technology | 40 | conditional |
+| 13 | Meta Platforms | META | Communication Services | 36 | unlikely |
+| 14 | Johnson & Johnson | JNJ | Health Care | 36 | unlikely |
+| 15 | Amazon | AMZN | Consumer Discretionary | 34 | unlikely |
+| 16 | IBM | IBM | Information Technology | 32 | unlikely |
+| 17 | Accenture | ACN | Information Technology | 32 | unlikely |
+| 18 | Cigna Group | CI | Health Care | 30 | unlikely |
+| 19 | General Electric | GE | Industrials | 30 | unlikely |
+| 20 | Boeing | BA | Industrials | 30 | unlikely |
 
 ### Bottom 10 (Most Likely Walk-Aways)
 
 | Rank | Company | Ticker | Sector | Score | Tier | Walk-Away Reasons |
 |---|---|---|---|---|---|---|
-| - | Berkshire Hathaway | BRK.B | Financials | 0 | walk-away | Build internally (-30): >5000 engineers with platform team; No agents (-40): Zero agent tooling signals |
-| - | Chevron | CVX | Energy | 0 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
-| - | Phillips 66 | PSX | Energy | 0 | walk-away | No agents (-40): Zero agent tooling signals; Compliance-only governance (-20): No operational governance posture |
-| - | Valero Energy | VLO | Energy | 0 | walk-away | No agents (-40): Zero agent tooling signals; Compliance-only governance (-20): No operational governance posture |
-| - | Exxon Mobil | XOM | Energy | 1 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
+| - | Berkshire Hathaway | BRK.B | Financials | 0 | walk-away | No agents (-40): Zero agent tooling signals; Compliance-only governance (-20): No operational governance posture |
+| - | Home Depot | HD | Consumer Discretionary | 0 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
+| - | Dell Technologies | DELL | Information Technology | 0 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture; Open-source only (-15): Prefers free/OSS AI tools |
+| - | UPS | UPS | Industrials | 0 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
+| - | FedEx | FDX | Industrials | 0 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
+| - | Intel | INTC | Information Technology | 0 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture; Open-source only (-15): Prefers free/OSS AI tools |
+| - | Walt Disney | DIS | Communication Services | 2 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
 | - | Ford Motor | F | Consumer Discretionary | 3 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
-| - | Home Depot | HD | Consumer Discretionary | 3 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
-| - | UPS | UPS | Industrials | 3 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
-| - | FedEx | FDX | Industrials | 5 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
-| - | Comcast | CMCSA | Communication Services | 10 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
+| - | Comcast | CMCSA | Communication Services | 3 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
+| - | CVS Health | CVS | Health Care | 4 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
 
 ---
 
@@ -232,41 +232,41 @@
 
 | Rank | Company | Ticker | Sector | Score | Tier |
 |---|---|---|---|---|---|
-| 1 | Freddie Mac | FMCC | Financials | 82 | strong-prospect |
-| 2 | Humana | HUM | Health Care | 81 | strong-prospect |
-| 3 | Fannie Mae | FNMA | Financials | 78 | moderate-prospect |
-| 4 | Meta Platforms | META | Communication Services | 73 | moderate-prospect |
-| 5 | Alphabet | GOOGL | Communication Services | 72 | moderate-prospect |
-| 6 | Microsoft | MSFT | Information Technology | 71 | moderate-prospect |
-| 7 | Amazon | AMZN | Consumer Discretionary | 67 | moderate-prospect |
-| 8 | Wells Fargo | WFC | Financials | 67 | moderate-prospect |
-| 9 | JPMorgan Chase | JPM | Financials | 65 | moderate-prospect |
-| 10 | Citigroup | C | Financials | 65 | moderate-prospect |
-| 11 | Tesla | TSLA | Consumer Discretionary | 64 | moderate-prospect |
-| 12 | Bank of America | BAC | Financials | 63 | moderate-prospect |
-| 13 | UnitedHealth Group | UNH | Health Care | 62 | moderate-prospect |
-| 14 | Apple | AAPL | Information Technology | 62 | moderate-prospect |
-| 15 | McKesson | MCK | Health Care | 62 | moderate-prospect |
-| 16 | Johnson & Johnson | JNJ | Health Care | 61 | moderate-prospect |
-| 17 | PepsiCo | PEP | Consumer Staples | 61 | moderate-prospect |
-| 18 | Cencora | COR | Health Care | 60 | moderate-prospect |
-| 19 | Cardinal Health | CAH | Health Care | 60 | moderate-prospect |
-| 20 | Walgreens Boots Alliance | WBA | Consumer Staples | 60 | moderate-prospect |
+| 1 | JPMorgan Chase | JPM | Financials | 76 | moderate-prospect |
+| 2 | Bank of America | BAC | Financials | 73 | moderate-prospect |
+| 3 | Salesforce | CRM | Information Technology | 71 | moderate-prospect |
+| 4 | Goldman Sachs | GS | Financials | 69 | moderate-prospect |
+| 5 | Wells Fargo | WFC | Financials | 68 | moderate-prospect |
+| 6 | Oracle | ORCL | Information Technology | 67 | moderate-prospect |
+| 7 | Morgan Stanley | MS | Financials | 66 | moderate-prospect |
+| 8 | Apple | AAPL | Information Technology | 64 | moderate-prospect |
+| 9 | Citigroup | C | Financials | 64 | moderate-prospect |
+| 10 | Adobe | ADBE | Information Technology | 64 | moderate-prospect |
+| 11 | Alphabet | GOOGL | Communication Services | 62 | moderate-prospect |
+| 12 | Cigna Group | CI | Health Care | 62 | moderate-prospect |
+| 13 | Microsoft | MSFT | Information Technology | 62 | moderate-prospect |
+| 14 | McKesson | MCK | Health Care | 61 | moderate-prospect |
+| 15 | Centene | CNC | Health Care | 61 | moderate-prospect |
+| 16 | ExxonMobil | XOM | Energy | 59 | conditional |
+| 17 | Meta Platforms | META | Communication Services | 59 | conditional |
+| 18 | Chevron | CVX | Energy | 58 | conditional |
+| 19 | Johnson & Johnson | JNJ | Health Care | 58 | conditional |
+| 20 | Amazon | AMZN | Consumer Discretionary | 56 | conditional |
 
 ### Bottom 10 (Most Likely Walk-Aways)
 
 | Rank | Company | Ticker | Sector | Score | Tier | Walk-Away Reasons |
 |---|---|---|---|---|---|---|
-| - | Berkshire Hathaway | BRK.B | Financials | 1 | walk-away | Build internally (-30): >5000 engineers with platform team; No agents (-40): Zero agent tooling signals |
-| - | Phillips 66 | PSX | Energy | 8 | walk-away | No agents (-40): Zero agent tooling signals; Compliance-only governance (-10, reduced by regulatory pressure) |
-| - | Valero Energy | VLO | Energy | 8 | walk-away | No agents (-40): Zero agent tooling signals; Compliance-only governance (-10, reduced by regulatory pressure) |
-| - | Chevron | CVX | Energy | 31 | unlikely | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-10, reduced by regulatory pressure) |
-| - | Exxon Mobil | XOM | Energy | 33 | unlikely | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-10, reduced by regulatory pressure) |
+| - | Berkshire Hathaway | BRK.B | Financials | 15 | walk-away | No agents (-40): Zero agent tooling signals; Compliance-only governance (-10, reduced by regulatory pressure) |
+| - | Dell Technologies | DELL | Information Technology | 25 | unlikely | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-10, reduced by regulatory pressure); Open-source only (-15): Prefers free/OSS AI tools |
+| - | FedEx | FDX | Industrials | 27 | unlikely | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-10, reduced by regulatory pressure) |
+| - | Intel | INTC | Information Technology | 28 | unlikely | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-10, reduced by regulatory pressure); Open-source only (-15): Prefers free/OSS AI tools |
+| - | Home Depot | HD | Consumer Discretionary | 29 | unlikely | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-10, reduced by regulatory pressure) |
+| - | UPS | UPS | Industrials | 29 | unlikely | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-10, reduced by regulatory pressure) |
+| - | Walt Disney | DIS | Communication Services | 34 | unlikely | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-10, reduced by regulatory pressure) |
 | - | Ford Motor | F | Consumer Discretionary | 35 | unlikely | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-10, reduced by regulatory pressure) |
-| - | Home Depot | HD | Consumer Discretionary | 35 | unlikely | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-10, reduced by regulatory pressure) |
-| - | UPS | UPS | Industrials | 36 | unlikely | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-10, reduced by regulatory pressure) |
-| - | FedEx | FDX | Industrials | 38 | unlikely | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-10, reduced by regulatory pressure) |
-| - | Comcast | CMCSA | Communication Services | 43 | conditional | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-10, reduced by regulatory pressure) |
+| - | Comcast | CMCSA | Communication Services | 35 | unlikely | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-10, reduced by regulatory pressure) |
+| - | CVS Health | CVS | Health Care | 36 | unlikely | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-10, reduced by regulatory pressure) |
 
 ---
 
@@ -276,41 +276,41 @@
 
 | Rank | Company | Ticker | Sector | Score | Tier |
 |---|---|---|---|---|---|
-| 1 | Freddie Mac | FMCC | Financials | 66 | moderate-prospect |
-| 2 | Humana | HUM | Health Care | 64 | moderate-prospect |
-| 3 | Fannie Mae | FNMA | Financials | 62 | moderate-prospect |
-| 4 | Alphabet | GOOGL | Communication Services | 56 | conditional |
-| 5 | Meta Platforms | META | Communication Services | 56 | conditional |
-| 6 | Microsoft | MSFT | Information Technology | 54 | conditional |
-| 7 | Amazon | AMZN | Consumer Discretionary | 51 | conditional |
-| 8 | Wells Fargo | WFC | Financials | 51 | conditional |
-| 9 | JPMorgan Chase | JPM | Financials | 50 | conditional |
-| 10 | Citigroup | C | Financials | 49 | conditional |
-| 11 | Tesla | TSLA | Consumer Discretionary | 48 | conditional |
-| 12 | Bank of America | BAC | Financials | 47 | conditional |
-| 13 | Apple | AAPL | Information Technology | 46 | conditional |
-| 14 | UnitedHealth Group | UNH | Health Care | 45 | conditional |
-| 15 | Johnson & Johnson | JNJ | Health Care | 45 | conditional |
-| 16 | Verizon Communications | VZ | Communication Services | 41 | conditional |
-| 17 | AT&T | T | Communication Services | 41 | conditional |
-| 18 | Walmart | WMT | Consumer Staples | 40 | conditional |
-| 19 | Elevance Health | ELV | Health Care | 40 | conditional |
-| 20 | Dell Technologies | DELL | Information Technology | 40 | conditional |
+| 1 | JPMorgan Chase | JPM | Financials | 61 | moderate-prospect |
+| 2 | Bank of America | BAC | Financials | 58 | conditional |
+| 3 | Salesforce | CRM | Information Technology | 54 | conditional |
+| 4 | Goldman Sachs | GS | Financials | 54 | conditional |
+| 5 | Wells Fargo | WFC | Financials | 53 | conditional |
+| 6 | Morgan Stanley | MS | Financials | 51 | conditional |
+| 7 | Oracle | ORCL | Information Technology | 50 | conditional |
+| 8 | Citigroup | C | Financials | 49 | conditional |
+| 9 | Adobe | ADBE | Information Technology | 48 | conditional |
+| 10 | Apple | AAPL | Information Technology | 47 | conditional |
+| 11 | Microsoft | MSFT | Information Technology | 46 | conditional |
+| 12 | Alphabet | GOOGL | Communication Services | 45 | conditional |
+| 13 | Meta Platforms | META | Communication Services | 42 | conditional |
+| 14 | Johnson & Johnson | JNJ | Health Care | 42 | conditional |
+| 15 | Amazon | AMZN | Consumer Discretionary | 40 | conditional |
+| 16 | IBM | IBM | Information Technology | 38 | unlikely |
+| 17 | Accenture | ACN | Information Technology | 38 | unlikely |
+| 18 | General Electric | GE | Industrials | 36 | unlikely |
+| 19 | Boeing | BA | Industrials | 36 | unlikely |
+| 20 | Cigna Group | CI | Health Care | 35 | unlikely |
 
 ### Bottom 10 (Most Likely Walk-Aways)
 
 | Rank | Company | Ticker | Sector | Score | Tier | Walk-Away Reasons |
 |---|---|---|---|---|---|---|
-| - | Berkshire Hathaway | BRK.B | Financials | 0 | walk-away | Build internally (-30): >5000 engineers with platform team; No agents (-40): Zero agent tooling signals |
-| - | Phillips 66 | PSX | Energy | 0 | walk-away | No agents (-40): Zero agent tooling signals; Compliance-only governance (-20): No operational governance posture |
-| - | Valero Energy | VLO | Energy | 0 | walk-away | No agents (-40): Zero agent tooling signals; Compliance-only governance (-20): No operational governance posture |
-| - | Chevron | CVX | Energy | 5 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
-| - | Exxon Mobil | XOM | Energy | 7 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
+| - | Berkshire Hathaway | BRK.B | Financials | 0 | walk-away | No agents (-40): Zero agent tooling signals; Compliance-only governance (-20): No operational governance posture |
+| - | Dell Technologies | DELL | Information Technology | 0 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture; Open-source only (-15): Prefers free/OSS AI tools |
+| - | FedEx | FDX | Industrials | 1 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
+| - | Home Depot | HD | Consumer Discretionary | 2 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
+| - | UPS | UPS | Industrials | 2 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
+| - | Intel | INTC | Information Technology | 2 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture; Open-source only (-15): Prefers free/OSS AI tools |
+| - | Walt Disney | DIS | Communication Services | 8 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
 | - | Ford Motor | F | Consumer Discretionary | 9 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
-| - | Home Depot | HD | Consumer Discretionary | 9 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
-| - | UPS | UPS | Industrials | 9 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
-| - | FedEx | FDX | Industrials | 11 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
-| - | Comcast | CMCSA | Communication Services | 16 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
+| - | Comcast | CMCSA | Communication Services | 9 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
+| - | CVS Health | CVS | Health Care | 10 | walk-away | Build internally (-30): >5000 engineers with platform team; Compliance-only governance (-20): No operational governance posture |
 
 ---
 

@@ -11,23 +11,23 @@ This report documents the most common walk-away patterns, which companies would 
 
 | Walk-Away Factor | Companies Affected | % of Total |
 |---|---|---|
-| Build internally | 34 | 68.0% |
-| No agents | 3 | 6.0% |
-| Compliance-only | 20 | 40.0% |
-| Open-source only | 0 | 0% |
+| Build internally | 35 | 70.0% |
+| No agents | 1 | 2.0% |
+| Compliance-only | 30 | 60.0% |
+| Open-source only | 9 | 18.0% |
 
 ## Walk-Away Patterns by Sector
 
 | Sector | Walk-Away Count | % Walk-Away | Dominant Factor |
 |---|---|---|---|
-| Energy | 5/5 | 100% | — |
-| Consumer Staples | 4/7 | 57.1% | — |
+| Consumer Staples | 5/5 | 100% | — |
+| Consumer Discretionary | 6/7 | 85.7% | — |
+| Communication Services | 4/6 | 66.7% | — |
+| Health Care | 4/8 | 50% | — |
 | Industrials | 2/4 | 50% | — |
-| Consumer Discretionary | 3/7 | 42.9% | — |
-| Financials | 2/8 | 25% | — |
-| Communication Services | 1/6 | 16.7% | — |
-| Health Care | 0/10 | 0% | — |
-| Information Technology | 0/3 | 0% | — |
+| Energy | 1/3 | 33.3% | — |
+| Information Technology | 3/10 | 30% | — |
+| Financials | 1/7 | 14.3% | — |
 
 ## Cross-Scenario Walk-Away Comparison
 
@@ -36,56 +36,56 @@ Companies that are walk-aways in some scenarios but prospects in others are timi
 
 | Company | Baseline | Regulatory | Agent Explosion | Budget Crunch | Competitor | Incident | Walk-Away |
 |---|---|---|---|---|---|---|---|
-| AT&T | 30 | 54 | 46 | 15 | 36 | 58 | 41 |
-| Alphabet | 44 | 68 | 61 | 29 | 50 | 72 | 56 |
-| Amazon | 39 | 63 | 56 | 24 | 45 | 67 | 51 |
-| Apple | 34 | 58 | 51 | 19 | 40 | 62 | 46 |
-| Archer Daniels Midland | 12 | 46 | 29 | 0 | 18 | 50 | 24 |
-| Bank of America | 35 | 58 | 52 | 20 | 41 | 63 | 47 |
-| Berkshire Hathaway | 0 | 0 | 0 | 0 | 0 | 1 | 0 |
-| Boeing | 20 | 44 | 37 | 5 | 26 | 48 | 32 |
-| CVS Health | 22 | 45 | 38 | 7 | 27 | 50 | 33 |
-| Cardinal Health | 22 | 55 | 38 | 7 | 27 | 60 | 33 |
-| Cencora | 22 | 55 | 38 | 7 | 27 | 60 | 33 |
-| Centene | 24 | 47 | 41 | 9 | 30 | 52 | 36 |
-| Chevron | 0 | 27 | 10 | 0 | 0 | 31 | 5 |
-| Citigroup | 37 | 60 | 54 | 22 | 43 | 65 | 49 |
-| Comcast | 5 | 38 | 21 | 0 | 10 | 43 | 16 |
-| Costco | 15 | 49 | 32 | 0 | 21 | 53 | 27 |
-| Dell Technologies | 29 | 53 | 45 | 14 | 35 | 57 | 40 |
-| Elevance Health | 28 | 51 | 45 | 13 | 34 | 56 | 40 |
-| Exxon Mobil | 0 | 29 | 12 | 0 | 1 | 33 | 7 |
-| Fannie Mae | 51 | 73 | 67 | 36 | 56 | 78 | 62 |
-| FedEx | 0 | 33 | 16 | 0 | 5 | 38 | 11 |
+| AT&T | 0 | 32 | 15 | 0 | 4 | 36 | 10 |
+| Accenture | 26 | 50 | 43 | 11 | 32 | 54 | 38 |
+| Adobe | 36 | 60 | 53 | 21 | 42 | 64 | 48 |
+| Alphabet | 34 | 58 | 50 | 19 | 40 | 62 | 45 |
+| Amazon | 28 | 52 | 45 | 13 | 34 | 56 | 40 |
+| Apple | 36 | 59 | 52 | 21 | 41 | 64 | 47 |
+| Bank of America | 48 | 68 | 63 | 33 | 53 | 73 | 58 |
+| Berkshire Hathaway | 0 | 11 | 0 | 0 | 0 | 15 | 0 |
+| Boeing | 25 | 48 | 41 | 10 | 30 | 53 | 36 |
+| CVS Health | 0 | 32 | 15 | 0 | 4 | 36 | 10 |
+| Cardinal Health | 18 | 51 | 34 | 3 | 23 | 56 | 29 |
+| Cencora | 18 | 51 | 34 | 3 | 23 | 56 | 29 |
+| Centene | 23 | 57 | 39 | 8 | 29 | 61 | 34 |
+| Chevron | 20 | 54 | 36 | 5 | 26 | 58 | 31 |
+| Cigna Group | 24 | 58 | 40 | 9 | 30 | 62 | 35 |
+| Citigroup | 39 | 59 | 54 | 24 | 44 | 64 | 49 |
+| Comcast | 0 | 31 | 14 | 0 | 3 | 35 | 9 |
+| Costco | 11 | 44 | 27 | 0 | 16 | 49 | 22 |
+| Dell Technologies | 0 | 21 | 3 | 0 | 0 | 25 | 0 |
+| ExxonMobil | 21 | 55 | 38 | 6 | 27 | 59 | 33 |
+| FedEx | 0 | 23 | 6 | 0 | 0 | 27 | 1 |
 | Ford Motor | 0 | 31 | 14 | 0 | 3 | 35 | 9 |
-| Freddie Mac | 54 | 77 | 71 | 39 | 60 | 82 | 66 |
-| GE Aerospace | 25 | 49 | 42 | 10 | 31 | 53 | 37 |
-| General Motors | 24 | 47 | 40 | 9 | 29 | 52 | 35 |
-| Home Depot | 0 | 31 | 14 | 0 | 3 | 35 | 9 |
-| Humana | 53 | 76 | 69 | 38 | 58 | 81 | 64 |
-| JPMorgan Chase | 38 | 60 | 55 | 23 | 44 | 65 | 50 |
-| Johnson & Johnson | 33 | 56 | 50 | 18 | 39 | 61 | 45 |
-| Kroger | 19 | 53 | 36 | 4 | 25 | 57 | 31 |
-| Lowe's | 22 | 56 | 39 | 7 | 28 | 60 | 34 |
-| Marathon Petroleum | 16 | 50 | 32 | 1 | 22 | 54 | 27 |
-| McKesson | 24 | 57 | 41 | 9 | 30 | 62 | 36 |
-| Meta Platforms | 45 | 69 | 61 | 30 | 51 | 73 | 56 |
-| Microsoft | 43 | 67 | 59 | 28 | 49 | 71 | 54 |
-| PepsiCo | 23 | 57 | 39 | 8 | 29 | 61 | 34 |
-| Phillips 66 | 0 | 4 | 0 | 0 | 0 | 8 | 0 |
-| Procter & Gamble | 17 | 41 | 34 | 2 | 23 | 45 | 29 |
-| State Farm | 17 | 39 | 33 | 2 | 22 | 44 | 28 |
-| Target | 19 | 53 | 36 | 4 | 25 | 57 | 31 |
-| Tesla | 36 | 60 | 53 | 21 | 42 | 64 | 48 |
-| The Cigna Group | 20 | 43 | 37 | 5 | 26 | 48 | 32 |
-| UPS | 0 | 31 | 14 | 0 | 3 | 36 | 9 |
-| UnitedHealth Group | 34 | 57 | 50 | 19 | 40 | 62 | 45 |
-| Valero Energy | 0 | 4 | 0 | 0 | 0 | 8 | 0 |
-| Verizon Communications | 30 | 54 | 46 | 15 | 36 | 58 | 41 |
-| Walgreens Boots Alliance | 22 | 55 | 38 | 7 | 27 | 60 | 33 |
-| Walmart | 29 | 52 | 45 | 14 | 34 | 57 | 40 |
-| Walt Disney | 28 | 52 | 45 | 13 | 34 | 56 | 40 |
-| Wells Fargo | 40 | 62 | 56 | 25 | 45 | 67 | 51 |
+| General Electric | 24 | 48 | 41 | 9 | 30 | 52 | 36 |
+| General Motors | 3 | 37 | 19 | 0 | 9 | 41 | 14 |
+| Goldman Sachs | 44 | 64 | 59 | 29 | 49 | 69 | 54 |
+| Home Depot | 0 | 25 | 7 | 0 | 0 | 29 | 2 |
+| IBM | 26 | 50 | 43 | 11 | 32 | 54 | 38 |
+| Intel | 0 | 24 | 7 | 0 | 0 | 28 | 2 |
+| JPMorgan Chase | 51 | 71 | 66 | 36 | 56 | 76 | 61 |
+| Johnson & Johnson | 30 | 54 | 47 | 15 | 36 | 58 | 42 |
+| Kroger | 12 | 46 | 29 | 0 | 18 | 50 | 24 |
+| Lowe's | 15 | 48 | 31 | 0 | 20 | 53 | 26 |
+| Marathon Petroleum | 9 | 43 | 26 | 0 | 15 | 47 | 21 |
+| McKesson | 23 | 57 | 39 | 8 | 29 | 61 | 34 |
+| Meta Platforms | 31 | 54 | 47 | 16 | 36 | 59 | 42 |
+| Microsoft | 34 | 58 | 51 | 19 | 40 | 62 | 46 |
+| Morgan Stanley | 41 | 61 | 56 | 26 | 46 | 66 | 51 |
+| Nvidia | 5 | 39 | 22 | 0 | 11 | 43 | 17 |
+| Oracle | 39 | 62 | 55 | 24 | 44 | 67 | 50 |
+| PepsiCo | 15 | 48 | 31 | 0 | 20 | 53 | 26 |
+| Procter & Gamble | 17 | 51 | 34 | 2 | 23 | 55 | 29 |
+| Salesforce | 43 | 67 | 59 | 28 | 49 | 71 | 54 |
+| Target | 14 | 47 | 30 | 0 | 19 | 52 | 25 |
+| Tesla | 13 | 46 | 29 | 0 | 18 | 51 | 24 |
+| UPS | 0 | 24 | 7 | 0 | 0 | 29 | 2 |
+| UnitedHealth Group | 13 | 47 | 30 | 0 | 19 | 51 | 25 |
+| Verizon | 0 | 33 | 16 | 0 | 5 | 37 | 11 |
+| Walmart | 16 | 40 | 33 | 1 | 22 | 44 | 28 |
+| Walt Disney | 0 | 30 | 13 | 0 | 2 | 34 | 8 |
+| Wells Fargo | 43 | 63 | 58 | 28 | 48 | 68 | 53 |
 
 ---
 
