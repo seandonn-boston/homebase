@@ -1,0 +1,12 @@
+{
+  "id": "c8f1a2d3-9e4b-5f6c-a7d8-1b2c3d4e5f60",
+  "project": "homebase",
+  "category": "pattern",
+  "title": "Context Source Routing: long context vs RAG vs escalation",
+  "content": "Established a 3-step Context Source Routing chain for agents to determine where to look when context is insufficient. Step 1: Check loaded context (standing, session, working). Step 2: Query the Brain via brain_query for precedent, cross-session knowledge, and durable lessons — mandatory before Propose/Escalate-tier decisions. Step 3: Escalate to human if neither source resolves the gap. Codified in Part 2 spec (Context Source Routing section), SO-11 (new routing chain rule), and enforced by brain_context_router.sh hook that detects Propose/Escalate decisions made without a preceding brain_query.",
+  "metadata": {
+    "tags": ["context-routing", "brain", "rag", "long-context", "propose", "escalate", "so-11"]
+  },
+  "source_agent": "implementer",
+  "created_at": "2026-03-15T14:00:00Z"
+}

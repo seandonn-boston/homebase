@@ -31,7 +31,8 @@ init_session_state() {
   "tool_call_count": 0,
   "hook_state": {
     "loop_detector": { "error_counts": {}, "total_errors": 0 },
-    "self_healing": { "retry_counts": {}, "total_retries": 0 }
+    "self_healing": { "retry_counts": {}, "total_retries": 0 },
+    "brain_context_router": { "brain_queries_count": 0, "last_brain_query_tool_call": 0, "propose_without_brain": 0, "escalate_without_brain": 0 }
   },
   "context": {
     "standing_context_tokens": 0,

@@ -92,6 +92,22 @@ if [ $((TOOL_CALL_COUNT % 10)) -eq 0 ] && [ -x "$SCRIPT_DIR/context_health_check
   fi
 fi
 
+# --- Hook 4: brain_context_router (isolated, advisory only) ---
+if [ -x "$SCRIPT_DIR/brain_context_router.sh" ]; then
+  BRAIN_OUTPUT=""
+  BRAIN_OUTPUT=$(echo "$PAYLOAD" | jq --argjson state "$STATE" '. + {session_state: $state}' | "$SCRIPT_DIR/brain_context_router.sh" 2>/dev/null) || true
+  if [ -n "$BRAIN_OUTPUT" ]; then
+    BRAIN_STATE=$(echo "$BRAIN_OUTPUT" | jq '.hook_state.brain_context_router // empty' 2>/dev/null) || true
+    if [ -n "$BRAIN_STATE" ] && [ "$BRAIN_STATE" != "null" ]; then
+      STATE=$(echo "$STATE" | jq --argjson bs "$BRAIN_STATE" '.hook_state.brain_context_router = $bs')
+    fi
+    BRAIN_ALERT=$(echo "$BRAIN_OUTPUT" | jq -r '.alert // empty' 2>/dev/null) || true
+    if [ -n "$BRAIN_ALERT" ]; then
+      MESSAGES+="[Context Routing] $BRAIN_ALERT\n"
+    fi
+  fi
+fi
+
 # Save updated state (fail-open: if save fails, continue anyway)
 echo "$STATE" | save_state 2>/dev/null || true
 

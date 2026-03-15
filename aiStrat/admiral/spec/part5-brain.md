@@ -271,6 +271,25 @@ When the recovery ladder (Failure Recovery, Part 7) reaches Escalate, the agent 
 5. If not found: escalation report includes "No precedent found in Brain"
 ```
 
+### Brain Integration with Decision Authority Tiers
+
+The Brain is not a passive archive. It is an active participant in the decision workflow. Every Propose-tier and Escalate-tier decision should be informed by institutional memory. The Context Source Routing chain (Part 2, Standing Order 11) formalizes this, and the `brain_context_router` hook enforces it.
+
+**Autonomous decisions:** Brain query is optional. The agent has earned trust in this category and may proceed on loaded context alone. However, agents should still query when the decision involves a pattern they haven't encountered in this session.
+
+**Propose-tier decisions:** Brain query is **mandatory**. Before drafting a proposal, the agent must call `brain_query` with the decision topic. This surfaces:
+- Prior decisions on the same topic (avoid re-litigating settled questions)
+- Lessons from similar decisions in other projects (cross-project intelligence)
+- Outcomes of previous approaches (avoid repeating mistakes)
+
+Example: `brain_query("authentication approach for stateless API", project="taskflow")` → returns JWT decision, rationale, and outcome from a prior session.
+
+**Escalate-tier decisions:** Brain query is **mandatory**. Before writing the escalation report, the agent must call `brain_query` describing the blocker. The escalation report must include a "Brain Consulted" section showing what was queried and what was found (or "No precedent found"). This ensures the Admiral receives escalations that have already exhausted institutional knowledge.
+
+**Recovery ladder integration:** Before advancing to Step 4 (Isolate) or Step 5 (Escalate) of the recovery ladder (Part 7), agents must query the Brain for similar failures. The Failure Forensics pattern (above) codifies this. See also the `brain_context_router` hook which detects and warns when Propose/Escalate decisions are made without a preceding `brain_query`.
+
+> **Why mandatory for Propose/Escalate but not Autonomous?** Autonomous decisions are high-frequency, low-risk, and within established patterns — adding a Brain query to every one would create latency without proportional value. Propose and Escalate decisions are low-frequency, high-impact, and often novel — exactly the cases where institutional memory prevents the most expensive mistakes.
+
 ### Access Control
 
 Not every agent should read or write everything. **Access control is mandatory and enforced — not advisory.**

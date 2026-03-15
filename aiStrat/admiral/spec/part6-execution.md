@@ -28,7 +28,7 @@ AI agents do not naturally manage resource depletion. In our experience, given a
 For significant features, each phase produces artifacts feeding the next:
 
 1. **Requirements Spec:** What the feature must do. Acceptance criteria. Edge cases. Not how — what.
-2. **Design Spec:** How it will be built. Architecture. Data models. API contracts. Components.
+2. **Design Spec:** How it will be built. Architecture. Data models. API contracts. Components. Before committing to a design, query the Brain for similar features: `brain_query("similar feature design")` — prior decompositions, architectural decisions, and lessons may inform a better approach.
 3. **Task Decomposition:** Design spec broken into chunks with entry/exit states and budgets.
 4. **Implementation:** Each chunk executed by the appropriate specialist.
 

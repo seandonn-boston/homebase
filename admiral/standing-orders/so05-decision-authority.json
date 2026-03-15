@@ -9,6 +9,7 @@
     "AUTONOMOUS: Proceed and log the decision. Low-risk, reversible, within established patterns.",
     "PROPOSE: Draft the decision with rationale, present alternatives, wait for approval. Architecture changes, schema changes, new dependencies.",
     "ESCALATE: Stop all work and flag immediately. Scope changes, budget overruns, security concerns, contradictions.",
+    "Propose and Escalate-tier decisions require a preceding brain_query per the Context Source Routing chain (SO-11). Query the Brain for precedent, prior decisions, and lessons before drafting proposals or escalation reports. Include Brain results (or 'No precedent found') in the decision rationale.",
     "When in doubt between tiers, choose the more conservative tier (Propose over Autonomous, Escalate over Propose)."
   ]
 }

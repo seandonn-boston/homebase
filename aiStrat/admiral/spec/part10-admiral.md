@@ -28,7 +28,7 @@ Trust is not a feeling. It is a measurable, per-category parameter earned increm
 
 **Earning:** After **5 consecutive successful** Autonomous decisions in a category, promote similar Propose-tier decisions. Category-specific, not global. Log every promotion. Any failure resets the consecutive counter to 0 for that category.
 
-**Withdrawing:** After a failed Autonomous decision, demote that category to Propose. Investigate: context gap (fixable via Ground Truth) or judgment gap (needs tighter oversight)?
+**Withdrawing:** After a failed Autonomous decision, demote that category to Propose. Before withdrawing trust, query the Brain: `brain_query("failure in [category] by [agent role]")` to understand whether this failure matches a known pattern, whether the root cause is a context gap (fixable via Ground Truth) or a judgment gap (needs tighter oversight), and whether prior trust withdrawals in this category were effective. Include Brain findings in the trust adjustment rationale.
 
 ### The Admiral's Growth Trajectory
 

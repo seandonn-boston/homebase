@@ -62,6 +62,19 @@ These are recommended combinations that satisfy all dependency rules. Start with
 | **Production** | 3 | 3 | 3 | 4 | 2 | 3 | 4 | 1–2 weeks | 1–2 months | Multiple fleets needed |
 | **Enterprise** | 3 | 4 | 3 | 5 | 3 | 3 | 5 | 2–4 weeks | 2–4 months | Target state |
 
+### Decision Workflow Quick Reference
+
+Every agent decision follows the four-tier authority model (SO-05). The **Context Source Routing chain** (Part 2, SO-11) defines where agents look for information at each tier:
+
+| Tier | Action | Context Source | Brain Required? |
+|---|---|---|---|
+| **Enforced** | Hooks handle it — agent doesn't decide | N/A | No |
+| **Autonomous** | Proceed and log | Loaded context (standing + session + working) | Optional |
+| **Propose** | Draft with rationale, wait for approval | Loaded context → Brain query → draft proposal | **Yes** — query before drafting |
+| **Escalate** | Stop work, flag immediately | Loaded context → Brain query → escalation report | **Yes** — query before escalating |
+
+The `brain_context_router` hook (PostToolUse, advisory) detects Propose/Escalate decisions made without a preceding `brain_query` and emits a warning. See Part 3 (Hook-Brain Integration) and Part 5 (Brain Integration with Decision Authority Tiers) for details.
+
 > **Mix and match.** Profiles are starting points, not rules. You can run B1 with F3 if your fleet doesn't need semantic search. You can run B3 with F1 if a solo agent needs deep memory. The only constraint is the dependency matrix below.
 
 ### Cross-Component Dependencies
