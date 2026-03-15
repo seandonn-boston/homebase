@@ -27,6 +27,7 @@ init_session_state() {
   "session_id": "",
   "started_at": 0,
   "tokens_used": 0,
+  "token_budget": 0,
   "tool_call_count": 0,
   "hook_state": {
     "loop_detector": { "error_counts": {}, "total_errors": 0 },

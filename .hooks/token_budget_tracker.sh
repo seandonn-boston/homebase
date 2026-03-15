@@ -1,7 +1,8 @@
 #!/bin/bash
 # Admiral Framework — Token Budget Tracker (PostToolUse)
 # Estimates tokens for current tool call, updates cumulative count.
-# Informational only — no limits enforced. Advisory only (exit 0).
+# Advisory warnings only (exit 0) — never blocks.
+# Budget of 0 means unlimited (no warnings emitted).
 # Timeout: 5s
 set -euo pipefail
 
@@ -17,6 +18,7 @@ PAYLOAD=$(cat)
 # Extract fields
 TOOL_NAME=$(echo "$PAYLOAD" | jq -r '.tool_name // "unknown"')
 TOKENS_USED=$(echo "$PAYLOAD" | jq -r '.session_state.tokens_used // 0')
+TOKEN_BUDGET=$(echo "$PAYLOAD" | jq -r '.session_state.token_budget // 0')
 
 # Estimate tokens for this tool call
 ESTIMATED=$(estimate_tokens "$TOOL_NAME")
@@ -24,8 +26,23 @@ ESTIMATED=$(estimate_tokens "$TOOL_NAME")
 # Update cumulative count
 NEW_TOTAL=$((TOKENS_USED + ESTIMATED))
 
-# Output updated state (no alerts — context limits removed)
+# Calculate utilization and emit advisory warnings (budget 0 = unlimited)
+ALERT=""
+if [ "$TOKEN_BUDGET" -gt 0 ]; then
+  UTIL_PCT=$((NEW_TOTAL * 100 / TOKEN_BUDGET))
+
+  if [ "$UTIL_PCT" -ge 100 ]; then
+    OVER_BY=$((NEW_TOTAL - TOKEN_BUDGET))
+    ALERT="BUDGET EXCEEDED: Token usage at ${UTIL_PCT}% (${NEW_TOTAL}/${TOKEN_BUDGET}, ${OVER_BY} over). Inform the user and ask if they wish to continue."
+  elif [ "$UTIL_PCT" -ge 90 ]; then
+    REMAINING=$((TOKEN_BUDGET - NEW_TOTAL))
+    ALERT="BUDGET WARNING: Token usage at ${UTIL_PCT}% (${NEW_TOTAL}/${TOKEN_BUDGET}). ~${REMAINING} tokens remaining."
+  fi
+fi
+
+# Output updated state
 jq -n --argjson tokens "$NEW_TOTAL" \
-      '{tokens_used: $tokens, alert: ""}'
+      --arg alert "$ALERT" \
+      '{tokens_used: $tokens, alert: $alert}'
 
 exit 0
