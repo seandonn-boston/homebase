@@ -1,0 +1,11 @@
+{
+  "id": "SO-07",
+  "title": "Checkpointing",
+  "priority_category": "high",
+  "order": 7,
+  "rules": [
+    "At the completion of every significant chunk of work, produce a checkpoint.",
+    "A checkpoint records: what was completed, what's in progress, what's blocked, decisions made, assumptions held, and resources consumed.",
+    "Checkpoints are how the fleet survives context boundaries. Treat them as critical outputs."
+  ]
+}

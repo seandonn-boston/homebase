@@ -1,0 +1,74 @@
+#!/bin/bash
+# Admiral Framework — Brain Record (B1)
+# Creates a JSON brain entry in .brain/{project}/
+# Usage: brain_record <project> <category> <title> <content> [source_agent]
+set -euo pipefail
+
+BRAIN_DIR="${BRAIN_DIR:-${CLAUDE_PROJECT_DIR:-.}/.brain}"
+
+# Validate arguments
+if [ $# -lt 4 ]; then
+  echo "Usage: brain_record <project> <category> <title> <content> [source_agent]" >&2
+  exit 1
+fi
+
+PROJECT="$1"
+CATEGORY="$2"
+TITLE="$3"
+CONTENT="$4"
+SOURCE_AGENT="${5:-manual}"
+
+# Validate category
+case "$CATEGORY" in
+  decision|outcome|lesson|context|failure|pattern) ;;
+  *)
+    echo "Error: Invalid category '$CATEGORY'. Must be: decision|outcome|lesson|context|failure|pattern" >&2
+    exit 1
+    ;;
+esac
+
+# Validate project name (alphanumeric, hyphens, underscores)
+if ! echo "$PROJECT" | grep -qE '^[a-zA-Z0-9_-]+$'; then
+  echo "Error: Invalid project name '$PROJECT'. Use alphanumeric, hyphens, underscores only." >&2
+  exit 1
+fi
+
+# Generate timestamp (UTC)
+TIMESTAMP=$(date -u +%Y%m%d-%H%M%S)
+ISO_TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+
+# Generate slug from title (lowercase, hyphenated, max 50 chars)
+SLUG=$(echo "$TITLE" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9 ]//g' | tr ' ' '-' | sed 's/--*/-/g' | cut -c1-50 | sed 's/-$//')
+
+# Generate UUID v4
+ID=$(uuidgen 2>/dev/null || python3 -c "import uuid; print(uuid.uuid4())" 2>/dev/null || echo "$(date +%s)-$(od -A n -t x4 -N 4 /dev/urandom | tr -d ' ')")
+
+# Create directory
+DIR="${BRAIN_DIR}/${PROJECT}"
+mkdir -p "$DIR"
+
+# Build filename
+FILENAME="${TIMESTAMP}-${CATEGORY}-${SLUG}.json"
+FILEPATH="${DIR}/${FILENAME}"
+
+# Write JSON entry
+jq -n \
+  --arg id "$ID" \
+  --arg project "$PROJECT" \
+  --arg category "$CATEGORY" \
+  --arg title "$TITLE" \
+  --arg content "$CONTENT" \
+  --arg agent "$SOURCE_AGENT" \
+  --arg created "$ISO_TIMESTAMP" \
+  '{
+    id: $id,
+    project: $project,
+    category: $category,
+    title: $title,
+    content: $content,
+    metadata: { tags: [] },
+    source_agent: $agent,
+    created_at: $created
+  }' > "$FILEPATH"
+
+echo "Recorded: ${FILEPATH}"

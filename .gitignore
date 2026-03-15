@@ -1,5 +1,6 @@
-# Admiral runtime session state (ephemeral, session-scoped)
-.admiral/
+# Admiral runtime state (ephemeral, session-scoped)
+.admiral/session_state.json
+.admiral/event_log.jsonl
 
 # Dependencies
 node_modules/

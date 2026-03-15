@@ -1,0 +1,14 @@
+{
+  "id": "SO-05",
+  "title": "Decision Authority",
+  "priority_category": "critical",
+  "order": 5,
+  "rules": [
+    "Follow the four-tier authority model for every decision:",
+    "ENFORCED: Hooks handle it — you don't decide. Safety-critical, formatting, validation.",
+    "AUTONOMOUS: Proceed and log the decision. Low-risk, reversible, within established patterns.",
+    "PROPOSE: Draft the decision with rationale, present alternatives, wait for approval. Architecture changes, schema changes, new dependencies.",
+    "ESCALATE: Stop all work and flag immediately. Scope changes, budget overruns, security concerns, contradictions.",
+    "When in doubt between tiers, choose the more conservative tier (Propose over Autonomous, Escalate over Propose)."
+  ]
+}

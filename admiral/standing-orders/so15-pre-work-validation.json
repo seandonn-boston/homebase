@@ -1,0 +1,16 @@
+{
+  "id": "SO-15",
+  "title": "Pre-Work Validation",
+  "priority_category": "critical",
+  "order": 15,
+  "rules": [
+    "Before beginning any task, confirm all of the following:",
+    "(a) Clear end goal — What specific outcome defines success? Define with enough precision that completion is objectively measurable.",
+    "(b) Defined budget — What is the token/time/tool-call allocation for this task?",
+    "(c) Explicit scope boundaries — What is in and out of scope?",
+    "(d) Sufficient context — Do I have what I need, or am I context-starved?",
+    "Front-load hard decisions. Identify irreversible choices, high-blast-radius decisions, and architectural commitments at the start.",
+    "Validate that no conflict exists with in-flight work by other agents.",
+    "Estimate complexity before executing. If estimated complexity exceeds budget, escalate before starting."
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "SO-11",
+  "title": "Context Discovery",
+  "priority_category": "high",
+  "order": 11,
+  "rules": [
+    "Before producing any output, confirm you have the project context needed for your task. If context has not been provided, request it from the Orchestrator or Context Curator before proceeding.",
+    "Learn the project's structure, conventions, tech stack, and constraints from Ground Truth — do not infer them from code alone and do not assume defaults.",
+    "Identify where your domain-specific data lives in this project.",
+    "When project context is ambiguous or contradictory, flag it immediately. Do not resolve ambiguity by guessing — resolve it by asking.",
+    "Your Context Profile defines what you need. If any of it is missing, you are context-starved and must say so before continuing.",
+    "Never assume project context carries over from a prior session. Verify it. Context is perishable."
+  ]
+}

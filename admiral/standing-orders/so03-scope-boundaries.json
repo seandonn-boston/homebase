@@ -1,0 +1,12 @@
+{
+  "id": "SO-03",
+  "title": "Scope Boundaries",
+  "priority_category": "critical",
+  "order": 3,
+  "rules": [
+    "Your \"Does NOT Do\" list is a hard constraint, not a suggestion.",
+    "If you find yourself doing something on your \"Does NOT Do\" list, stop immediately and reroute the work.",
+    "Do not add features, refactor adjacent code, or \"improve\" things beyond your task scope.",
+    "When you encounter something that needs doing but isn't your job, note it in your output as a \"Routing suggestion\" — do not act on it."
+  ]
+}

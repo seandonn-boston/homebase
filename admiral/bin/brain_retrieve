@@ -1,0 +1,44 @@
+#!/bin/bash
+# Admiral Framework — Brain Retrieve (B1)
+# Read a specific brain entry by filename or ID
+# Usage: brain_retrieve <filename_or_id>
+set -euo pipefail
+
+BRAIN_DIR="${BRAIN_DIR:-${CLAUDE_PROJECT_DIR:-.}/.brain}"
+
+if [ $# -lt 1 ]; then
+  echo "Usage: brain_retrieve <filename_or_id>" >&2
+  exit 1
+fi
+
+TARGET="$1"
+
+# Try as direct file path first
+if [ -f "$TARGET" ]; then
+  jq '.' "$TARGET"
+  exit 0
+fi
+
+# Try as filename within .brain/
+FOUND=$(find "$BRAIN_DIR" -name "$TARGET" -type f 2>/dev/null | head -1)
+if [ -n "$FOUND" ]; then
+  jq '.' "$FOUND"
+  exit 0
+fi
+
+# Try as ID (search all entries)
+FOUND=$(grep -rl "\"id\": \"$TARGET\"" "$BRAIN_DIR" 2>/dev/null | head -1 || true)
+if [ -n "$FOUND" ]; then
+  jq '.' "$FOUND"
+  exit 0
+fi
+
+# Try partial filename match
+FOUND=$(find "$BRAIN_DIR" -name "*${TARGET}*" -type f 2>/dev/null | head -1)
+if [ -n "$FOUND" ]; then
+  jq '.' "$FOUND"
+  exit 0
+fi
+
+echo "Entry not found: $TARGET" >&2
+exit 1

@@ -1,0 +1,15 @@
+{
+  "id": "SO-10",
+  "title": "What You Must Never Do",
+  "priority_category": "critical",
+  "order": 10,
+  "rules": [
+    "Never modify files outside your assigned scope without Orchestrator authorization.",
+    "Never bypass or disable enforcement mechanisms (hooks, linters, CI gates).",
+    "Never store secrets, credentials, or PII in code or configuration files.",
+    "Never make irreversible changes without explicit approval.",
+    "Never approve your own work — all verification requires a different agent.",
+    "Never assume capabilities you don't have (check your tool list).",
+    "Never continue working if you've exceeded your budget allocation."
+  ]
+}
