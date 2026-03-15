@@ -1,0 +1,115 @@
+#!/bin/bash
+# Admiral Framework — Prohibitions Enforcer (PreToolUse)
+# Enforces SO-10: What You Must Never Do
+# Detects violations of prohibition rules beyond budget (handled by token_budget_tracker).
+# Advisory only — emits warnings but NEVER hard-blocks (always exit 0).
+# Timeout: 5s
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$SCRIPT_DIR/.." && pwd)}"
+export CLAUDE_PROJECT_DIR="$PROJECT_DIR"
+
+# Read payload from stdin
+PAYLOAD=$(cat)
+
+TOOL_NAME=$(echo "$PAYLOAD" | jq -r '.tool_name // "unknown"')
+ALERTS=""
+
+# --- Rule: Never bypass or disable enforcement mechanisms ---
+if [ "$TOOL_NAME" = "Bash" ]; then
+  COMMAND=$(echo "$PAYLOAD" | jq -r '.tool_input.command // ""')
+
+  # Detect hook/linter/CI bypass patterns
+  BYPASS_PATTERNS=(
+    "--no-verify"
+    "--no-gpg-sign"
+    "git commit.*--amend"
+    "eslint.*--fix.*--quiet"
+    "chmod.*\.hooks/"
+    "rm.*\.hooks/"
+    "disable.*hook"
+    "skip.*ci"
+    "SKIP=.*pre-commit"
+  )
+  for PATTERN in "${BYPASS_PATTERNS[@]}"; do
+    if echo "$COMMAND" | grep -qiE "$PATTERN"; then
+      ALERTS+="PROHIBITION (SO-10): Command matches bypass pattern '${PATTERN}'. Never bypass or disable enforcement mechanisms. "
+      break
+    fi
+  done
+
+  # --- Rule: Never store secrets, credentials, or PII ---
+  SECRET_PATTERNS=(
+    'password\s*='
+    'api_key\s*='
+    'secret\s*='
+    'token\s*='
+    'AWS_ACCESS_KEY'
+    'PRIVATE_KEY'
+    'BEGIN RSA'
+    'BEGIN OPENSSH'
+    'BEGIN PGP'
+  )
+  for PATTERN in "${SECRET_PATTERNS[@]}"; do
+    if echo "$COMMAND" | grep -qiE "$PATTERN"; then
+      ALERTS+="PROHIBITION (SO-10): Command may contain or create secrets/credentials. Never store secrets in code or configuration. "
+      break
+    fi
+  done
+
+  # --- Rule: Never make irreversible changes without explicit approval ---
+  IRREVERSIBLE_PATTERNS=(
+    "rm -rf"
+    "git reset --hard"
+    "git push.*--force"
+    "git push.*-f "
+    "git branch -D"
+    "drop table"
+    "DROP TABLE"
+    "truncate"
+    "TRUNCATE"
+  )
+  for PATTERN in "${IRREVERSIBLE_PATTERNS[@]}"; do
+    if echo "$COMMAND" | grep -qiE "$PATTERN"; then
+      ALERTS+="PROHIBITION (SO-10): Command is potentially irreversible ('${PATTERN}'). Confirm explicit approval before proceeding. "
+      break
+    fi
+  done
+fi
+
+# --- Rule: Never store secrets in files ---
+if [ "$TOOL_NAME" = "Write" ] || [ "$TOOL_NAME" = "Edit" ]; then
+  FILE_PATH=$(echo "$PAYLOAD" | jq -r '.tool_input.file_path // ""')
+  CONTENT=""
+  if [ "$TOOL_NAME" = "Write" ]; then
+    CONTENT=$(echo "$PAYLOAD" | jq -r '.tool_input.content // ""')
+  else
+    CONTENT=$(echo "$PAYLOAD" | jq -r '.tool_input.new_string // ""')
+  fi
+
+  # Check for secrets in file content
+  if echo "$CONTENT" | grep -qiE '(password|api_key|secret_key|private_key|AWS_ACCESS_KEY|BEGIN RSA|BEGIN OPENSSH)\s*[:=]'; then
+    ALERTS+="PROHIBITION (SO-10): File write may contain secrets or credentials. Never store secrets in code or configuration files. "
+  fi
+
+  # Check for writes to sensitive file types
+  case "$FILE_PATH" in
+    *.env|*credentials*|*secret*|*.pem|*.key)
+      ALERTS+="PROHIBITION (SO-10): Writing to sensitive file type '${FILE_PATH##*/}'. Verify this does not contain secrets. "
+      ;;
+  esac
+fi
+
+# Emit advisory if any alerts
+if [ -n "$ALERTS" ]; then
+  jq -n --arg ctx "$ALERTS" '{
+    "hookSpecificOutput": {
+      "hookEventName": "PreToolUse",
+      "permissionDecision": "allow",
+      "additionalContext": $ctx
+    }
+  }'
+fi
+
+exit 0

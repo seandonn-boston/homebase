@@ -8,14 +8,9 @@
 
 ## Active Debt
 
-### SD-01: Hook Coverage vs. Enforcement Spectrum Thesis
+### ~~SD-01: Hook Coverage vs. Enforcement Spectrum Thesis~~ → Resolved
 
-**Severity:** High
-**Claim:** The enforcement spectrum (hooks over instructions) is Admiral's core differentiator. The thesis and sales pitch present deterministic enforcement as the defining advantage.
-**Reality:** Only 4 of 15 Standing Orders (27%) have hook enforcement. The remaining 73% are enforced only by instructions — the exact mechanism the framework argues is unreliable.
-**Where it appears:** `thesis.md`, `sales-pitch-30min-guide.md`, `part3-enforcement.md`
-**Acknowledged in:** `benchmarks.md` ("Current state: 4/15 (27%)" with target of 80%+)
-**Resolution path:** Either increase hook coverage to a defensible percentage (target: 8/15 minimum) or adjust thesis language to acknowledge that the enforcement spectrum is a design principle with partial implementation, not a fully realized system.
+*Moved to Resolved Debt (see below).*
 
 -----
 
@@ -60,7 +55,21 @@
 
 ## Resolved Debt
 
-*(No entries yet. Move entries here when resolved, with resolution date and evidence.)*
+### SD-01: Hook Coverage vs. Enforcement Spectrum Thesis
+
+**Severity:** High (was)
+**Resolved:** 2026-03-15
+**Resolution:** Increased hook enforcement from 4/15 (27%) to 8/15 (53%), meeting the stated target of 8/15 minimum. Four new hooks implemented:
+
+| Hook | Standing Order | Lifecycle | What It Enforces |
+|------|---------------|-----------|-----------------|
+| `scope_boundary_guard` | SO-03 (Scope Boundaries) | PreToolUse | Validates file operations against protected directory boundaries (`aiStrat/`, `.github/workflows/`, `.claude/settings`) |
+| `prohibitions_enforcer` | SO-10 (Prohibitions) | PreToolUse | Detects enforcement bypass patterns, secret/credential exposure, irreversible operations |
+| `zero_trust_validator` | SO-12 (Zero-Trust) | PostToolUse | Flags untrusted external data, prompt injection markers, blast radius assessment, excessive scope |
+| `pre_work_validator` | SO-15 (Pre-Work Validation) | PreToolUse | Validates Standing Orders loaded, budget defined, sufficient context before first write |
+
+**Evidence:** `standing-orders-enforcement-map.md` updated to reflect E2 coverage. All hooks follow the advisory-only pattern (never hard-block, always exit 0) consistent with the framework's fail-open design. Hook implementations in `.hooks/` directory, wired through `pre_tool_use_adapter.sh` and `post_tool_use_adapter.sh`.
+**Remaining gap:** Coverage is 53%, not the 80%+ aspirational target in `benchmarks.md`. The enforcement spectrum thesis is now defensible (majority coverage) but not fully realized. Further progression tracked in the enforcement map's E3 targets.
 
 -----
 

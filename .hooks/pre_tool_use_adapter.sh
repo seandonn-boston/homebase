@@ -1,8 +1,9 @@
 #!/bin/bash
 # Admiral Framework — PreToolUse Hook Adapter
 # Translates Claude Code PreToolUse payload to Admiral hook contracts.
-# Budget checkpoint: warns via additionalContext when budget is exceeded.
+# Dispatches to: budget checkpoint, scope_boundary_guard, prohibitions_enforcer, pre_work_validator
 # NEVER hard-blocks (exit 2) — prevents unrecoverable deadlocks.
+# All sub-hooks are isolated — one failure cannot cascade.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -18,50 +19,74 @@ PAYLOAD=$(cat)
 # Extract tool name
 TOOL_NAME=$(echo "$PAYLOAD" | jq -r '.tool_name // "unknown"')
 
-# Load current session state
+# Collect advisory context from all sub-hooks
+ALL_CONTEXT=""
+
+# --- Sub-hook 1: Budget Checkpoint ---
 STATE=$(load_state)
 TOKENS_USED=$(echo "$STATE" | jq -r '.tokens_used // 0')
 TOKEN_BUDGET=$(echo "$STATE" | jq -r '.token_budget // 0')
-
-# Estimate tokens for this tool call
 ESTIMATED=$(estimate_tokens "$TOOL_NAME")
 
-# If no budget is set, allow without comment
-if [ "$TOKEN_BUDGET" -le 0 ]; then
-  exit 0
+if [ "$TOKEN_BUDGET" -gt 0 ]; then
+  UTIL_PCT=$((TOKENS_USED * 100 / TOKEN_BUDGET))
+  PROJECTED=$((TOKENS_USED + ESTIMATED))
+  OVER_BY=$((PROJECTED - TOKEN_BUDGET))
+
+  if [ "$PROJECTED" -ge "$TOKEN_BUDGET" ]; then
+    ALL_CONTEXT+="BUDGET CHECKPOINT: Token budget exceeded. Current: ${TOKENS_USED} tokens used of ${TOKEN_BUDGET} budget (${UTIL_PCT}%). This ${TOOL_NAME} call is estimated at ~${ESTIMATED} tokens, bringing projected total to ${PROJECTED} (${OVER_BY} over budget). You may continue, but please inform the user that the session has exceeded its token budget and ask if they wish to proceed. "
+  elif [ "$UTIL_PCT" -ge 90 ]; then
+    REMAINING=$((TOKEN_BUDGET - TOKENS_USED))
+    ALL_CONTEXT+="BUDGET ADVISORY: Session at ${UTIL_PCT}% of token budget (${TOKENS_USED}/${TOKEN_BUDGET}). ~${REMAINING} tokens remaining. Consider wrapping up or informing the user. "
+  fi
 fi
 
-# Calculate utilization
-UTIL_PCT=$((TOKENS_USED * 100 / TOKEN_BUDGET))
-PROJECTED=$((TOKENS_USED + ESTIMATED))
-PROJECTED_PCT=$((PROJECTED * 100 / TOKEN_BUDGET))
-OVER_BY=$((PROJECTED - TOKEN_BUDGET))
-
-# Emit advisory context at thresholds — always allow (exit 0)
-if [ "$PROJECTED" -ge "$TOKEN_BUDGET" ]; then
-  # Over budget — warn with details but allow
-  jq -n \
-    --arg ctx "BUDGET CHECKPOINT: Token budget exceeded. Current: ${TOKENS_USED} tokens used of ${TOKEN_BUDGET} budget (${UTIL_PCT}%). This ${TOOL_NAME} call is estimated at ~${ESTIMATED} tokens, bringing projected total to ${PROJECTED} (${OVER_BY} over budget). You may continue, but please inform the user that the session has exceeded its token budget and ask if they wish to proceed." \
-    '{
-      "hookSpecificOutput": {
-        "hookEventName": "PreToolUse",
-        "permissionDecision": "allow",
-        "additionalContext": $ctx
-      }
-    }'
-elif [ "$UTIL_PCT" -ge 90 ]; then
-  # Approaching budget — advisory warning
-  REMAINING=$((TOKEN_BUDGET - TOKENS_USED))
-  jq -n \
-    --arg ctx "BUDGET ADVISORY: Session at ${UTIL_PCT}% of token budget (${TOKENS_USED}/${TOKEN_BUDGET}). ~${REMAINING} tokens remaining. Consider wrapping up or informing the user." \
-    '{
-      "hookSpecificOutput": {
-        "hookEventName": "PreToolUse",
-        "permissionDecision": "allow",
-        "additionalContext": $ctx
-      }
-    }'
+# --- Sub-hook 2: Scope Boundary Guard (SO-03, isolated) ---
+if [ -x "$SCRIPT_DIR/scope_boundary_guard.sh" ]; then
+  SCOPE_OUTPUT=""
+  SCOPE_OUTPUT=$(echo "$PAYLOAD" | "$SCRIPT_DIR/scope_boundary_guard.sh" 2>/dev/null) || true
+  if [ -n "$SCOPE_OUTPUT" ]; then
+    SCOPE_CTX=$(echo "$SCOPE_OUTPUT" | jq -r '.hookSpecificOutput.additionalContext // empty' 2>/dev/null) || true
+    if [ -n "$SCOPE_CTX" ]; then
+      ALL_CONTEXT+="$SCOPE_CTX "
+    fi
+  fi
 fi
 
-# Allow the tool use
+# --- Sub-hook 3: Prohibitions Enforcer (SO-10, isolated) ---
+if [ -x "$SCRIPT_DIR/prohibitions_enforcer.sh" ]; then
+  PROHIB_OUTPUT=""
+  PROHIB_OUTPUT=$(echo "$PAYLOAD" | "$SCRIPT_DIR/prohibitions_enforcer.sh" 2>/dev/null) || true
+  if [ -n "$PROHIB_OUTPUT" ]; then
+    PROHIB_CTX=$(echo "$PROHIB_OUTPUT" | jq -r '.hookSpecificOutput.additionalContext // empty' 2>/dev/null) || true
+    if [ -n "$PROHIB_CTX" ]; then
+      ALL_CONTEXT+="$PROHIB_CTX "
+    fi
+  fi
+fi
+
+# --- Sub-hook 4: Pre-Work Validator (SO-15, isolated) ---
+if [ -x "$SCRIPT_DIR/pre_work_validator.sh" ]; then
+  PREWORK_OUTPUT=""
+  PREWORK_OUTPUT=$(echo "$PAYLOAD" | "$SCRIPT_DIR/pre_work_validator.sh" 2>/dev/null) || true
+  if [ -n "$PREWORK_OUTPUT" ]; then
+    PREWORK_CTX=$(echo "$PREWORK_OUTPUT" | jq -r '.hookSpecificOutput.additionalContext // empty' 2>/dev/null) || true
+    if [ -n "$PREWORK_CTX" ]; then
+      ALL_CONTEXT+="$PREWORK_CTX "
+    fi
+  fi
+fi
+
+# Emit combined advisory context if any sub-hooks fired
+if [ -n "$ALL_CONTEXT" ]; then
+  jq -n --arg ctx "$ALL_CONTEXT" '{
+    "hookSpecificOutput": {
+      "hookEventName": "PreToolUse",
+      "permissionDecision": "allow",
+      "additionalContext": $ctx
+    }
+  }'
+fi
+
+# Always allow
 exit 0

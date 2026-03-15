@@ -1,7 +1,7 @@
 #!/bin/bash
 # Admiral Framework — PostToolUse Hook Adapter
 # Translates Claude Code PostToolUse payload to Admiral hook contracts.
-# Fires in order: token_budget_tracker, loop_detector, context_health_check (every 10th)
+# Fires in order: token_budget_tracker, loop_detector, context_health_check (every 10th), zero_trust_validator, brain_context_router
 # DESIGN PRINCIPLE: All hooks are advisory-only (exit 0). No hook can block tool use.
 # Hook failures are isolated — one failing hook cannot cascade into others.
 set -euo pipefail
@@ -92,7 +92,23 @@ if [ $((TOOL_CALL_COUNT % 10)) -eq 0 ] && [ -x "$SCRIPT_DIR/context_health_check
   fi
 fi
 
-# --- Hook 4: brain_context_router (isolated, advisory only) ---
+# --- Hook 4: zero_trust_validator (SO-12, isolated, advisory only) ---
+if [ -x "$SCRIPT_DIR/zero_trust_validator.sh" ]; then
+  ZT_OUTPUT=""
+  ZT_OUTPUT=$(echo "$PAYLOAD" | jq --argjson state "$STATE" '. + {session_state: $state}' | "$SCRIPT_DIR/zero_trust_validator.sh" 2>/dev/null) || true
+  if [ -n "$ZT_OUTPUT" ]; then
+    ZT_STATE=$(echo "$ZT_OUTPUT" | jq '.hook_state.zero_trust // empty' 2>/dev/null) || true
+    if [ -n "$ZT_STATE" ] && [ "$ZT_STATE" != "null" ]; then
+      STATE=$(echo "$STATE" | jq --argjson zs "$ZT_STATE" '.hook_state.zero_trust = $zs')
+    fi
+    ZT_ALERT=$(echo "$ZT_OUTPUT" | jq -r '.alert // empty' 2>/dev/null) || true
+    if [ -n "$ZT_ALERT" ]; then
+      MESSAGES+="[Zero-Trust] $ZT_ALERT\n"
+    fi
+  fi
+fi
+
+# --- Hook 5: brain_context_router (isolated, advisory only) ---
 if [ -x "$SCRIPT_DIR/brain_context_router.sh" ]; then
   BRAIN_OUTPUT=""
   BRAIN_OUTPUT=$(echo "$PAYLOAD" | jq --argjson state "$STATE" '. + {session_state: $state}' | "$SCRIPT_DIR/brain_context_router.sh" 2>/dev/null) || true
