@@ -88,7 +88,7 @@
 **5. Institutional Memory (Brain Architecture)**
 - Persistent memory across sessions — lessons learned, project context, decision history
 - The fleet accumulates knowledge over time instead of cold-starting every session
-- Five-level memory architecture (Postgres+pgvector)
+- Three-level memory architecture: B1 (file-based) → B2 (SQLite + embeddings) → B3 (Postgres + pgvector)
 - Shared context enables coordination without redundant discovery
 
 ### Why This Matters (The Business Case)
@@ -128,10 +128,10 @@ The space is crowding from two directions — agent frameworks adding governance
 
 ### Development Status — Be Honest and Specific
 
-> "I'm at v0.5.3-alpha. Here's what that means in plain English:"
+> "I'm at v0.8.1-alpha. Here's what that means in plain English:"
 
 **What exists today:**
-- The complete specification — 15,000+ lines across 70+ files. The full architectural blueprint.
+- The complete specification — 114 files across 22 groups. The full architectural blueprint.
 - 12-part operational doctrine covering strategy, enforcement, execution, security, and quality assurance
 - 71 agent definitions with routing rules and interface contracts
 - The persistent memory (Brain) architecture — three-level semantic memory (B1: file-based → B2: SQLite → B3: Postgres+pgvector)
@@ -173,7 +173,7 @@ The space is crowding from two directions — agent frameworks adding governance
 → Multiple paths: hosted control plane (SaaS), enterprise runtime (on-prem), consulting/implementation, certification/training, marketplace for agent definitions. The spec is the foundation — monetization layers sit above it. *(Be honest if you haven't finalized this — it shows you're thinking about it seriously.)*
 
 **"What's your competitive moat?"**
-→ First-mover on the visibility and control layer specifically — not building agents, not compliance checkboxes, but the operational layer humans need to run agents safely. Model-agnostic and platform-agnostic (not locked to one vendor). The depth — 15,000+ lines of doctrine — is hard to replicate. The enforcement spectrum insight (hooks vs. instructions) is non-obvious and validated. And the 71 pre-defined roles with interface contracts don't exist anywhere else.
+→ First-mover on the visibility and control layer specifically — not building agents, not compliance checkboxes, but the operational layer humans need to run agents safely. Model-agnostic and platform-agnostic (not locked to one vendor). The depth — 114 files of doctrine across 22 groups — is hard to replicate. The enforcement spectrum insight (hooks vs. instructions) is non-obvious and validated. And the 71 pre-defined roles with interface contracts don't exist anywhere else.
 
 **"Is this a real market?"**
 → $660B+ being spent on AI infrastructure in 2026. Every dollar creates downstream demand for operations and governance. The $2 trillion repricing proves the market believes agents are replacing seats. The Gartner stat — 40% of deployments canceled by 2027 due to poor controls — proves governance is the bottleneck. The AI governance market alone is projected at $7.4B by 2030 (51% CAGR).

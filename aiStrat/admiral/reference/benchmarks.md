@@ -2,6 +2,8 @@
 
 > **Audience:** Implementers and evaluators measuring Admiral Framework effectiveness. These benchmarks define what "good" looks like for an Admiral-governed fleet.
 
+> **Maturity Note:** All targets in this document are hypothetical until validated through real-world deployment. Targets are informed estimates based on software engineering heuristics and analogous systems — not empirical measurements from Admiral-governed fleets. As real-world data becomes available, targets should be updated and marked as validated.
+
 -----
 
 ## Core Metrics
@@ -107,9 +109,9 @@ These are capabilities unique to or pioneered by the Admiral Framework:
 
 These are order-of-magnitude expectations, not guarantees. Actual performance depends on domain, model selection, and implementation quality.
 
-| Phase | Governance Overhead | First-Pass Quality | Recovery Rate | Enforcement Coverage |
-|---|---|---|---|---|
-| Initial deployment | 20-30% | 50-60% | 60-70% | 27% (4/15) |
-| After 2 weeks | 15-20% | 65-75% | 75-85% | 50%+ (target) |
-| After 3 months | 10-15% | 75-85% | 85-95% | 80%+ (target) |
-| Mature fleet | < 10% | > 85% | > 95% | > 90% |
+| Phase | Governance Overhead | First-Pass Quality | Recovery Rate | Enforcement Coverage | Basis | Validated |
+|---|---|---|---|---|---|---|
+| Initial deployment | 20-30% | 50-60% | 60-70% | 27% (4/15) | Informed estimate from analogous systems | Not yet |
+| After 2 weeks | 15-20% | 65-75% | 75-85% | 50%+ (target) | Informed estimate | Not yet |
+| After 3 months | 10-15% | 75-85% | 85-95% | 80%+ (target) | Informed estimate | Not yet |
+| Mature fleet | < 10% | > 85% | > 95% | > 90% | Informed estimate | Not yet |

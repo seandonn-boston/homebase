@@ -77,13 +77,13 @@ Every piece of external content destined for the Brain passes through a five-lay
 
 **Why this layer ordering matters:** Layers 1-3 are deterministic and LLM-free because they must be trustworthy against adversarial content specifically crafted to manipulate LLMs. If the primary defense relied on an LLM, an attacker could craft content that simultaneously attacks the fleet *and* disarms the defense. Layer 4 (LLM advisory) is additive only — it can reject but never approve — so even a compromised Layer 4 can only fail in one direction. **Principle: fail-open for discovery (the Monitor finds everything), fail-closed for ingestion (nothing enters the Brain without passing all layers).**
 
-| Layer | Defense | What It Catches | LLM Involvement |
-|-------|---------|-----------------|-----------------|
-| **1. Structural** | Enforces schema, field lengths, valid categories, required fields | Malformed entries, oversized payloads, invalid categories | None — deterministic |
-| **2. Injection** | Encoding normalization + 70+ regex patterns scanning for prompt injection, XSS, SQL injection, command injection, secrets, PII | Adversarial content, credential exposure, data leaks | None — pattern matching |
-| **3. Deterministic Semantic** | Rule-based NLP, TF-IDF scoring against attack corpus, Bayesian text classification, authority-pattern detection | Authority spoofing, false credentials, behavior manipulation, dangerous advice | **None — LLM-airgapped** |
-| **4. LLM Advisory** | LLM classifier with hardcoded prompt. **Can only REJECT, never APPROVE.** | Subtle semantic attacks evading deterministic detection | LLM — advisory, additive rejection only |
-| **5. Antibody** | Converts detected attacks into Brain FAILURE entries for future defense | Rate-limited (50/hour), fingerprint-deduplicated, preserves attack patterns in defanged form | None — deterministic |
+| Layer | Defense | What It Catches | LLM Involvement | Implementation Status |
+|-------|---------|-----------------|-----------------|---------------------|
+| **1. Structural** | Enforces schema, field lengths, valid categories, required fields | Malformed entries, oversized payloads, invalid categories | None — deterministic | **Specified + partial implementation** (via scanner.sh validation) |
+| **2. Injection** | Encoding normalization + 70+ regex patterns scanning for prompt injection, XSS, SQL injection, command injection, secrets, PII | Adversarial content, credential exposure, data leaks | None — pattern matching | **Specified + partial implementation** (regex patterns defined) |
+| **3. Deterministic Semantic** | Rule-based NLP, TF-IDF scoring against attack corpus, Bayesian text classification, authority-pattern detection | Authority spoofing, false credentials, behavior manipulation, dangerous advice | **None — LLM-airgapped** | **Specified only** — no implementation exists |
+| **4. LLM Advisory** | LLM classifier with hardcoded prompt. **Can only REJECT, never APPROVE.** | Subtle semantic attacks evading deterministic detection | LLM — advisory, additive rejection only | **Specified only** — no implementation exists |
+| **5. Antibody** | Converts detected attacks into Brain FAILURE entries for future defense | Rate-limited (50/hour), fingerprint-deduplicated, preserves attack patterns in defanged form | None — deterministic | **Specified only** — no implementation exists |
 
 **Attack response flow:**
 1. Entry is **rejected** (never reaches the Brain)
