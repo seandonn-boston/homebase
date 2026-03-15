@@ -2,11 +2,9 @@
   {
     "company": "Walmart",
     "ticker": "WMT",
-    "fortune_500_rank": 1,
     "sector": "Consumer Staples",
+    "fortune_500_rank": 1,
     "revenue_2025": 681000,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "many",
     "headcount": 2100000,
     "engineering_headcount_est": 20000,
     "cloud_provider": "multi",
@@ -21,20 +19,28 @@
       "Responsible AI principles published",
       "AI ethics review process for new deployments"
     ],
-    "build_vs_buy": "build",
-    "tech_spend_pct": 2.5,
-    "operating_margin_pct": 4.2,
     "data_source": "Walmart FY2025 10-K (ended Jan 31, 2025); corporate.walmart.com AI announcements 2025",
-    "data_date": "2025-01-31"
+    "data_date": "2025-01-31",
+    "scores": {
+      "ai_investment_intensity": 70,
+      "engineering_scale": 75,
+      "cloud_maturity": 80,
+      "governance_posture": 55,
+      "regulatory_pressure": 35,
+      "agent_tooling": 90,
+      "build_vs_buy": 20,
+      "budget_availability": 28
+    },
+    "has_platform_team": true,
+    "governance_type": "compliance-focused",
+    "open_source_preference": false
   },
   {
     "company": "Amazon",
     "ticker": "AMZN",
-    "fortune_500_rank": 2,
     "sector": "Consumer Discretionary",
+    "fortune_500_rank": 2,
     "revenue_2025": 716900,
-    "ai_capex_2025": 131800,
-    "ai_mentions_earnings": "dominant",
     "headcount": 1556000,
     "engineering_headcount_est": 350000,
     "cloud_provider": "AWS",
@@ -51,20 +57,28 @@
       "AI Service Cards for transparency",
       "Founding member of Partnership on AI"
     ],
-    "build_vs_buy": "build",
-    "tech_spend_pct": 18.4,
-    "operating_margin_pct": 11.2,
     "data_source": "Amazon 2025 annual results; Q4 2025 earnings release (Feb 2026)",
-    "data_date": "2025-12-31"
+    "data_date": "2025-12-31",
+    "scores": {
+      "ai_investment_intensity": 85,
+      "engineering_scale": 95,
+      "cloud_maturity": 75,
+      "governance_posture": 70,
+      "regulatory_pressure": 30,
+      "agent_tooling": 90,
+      "build_vs_buy": 20,
+      "budget_availability": 100
+    },
+    "has_platform_team": true,
+    "governance_type": "operational",
+    "open_source_preference": false
   },
   {
     "company": "UnitedHealth Group",
     "ticker": "UNH",
-    "fortune_500_rank": 3,
     "sector": "Health Care",
+    "fortune_500_rank": 3,
     "revenue_2025": 447600,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "moderate",
     "headcount": 440000,
     "engineering_headcount_est": 30000,
     "cloud_provider": "multi",
@@ -78,20 +92,28 @@
       "HIPAA compliance for AI systems",
       "Regulatory compliance programs for AI in healthcare"
     ],
-    "build_vs_buy": "build",
-    "tech_spend_pct": 4.0,
-    "operating_margin_pct": 4.2,
     "data_source": "UnitedHealth Group 2025 annual results press release",
-    "data_date": "2025-12-31"
+    "data_date": "2025-12-31",
+    "scores": {
+      "ai_investment_intensity": 50,
+      "engineering_scale": 85,
+      "cloud_maturity": 80,
+      "governance_posture": 70,
+      "regulatory_pressure": 80,
+      "agent_tooling": 70,
+      "build_vs_buy": 20,
+      "budget_availability": 40
+    },
+    "has_platform_team": true,
+    "governance_type": "operational",
+    "open_source_preference": false
   },
   {
     "company": "Apple",
     "ticker": "AAPL",
-    "fortune_500_rank": 4,
     "sector": "Information Technology",
+    "fortune_500_rank": 4,
     "revenue_2025": 416161,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "many",
     "headcount": 164000,
     "engineering_headcount_est": 80000,
     "cloud_provider": "multi",
@@ -106,20 +128,28 @@
       "Private Cloud Compute transparency and auditability",
       "Differential privacy techniques in AI training"
     ],
-    "build_vs_buy": "build",
-    "tech_spend_pct": 8.0,
-    "operating_margin_pct": 31.5,
     "data_source": "Apple FY2025 10-K (fiscal year ended Sep 27, 2025)",
-    "data_date": "2025-09-27"
+    "data_date": "2025-09-27",
+    "scores": {
+      "ai_investment_intensity": 70,
+      "engineering_scale": 95,
+      "cloud_maturity": 80,
+      "governance_posture": 70,
+      "regulatory_pressure": 25,
+      "agent_tooling": 70,
+      "build_vs_buy": 20,
+      "budget_availability": 100
+    },
+    "has_platform_team": true,
+    "governance_type": "operational",
+    "open_source_preference": false
   },
   {
     "company": "CVS Health",
     "ticker": "CVS",
-    "fortune_500_rank": 5,
     "sector": "Health Care",
+    "fortune_500_rank": 5,
     "revenue_2025": 402067,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "few",
     "headcount": 300000,
     "engineering_headcount_est": 15000,
     "cloud_provider": "multi",
@@ -130,20 +160,28 @@
     "governance_signals": [
       "Health AI compliance frameworks"
     ],
-    "build_vs_buy": "mixed",
-    "tech_spend_pct": 3.0,
-    "operating_margin_pct": 2.5,
     "data_source": "CVS Health 2025 full-year earnings release (Feb 2026)",
-    "data_date": "2025-12-31"
+    "data_date": "2025-12-31",
+    "scores": {
+      "ai_investment_intensity": 20,
+      "engineering_scale": 75,
+      "cloud_maturity": 80,
+      "governance_posture": 40,
+      "regulatory_pressure": 80,
+      "agent_tooling": 55,
+      "build_vs_buy": 40,
+      "budget_availability": 29
+    },
+    "has_platform_team": true,
+    "governance_type": "compliance-focused",
+    "open_source_preference": false
   },
   {
     "company": "Berkshire Hathaway",
     "ticker": "BRK.B",
-    "fortune_500_rank": 6,
     "sector": "Financials",
+    "fortune_500_rank": 6,
     "revenue_2025": 371433,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "none",
     "headcount": 396500,
     "engineering_headcount_est": 10000,
     "cloud_provider": "unknown",
@@ -152,20 +190,28 @@
       "Insurance regulatory compliance",
       "Conservative technology posture"
     ],
-    "build_vs_buy": "buy",
-    "tech_spend_pct": 1.5,
-    "operating_margin_pct": 12.8,
     "data_source": "Berkshire Hathaway 2024 10-K (calendar year 2024)",
-    "data_date": "2024-12-31"
+    "data_date": "2024-12-31",
+    "scores": {
+      "ai_investment_intensity": 5,
+      "engineering_scale": 65,
+      "cloud_maturity": 30,
+      "governance_posture": 55,
+      "regulatory_pressure": 85,
+      "agent_tooling": 0,
+      "build_vs_buy": 80,
+      "budget_availability": 37
+    },
+    "has_platform_team": true,
+    "governance_type": "compliance-focused",
+    "open_source_preference": false
   },
   {
     "company": "Exxon Mobil",
     "ticker": "XOM",
-    "fortune_500_rank": 7,
     "sector": "Energy",
+    "fortune_500_rank": 7,
     "revenue_2025": 349600,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "few",
     "headcount": 62000,
     "engineering_headcount_est": 15000,
     "cloud_provider": "multi",
@@ -174,20 +220,28 @@
       "Machine learning for predictive maintenance"
     ],
     "governance_signals": [],
-    "build_vs_buy": "mixed",
-    "tech_spend_pct": 1.5,
-    "operating_margin_pct": 12.5,
     "data_source": "ExxonMobil 2024 annual results (Jan 2025)",
-    "data_date": "2024-12-31"
+    "data_date": "2024-12-31",
+    "scores": {
+      "ai_investment_intensity": 20,
+      "engineering_scale": 75,
+      "cloud_maturity": 80,
+      "governance_posture": 15,
+      "regulatory_pressure": 60,
+      "agent_tooling": 55,
+      "build_vs_buy": 40,
+      "budget_availability": 37
+    },
+    "has_platform_team": true,
+    "governance_type": "compliance-only",
+    "open_source_preference": false
   },
   {
     "company": "Alphabet",
     "ticker": "GOOGL",
-    "fortune_500_rank": 8,
     "sector": "Communication Services",
+    "fortune_500_rank": 8,
     "revenue_2025": 402836,
-    "ai_capex_2025": 91400,
-    "ai_mentions_earnings": "dominant",
     "headcount": 183000,
     "engineering_headcount_est": 120000,
     "cloud_provider": "GCP",
@@ -206,20 +260,28 @@
       "AI safety research via DeepMind",
       "Participation in voluntary AI safety commitments"
     ],
-    "build_vs_buy": "build",
-    "tech_spend_pct": 22.7,
-    "operating_margin_pct": 32.0,
     "data_source": "Alphabet 2025 10-K; Q4 2025 earnings release (Feb 2026)",
-    "data_date": "2025-12-31"
+    "data_date": "2025-12-31",
+    "scores": {
+      "ai_investment_intensity": 95,
+      "engineering_scale": 95,
+      "cloud_maturity": 75,
+      "governance_posture": 70,
+      "regulatory_pressure": 50,
+      "agent_tooling": 90,
+      "build_vs_buy": 20,
+      "budget_availability": 100
+    },
+    "has_platform_team": true,
+    "governance_type": "operational",
+    "open_source_preference": false
   },
   {
     "company": "McKesson",
     "ticker": "MCK",
-    "fortune_500_rank": 9,
     "sector": "Health Care",
+    "fortune_500_rank": 9,
     "revenue_2025": 359100,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "few",
     "headcount": 51000,
     "engineering_headcount_est": 5000,
     "cloud_provider": "multi",
@@ -228,20 +290,28 @@
       "Data analytics platform for oncology insights"
     ],
     "governance_signals": [],
-    "build_vs_buy": "mixed",
-    "tech_spend_pct": 2.0,
-    "operating_margin_pct": 1.6,
     "data_source": "McKesson FY2025 results (fiscal year ended Mar 31, 2025)",
-    "data_date": "2025-03-31"
+    "data_date": "2025-03-31",
+    "scores": {
+      "ai_investment_intensity": 20,
+      "engineering_scale": 55,
+      "cloud_maturity": 80,
+      "governance_posture": 15,
+      "regulatory_pressure": 80,
+      "agent_tooling": 55,
+      "build_vs_buy": 40,
+      "budget_availability": 19
+    },
+    "has_platform_team": false,
+    "governance_type": "compliance-only",
+    "open_source_preference": false
   },
   {
     "company": "The Cigna Group",
     "ticker": "CI",
-    "fortune_500_rank": 10,
     "sector": "Health Care",
+    "fortune_500_rank": 10,
     "revenue_2025": 274900,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "few",
     "headcount": 72000,
     "engineering_headcount_est": 8000,
     "cloud_provider": "multi",
@@ -252,20 +322,28 @@
     "governance_signals": [
       "Healthcare AI governance programs"
     ],
-    "build_vs_buy": "mixed",
-    "tech_spend_pct": 3.0,
-    "operating_margin_pct": 3.5,
     "data_source": "Cigna Group 2025 full-year results (calendar year 2025)",
-    "data_date": "2025-12-31"
+    "data_date": "2025-12-31",
+    "scores": {
+      "ai_investment_intensity": 20,
+      "engineering_scale": 65,
+      "cloud_maturity": 80,
+      "governance_posture": 40,
+      "regulatory_pressure": 80,
+      "agent_tooling": 55,
+      "build_vs_buy": 40,
+      "budget_availability": 31
+    },
+    "has_platform_team": true,
+    "governance_type": "compliance-focused",
+    "open_source_preference": false
   },
   {
     "company": "Costco",
     "ticker": "COST",
-    "fortune_500_rank": 11,
     "sector": "Consumer Staples",
+    "fortune_500_rank": 11,
     "revenue_2025": 275240,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "few",
     "headcount": 316000,
     "engineering_headcount_est": 3000,
     "cloud_provider": "unknown",
@@ -273,20 +351,28 @@
       "AI for demand forecasting and inventory management"
     ],
     "governance_signals": [],
-    "build_vs_buy": "buy",
-    "tech_spend_pct": 1.5,
-    "operating_margin_pct": 3.8,
     "data_source": "Costco FY2025 results (fiscal year ended Aug 31, 2025)",
-    "data_date": "2025-08-31"
+    "data_date": "2025-08-31",
+    "scores": {
+      "ai_investment_intensity": 20,
+      "engineering_scale": 55,
+      "cloud_maturity": 30,
+      "governance_posture": 15,
+      "regulatory_pressure": 35,
+      "agent_tooling": 40,
+      "build_vs_buy": 80,
+      "budget_availability": 19
+    },
+    "has_platform_team": false,
+    "governance_type": "compliance-only",
+    "open_source_preference": false
   },
   {
     "company": "Microsoft",
     "ticker": "MSFT",
-    "fortune_500_rank": 12,
     "sector": "Information Technology",
+    "fortune_500_rank": 12,
     "revenue_2025": 281720,
-    "ai_capex_2025": 64550,
-    "ai_mentions_earnings": "dominant",
     "headcount": 228000,
     "engineering_headcount_est": 130000,
     "cloud_provider": "Azure",
@@ -305,20 +391,28 @@
       "Transparency reports on AI systems",
       "Founding member of Partnership on AI"
     ],
-    "build_vs_buy": "build",
-    "tech_spend_pct": 22.9,
-    "operating_margin_pct": 45.6,
     "data_source": "Microsoft FY2025 10-K (fiscal year ended Jun 30, 2025)",
-    "data_date": "2025-06-30"
+    "data_date": "2025-06-30",
+    "scores": {
+      "ai_investment_intensity": 95,
+      "engineering_scale": 95,
+      "cloud_maturity": 75,
+      "governance_posture": 85,
+      "regulatory_pressure": 25,
+      "agent_tooling": 90,
+      "build_vs_buy": 20,
+      "budget_availability": 100
+    },
+    "has_platform_team": true,
+    "governance_type": "operational",
+    "open_source_preference": false
   },
   {
     "company": "Cencora",
     "ticker": "COR",
-    "fortune_500_rank": 13,
     "sector": "Health Care",
+    "fortune_500_rank": 13,
     "revenue_2025": 321333,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "few",
     "headcount": 46000,
     "engineering_headcount_est": 4000,
     "cloud_provider": "unknown",
@@ -326,20 +420,28 @@
       "AI for pharmaceutical supply chain logistics"
     ],
     "governance_signals": [],
-    "build_vs_buy": "buy",
-    "tech_spend_pct": 1.5,
-    "operating_margin_pct": 0.8,
     "data_source": "Cencora FY2025 results (fiscal year ended Sep 30, 2025)",
-    "data_date": "2025-09-30"
+    "data_date": "2025-09-30",
+    "scores": {
+      "ai_investment_intensity": 20,
+      "engineering_scale": 55,
+      "cloud_maturity": 30,
+      "governance_posture": 15,
+      "regulatory_pressure": 80,
+      "agent_tooling": 40,
+      "build_vs_buy": 80,
+      "budget_availability": 13
+    },
+    "has_platform_team": false,
+    "governance_type": "compliance-only",
+    "open_source_preference": false
   },
   {
     "company": "Chevron",
     "ticker": "CVX",
-    "fortune_500_rank": 14,
     "sector": "Energy",
+    "fortune_500_rank": 14,
     "revenue_2025": 202800,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "few",
     "headcount": 45600,
     "engineering_headcount_est": 10000,
     "cloud_provider": "multi",
@@ -348,20 +450,28 @@
       "Machine learning for equipment predictive maintenance"
     ],
     "governance_signals": [],
-    "build_vs_buy": "mixed",
-    "tech_spend_pct": 1.5,
-    "operating_margin_pct": 8.5,
     "data_source": "Chevron 2024 annual results (Jan 2025)",
-    "data_date": "2024-12-31"
+    "data_date": "2024-12-31",
+    "scores": {
+      "ai_investment_intensity": 20,
+      "engineering_scale": 65,
+      "cloud_maturity": 80,
+      "governance_posture": 15,
+      "regulatory_pressure": 60,
+      "agent_tooling": 55,
+      "build_vs_buy": 40,
+      "budget_availability": 29
+    },
+    "has_platform_team": true,
+    "governance_type": "compliance-only",
+    "open_source_preference": false
   },
   {
     "company": "Cardinal Health",
     "ticker": "CAH",
-    "fortune_500_rank": 15,
     "sector": "Health Care",
+    "fortune_500_rank": 15,
     "revenue_2025": 222600,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "few",
     "headcount": 48000,
     "engineering_headcount_est": 4000,
     "cloud_provider": "unknown",
@@ -369,20 +479,28 @@
       "AI for pharmaceutical distribution optimization"
     ],
     "governance_signals": [],
-    "build_vs_buy": "buy",
-    "tech_spend_pct": 1.5,
-    "operating_margin_pct": 1.0,
     "data_source": "Cardinal Health FY2025 results (fiscal year ended Jun 30, 2025)",
-    "data_date": "2025-06-30"
+    "data_date": "2025-06-30",
+    "scores": {
+      "ai_investment_intensity": 20,
+      "engineering_scale": 55,
+      "cloud_maturity": 30,
+      "governance_posture": 15,
+      "regulatory_pressure": 80,
+      "agent_tooling": 40,
+      "build_vs_buy": 80,
+      "budget_availability": 14
+    },
+    "has_platform_team": false,
+    "governance_type": "compliance-only",
+    "open_source_preference": false
   },
   {
     "company": "JPMorgan Chase",
     "ticker": "JPM",
-    "fortune_500_rank": 16,
     "sector": "Financials",
+    "fortune_500_rank": 16,
     "revenue_2025": 280345,
-    "ai_capex_2025": 1300,
-    "ai_mentions_earnings": "many",
     "headcount": 317233,
     "engineering_headcount_est": 60000,
     "cloud_provider": "multi",
@@ -399,20 +517,28 @@
       "AI risk management integrated with model risk management",
       "Top-ranked on Evident AI Index for financial services"
     ],
-    "build_vs_buy": "build",
-    "tech_spend_pct": 6.4,
-    "operating_margin_pct": 38.0,
     "data_source": "JPMorgan Chase 2025 annual results; CNBC AI strategy reports",
-    "data_date": "2025-12-31"
+    "data_date": "2025-12-31",
+    "scores": {
+      "ai_investment_intensity": 35,
+      "engineering_scale": 95,
+      "cloud_maturity": 80,
+      "governance_posture": 70,
+      "regulatory_pressure": 85,
+      "agent_tooling": 90,
+      "build_vs_buy": 20,
+      "budget_availability": 100
+    },
+    "has_platform_team": true,
+    "governance_type": "operational",
+    "open_source_preference": false
   },
   {
     "company": "Fannie Mae",
     "ticker": "FNMA",
-    "fortune_500_rank": 17,
     "sector": "Financials",
+    "fortune_500_rank": 17,
     "revenue_2025": 152670,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "few",
     "headcount": 8200,
     "engineering_headcount_est": 2500,
     "cloud_provider": "multi",
@@ -423,20 +549,28 @@
     "governance_signals": [
       "FHFA regulatory oversight of AI in mortgage decisions"
     ],
-    "build_vs_buy": "mixed",
-    "tech_spend_pct": 3.0,
-    "operating_margin_pct": 15.0,
     "data_source": "Fannie Mae 2024 10-K (calendar year 2024)",
-    "data_date": "2024-12-31"
+    "data_date": "2024-12-31",
+    "scores": {
+      "ai_investment_intensity": 20,
+      "engineering_scale": 55,
+      "cloud_maturity": 80,
+      "governance_posture": 40,
+      "regulatory_pressure": 85,
+      "agent_tooling": 55,
+      "build_vs_buy": 40,
+      "budget_availability": 54
+    },
+    "has_platform_team": false,
+    "governance_type": "compliance-focused",
+    "open_source_preference": false
   },
   {
     "company": "General Motors",
     "ticker": "GM",
-    "fortune_500_rank": 18,
     "sector": "Consumer Discretionary",
+    "fortune_500_rank": 18,
     "revenue_2025": 185019,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "moderate",
     "headcount": 163000,
     "engineering_headcount_est": 25000,
     "cloud_provider": "multi",
@@ -448,20 +582,28 @@
     "governance_signals": [
       "Safety-first approach to autonomous vehicle development"
     ],
-    "build_vs_buy": "mixed",
-    "tech_spend_pct": 3.5,
-    "operating_margin_pct": 5.8,
     "data_source": "GM 2025 annual results (calendar year 2025)",
-    "data_date": "2025-12-31"
+    "data_date": "2025-12-31",
+    "scores": {
+      "ai_investment_intensity": 50,
+      "engineering_scale": 85,
+      "cloud_maturity": 80,
+      "governance_posture": 40,
+      "regulatory_pressure": 30,
+      "agent_tooling": 70,
+      "build_vs_buy": 40,
+      "budget_availability": 39
+    },
+    "has_platform_team": true,
+    "governance_type": "compliance-focused",
+    "open_source_preference": false
   },
   {
     "company": "Ford Motor",
     "ticker": "F",
-    "fortune_500_rank": 19,
     "sector": "Consumer Discretionary",
+    "fortune_500_rank": 19,
     "revenue_2025": 187267,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "moderate",
     "headcount": 177000,
     "engineering_headcount_est": 20000,
     "cloud_provider": "multi",
@@ -471,20 +613,28 @@
       "AI for manufacturing process optimization"
     ],
     "governance_signals": [],
-    "build_vs_buy": "mixed",
-    "tech_spend_pct": 3.0,
-    "operating_margin_pct": -4.9,
     "data_source": "Ford Motor 2025 annual results (calendar year 2025)",
-    "data_date": "2025-12-31"
+    "data_date": "2025-12-31",
+    "scores": {
+      "ai_investment_intensity": 50,
+      "engineering_scale": 75,
+      "cloud_maturity": 80,
+      "governance_posture": 15,
+      "regulatory_pressure": 30,
+      "agent_tooling": 70,
+      "build_vs_buy": 40,
+      "budget_availability": 14
+    },
+    "has_platform_team": true,
+    "governance_type": "compliance-only",
+    "open_source_preference": false
   },
   {
     "company": "Centene",
     "ticker": "CNC",
-    "fortune_500_rank": 20,
     "sector": "Health Care",
+    "fortune_500_rank": 20,
     "revenue_2025": 194777,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "few",
     "headcount": 74300,
     "engineering_headcount_est": 6000,
     "cloud_provider": "multi",
@@ -495,20 +645,28 @@
     "governance_signals": [
       "Healthcare regulatory compliance for AI-assisted decisions"
     ],
-    "build_vs_buy": "buy",
-    "tech_spend_pct": 3.0,
-    "operating_margin_pct": 1.5,
     "data_source": "Centene 2025 annual results (Feb 2026)",
-    "data_date": "2025-12-31"
+    "data_date": "2025-12-31",
+    "scores": {
+      "ai_investment_intensity": 20,
+      "engineering_scale": 65,
+      "cloud_maturity": 80,
+      "governance_posture": 40,
+      "regulatory_pressure": 80,
+      "agent_tooling": 55,
+      "build_vs_buy": 80,
+      "budget_availability": 27
+    },
+    "has_platform_team": true,
+    "governance_type": "compliance-focused",
+    "open_source_preference": false
   },
   {
     "company": "Verizon Communications",
     "ticker": "VZ",
-    "fortune_500_rank": 21,
     "sector": "Communication Services",
+    "fortune_500_rank": 21,
     "revenue_2025": 138200,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "moderate",
     "headcount": 105400,
     "engineering_headcount_est": 25000,
     "cloud_provider": "multi",
@@ -520,20 +678,28 @@
     "governance_signals": [
       "Responsible AI principles"
     ],
-    "build_vs_buy": "mixed",
-    "tech_spend_pct": 12.0,
-    "operating_margin_pct": 18.5,
     "data_source": "Verizon 2025 annual results (Jan 2026)",
-    "data_date": "2025-12-31"
+    "data_date": "2025-12-31",
+    "scores": {
+      "ai_investment_intensity": 50,
+      "engineering_scale": 85,
+      "cloud_maturity": 80,
+      "governance_posture": 40,
+      "regulatory_pressure": 50,
+      "agent_tooling": 70,
+      "build_vs_buy": 40,
+      "budget_availability": 100
+    },
+    "has_platform_team": true,
+    "governance_type": "compliance-focused",
+    "open_source_preference": false
   },
   {
     "company": "AT&T",
     "ticker": "T",
-    "fortune_500_rank": 22,
     "sector": "Communication Services",
+    "fortune_500_rank": 22,
     "revenue_2025": 125648,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "moderate",
     "headcount": 147000,
     "engineering_headcount_est": 30000,
     "cloud_provider": "multi",
@@ -545,20 +711,28 @@
     "governance_signals": [
       "AI governance and responsible use policies"
     ],
-    "build_vs_buy": "mixed",
-    "tech_spend_pct": 16.5,
-    "operating_margin_pct": 19.3,
     "data_source": "AT&T 2025 annual results (Jan 2026)",
-    "data_date": "2025-12-31"
+    "data_date": "2025-12-31",
+    "scores": {
+      "ai_investment_intensity": 50,
+      "engineering_scale": 85,
+      "cloud_maturity": 80,
+      "governance_posture": 40,
+      "regulatory_pressure": 50,
+      "agent_tooling": 70,
+      "build_vs_buy": 40,
+      "budget_availability": 100
+    },
+    "has_platform_team": true,
+    "governance_type": "compliance-focused",
+    "open_source_preference": false
   },
   {
     "company": "Kroger",
     "ticker": "KR",
-    "fortune_500_rank": 23,
     "sector": "Consumer Staples",
+    "fortune_500_rank": 23,
     "revenue_2025": 147120,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "few",
     "headcount": 414000,
     "engineering_headcount_est": 5000,
     "cloud_provider": "multi",
@@ -568,20 +742,28 @@
       "AI-driven digital shopping recommendations"
     ],
     "governance_signals": [],
-    "build_vs_buy": "mixed",
-    "tech_spend_pct": 2.0,
-    "operating_margin_pct": 2.5,
     "data_source": "Kroger FY2024 results (fiscal year ended Feb 1, 2025)",
-    "data_date": "2025-02-01"
+    "data_date": "2025-02-01",
+    "scores": {
+      "ai_investment_intensity": 20,
+      "engineering_scale": 55,
+      "cloud_maturity": 80,
+      "governance_posture": 15,
+      "regulatory_pressure": 35,
+      "agent_tooling": 70,
+      "build_vs_buy": 40,
+      "budget_availability": 21
+    },
+    "has_platform_team": false,
+    "governance_type": "compliance-only",
+    "open_source_preference": false
   },
   {
     "company": "Walgreens Boots Alliance",
     "ticker": "WBA",
-    "fortune_500_rank": 24,
     "sector": "Consumer Staples",
+    "fortune_500_rank": 24,
     "revenue_2025": 154580,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "few",
     "headcount": 312000,
     "engineering_headcount_est": 5000,
     "cloud_provider": "multi",
@@ -590,20 +772,28 @@
       "Predictive analytics for inventory management"
     ],
     "governance_signals": [],
-    "build_vs_buy": "buy",
-    "tech_spend_pct": 2.0,
-    "operating_margin_pct": 1.0,
     "data_source": "Walgreens Boots Alliance trailing twelve months (May 2025)",
-    "data_date": "2025-05-31"
+    "data_date": "2025-05-31",
+    "scores": {
+      "ai_investment_intensity": 20,
+      "engineering_scale": 55,
+      "cloud_maturity": 80,
+      "governance_posture": 15,
+      "regulatory_pressure": 35,
+      "agent_tooling": 55,
+      "build_vs_buy": 80,
+      "budget_availability": 18
+    },
+    "has_platform_team": false,
+    "governance_type": "compliance-only",
+    "open_source_preference": false
   },
   {
     "company": "Marathon Petroleum",
     "ticker": "MPC",
-    "fortune_500_rank": 25,
     "sector": "Energy",
+    "fortune_500_rank": 25,
     "revenue_2025": 138864,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "none",
     "headcount": 17800,
     "engineering_headcount_est": 3000,
     "cloud_provider": "unknown",
@@ -611,20 +801,28 @@
       "AI for refinery process optimization"
     ],
     "governance_signals": [],
-    "build_vs_buy": "buy",
-    "tech_spend_pct": 1.0,
-    "operating_margin_pct": 4.0,
     "data_source": "Marathon Petroleum 2024 annual results (Jan 2025)",
-    "data_date": "2024-12-31"
+    "data_date": "2024-12-31",
+    "scores": {
+      "ai_investment_intensity": 5,
+      "engineering_scale": 55,
+      "cloud_maturity": 30,
+      "governance_posture": 15,
+      "regulatory_pressure": 60,
+      "agent_tooling": 40,
+      "build_vs_buy": 80,
+      "budget_availability": 16
+    },
+    "has_platform_team": false,
+    "governance_type": "compliance-only",
+    "open_source_preference": false
   },
   {
     "company": "Home Depot",
     "ticker": "HD",
-    "fortune_500_rank": 26,
     "sector": "Consumer Discretionary",
+    "fortune_500_rank": 26,
     "revenue_2025": 164700,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "moderate",
     "headcount": 465000,
     "engineering_headcount_est": 10000,
     "cloud_provider": "GCP",
@@ -634,58 +832,82 @@
       "Magic Apron AI shopping assistant"
     ],
     "governance_signals": [],
-    "build_vs_buy": "mixed",
-    "tech_spend_pct": 3.0,
-    "operating_margin_pct": 13.5,
     "data_source": "Home Depot FY2025 results (fiscal year ended Feb 1, 2026)",
-    "data_date": "2026-02-01"
+    "data_date": "2026-02-01",
+    "scores": {
+      "ai_investment_intensity": 50,
+      "engineering_scale": 65,
+      "cloud_maturity": 75,
+      "governance_posture": 15,
+      "regulatory_pressure": 30,
+      "agent_tooling": 70,
+      "build_vs_buy": 40,
+      "budget_availability": 51
+    },
+    "has_platform_team": true,
+    "governance_type": "compliance-only",
+    "open_source_preference": false
   },
   {
     "company": "Phillips 66",
     "ticker": "PSX",
-    "fortune_500_rank": 27,
     "sector": "Energy",
+    "fortune_500_rank": 27,
     "revenue_2025": 143153,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "none",
     "headcount": 13000,
     "engineering_headcount_est": 2000,
     "cloud_provider": "unknown",
     "agent_tooling_signals": [],
     "governance_signals": [],
-    "build_vs_buy": "buy",
-    "tech_spend_pct": 1.0,
-    "operating_margin_pct": 1.5,
     "data_source": "Phillips 66 2024 annual results (Jan 2025)",
-    "data_date": "2024-12-31"
+    "data_date": "2024-12-31",
+    "scores": {
+      "ai_investment_intensity": 5,
+      "engineering_scale": 45,
+      "cloud_maturity": 30,
+      "governance_posture": 15,
+      "regulatory_pressure": 60,
+      "agent_tooling": 0,
+      "build_vs_buy": 80,
+      "budget_availability": 11
+    },
+    "has_platform_team": false,
+    "governance_type": "compliance-only",
+    "open_source_preference": false
   },
   {
     "company": "Valero Energy",
     "ticker": "VLO",
-    "fortune_500_rank": 28,
     "sector": "Energy",
+    "fortune_500_rank": 28,
     "revenue_2025": 129881,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "none",
     "headcount": 9743,
     "engineering_headcount_est": 2000,
     "cloud_provider": "unknown",
     "agent_tooling_signals": [],
     "governance_signals": [],
-    "build_vs_buy": "buy",
-    "tech_spend_pct": 0.5,
-    "operating_margin_pct": 2.8,
     "data_source": "Valero Energy 2024 annual results (Jan 2025)",
-    "data_date": "2024-12-31"
+    "data_date": "2024-12-31",
+    "scores": {
+      "ai_investment_intensity": 5,
+      "engineering_scale": 45,
+      "cloud_maturity": 30,
+      "governance_posture": 15,
+      "regulatory_pressure": 60,
+      "agent_tooling": 0,
+      "build_vs_buy": 80,
+      "budget_availability": 9
+    },
+    "has_platform_team": false,
+    "governance_type": "compliance-only",
+    "open_source_preference": false
   },
   {
     "company": "Elevance Health",
     "ticker": "ELV",
-    "fortune_500_rank": 29,
     "sector": "Health Care",
+    "fortune_500_rank": 29,
     "revenue_2025": 197600,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "moderate",
     "headcount": 100000,
     "engineering_headcount_est": 10000,
     "cloud_provider": "multi",
@@ -698,20 +920,28 @@
       "Healthcare AI compliance and governance frameworks",
       "Clinical AI validation processes"
     ],
-    "build_vs_buy": "build",
-    "tech_spend_pct": 4.0,
-    "operating_margin_pct": 3.0,
     "data_source": "Elevance Health 2025 annual results (Jan 2026)",
-    "data_date": "2025-12-31"
+    "data_date": "2025-12-31",
+    "scores": {
+      "ai_investment_intensity": 50,
+      "engineering_scale": 65,
+      "cloud_maturity": 80,
+      "governance_posture": 55,
+      "regulatory_pressure": 80,
+      "agent_tooling": 70,
+      "build_vs_buy": 20,
+      "budget_availability": 38
+    },
+    "has_platform_team": true,
+    "governance_type": "compliance-focused",
+    "open_source_preference": false
   },
   {
     "company": "Comcast",
     "ticker": "CMCSA",
-    "fortune_500_rank": 30,
     "sector": "Communication Services",
+    "fortune_500_rank": 30,
     "revenue_2025": 123708,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "moderate",
     "headcount": 186000,
     "engineering_headcount_est": 25000,
     "cloud_provider": "multi",
@@ -721,20 +951,28 @@
       "AI-driven network management"
     ],
     "governance_signals": [],
-    "build_vs_buy": "mixed",
-    "tech_spend_pct": 5.0,
-    "operating_margin_pct": 17.0,
     "data_source": "Comcast 2025 annual results (Jan 2026)",
-    "data_date": "2025-12-31"
+    "data_date": "2025-12-31",
+    "scores": {
+      "ai_investment_intensity": 50,
+      "engineering_scale": 85,
+      "cloud_maturity": 80,
+      "governance_posture": 15,
+      "regulatory_pressure": 50,
+      "agent_tooling": 70,
+      "build_vs_buy": 40,
+      "budget_availability": 74
+    },
+    "has_platform_team": true,
+    "governance_type": "compliance-only",
+    "open_source_preference": false
   },
   {
     "company": "Meta Platforms",
     "ticker": "META",
-    "fortune_500_rank": 31,
     "sector": "Communication Services",
+    "fortune_500_rank": 31,
     "revenue_2025": 200970,
-    "ai_capex_2025": 72220,
-    "ai_mentions_earnings": "dominant",
     "headcount": 78865,
     "engineering_headcount_est": 55000,
     "cloud_provider": "multi",
@@ -753,20 +991,28 @@
       "AI system cards for major features",
       "Participation in voluntary AI safety commitments"
     ],
-    "build_vs_buy": "build",
-    "tech_spend_pct": 35.9,
-    "operating_margin_pct": 41.4,
     "data_source": "Meta Platforms 2025 annual results (Feb 2026)",
-    "data_date": "2025-12-31"
+    "data_date": "2025-12-31",
+    "scores": {
+      "ai_investment_intensity": 95,
+      "engineering_scale": 95,
+      "cloud_maturity": 80,
+      "governance_posture": 70,
+      "regulatory_pressure": 50,
+      "agent_tooling": 90,
+      "build_vs_buy": 20,
+      "budget_availability": 100
+    },
+    "has_platform_team": true,
+    "governance_type": "operational",
+    "open_source_preference": false
   },
   {
     "company": "Dell Technologies",
     "ticker": "DELL",
-    "fortune_500_rank": 32,
     "sector": "Information Technology",
+    "fortune_500_rank": 32,
     "revenue_2025": 95600,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "many",
     "headcount": 120000,
     "engineering_headcount_est": 30000,
     "cloud_provider": "multi",
@@ -779,20 +1025,28 @@
     "governance_signals": [
       "Responsible AI principles"
     ],
-    "build_vs_buy": "mixed",
-    "tech_spend_pct": 8.0,
-    "operating_margin_pct": 6.5,
     "data_source": "Dell Technologies FY2025 results (fiscal year ended Jan 31, 2025)",
-    "data_date": "2025-01-31"
+    "data_date": "2025-01-31",
+    "scores": {
+      "ai_investment_intensity": 70,
+      "engineering_scale": 85,
+      "cloud_maturity": 80,
+      "governance_posture": 40,
+      "regulatory_pressure": 25,
+      "agent_tooling": 70,
+      "build_vs_buy": 40,
+      "budget_availability": 77
+    },
+    "has_platform_team": true,
+    "governance_type": "compliance-focused",
+    "open_source_preference": false
   },
   {
     "company": "Target",
     "ticker": "TGT",
-    "fortune_500_rank": 33,
     "sector": "Consumer Discretionary",
+    "fortune_500_rank": 33,
     "revenue_2025": 104780,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "few",
     "headcount": 440000,
     "engineering_headcount_est": 5000,
     "cloud_provider": "multi",
@@ -802,20 +1056,28 @@
       "AI-driven digital marketing and personalization"
     ],
     "governance_signals": [],
-    "build_vs_buy": "mixed",
-    "tech_spend_pct": 3.5,
-    "operating_margin_pct": 5.5,
     "data_source": "Target FY2024 results (fiscal year ended Feb 1, 2025)",
-    "data_date": "2025-02-01"
+    "data_date": "2025-02-01",
+    "scores": {
+      "ai_investment_intensity": 20,
+      "engineering_scale": 55,
+      "cloud_maturity": 80,
+      "governance_posture": 15,
+      "regulatory_pressure": 30,
+      "agent_tooling": 70,
+      "build_vs_buy": 40,
+      "budget_availability": 39
+    },
+    "has_platform_team": false,
+    "governance_type": "compliance-only",
+    "open_source_preference": false
   },
   {
     "company": "UPS",
     "ticker": "UPS",
-    "fortune_500_rank": 34,
     "sector": "Industrials",
+    "fortune_500_rank": 34,
     "revenue_2025": 88700,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "moderate",
     "headcount": 490000,
     "engineering_headcount_est": 10000,
     "cloud_provider": "multi",
@@ -825,20 +1087,28 @@
       "Smart Facilities with AI-driven sorting"
     ],
     "governance_signals": [],
-    "build_vs_buy": "build",
-    "tech_spend_pct": 4.0,
-    "operating_margin_pct": 8.9,
     "data_source": "UPS 2025 annual results (Jan 2026)",
-    "data_date": "2025-12-31"
+    "data_date": "2025-12-31",
+    "scores": {
+      "ai_investment_intensity": 50,
+      "engineering_scale": 65,
+      "cloud_maturity": 80,
+      "governance_posture": 15,
+      "regulatory_pressure": 45,
+      "agent_tooling": 70,
+      "build_vs_buy": 20,
+      "budget_availability": 49
+    },
+    "has_platform_team": true,
+    "governance_type": "compliance-only",
+    "open_source_preference": false
   },
   {
     "company": "Freddie Mac",
     "ticker": "FMCC",
-    "fortune_500_rank": 35,
     "sector": "Financials",
+    "fortune_500_rank": 35,
     "revenue_2025": 122052,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "few",
     "headcount": 7900,
     "engineering_headcount_est": 2500,
     "cloud_provider": "multi",
@@ -851,20 +1121,28 @@
       "FHFA oversight of AI in lending decisions",
       "Fair lending compliance for AI models"
     ],
-    "build_vs_buy": "mixed",
-    "tech_spend_pct": 3.5,
-    "operating_margin_pct": 13.0,
     "data_source": "Freddie Mac 2024 10-K (Feb 2025)",
-    "data_date": "2024-12-31"
+    "data_date": "2024-12-31",
+    "scores": {
+      "ai_investment_intensity": 20,
+      "engineering_scale": 55,
+      "cloud_maturity": 80,
+      "governance_posture": 55,
+      "regulatory_pressure": 85,
+      "agent_tooling": 70,
+      "build_vs_buy": 40,
+      "budget_availability": 54
+    },
+    "has_platform_team": false,
+    "governance_type": "compliance-focused",
+    "open_source_preference": false
   },
   {
     "company": "Lowe's",
     "ticker": "LOW",
-    "fortune_500_rank": 36,
     "sector": "Consumer Discretionary",
+    "fortune_500_rank": 36,
     "revenue_2025": 86000,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "few",
     "headcount": 300000,
     "engineering_headcount_est": 5000,
     "cloud_provider": "multi",
@@ -873,20 +1151,28 @@
       "AI-powered online product search"
     ],
     "governance_signals": [],
-    "build_vs_buy": "buy",
-    "tech_spend_pct": 2.5,
-    "operating_margin_pct": 10.5,
     "data_source": "Lowe's FY2025 results (fiscal year ended Jan 30, 2026)",
-    "data_date": "2026-01-30"
+    "data_date": "2026-01-30",
+    "scores": {
+      "ai_investment_intensity": 20,
+      "engineering_scale": 55,
+      "cloud_maturity": 80,
+      "governance_posture": 15,
+      "regulatory_pressure": 30,
+      "agent_tooling": 55,
+      "build_vs_buy": 80,
+      "budget_availability": 41
+    },
+    "has_platform_team": false,
+    "governance_type": "compliance-only",
+    "open_source_preference": false
   },
   {
     "company": "Bank of America",
     "ticker": "BAC",
-    "fortune_500_rank": 37,
     "sector": "Financials",
+    "fortune_500_rank": 37,
     "revenue_2025": 113000,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "moderate",
     "headcount": 213000,
     "engineering_headcount_est": 35000,
     "cloud_provider": "multi",
@@ -899,20 +1185,28 @@
       "AI governance framework",
       "Model risk management for AI systems"
     ],
-    "build_vs_buy": "build",
-    "tech_spend_pct": 10.0,
-    "operating_margin_pct": 30.0,
     "data_source": "Bank of America 2025 annual results (Jan 2026)",
-    "data_date": "2025-12-31"
+    "data_date": "2025-12-31",
+    "scores": {
+      "ai_investment_intensity": 50,
+      "engineering_scale": 85,
+      "cloud_maturity": 80,
+      "governance_posture": 55,
+      "regulatory_pressure": 85,
+      "agent_tooling": 70,
+      "build_vs_buy": 20,
+      "budget_availability": 100
+    },
+    "has_platform_team": true,
+    "governance_type": "compliance-focused",
+    "open_source_preference": false
   },
   {
     "company": "Johnson & Johnson",
     "ticker": "JNJ",
-    "fortune_500_rank": 38,
     "sector": "Health Care",
+    "fortune_500_rank": 38,
     "revenue_2025": 94200,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "moderate",
     "headcount": 131900,
     "engineering_headcount_est": 20000,
     "cloud_provider": "multi",
@@ -925,20 +1219,28 @@
       "Responsible AI governance in medical device development",
       "FDA compliance for AI-enabled medical devices"
     ],
-    "build_vs_buy": "build",
-    "tech_spend_pct": 15.0,
-    "operating_margin_pct": 22.0,
     "data_source": "Johnson & Johnson 2025 annual results (Jan 2026)",
-    "data_date": "2025-12-31"
+    "data_date": "2025-12-31",
+    "scores": {
+      "ai_investment_intensity": 50,
+      "engineering_scale": 75,
+      "cloud_maturity": 80,
+      "governance_posture": 55,
+      "regulatory_pressure": 80,
+      "agent_tooling": 70,
+      "build_vs_buy": 20,
+      "budget_availability": 100
+    },
+    "has_platform_team": true,
+    "governance_type": "compliance-focused",
+    "open_source_preference": false
   },
   {
     "company": "Archer Daniels Midland",
     "ticker": "ADM",
-    "fortune_500_rank": 39,
     "sector": "Consumer Staples",
+    "fortune_500_rank": 39,
     "revenue_2025": 85500,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "none",
     "headcount": 41000,
     "engineering_headcount_est": 3000,
     "cloud_provider": "unknown",
@@ -946,20 +1248,28 @@
       "AI for commodity trading and supply chain optimization"
     ],
     "governance_signals": [],
-    "build_vs_buy": "buy",
-    "tech_spend_pct": 1.0,
-    "operating_margin_pct": 3.5,
     "data_source": "ADM 2024 annual results (Jan 2025)",
-    "data_date": "2024-12-31"
+    "data_date": "2024-12-31",
+    "scores": {
+      "ai_investment_intensity": 5,
+      "engineering_scale": 55,
+      "cloud_maturity": 30,
+      "governance_posture": 15,
+      "regulatory_pressure": 35,
+      "agent_tooling": 40,
+      "build_vs_buy": 80,
+      "budget_availability": 15
+    },
+    "has_platform_team": false,
+    "governance_type": "compliance-only",
+    "open_source_preference": false
   },
   {
     "company": "FedEx",
     "ticker": "FDX",
-    "fortune_500_rank": 40,
     "sector": "Industrials",
+    "fortune_500_rank": 40,
     "revenue_2025": 87930,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "moderate",
     "headcount": 530000,
     "engineering_headcount_est": 10000,
     "cloud_provider": "multi",
@@ -969,20 +1279,28 @@
       "AI-driven demand sensing and capacity planning"
     ],
     "governance_signals": [],
-    "build_vs_buy": "mixed",
-    "tech_spend_pct": 4.7,
-    "operating_margin_pct": 5.9,
     "data_source": "FedEx FY2025 results (fiscal year ended May 31, 2025)",
-    "data_date": "2025-05-31"
+    "data_date": "2025-05-31",
+    "scores": {
+      "ai_investment_intensity": 50,
+      "engineering_scale": 65,
+      "cloud_maturity": 80,
+      "governance_posture": 15,
+      "regulatory_pressure": 45,
+      "agent_tooling": 70,
+      "build_vs_buy": 40,
+      "budget_availability": 49
+    },
+    "has_platform_team": true,
+    "governance_type": "compliance-only",
+    "open_source_preference": false
   },
   {
     "company": "Humana",
     "ticker": "HUM",
-    "fortune_500_rank": 41,
     "sector": "Health Care",
+    "fortune_500_rank": 41,
     "revenue_2025": 129664,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "few",
     "headcount": 65000,
     "engineering_headcount_est": 5000,
     "cloud_provider": "multi",
@@ -993,20 +1311,28 @@
     "governance_signals": [
       "Healthcare AI compliance programs"
     ],
-    "build_vs_buy": "buy",
-    "tech_spend_pct": 3.0,
-    "operating_margin_pct": 2.5,
     "data_source": "Humana 2025 annual results (Feb 2026)",
-    "data_date": "2025-12-31"
+    "data_date": "2025-12-31",
+    "scores": {
+      "ai_investment_intensity": 20,
+      "engineering_scale": 55,
+      "cloud_maturity": 80,
+      "governance_posture": 40,
+      "regulatory_pressure": 80,
+      "agent_tooling": 55,
+      "build_vs_buy": 80,
+      "budget_availability": 29
+    },
+    "has_platform_team": false,
+    "governance_type": "compliance-focused",
+    "open_source_preference": false
   },
   {
     "company": "Wells Fargo",
     "ticker": "WFC",
-    "fortune_500_rank": 42,
     "sector": "Financials",
+    "fortune_500_rank": 42,
     "revenue_2025": 123529,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "moderate",
     "headcount": 217502,
     "engineering_headcount_est": 30000,
     "cloud_provider": "multi",
@@ -1020,20 +1346,28 @@
       "Model risk management oversight",
       "OCC regulatory compliance"
     ],
-    "build_vs_buy": "mixed",
-    "tech_spend_pct": 7.5,
-    "operating_margin_pct": 27.0,
     "data_source": "Wells Fargo 2025 annual results (Jan 2026)",
-    "data_date": "2025-12-31"
+    "data_date": "2025-12-31",
+    "scores": {
+      "ai_investment_intensity": 50,
+      "engineering_scale": 85,
+      "cloud_maturity": 80,
+      "governance_posture": 70,
+      "regulatory_pressure": 85,
+      "agent_tooling": 70,
+      "build_vs_buy": 40,
+      "budget_availability": 100
+    },
+    "has_platform_team": true,
+    "governance_type": "operational",
+    "open_source_preference": false
   },
   {
     "company": "State Farm",
     "ticker": null,
-    "fortune_500_rank": 43,
     "sector": "Financials",
+    "fortune_500_rank": 43,
     "revenue_2025": 123000,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "few",
     "headcount": 56700,
     "engineering_headcount_est": 6000,
     "cloud_provider": "unknown",
@@ -1044,20 +1378,28 @@
     "governance_signals": [
       "Insurance regulatory compliance for AI in underwriting"
     ],
-    "build_vs_buy": "mixed",
-    "tech_spend_pct": 4.0,
-    "operating_margin_pct": 4.3,
     "data_source": "State Farm 2024 financial results (mutual company - limited public disclosure)",
-    "data_date": "2024-12-31"
+    "data_date": "2024-12-31",
+    "scores": {
+      "ai_investment_intensity": 20,
+      "engineering_scale": 65,
+      "cloud_maturity": 30,
+      "governance_posture": 40,
+      "regulatory_pressure": 85,
+      "agent_tooling": 55,
+      "build_vs_buy": 40,
+      "budget_availability": 40
+    },
+    "has_platform_team": true,
+    "governance_type": "compliance-focused",
+    "open_source_preference": false
   },
   {
     "company": "Citigroup",
     "ticker": "C",
-    "fortune_500_rank": 44,
     "sector": "Financials",
+    "fortune_500_rank": 44,
     "revenue_2025": 85200,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "moderate",
     "headcount": 229000,
     "engineering_headcount_est": 30000,
     "cloud_provider": "multi",
@@ -1070,20 +1412,28 @@
       "AI risk governance framework",
       "Model risk management for AI systems"
     ],
-    "build_vs_buy": "mixed",
-    "tech_spend_pct": 10.0,
-    "operating_margin_pct": 20.0,
     "data_source": "Citigroup 2025 annual results (Jan 2026)",
-    "data_date": "2025-12-31"
+    "data_date": "2025-12-31",
+    "scores": {
+      "ai_investment_intensity": 50,
+      "engineering_scale": 85,
+      "cloud_maturity": 80,
+      "governance_posture": 55,
+      "regulatory_pressure": 85,
+      "agent_tooling": 70,
+      "build_vs_buy": 40,
+      "budget_availability": 100
+    },
+    "has_platform_team": true,
+    "governance_type": "compliance-focused",
+    "open_source_preference": false
   },
   {
     "company": "Tesla",
     "ticker": "TSLA",
-    "fortune_500_rank": 45,
     "sector": "Consumer Discretionary",
+    "fortune_500_rank": 45,
     "revenue_2025": 94827,
-    "ai_capex_2025": 11300,
-    "ai_mentions_earnings": "dominant",
     "headcount": 121000,
     "engineering_headcount_est": 48000,
     "cloud_provider": "multi",
@@ -1100,20 +1450,28 @@
       "FSD safety monitoring and disengagement reporting",
       "Regulatory engagement for autonomous vehicle approval"
     ],
-    "build_vs_buy": "build",
-    "tech_spend_pct": 11.9,
-    "operating_margin_pct": 4.6,
     "data_source": "Tesla 2025 annual results; Q4 2025 investor update",
-    "data_date": "2025-12-31"
+    "data_date": "2025-12-31",
+    "scores": {
+      "ai_investment_intensity": 85,
+      "engineering_scale": 85,
+      "cloud_maturity": 80,
+      "governance_posture": 55,
+      "regulatory_pressure": 30,
+      "agent_tooling": 90,
+      "build_vs_buy": 20,
+      "budget_availability": 100
+    },
+    "has_platform_team": true,
+    "governance_type": "compliance-focused",
+    "open_source_preference": false
   },
   {
     "company": "Procter & Gamble",
     "ticker": "PG",
-    "fortune_500_rank": 46,
     "sector": "Consumer Staples",
+    "fortune_500_rank": 46,
     "revenue_2025": 84300,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "few",
     "headcount": 107000,
     "engineering_headcount_est": 8000,
     "cloud_provider": "multi",
@@ -1125,20 +1483,28 @@
     "governance_signals": [
       "Responsible data use policies"
     ],
-    "build_vs_buy": "mixed",
-    "tech_spend_pct": 3.0,
-    "operating_margin_pct": 23.5,
     "data_source": "Procter & Gamble FY2025 results (fiscal year ended Jun 30, 2025)",
-    "data_date": "2025-06-30"
+    "data_date": "2025-06-30",
+    "scores": {
+      "ai_investment_intensity": 20,
+      "engineering_scale": 65,
+      "cloud_maturity": 80,
+      "governance_posture": 40,
+      "regulatory_pressure": 35,
+      "agent_tooling": 70,
+      "build_vs_buy": 40,
+      "budget_availability": 71
+    },
+    "has_platform_team": true,
+    "governance_type": "compliance-focused",
+    "open_source_preference": false
   },
   {
     "company": "GE Aerospace",
     "ticker": "GE",
-    "fortune_500_rank": 47,
     "sector": "Industrials",
+    "fortune_500_rank": 47,
     "revenue_2025": 45855,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "moderate",
     "headcount": 53000,
     "engineering_headcount_est": 18000,
     "cloud_provider": "multi",
@@ -1150,20 +1516,28 @@
     "governance_signals": [
       "Aviation safety oversight for AI-assisted systems (FAA)"
     ],
-    "build_vs_buy": "build",
-    "tech_spend_pct": 7.0,
-    "operating_margin_pct": 19.9,
     "data_source": "GE Aerospace 2025 annual results (Jan 2026)",
-    "data_date": "2025-12-31"
+    "data_date": "2025-12-31",
+    "scores": {
+      "ai_investment_intensity": 50,
+      "engineering_scale": 75,
+      "cloud_maturity": 80,
+      "governance_posture": 40,
+      "regulatory_pressure": 45,
+      "agent_tooling": 70,
+      "build_vs_buy": 20,
+      "budget_availability": 95
+    },
+    "has_platform_team": true,
+    "governance_type": "compliance-focused",
+    "open_source_preference": false
   },
   {
     "company": "PepsiCo",
     "ticker": "PEP",
-    "fortune_500_rank": 48,
     "sector": "Consumer Staples",
+    "fortune_500_rank": 48,
     "revenue_2025": 93925,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "few",
     "headcount": 315000,
     "engineering_headcount_est": 5000,
     "cloud_provider": "multi",
@@ -1172,20 +1546,28 @@
       "AI-driven marketing and consumer insights"
     ],
     "governance_signals": [],
-    "build_vs_buy": "buy",
-    "tech_spend_pct": 2.0,
-    "operating_margin_pct": 12.2,
     "data_source": "PepsiCo 2025 annual results (calendar year 2025)",
-    "data_date": "2025-12-31"
+    "data_date": "2025-12-31",
+    "scores": {
+      "ai_investment_intensity": 20,
+      "engineering_scale": 55,
+      "cloud_maturity": 80,
+      "governance_posture": 15,
+      "regulatory_pressure": 35,
+      "agent_tooling": 55,
+      "build_vs_buy": 80,
+      "budget_availability": 40
+    },
+    "has_platform_team": false,
+    "governance_type": "compliance-only",
+    "open_source_preference": false
   },
   {
     "company": "Walt Disney",
     "ticker": "DIS",
-    "fortune_500_rank": 49,
     "sector": "Communication Services",
+    "fortune_500_rank": 49,
     "revenue_2025": 94400,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "moderate",
     "headcount": 225000,
     "engineering_headcount_est": 15000,
     "cloud_provider": "AWS",
@@ -1198,20 +1580,28 @@
       "Content moderation AI governance",
       "Creative AI use guidelines"
     ],
-    "build_vs_buy": "mixed",
-    "tech_spend_pct": 5.0,
-    "operating_margin_pct": 12.7,
     "data_source": "Walt Disney FY2025 results (fiscal year ended Sep 27, 2025)",
-    "data_date": "2025-09-27"
+    "data_date": "2025-09-27",
+    "scores": {
+      "ai_investment_intensity": 50,
+      "engineering_scale": 75,
+      "cloud_maturity": 75,
+      "governance_posture": 55,
+      "regulatory_pressure": 50,
+      "agent_tooling": 70,
+      "build_vs_buy": 40,
+      "budget_availability": 65
+    },
+    "has_platform_team": true,
+    "governance_type": "compliance-focused",
+    "open_source_preference": false
   },
   {
     "company": "Boeing",
     "ticker": "BA",
-    "fortune_500_rank": 50,
     "sector": "Industrials",
+    "fortune_500_rank": 50,
     "revenue_2025": 89463,
-    "ai_capex_2025": null,
-    "ai_mentions_earnings": "few",
     "headcount": 170000,
     "engineering_headcount_est": 50000,
     "cloud_provider": "multi",
@@ -1224,10 +1614,20 @@
       "Safety-critical AI systems oversight",
       "FAA compliance for AI in aviation systems"
     ],
-    "build_vs_buy": "build",
-    "tech_spend_pct": 4.0,
-    "operating_margin_pct": 2.1,
     "data_source": "Boeing 2025 annual results (Jan 2026)",
-    "data_date": "2025-12-31"
+    "data_date": "2025-12-31",
+    "scores": {
+      "ai_investment_intensity": 20,
+      "engineering_scale": 85,
+      "cloud_maturity": 80,
+      "governance_posture": 55,
+      "regulatory_pressure": 45,
+      "agent_tooling": 70,
+      "build_vs_buy": 20,
+      "budget_availability": 36
+    },
+    "has_platform_team": true,
+    "governance_type": "compliance-focused",
+    "open_source_preference": false
   }
 ]

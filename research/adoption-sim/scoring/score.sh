@@ -13,7 +13,8 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SIM_DIR="$(dirname "$SCRIPT_DIR")"
 
-DATA_FILE="$SIM_DIR/data/fortune500.json"
+DATA_FILE="$SIM_DIR/data/fortune500-scored.json"
+RAW_DATA_FILE="$SIM_DIR/data/fortune500.json"
 SCENARIOS_FILE="$SIM_DIR/scenarios/scenario-definitions.json"
 WEIGHTS_FILE="$SCRIPT_DIR/weights.json"
 
@@ -46,6 +47,13 @@ while [[ $# -gt 0 ]]; do
         *) echo "Unknown option: $1"; usage ;;
     esac
 done
+
+# Auto-preprocess if scored file is missing or older than raw data
+if [[ ! -f "$DATA_FILE" ]] || [[ -f "$RAW_DATA_FILE" && "$RAW_DATA_FILE" -nt "$DATA_FILE" ]]; then
+    echo "Preprocessing raw data..."
+    "$SCRIPT_DIR/preprocess.sh" --input "$RAW_DATA_FILE" --output "$DATA_FILE"
+    echo "---"
+fi
 
 # Validate inputs
 for f in "$DATA_FILE" "$SCENARIOS_FILE" "$WEIGHTS_FILE"; do
