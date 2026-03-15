@@ -29,7 +29,7 @@ Context engineering is the *mechanism*. Intent engineering is the *purpose*. Con
 
 1. **Structural context:** How information is organized — file hierarchy, configuration layering, skill triggers, hook placement. Determines what the agent can access. *Why it matters:* An agent cannot act on information it cannot find. Structural context determines the ceiling of what the agent can reason about.
 
-2. **Temporal context:** When information is loaded — at session start, on match, on request, at refresh points. Loading order affects primacy/recency weighting and attention distribution. *Why it matters:* Information loaded early frames all subsequent reasoning. Constraints must arrive before tasks, or the agent reasons about the task unconstrained and retrofits boundaries later — by which point it has already committed to an approach that may violate them.
+2. **Temporal context:** When information is loaded — at session start, on match, on request, at refresh points. Loading order affects primacy/recency weighting and attention distribution. *Why it matters:* Information loaded in the first **5–10% of the context window** (~10K–20K tokens in a 200K window) frames all subsequent reasoning. Constraints must arrive before tasks, or the agent reasons about the task unconstrained and retrofits boundaries later — by which point it has already committed to an approach that may violate them.
 
 3. **Relational context:** How pieces of information relate to each other — dependency graphs, cascade maps, interface contracts. An agent that knows its task but not the contract with the adjacent agent produces incompatible output. *Why it matters:* Isolated facts without relationships produce locally correct but globally incoherent work.
 
@@ -166,7 +166,7 @@ Everything an agent can know, remember, and reason about must fit within the con
 
 The budget percentages above are reference points calibrated for 200K-token context windows. As models offer larger windows, apply these scaling principles:
 
-- **Percentages are soft guides, not hard rules.** At 2M tokens, 15% standing context is 300K tokens — far more than any agent needs. Apply absolute ceilings: standing context should rarely exceed 50K tokens regardless of window size.
+- **Percentages are soft guides, not hard rules.** At 2M tokens, 15% standing context is 300K tokens — far more than any agent needs. Apply absolute ceilings: standing context must not exceed **50K tokens** (hard limit) regardless of window size. Issue a warning at **45K tokens** to trigger an audit of the context loading strategy.
 - **Larger windows do not eliminate context engineering.** Attention quality degrades in longer contexts even when capacity permits. The primacy/recency loading principles remain important at any window size.
 - **Larger windows enable richer task context, not bloated standing context.** The primary benefit of larger windows is carrying more project artifacts (full files, test suites, design docs) in the working context, not expanding the instruction payload.
 - **Revisit the 40% chunk sizing rule** in Work Decomposition (Part 6) when windows grow significantly. Larger windows may permit larger chunks, but the principle — leave headroom for reasoning — still applies. Scale the absolute chunk size, not the percentage.
@@ -252,7 +252,7 @@ Path-specific, role-specific, on-demand, and enforcement scopes are tool-depende
 
 ### The 150-Line Rule
 
-AGENTS.md should not exceed 150 lines. For each line, ask "Would removing this cause mistakes?" If not, remove it. Operational experience and emerging research consistently show: over-detailed instruction files hinder agent performance. Human-written, minimal instructions targeting non-inferable details show the best results.
+AGENTS.md should not exceed 150 lines. For each line, ask "Would removing this cause mistakes?" If not, remove it. In our experience, over-detailed instruction files hinder agent performance. Human-written, minimal instructions targeting non-inferable details show the best results.
 
 **How to stay under 150 lines:**
 
@@ -269,7 +269,7 @@ AGENTS.md should not exceed 150 lines. For each line, ask "Would removing this c
 
 ### Cross-Tool Portability
 
-The best AGENTS.md files share six characteristics (based on patterns observed across open-source repositories and internal experimentation):
+The best AGENTS.md files share six characteristics (based on common patterns observed in open-source AGENTS.md files):
 
 1. **Clear persona** — who the agent is and what it's responsible for.
 2. **Executable commands** — exact shell commands, not descriptions.

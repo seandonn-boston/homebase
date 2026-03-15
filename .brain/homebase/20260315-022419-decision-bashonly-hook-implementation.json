@@ -1,0 +1,12 @@
+{
+  "id": "82da12f3-d9bb-4f6e-9ee0-1da0e11e1851",
+  "project": "homebase",
+  "category": "decision",
+  "title": "Bash-only hook implementation",
+  "content": "All hooks implemented in bash with jq for JSON processing. No Python dependencies required at E1 level. This keeps the hook runtime simple, portable, and zero-dependency beyond standard Unix tools plus jq. Individual hooks are under 60 lines each.",
+  "metadata": {
+    "tags": []
+  },
+  "source_agent": "implementer",
+  "created_at": "2026-03-15T02:24:19Z"
+}

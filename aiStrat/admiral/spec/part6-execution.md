@@ -12,11 +12,11 @@
 
 > **TL;DR** — Break goals into chunks that each consume no more than 40% of an agent's token budget. Each chunk is independently completable, independently verifiable, with explicit entry and exit states.
 
-AI agents do not naturally manage resource depletion. Given a large task, an agent produces high-quality work for the first 60% and rushes the remaining 40%.
+AI agents do not naturally manage resource depletion. In our experience, given a large task, an agent produces high-quality work for roughly the first 60% and rushes the remainder.
 
 ### Chunking Principles
 
-- **No single task should consume more than 40% of token budget.** The 40% ceiling exists because agents near resource depletion rush to finish — they drop error handling, skip edge cases, and produce shallow implementations. The remaining 60% covers execution overhead, self-healing loops, checkpointing, and the unexpected. If a chunk consistently uses less than 20%, it is over-decomposed and paying unnecessary context tax.
+- **No single task should consume more than 40% of token budget.** The 40% ceiling exists because agents near resource depletion rush to finish — they drop error handling, skip edge cases, and produce shallow implementations. The remaining 60% covers execution overhead, self-healing loops, checkpointing, and the unexpected. If **2 consecutive chunks** each use less than 20% of budget, or **3+ chunks in a single session** fall below 20%, the work is over-decomposed and paying unnecessary context tax. Re-decompose into larger chunks.
 - **Each chunk must be independently completable and independently verifiable.**
 - **Chunks must have explicit entry state and exit state.**
 - **Sequence chunks to front-load uncertainty.** Unknown complexity first, when resources are fresh.

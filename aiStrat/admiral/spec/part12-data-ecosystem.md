@@ -68,7 +68,7 @@ Most organizations treat AI as a tool — it consumes data, produces output, and
 
 1. **Customer engagement data** tells you what customers do. Every competitor has this.
 2. **AI decision data** tells you what your agents decided and why. No competitor has this unless they built it.
-3. **Outcome attribution data** tells you which AI decisions drove which customer outcomes. This is the moat — the intersection of your agents, your customers, and your operational context creates a dataset that exists nowhere else.
+3. **Outcome attribution data** tells you which AI decisions drove which customer outcomes. The architecture for capturing this is replicable — the moat is the *accumulated dataset itself*, which emerges from the specific intersection of your agents, your customers, and your operational context over time.
 4. **Feedback loop data** tells you how the system improved over time. This is the compound interest.
 
 > **CORE INSIGHT:** The data ecosystem is not an add-on to Admiral. It is the reason Admiral exists. A governed fleet that captures every decision, outcome, and lesson creates a flywheel: better data → better decisions → better outcomes → more engagement → more data. An ungoverned fleet generates noise.
@@ -611,7 +611,7 @@ This loop extends the existing Monitor (Intelligence Lifecycle, Part 5) by feedi
 
 ### The Seven Proprietary Datasets
 
-| # | Dataset | Contents | Moat Depth |
+| # | Dataset | Contents | Replication Difficulty |
 |---|---------|----------|------------|
 | 1 | **Engagement Corpus** | Anonymized customer behavior patterns, aggregated by feature, segment, and time window | Shallow — competitors can build similar |
 | 2 | **Trend Atlas** | Time-series trend data with anomaly markers, cross-domain correlations, and prediction baselines | Moderate — requires analytical maturity |

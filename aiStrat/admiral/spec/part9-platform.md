@@ -259,7 +259,7 @@ Interactive agents receive context from the Admiral in real time. Headless agent
 1. **Event payload.** The trigger event provides the immediate context — which PR, which CI failure, which issue.
 2. **Ground Truth loading.** SessionStart hook loads project Ground Truth from the repository.
 3. **Brain query.** Agent queries the Brain for relevant precedent based on the event context.
-4. **Scope constraints.** Pre-configured boundaries limit the agent's authority. **Headless agents default to narrower authority than interactive agents** — this is a hard constraint, not a suggestion. No Admiral is present to catch mistakes. Actions that would be Autonomous in interactive mode should be Propose in headless mode. The cost of false caution (creating an issue instead of acting) is always lower than the cost of unreviewed autonomous action in an unattended context.
+4. **Scope constraints.** Pre-configured boundaries limit the agent's authority. **Headless agents default to authority shifted 1 tier down from the interactive baseline** — this is a hard constraint, not a suggestion. No Admiral is present to catch mistakes. Autonomous → Propose, Propose → Escalate, Escalate → unchanged. The cost of false caution (creating an issue instead of acting) is always lower than the cost of unreviewed autonomous action in an unattended context.
 5. **Result routing configuration.** Where does the output go? PR comment, issue update, Slack notification, commit, or file artifact.
 
 > **TEMPLATE: EVENT-DRIVEN AGENT DEFINITION**
@@ -522,7 +522,7 @@ Agents with computer use capability can interact with graphical interfaces — c
 - All computer use actions are logged with screenshots for audit trail
 - Computer use agents have the narrowest Autonomous tier — most actions require Propose-tier approval
 
-**Cost implications:** Computer use is token-intensive (vision tokens for screen reading + action tokens for interaction). Budget accordingly — typically 3-5x the token cost of equivalent CLI operations.
+**Cost implications:** Computer use is token-intensive (vision tokens for screen reading + action tokens for interaction). Budget accordingly — in our experience, roughly 3–5x the token cost of equivalent CLI operations.
 
 ### Extended Thinking
 

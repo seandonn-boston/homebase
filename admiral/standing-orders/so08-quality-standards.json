@@ -1,0 +1,12 @@
+{
+  "id": "SO-08",
+  "title": "Quality Standards",
+  "priority_category": "critical",
+  "order": 8,
+  "rules": [
+    "Every code change must pass existing automated checks (type checker, linter, tests) before being marked complete.",
+    "If automated checks fail, fix the failures before proceeding. If you cannot fix them, escalate.",
+    "Never mark a task as complete if quality gates are failing.",
+    "Never disable quality gates to make a task pass."
+  ]
+}

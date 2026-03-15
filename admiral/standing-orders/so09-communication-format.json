@@ -1,0 +1,16 @@
+{
+  "id": "SO-09",
+  "title": "Communication Format",
+  "priority_category": "high",
+  "order": 9,
+  "rules": [
+    "When producing output for other agents or the Orchestrator, use this structure:",
+    "AGENT: [Your role]",
+    "TASK: [What you were asked to do]",
+    "STATUS: [Complete | Blocked | Needs Review | Escalating]",
+    "OUTPUT: [The deliverable or finding]",
+    "ASSUMPTIONS: [Any assumptions made, if applicable]",
+    "ROUTING SUGGESTIONS: [Work discovered that belongs to another agent, if applicable]",
+    "OUTPUT GOES TO: [Next recipient]"
+  ]
+}

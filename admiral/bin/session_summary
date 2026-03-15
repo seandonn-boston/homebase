@@ -1,0 +1,75 @@
+#!/bin/bash
+# Admiral Framework — Session Summary (CP1)
+# Reads event log and session state, produces human-readable summary.
+# Usage: session_summary
+set -euo pipefail
+
+ADMIRAL_DIR="${ADMIRAL_DIR:-${CLAUDE_PROJECT_DIR:-.}/.admiral}"
+STATE_FILE="${ADMIRAL_DIR}/session_state.json"
+EVENT_LOG="${ADMIRAL_DIR}/event_log.jsonl"
+
+echo "================================================================"
+echo "ADMIRAL SESSION SUMMARY"
+echo "================================================================"
+echo ""
+
+# Session state
+if [ -f "$STATE_FILE" ]; then
+  SESSION_ID=$(jq -r '.session_id' "$STATE_FILE")
+  STARTED=$(jq -r '.started_at' "$STATE_FILE")
+  TOKENS_USED=$(jq -r '.tokens_used' "$STATE_FILE")
+  TOKEN_BUDGET=$(jq -r '.token_budget' "$STATE_FILE")
+  TOOL_CALLS=$(jq -r '.tool_call_count' "$STATE_FILE")
+  TRACE_ID=$(jq -r '.trace_id // "none"' "$STATE_FILE")
+  UTILIZATION=$(jq -r '.context.current_utilization' "$STATE_FILE")
+
+  # Format utilization as percentage
+  UTIL_PCT=$(echo "$UTILIZATION" | awk '{printf "%.1f", $1 * 100}')
+
+  echo "Session: $SESSION_ID"
+  echo "Trace ID: $TRACE_ID"
+  echo "Started: $(date -d "@$STARTED" 2>/dev/null || echo "$STARTED")"
+  echo ""
+  echo "--- Resource Usage ---"
+  echo "Tokens used: ${TOKENS_USED} / ${TOKEN_BUDGET} (${UTIL_PCT}%)"
+  echo "Tool calls: $TOOL_CALLS"
+  echo ""
+
+  # Loop detector state
+  TOTAL_ERRORS=$(jq -r '.hook_state.loop_detector.total_errors // 0' "$STATE_FILE")
+  DISTINCT_ERRORS=$(jq -r '.hook_state.loop_detector.error_counts | length // 0' "$STATE_FILE")
+  echo "--- Error Tracking ---"
+  echo "Total errors detected: $TOTAL_ERRORS"
+  echo "Distinct error signatures: $DISTINCT_ERRORS"
+  echo ""
+else
+  echo "No session state found."
+  echo ""
+fi
+
+# Event log analysis
+if [ -f "$EVENT_LOG" ]; then
+  TOTAL_EVENTS=$(wc -l < "$EVENT_LOG")
+  SESSION_STARTS=$(grep -c '"session_start"' "$EVENT_LOG" 2>/dev/null || echo 0)
+  TOOL_EVENTS=$(grep -c '"post_tool_use"' "$EVENT_LOG" 2>/dev/null || echo 0)
+
+  echo "--- Event Log ---"
+  echo "Total events: $TOTAL_EVENTS"
+  echo "Session starts: $SESSION_STARTS"
+  echo "Tool use events: $TOOL_EVENTS"
+
+  # Tool breakdown
+  if [ "$TOOL_EVENTS" -gt 0 ]; then
+    echo ""
+    echo "Tools used:"
+    grep '"post_tool_use"' "$EVENT_LOG" 2>/dev/null | jq -r '.tool // empty' 2>/dev/null | sort | uniq -c | sort -rn | head -10 | while read -r count tool; do
+      [ -n "$tool" ] && echo "  ${tool}: ${count}"
+    done
+  fi
+  echo ""
+else
+  echo "No event log found."
+  echo ""
+fi
+
+echo "================================================================"

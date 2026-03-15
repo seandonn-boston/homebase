@@ -71,8 +71,8 @@ Chronological record of every non-trivial decision: timestamp, decision, alterna
 
 | Classification | What Changed | Response |
 |---|---|---|
-| **Tactical Adjustment** | Task parameters, minor deadline shifts, requirement clarifications | Update affected tasks. No pause. Log. |
-| **Strategic Shift** | Mission evolution, Boundary changes, Ground Truth updates, significant scope change | Pause at chunk boundary. Cascade through artifacts. Re-validate. Resume. |
+| **Tactical Adjustment** | Task parameters, deadline shifts ≤1 week, requirement clarifications (no Mission text changes) | Update affected tasks. No pause. Log. |
+| **Strategic Shift** | Mission text changes, Boundary changes, Ground Truth updates, scope expansion >15% or reduction >10% of original requirements, deadline shifts >1 week | Pause at chunk boundary. Cascade through artifacts. Re-validate. Resume. |
 | **Full Pivot** | Fundamental direction change, complete tech change, total scope replacement | Halt fleet. Treat as new deployment. Full Quick-Start. |
 
 ### External Intelligence as Adaptation Trigger
@@ -141,13 +141,13 @@ Deterministic Enforcement ──→ Configuration File Strategy ──→ Config
 
 ## Cost Management
 
-> **TL;DR** — The biggest cost lever is LLM-Last design (Boundaries (Part 1)): eliminating 30-60% of LLM calls by routing to deterministic tools. Second: model tier assignment. Third: context size via progressive disclosure. Track spend in dollars, not just tokens.
+> **TL;DR** — The biggest cost lever is LLM-Last design (Boundaries (Part 1)): in our experience, eliminating 30–60% of LLM calls by routing to deterministic tools. Second: model tier assignment. Third: context size via progressive disclosure. Track spend in dollars, not just tokens.
 
 ### Cost Drivers and Levers
 
 | Cost Driver | Lever | Impact |
 |---|---|---|
-| **LLM for deterministic tasks** | LLM-Last design (Boundaries (Part 1)) | **Highest.** Eliminates 30-60% of LLM calls. |
+| **LLM for deterministic tasks** | LLM-Last design (Boundaries (Part 1)) | **Highest.** Can eliminate 30–60% of LLM calls in our experience. |
 | **Model tier** | Demote where quality is indistinguishable at lower tier (Model Selection (Part 4)) | High. Economy-tier at 1/30th cost. |
 | **Context size** | Progressive disclosure, <150 line rule (Configuration File Strategy (Part 2)) | High. Every loaded token is billed. |
 | **Retry and rework** | Sharper criteria and self-healing hooks | Medium. Each retry doubles chunk cost. |
@@ -223,7 +223,7 @@ When a fleet shares pooled access to external subscription services (LLM API key
 
 | Metric | Healthy | Warning |
 |---|---|---|
-| **First-Pass Quality Rate** | Above 75% | Below 50% — unclear criteria. *Why 75%: below this threshold, rework volume exceeds new work volume, and the fleet is spending more time fixing than building.* |
+| **First-Pass Quality Rate** | Above 75% | **50–75% (Yellow):** Audit acceptance criteria clarity; review Ground Truth freshness. Below 50% — unclear criteria. *Why 75%: below this threshold, rework volume exceeds new work volume, and the fleet is spending more time fixing than building.* |
 | **Rework Ratio** | Under 10% | Above 20% — upstream problems |
 | **Defect Escape Rate** | Near zero | Any consistent pattern |
 | **Self-Heal Rate** | Above 80% | Below 50% — gates misconfigured |
@@ -232,8 +232,8 @@ When a fleet shares pooled access to external subscription services (LLM API key
 
 | Metric | Healthy | Warning |
 |---|---|---|
-| **Escalation Rate** | Decreasing over time | Increasing — insufficient context or authority |
-| **Assumption Accuracy** | Above 85% | Below 70% — Ground Truth stale |
+| **Escalation Rate** | Decreasing 5–10% per session during Acceleration phase | Increasing — insufficient context or authority. Stable for 3+ sessions — review Decision Authority assignments |
+| **Assumption Accuracy** | Above 85% | **70–85% (Yellow):** Audit Ground Truth; increase assumption-flagging frequency. Below 70% — Ground Truth stale |
 | **Recovery Ladder Usage** | 1–2 per session | 5+ — environmental instability |
 | **Handoff Rejection Rate** | Under 5% | Above 15% — contracts underspecified |
 
@@ -302,7 +302,7 @@ When removing an individual agent from a running fleet:
 2. **Update routing rules.** Remove the agent from `fleet/routing-rules.md` task mappings. Assign its tasks to the designated fallback agent or a replacement.
 3. **Update interface contracts.** Remove or reassign any handoff contracts in `fleet/interface-contracts.md` that reference the retired agent.
 4. **Archive Brain entries.** Do not delete the agent's Brain entries — they remain valuable as institutional memory. Tag them with `retired_agent: true` in metadata for filtering.
-5. **Reset trust calibration.** If a replacement agent takes over, its trust calibration starts fresh (Novice tier) regardless of the predecessor's earned trust.
+5. **Reset trust calibration.** If a replacement agent takes over, its trust calibration starts fresh (Novice tier) regardless of the predecessor's earned trust. See the Unified Trust Model in Decision Authority (Part 3) for trust transition rules.
 6. **Update fleet roster.** Remove from `fleet/README.md` and `fleet/model-tiers.md`.
 7. **Notify dependent agents.** Any agent whose "Output Goes To" includes the retired agent must be updated.
 
@@ -338,7 +338,7 @@ The following signals indicate the Orchestrator is degrading. Any single signal 
 | Signal | Detection Method | Threshold |
 |---|---|---|
 | **Routing error rate rising** | Handoff rejection rate (Fleet Health Metrics) increasing within session | >15% rejection rate (healthy baseline: <5%) |
-| **Overhead ratio climbing** | Orchestrator token consumption / total fleet token consumption | >25% of session budget on coordination |
+| **Overhead ratio climbing** | Orchestrator token consumption / total fleet token consumption | Graduated: <20% Normal, 20–25% Monitor, 25–35% Caution (audit routing), 35–50% Alert (reduce parallel work), 50%+ Critical (reduce fleet scope or split fleet) |
 | **Decomposition quality dropping** | Specialist agents requesting re-decomposition or reporting unclear acceptance criteria | 3+ re-decomposition requests in a single session |
 | **Context amnesia** | Orchestrator re-routing tasks it already routed, losing track of in-flight parallel work, or dropping Standing Orders from standing context | Any duplicate routing within a session, or Standing Orders absent from context check |
 | **Fleet roster drift** | Orchestrator referencing agents not in the active roster or missing agents that are active | Any phantom agent reference |

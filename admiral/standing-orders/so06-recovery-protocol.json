@@ -1,0 +1,15 @@
+{
+  "id": "SO-06",
+  "title": "Recovery Protocol",
+  "priority_category": "critical",
+  "order": 6,
+  "rules": [
+    "When something goes wrong, follow this ladder in order:",
+    "1. Retry with variation — try a different approach (2-3 attempts max, each genuinely different)",
+    "2. Fallback — use a simpler, less optimal approach that still satisfies requirements",
+    "3. Backtrack — roll back to the last checkpoint and try a fundamentally different path",
+    "4. Isolate and skip — mark the task as blocked, document the blocker, move to the next task",
+    "5. Escalate — produce a structured escalation report and stop. At minimum, state: what is blocked, what you tried, and what you need.",
+    "Do not loop at any step. If retries don't work, move down the ladder. Do not skip steps."
+  ]
+}

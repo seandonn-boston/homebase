@@ -334,6 +334,29 @@ Every orchestrator needs a clear decision envelope: what it may decide autonomou
 | External-facing or regulated | Narrow Autonomous significantly. |
 | Self-healing hooks in place | Widen Autonomous for hook-covered categories. |
 
+### Unified Trust Model
+
+Trust is a measurable, per-category parameter — not a global setting and not a feeling. This section is the single authoritative definition of trust in the Admiral Framework. All other references (Admiral Self-Calibration (Part 10), Fleet Health Metrics (Part 8), Work Decomposition (Part 6)) defer to this model.
+
+**What trust is:** A per-agent, per-decision-category score that determines which authority tier applies. An agent may be Autonomous for code formatting decisions but Propose for architecture decisions.
+
+**Where trust state lives:** Trust calibration is stored in the fleet's configuration (at F1: in AGENTS.md or the agent definition file; at F2+: in the fleet roster configuration; at B2+: additionally recorded in the Brain as `decision` entries for audit). Trust state is bound to the agent's identity at session start and cannot be modified mid-session.
+
+**Trust state transitions:**
+
+| Transition | Trigger | Threshold | Effect |
+|---|---|---|---|
+| **Promotion** | Consecutive successful Autonomous decisions in a category | 5 consecutive successes (zero failures) | Similar Propose-tier decisions in that category may be promoted to Autonomous |
+| **Demotion** | Failed Autonomous decision | Any single failure | That category demotes from Autonomous to Propose |
+| **Reset** | Agent rotation, new deployment, or replacement agent | N/A | Trust starts at Novice (narrow Autonomous) regardless of predecessor's earned trust |
+| **Degradation** | Extended inactivity in a category | No decisions in category for 30+ days | Category reverts to Propose until re-earned |
+
+**Trust never transfers:** Trust earned by Agent A does not transfer to Agent B, even if B replaces A in the same role. Trust is earned by demonstrated performance, not inherited.
+
+**Promotion process:** (1) Agent accumulates 5 consecutive successful decisions in a category. (2) Admiral reviews the pattern and approves or defers the promotion. (3) Promotion is logged in the decision log. (4) Any failure resets the consecutive counter to 0 for that category.
+
+**Demotion process:** (1) Failed decision is detected (by hook, QA, or Admiral review). (2) Admiral investigates: context gap (fixable via Ground Truth update) or judgment gap (needs tighter oversight). (3) Category demoted to Propose. (4) Admiral decides remediation before re-promotion is possible.
+
 > **ANTI-PATTERN: DEFERENCE CASCADING** — One agent is uncertain, defers to another, who defers back. The decision is made by whichever agent is last — usually the least qualified. **Uncertainty always flows upward (to Orchestrator or Admiral), never sideways (to a peer agent).** Handoffs between peers (Handoff Protocol, Part 11) transfer *work*, not *uncertainty*. If Agent A is uncertain about a task, it escalates to the Orchestrator — it does not hand the uncertainty to Agent B as a task. The Orchestrator resolves the uncertainty, then delegates clearly-scoped work to the appropriate agent.
 
 > **VULNERABILITY (8.3.2): AUTHORITY SELF-ESCALATION** — Decision authority tiers

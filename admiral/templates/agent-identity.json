@@ -1,0 +1,12 @@
+{
+  "agent_id": "",
+  "role": "implementer",
+  "authority_tier": "starter",
+  "project": "homebase",
+  "model_tier": "tier2_workhorse",
+  "scope_boundaries": {
+    "allowed_paths": [],
+    "denied_paths": ["aiStrat/", ".github/"],
+    "tool_permissions": []
+  }
+}

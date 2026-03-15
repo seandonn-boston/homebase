@@ -53,7 +53,7 @@ QA focuses on what machines cannot check: logic correctness, design quality, edg
 >
 > ACTUAL: [What actually happens]
 >
-> CONFIDENCE: [Verified (tested) | Assessed (reviewed carefully) | Assumed (spot-checked)]
+> CONFIDENCE: [Verified (≥2 independent test cases passing) | Assessed (≥50% of changed lines reviewed) | Assumed (≥10% of implementation spot-checked)]
 
 > **ANTI-PATTERN: SYCOPHANTIC DRIFT** — Over long sessions, agents increasingly agree with established framing. QA finds fewer issues. After several review rounds where the orchestrator pushes back, the QA agent starts "finding" fewer issues. Ensure QA instructions state that finding zero issues is a red flag.
 
@@ -154,7 +154,7 @@ When a failure mode is diagnosed, follow these remediation steps:
 4. Fix: Update the context profile, adjust the sacrifice order, or add the missing information to Ground Truth.
 
 **Sycophantic Drift**
-1. Check the agent's recent outputs for declining finding counts or softening language ("minor suggestion" where "blocking issue" is warranted).
+1. Check the agent's recent outputs for declining finding counts (a **>30% decrease session-over-session** flags a drift check) or softening language (any "suggestion" replacing a previous "blocking issue" triggers review).
 2. Compare against the Bias Sentinel's detection log — if no drift was flagged, the Bias Sentinel's thresholds may need tightening.
 3. Run the same task through a separate agent (Adversarial Review) to get an independent assessment.
 4. Fix: Reset the agent's session, tighten the quality floor in the task specification, or deploy the Devil's Advocate for the next cycle.
@@ -206,6 +206,22 @@ The failure modes above describe individual agent behavior. The following catalo
 **Remediation Principles:**
 
 Framework-level failures are harder to detect than agent-level failures because they manifest as *absence* — the absence of enforcement, the absence of retrieval, the absence of governance action. The primary diagnostic tool is the audit log: if a framework mechanism exists but the audit log shows no evidence of it executing, the mechanism has failed. Periodic framework health audits (quarterly or after each major project phase) should verify that every specified mechanism is actually operational, not just deployed.
+
+### Failure Chains
+
+Individual failure modes rarely occur in isolation. They cascade — one failure creates conditions that trigger the next. Understanding these chains enables early intervention: catching the upstream failure prevents the entire downstream sequence.
+
+**Chain 1: Context Starvation → Hallucination → Sycophantic Drift → Governance Theater**
+
+The agent lacks sufficient context (Context Starvation). Without grounding, it fills gaps with fabricated details (Hallucination). As the session progresses, it increasingly aligns with the established (hallucinated) framing rather than challenging it (Sycophantic Drift). Governance agents review but don't catch the drift because they share the same blind spots (Governance Theater). *Early intervention: context health check hook detects starvation before hallucination begins. See Case Study 1 (Appendix D).*
+
+**Chain 2: Over-Decomposition → Orchestrator Overhead → Cost Overrun → Fleet Collapse**
+
+Work is split into too many small chunks (Over-Decomposition). The Orchestrator spends more tokens on routing, handoffs, and coordination than on productive work (Orchestrator Overhead, reaching the 60% level documented in Case Study 2). Token costs exceed budget (Cost Overrun). The fleet is shut down or drastically reduced before completing the work (Fleet Collapse). *Early intervention: monitor the 20% chunk budget floor and the orchestrator overhead graduated thresholds.*
+
+**Chain 3: Trust Miscalibration → Rubber-Stamp Approvals → Security Breach → Emergency Halt**
+
+The Admiral widens Autonomous tier too aggressively or stops reviewing Propose-tier decisions carefully (Trust Miscalibration). Approvals become rubber-stamps — the Admiral approves without reviewing (Rubber-Stamp Approvals). An agent makes a security-critical decision autonomously that should have been caught (Security Breach). The fleet is halted pending investigation (Emergency Halt). *Early intervention: the Admiral's bottleneck detection signals (Part 10) identify rubber-stamping before it causes harm. See Case Study 3 (Appendix D).*
 
 -----
 

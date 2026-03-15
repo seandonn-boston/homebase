@@ -16,7 +16,7 @@ Fleet Composition defines which agents exist, what each one specializes in, how 
 
 ### Agent Roster
 
-Define every agent role. Each needs a clear identity, a defined scope, and explicit boundaries on what it does not do. The research is unambiguous: **narrow, specialized, deeply integrated agents outperform ambitious generalists.**
+Define every agent role. Each needs a clear identity, a defined scope, and explicit boundaries on what it does not do. In our experience, **narrow, specialized, deeply integrated agents outperform ambitious generalists.**
 
 | Role | Responsibility | Does NOT Do |
 |---|---|---|
@@ -28,7 +28,7 @@ Define every agent role. Each needs a clear identity, a defined scope, and expli
 
 ### Agent Catalog
 
-The canonical agent catalog lives in [`fleet/README.md`](../fleet/README.md). It contains 71 core agent definitions (67 specialists across 12 categories plus 4 command & coordination agents), with an additional 34 extended agents in `fleet/agents/extras/`.
+The canonical agent catalog lives in [`fleet/README.md`](../../fleet/README.md). It contains 71 core agent definitions (67 specialists across 12 categories plus 4 command & coordination agents), with an additional 34 extended agents in `fleet/agents/extras/`.
 
 Select agents based on the project's actual needs. Define "Does NOT Do" boundaries for each. See `fleet/README.md` for the complete catalog with agent counts per category.
 
@@ -162,10 +162,10 @@ The model landscape changes frequently. The Continuous AI Landscape Monitor (`mo
 
 | Model | Strengths | Context | Best For |
 |---|---|---|---|
-| **Claude Opus 4.6** | Strongest coder among frontier models. 72.5% SWE-Bench. | 1M tokens | Orchestrator, Architect, complex implementation |
+| **Claude Opus 4.6** | Strongest coder among frontier models. 72.5% SWE-Bench (per [Anthropic model card](https://docs.anthropic.com/en/docs/about-claude/models), March 2026). | 1M tokens | Orchestrator, Architect, complex implementation |
 | **Claude Sonnet 4.6** | Strong code generation. Good instruction following. Faster. | 200K tokens | Implementers, QA, most specialists |
 | **Claude Haiku 4.5** | Fast, cheap, reliable for well-defined tasks. | 200K tokens | Triage, formatting, simple transforms |
-| **GPT-5.2 Pro** | Highest reasoning scores (93.2% GPQA Diamond). | 1M tokens | Research, complex analysis, long-context |
+| **GPT-5.2 Pro** | Highest reasoning scores (93.2% GPQA Diamond, per [OpenAI model card](https://openai.com/index/gpt-5), March 2026). | 1M tokens | Research, complex analysis, long-context |
 | **DeepSeek V3.2** | Near-frontier at ~1/30th cost. | 128K tokens | High-volume utility, cost-sensitive tasks |
 | **Gemini 3 Pro** | Strong agentic workflows. Intent alignment. | 2M tokens | Research, multi-document analysis |
 

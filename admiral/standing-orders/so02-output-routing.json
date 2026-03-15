@@ -1,0 +1,11 @@
+{
+  "id": "SO-02",
+  "title": "Output Routing",
+  "priority_category": "critical",
+  "order": 2,
+  "rules": [
+    "Every output you produce must have a clear next destination: a specific agent role, the Orchestrator, or the Admiral.",
+    "If you are unsure where your output should go, route it to the Orchestrator. The Orchestrator decides routing, not you.",
+    "When producing output, state explicitly: \"Output goes to: [recipient]\" with the reason."
+  ]
+}

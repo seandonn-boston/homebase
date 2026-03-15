@@ -1,0 +1,75 @@
+#!/bin/bash
+# Admiral Framework — Brain Query (B1)
+# Keyword search across .brain/ entries
+# Usage: brain_query <keyword> [--project <name>] [--category <cat>]
+set -euo pipefail
+
+BRAIN_DIR="${BRAIN_DIR:-${CLAUDE_PROJECT_DIR:-.}/.brain}"
+
+if [ $# -lt 1 ]; then
+  echo "Usage: brain_query <keyword> [--project <name>] [--category <cat>]" >&2
+  exit 1
+fi
+
+KEYWORD="$1"
+shift
+
+PROJECT=""
+CATEGORY=""
+
+# Parse optional flags
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --project) PROJECT="$2"; shift 2 ;;
+    --category) CATEGORY="$2"; shift 2 ;;
+    *) shift ;;
+  esac
+done
+
+# Determine search path
+SEARCH_PATH="$BRAIN_DIR"
+if [ -n "$PROJECT" ]; then
+  SEARCH_PATH="${BRAIN_DIR}/${PROJECT}"
+  if [ ! -d "$SEARCH_PATH" ]; then
+    echo "No entries found for project: $PROJECT" >&2
+    exit 0
+  fi
+fi
+
+# Build file filter for category
+FILE_PATTERN="*.json"
+if [ -n "$CATEGORY" ]; then
+  FILE_PATTERN="*-${CATEGORY}-*.json"
+fi
+
+# Search using grep to find matching files
+FOUND=0
+MATCHING_FILES=$(grep -rli "$KEYWORD" "$SEARCH_PATH" 2>/dev/null || true)
+
+for file in $MATCHING_FILES; do
+  [ -f "$file" ] || continue
+  # Apply category filter if set
+  if [ -n "$CATEGORY" ]; then
+    case "$(basename "$file")" in
+      *-${CATEGORY}-*) ;;
+      *) continue ;;
+    esac
+  fi
+  # Only process .json files
+  case "$file" in *.json) ;; *) continue ;; esac
+
+  FOUND=$((FOUND + 1))
+  TITLE=$(jq -r '.title' "$file" 2>/dev/null)
+  CAT=$(jq -r '.category' "$file" 2>/dev/null)
+  PROJ=$(jq -r '.project' "$file" 2>/dev/null)
+  CREATED=$(jq -r '.created_at' "$file" 2>/dev/null)
+  echo "[$CAT] $TITLE"
+  echo "  Project: $PROJ | Created: $CREATED"
+  echo "  File: $file"
+  echo ""
+done
+
+if [ "$FOUND" -eq 0 ]; then
+  echo "No entries found matching: $KEYWORD"
+fi
+echo "Found: $FOUND entries"
