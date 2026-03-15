@@ -26,9 +26,12 @@ init_session_state "$SESSION_ID"
 TRACE_ID=$(uuidgen 2>/dev/null || python3 -c "import uuid; print(uuid.uuid4())" 2>/dev/null || echo "trace-${SESSION_ID}-$(date +%s)")
 set_state_field '.trace_id' "\"$TRACE_ID\""
 
-# 3. Fire context_baseline hook
+# 3. Fire context_baseline hook (surface failures as warnings, don't suppress)
+BASELINE_WARNING=""
 if [ -x "$SCRIPT_DIR/context_baseline.sh" ]; then
-  echo "$PAYLOAD" | "$SCRIPT_DIR/context_baseline.sh" >/dev/null 2>&1 || true
+  BASELINE_OUTPUT=$(echo "$PAYLOAD" | "$SCRIPT_DIR/context_baseline.sh" 2>&1) || {
+    BASELINE_WARNING="Context baseline hook failed — standing context metrics may be inaccurate. "
+  }
 fi
 
 # 4. Render Standing Orders for context injection
@@ -46,7 +49,12 @@ jq -n --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
       >> "$EVENT_LOG" 2>/dev/null || true
 
 # 6. Output for Claude Code — inject Standing Orders as system message
-jq -n --arg msg "$SO_TEXT" '{
+# Include any initialization warnings so they're visible
+FULL_MSG="$SO_TEXT"
+if [ -n "$BASELINE_WARNING" ]; then
+  FULL_MSG="[Session Init Warning] ${BASELINE_WARNING}\n\n${SO_TEXT}"
+fi
+jq -n --arg msg "$FULL_MSG" '{
   "continue": true,
   "suppressOutput": false,
   "systemMessage": $msg

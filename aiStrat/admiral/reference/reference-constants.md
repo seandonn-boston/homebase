@@ -131,20 +131,23 @@ The `token_budget_tracker` hook issues alerts at two thresholds:
 
 Both thresholds use `>=` (inclusive). Alerts are advisory (exit 0); they do not block actions. The alert type is a string literal in the hook's JSON stdout under the `"alert"` key. An agent may receive both alerts in a single session as utilization crosses each threshold.
 
-The `token_budget_gate` hook (PreToolUse) blocks at 100% utilization with exit code 2. At 99.99% utilization, the gate allows the action.
+**Note (March 2026):** The `token_budget_gate` hook (PreToolUse hard block at 100%) has been removed. It created unrecoverable deadlocks — once budget was exhausted, all tool use was blocked including recovery attempts. Budget enforcement is now entirely advisory: the PreToolUse adapter emits warnings via `additionalContext` when budget is exceeded, and the PostToolUse tracker emits system message alerts. Sessions can run "over budget" (see Fleet Control Plane — Session Thermal Model). Default `token_budget: 0` means unlimited.
 
 -----
 
 ## Loop Detection Thresholds
 
-The `loop_detector` hook implements dual-threshold activation:
+The `loop_detector` hook implements dual-threshold advisory warnings:
 
 | Constant | Value | Meaning |
 |---|---|---|
-| MAX_SAME_ERROR | 3 | Same error signature recurs this many times |
-| MAX_TOTAL_ERRORS | 10 | Total distinct error signatures in a session |
+| MAX_SAME_ERROR | 3 | Same error signature recurs this many times — emit warning |
+| MAX_TOTAL_ERRORS | 10 | Total error count in session — emit warning |
+| SUCCESS_DECAY | 1 | Each successful tool call reduces total_errors by 1 (floor 0) |
 
-Loop detection triggers when **EITHER** threshold is crossed. These are the same defaults as the self-healing loop's `max_retries` and `max_session_retries`, but they apply at the tool-error level (loop detector) rather than the hook-error level (self-healing).
+Loop detection warns when **EITHER** threshold is crossed. Warnings are advisory (exit 0) — they never block tool use. These are the same defaults as the self-healing loop's `max_retries` and `max_session_retries`, but they apply at the tool-error level (loop detector) rather than the hook-error level (self-healing).
+
+**Error decay:** Successful tool calls decay the total error count to prevent monotonic accumulation. Without decay, any long-running session would inevitably hit the total error threshold from normal transient failures (timeouts, temporary permission errors, etc.), creating a guaranteed deadlock. The decay rate of 1 per success means the counter only climbs when errors are happening faster than successes — a genuine loop pattern.
 
 -----
 
@@ -242,7 +245,7 @@ The context health check hook validates the presence of three critical sections 
 
 If any of these three sections is missing from the standing context, the health check fails (exit code 1). Other context sections (Knowledge, Task, Ground Truth) are valuable but not critical — their absence produces a warning, not a failure.
 
-**Utilization threshold:** The health check also fails (exit code 1) when `current_utilization >= 0.85` (85%). Both conditions — missing sections and high utilization — trigger exit 1 (soft fail), not exit 2 (block). They can co-occur; when both trigger, the issues list contains both.
+**Note (March 2026):** The context health check is now advisory-only (always exit 0). Missing critical sections emit a warning via JSON alert field. The utilization threshold check has been removed — high context utilization is a symptom of work in progress, not a condition that should trigger failures. Health check failures must never cascade into the loop detector's error counter, as this creates a path to deadlock (repeated health check failures accumulate to the total error threshold).
 
 -----
 
@@ -253,8 +256,8 @@ The reference implementation uses a three-handler adapter that translates betwee
 | Handler | Event | Hooks Fired | Key Behavior |
 |---|---|---|---|
 | `session_start` | SessionStart | context_baseline | Resets state, records baseline, injects Standing Orders |
-| `pre_tool_use` | PreToolUse | token_budget_gate | Blocks if budget exhausted (exit 2) |
-| `post_tool_use` | PostToolUse | token_budget_tracker, loop_detector, context_health_check | Tracks tokens, detects loops, checks context health |
+| `pre_tool_use` | PreToolUse | token_budget_checkpoint | Warns via additionalContext if budget exceeded (always exit 0) |
+| `post_tool_use` | PostToolUse | token_budget_tracker, loop_detector, context_health_check | Tracks tokens, detects loops, checks context health — all advisory (exit 0) |
 
 The adapter handles:
 - Reading the platform's JSON payload from stdin.

@@ -35,13 +35,13 @@ Every hook manifest must conform to `hooks/manifest.schema.json`. Example:
 
 ```json
 {
-  "name": "token_budget_gate",
-  "version": "1.0.0",
+  "name": "token_budget_checkpoint",
+  "version": "2.0.0",
   "events": ["PreToolUse"],
   "timeout_ms": 5000,
   "requires": ["token_budget_tracker"],
   "input_contract": "v1",
-  "description": "Blocks tool invocations that would exceed the session token budget."
+  "description": "Advisory checkpoint that warns when session token budget is exceeded. Never blocks tool use."
 }
 ```
 
@@ -140,16 +140,16 @@ The following 8 hooks are specified in `admiral/spec/part3-enforcement.md` (Dete
 }
 ```
 
-**token_budget_gate:**
+**token_budget_checkpoint:**
 ```json
 {
-  "name": "token_budget_gate",
-  "version": "1.0.0",
+  "name": "token_budget_checkpoint",
+  "version": "2.0.0",
   "events": ["PreToolUse"],
   "timeout_ms": 5000,
   "requires": ["token_budget_tracker"],
   "input_contract": "v1",
-  "description": "Blocks tool invocations that would exceed the session token budget."
+  "description": "Advisory checkpoint that warns when session token budget is exceeded. Never blocks tool use."
 }
 ```
 

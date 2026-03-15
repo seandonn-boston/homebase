@@ -1,7 +1,8 @@
 #!/bin/bash
 # Admiral Framework — Context Health Check (PostToolUse, every 10th call)
-# Checks: utilization > 85%, validates critical sections present.
-# Exit 0: healthy. Exit 1: issues detected (soft fail with diagnostics).
+# Validates critical sections present in standing context.
+# Advisory only — NEVER blocks or fails (always exit 0).
+# Issues are reported via JSON alert field, not exit codes.
 # Timeout: 10s
 set -euo pipefail
 
@@ -9,17 +10,9 @@ set -euo pipefail
 PAYLOAD=$(cat)
 
 # Extract context state
-UTILIZATION=$(echo "$PAYLOAD" | jq -r '.session_state.context.current_utilization // 0')
 STANDING_PRESENT=$(echo "$PAYLOAD" | jq -r '.session_state.context.standing_context_present // []')
 
 ISSUES=""
-
-# Check utilization threshold (85%)
-# Use integer comparison: multiply utilization by 100
-UTIL_INT=$(echo "$UTILIZATION" | awk '{printf "%d", $1 * 100}')
-if [ "$UTIL_INT" -ge 85 ]; then
-  ISSUES+="Context utilization at ${UTIL_INT}% (threshold: 85%). "
-fi
 
 # Check critical sections: Identity, Authority, Constraints
 for section in "Identity" "Authority" "Constraints"; do
@@ -30,9 +23,10 @@ for section in "Identity" "Authority" "Constraints"; do
 done
 
 if [ -n "$ISSUES" ]; then
-  echo "Context health check failed: ${ISSUES}" >&2
-  exit 1
+  jq -n --arg alert "CONTEXT ADVISORY: ${ISSUES}Standing Orders may not have loaded correctly at session start." \
+    '{status: "warning", alert: $alert}'
+else
+  echo '{"status": "ok"}'
 fi
 
-echo "Context health: OK"
 exit 0
