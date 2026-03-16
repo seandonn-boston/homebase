@@ -63,7 +63,7 @@ The present invention provides a **three-tier enforcement spectrum** that classi
 **Tier 3 — Soft Guidance:** Advisory constraints with low enforcement reliability, easily overridden under context pressure. Used for stylistic preferences and non-critical suggestions.
 
 The invention further provides:
-- A **lifecycle event hook system** with defined event types (PreToolUse, PostToolUse, PreCommit, SessionStart, TaskCompleted, Periodic) where deterministic enforcement programs execute
+- A **lifecycle event hook system** with defined event types (PreToolUse, PostToolUse, PreCommit, PostCommit, SessionStart, TaskCompleted, PrePush, Periodic) where deterministic enforcement programs execute
 - A **self-healing feedback loop** where hook output is injected as error context into the agent's next action, enabling automated correction with cycle detection to prevent infinite retry loops
 - An **enforcement coverage validation** method that identifies compliance gaps at configuration time
 - A **policy-mechanism separation** where Standing Orders define governance policy and hooks implement enforcement mechanisms
@@ -122,7 +122,7 @@ The invention defines a set of lifecycle events at which deterministic enforceme
 **Hook Contract:**
 - **Input:** Structured JSON on stdin containing event type, tool name, parameters, agent identity, and trace ID
 - **Output:** Exit code 0 (pass) or non-zero (block). Stdout captured and fed back to agent as context. Stderr logged.
-- **Execution:** Synchronous — agent runtime pauses until hook returns. Configurable timeout (default 30 seconds). Hooks exceeding timeout are killed and treated as failures.
+- **Execution:** Synchronous — agent runtime pauses until hook returns. Configurable timeout (default 30 seconds; reference implementations typically use 5-10 seconds for lightweight monitoring hooks). Hooks exceeding timeout are killed and treated as failures.
 - **Chaining:** Multiple hooks bind to the same event. Execute in declared order. First failure stops the chain (fail-fast).
 - **Idempotency:** Hooks must be idempotent. The runtime may invoke a hook multiple times for the same event during self-healing retries.
 - **Isolation:** Hooks execute in a sandboxed environment with read access to the repository. Hooks cannot modify agent state, context, or tool parameters.

@@ -46,7 +46,7 @@ No existing methodology provides:
 - A formalized decomposition of human intent into structured, verifiable elements
 - Explicit encoding of judgment boundaries as part of the instruction (not an afterthought)
 - System-wide application of intent principles across hooks, knowledge entries, routing rules, and task assignments
-- A verification system for comparing agent output against structured intent specifications
+- A structured approach to verifying agent output against intent specifications
 
 ---
 
@@ -69,8 +69,8 @@ The methodology represents the third generation in a lineage of human-to-AI inst
 Each generation subsumes the previous. Intent engineering requires context engineering (information must be in the right place) and prompt engineering (individual instructions must be well-formed), but adds a layer above both: the communication of purpose, priority, and permission boundaries.
 
 The invention further provides:
-- A **verification system** that evaluates agent output against each of the six intent elements independently
-- A **cross-framework intent specification format** that is agent-runtime-agnostic
+- A **verification methodology** for evaluating agent output against each of the six intent elements independently, enabling decomposed assessment of intent-output alignment
+- A **portable intent specification format** designed to be agent-runtime-agnostic, specifying outcomes and success criteria rather than framework-specific processing instructions
 - **System-wide intent application** across enforcement hooks, knowledge entries, fleet routing, and task assignments
 - A **Human Inflection Point** concept that identifies decision types requiring human judgment
 
@@ -161,7 +161,7 @@ This system-wide application distinguishes intent engineering from prompt engine
 
 ### 5.3 Verification Against Intent Specification
 
-The methodology includes a verification system that evaluates agent output against each intent element independently:
+The six-element decomposition naturally enables structured verification of agent output. By evaluating output against each element independently, the methodology provides a framework for identifying precisely where intent-output misalignment occurs:
 
 | Element | Verification Method |
 |---|---|
@@ -172,11 +172,13 @@ The methodology includes a verification system that evaluates agent output again
 | Judgment Boundaries | Did the agent stop and request human input at the specified boundaries? |
 | Values | Do the agent's decisions in ambiguous territory reflect the stated values? |
 
-Constraint verification is binary and can be partially automated (checking that specific actions were not taken). Goal and values verification requires judgment and may involve human review. This decomposed verification enables precise identification of where intent-output misalignment occurs.
+Constraint verification is binary and can be partially automated (checking that specific actions were not taken). Goal and values verification requires judgment and may involve human review. This decomposed verification enables precise identification of where intent-output misalignment occurs — distinguishing between "the agent did the wrong thing" (goal failure), "the agent did a forbidden thing" (constraint violation), "the agent didn't stop when it should have" (judgment boundary overrun), and "the agent's approach was inconsistent with organizational principles" (value misalignment).
 
-### 5.4 Cross-Framework Intent Specification Format
+*Note: The verification methodology described here is derived from the six-element structure defined in the specification. Automated tooling to perform this verification is a planned extension, not yet implemented.*
 
-The intent specification is agent-runtime-agnostic. The same six-element structured intent document works with any agent framework because it specifies WHAT the agent should achieve and HOW to judge success — not HOW the agent should process instructions internally.
+### 5.4 Portable Intent Specification Format
+
+The six-element structure produces intent specifications that are inherently agent-runtime-agnostic. Because the format specifies WHAT the agent should achieve and HOW to judge success — not HOW the agent should process instructions internally — the same structured intent document can be consumed by any agent framework.
 
 ```
 Goal: [outcome description]
@@ -194,7 +196,7 @@ Values:
   - [principle #2]
 ```
 
-This format can be consumed by Claude Code (via AGENTS.md), CrewAI (via task definitions), LangGraph (via node configurations), AutoGen (via agent instructions), or any future framework. The intent specification is portable because it describes purpose, not mechanism.
+This format is designed to be consumable by any agent framework — Claude Code (via AGENTS.md), CrewAI (via task definitions), LangGraph (via node configurations), AutoGen (via agent instructions), or future frameworks — because it describes purpose, not mechanism. The reference implementation demonstrates this format within the Admiral Framework; cross-framework portability is an architectural property of the format's design, validated within the Admiral ecosystem.
 
 *Reference implementation: `aiStrat/admiral/extensions/intent-engineering.md`, Section "Writing Intent-Engineered Instructions"*
 
@@ -224,18 +226,18 @@ The measure of intent engineering quality is not instruction length. It is wheth
 - (c) transmitting the structured instruction to an AI agent system for execution;
 - wherein the structured instruction provides the agent with sufficient context to either make informed decisions when encountering unexpected situations or to recognize that human judgment is required and cease autonomous action.
 
-**Claim 2.** A verification system for evaluating AI agent output against structured intent specifications, comprising:
+**Claim 2.** A method for verifying AI agent output against structured intent specifications, comprising:
 - (a) receiving a structured intent specification decomposed into at least: goal, constraints, failure modes, judgment boundaries, and values;
-- (b) evaluating agent output against each element independently, producing per-element alignment scores;
+- (b) evaluating agent output against each element independently, wherein constraint compliance is verified by checking that specified prohibited actions were not taken, and judgment boundary compliance is verified by checking that specified escalation points triggered human consultation;
 - (c) identifying specific elements where agent output diverges from stated intent;
 - (d) classifying constraint violations as binary failures regardless of output quality on other elements;
-- wherein the decomposed verification enables precise identification of where intent-output misalignment occurs, distinguishing between goal failures, constraint violations, judgment boundary overruns, and value misalignment.
+- wherein the decomposed evaluation enables precise identification of where intent-output misalignment occurs, distinguishing between goal failures, constraint violations, judgment boundary overruns, and value misalignment.
 
-**Claim 3.** A cross-framework intent specification format for AI agent systems, comprising:
+**Claim 3.** A portable intent specification format for AI agent systems, comprising:
 - (a) a structured document format specifying at least: outcome goal, priority ranking, operational constraints, anticipated failure modes with recovery instructions, judgment boundaries identifying where human input is required, and decision-guiding values;
-- (b) the specification format being agent-runtime-agnostic, consuming by any agent framework because it specifies what the agent should achieve and how to judge success, not how the agent should process instructions internally;
+- (b) the specification format being agent-runtime-agnostic by design, specifying what the agent should achieve and how to judge success rather than how the agent should process instructions internally;
 - (c) system-wide application of the intent format across enforcement hooks, knowledge entries, fleet routing rules, task assignments, and monitoring — not limited to individual prompts;
-- wherein the same structured intent document operates consistently across different AI agent frameworks and across different components within a single framework.
+- wherein the structured intent document is designed to operate consistently across different AI agent frameworks and across different components within a single framework by describing purpose and success criteria rather than framework-specific processing instructions.
 
 ### Dependent Claims
 
@@ -305,7 +307,7 @@ The measure of intent engineering quality is not instruction length. It is wheth
 
 5. **Figure 5: Human Inflection Point Decision Tree** — Flowchart showing: Agent encounters decision → Is this within defined constraints? → Yes: proceed → Does this require taste/ethics/strategy/stakeholder judgment? → Yes: STOP and request human input → No: proceed with values-guided judgment.
 
-6. **Figure 6: Cross-Framework Portability** — Diagram showing a single Intent Specification document consumed by multiple frameworks (Claude Code, CrewAI, LangGraph, AutoGen) with "same intent, different runtimes" annotation.
+6. **Figure 6: Portable Intent Specification** — Diagram showing a single Intent Specification document designed for consumption by multiple frameworks (Claude Code, CrewAI, LangGraph, AutoGen) with "purpose-based, not mechanism-based" annotation.
 
 ---
 
