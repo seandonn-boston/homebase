@@ -36,7 +36,7 @@ aiStrat is the **Admiral Framework** — a comprehensive specification for AI ag
 
 ## Versioning
 
-- **Current version: v0.12.1-alpha.1773664042445** (pre-release, not yet published)
+- **Current version: v0.13.0-alpha.1773664247626** (pre-release, not yet published)
 - The framework uses [semantic versioning](https://semver.org/) with the format: `vMAJOR.MINOR.PATCH-stage.dateInMS` (e.g., `v0.10.0-alpha.1773619200000`). The `stage` is the pre-release label (e.g., `alpha`, `beta`, `rc`). The `dateInMS` is the Unix epoch timestamp in milliseconds at the time of the version bump.
 - The **single source of truth** for the version is `aiStrat/VERSION`. This is a plain text file containing only the version string. **Do not introduce version strings in any other file** — only the CI-managed locations below should contain version references.
 - **Versions are bumped automatically** on merge to main via `.github/workflows/version-bump.yml`. The bump type is determined by commit messages using [Conventional Commits](https://www.conventionalcommits.org/):
