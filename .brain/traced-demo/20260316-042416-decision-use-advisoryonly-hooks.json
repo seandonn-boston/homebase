@@ -1,0 +1,12 @@
+{
+  "id": "51cbdf15-ce94-4f43-8986-20a09ee4b653",
+  "project": "traced-demo",
+  "category": "decision",
+  "title": "Use advisory-only hooks",
+  "content": "All post-tool-use hooks exit 0 to prevent deadlocks. Enforcement happens at pre-tool-use only.",
+  "metadata": {
+    "tags": []
+  },
+  "source_agent": "architect",
+  "created_at": "2026-03-16T04:24:16Z"
+}
