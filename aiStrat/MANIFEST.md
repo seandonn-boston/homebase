@@ -1,6 +1,6 @@
 # Admiral Framework — File Manifest
 
-**114 files across 22 groups | Last modified: 2026-03-14**
+**120 files across 23 groups | Last modified: 2026-03-16**
 
 This is the semantic catalog of every file in the Admiral Framework. Each entry describes what the file contains, verified against the source. Update this manifest when files are added, removed, renamed, or when their content changes materially.
 
@@ -1009,4 +1009,39 @@ if Admiral disappears (the dependency test), and the core thesis that Admiral en
 a new organizational form — the hybrid organization with AI agents as permanent
 operational members. Historical parallel to the invention of the corporation.
 research/future-operations.md
+```
+
+---
+
+## Control Plane Reference Sketch (6 files)
+
+```
+README.md - control-plane/reference - 2026-03-16:
+Explains the relationship between this spec-level type definition directory and the
+root-level control-plane/ MVP implementation. This directory contains interface sketches
+that informed the MVP design; the root-level code is the runnable implementation.
+control-plane/README.md
+
+types.ts - control-plane/reference - 2026-03-14:
+Core type contracts for the CP1-CP2 Fleet Control Plane. Defines FleetEvent (structured
+agent events), AgentHealth (green/yellow/red), AgentStatus (per-agent state snapshot),
+and FleetSnapshot (top-level fleet state). Reference implementation sketch — see
+admiral/extensions/fleet-control-plane.md for the full specification.
+control-plane/types.ts
+
+server.ts - control-plane/reference - 2026-03-14:
+API surface sketch for the control plane HTTP server.
+control-plane/server.ts
+
+dashboard.ts - control-plane/reference - 2026-03-14:
+Dashboard component sketch for fleet visualization.
+control-plane/dashboard.ts
+
+package.json - control-plane/reference - 2026-03-14:
+TypeScript configuration for type-checking the reference sketches.
+control-plane/package.json
+
+tsconfig.json - control-plane/reference - 2026-03-14:
+TypeScript compiler configuration for the reference sketches.
+control-plane/tsconfig.json
 ```

@@ -1,6 +1,6 @@
 # PLAN.md — Admiral Framework Implementation Plan
 
-**Version:** v0.9.0-alpha
+**Version:** v0.10.0-alpha
 **Last Updated:** 2026-03-16
 **Status:** Phase 1 Complete
 
@@ -14,7 +14,7 @@
 
 | Milestone | Status | Exit Criteria |
 |---|---|---|
-| Version consistency across all files | Complete | VERSION, index.md, AGENTS.md all say v0.7.0-alpha |
+| Version consistency across all files | Complete | VERSION, index.md, AGENTS.md, PLAN.md, sales-pitch all say v0.10.0-alpha |
 | Ground truth references valid | Complete | PLAN.md and PLAN2.md exist and are current |
 | Enforcement language refined | Complete | Part 3 distinguishes enforcement vs. monitoring; hooks tagged by function (Enforcement/Monitoring) |
 | Standing Orders classified by mechanism | Complete | Each SO classified as Mechanical / Judgment-Assisted / Advisory in enforcement map |
