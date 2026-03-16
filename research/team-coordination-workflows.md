@@ -425,12 +425,187 @@ The tools change. The coordination problems don't. Admiral solves the problems, 
 
 ---
 
+## Where This Breaks Down
+
+The coordination-to-Admiral mapping above tells a clean story. Reality is messier. These are the situations where the approach fails or needs significant adaptation.
+
+### Situation 1: Greenfield Projects
+
+A team starting from zero — no codebase, no architecture decisions, no conventions established.
+
+**Why this is harder than it sounds:**
+
+Admiral assumes Ground Truth exists. Mission, Boundaries, Success Criteria, tech stack, coding conventions — these are inputs to the framework, not outputs. A greenfield project hasn't made these decisions yet. The fleet can't enforce conventions that don't exist. The Brain has nothing to remember. The QA Agent has no standards to verify against.
+
+**The trap:** Teams deploy Admiral on day one of a greenfield project and spend more time configuring governance than building the product. The framework becomes overhead before the project has enough mass to benefit from it.
+
+**What actually works:**
+- **Week 1-2:** Don't deploy Admiral. Make foundational decisions manually — tech stack, architecture, initial conventions. Write them down.
+- **Week 3-4:** Deploy Starter profile once Ground Truth exists. One agent, three hooks, persistent memory. The Brain starts accumulating decisions from the first governed session.
+- **Month 2+:** Advance to Team profile as the codebase grows and coordination needs emerge.
+
+**The key insight:** Admiral governs work. Greenfield projects need to create the thing that gets governed before governance adds value. The Mission statement and Boundaries should exist before Admiral is deployed — and creating those is inherently a human activity.
+
+**Exception:** If the greenfield project is being built *entirely* by a fleet (human provides strategy, fleet builds everything), then Admiral is needed from session one. But the human must front-load the Ground Truth: tech stack decisions, architecture decisions, coding conventions, and success criteria. The fleet cannot bootstrap its own governance context.
+
+---
+
+### Situation 2: Existing Projects with Active Teams
+
+A codebase with history, conventions (written and unwritten), technical debt, and humans who know where the bodies are buried.
+
+**Why this is different from the clean archetype model:**
+
+The document assumes teams adopt Admiral and then the fleet starts working. But existing projects have:
+- **Implicit conventions** that no one has written down. The fleet won't follow conventions it can't see.
+- **Technical debt** that makes "correct" behavior ambiguous. Does the fleet follow the existing (messy) patterns or the ideal (clean) patterns? Neither answer is obviously right.
+- **Existing workflows** that people are attached to. "We've always done PR reviews this way" — introducing a QA Agent into an established review culture creates friction.
+- **Tribal knowledge** that exists only in people's heads. The Brain starts empty. The fleet is less knowledgeable than the junior developer who's been on the team for six months.
+
+**What actually breaks:**
+- QA Agent enforces standards the codebase doesn't follow → every PR gets flagged → alert fatigue → governance theater
+- Fleet makes architecture decisions that contradict undocumented conventions → senior devs override → fleet loses trust → permanent Stage 1
+- Brain has no history → fleet makes decisions that contradict prior team decisions it doesn't know about → rework
+
+**What actually works:**
+- **Ground Truth extraction sprint:** Before deploying Admiral, spend 1-2 days documenting what's currently true — not what's ideal, what's *true*. Coding conventions, architecture decisions, known tech debt, "don't touch this because" warnings.
+- **Shadow mode first:** Deploy Admiral in observation-only mode. Hooks log but don't block. QA Agent reviews but doesn't gate. Let the fleet learn the codebase patterns before it starts enforcing.
+- **Brain seeding:** Manually create Brain entries for the top 20 decisions the team has made. "We chose Postgres because X." "The auth system works this way because Y." "Don't refactor the payment module because Z." This front-loads institutional knowledge that would otherwise take months of sessions to accumulate.
+- **Gradual authority:** Start with the fleet handling only new, well-scoped features — not refactors, not bug fixes in legacy code, not anything touching the parts of the codebase with heavy tribal knowledge.
+
+---
+
+### Situation 3: Legacy Projects with No Active Maintainers
+
+This is the hardest case. A codebase that:
+- Has no one who understands it well
+- Has no written documentation (or documentation that's years out of date)
+- Uses outdated dependencies, frameworks, or patterns
+- May have no tests, no CI, no linting
+- Exists because it works and no one wants to touch it
+
+**Why Admiral's model fundamentally struggles here:**
+
+Admiral's entire architecture assumes someone can provide Mission, Boundaries, and Success Criteria. It assumes Ground Truth exists or can be created. It assumes there are quality gates to enforce (tests, linters, type checkers). Legacy projects with no maintainers have *none of this*.
+
+| Admiral Assumption | Legacy Reality |
+|---|---|
+| Mission is defined | No one knows what this project is supposed to do beyond "it runs in production" |
+| Boundaries are explicit | No one knows what's safe to change |
+| Ground Truth exists | The code is the only documentation, and it's contradictory |
+| Quality gates work | No tests. No CI. `npm run lint` might not even run |
+| Conventions are documented | The conventions are whatever the original developers did in 2019 |
+| The Brain accumulates knowledge | There's no knowledge to accumulate — the starting point is total ignorance |
+
+**What actually breaks:**
+- The fleet can't determine what's intentional vs. accidental in the codebase. Is this weird pattern a bug or a workaround for a constraint that still exists?
+- No tests means no safety net. The fleet can make changes that break production and have no way to detect it.
+- Undocumented dependencies between components mean the fleet can't scope changes safely. Changing file A breaks file Q because of a coupling nobody documented.
+- The fleet will try to "improve" legacy code that works. Scope Creep via Helpfulness (failure mode #7) is especially dangerous here — every improvement risks breaking something.
+
+**What actually works (if anything):**
+
+1. **Reconnaissance phase (human + fleet together):**
+   - Deploy a single agent in read-only mode: map the codebase, identify dependencies, document what exists
+   - Brain seeding from archaeology: "This module appears to handle X based on code analysis. Confidence: inferred."
+   - Generate a codebase map before making any changes
+   - This is NOT autonomous work. The human is reviewing every finding.
+
+2. **Scaffold safety nets before touching anything:**
+   - Add CI/CD if it doesn't exist
+   - Add basic linting and type checking
+   - Write characterization tests — tests that verify current behavior, not ideal behavior
+   - These safety nets become the quality gates Admiral's hooks enforce
+
+3. **Extremely narrow scope:**
+   - Do NOT deploy a full fleet on a legacy codebase
+   - One agent. One task at a time. Manual review of everything.
+   - Boundaries: "You may only modify files in src/api/. You may not modify anything else."
+   - Authority: everything is Propose or Escalate. Nothing is Autonomous.
+
+4. **Accept that Stage 1 may be permanent:**
+   - For some legacy codebases, full autonomy is never the right answer
+   - The value is the Brain: as the fleet works on the codebase, it accumulates understanding that currently exists nowhere
+   - Over months, the Brain becomes the documentation the project never had
+   - This is valuable even if the fleet never advances past assisted automation
+
+**The honest assessment:** Admiral can help with legacy projects, but the value proposition is different. It's not "the fleet does the work of 50 developers." It's "the fleet helps you understand and safely modify a codebase that no one understands." That's a slower, more cautious, more human-intensive use of the framework — and the document I wrote doesn't acknowledge that.
+
+---
+
+### Situation 4: Teams That Don't Write Things Down
+
+Some teams coordinate entirely through meetings, hallway conversations, and "just ask Dave." They have no written process, no documented conventions, no ticket system — or they have these tools but don't use them consistently.
+
+**Why this is a problem:**
+
+Admiral hooks into written artifacts. Standing Orders are loaded from files. The Brain stores written entries. Hooks fire on tool calls. If the team's coordination happens verbally, Admiral has nothing to hook into.
+
+**What actually breaks:**
+- Ground Truth is supposed to come from documented conventions. If conventions are verbal, the fleet operates in a vacuum.
+- Escalations require routing to a human. If there's no ticket system or structured communication channel, escalations go nowhere.
+- The Brain records decisions. But if the important decisions happen in meetings and never get recorded, the Brain has a parallel (incomplete) history that diverges from reality.
+
+**What actually works:**
+- **Admiral as the forcing function for documentation.** The requirement to write Mission, Boundaries, and Success Criteria forces the conversation that the team has been avoiding. This is painful but valuable independent of AI agents.
+- **Start with the Brain as the documentation system.** Instead of "adopt Admiral and then document things," flip it: "use the Brain to start documenting decisions, and Admiral becomes useful as a side effect."
+- **Slack integration as the bridge.** If the team communicates in Slack, route fleet output there. Escalations become Slack messages. This meets the team where they are instead of demanding they adopt a new workflow.
+
+---
+
+### Situation 5: Teams Already Using Another Agent Framework
+
+Teams running CrewAI, LangGraph, AutoGen, or custom orchestration who want to add governance.
+
+**Why this is awkward:**
+
+Admiral specifies its own fleet composition, routing rules, and agent definitions. A team already running CrewAI agents has their own agent definitions, routing, and memory. Admiral can't just wrap around an existing framework without friction.
+
+**What actually works:**
+- Admiral's enforcement layer (hooks, Standing Orders) is framework-agnostic. You can enforce token budgets, loop detection, and scope boundaries on any agent framework.
+- The Brain works independently — any agent framework can write to and read from it via MCP.
+- The governance agents (Loop Breaker, Token Budgeter, etc.) can observe any framework's output.
+- What does NOT port easily: fleet composition (F2+), routing rules, interface contracts. These assume Admiral-native agent definitions.
+
+**The honest answer:** Admiral-as-governance works with other frameworks. Admiral-as-operating-system requires migration. The document should be clear about which value proposition applies to which team.
+
+---
+
+### Situation 6: The Overhead Exceeds the Value
+
+The most dangerous failure mode, and the one the document doesn't address at all.
+
+**When Admiral is net-negative:**
+- **Solo projects with short lifecycles.** If the project ships in two weeks and is never touched again, the Brain accumulates knowledge nobody will ever use. The governance overhead exceeds the value of governance.
+- **Highly exploratory work.** Research spikes, prototyping, "just try things and see what happens." Admiral's enforcement and structure actively interfere with exploration. You don't need budget gates when you're throwing away the result.
+- **Trivially simple projects.** A CRUD app with three endpoints doesn't need governance agents, fleet composition, or institutional memory. Using Admiral here is like deploying Kubernetes for a single static website.
+- **Teams where AI agent usage is occasional.** If you use an AI agent once a week for 30 minutes, the cost of configuring and maintaining Admiral exceeds the value of governing those sessions.
+
+**The principle the document should state but doesn't:** Admiral's value scales with the *volume and complexity of AI agent usage*. Below a certain threshold, it's overhead. The document presents Admiral as universally beneficial across all team sizes — it should instead identify the minimum viable agent usage that makes Admiral worthwhile.
+
+---
+
+## Revised Assessment: What the Archetype Model Gets Wrong
+
+| What the Document Claims | What's Actually True |
+|---|---|
+| Every team starts with the same three capabilities | True for teams that already have Ground Truth. False for greenfield and legacy projects that need to create Ground Truth first. |
+| Growth is friction-triggered | True, but the document doesn't address teams that never hit friction because their AI usage is too low to generate it. |
+| The convergence path is universal | False. Legacy projects may never advance past Stage 1-2. Greenfield projects need a pre-Admiral phase. Short-lived projects never reach convergence. |
+| "Minimal human-in-the-loop" is the end state | True for established, well-understood codebases. False for legacy code, novel architecture, and work requiring aesthetic judgment. |
+| Tool integration follows a clean priority stack | True for new tool adoption. Messy for existing tool ecosystems where integrations conflict or overlap. |
+
+---
+
 ## Open Questions
 
-1. **What is the minimum integration surface for each tool?** (e.g., what's the simplest useful Jira integration?)
-2. **Should Admiral provide a "coordination assessment" tool** that analyzes a team's current workflow and recommends the optimal Admiral profile and integration set?
-3. **How do we handle teams that coordinate primarily through meetings** (no written process)? Admiral needs something to hook into.
-4. **What's the migration path for teams already using another agent framework** (CrewAI, LangGraph, etc.) who want to add Admiral governance?
-5. **How do we prevent the "integration tax"** — the cost of maintaining N integrations as external tools evolve?
+1. **What is the minimum AI agent usage volume** where Admiral becomes net-positive vs. overhead?
+2. **What is the minimum integration surface for each tool?** (e.g., what's the simplest useful Jira integration?)
+3. **Should Admiral provide a "coordination assessment" tool** that analyzes a team's current workflow and recommends the optimal Admiral profile and integration set?
+4. **How do we handle teams that coordinate primarily through meetings** (no written process)? Admiral needs something to hook into.
+5. **What's the migration path for teams already using another agent framework** (CrewAI, LangGraph, etc.) who want to add Admiral governance?
+6. **How do we prevent the "integration tax"** — the cost of maintaining N integrations as external tools evolve?
+7. **Should there be a formal "pre-Admiral" phase** for greenfield and legacy projects that creates the Ground Truth Admiral needs before the framework is deployed?
+8. **What does a "read-only reconnaissance" mode look like** for legacy codebases where the fleet maps and documents before it modifies?
 
 ---
