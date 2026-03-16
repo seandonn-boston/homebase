@@ -1,0 +1,3 @@
+# Exclude files containing historical version strings from ripgrep searches.
+# This prevents false positives when searching for version references to update.
+aiStrat/admiral/spec/CHANGELOG.md
