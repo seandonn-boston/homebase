@@ -11,8 +11,15 @@
     "engineering_headcount_est": 20000,
     "cloud_provider": "Azure",
     "has_platform_team": true,
-    "agent_tooling_signals": ["AI-powered inventory management", "Walmart AI shopping assistant", "drone delivery automation"],
-    "governance_signals": ["Responsible AI framework", "data ethics program"],
+    "agent_tooling_signals": [
+      "AI-powered inventory management",
+      "Walmart AI shopping assistant",
+      "drone delivery automation"
+    ],
+    "governance_signals": [
+      "Responsible AI framework",
+      "data ethics program"
+    ],
     "governance_type": "operational",
     "build_vs_buy": "mixed",
     "open_source_preference": false,
@@ -43,8 +50,18 @@
     "engineering_headcount_est": 150000,
     "cloud_provider": "AWS",
     "has_platform_team": true,
-    "agent_tooling_signals": ["Amazon Bedrock agents", "Q Developer AI coding assistant", "Alexa+ AI agent", "warehouse robotics AI", "AWS AI services platform"],
-    "governance_signals": ["AWS AI service cards", "responsible AI practices", "SOC/ISO compliance"],
+    "agent_tooling_signals": [
+      "Amazon Bedrock agents",
+      "Q Developer AI coding assistant",
+      "Alexa+ AI agent",
+      "warehouse robotics AI",
+      "AWS AI services platform"
+    ],
+    "governance_signals": [
+      "AWS AI service cards",
+      "responsible AI practices",
+      "SOC/ISO compliance"
+    ],
     "governance_type": "operational",
     "build_vs_buy": "build",
     "open_source_preference": true,
@@ -75,8 +92,16 @@
     "engineering_headcount_est": 60000,
     "cloud_provider": "multi",
     "has_platform_team": true,
-    "agent_tooling_signals": ["Apple Intelligence on-device AI", "Siri AI upgrade", "Core ML developer tools"],
-    "governance_signals": ["Privacy-first AI design", "on-device processing emphasis", "App Store AI review policies"],
+    "agent_tooling_signals": [
+      "Apple Intelligence on-device AI",
+      "Siri AI upgrade",
+      "Core ML developer tools"
+    ],
+    "governance_signals": [
+      "Privacy-first AI design",
+      "on-device processing emphasis",
+      "App Store AI review policies"
+    ],
     "governance_type": "operational",
     "build_vs_buy": "build",
     "open_source_preference": false,
@@ -107,8 +132,16 @@
     "engineering_headcount_est": 30000,
     "cloud_provider": "multi",
     "has_platform_team": true,
-    "agent_tooling_signals": ["Optum AI clinical decision support", "claims processing automation", "prior authorization AI"],
-    "governance_signals": ["HIPAA compliance", "clinical AI governance board", "FDA AI/ML framework adherence"],
+    "agent_tooling_signals": [
+      "Optum AI clinical decision support",
+      "claims processing automation",
+      "prior authorization AI"
+    ],
+    "governance_signals": [
+      "HIPAA compliance",
+      "clinical AI governance board",
+      "FDA AI/ML framework adherence"
+    ],
     "governance_type": "compliance-only",
     "build_vs_buy": "mixed",
     "open_source_preference": false,
@@ -140,7 +173,10 @@
     "cloud_provider": "unknown",
     "has_platform_team": false,
     "agent_tooling_signals": [],
-    "governance_signals": ["Decentralized subsidiary governance", "insurance regulatory compliance"],
+    "governance_signals": [
+      "Decentralized subsidiary governance",
+      "insurance regulatory compliance"
+    ],
     "governance_type": "compliance-only",
     "build_vs_buy": "buy",
     "open_source_preference": false,
@@ -171,8 +207,16 @@
     "engineering_headcount_est": 10000,
     "cloud_provider": "multi",
     "has_platform_team": true,
-    "agent_tooling_signals": ["AI-powered clinical analytics", "pharmacy automation", "Open Engagement Platform"],
-    "governance_signals": ["HIPAA compliance", "PBM regulatory oversight", "clinical data governance"],
+    "agent_tooling_signals": [
+      "AI-powered clinical analytics",
+      "pharmacy automation",
+      "Open Engagement Platform"
+    ],
+    "governance_signals": [
+      "HIPAA compliance",
+      "PBM regulatory oversight",
+      "clinical data governance"
+    ],
     "governance_type": "compliance-only",
     "build_vs_buy": "mixed",
     "open_source_preference": false,
@@ -203,8 +247,16 @@
     "engineering_headcount_est": 8000,
     "cloud_provider": "multi",
     "has_platform_team": false,
-    "agent_tooling_signals": ["Seismic data AI analysis", "predictive maintenance", "process optimization ML"],
-    "governance_signals": ["Environmental compliance", "SEC reporting", "safety systems governance"],
+    "agent_tooling_signals": [
+      "Seismic data AI analysis",
+      "predictive maintenance",
+      "process optimization ML"
+    ],
+    "governance_signals": [
+      "Environmental compliance",
+      "SEC reporting",
+      "safety systems governance"
+    ],
     "governance_type": "compliance-only",
     "build_vs_buy": "buy",
     "open_source_preference": false,
@@ -235,8 +287,20 @@
     "engineering_headcount_est": 100000,
     "cloud_provider": "GCP",
     "has_platform_team": true,
-    "agent_tooling_signals": ["Gemini AI platform", "Google Cloud AI agents", "DeepMind research", "Vertex AI agent builder", "AI Overviews in Search", "750M+ Gemini MAU"],
-    "governance_signals": ["Google AI Principles", "Responsible AI team", "AI safety research", "model cards and transparency reports"],
+    "agent_tooling_signals": [
+      "Gemini AI platform",
+      "Google Cloud AI agents",
+      "DeepMind research",
+      "Vertex AI agent builder",
+      "AI Overviews in Search",
+      "750M+ Gemini MAU"
+    ],
+    "governance_signals": [
+      "Google AI Principles",
+      "Responsible AI team",
+      "AI safety research",
+      "model cards and transparency reports"
+    ],
     "governance_type": "operational",
     "build_vs_buy": "build",
     "open_source_preference": true,
@@ -267,8 +331,15 @@
     "engineering_headcount_est": 3000,
     "cloud_provider": "multi",
     "has_platform_team": false,
-    "agent_tooling_signals": ["Pharmaceutical supply chain analytics", "distribution optimization"],
-    "governance_signals": ["DEA compliance", "pharmaceutical distribution regulations", "controlled substance tracking"],
+    "agent_tooling_signals": [
+      "Pharmaceutical supply chain analytics",
+      "distribution optimization"
+    ],
+    "governance_signals": [
+      "DEA compliance",
+      "pharmaceutical distribution regulations",
+      "controlled substance tracking"
+    ],
     "governance_type": "compliance-only",
     "build_vs_buy": "buy",
     "open_source_preference": false,
@@ -299,8 +370,15 @@
     "engineering_headcount_est": 5000,
     "cloud_provider": "multi",
     "has_platform_team": false,
-    "agent_tooling_signals": ["Evernorth clinical analytics", "pharmacy benefit management automation"],
-    "governance_signals": ["HIPAA compliance", "state insurance regulations", "clinical data governance"],
+    "agent_tooling_signals": [
+      "Evernorth clinical analytics",
+      "pharmacy benefit management automation"
+    ],
+    "governance_signals": [
+      "HIPAA compliance",
+      "state insurance regulations",
+      "clinical data governance"
+    ],
     "governance_type": "compliance-only",
     "build_vs_buy": "buy",
     "open_source_preference": false,
@@ -331,8 +409,14 @@
     "engineering_headcount_est": 3000,
     "cloud_provider": "unknown",
     "has_platform_team": false,
-    "agent_tooling_signals": ["Inventory management optimization", "e-commerce personalization"],
-    "governance_signals": ["Standard retail compliance", "data privacy"],
+    "agent_tooling_signals": [
+      "Inventory management optimization",
+      "e-commerce personalization"
+    ],
+    "governance_signals": [
+      "Standard retail compliance",
+      "data privacy"
+    ],
     "governance_type": "compliance-only",
     "build_vs_buy": "buy",
     "open_source_preference": false,
@@ -363,8 +447,20 @@
     "engineering_headcount_est": 80000,
     "cloud_provider": "Azure",
     "has_platform_team": true,
-    "agent_tooling_signals": ["Microsoft Copilot across Office/365", "Azure AI services", "GitHub Copilot", "Copilot Studio agent builder", "OpenAI partnership", "Autonomous agents framework"],
-    "governance_signals": ["Microsoft Responsible AI Standard", "AI ethics board", "Responsible AI Impact Assessment", "EU AI Act compliance"],
+    "agent_tooling_signals": [
+      "Microsoft Copilot across Office/365",
+      "Azure AI services",
+      "GitHub Copilot",
+      "Copilot Studio agent builder",
+      "OpenAI partnership",
+      "Autonomous agents framework"
+    ],
+    "governance_signals": [
+      "Microsoft Responsible AI Standard",
+      "AI ethics board",
+      "Responsible AI Impact Assessment",
+      "EU AI Act compliance"
+    ],
     "governance_type": "operational",
     "build_vs_buy": "build",
     "open_source_preference": true,
@@ -395,8 +491,14 @@
     "engineering_headcount_est": 2500,
     "cloud_provider": "unknown",
     "has_platform_team": false,
-    "agent_tooling_signals": ["Pharmaceutical distribution analytics"],
-    "governance_signals": ["DEA compliance", "pharmaceutical distribution regulations", "controlled substance tracking"],
+    "agent_tooling_signals": [
+      "Pharmaceutical distribution analytics"
+    ],
+    "governance_signals": [
+      "DEA compliance",
+      "pharmaceutical distribution regulations",
+      "controlled substance tracking"
+    ],
     "governance_type": "compliance-only",
     "build_vs_buy": "buy",
     "open_source_preference": false,
@@ -427,8 +529,16 @@
     "engineering_headcount_est": 5000,
     "cloud_provider": "multi",
     "has_platform_team": false,
-    "agent_tooling_signals": ["Predictive maintenance ML", "reservoir modeling AI", "process optimization"],
-    "governance_signals": ["Environmental compliance", "SEC reporting", "safety systems governance"],
+    "agent_tooling_signals": [
+      "Predictive maintenance ML",
+      "reservoir modeling AI",
+      "process optimization"
+    ],
+    "governance_signals": [
+      "Environmental compliance",
+      "SEC reporting",
+      "safety systems governance"
+    ],
     "governance_type": "compliance-only",
     "build_vs_buy": "buy",
     "open_source_preference": false,
@@ -459,8 +569,13 @@
     "engineering_headcount_est": 2500,
     "cloud_provider": "unknown",
     "has_platform_team": false,
-    "agent_tooling_signals": ["Supply chain optimization analytics"],
-    "governance_signals": ["DEA compliance", "pharmaceutical distribution regulations"],
+    "agent_tooling_signals": [
+      "Supply chain optimization analytics"
+    ],
+    "governance_signals": [
+      "DEA compliance",
+      "pharmaceutical distribution regulations"
+    ],
     "governance_type": "compliance-only",
     "build_vs_buy": "buy",
     "open_source_preference": false,
@@ -491,8 +606,19 @@
     "engineering_headcount_est": 55000,
     "cloud_provider": "multi",
     "has_platform_team": true,
-    "agent_tooling_signals": ["LLM Suit internal AI platform", "AI-powered fraud detection", "IndexGPT", "AI for trading and risk", "2000+ AI/ML use cases in production"],
-    "governance_signals": ["OCC/Fed regulatory compliance", "AI risk management framework", "model risk management", "CCAR stress testing"],
+    "agent_tooling_signals": [
+      "LLM Suit internal AI platform",
+      "AI-powered fraud detection",
+      "IndexGPT",
+      "AI for trading and risk",
+      "2000+ AI/ML use cases in production"
+    ],
+    "governance_signals": [
+      "OCC/Fed regulatory compliance",
+      "AI risk management framework",
+      "model risk management",
+      "CCAR stress testing"
+    ],
     "governance_type": "operational",
     "build_vs_buy": "build",
     "open_source_preference": false,
@@ -523,8 +649,16 @@
     "engineering_headcount_est": 25000,
     "cloud_provider": "multi",
     "has_platform_team": true,
-    "agent_tooling_signals": ["Cruise autonomous driving (wound down)", "Ultifi software platform", "vehicle AI assistant"],
-    "governance_signals": ["NHTSA compliance", "autonomous vehicle safety reporting", "automotive cybersecurity"],
+    "agent_tooling_signals": [
+      "Cruise autonomous driving (wound down)",
+      "Ultifi software platform",
+      "vehicle AI assistant"
+    ],
+    "governance_signals": [
+      "NHTSA compliance",
+      "autonomous vehicle safety reporting",
+      "automotive cybersecurity"
+    ],
     "governance_type": "compliance-only",
     "build_vs_buy": "mixed",
     "open_source_preference": false,
@@ -555,8 +689,16 @@
     "engineering_headcount_est": 20000,
     "cloud_provider": "multi",
     "has_platform_team": true,
-    "agent_tooling_signals": ["BlueCruise autonomous driving", "Ford Pro Intelligence fleet management", "connected vehicle AI"],
-    "governance_signals": ["NHTSA compliance", "automotive cybersecurity", "connected vehicle data governance"],
+    "agent_tooling_signals": [
+      "BlueCruise autonomous driving",
+      "Ford Pro Intelligence fleet management",
+      "connected vehicle AI"
+    ],
+    "governance_signals": [
+      "NHTSA compliance",
+      "automotive cybersecurity",
+      "connected vehicle data governance"
+    ],
     "governance_type": "compliance-only",
     "build_vs_buy": "mixed",
     "open_source_preference": false,
@@ -587,8 +729,15 @@
     "engineering_headcount_est": 4000,
     "cloud_provider": "multi",
     "has_platform_team": false,
-    "agent_tooling_signals": ["Medicaid claims analytics", "member engagement automation"],
-    "governance_signals": ["CMS compliance", "state Medicaid regulations", "HIPAA"],
+    "agent_tooling_signals": [
+      "Medicaid claims analytics",
+      "member engagement automation"
+    ],
+    "governance_signals": [
+      "CMS compliance",
+      "state Medicaid regulations",
+      "HIPAA"
+    ],
     "governance_type": "compliance-only",
     "build_vs_buy": "buy",
     "open_source_preference": false,
@@ -619,8 +768,16 @@
     "engineering_headcount_est": 15000,
     "cloud_provider": "AWS",
     "has_platform_team": true,
-    "agent_tooling_signals": ["Network AI optimization", "AI customer service chatbots", "5G edge AI services"],
-    "governance_signals": ["FCC compliance", "network security governance", "customer data privacy"],
+    "agent_tooling_signals": [
+      "Network AI optimization",
+      "AI customer service chatbots",
+      "5G edge AI services"
+    ],
+    "governance_signals": [
+      "FCC compliance",
+      "network security governance",
+      "customer data privacy"
+    ],
     "governance_type": "compliance-only",
     "build_vs_buy": "mixed",
     "open_source_preference": false,
@@ -651,8 +808,16 @@
     "engineering_headcount_est": 15000,
     "cloud_provider": "Azure",
     "has_platform_team": true,
-    "agent_tooling_signals": ["Network AI optimization", "AI customer service", "Ask AT&T internal AI tool"],
-    "governance_signals": ["FCC compliance", "network security governance", "customer data privacy"],
+    "agent_tooling_signals": [
+      "Network AI optimization",
+      "AI customer service",
+      "Ask AT&T internal AI tool"
+    ],
+    "governance_signals": [
+      "FCC compliance",
+      "network security governance",
+      "customer data privacy"
+    ],
     "governance_type": "compliance-only",
     "build_vs_buy": "buy",
     "open_source_preference": false,
@@ -683,8 +848,15 @@
     "engineering_headcount_est": 5000,
     "cloud_provider": "multi",
     "has_platform_team": false,
-    "agent_tooling_signals": ["Ocado automated fulfillment", "personalized marketing AI", "inventory optimization"],
-    "governance_signals": ["Food safety compliance", "customer data privacy"],
+    "agent_tooling_signals": [
+      "Ocado automated fulfillment",
+      "personalized marketing AI",
+      "inventory optimization"
+    ],
+    "governance_signals": [
+      "Food safety compliance",
+      "customer data privacy"
+    ],
     "governance_type": "compliance-only",
     "build_vs_buy": "buy",
     "open_source_preference": false,
@@ -715,8 +887,15 @@
     "engineering_headcount_est": 2000,
     "cloud_provider": "unknown",
     "has_platform_team": false,
-    "agent_tooling_signals": ["Refinery process optimization", "predictive maintenance"],
-    "governance_signals": ["EPA compliance", "refinery safety regulations", "environmental monitoring"],
+    "agent_tooling_signals": [
+      "Refinery process optimization",
+      "predictive maintenance"
+    ],
+    "governance_signals": [
+      "EPA compliance",
+      "refinery safety regulations",
+      "environmental monitoring"
+    ],
     "governance_type": "compliance-only",
     "build_vs_buy": "buy",
     "open_source_preference": false,
@@ -747,8 +926,16 @@
     "engineering_headcount_est": 8000,
     "cloud_provider": "GCP",
     "has_platform_team": true,
-    "agent_tooling_signals": ["AI-powered product search", "inventory replenishment ML", "supply chain optimization"],
-    "governance_signals": ["Retail compliance", "customer data privacy", "PCI DSS"],
+    "agent_tooling_signals": [
+      "AI-powered product search",
+      "inventory replenishment ML",
+      "supply chain optimization"
+    ],
+    "governance_signals": [
+      "Retail compliance",
+      "customer data privacy",
+      "PCI DSS"
+    ],
     "governance_type": "compliance-only",
     "build_vs_buy": "mixed",
     "open_source_preference": false,
@@ -779,8 +966,16 @@
     "engineering_headcount_est": 15000,
     "cloud_provider": "multi",
     "has_platform_team": true,
-    "agent_tooling_signals": ["AI-powered content recommendations", "Xfinity voice assistant", "network optimization AI"],
-    "governance_signals": ["FCC compliance", "content moderation", "customer data privacy"],
+    "agent_tooling_signals": [
+      "AI-powered content recommendations",
+      "Xfinity voice assistant",
+      "network optimization AI"
+    ],
+    "governance_signals": [
+      "FCC compliance",
+      "content moderation",
+      "customer data privacy"
+    ],
     "governance_type": "compliance-only",
     "build_vs_buy": "mixed",
     "open_source_preference": false,
@@ -811,8 +1006,20 @@
     "engineering_headcount_est": 50000,
     "cloud_provider": "multi",
     "has_platform_team": true,
-    "agent_tooling_signals": ["Llama open-source LLM family", "Meta AI assistant", "AI-powered ad targeting", "AI content moderation", "Reality Labs AI", "Business AI agents"],
-    "governance_signals": ["Responsible AI team", "AI transparency reports", "content moderation governance", "EU Digital Services Act compliance"],
+    "agent_tooling_signals": [
+      "Llama open-source LLM family",
+      "Meta AI assistant",
+      "AI-powered ad targeting",
+      "AI content moderation",
+      "Reality Labs AI",
+      "Business AI agents"
+    ],
+    "governance_signals": [
+      "Responsible AI team",
+      "AI transparency reports",
+      "content moderation governance",
+      "EU Digital Services Act compliance"
+    ],
     "governance_type": "operational",
     "build_vs_buy": "build",
     "open_source_preference": true,
@@ -843,8 +1050,17 @@
     "engineering_headcount_est": 20000,
     "cloud_provider": "multi",
     "has_platform_team": true,
-    "agent_tooling_signals": ["AI server infrastructure provider", "Dell AI Factory", "PowerEdge AI servers", "enterprise AI solutions"],
-    "governance_signals": ["Supply chain security", "data protection compliance", "SOC certifications"],
+    "agent_tooling_signals": [
+      "AI server infrastructure provider",
+      "Dell AI Factory",
+      "PowerEdge AI servers",
+      "enterprise AI solutions"
+    ],
+    "governance_signals": [
+      "Supply chain security",
+      "data protection compliance",
+      "SOC certifications"
+    ],
     "governance_type": "compliance-only",
     "build_vs_buy": "mixed",
     "open_source_preference": true,
@@ -875,8 +1091,16 @@
     "engineering_headcount_est": 5000,
     "cloud_provider": "multi",
     "has_platform_team": true,
-    "agent_tooling_signals": ["Store Companion AI for employees", "AI-powered personalization", "supply chain ML"],
-    "governance_signals": ["Retail compliance", "PCI DSS", "customer data privacy"],
+    "agent_tooling_signals": [
+      "Store Companion AI for employees",
+      "AI-powered personalization",
+      "supply chain ML"
+    ],
+    "governance_signals": [
+      "Retail compliance",
+      "PCI DSS",
+      "customer data privacy"
+    ],
     "governance_type": "compliance-only",
     "build_vs_buy": "mixed",
     "open_source_preference": false,
@@ -907,8 +1131,16 @@
     "engineering_headcount_est": 8000,
     "cloud_provider": "multi",
     "has_platform_team": true,
-    "agent_tooling_signals": ["ORION route optimization AI", "smart package scanning", "network planning ML"],
-    "governance_signals": ["DOT compliance", "customs regulations", "data privacy"],
+    "agent_tooling_signals": [
+      "ORION route optimization AI",
+      "smart package scanning",
+      "network planning ML"
+    ],
+    "governance_signals": [
+      "DOT compliance",
+      "customs regulations",
+      "data privacy"
+    ],
     "governance_type": "compliance-only",
     "build_vs_buy": "mixed",
     "open_source_preference": false,
@@ -939,8 +1171,16 @@
     "engineering_headcount_est": 4000,
     "cloud_provider": "multi",
     "has_platform_team": false,
-    "agent_tooling_signals": ["AI-powered product search", "home services matching", "inventory optimization"],
-    "governance_signals": ["Retail compliance", "PCI DSS", "customer data privacy"],
+    "agent_tooling_signals": [
+      "AI-powered product search",
+      "home services matching",
+      "inventory optimization"
+    ],
+    "governance_signals": [
+      "Retail compliance",
+      "PCI DSS",
+      "customer data privacy"
+    ],
     "governance_type": "compliance-only",
     "build_vs_buy": "buy",
     "open_source_preference": false,
@@ -971,8 +1211,17 @@
     "engineering_headcount_est": 40000,
     "cloud_provider": "multi",
     "has_platform_team": true,
-    "agent_tooling_signals": ["Erica AI virtual assistant (2B+ interactions)", "AI-driven fraud detection", "AI coding reducing dev work by 30%", "CashPro AI for commercial clients"],
-    "governance_signals": ["OCC/Fed regulatory compliance", "model risk management", "AI risk governance framework"],
+    "agent_tooling_signals": [
+      "Erica AI virtual assistant (2B+ interactions)",
+      "AI-driven fraud detection",
+      "AI coding reducing dev work by 30%",
+      "CashPro AI for commercial clients"
+    ],
+    "governance_signals": [
+      "OCC/Fed regulatory compliance",
+      "model risk management",
+      "AI risk governance framework"
+    ],
     "governance_type": "operational",
     "build_vs_buy": "mixed",
     "open_source_preference": false,
@@ -1003,8 +1252,17 @@
     "engineering_headcount_est": 15000,
     "cloud_provider": "multi",
     "has_platform_team": true,
-    "agent_tooling_signals": ["AI drug discovery", "surgical robotics AI (Ottava)", "clinical trial optimization"],
-    "governance_signals": ["FDA compliance", "clinical data governance", "pharmaceutical AI validation", "GxP compliance"],
+    "agent_tooling_signals": [
+      "AI drug discovery",
+      "surgical robotics AI (Ottava)",
+      "clinical trial optimization"
+    ],
+    "governance_signals": [
+      "FDA compliance",
+      "clinical data governance",
+      "pharmaceutical AI validation",
+      "GxP compliance"
+    ],
     "governance_type": "operational",
     "build_vs_buy": "mixed",
     "open_source_preference": false,
@@ -1035,8 +1293,17 @@
     "engineering_headcount_est": 8000,
     "cloud_provider": "multi",
     "has_platform_team": true,
-    "agent_tooling_signals": ["SenseAware IoT tracking", "route optimization ML", "demand forecasting AI", "sorting automation"],
-    "governance_signals": ["DOT compliance", "customs regulations", "data privacy"],
+    "agent_tooling_signals": [
+      "SenseAware IoT tracking",
+      "route optimization ML",
+      "demand forecasting AI",
+      "sorting automation"
+    ],
+    "governance_signals": [
+      "DOT compliance",
+      "customs regulations",
+      "data privacy"
+    ],
     "governance_type": "compliance-only",
     "build_vs_buy": "mixed",
     "open_source_preference": false,
@@ -1067,8 +1334,16 @@
     "engineering_headcount_est": 30000,
     "cloud_provider": "multi",
     "has_platform_team": true,
-    "agent_tooling_signals": ["AI virtual assistant Fargo", "AI-powered fraud detection", "AI underwriting models"],
-    "governance_signals": ["OCC/Fed regulatory compliance", "consent order compliance", "model risk management"],
+    "agent_tooling_signals": [
+      "AI virtual assistant Fargo",
+      "AI-powered fraud detection",
+      "AI underwriting models"
+    ],
+    "governance_signals": [
+      "OCC/Fed regulatory compliance",
+      "consent order compliance",
+      "model risk management"
+    ],
     "governance_type": "operational",
     "build_vs_buy": "mixed",
     "open_source_preference": false,
@@ -1099,8 +1374,17 @@
     "engineering_headcount_est": 30000,
     "cloud_provider": "multi",
     "has_platform_team": true,
-    "agent_tooling_signals": ["AI-powered risk analytics", "trade surveillance AI", "client service automation"],
-    "governance_signals": ["OCC/Fed regulatory compliance", "consent order compliance", "model risk management", "data governance transformation"],
+    "agent_tooling_signals": [
+      "AI-powered risk analytics",
+      "trade surveillance AI",
+      "client service automation"
+    ],
+    "governance_signals": [
+      "OCC/Fed regulatory compliance",
+      "consent order compliance",
+      "model risk management",
+      "data governance transformation"
+    ],
     "governance_type": "operational",
     "build_vs_buy": "mixed",
     "open_source_preference": false,
@@ -1131,8 +1415,17 @@
     "engineering_headcount_est": 40000,
     "cloud_provider": "multi",
     "has_platform_team": true,
-    "agent_tooling_signals": ["Full Self-Driving AI", "Optimus humanoid robot", "Dojo AI training supercomputer", "Robotaxi ride-hailing", "xAI partnership"],
-    "governance_signals": ["NHTSA autonomous vehicle reporting", "FMVSS compliance"],
+    "agent_tooling_signals": [
+      "Full Self-Driving AI",
+      "Optimus humanoid robot",
+      "Dojo AI training supercomputer",
+      "Robotaxi ride-hailing",
+      "xAI partnership"
+    ],
+    "governance_signals": [
+      "NHTSA autonomous vehicle reporting",
+      "FMVSS compliance"
+    ],
     "governance_type": "compliance-only",
     "build_vs_buy": "build",
     "open_source_preference": false,
@@ -1163,8 +1456,16 @@
     "engineering_headcount_est": 5000,
     "cloud_provider": "multi",
     "has_platform_team": false,
-    "agent_tooling_signals": ["AI-driven consumer insights", "supply chain optimization", "digital marketing AI"],
-    "governance_signals": ["Consumer product safety compliance", "data privacy", "sustainability reporting"],
+    "agent_tooling_signals": [
+      "AI-driven consumer insights",
+      "supply chain optimization",
+      "digital marketing AI"
+    ],
+    "governance_signals": [
+      "Consumer product safety compliance",
+      "data privacy",
+      "sustainability reporting"
+    ],
     "governance_type": "compliance-only",
     "build_vs_buy": "buy",
     "open_source_preference": false,
@@ -1195,8 +1496,16 @@
     "engineering_headcount_est": 15000,
     "cloud_provider": "AWS",
     "has_platform_team": true,
-    "agent_tooling_signals": ["Predix industrial IoT analytics", "digital twin AI", "predictive maintenance ML for jet engines"],
-    "governance_signals": ["FAA compliance", "aviation safety standards", "defense contractor governance"],
+    "agent_tooling_signals": [
+      "Predix industrial IoT analytics",
+      "digital twin AI",
+      "predictive maintenance ML for jet engines"
+    ],
+    "governance_signals": [
+      "FAA compliance",
+      "aviation safety standards",
+      "defense contractor governance"
+    ],
     "governance_type": "operational",
     "build_vs_buy": "mixed",
     "open_source_preference": false,
@@ -1227,8 +1536,16 @@
     "engineering_headcount_est": 5000,
     "cloud_provider": "multi",
     "has_platform_team": false,
-    "agent_tooling_signals": ["AI-driven demand forecasting", "supply chain optimization", "personalized marketing"],
-    "governance_signals": ["Food safety compliance", "sustainability reporting", "data privacy"],
+    "agent_tooling_signals": [
+      "AI-driven demand forecasting",
+      "supply chain optimization",
+      "personalized marketing"
+    ],
+    "governance_signals": [
+      "Food safety compliance",
+      "sustainability reporting",
+      "data privacy"
+    ],
     "governance_type": "compliance-only",
     "build_vs_buy": "buy",
     "open_source_preference": false,
@@ -1259,8 +1576,17 @@
     "engineering_headcount_est": 12000,
     "cloud_provider": "AWS",
     "has_platform_team": true,
-    "agent_tooling_signals": ["Disney+ recommendation AI", "content personalization", "VFX AI tools", "theme park operations AI"],
-    "governance_signals": ["Content moderation", "COPPA compliance", "IP governance"],
+    "agent_tooling_signals": [
+      "Disney+ recommendation AI",
+      "content personalization",
+      "VFX AI tools",
+      "theme park operations AI"
+    ],
+    "governance_signals": [
+      "Content moderation",
+      "COPPA compliance",
+      "IP governance"
+    ],
     "governance_type": "compliance-only",
     "build_vs_buy": "mixed",
     "open_source_preference": false,
@@ -1291,8 +1617,17 @@
     "engineering_headcount_est": 35000,
     "cloud_provider": "AWS",
     "has_platform_team": true,
-    "agent_tooling_signals": ["Digital Aviation Solutions (divested)", "manufacturing quality AI", "predictive maintenance for fleet"],
-    "governance_signals": ["FAA compliance", "defense contractor governance", "ITAR compliance", "aviation safety standards"],
+    "agent_tooling_signals": [
+      "Digital Aviation Solutions (divested)",
+      "manufacturing quality AI",
+      "predictive maintenance for fleet"
+    ],
+    "governance_signals": [
+      "FAA compliance",
+      "defense contractor governance",
+      "ITAR compliance",
+      "aviation safety standards"
+    ],
     "governance_type": "operational",
     "build_vs_buy": "mixed",
     "open_source_preference": false,
@@ -1323,8 +1658,18 @@
     "engineering_headcount_est": 35000,
     "cloud_provider": "multi",
     "has_platform_team": true,
-    "agent_tooling_signals": ["Gaudi AI accelerators", "Intel 18A AI chip process", "Xeon AI PC processors", "AI PC platform", "NVIDIA collaboration for AI host nodes"],
-    "governance_signals": ["CHIPS Act compliance", "export control compliance", "semiconductor trade regulations"],
+    "agent_tooling_signals": [
+      "Gaudi AI accelerators",
+      "Intel 18A AI chip process",
+      "Xeon AI PC processors",
+      "AI PC platform",
+      "NVIDIA collaboration for AI host nodes"
+    ],
+    "governance_signals": [
+      "CHIPS Act compliance",
+      "export control compliance",
+      "semiconductor trade regulations"
+    ],
     "governance_type": "compliance-only",
     "build_vs_buy": "build",
     "open_source_preference": true,
@@ -1355,8 +1700,20 @@
     "engineering_headcount_est": 80000,
     "cloud_provider": "multi",
     "has_platform_team": true,
-    "agent_tooling_signals": ["watsonx AI platform", "GenAI book of business >$12.5B", "Red Hat OpenShift AI", "HashiCorp acquisition", "100+ AI agents deployed", "AI replacing 200 HR roles"],
-    "governance_signals": ["IBM AI Ethics Board", "AI Fairness 360", "enterprise AI governance frameworks", "EU AI Act compliance"],
+    "agent_tooling_signals": [
+      "watsonx AI platform",
+      "GenAI book of business >$12.5B",
+      "Red Hat OpenShift AI",
+      "HashiCorp acquisition",
+      "100+ AI agents deployed",
+      "AI replacing 200 HR roles"
+    ],
+    "governance_signals": [
+      "IBM AI Ethics Board",
+      "AI Fairness 360",
+      "enterprise AI governance frameworks",
+      "EU AI Act compliance"
+    ],
     "governance_type": "operational",
     "build_vs_buy": "build",
     "open_source_preference": true,
@@ -1387,8 +1744,19 @@
     "engineering_headcount_est": 25000,
     "cloud_provider": "multi",
     "has_platform_team": true,
-    "agent_tooling_signals": ["Agentforce autonomous AI agents", "Einstein AI", "Data Cloud AI", "Agentforce ARR $800M", "nearly half of Fortune 100 are AI+Data Cloud customers"],
-    "governance_signals": ["SOC 2 compliance", "GDPR compliance", "AI acceptable use policy", "Trust layer for AI"],
+    "agent_tooling_signals": [
+      "Agentforce autonomous AI agents",
+      "Einstein AI",
+      "Data Cloud AI",
+      "Agentforce ARR $800M",
+      "nearly half of Fortune 100 are AI+Data Cloud customers"
+    ],
+    "governance_signals": [
+      "SOC 2 compliance",
+      "GDPR compliance",
+      "AI acceptable use policy",
+      "Trust layer for AI"
+    ],
     "governance_type": "operational",
     "build_vs_buy": "build",
     "open_source_preference": false,
@@ -1419,8 +1787,19 @@
     "engineering_headcount_est": 45000,
     "cloud_provider": "multi",
     "has_platform_team": true,
-    "agent_tooling_signals": ["OCI AI services", "100+ embedded AI agents in SaaS", "GPU consumption up 336%", "partnerships with OpenAI, xAI, Meta, NVIDIA", "RPO $138B driven by AI demand"],
-    "governance_signals": ["SOC 2 compliance", "FedRAMP authorization", "GDPR compliance", "healthcare and financial data compliance"],
+    "agent_tooling_signals": [
+      "OCI AI services",
+      "100+ embedded AI agents in SaaS",
+      "GPU consumption up 336%",
+      "partnerships with OpenAI, xAI, Meta, NVIDIA",
+      "RPO $138B driven by AI demand"
+    ],
+    "governance_signals": [
+      "SOC 2 compliance",
+      "FedRAMP authorization",
+      "GDPR compliance",
+      "healthcare and financial data compliance"
+    ],
     "governance_type": "operational",
     "build_vs_buy": "build",
     "open_source_preference": false,
@@ -1451,8 +1830,19 @@
     "engineering_headcount_est": 25000,
     "cloud_provider": "multi",
     "has_platform_team": true,
-    "agent_tooling_signals": ["CUDA AI compute platform", "Blackwell NVL72 AI supercomputer", "NVIDIA NIM microservices", "Stargate Project partner", "AI inference token generation up 10x", "AI factory infrastructure"],
-    "governance_signals": ["Export control compliance", "CHIPS Act", "AI safety partnerships"],
+    "agent_tooling_signals": [
+      "CUDA AI compute platform",
+      "Blackwell NVL72 AI supercomputer",
+      "NVIDIA NIM microservices",
+      "Stargate Project partner",
+      "AI inference token generation up 10x",
+      "AI factory infrastructure"
+    ],
+    "governance_signals": [
+      "Export control compliance",
+      "CHIPS Act",
+      "AI safety partnerships"
+    ],
     "governance_type": "compliance-only",
     "build_vs_buy": "build",
     "open_source_preference": true,
@@ -1483,8 +1873,17 @@
     "engineering_headcount_est": 12000,
     "cloud_provider": "multi",
     "has_platform_team": true,
-    "agent_tooling_signals": ["GS AI Platform", "AI-powered trading analytics", "AI code generation for developers", "AI document analysis"],
-    "governance_signals": ["SEC/FINRA compliance", "model risk management", "AI governance committee"],
+    "agent_tooling_signals": [
+      "GS AI Platform",
+      "AI-powered trading analytics",
+      "AI code generation for developers",
+      "AI document analysis"
+    ],
+    "governance_signals": [
+      "SEC/FINRA compliance",
+      "model risk management",
+      "AI governance committee"
+    ],
     "governance_type": "operational",
     "build_vs_buy": "build",
     "open_source_preference": false,
@@ -1515,8 +1914,17 @@
     "engineering_headcount_est": 15000,
     "cloud_provider": "multi",
     "has_platform_team": true,
-    "agent_tooling_signals": ["AI@Morgan Stanley assistant (OpenAI partnership)", "AI-powered wealth management tools", "AI trading analytics"],
-    "governance_signals": ["SEC/FINRA compliance", "model risk management", "AI governance committee", "data privacy"],
+    "agent_tooling_signals": [
+      "AI@Morgan Stanley assistant (OpenAI partnership)",
+      "AI-powered wealth management tools",
+      "AI trading analytics"
+    ],
+    "governance_signals": [
+      "SEC/FINRA compliance",
+      "model risk management",
+      "AI governance committee",
+      "data privacy"
+    ],
     "governance_type": "operational",
     "build_vs_buy": "mixed",
     "open_source_preference": false,
@@ -1547,8 +1955,20 @@
     "engineering_headcount_est": 200000,
     "cloud_provider": "multi",
     "has_platform_team": true,
-    "agent_tooling_signals": ["GenAI bookings $5.9B", "6000 AI projects", "GenAI revenue $2.7B (3x YoY)", "77000 AI/data professionals", "agentic AI deployments", "Informatica acquisition $8B"],
-    "governance_signals": ["Responsible AI framework", "AI governance consulting practice", "SOC 2", "ISO 27001"],
+    "agent_tooling_signals": [
+      "GenAI bookings $5.9B",
+      "6000 AI projects",
+      "GenAI revenue $2.7B (3x YoY)",
+      "77000 AI/data professionals",
+      "agentic AI deployments",
+      "Informatica acquisition $8B"
+    ],
+    "governance_signals": [
+      "Responsible AI framework",
+      "AI governance consulting practice",
+      "SOC 2",
+      "ISO 27001"
+    ],
     "governance_type": "operational",
     "build_vs_buy": "mixed",
     "open_source_preference": true,
@@ -1579,8 +1999,20 @@
     "engineering_headcount_est": 15000,
     "cloud_provider": "multi",
     "has_platform_team": true,
-    "agent_tooling_signals": ["Firefly generative AI", "Firefly Services enterprise API", "Firefly Foundry brand-specific AI", "AI-influenced ARR >33% of total", "Sensei AI across Creative Cloud", "3x gen credit consumption QoQ"],
-    "governance_signals": ["Content Credentials initiative", "AI training data transparency", "Content Authenticity Initiative", "GDPR compliance"],
+    "agent_tooling_signals": [
+      "Firefly generative AI",
+      "Firefly Services enterprise API",
+      "Firefly Foundry brand-specific AI",
+      "AI-influenced ARR >33% of total",
+      "Sensei AI across Creative Cloud",
+      "3x gen credit consumption QoQ"
+    ],
+    "governance_signals": [
+      "Content Credentials initiative",
+      "AI training data transparency",
+      "Content Authenticity Initiative",
+      "GDPR compliance"
+    ],
     "governance_type": "operational",
     "build_vs_buy": "build",
     "open_source_preference": false,
@@ -1598,5 +2030,1999 @@
     },
     "data_source": "FY2025 10-K (ended Nov 28, 2025), Q4 FY2025 earnings",
     "data_date": "2025-11-28"
+  },
+  {
+    "company": "Elevance Health",
+    "ticker": "ELV",
+    "fortune_500_rank": 22,
+    "sector": "Health Care",
+    "revenue_2025_mm": 176200,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "moderate",
+    "headcount": 100000,
+    "engineering_headcount_est": 8000,
+    "cloud_provider": "Azure",
+    "has_platform_team": true,
+    "agent_tooling_signals": [
+      "Clinical decision AI",
+      "claims auto-adjudication",
+      "member engagement chatbot"
+    ],
+    "governance_signals": [
+      "HIPAA compliance",
+      "AI ethics board",
+      "state insurance regulatory compliance"
+    ],
+    "governance_type": "compliance-only",
+    "build_vs_buy": "mixed",
+    "open_source_preference": false,
+    "tech_spend_pct": 3.5,
+    "operating_margin_pct": 4.8,
+    "scores": {
+      "ai_investment_intensity": 35,
+      "engineering_scale": 70,
+      "cloud_maturity": 55,
+      "governance_posture": 60,
+      "regulatory_pressure": 80,
+      "agent_tooling": 40,
+      "build_vs_buy": 55,
+      "budget_availability": 25
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "Humana",
+    "ticker": "HUM",
+    "fortune_500_rank": 38,
+    "sector": "Health Care",
+    "revenue_2025_mm": 115000,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "moderate",
+    "headcount": 67000,
+    "engineering_headcount_est": 4000,
+    "cloud_provider": "AWS",
+    "has_platform_team": true,
+    "agent_tooling_signals": [
+      "CenterWell AI health analytics",
+      "Medicare Advantage predictive models",
+      "care coordination automation"
+    ],
+    "governance_signals": [
+      "CMS compliance",
+      "HIPAA",
+      "Medicare regulatory oversight"
+    ],
+    "governance_type": "compliance-only",
+    "build_vs_buy": "buy",
+    "open_source_preference": false,
+    "tech_spend_pct": 3.0,
+    "operating_margin_pct": 3.2,
+    "scores": {
+      "ai_investment_intensity": 30,
+      "engineering_scale": 55,
+      "cloud_maturity": 50,
+      "governance_posture": 55,
+      "regulatory_pressure": 80,
+      "agent_tooling": 35,
+      "build_vs_buy": 70,
+      "budget_availability": 15
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "AbbVie",
+    "ticker": "ABBV",
+    "fortune_500_rank": 53,
+    "sector": "Health Care",
+    "revenue_2025_mm": 58000,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "moderate",
+    "headcount": 50000,
+    "engineering_headcount_est": 3500,
+    "cloud_provider": "AWS",
+    "has_platform_team": false,
+    "agent_tooling_signals": [
+      "AI drug discovery pipelines",
+      "clinical trial optimization ML",
+      "pharmacovigilance automation"
+    ],
+    "governance_signals": [
+      "FDA compliance",
+      "clinical data governance",
+      "GxP validation"
+    ],
+    "governance_type": "compliance-only",
+    "build_vs_buy": "buy",
+    "open_source_preference": false,
+    "tech_spend_pct": 2.5,
+    "operating_margin_pct": 24.0,
+    "scores": {
+      "ai_investment_intensity": 35,
+      "engineering_scale": 50,
+      "cloud_maturity": 45,
+      "governance_posture": 55,
+      "regulatory_pressure": 85,
+      "agent_tooling": 30,
+      "build_vs_buy": 75,
+      "budget_availability": 50
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "Merck",
+    "ticker": "MRK",
+    "fortune_500_rank": 58,
+    "sector": "Health Care",
+    "revenue_2025_mm": 64200,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "moderate",
+    "headcount": 69000,
+    "engineering_headcount_est": 5000,
+    "cloud_provider": "AWS",
+    "has_platform_team": true,
+    "agent_tooling_signals": [
+      "AI-accelerated drug discovery",
+      "manufacturing process AI",
+      "clinical trial patient matching"
+    ],
+    "governance_signals": [
+      "FDA regulatory compliance",
+      "GxP data integrity",
+      "clinical AI validation protocols"
+    ],
+    "governance_type": "compliance-only",
+    "build_vs_buy": "mixed",
+    "open_source_preference": false,
+    "tech_spend_pct": 3.0,
+    "operating_margin_pct": 28.0,
+    "scores": {
+      "ai_investment_intensity": 40,
+      "engineering_scale": 55,
+      "cloud_maturity": 50,
+      "governance_posture": 60,
+      "regulatory_pressure": 85,
+      "agent_tooling": 35,
+      "build_vs_buy": 55,
+      "budget_availability": 55
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "Pfizer",
+    "ticker": "PFE",
+    "fortune_500_rank": 56,
+    "sector": "Health Care",
+    "revenue_2025_mm": 61500,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "moderate",
+    "headcount": 83000,
+    "engineering_headcount_est": 4500,
+    "cloud_provider": "AWS",
+    "has_platform_team": true,
+    "agent_tooling_signals": [
+      "AI drug candidate screening",
+      "manufacturing quality AI",
+      "real-world evidence ML"
+    ],
+    "governance_signals": [
+      "FDA compliance",
+      "GxP validation",
+      "clinical data governance board"
+    ],
+    "governance_type": "compliance-only",
+    "build_vs_buy": "buy",
+    "open_source_preference": false,
+    "tech_spend_pct": 2.5,
+    "operating_margin_pct": 8.0,
+    "scores": {
+      "ai_investment_intensity": 35,
+      "engineering_scale": 55,
+      "cloud_maturity": 50,
+      "governance_posture": 55,
+      "regulatory_pressure": 85,
+      "agent_tooling": 30,
+      "build_vs_buy": 75,
+      "budget_availability": 25
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "Cisco Systems",
+    "ticker": "CSCO",
+    "fortune_500_rank": 74,
+    "sector": "Information Technology",
+    "revenue_2025_mm": 54000,
+    "ai_capex_2025_mm": 2500,
+    "ai_mentions_earnings": "significant",
+    "headcount": 85000,
+    "engineering_headcount_est": 30000,
+    "cloud_provider": "Multi-cloud",
+    "has_platform_team": true,
+    "agent_tooling_signals": [
+      "Cisco AI Assistant for Security",
+      "AI-driven network analytics",
+      "Webex AI features",
+      "ThousandEyes AI monitoring"
+    ],
+    "governance_signals": [
+      "Responsible AI framework",
+      "security-first AI governance",
+      "AI transparency reports"
+    ],
+    "governance_type": "operational",
+    "build_vs_buy": "build",
+    "open_source_preference": true,
+    "tech_spend_pct": 13.0,
+    "operating_margin_pct": 22.0,
+    "scores": {
+      "ai_investment_intensity": 65,
+      "engineering_scale": 90,
+      "cloud_maturity": 80,
+      "governance_posture": 65,
+      "regulatory_pressure": 30,
+      "agent_tooling": 70,
+      "build_vs_buy": 25,
+      "budget_availability": 80
+    },
+    "data_source": "FY2025 10-K (ended Jul 2025), Q4 FY2025 earnings",
+    "data_date": "2025-07-31"
+  },
+  {
+    "company": "Broadcom",
+    "ticker": "AVGO",
+    "fortune_500_rank": 67,
+    "sector": "Information Technology",
+    "revenue_2025_mm": 62000,
+    "ai_capex_2025_mm": 3000,
+    "ai_mentions_earnings": "dominant",
+    "headcount": 40000,
+    "engineering_headcount_est": 22000,
+    "cloud_provider": "Multi-cloud",
+    "has_platform_team": true,
+    "agent_tooling_signals": [
+      "VMware AI infrastructure",
+      "custom AI accelerators for hyperscalers",
+      "AI networking solutions",
+      "Symantec AI security"
+    ],
+    "governance_signals": [
+      "VMware compliance frameworks",
+      "semiconductor export controls"
+    ],
+    "governance_type": "operational",
+    "build_vs_buy": "build",
+    "open_source_preference": false,
+    "tech_spend_pct": 20.0,
+    "operating_margin_pct": 35.0,
+    "scores": {
+      "ai_investment_intensity": 80,
+      "engineering_scale": 80,
+      "cloud_maturity": 75,
+      "governance_posture": 55,
+      "regulatory_pressure": 35,
+      "agent_tooling": 55,
+      "build_vs_buy": 20,
+      "budget_availability": 90
+    },
+    "data_source": "FY2025 10-K (ended Oct 2025), Q4 FY2025 earnings",
+    "data_date": "2025-10-31"
+  },
+  {
+    "company": "AMD",
+    "ticker": "AMD",
+    "fortune_500_rank": 115,
+    "sector": "Information Technology",
+    "revenue_2025_mm": 30000,
+    "ai_capex_2025_mm": 1500,
+    "ai_mentions_earnings": "dominant",
+    "headcount": 27000,
+    "engineering_headcount_est": 17000,
+    "cloud_provider": "Multi-cloud",
+    "has_platform_team": true,
+    "agent_tooling_signals": [
+      "MI300X AI accelerators",
+      "ROCm open software platform",
+      "Xilinx AI inference engines",
+      "AI PC processors"
+    ],
+    "governance_signals": [
+      "Export control compliance",
+      "semiconductor supply chain governance"
+    ],
+    "governance_type": "operational",
+    "build_vs_buy": "build",
+    "open_source_preference": true,
+    "tech_spend_pct": 25.0,
+    "operating_margin_pct": 22.0,
+    "scores": {
+      "ai_investment_intensity": 85,
+      "engineering_scale": 80,
+      "cloud_maturity": 70,
+      "governance_posture": 55,
+      "regulatory_pressure": 30,
+      "agent_tooling": 50,
+      "build_vs_buy": 15,
+      "budget_availability": 75
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "Qualcomm",
+    "ticker": "QCOM",
+    "fortune_500_rank": 105,
+    "sector": "Information Technology",
+    "revenue_2025_mm": 42000,
+    "ai_capex_2025_mm": 2000,
+    "ai_mentions_earnings": "significant",
+    "headcount": 51000,
+    "engineering_headcount_est": 35000,
+    "cloud_provider": "Multi-cloud",
+    "has_platform_team": true,
+    "agent_tooling_signals": [
+      "On-device AI inference (Snapdragon)",
+      "AI Hub model optimization",
+      "edge AI compute platform",
+      "automotive AI chips"
+    ],
+    "governance_signals": [
+      "Export controls",
+      "FTC consent decree monitoring",
+      "patent licensing governance"
+    ],
+    "governance_type": "operational",
+    "build_vs_buy": "build",
+    "open_source_preference": true,
+    "tech_spend_pct": 22.0,
+    "operating_margin_pct": 26.0,
+    "scores": {
+      "ai_investment_intensity": 75,
+      "engineering_scale": 90,
+      "cloud_maturity": 65,
+      "governance_posture": 60,
+      "regulatory_pressure": 40,
+      "agent_tooling": 55,
+      "build_vs_buy": 15,
+      "budget_availability": 80
+    },
+    "data_source": "FY2025 10-K (ended Sep 2025), Q4 FY2025 earnings",
+    "data_date": "2025-09-30"
+  },
+  {
+    "company": "ServiceNow",
+    "ticker": "NOW",
+    "fortune_500_rank": 195,
+    "sector": "Information Technology",
+    "revenue_2025_mm": 12500,
+    "ai_capex_2025_mm": 800,
+    "ai_mentions_earnings": "dominant",
+    "headcount": 25000,
+    "engineering_headcount_est": 10000,
+    "cloud_provider": "Multi-cloud",
+    "has_platform_team": true,
+    "agent_tooling_signals": [
+      "Now Assist AI agents",
+      "AI-powered ITSM workflows",
+      "Xanadu AI features",
+      "intelligent document processing",
+      "agentic AI platform"
+    ],
+    "governance_signals": [
+      "FedRAMP authorization",
+      "SOC 2 compliance",
+      "AI trust and transparency"
+    ],
+    "governance_type": "operational",
+    "build_vs_buy": "build",
+    "open_source_preference": false,
+    "tech_spend_pct": 30.0,
+    "operating_margin_pct": 25.0,
+    "scores": {
+      "ai_investment_intensity": 85,
+      "engineering_scale": 75,
+      "cloud_maturity": 95,
+      "governance_posture": 65,
+      "regulatory_pressure": 30,
+      "agent_tooling": 85,
+      "build_vs_buy": 15,
+      "budget_availability": 85
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "American Express",
+    "ticker": "AXP",
+    "fortune_500_rank": 65,
+    "sector": "Financials",
+    "revenue_2025_mm": 66800,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "significant",
+    "headcount": 77000,
+    "engineering_headcount_est": 12000,
+    "cloud_provider": "Hybrid",
+    "has_platform_team": true,
+    "agent_tooling_signals": [
+      "AI fraud detection",
+      "personalized offer engine",
+      "customer service AI assistant",
+      "credit risk ML models"
+    ],
+    "governance_signals": [
+      "OCC/Fed regulatory compliance",
+      "model risk management (SR 11-7)",
+      "AI fairness in lending"
+    ],
+    "governance_type": "operational",
+    "build_vs_buy": "build",
+    "open_source_preference": false,
+    "tech_spend_pct": 8.0,
+    "operating_margin_pct": 22.0,
+    "scores": {
+      "ai_investment_intensity": 55,
+      "engineering_scale": 80,
+      "cloud_maturity": 60,
+      "governance_posture": 65,
+      "regulatory_pressure": 75,
+      "agent_tooling": 55,
+      "build_vs_buy": 30,
+      "budget_availability": 65
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "Capital One",
+    "ticker": "COF",
+    "fortune_500_rank": 97,
+    "sector": "Financials",
+    "revenue_2025_mm": 39500,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "significant",
+    "headcount": 55000,
+    "engineering_headcount_est": 15000,
+    "cloud_provider": "AWS",
+    "has_platform_team": true,
+    "agent_tooling_signals": [
+      "ML-driven credit underwriting",
+      "Eno AI virtual assistant",
+      "real-time fraud detection",
+      "cloud-native AI platform"
+    ],
+    "governance_signals": [
+      "OCC compliance",
+      "model risk management",
+      "AI fairness audits",
+      "cloud security governance"
+    ],
+    "governance_type": "operational",
+    "build_vs_buy": "build",
+    "open_source_preference": true,
+    "tech_spend_pct": 10.0,
+    "operating_margin_pct": 18.0,
+    "scores": {
+      "ai_investment_intensity": 65,
+      "engineering_scale": 80,
+      "cloud_maturity": 90,
+      "governance_posture": 70,
+      "regulatory_pressure": 80,
+      "agent_tooling": 60,
+      "build_vs_buy": 25,
+      "budget_availability": 65
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "Charles Schwab",
+    "ticker": "SCHW",
+    "fortune_500_rank": 155,
+    "sector": "Financials",
+    "revenue_2025_mm": 21000,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "moderate",
+    "headcount": 36000,
+    "engineering_headcount_est": 6000,
+    "cloud_provider": "Hybrid",
+    "has_platform_team": true,
+    "agent_tooling_signals": [
+      "Schwab AI portfolio insights",
+      "intelligent order routing",
+      "client service chatbot"
+    ],
+    "governance_signals": [
+      "SEC/FINRA compliance",
+      "fiduciary duty governance",
+      "model risk management"
+    ],
+    "governance_type": "compliance-only",
+    "build_vs_buy": "mixed",
+    "open_source_preference": false,
+    "tech_spend_pct": 6.0,
+    "operating_margin_pct": 38.0,
+    "scores": {
+      "ai_investment_intensity": 40,
+      "engineering_scale": 60,
+      "cloud_maturity": 55,
+      "governance_posture": 50,
+      "regulatory_pressure": 75,
+      "agent_tooling": 35,
+      "build_vs_buy": 55,
+      "budget_availability": 70
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "BlackRock",
+    "ticker": "BLK",
+    "fortune_500_rank": 175,
+    "sector": "Financials",
+    "revenue_2025_mm": 21500,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "significant",
+    "headcount": 21000,
+    "engineering_headcount_est": 5000,
+    "cloud_provider": "Azure",
+    "has_platform_team": true,
+    "agent_tooling_signals": [
+      "Aladdin AI risk analytics",
+      "AI-powered portfolio construction",
+      "GPT-integrated research tools",
+      "eFront private markets AI"
+    ],
+    "governance_signals": [
+      "SEC compliance",
+      "fiduciary governance",
+      "Aladdin model validation",
+      "AI ethics principles"
+    ],
+    "governance_type": "operational",
+    "build_vs_buy": "build",
+    "open_source_preference": false,
+    "tech_spend_pct": 10.0,
+    "operating_margin_pct": 36.0,
+    "scores": {
+      "ai_investment_intensity": 60,
+      "engineering_scale": 55,
+      "cloud_maturity": 70,
+      "governance_posture": 65,
+      "regulatory_pressure": 70,
+      "agent_tooling": 55,
+      "build_vs_buy": 30,
+      "budget_availability": 85
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "State Street",
+    "ticker": "STT",
+    "fortune_500_rank": 200,
+    "sector": "Financials",
+    "revenue_2025_mm": 13000,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "moderate",
+    "headcount": 46000,
+    "engineering_headcount_est": 6000,
+    "cloud_provider": "Hybrid",
+    "has_platform_team": true,
+    "agent_tooling_signals": [
+      "Alpha AI data platform",
+      "custody operations automation",
+      "NLP for regulatory filings"
+    ],
+    "governance_signals": [
+      "OCC/Fed compliance",
+      "model risk management",
+      "custodian fiduciary governance"
+    ],
+    "governance_type": "compliance-only",
+    "build_vs_buy": "mixed",
+    "open_source_preference": false,
+    "tech_spend_pct": 7.0,
+    "operating_margin_pct": 18.0,
+    "scores": {
+      "ai_investment_intensity": 40,
+      "engineering_scale": 60,
+      "cloud_maturity": 50,
+      "governance_posture": 55,
+      "regulatory_pressure": 75,
+      "agent_tooling": 35,
+      "build_vs_buy": 55,
+      "budget_availability": 50
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "Progressive",
+    "ticker": "PGR",
+    "fortune_500_rank": 72,
+    "sector": "Financials",
+    "revenue_2025_mm": 72000,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "moderate",
+    "headcount": 61000,
+    "engineering_headcount_est": 5000,
+    "cloud_provider": "AWS",
+    "has_platform_team": true,
+    "agent_tooling_signals": [
+      "AI-driven pricing models",
+      "Snapshot telematics ML",
+      "claims photo AI estimation",
+      "Flo chatbot"
+    ],
+    "governance_signals": [
+      "State insurance regulatory compliance",
+      "actuarial model governance",
+      "data privacy compliance"
+    ],
+    "governance_type": "compliance-only",
+    "build_vs_buy": "build",
+    "open_source_preference": false,
+    "tech_spend_pct": 4.0,
+    "operating_margin_pct": 14.0,
+    "scores": {
+      "ai_investment_intensity": 45,
+      "engineering_scale": 55,
+      "cloud_maturity": 65,
+      "governance_posture": 50,
+      "regulatory_pressure": 65,
+      "agent_tooling": 45,
+      "build_vs_buy": 30,
+      "budget_availability": 45
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "Allstate",
+    "ticker": "ALL",
+    "fortune_500_rank": 82,
+    "sector": "Financials",
+    "revenue_2025_mm": 61000,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "minimal",
+    "headcount": 54000,
+    "engineering_headcount_est": 3500,
+    "cloud_provider": "Hybrid",
+    "has_platform_team": false,
+    "agent_tooling_signals": [
+      "Claims processing automation",
+      "telematics-based pricing ML"
+    ],
+    "governance_signals": [
+      "State insurance regulatory compliance",
+      "actuarial model review"
+    ],
+    "governance_type": "compliance-only",
+    "build_vs_buy": "buy",
+    "open_source_preference": false,
+    "tech_spend_pct": 3.0,
+    "operating_margin_pct": 10.0,
+    "scores": {
+      "ai_investment_intensity": 20,
+      "engineering_scale": 50,
+      "cloud_maturity": 45,
+      "governance_posture": 40,
+      "regulatory_pressure": 65,
+      "agent_tooling": 20,
+      "build_vs_buy": 75,
+      "budget_availability": 35
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "MetLife",
+    "ticker": "MET",
+    "fortune_500_rank": 62,
+    "sector": "Financials",
+    "revenue_2025_mm": 71000,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "minimal",
+    "headcount": 45000,
+    "engineering_headcount_est": 4000,
+    "cloud_provider": "Hybrid",
+    "has_platform_team": false,
+    "agent_tooling_signals": [
+      "Underwriting AI assist",
+      "claims intake automation"
+    ],
+    "governance_signals": [
+      "State insurance compliance",
+      "international regulatory compliance",
+      "actuarial model governance"
+    ],
+    "governance_type": "compliance-only",
+    "build_vs_buy": "buy",
+    "open_source_preference": false,
+    "tech_spend_pct": 2.5,
+    "operating_margin_pct": 8.5,
+    "scores": {
+      "ai_investment_intensity": 20,
+      "engineering_scale": 55,
+      "cloud_maturity": 40,
+      "governance_posture": 40,
+      "regulatory_pressure": 70,
+      "agent_tooling": 20,
+      "build_vs_buy": 75,
+      "budget_availability": 30
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "Travelers",
+    "ticker": "TRV",
+    "fortune_500_rank": 90,
+    "sector": "Financials",
+    "revenue_2025_mm": 44500,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "minimal",
+    "headcount": 30000,
+    "engineering_headcount_est": 2500,
+    "cloud_provider": "Hybrid",
+    "has_platform_team": false,
+    "agent_tooling_signals": [
+      "Aerial imagery property assessment AI",
+      "claims triage automation"
+    ],
+    "governance_signals": [
+      "State insurance regulatory compliance",
+      "actuarial model oversight"
+    ],
+    "governance_type": "compliance-only",
+    "build_vs_buy": "buy",
+    "open_source_preference": false,
+    "tech_spend_pct": 2.5,
+    "operating_margin_pct": 12.0,
+    "scores": {
+      "ai_investment_intensity": 20,
+      "engineering_scale": 45,
+      "cloud_maturity": 40,
+      "governance_posture": 40,
+      "regulatory_pressure": 65,
+      "agent_tooling": 20,
+      "build_vs_buy": 75,
+      "budget_availability": 35
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "AIG",
+    "ticker": "AIG",
+    "fortune_500_rank": 85,
+    "sector": "Financials",
+    "revenue_2025_mm": 46000,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "minimal",
+    "headcount": 26000,
+    "engineering_headcount_est": 3000,
+    "cloud_provider": "Hybrid",
+    "has_platform_team": false,
+    "agent_tooling_signals": [
+      "Underwriting risk scoring ML",
+      "claims processing automation"
+    ],
+    "governance_signals": [
+      "State/federal insurance compliance",
+      "international regulatory compliance",
+      "enterprise risk framework"
+    ],
+    "governance_type": "compliance-only",
+    "build_vs_buy": "buy",
+    "open_source_preference": false,
+    "tech_spend_pct": 3.0,
+    "operating_margin_pct": 7.0,
+    "scores": {
+      "ai_investment_intensity": 20,
+      "engineering_scale": 45,
+      "cloud_maturity": 40,
+      "governance_posture": 40,
+      "regulatory_pressure": 70,
+      "agent_tooling": 15,
+      "build_vs_buy": 80,
+      "budget_availability": 25
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "Uber Technologies",
+    "ticker": "UBER",
+    "fortune_500_rank": 130,
+    "sector": "Information Technology",
+    "revenue_2025_mm": 44000,
+    "ai_capex_2025_mm": 1500,
+    "ai_mentions_earnings": "significant",
+    "headcount": 32000,
+    "engineering_headcount_est": 14000,
+    "cloud_provider": "GCP",
+    "has_platform_team": true,
+    "agent_tooling_signals": [
+      "AI-driven pricing and matching",
+      "autonomous vehicle partnerships",
+      "AI customer support",
+      "route optimization ML",
+      "Uber AI Labs"
+    ],
+    "governance_signals": [
+      "Multi-jurisdiction regulatory compliance",
+      "driver classification governance",
+      "safety incident ML review"
+    ],
+    "governance_type": "operational",
+    "build_vs_buy": "build",
+    "open_source_preference": true,
+    "tech_spend_pct": 15.0,
+    "operating_margin_pct": 8.0,
+    "scores": {
+      "ai_investment_intensity": 70,
+      "engineering_scale": 80,
+      "cloud_maturity": 90,
+      "governance_posture": 60,
+      "regulatory_pressure": 45,
+      "agent_tooling": 65,
+      "build_vs_buy": 20,
+      "budget_availability": 55
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "PayPal",
+    "ticker": "PYPL",
+    "fortune_500_rank": 140,
+    "sector": "Financials",
+    "revenue_2025_mm": 32500,
+    "ai_capex_2025_mm": 800,
+    "ai_mentions_earnings": "significant",
+    "headcount": 25000,
+    "engineering_headcount_est": 10000,
+    "cloud_provider": "GCP",
+    "has_platform_team": true,
+    "agent_tooling_signals": [
+      "AI fraud detection at scale",
+      "smart receipts ML",
+      "personalized checkout AI",
+      "Venmo AI features"
+    ],
+    "governance_signals": [
+      "Financial services compliance",
+      "FinCEN/AML compliance",
+      "data privacy governance"
+    ],
+    "governance_type": "operational",
+    "build_vs_buy": "build",
+    "open_source_preference": false,
+    "tech_spend_pct": 12.0,
+    "operating_margin_pct": 16.0,
+    "scores": {
+      "ai_investment_intensity": 60,
+      "engineering_scale": 75,
+      "cloud_maturity": 85,
+      "governance_posture": 60,
+      "regulatory_pressure": 65,
+      "agent_tooling": 55,
+      "build_vs_buy": 25,
+      "budget_availability": 60
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "Airbnb",
+    "ticker": "ABNB",
+    "fortune_500_rank": 190,
+    "sector": "Consumer Discretionary",
+    "revenue_2025_mm": 12000,
+    "ai_capex_2025_mm": 500,
+    "ai_mentions_earnings": "significant",
+    "headcount": 7500,
+    "engineering_headcount_est": 3500,
+    "cloud_provider": "AWS",
+    "has_platform_team": true,
+    "agent_tooling_signals": [
+      "AI-powered search and matching",
+      "dynamic pricing ML",
+      "AI concierge features",
+      "trust and safety ML"
+    ],
+    "governance_signals": [
+      "Multi-jurisdiction regulatory compliance",
+      "trust and safety governance"
+    ],
+    "governance_type": "operational",
+    "build_vs_buy": "build",
+    "open_source_preference": true,
+    "tech_spend_pct": 18.0,
+    "operating_margin_pct": 22.0,
+    "scores": {
+      "ai_investment_intensity": 60,
+      "engineering_scale": 50,
+      "cloud_maturity": 90,
+      "governance_posture": 55,
+      "regulatory_pressure": 35,
+      "agent_tooling": 55,
+      "build_vs_buy": 20,
+      "budget_availability": 70
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "DoorDash",
+    "ticker": "DASH",
+    "fortune_500_rank": 198,
+    "sector": "Consumer Discretionary",
+    "revenue_2025_mm": 11500,
+    "ai_capex_2025_mm": 400,
+    "ai_mentions_earnings": "moderate",
+    "headcount": 19000,
+    "engineering_headcount_est": 5000,
+    "cloud_provider": "AWS",
+    "has_platform_team": true,
+    "agent_tooling_signals": [
+      "AI delivery routing optimization",
+      "demand prediction ML",
+      "merchant analytics AI",
+      "DashAI voice ordering"
+    ],
+    "governance_signals": [
+      "Gig worker classification compliance",
+      "data privacy governance"
+    ],
+    "governance_type": "operational",
+    "build_vs_buy": "build",
+    "open_source_preference": true,
+    "tech_spend_pct": 16.0,
+    "operating_margin_pct": 3.0,
+    "scores": {
+      "ai_investment_intensity": 55,
+      "engineering_scale": 55,
+      "cloud_maturity": 90,
+      "governance_posture": 50,
+      "regulatory_pressure": 30,
+      "agent_tooling": 50,
+      "build_vs_buy": 20,
+      "budget_availability": 30
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "Lockheed Martin",
+    "ticker": "LMT",
+    "fortune_500_rank": 55,
+    "sector": "Industrials",
+    "revenue_2025_mm": 71300,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "moderate",
+    "headcount": 122000,
+    "engineering_headcount_est": 60000,
+    "cloud_provider": "Private",
+    "has_platform_team": true,
+    "agent_tooling_signals": [
+      "AI-enabled autonomous systems",
+      "predictive maintenance for F-35",
+      "JADC2 AI integration",
+      "Project CASTLE AI"
+    ],
+    "governance_signals": [
+      "ITAR/EAR compliance",
+      "DoD cybersecurity (CMMC)",
+      "classified program governance",
+      "NIST AI RMF"
+    ],
+    "governance_type": "compliance-only",
+    "build_vs_buy": "build",
+    "open_source_preference": false,
+    "tech_spend_pct": 3.0,
+    "operating_margin_pct": 10.5,
+    "scores": {
+      "ai_investment_intensity": 45,
+      "engineering_scale": 100,
+      "cloud_maturity": 35,
+      "governance_posture": 55,
+      "regulatory_pressure": 60,
+      "agent_tooling": 40,
+      "build_vs_buy": 25,
+      "budget_availability": 40
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "RTX Corporation",
+    "ticker": "RTX",
+    "fortune_500_rank": 51,
+    "sector": "Industrials",
+    "revenue_2025_mm": 80000,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "moderate",
+    "headcount": 185000,
+    "engineering_headcount_est": 60000,
+    "cloud_provider": "Private",
+    "has_platform_team": true,
+    "agent_tooling_signals": [
+      "AI-enabled radar systems",
+      "predictive engine maintenance",
+      "autonomous defense systems",
+      "supply chain AI optimization"
+    ],
+    "governance_signals": [
+      "ITAR/EAR compliance",
+      "DoD cybersecurity (CMMC)",
+      "classified program governance"
+    ],
+    "governance_type": "compliance-only",
+    "build_vs_buy": "mixed",
+    "open_source_preference": false,
+    "tech_spend_pct": 3.5,
+    "operating_margin_pct": 10.0,
+    "scores": {
+      "ai_investment_intensity": 40,
+      "engineering_scale": 100,
+      "cloud_maturity": 35,
+      "governance_posture": 50,
+      "regulatory_pressure": 60,
+      "agent_tooling": 35,
+      "build_vs_buy": 45,
+      "budget_availability": 40
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "General Dynamics",
+    "ticker": "GD",
+    "fortune_500_rank": 92,
+    "sector": "Industrials",
+    "revenue_2025_mm": 46500,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "minimal",
+    "headcount": 110000,
+    "engineering_headcount_est": 30000,
+    "cloud_provider": "Private",
+    "has_platform_team": true,
+    "agent_tooling_signals": [
+      "GDIT AI/ML services for government",
+      "autonomous submarine systems",
+      "cybersecurity AI"
+    ],
+    "governance_signals": [
+      "ITAR compliance",
+      "CMMC",
+      "classified program governance",
+      "FedRAMP"
+    ],
+    "governance_type": "compliance-only",
+    "build_vs_buy": "mixed",
+    "open_source_preference": false,
+    "tech_spend_pct": 2.5,
+    "operating_margin_pct": 10.5,
+    "scores": {
+      "ai_investment_intensity": 30,
+      "engineering_scale": 90,
+      "cloud_maturity": 35,
+      "governance_posture": 50,
+      "regulatory_pressure": 60,
+      "agent_tooling": 30,
+      "build_vs_buy": 45,
+      "budget_availability": 35
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "Northrop Grumman",
+    "ticker": "NOC",
+    "fortune_500_rank": 100,
+    "sector": "Industrials",
+    "revenue_2025_mm": 41000,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "moderate",
+    "headcount": 95000,
+    "engineering_headcount_est": 45000,
+    "cloud_provider": "Private",
+    "has_platform_team": true,
+    "agent_tooling_signals": [
+      "Autonomous systems AI",
+      "JADC2 integration",
+      "space-based AI processing",
+      "cyber AI defense"
+    ],
+    "governance_signals": [
+      "ITAR compliance",
+      "CMMC",
+      "classified program governance",
+      "nuclear weapons oversight"
+    ],
+    "governance_type": "compliance-only",
+    "build_vs_buy": "build",
+    "open_source_preference": false,
+    "tech_spend_pct": 3.0,
+    "operating_margin_pct": 11.0,
+    "scores": {
+      "ai_investment_intensity": 40,
+      "engineering_scale": 95,
+      "cloud_maturity": 35,
+      "governance_posture": 50,
+      "regulatory_pressure": 65,
+      "agent_tooling": 35,
+      "build_vs_buy": 25,
+      "budget_availability": 40
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "Caterpillar",
+    "ticker": "CAT",
+    "fortune_500_rank": 68,
+    "sector": "Industrials",
+    "revenue_2025_mm": 65500,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "moderate",
+    "headcount": 113000,
+    "engineering_headcount_est": 12000,
+    "cloud_provider": "Azure",
+    "has_platform_team": false,
+    "agent_tooling_signals": [
+      "Autonomous mining trucks",
+      "Cat Command remote operations",
+      "predictive maintenance IoT/AI",
+      "dealer analytics platform"
+    ],
+    "governance_signals": [
+      "EPA emissions compliance",
+      "safety systems governance",
+      "international trade compliance"
+    ],
+    "governance_type": "compliance-only",
+    "build_vs_buy": "mixed",
+    "open_source_preference": false,
+    "tech_spend_pct": 2.5,
+    "operating_margin_pct": 19.0,
+    "scores": {
+      "ai_investment_intensity": 35,
+      "engineering_scale": 80,
+      "cloud_maturity": 45,
+      "governance_posture": 45,
+      "regulatory_pressure": 40,
+      "agent_tooling": 40,
+      "build_vs_buy": 50,
+      "budget_availability": 50
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "Deere & Company",
+    "ticker": "DE",
+    "fortune_500_rank": 80,
+    "sector": "Industrials",
+    "revenue_2025_mm": 52000,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "significant",
+    "headcount": 83000,
+    "engineering_headcount_est": 12000,
+    "cloud_provider": "AWS",
+    "has_platform_team": true,
+    "agent_tooling_signals": [
+      "See & Spray AI precision agriculture",
+      "autonomous tractor platform",
+      "predictive maintenance ML",
+      "John Deere Operations Center AI"
+    ],
+    "governance_signals": [
+      "EPA compliance",
+      "precision ag data governance",
+      "right to repair compliance"
+    ],
+    "governance_type": "operational",
+    "build_vs_buy": "build",
+    "open_source_preference": false,
+    "tech_spend_pct": 4.0,
+    "operating_margin_pct": 18.0,
+    "scores": {
+      "ai_investment_intensity": 50,
+      "engineering_scale": 80,
+      "cloud_maturity": 55,
+      "governance_posture": 60,
+      "regulatory_pressure": 35,
+      "agent_tooling": 55,
+      "build_vs_buy": 30,
+      "budget_availability": 55
+    },
+    "data_source": "FY2025 10-K (ended Oct 2025), Q4 FY2025 earnings",
+    "data_date": "2025-10-31"
+  },
+  {
+    "company": "Honeywell",
+    "ticker": "HON",
+    "fortune_500_rank": 94,
+    "sector": "Industrials",
+    "revenue_2025_mm": 37000,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "significant",
+    "headcount": 95000,
+    "engineering_headcount_est": 20000,
+    "cloud_provider": "AWS",
+    "has_platform_team": true,
+    "agent_tooling_signals": [
+      "Honeywell Forge AI platform",
+      "building automation AI",
+      "process optimization ML",
+      "quantum computing research"
+    ],
+    "governance_signals": [
+      "FAA/aerospace compliance",
+      "ITAR controls",
+      "industrial safety governance"
+    ],
+    "governance_type": "operational",
+    "build_vs_buy": "build",
+    "open_source_preference": false,
+    "tech_spend_pct": 5.0,
+    "operating_margin_pct": 20.0,
+    "scores": {
+      "ai_investment_intensity": 50,
+      "engineering_scale": 80,
+      "cloud_maturity": 60,
+      "governance_posture": 60,
+      "regulatory_pressure": 45,
+      "agent_tooling": 50,
+      "build_vs_buy": 30,
+      "budget_availability": 60
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "3M",
+    "ticker": "MMM",
+    "fortune_500_rank": 110,
+    "sector": "Industrials",
+    "revenue_2025_mm": 25000,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "minimal",
+    "headcount": 62000,
+    "engineering_headcount_est": 8000,
+    "cloud_provider": "Hybrid",
+    "has_platform_team": false,
+    "agent_tooling_signals": [
+      "Materials science AI discovery",
+      "manufacturing quality ML"
+    ],
+    "governance_signals": [
+      "EPA compliance",
+      "product safety governance",
+      "litigation risk management"
+    ],
+    "governance_type": "compliance-only",
+    "build_vs_buy": "buy",
+    "open_source_preference": false,
+    "tech_spend_pct": 2.0,
+    "operating_margin_pct": 14.0,
+    "scores": {
+      "ai_investment_intensity": 20,
+      "engineering_scale": 70,
+      "cloud_maturity": 40,
+      "governance_posture": 40,
+      "regulatory_pressure": 45,
+      "agent_tooling": 15,
+      "build_vs_buy": 75,
+      "budget_availability": 35
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "Coca-Cola",
+    "ticker": "KO",
+    "fortune_500_rank": 88,
+    "sector": "Consumer Staples",
+    "revenue_2025_mm": 47000,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "moderate",
+    "headcount": 79000,
+    "engineering_headcount_est": 3000,
+    "cloud_provider": "Azure",
+    "has_platform_team": false,
+    "agent_tooling_signals": [
+      "AI-generated marketing content",
+      "supply chain demand forecasting ML",
+      "consumer insights AI"
+    ],
+    "governance_signals": [
+      "FDA compliance",
+      "international trade compliance",
+      "marketing ethics governance"
+    ],
+    "governance_type": "compliance-only",
+    "build_vs_buy": "buy",
+    "open_source_preference": false,
+    "tech_spend_pct": 2.0,
+    "operating_margin_pct": 24.0,
+    "scores": {
+      "ai_investment_intensity": 25,
+      "engineering_scale": 45,
+      "cloud_maturity": 50,
+      "governance_posture": 40,
+      "regulatory_pressure": 30,
+      "agent_tooling": 25,
+      "build_vs_buy": 80,
+      "budget_availability": 50
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "Philip Morris International",
+    "ticker": "PM",
+    "fortune_500_rank": 78,
+    "sector": "Consumer Staples",
+    "revenue_2025_mm": 37500,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "minimal",
+    "headcount": 82000,
+    "engineering_headcount_est": 2000,
+    "cloud_provider": "Hybrid",
+    "has_platform_team": false,
+    "agent_tooling_signals": [
+      "Consumer behavior analytics",
+      "supply chain optimization"
+    ],
+    "governance_signals": [
+      "FDA/PMTA compliance",
+      "international tobacco regulations",
+      "ESG reporting"
+    ],
+    "governance_type": "compliance-only",
+    "build_vs_buy": "buy",
+    "open_source_preference": false,
+    "tech_spend_pct": 1.5,
+    "operating_margin_pct": 30.0,
+    "scores": {
+      "ai_investment_intensity": 10,
+      "engineering_scale": 40,
+      "cloud_maturity": 35,
+      "governance_posture": 35,
+      "regulatory_pressure": 55,
+      "agent_tooling": 10,
+      "build_vs_buy": 85,
+      "budget_availability": 50
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "Altria Group",
+    "ticker": "MO",
+    "fortune_500_rank": 150,
+    "sector": "Consumer Staples",
+    "revenue_2025_mm": 21000,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "none",
+    "headcount": 6000,
+    "engineering_headcount_est": 300,
+    "cloud_provider": "Hybrid",
+    "has_platform_team": false,
+    "agent_tooling_signals": [],
+    "governance_signals": [
+      "FDA/PMTA compliance",
+      "tobacco regulation compliance",
+      "age verification systems"
+    ],
+    "governance_type": "compliance-only",
+    "build_vs_buy": "buy",
+    "open_source_preference": false,
+    "tech_spend_pct": 1.0,
+    "operating_margin_pct": 52.0,
+    "scores": {
+      "ai_investment_intensity": 5,
+      "engineering_scale": 30,
+      "cloud_maturity": 30,
+      "governance_posture": 30,
+      "regulatory_pressure": 55,
+      "agent_tooling": 0,
+      "build_vs_buy": 90,
+      "budget_availability": 50
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "Kraft Heinz",
+    "ticker": "KHC",
+    "fortune_500_rank": 125,
+    "sector": "Consumer Staples",
+    "revenue_2025_mm": 25500,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "minimal",
+    "headcount": 36000,
+    "engineering_headcount_est": 1500,
+    "cloud_provider": "Azure",
+    "has_platform_team": false,
+    "agent_tooling_signals": [
+      "Demand forecasting ML",
+      "supply chain optimization"
+    ],
+    "governance_signals": [
+      "FDA compliance",
+      "food safety governance",
+      "Kraft Heinz digital transformation office"
+    ],
+    "governance_type": "compliance-only",
+    "build_vs_buy": "buy",
+    "open_source_preference": false,
+    "tech_spend_pct": 1.5,
+    "operating_margin_pct": 16.0,
+    "scores": {
+      "ai_investment_intensity": 15,
+      "engineering_scale": 35,
+      "cloud_maturity": 40,
+      "governance_posture": 35,
+      "regulatory_pressure": 30,
+      "agent_tooling": 10,
+      "build_vs_buy": 85,
+      "budget_availability": 30
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "Mondelez International",
+    "ticker": "MDLZ",
+    "fortune_500_rank": 120,
+    "sector": "Consumer Staples",
+    "revenue_2025_mm": 36200,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "minimal",
+    "headcount": 91000,
+    "engineering_headcount_est": 2000,
+    "cloud_provider": "Azure",
+    "has_platform_team": false,
+    "agent_tooling_signals": [
+      "Consumer analytics AI",
+      "supply chain demand planning ML"
+    ],
+    "governance_signals": [
+      "International food safety compliance",
+      "GDPR data governance"
+    ],
+    "governance_type": "compliance-only",
+    "build_vs_buy": "buy",
+    "open_source_preference": false,
+    "tech_spend_pct": 1.5,
+    "operating_margin_pct": 15.0,
+    "scores": {
+      "ai_investment_intensity": 15,
+      "engineering_scale": 40,
+      "cloud_maturity": 40,
+      "governance_posture": 35,
+      "regulatory_pressure": 30,
+      "agent_tooling": 10,
+      "build_vs_buy": 85,
+      "budget_availability": 30
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "Colgate-Palmolive",
+    "ticker": "CL",
+    "fortune_500_rank": 165,
+    "sector": "Consumer Staples",
+    "revenue_2025_mm": 20200,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "minimal",
+    "headcount": 34000,
+    "engineering_headcount_est": 1200,
+    "cloud_provider": "Azure",
+    "has_platform_team": false,
+    "agent_tooling_signals": [
+      "Consumer insights analytics",
+      "supply chain optimization"
+    ],
+    "governance_signals": [
+      "FDA compliance",
+      "international product safety",
+      "ESG reporting"
+    ],
+    "governance_type": "compliance-only",
+    "build_vs_buy": "buy",
+    "open_source_preference": false,
+    "tech_spend_pct": 1.5,
+    "operating_margin_pct": 19.0,
+    "scores": {
+      "ai_investment_intensity": 10,
+      "engineering_scale": 35,
+      "cloud_maturity": 40,
+      "governance_posture": 35,
+      "regulatory_pressure": 25,
+      "agent_tooling": 10,
+      "build_vs_buy": 85,
+      "budget_availability": 35
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "Sysco",
+    "ticker": "SYY",
+    "fortune_500_rank": 52,
+    "sector": "Consumer Staples",
+    "revenue_2025_mm": 78800,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "minimal",
+    "headcount": 72000,
+    "engineering_headcount_est": 2500,
+    "cloud_provider": "Azure",
+    "has_platform_team": false,
+    "agent_tooling_signals": [
+      "Route optimization ML",
+      "demand forecasting",
+      "Sysco Your Way digital platform"
+    ],
+    "governance_signals": [
+      "FDA food safety compliance",
+      "fleet safety governance"
+    ],
+    "governance_type": "compliance-only",
+    "build_vs_buy": "buy",
+    "open_source_preference": false,
+    "tech_spend_pct": 1.5,
+    "operating_margin_pct": 4.5,
+    "scores": {
+      "ai_investment_intensity": 15,
+      "engineering_scale": 45,
+      "cloud_maturity": 40,
+      "governance_posture": 35,
+      "regulatory_pressure": 30,
+      "agent_tooling": 15,
+      "build_vs_buy": 80,
+      "budget_availability": 15
+    },
+    "data_source": "FY2025 10-K (ended Jun 2025), Q4 FY2025 earnings",
+    "data_date": "2025-06-30"
+  },
+  {
+    "company": "US Foods",
+    "ticker": "USFD",
+    "fortune_500_rank": 70,
+    "sector": "Consumer Staples",
+    "revenue_2025_mm": 37500,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "none",
+    "headcount": 30000,
+    "engineering_headcount_est": 1000,
+    "cloud_provider": "Azure",
+    "has_platform_team": false,
+    "agent_tooling_signals": [
+      "Route optimization",
+      "MOXe digital ordering platform"
+    ],
+    "governance_signals": [
+      "FDA food safety compliance",
+      "fleet DOT compliance"
+    ],
+    "governance_type": "compliance-only",
+    "build_vs_buy": "buy",
+    "open_source_preference": false,
+    "tech_spend_pct": 1.0,
+    "operating_margin_pct": 3.5,
+    "scores": {
+      "ai_investment_intensity": 10,
+      "engineering_scale": 35,
+      "cloud_maturity": 35,
+      "governance_posture": 30,
+      "regulatory_pressure": 25,
+      "agent_tooling": 10,
+      "build_vs_buy": 85,
+      "budget_availability": 10
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "Tyson Foods",
+    "ticker": "TSN",
+    "fortune_500_rank": 75,
+    "sector": "Consumer Staples",
+    "revenue_2025_mm": 53600,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "none",
+    "headcount": 139000,
+    "engineering_headcount_est": 1500,
+    "cloud_provider": "Azure",
+    "has_platform_team": false,
+    "agent_tooling_signals": [
+      "Production line automation",
+      "yield optimization ML"
+    ],
+    "governance_signals": [
+      "USDA compliance",
+      "food safety governance",
+      "worker safety compliance"
+    ],
+    "governance_type": "compliance-only",
+    "build_vs_buy": "buy",
+    "open_source_preference": false,
+    "tech_spend_pct": 1.0,
+    "operating_margin_pct": 3.0,
+    "scores": {
+      "ai_investment_intensity": 10,
+      "engineering_scale": 35,
+      "cloud_maturity": 35,
+      "governance_posture": 30,
+      "regulatory_pressure": 35,
+      "agent_tooling": 10,
+      "build_vs_buy": 85,
+      "budget_availability": 10
+    },
+    "data_source": "FY2025 10-K (ended Sep 2025), Q4 FY2025 earnings",
+    "data_date": "2025-09-30"
+  },
+  {
+    "company": "Archer Daniels Midland",
+    "ticker": "ADM",
+    "fortune_500_rank": 54,
+    "sector": "Consumer Staples",
+    "revenue_2025_mm": 85000,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "none",
+    "headcount": 42000,
+    "engineering_headcount_est": 1500,
+    "cloud_provider": "Hybrid",
+    "has_platform_team": false,
+    "agent_tooling_signals": [
+      "Commodity trading analytics",
+      "crop yield prediction models"
+    ],
+    "governance_signals": [
+      "FDA compliance",
+      "commodity trading regulations",
+      "SEC financial reporting"
+    ],
+    "governance_type": "compliance-only",
+    "build_vs_buy": "buy",
+    "open_source_preference": false,
+    "tech_spend_pct": 1.0,
+    "operating_margin_pct": 3.0,
+    "scores": {
+      "ai_investment_intensity": 10,
+      "engineering_scale": 35,
+      "cloud_maturity": 30,
+      "governance_posture": 30,
+      "regulatory_pressure": 35,
+      "agent_tooling": 10,
+      "build_vs_buy": 85,
+      "budget_availability": 10
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "ConocoPhillips",
+    "ticker": "COP",
+    "fortune_500_rank": 59,
+    "sector": "Energy",
+    "revenue_2025_mm": 58000,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "minimal",
+    "headcount": 30000,
+    "engineering_headcount_est": 5000,
+    "cloud_provider": "Hybrid",
+    "has_platform_team": false,
+    "agent_tooling_signals": [
+      "Seismic interpretation AI",
+      "drilling optimization ML",
+      "predictive maintenance"
+    ],
+    "governance_signals": [
+      "EPA/environmental compliance",
+      "SEC climate disclosures",
+      "safety management systems"
+    ],
+    "governance_type": "compliance-only",
+    "build_vs_buy": "buy",
+    "open_source_preference": false,
+    "tech_spend_pct": 1.5,
+    "operating_margin_pct": 22.0,
+    "scores": {
+      "ai_investment_intensity": 20,
+      "engineering_scale": 55,
+      "cloud_maturity": 35,
+      "governance_posture": 40,
+      "regulatory_pressure": 55,
+      "agent_tooling": 15,
+      "build_vs_buy": 80,
+      "budget_availability": 40
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "Valero Energy",
+    "ticker": "VLO",
+    "fortune_500_rank": 57,
+    "sector": "Energy",
+    "revenue_2025_mm": 130000,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "none",
+    "headcount": 10000,
+    "engineering_headcount_est": 1500,
+    "cloud_provider": "Hybrid",
+    "has_platform_team": false,
+    "agent_tooling_signals": [
+      "Refinery process optimization",
+      "predictive maintenance"
+    ],
+    "governance_signals": [
+      "EPA/environmental compliance",
+      "OSHA safety compliance",
+      "SEC reporting"
+    ],
+    "governance_type": "compliance-only",
+    "build_vs_buy": "buy",
+    "open_source_preference": false,
+    "tech_spend_pct": 0.8,
+    "operating_margin_pct": 4.0,
+    "scores": {
+      "ai_investment_intensity": 10,
+      "engineering_scale": 35,
+      "cloud_maturity": 30,
+      "governance_posture": 30,
+      "regulatory_pressure": 55,
+      "agent_tooling": 10,
+      "build_vs_buy": 85,
+      "budget_availability": 10
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "Phillips 66",
+    "ticker": "PSX",
+    "fortune_500_rank": 60,
+    "sector": "Energy",
+    "revenue_2025_mm": 148000,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "none",
+    "headcount": 14000,
+    "engineering_headcount_est": 2000,
+    "cloud_provider": "Hybrid",
+    "has_platform_team": false,
+    "agent_tooling_signals": [
+      "Refinery optimization ML",
+      "predictive maintenance sensors"
+    ],
+    "governance_signals": [
+      "EPA compliance",
+      "OSHA safety",
+      "SEC reporting",
+      "pipeline safety regulations"
+    ],
+    "governance_type": "compliance-only",
+    "build_vs_buy": "buy",
+    "open_source_preference": false,
+    "tech_spend_pct": 0.8,
+    "operating_margin_pct": 3.5,
+    "scores": {
+      "ai_investment_intensity": 10,
+      "engineering_scale": 40,
+      "cloud_maturity": 30,
+      "governance_posture": 30,
+      "regulatory_pressure": 55,
+      "agent_tooling": 10,
+      "build_vs_buy": 85,
+      "budget_availability": 10
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "Duke Energy",
+    "ticker": "DUK",
+    "fortune_500_rank": 128,
+    "sector": "Utilities",
+    "revenue_2025_mm": 30000,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "minimal",
+    "headcount": 27600,
+    "engineering_headcount_est": 2000,
+    "cloud_provider": "Hybrid",
+    "has_platform_team": false,
+    "agent_tooling_signals": [
+      "Grid optimization AI",
+      "predictive outage management",
+      "vegetation management ML"
+    ],
+    "governance_signals": [
+      "FERC/NERC compliance",
+      "state PUC regulatory compliance",
+      "nuclear safety governance"
+    ],
+    "governance_type": "compliance-only",
+    "build_vs_buy": "buy",
+    "open_source_preference": false,
+    "tech_spend_pct": 1.5,
+    "operating_margin_pct": 20.0,
+    "scores": {
+      "ai_investment_intensity": 15,
+      "engineering_scale": 40,
+      "cloud_maturity": 35,
+      "governance_posture": 40,
+      "regulatory_pressure": 60,
+      "agent_tooling": 15,
+      "build_vs_buy": 80,
+      "budget_availability": 35
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "Southern Company",
+    "ticker": "SO",
+    "fortune_500_rank": 132,
+    "sector": "Utilities",
+    "revenue_2025_mm": 27000,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "minimal",
+    "headcount": 27000,
+    "engineering_headcount_est": 2000,
+    "cloud_provider": "Hybrid",
+    "has_platform_team": false,
+    "agent_tooling_signals": [
+      "Grid load forecasting ML",
+      "asset monitoring IoT/AI"
+    ],
+    "governance_signals": [
+      "FERC/NERC compliance",
+      "state PUC regulatory compliance",
+      "nuclear regulatory compliance"
+    ],
+    "governance_type": "compliance-only",
+    "build_vs_buy": "buy",
+    "open_source_preference": false,
+    "tech_spend_pct": 1.5,
+    "operating_margin_pct": 20.0,
+    "scores": {
+      "ai_investment_intensity": 15,
+      "engineering_scale": 40,
+      "cloud_maturity": 35,
+      "governance_posture": 40,
+      "regulatory_pressure": 60,
+      "agent_tooling": 10,
+      "build_vs_buy": 85,
+      "budget_availability": 35
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "NextEra Energy",
+    "ticker": "NEE",
+    "fortune_500_rank": 135,
+    "sector": "Utilities",
+    "revenue_2025_mm": 28000,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "moderate",
+    "headcount": 16500,
+    "engineering_headcount_est": 2500,
+    "cloud_provider": "AWS",
+    "has_platform_team": false,
+    "agent_tooling_signals": [
+      "Renewable energy output forecasting AI",
+      "grid optimization ML",
+      "predictive maintenance for wind/solar"
+    ],
+    "governance_signals": [
+      "FERC/NERC compliance",
+      "state PUC compliance",
+      "renewable energy certificate governance"
+    ],
+    "governance_type": "compliance-only",
+    "build_vs_buy": "buy",
+    "open_source_preference": false,
+    "tech_spend_pct": 1.5,
+    "operating_margin_pct": 25.0,
+    "scores": {
+      "ai_investment_intensity": 20,
+      "engineering_scale": 45,
+      "cloud_maturity": 45,
+      "governance_posture": 40,
+      "regulatory_pressure": 60,
+      "agent_tooling": 20,
+      "build_vs_buy": 80,
+      "budget_availability": 40
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "Prologis",
+    "ticker": "PLD",
+    "fortune_500_rank": 180,
+    "sector": "Real Estate",
+    "revenue_2025_mm": 8500,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "minimal",
+    "headcount": 2600,
+    "engineering_headcount_est": 400,
+    "cloud_provider": "AWS",
+    "has_platform_team": false,
+    "agent_tooling_signals": [
+      "Warehouse automation consulting",
+      "Essentials platform analytics"
+    ],
+    "governance_signals": [
+      "REIT regulatory compliance",
+      "SEC reporting"
+    ],
+    "governance_type": "compliance-only",
+    "build_vs_buy": "buy",
+    "open_source_preference": false,
+    "tech_spend_pct": 2.0,
+    "operating_margin_pct": 45.0,
+    "scores": {
+      "ai_investment_intensity": 10,
+      "engineering_scale": 30,
+      "cloud_maturity": 45,
+      "governance_posture": 30,
+      "regulatory_pressure": 25,
+      "agent_tooling": 10,
+      "build_vs_buy": 85,
+      "budget_availability": 50
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
+  },
+  {
+    "company": "Simon Property Group",
+    "ticker": "SPG",
+    "fortune_500_rank": 185,
+    "sector": "Real Estate",
+    "revenue_2025_mm": 6200,
+    "ai_capex_2025_mm": null,
+    "ai_mentions_earnings": "none",
+    "headcount": 3000,
+    "engineering_headcount_est": 300,
+    "cloud_provider": "Hybrid",
+    "has_platform_team": false,
+    "agent_tooling_signals": [
+      "Tenant analytics dashboard"
+    ],
+    "governance_signals": [
+      "REIT regulatory compliance",
+      "SEC reporting"
+    ],
+    "governance_type": "compliance-only",
+    "build_vs_buy": "buy",
+    "open_source_preference": false,
+    "tech_spend_pct": 1.0,
+    "operating_margin_pct": 38.0,
+    "scores": {
+      "ai_investment_intensity": 5,
+      "engineering_scale": 30,
+      "cloud_maturity": 30,
+      "governance_posture": 30,
+      "regulatory_pressure": 25,
+      "agent_tooling": 5,
+      "build_vs_buy": 90,
+      "budget_availability": 40
+    },
+    "data_source": "2025 10-K, Q4 2025 earnings release",
+    "data_date": "2025-12-31"
   }
 ]
