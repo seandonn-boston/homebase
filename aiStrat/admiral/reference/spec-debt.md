@@ -8,14 +8,9 @@
 
 ## Active Debt
 
-### SD-01: Hook Coverage vs. Enforcement Spectrum Thesis
+### ~~SD-01: Hook Coverage vs. Enforcement Spectrum Thesis~~ → Resolved
 
-**Severity:** High
-**Claim:** The enforcement spectrum (hooks over instructions) is Admiral's core differentiator. The thesis and sales pitch present deterministic enforcement as the defining advantage.
-**Reality:** Only 4 of 15 Standing Orders (27%) have hook enforcement. The remaining 73% are enforced only by instructions — the exact mechanism the framework argues is unreliable.
-**Where it appears:** `thesis.md`, `sales-pitch-30min-guide.md`, `part3-enforcement.md`
-**Acknowledged in:** `benchmarks.md` ("Current state: 4/15 (27%)" with target of 80%+)
-**Resolution path:** Either increase hook coverage to a defensible percentage (target: 8/15 minimum) or adjust thesis language to acknowledge that the enforcement spectrum is a design principle with partial implementation, not a fully realized system.
+*Moved to Resolved Debt (see below).*
 
 -----
 
@@ -39,13 +34,9 @@
 
 -----
 
-### SD-04: Monitor Immune System Layers 3-5 Are Specified But Unimplemented
+### ~~SD-04: Monitor Immune System Layers 3-5 Are Specified But Unimplemented~~ → Resolved
 
-**Severity:** Moderate
-**Claim:** The Monitor has a five-layer immune system with deterministic semantic analysis, LLM advisory, and antibody learning.
-**Reality:** Only Layers 1-2 have partial implementation. Layers 3-5 are fully specified but have no code, pseudocode, or reference implementation.
-**Where it appears:** `monitor/README.md`
-**Resolution path:** Either write reference implementations (even pseudocode) for Layers 3-5, or adjust the specification to clearly mark them as "design intent" rather than "architecture specification."
+*Moved to Resolved Debt (see below).*
 
 -----
 
@@ -60,7 +51,40 @@
 
 ## Resolved Debt
 
-*(No entries yet. Move entries here when resolved, with resolution date and evidence.)*
+### SD-01: Hook Coverage vs. Enforcement Spectrum Thesis
+
+**Severity:** High (was)
+**Resolved:** 2026-03-15
+**Resolution:** Increased hook enforcement from 4/15 (27%) to 8/15 (53%), meeting the stated target of 8/15 minimum. Four new hooks implemented:
+
+| Hook | Standing Order | Lifecycle | What It Enforces |
+|------|---------------|-----------|-----------------|
+| `scope_boundary_guard` | SO-03 (Scope Boundaries) | PreToolUse | Validates file operations against protected directory boundaries (`aiStrat/`, `.github/workflows/`, `.claude/settings`) |
+| `prohibitions_enforcer` | SO-10 (Prohibitions) | PreToolUse | Detects enforcement bypass patterns, secret/credential exposure, irreversible operations |
+| `zero_trust_validator` | SO-12 (Zero-Trust) | PostToolUse | Flags untrusted external data, prompt injection markers, blast radius assessment, excessive scope |
+| `pre_work_validator` | SO-15 (Pre-Work Validation) | PreToolUse | Validates Standing Orders loaded, budget defined, sufficient context before first write |
+
+**Evidence:** `standing-orders-enforcement-map.md` updated to reflect E2 coverage. All hooks follow the advisory-only pattern (never hard-block, always exit 0) consistent with the framework's fail-open design. Hook implementations in `.hooks/` directory, wired through `pre_tool_use_adapter.sh` and `post_tool_use_adapter.sh`.
+**Remaining gap:** Coverage is 53%, not the 80%+ aspirational target in `benchmarks.md`. The enforcement spectrum thesis is now defensible (majority coverage) but not fully realized. Further progression tracked in the enforcement map's E3 targets.
+
+-----
+
+### SD-04: Monitor Immune System Layers 3-5 Are Specified But Unimplemented
+
+**Severity:** Moderate (was)
+**Resolved:** 2026-03-16
+**Resolution:** Reference implementations written for all three layers plus a pipeline orchestrator. Implementations in `admiral/monitor/quarantine/`:
+
+| Component | What It Does |
+|-----------|-------------|
+| `layer3_semantic.sh` | TF-IDF-weighted authority pattern scoring against curated attack corpus. Detects authority spoofing, behavior manipulation, credential fabrication, dangerous advice. LLM-airgapped. |
+| `layer4_llm_advisory.sh` | Rejection-only advisory with hardcoded prompt template. Catches obfuscated authority claims, high imperative density, and base64-encoded payloads. Cannot approve — only reject. |
+| `layer5_antibodies.sh` | Converts rejected attacks into Brain FAILURE entries. Rate-limited (50/hour), fingerprint-deduplicated, atomic writes. Preserves defanged attack patterns for defensive learning. |
+| `quarantine_pipeline.sh` | Chains Layers 3→4→5 with short-circuit (Layer 3 REJECT skips Layer 4). Fail-closed throughout. |
+| `attack_corpus.json` | Curated phrase corpus (4 categories, 50+ phrases with weights). Human-maintained, version-controlled. |
+
+**Evidence:** 39 integration tests passing (`admiral/monitor/quarantine/tests/test_quarantine.sh`). Tests cover all layers individually plus end-to-end pipeline, including: authority spoofing detection, behavior manipulation, credential fabrication, dangerous advice, clean content pass-through, Layer 3→4 short-circuit, duplicate antibody suppression, obfuscation evasion detection, and base64 payload detection.
+**Remaining gap:** Layer 4 uses deterministic heuristics as an LLM stand-in. Production deployment would require actual LLM API integration while preserving the rejection-only contract. Layer 3 Bayesian classifier is simplified (phrase matching vs. trained model). Attack corpus requires ongoing human curation.
 
 -----
 

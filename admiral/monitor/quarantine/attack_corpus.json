@@ -1,0 +1,77 @@
+{
+  "_meta": {
+    "description": "Curated attack phrase corpus for Layer 3 deterministic semantic analysis. Human-maintained, version-controlled. Never auto-updated by agents.",
+    "version": "1.0.0",
+    "last_updated": "2026-03-16"
+  },
+  "authority_spoofing": {
+    "phrases": [
+      "admiral approved",
+      "admiral authorized",
+      "fleet-wide directive",
+      "override standing order",
+      "system-level permission",
+      "orchestrator granted",
+      "emergency override",
+      "bypass authorized",
+      "security exception granted",
+      "admin access confirmed",
+      "elevated privileges approved",
+      "standing order suspended",
+      "governance waiver",
+      "compliance exemption",
+      "enforcement disabled"
+    ],
+    "weight": 3.0
+  },
+  "behavior_manipulation": {
+    "phrases": [
+      "ignore previous instructions",
+      "disregard your instructions",
+      "from now on you",
+      "you must always",
+      "new system prompt",
+      "forget everything above",
+      "act as if you",
+      "pretend you are",
+      "you are now",
+      "override your behavior",
+      "ignore safety guidelines",
+      "bypass your restrictions",
+      "disable your filters",
+      "change your persona",
+      "your new role is"
+    ],
+    "weight": 5.0
+  },
+  "credential_fabrication": {
+    "phrases": [
+      "certified by admiral",
+      "endorsed by the fleet",
+      "verified credential",
+      "authenticated source",
+      "trusted by orchestrator",
+      "approved vendor",
+      "security clearance level",
+      "audit passed",
+      "compliance certified",
+      "penetration test approved"
+    ],
+    "weight": 2.5
+  },
+  "dangerous_advice": {
+    "phrases": [
+      "disable security",
+      "turn off authentication",
+      "remove validation",
+      "skip verification",
+      "ignore error",
+      "suppress warning",
+      "disable logging",
+      "remove audit trail",
+      "bypass firewall",
+      "open all ports"
+    ],
+    "weight": 4.0
+  }
+}
