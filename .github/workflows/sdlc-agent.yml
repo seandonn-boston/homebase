@@ -1,0 +1,232 @@
+name: SDLC Agent
+
+# Autonomous SDLC loop — spawns a Claude Code agent to implement work
+# from a GitHub issue. Creates a PR with the changes. The review workflow
+# (sdlc-review.yml) evaluates the PR and can trigger another iteration.
+#
+# Circuit breaker enforces iteration cap, token budget, and runaway detection.
+# Human merge to main is always required.
+
+on:
+  issues:
+    types: [labeled]
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: "Issue number to implement"
+        required: true
+        type: number
+      iteration:
+        description: "Current loop iteration (1-based)"
+        required: false
+        type: number
+        default: 1
+      review_feedback:
+        description: "Review feedback from previous iteration (if any)"
+        required: false
+        type: string
+        default: ""
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  implement:
+    # Only run when the 'agent:implement' label is added, or on manual dispatch
+    if: >
+      (github.event_name == 'issues' && github.event.label.name == 'agent:implement') ||
+      github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Resolve issue number and iteration
+        id: params
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "issue_number=${{ inputs.issue_number }}" >> "$GITHUB_OUTPUT"
+            echo "iteration=${{ inputs.iteration }}" >> "$GITHUB_OUTPUT"
+            echo "review_feedback=${{ inputs.review_feedback }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "issue_number=${{ github.event.issue.number }}" >> "$GITHUB_OUTPUT"
+            echo "iteration=1" >> "$GITHUB_OUTPUT"
+            echo "review_feedback=" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run circuit breaker
+        id: breaker
+        run: |
+          chmod +x admiral/sdlc/circuit-breaker.sh
+          RESULT=$(bash admiral/sdlc/circuit-breaker.sh \
+            "${{ steps.params.outputs.iteration }}" \
+            "sdlc-issue-${{ steps.params.outputs.issue_number }}")
+          echo "result=$RESULT" >> "$GITHUB_OUTPUT"
+          PROCEED=$(echo "$RESULT" | jq -r '.proceed')
+          echo "proceed=$PROCEED" >> "$GITHUB_OUTPUT"
+          if [ "$PROCEED" = "false" ]; then
+            REASON=$(echo "$RESULT" | jq -r '.reason')
+            echo "reason=$REASON" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Post circuit breaker halt comment
+        if: steps.breaker.outputs.proceed == 'false'
+        run: |
+          gh issue comment "${{ steps.params.outputs.issue_number }}" \
+            --body "$(cat <<EOF
+          **SDLC Loop — Circuit Breaker Triggered**
+
+          The autonomous loop has been halted.
+
+          **Reason:** ${{ steps.breaker.outputs.reason }}
+          **Result:** \`${{ steps.breaker.outputs.result }}\`
+
+          Human review required to continue.
+          EOF
+          )"
+
+      - name: Fetch issue details
+        if: steps.breaker.outputs.proceed != 'false'
+        id: issue
+        run: |
+          ISSUE_JSON=$(gh issue view "${{ steps.params.outputs.issue_number }}" --json title,body)
+          TITLE=$(echo "$ISSUE_JSON" | jq -r '.title')
+          BODY=$(echo "$ISSUE_JSON" | jq -r '.body')
+          echo "title=$TITLE" >> "$GITHUB_OUTPUT"
+          # Write body to file to handle multiline
+          echo "$BODY" > /tmp/issue_body.txt
+
+      - name: Set agent git identity
+        if: steps.breaker.outputs.proceed != 'false'
+        run: |
+          # LLM-authored commits MUST use a distinct non-human identity.
+          # This is non-negotiable — SO-01 (Identity Discipline) and SO-12 (Zero-Trust).
+          # Humans may impersonate agents; agents may NEVER impersonate humans.
+          git config user.name "claude-agent[bot]"
+          git config user.email "claude-agent[bot]@users.noreply.github.com"
+
+      - name: Create agent branch
+        if: steps.breaker.outputs.proceed != 'false'
+        id: branch
+        run: |
+          BRANCH="agent/issue-${{ steps.params.outputs.issue_number }}-iter-${{ steps.params.outputs.iteration }}"
+          git checkout -b "$BRANCH"
+          echo "name=$BRANCH" >> "$GITHUB_OUTPUT"
+
+      - name: Build agent prompt
+        if: steps.breaker.outputs.proceed != 'false'
+        run: |
+          ISSUE_BODY=$(cat /tmp/issue_body.txt)
+          REVIEW="${{ steps.params.outputs.review_feedback }}"
+          ITER="${{ steps.params.outputs.iteration }}"
+
+          cat > /tmp/agent_prompt.txt <<PROMPT
+          You are an autonomous implementation agent running in CI. Your task comes from GitHub issue #${{ steps.params.outputs.issue_number }}.
+
+          ## Task
+          **${{ steps.issue.outputs.title }}**
+
+          $ISSUE_BODY
+
+          ## Iteration
+          This is iteration $ITER of the SDLC loop.
+          PROMPT
+
+          if [ -n "$REVIEW" ]; then
+            cat >> /tmp/agent_prompt.txt <<PROMPT
+
+          ## Review Feedback (from previous iteration)
+          $REVIEW
+
+          Address the review feedback above. Focus on the specific changes requested.
+          PROMPT
+          fi
+
+          cat >> /tmp/agent_prompt.txt <<PROMPT
+
+          ## Instructions
+          1. Read the relevant code and understand the task.
+          2. Implement the changes. Follow conventional commits.
+          3. Commit your work with a clear message referencing issue #${{ steps.params.outputs.issue_number }}.
+          4. Every commit message MUST include the trailer "Author-Type: agent" on a separate line after a blank line. Example:
+             feat: add widget parser for issue #42
+
+             Author-Type: agent
+          5. Keep changes focused — do not refactor unrelated code.
+          6. Respect scope boundaries defined in AGENTS.md.
+          PROMPT
+
+      - name: Run Claude Code agent
+        if: steps.breaker.outputs.proceed != 'false'
+        run: |
+          npx -y @anthropic-ai/claude-code --print "$(cat /tmp/agent_prompt.txt)"
+
+      - name: Push branch
+        if: steps.breaker.outputs.proceed != 'false'
+        run: |
+          BRANCH="${{ steps.branch.outputs.name }}"
+          # Only push if there are commits beyond the checkout
+          if [ "$(git rev-list --count origin/main..HEAD)" -gt 0 ]; then
+            git push -u origin "$BRANCH"
+          else
+            echo "No commits to push — agent made no changes"
+            gh issue comment "${{ steps.params.outputs.issue_number }}" \
+              --body "**SDLC Agent (iteration ${{ steps.params.outputs.iteration }}):** No changes were made. The agent may need more specific instructions."
+            exit 0
+          fi
+
+      - name: Create pull request
+        if: steps.breaker.outputs.proceed != 'false'
+        run: |
+          BRANCH="${{ steps.branch.outputs.name }}"
+          ITER="${{ steps.params.outputs.iteration }}"
+          ISSUE="${{ steps.params.outputs.issue_number }}"
+
+          # Check if branch was pushed
+          if ! git ls-remote --exit-code origin "$BRANCH" > /dev/null 2>&1; then
+            echo "Branch not pushed — skipping PR creation"
+            exit 0
+          fi
+
+          gh pr create \
+            --title "agent: implement #${ISSUE} (iteration ${ITER})" \
+            --body "$(cat <<EOF
+          ## Autonomous SDLC — Iteration ${ITER}
+
+          Implements #${ISSUE}
+
+          ### Identity Attestation
+          | Field | Value |
+          |---|---|
+          | **Author type** | \`agent\` (LLM-generated) |
+          | **Agent** | Claude Code via \`sdlc-agent.yml\` |
+          | **Git identity** | \`claude-agent[bot]\` |
+          | **Iteration** | ${ITER} |
+          | **Trigger** | \`${{ github.event_name }}\` |
+          | **Run ID** | \`${{ github.run_id }}\` |
+
+          > All commits in this PR were authored by an AI agent.
+          > Human merge to main is required. Verify git author before merging.
+
+          **Circuit breaker:** ${{ steps.breaker.outputs.result }}
+          EOF
+          )" \
+            --label "agent:authored" \
+            --label "iteration:${ITER}" \
+            --base main \
+            --head "$BRANCH"
+
+      - name: Comment on issue
+        if: steps.breaker.outputs.proceed != 'false'
+        run: |
+          ITER="${{ steps.params.outputs.iteration }}"
+          BRANCH="${{ steps.branch.outputs.name }}"
+          gh issue comment "${{ steps.params.outputs.issue_number }}" \
+            --body "**SDLC Agent (iteration ${ITER}):** PR created on branch \`${BRANCH}\`. Review workflow will evaluate automatically."

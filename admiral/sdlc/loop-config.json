@@ -1,0 +1,30 @@
+{
+  "max_iterations": 3,
+  "token_budget_per_cycle": 100000,
+  "require_human_merge_to_main": true,
+  "auto_merge_feature_branches": true,
+  "escalation_creates_issue": true,
+  "allowed_modify_paths": [
+    "admiral/",
+    "control-plane/",
+    ".hooks/"
+  ],
+  "blocked_modify_paths": [
+    "aiStrat/",
+    ".github/workflows/",
+    ".claude/settings"
+  ],
+  "circuit_breaker_checks": [
+    "iteration_cap",
+    "token_budget",
+    "runaway_alerts"
+  ],
+  "identity": {
+    "agent_git_name": "claude-agent[bot]",
+    "agent_git_email": "claude-agent[bot]@users.noreply.github.com",
+    "reviewer_git_name": "claude-reviewer[bot]",
+    "reviewer_git_email": "claude-reviewer[bot]@users.noreply.github.com",
+    "commit_trailer": "Author-Type: agent",
+    "policy": "LLMs MUST use bot identities. LLMs may NEVER impersonate humans. Humans may impersonate agents."
+  }
+}

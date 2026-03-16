@@ -52,6 +52,10 @@ Spec reference: `aiStrat/admiral/spec/part11-protocols.md`
 | Hook timeout values, budget thresholds | **Propose** | Operational impact |
 | Architecture changes, new directories | **Propose** | Structural impact |
 | Schema changes to session state or brain entries | **Propose** | Interface contract |
+| SDLC loop config (iterations, budget) | **Propose** | Operational impact |
+| Circuit breaker thresholds | **Escalate** | Safety-critical |
+| Agent identity policy (git name, trailers) | **Escalate** | Identity integrity — agents must never impersonate humans |
+| Adding new SDLC workflow triggers | **Escalate** | Scope expansion |
 | Spec modifications in `aiStrat/` | **Escalate** | Spec is frozen |
 | Security-related decisions | **Escalate** | Always requires human review |
 | Scope changes to PLAN.md milestones | **Escalate** | Strategic decisions |

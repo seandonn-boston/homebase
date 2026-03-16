@@ -44,6 +44,7 @@
 | Brain B1 round-trip tested | Complete | Record → query → retrieve verified; 13/13 assertions pass in `admiral/tests/test_brain_b1.sh`; `.brain/` seeded |
 | 7 starter agent configs created | Complete | 7 configs in `.claude/agents/` (orchestrator, backend-implementer, qa, architect, context-curator, security, triage) — exceeds 5-config target |
 | Traced multi-agent session documented | Complete | Full session trace in `admiral/examples/traced-session.md` with runner script `traced-session-runner.sh` |
+| SDLC-in-CI loop operational | Not Started | Issue label triggers autonomous implement→review→revise cycle with circuit breakers; see `admiral/sdlc/` |
 
 ### Phase 4: IP Protection (Current — Months 1-6)
 
