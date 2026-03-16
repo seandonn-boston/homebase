@@ -1013,7 +1013,9 @@ research/future-operations.md
 
 ---
 
-## Control Plane Reference Sketch (6 files)
+## Control Plane Reference Sketch — `aiStrat/control-plane/` (6 files)
+
+> **Not the MVP.** These are spec-level type definition sketches. The runnable implementation lives at the repo root in `control-plane/` (outside `aiStrat/`). See `aiStrat/control-plane/README.md` for the relationship.
 
 ```
 README.md - control-plane/reference - 2026-03-16:

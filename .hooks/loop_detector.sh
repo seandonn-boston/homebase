@@ -59,9 +59,11 @@ if [ "$IS_ERROR" = "false" ]; then
 fi
 
 # Error detected — compute signature and track
-AGENT_ID=$(echo "$PAYLOAD" | jq -r '.session_state.session_id // "unknown"')
+# Use session_id as the agent identifier — in multi-agent scenarios,
+# each agent runs in its own session, so session_id is agent-scoped.
+SESSION_ID=$(echo "$PAYLOAD" | jq -r '.session_state.session_id // "unknown"')
 ERROR_MSG="${ERROR_TEXT:-$(echo "$TOOL_RESPONSE" | jq -r 'tostring' 2>/dev/null | head -c 200)}"
-SIG=$(compute_loop_sig "$AGENT_ID" "$ERROR_MSG")
+SIG=$(compute_loop_sig "$SESSION_ID" "$ERROR_MSG")
 
 CURRENT_COUNT=$(echo "$LOOP_STATE" | jq -r ".error_counts[\"$SIG\"] // 0")
 

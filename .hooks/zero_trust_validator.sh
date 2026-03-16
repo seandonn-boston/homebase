@@ -38,7 +38,10 @@ fi
 # "What damage could this cause if I'm wrong? Scale verification to blast radius."
 if [ "$TOOL_NAME" = "Write" ] || [ "$TOOL_NAME" = "Edit" ]; then
   FILE_PATH=$(echo "$PAYLOAD" | jq -r '.tool_input.file_path // ""' 2>/dev/null)
+  # Strip project dir prefix to get relative path; if path is outside project, use full path
   REL_PATH="${FILE_PATH#$PROJECT_DIR/}"
+  [ "$REL_PATH" = "$FILE_PATH" ] && [ -n "$FILE_PATH" ] && \
+    ALERTS+="ZERO-TRUST (SO-12): Write target '${FILE_PATH}' is outside project directory. Verify intent. "
 
   # High blast-radius paths
   case "$REL_PATH" in

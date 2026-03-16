@@ -684,6 +684,36 @@ This appendix maps every major framework component to its real-world implementat
 
 ### Version History
 
+**v0.10.0-alpha (March 2026)**
+
+- **Version consolidation.** Adopted `vMAJOR.MINOR.PATCH-stage.dateInMS` format. Single source of truth in `aiStrat/VERSION`; CI propagates to 4 display locations. Removed version strings from all non-CI-managed files.
+- **Phase 1 complete.** Specification integrity hardening: version consistency, enforcement language refinement (Part 3 enforcement vs. monitoring distinction), standing orders classified by mechanism, empirical claims qualified, research-to-spec pipeline formalized.
+- **Phase 2 complete.** Fortune 500 adoption simulation: 100 companies scored across 7 scenarios using FY2025 10-K data, sector analysis, prospect rankings, walk-away analysis, trend monitoring pipeline.
+- **CI root-cause fix.** Version-bump workflow used line-number targeting (brittle); replaced with pattern-based sed matching.
+
+**v0.9.0-alpha (March 2026)**
+
+- **Specification hardening.** Resolved SD-01 (hook enforcement 4/15 → 8/15), SD-03 (fleet maturity language), SD-04 (Monitor quarantine Layers 3–5). Added hook test suite (34/34 passing).
+- **Adoption simulation expansion.** Scaled from 50 to 100 companies with trend monitoring pipeline (`monitor.sh`, `snapshot.sh`, `diff.sh`).
+
+**v0.8.0-alpha (March 2026)**
+
+- **Event-driven Brain operations.** Added SPC-based anomaly detection for Brain health metrics with recursion prevention.
+- **Control plane MVP.** SPC integration (Shewhart control charts + Western Electric rules), runaway detector, execution trace, HTTP dashboard server. 24 passing tests.
+- **Möbius Loop.** Named the Brain's continuous feedback mechanism linking execution outcomes back to institutional memory.
+- **Codebase review fixes.** Resolved version inconsistencies, narrative contradictions, and spec-debt items.
+
+**v0.7.0-alpha (March 2026)**
+
+- **Brain consultation integration.** Wired Brain query into all decision-making documentation. Context source routing logic (long context vs. RAG vs. escalate).
+- **Hook infrastructure hardening.** Eliminated all deadlock vectors. Converted token budget gate from hard block to advisory checkpoint. Session Thermal Model for advisory budget dashboards.
+- **Patent analysis.** Expanded from 7 to 23 distinct patent opportunities across the Admiral Framework.
+- **QUICKSTART gap closure.** Updated bootstrap path, added end-to-end session log.
+
+**v0.6.0-alpha (March 2026)**
+
+- **Phase 4 completion.** Closed remaining implementation gaps from Phase 4.4. Updated QUICKSTART.md and planning documents.
+
 **v0.5.3-alpha (March 2026)**
 
 - **Resolved all 14 spec-gaps.** Concrete thresholds added to source spec files and mirrored in `reference-constants.md § Spec-Gap Resolved Thresholds`. See `reference/spec-gaps.md` for the gap inventory and resolutions.
