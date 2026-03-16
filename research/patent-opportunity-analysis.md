@@ -832,7 +832,7 @@ Set up patent monitoring (e.g., Google Patents alerts) for these classification 
 
 ## Sources
 
-- Admiral Framework Specification v0.5.3-alpha (`aiStrat/admiral/spec/`)
+- Admiral Framework Specification v0.5.3-alpha (`aiStrat/admiral/spec/`) <!-- no-version-sync -->
 - Admiral Competitive Landscape Analysis (`research/competitive-landscape-2026.md`)
 - Admiral Competitive Positioning Strategy (`research/competitive-positioning-strategy.md`)
 - Monetizing Doctrine Playbook (`research/monetizing-doctrine-playbook.md`)

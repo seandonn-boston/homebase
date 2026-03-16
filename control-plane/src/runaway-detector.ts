@@ -443,7 +443,7 @@ export class RunawayDetector {
     if (violation) {
       this.fireAlert({
         type: "spc_violation",
-        severity: violation.rule === "beyond_ucl" ? "warning" : "warning",
+        severity: violation.rule === "beyond_ucl" ? "warning" : "critical",
         agentId: event.agentId,
         agentName: event.agentName,
         message: `SPC ${metric}: ${violation.message}`,

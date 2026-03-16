@@ -983,7 +983,7 @@ aiStrat/.claude/settings.local.json
 sales-pitch-30min-guide.md - sales/guide - 2026-03-10:
 30-minute conversation guide for presenting the Admiral Framework. Structured as:
 30-second pitch → 8-10 min market context → 12-15 min product pitch → 5-7 min
-status/roadmap → Q&A cheat sheet. References v0.4.0-alpha status, 71 agent definitions,
+status/roadmap → Q&A cheat sheet. References v0.4.0-alpha status, 71 agent definitions, <!-- no-version-sync -->
 15,000+ lines of spec. Includes objection handling for "just a spec" and "why not
 LangGraph/CrewAI" concerns.
 aiStrat/sales-pitch-30min-guide.md
@@ -991,11 +991,11 @@ aiStrat/sales-pitch-30min-guide.md
 
 ---
 
-> **Note:** Research (14 files, consolidated in v0.4.0-alpha) and thesis (6 files) documents
+> **Note:** Research (14 files, consolidated in v0.4.0-alpha) and thesis (6 files) documents <!-- no-version-sync -->
 > live at the repository root (`research/` and `thesis/`). They are strategy and investment
 > documents, not specification artifacts, and are excluded from the spec versioning
 > policy. Eight additional research files were moved from `aiStrat/research/` to root
-> `research/` in v0.4.0-alpha. See `AGENTS.md` for versioning scope details.
+> `research/` in v0.4.0-alpha. See `AGENTS.md` for versioning scope details. <!-- no-version-sync -->
 
 ## Admiral Strategic Research (1 file)
 
@@ -1013,7 +1013,9 @@ research/future-operations.md
 
 ---
 
-## Control Plane Reference Sketch (6 files)
+## Control Plane Reference Sketch — `aiStrat/control-plane/` (6 files)
+
+> **Not the MVP.** These are spec-level type definition sketches. The runnable implementation lives at the repo root in `control-plane/` (outside `aiStrat/`). See `aiStrat/control-plane/README.md` for the relationship.
 
 ```
 README.md - control-plane/reference - 2026-03-16:
