@@ -55,10 +55,13 @@ The first implementation code. A TypeScript-based control plane providing agent 
 - **HTTP Server** (`server.ts`) — API surface for trace ingestion and dashboard queries
 - **Dashboard** (`src/dashboard/`) — Visualization layer for fleet observability
 
+**Prerequisites:** Node.js 22+ (see `.nvmrc`), `jq`
+
 ```bash
 cd control-plane
 npm install
 npm run build
+npm test          # Run unit tests
 npm run example   # Run the demo
 ```
 

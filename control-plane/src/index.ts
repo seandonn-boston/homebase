@@ -13,15 +13,21 @@
 
 export { EventStream, AgentEvent, EventType, EventListener } from "./events";
 export { AgentInstrumentation, InstrumentationConfig } from "./instrumentation";
-export { RunawayDetector, DetectorConfig, Alert, ControlChart, SPCMonitor } from "./runaway-detector";
+export {
+  RunawayDetector,
+  DetectorConfig,
+  Alert,
+  ControlChart,
+  SPCMonitor,
+} from "./runaway-detector";
 export { ExecutionTrace, TraceNode, TraceStats } from "./trace";
 export { AdmiralServer } from "./server";
 export { JournalIngester } from "./ingest";
 
 import { EventStream } from "./events";
-import { RunawayDetector, DetectorConfig } from "./runaway-detector";
-import { ExecutionTrace } from "./trace";
 import { AgentInstrumentation } from "./instrumentation";
+import { type DetectorConfig, RunawayDetector } from "./runaway-detector";
+import { ExecutionTrace } from "./trace";
 
 /**
  * Create a fully wired Admiral control plane instance.

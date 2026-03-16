@@ -13,11 +13,17 @@ export CLAUDE_PROJECT_DIR="$PROJECT_DIR"
 
 source "$PROJECT_DIR/admiral/lib/state.sh"
 
-# Constants — advisory thresholds (warnings, not blocks)
-MAX_SAME_ERROR=3
-MAX_TOTAL_ERRORS=10
-# Decay: each success reduces total_errors by 1 (floor 0)
-SUCCESS_DECAY=1
+# Load thresholds from central config, falling back to hardcoded defaults
+CONFIG_FILE="$PROJECT_DIR/admiral/config.json"
+if [ -f "$CONFIG_FILE" ]; then
+  MAX_SAME_ERROR=$(jq -r '.hooks.maxSameError // 3' "$CONFIG_FILE" 2>/dev/null) || MAX_SAME_ERROR=3
+  MAX_TOTAL_ERRORS=$(jq -r '.hooks.maxTotalErrors // 10' "$CONFIG_FILE" 2>/dev/null) || MAX_TOTAL_ERRORS=10
+  SUCCESS_DECAY=$(jq -r '.hooks.successDecay // 1' "$CONFIG_FILE" 2>/dev/null) || SUCCESS_DECAY=1
+else
+  MAX_SAME_ERROR=3
+  MAX_TOTAL_ERRORS=10
+  SUCCESS_DECAY=1
+fi
 
 # Read payload from stdin
 PAYLOAD=$(cat)

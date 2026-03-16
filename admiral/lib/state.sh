@@ -100,9 +100,22 @@ increment_state_field() {
   echo "$state" | jq "$field = ($field + $amount)" | save_state
 }
 
-# Get token estimation for a tool
+# Get token estimation for a tool — reads from central config with hardcoded fallback
 estimate_tokens() {
   local tool_name="$1"
+  local config_file="${CLAUDE_PROJECT_DIR:-$PROJECT_DIR}/admiral/config.json"
+
+  # Try central config first
+  if [ -f "$config_file" ]; then
+    local estimate
+    estimate=$(jq -r ".tokenEstimates[\"$tool_name\"] // .tokenEstimates.default // 500" "$config_file" 2>/dev/null)
+    if [ -n "$estimate" ] && [ "$estimate" != "null" ]; then
+      echo "$estimate"
+      return
+    fi
+  fi
+
+  # Fallback to hardcoded defaults
   case "$tool_name" in
     Bash)         echo 500  ;;
     Read)         echo 1000 ;;

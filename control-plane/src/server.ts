@@ -5,12 +5,13 @@
  * and exposes a JSON API for events, alerts, and traces.
  */
 
-import * as http from "http";
-import * as fs from "fs";
-import * as path from "path";
-import { EventStream } from "./events";
-import { RunawayDetector } from "./runaway-detector";
-import { ExecutionTrace } from "./trace";
+import * as fs from "node:fs";
+import * as http from "node:http";
+import * as path from "node:path";
+import type { EventStream } from "./events";
+import type { JournalIngester } from "./ingest";
+import type { RunawayDetector } from "./runaway-detector";
+import type { ExecutionTrace } from "./trace";
 
 export class AdmiralServer {
   private server: http.Server | null = null;
@@ -18,12 +19,14 @@ export class AdmiralServer {
   private detector: RunawayDetector;
   private trace: ExecutionTrace;
   private projectDir: string;
+  private ingester: JournalIngester | null = null;
+  private startedAt: number = Date.now();
 
   constructor(
     stream: EventStream,
     detector: RunawayDetector,
     trace: ExecutionTrace,
-    projectDir?: string
+    projectDir?: string,
   ) {
     this.stream = stream;
     this.detector = detector;
@@ -31,7 +34,12 @@ export class AdmiralServer {
     this.projectDir = projectDir || process.cwd();
   }
 
-  start(port: number = 4510): Promise<void> {
+  /** Set the ingester reference for health reporting */
+  setIngester(ingester: JournalIngester): void {
+    this.ingester = ingester;
+  }
+
+  start(port = 4510): Promise<void> {
     return new Promise((resolve) => {
       this.server = http.createServer((req, res) => this.handleRequest(req, res));
       this.server.listen(port, () => {
@@ -62,7 +70,11 @@ export class AdmiralServer {
     }
 
     // API routes
-    if (url === "/api/events") {
+    if (url === "/health") {
+      this.serveHealth(res);
+    } else if (url === "/api/config") {
+      this.json(res, this.detector.getConfig());
+    } else if (url === "/api/events") {
       this.json(res, this.stream.getEvents());
     } else if (url === "/api/alerts") {
       this.json(res, this.detector.getAlerts());
@@ -76,7 +88,11 @@ export class AdmiralServer {
     } else if (url === "/api/session") {
       this.serveSessionState(res);
     } else if (url === "/api/stats") {
-      this.json(res, this.trace.getStats());
+      const stats: Record<string, unknown> = { trace: this.trace.getStats() };
+      if (this.ingester) {
+        stats.ingester = this.ingester.getStats();
+      }
+      this.json(res, stats);
     } else if (url.startsWith("/api/agents/") && url.endsWith("/resume")) {
       const agentId = url.split("/")[3];
       this.detector.resumeAgent(agentId);
@@ -93,6 +109,32 @@ export class AdmiralServer {
     }
   }
 
+  private serveHealth(res: http.ServerResponse): void {
+    const events = this.stream.getEvents();
+    const lastEventTs = events.length > 0 ? events[events.length - 1].timestamp : 0;
+    const staleThresholdMs = 5 * 60 * 1000; // 5 minutes
+    const isStale = events.length > 0 && Date.now() - lastEventTs > staleThresholdMs;
+    const activeAlerts = this.detector.getActiveAlerts();
+
+    const health = {
+      status: isStale ? "degraded" : "healthy",
+      uptime_ms: Date.now() - this.startedAt,
+      events: {
+        total: events.length,
+        last_event_age_ms: lastEventTs > 0 ? Date.now() - lastEventTs : null,
+      },
+      alerts: {
+        active: activeAlerts.length,
+        total: this.detector.getAlerts().length,
+      },
+      ingester: this.ingester ? this.ingester.getStats() : null,
+    };
+
+    const statusCode = isStale ? 503 : 200;
+    res.writeHead(statusCode, { "Content-Type": "application/json" });
+    res.end(JSON.stringify(health, null, 2));
+  }
+
   private serveSessionState(res: http.ServerResponse): void {
     const statePath = path.join(this.projectDir, ".admiral", "session_state.json");
     try {
@@ -101,10 +143,14 @@ export class AdmiralServer {
         const data = JSON.parse(content);
         this.json(res, data);
       } else {
-        this.json(res, { error: "No session state file found" });
+        res.writeHead(404, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ error: "No session state file found" }));
       }
-    } catch {
-      this.json(res, { error: "Failed to read session state" });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      console.error(`[admiral-server] Failed to read session state: ${message}`);
+      res.writeHead(500, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "Failed to read session state", detail: message }));
     }
   }
 
@@ -134,8 +180,10 @@ export class AdmiralServer {
 <html><head><title>Admiral Control Plane</title></head>
 <body><h1>Admiral Control Plane</h1><p>Dashboard file not found. API is running.</p>
 <ul>
+<li><a href="/health">Health</a></li>
 <li><a href="/api/events">Events</a></li>
 <li><a href="/api/alerts">Alerts</a></li>
+<li><a href="/api/config">Config</a></li>
 <li><a href="/api/trace/ascii">Trace (ASCII)</a></li>
 <li><a href="/api/stats">Stats</a></li>
 </ul></body></html>`;

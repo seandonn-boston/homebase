@@ -46,7 +46,7 @@ export class EventStream {
     type: EventType,
     data: Record<string, unknown> = {},
     parentEventId?: string,
-    taskId?: string
+    taskId?: string,
   ): AgentEvent {
     const event: AgentEvent = {
       id: generateId(),

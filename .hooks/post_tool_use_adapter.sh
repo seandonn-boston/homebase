@@ -25,8 +25,12 @@ PAYLOAD=$(cat)
 # Extract fields
 TOOL_NAME=$(echo "$PAYLOAD" | jq -r '.tool_name // "unknown"')
 
+# Ensure hook error log directory exists
+mkdir -p "$PROJECT_DIR/.admiral"
+HOOK_ERROR_LOG="$PROJECT_DIR/.admiral/hook_errors.log"
+
 # Load session state — fail-open if state is corrupt
-STATE=$(load_state 2>/dev/null) || STATE='{}'
+STATE=$(load_state 2>>"$HOOK_ERROR_LOG") || STATE='{}'
 # Validate loaded state is parseable JSON
 if ! echo "$STATE" | jq empty 2>/dev/null; then
   # State is corrupt — reset it and continue
@@ -46,7 +50,7 @@ MESSAGES=""
 # --- Hook 1: token_budget_tracker (isolated) ---
 if [ -x "$SCRIPT_DIR/token_budget_tracker.sh" ]; then
   TRACKER_OUTPUT=""
-  TRACKER_OUTPUT=$(echo "$PAYLOAD" | jq --argjson state "$STATE" '. + {session_state: $state}' | "$SCRIPT_DIR/token_budget_tracker.sh" 2>/dev/null) || true
+  TRACKER_OUTPUT=$(echo "$PAYLOAD" | jq --argjson state "$STATE" '. + {session_state: $state}' | "$SCRIPT_DIR/token_budget_tracker.sh" 2>>"$HOOK_ERROR_LOG") || true
   if [ -n "$TRACKER_OUTPUT" ]; then
     NEW_TOKENS=$(echo "$TRACKER_OUTPUT" | jq -r '.tokens_used // empty' 2>/dev/null) || true
     if [ -n "$NEW_TOKENS" ]; then
@@ -70,7 +74,7 @@ AGENT_NAME="${ADMIRAL_AGENT_NAME:-Claude Code Agent}"
 # --- Hook 2: loop_detector (isolated, advisory only) ---
 if [ -x "$SCRIPT_DIR/loop_detector.sh" ]; then
   LOOP_OUTPUT=""
-  LOOP_OUTPUT=$(echo "$PAYLOAD" | jq --argjson state "$STATE" '. + {session_state: $state}' | "$SCRIPT_DIR/loop_detector.sh" 2>/dev/null) || true
+  LOOP_OUTPUT=$(echo "$PAYLOAD" | jq --argjson state "$STATE" '. + {session_state: $state}' | "$SCRIPT_DIR/loop_detector.sh" 2>>"$HOOK_ERROR_LOG") || true
   if [ -n "$LOOP_OUTPUT" ]; then
     # Update loop detector state if returned
     LOOP_STATE=$(echo "$LOOP_OUTPUT" | jq '.hook_state.loop_detector // empty' 2>/dev/null) || true
@@ -88,7 +92,7 @@ fi
 # --- Hook 3: context_health_check (every 10th tool call, isolated, advisory only) ---
 if [ $((TOOL_CALL_COUNT % 10)) -eq 0 ] && [ -x "$SCRIPT_DIR/context_health_check.sh" ]; then
   HEALTH_OUTPUT=""
-  HEALTH_OUTPUT=$(echo "$PAYLOAD" | jq --argjson state "$STATE" '. + {session_state: $state}' | "$SCRIPT_DIR/context_health_check.sh" 2>/dev/null) || true
+  HEALTH_OUTPUT=$(echo "$PAYLOAD" | jq --argjson state "$STATE" '. + {session_state: $state}' | "$SCRIPT_DIR/context_health_check.sh" 2>>"$HOOK_ERROR_LOG") || true
   if [ -n "$HEALTH_OUTPUT" ]; then
     HEALTH_ALERT=$(echo "$HEALTH_OUTPUT" | jq -r '.alert // empty' 2>/dev/null) || true
     if [ -n "$HEALTH_ALERT" ]; then
@@ -100,7 +104,7 @@ fi
 # --- Hook 4: zero_trust_validator (SO-12, isolated, advisory only) ---
 if [ -x "$SCRIPT_DIR/zero_trust_validator.sh" ]; then
   ZT_OUTPUT=""
-  ZT_OUTPUT=$(echo "$PAYLOAD" | jq --argjson state "$STATE" '. + {session_state: $state}' | "$SCRIPT_DIR/zero_trust_validator.sh" 2>/dev/null) || true
+  ZT_OUTPUT=$(echo "$PAYLOAD" | jq --argjson state "$STATE" '. + {session_state: $state}' | "$SCRIPT_DIR/zero_trust_validator.sh" 2>>"$HOOK_ERROR_LOG") || true
   if [ -n "$ZT_OUTPUT" ]; then
     ZT_STATE=$(echo "$ZT_OUTPUT" | jq '.hook_state.zero_trust // empty' 2>/dev/null) || true
     if [ -n "$ZT_STATE" ] && [ "$ZT_STATE" != "null" ]; then
@@ -116,7 +120,7 @@ fi
 # --- Hook 5: brain_context_router (isolated, advisory only) ---
 if [ -x "$SCRIPT_DIR/brain_context_router.sh" ]; then
   BRAIN_OUTPUT=""
-  BRAIN_OUTPUT=$(echo "$PAYLOAD" | jq --argjson state "$STATE" '. + {session_state: $state}' | "$SCRIPT_DIR/brain_context_router.sh" 2>/dev/null) || true
+  BRAIN_OUTPUT=$(echo "$PAYLOAD" | jq --argjson state "$STATE" '. + {session_state: $state}' | "$SCRIPT_DIR/brain_context_router.sh" 2>>"$HOOK_ERROR_LOG") || true
   if [ -n "$BRAIN_OUTPUT" ]; then
     BRAIN_STATE=$(echo "$BRAIN_OUTPUT" | jq '.hook_state.brain_context_router // empty' 2>/dev/null) || true
     if [ -n "$BRAIN_STATE" ] && [ "$BRAIN_STATE" != "null" ]; then
@@ -130,7 +134,7 @@ if [ -x "$SCRIPT_DIR/brain_context_router.sh" ]; then
 fi
 
 # Save updated state (fail-open: if save fails, continue anyway)
-echo "$STATE" | save_state 2>/dev/null || true
+echo "$STATE" | save_state 2>>"$HOOK_ERROR_LOG" || true
 
 # Log events to JSONL — enriched schema for control plane ingestion
 EVENT_LOG="$PROJECT_DIR/.admiral/event_log.jsonl"
