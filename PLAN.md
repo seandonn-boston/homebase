@@ -1,81 +1,92 @@
-# Spec-Debt Resolution Plan
+# PLAN.md — Admiral Framework Implementation Plan
 
-## Status: In Progress
+**Version:** v0.7.0-alpha
+**Last Updated:** 2026-03-15
+**Status:** Phase 1 Active
 
-**Branch:** `claude/resolve-spec-debt-YJnxS`
-**Commits so far:** 3 (see below)
+---
 
-## Completed
+## Current Phase: Specification Hardening + Market Validation
 
-### SD-01: Hook Coverage (High) — RESOLVED
-- Increased enforcement from 4/15 (27%) to 8/15 (53%)
-- 4 new hooks: `scope_boundary_guard`, `prohibitions_enforcer`, `zero_trust_validator`, `pre_work_validator`
-- All wired into `pre_tool_use_adapter.sh` and `post_tool_use_adapter.sh`
-- Tests: `.hooks/tests/test_hooks.sh` (34/34 passing)
-- Enforcement map updated to E2 level
+### Phase 1: Specification Integrity (Current — Weeks 1-4)
 
-### SD-04: Monitor Layers 3-5 (Moderate) — RESOLVED
-- Reference implementations for all 3 layers + pipeline orchestrator
-- Location: `admiral/monitor/quarantine/`
-- Components: `layer3_semantic.sh`, `layer4_llm_advisory.sh`, `layer5_antibodies.sh`, `quarantine_pipeline.sh`, `attack_corpus.json`
-- Tests: `admiral/monitor/quarantine/tests/test_quarantine.sh` (39/39 passing)
+**Objective:** Resolve all internal contradictions, close the research-to-spec pipeline, and establish the codebase as internally consistent.
 
-## Remaining Items
+| Milestone | Status | Exit Criteria |
+|---|---|---|
+| Version consistency across all files | Complete | VERSION, index.md, AGENTS.md all say v0.7.0-alpha |
+| Ground truth references valid | Complete | PLAN.md and PLAN2.md exist and are current |
+| Enforcement language refined | Not Started | Part 3 distinguishes enforcement vs. monitoring |
+| Standing Orders classified by mechanism | Not Started | Each SO marked Mechanical / Judgment-Assisted / Advisory |
+| Empirical claims qualified | Not Started | All data claims cite source and scope |
+| Research-to-spec pipeline closed | Not Started | OS reframe, engineering ladder mapping, certification process defined |
 
-### SD-02: Benchmark Targets Lack Empirical Basis (Moderate)
+### Phase 2: Market Validation via Simulation (Weeks 2-8)
 
-**What:** All performance targets in `benchmarks.md` are estimates with no empirical measurements.
+**Objective:** Build a Fortune 500 adoption simulation using confirmed 2025 financial data. Test the thesis against real company profiles at scale.
 
-**Next steps:**
-1. Create `admiral/benchmarks/` directory for measurement infrastructure
-2. Instrument existing hooks to emit structured metrics (timing, pass/fail rates, recovery counts) — likely via appending to `.admiral/metrics.jsonl`
-3. Create a `benchmarks_collector.sh` PostToolUse hook (or session-end hook) that aggregates per-session data
-4. Define metric schemas matching the benchmark targets: first-pass quality, auto-recovery rate, context utilization, etc.
-5. After running real workloads, populate the "Validated" column in `benchmarks.md`
+| Milestone | Status | Exit Criteria |
+|---|---|---|
+| Top 100 company profiles built | Not Started | fortune500.json with confirmed data from 10-K/earnings |
+| 7 core scenarios defined | Not Started | scenario-definitions.json with parameterized templates |
+| Scoring engine operational | Not Started | Takes (company, scenario) → adoption score (0-100) |
+| Sector-level analysis complete | Not Started | Per-sector adoption likelihood with evidence |
+| Walk-away analysis for top 50 | Not Started | Each prospect has documented walk-away scenario |
+| Trend monitoring infrastructure | Not Started | Snapshot system, diff tool, quarterly cadence |
 
-**Key files to read:**
-- `aiStrat/admiral/reference/benchmarks.md` — current targets and structure
-- `.hooks/post_tool_use_adapter.sh` — where to add metric emission
-- `admiral/lib/state.sh` — shared state utilities
+### Phase 3: Reference Implementation Wedge (Weeks 4-12)
 
-**Constraints:** Implementation code goes in `admiral/` — no spec approval needed. Updating `benchmarks.md` with validated numbers requires `aiStrat/` approval.
+**Objective:** Wire hooks to control plane, prove single-agent observability, demonstrate the wedge.
 
-### SD-03: Fleet Catalog Caveat (Moderate)
+| Milestone | Status | Exit Criteria |
+|---|---|---|
+| Hooks → control plane connected | Not Started | Event log ingested by control plane |
+| Dashboard renders real data | Not Started | Session state, budget, hooks, alerts visible |
+| Brain B1 round-trip tested | Not Started | Record → query → retrieve verified |
+| 5 starter agent configs created | Not Started | .claude/agents/*.md following prompt-anatomy |
+| Traced multi-agent session documented | Not Started | Full session trace in admiral/examples/ |
 
-**What:** Sales pitch presents 71 pre-defined roles as competitive advantage without noting they're spec-based, not battle-tested.
+### Phase 4: IP Protection (Months 1-6)
 
-**Next steps:**
-1. Read `aiStrat/sales-pitch-30min-guide.md`
-2. Add one-sentence caveat near the "71 pre-defined roles" claim: "based on production patterns, refined through real-world deployment"
-3. This is a minimal `aiStrat/` modification — **requires explicit user approval** per AGENTS.md boundaries
+**Objective:** File provisional patents on core innovations, begin trademark process.
 
-**This is the simplest remaining item — one sentence change.**
+| Milestone | Status | Exit Criteria |
+|---|---|---|
+| Invention dates documented | Not Started | Git history extracted for all 23 opportunities |
+| Provisional #1 filed (Enforcement Spectrum) | Not Started | Filed with patent counsel |
+| Provisional #2 filed (Brain Architecture) | Not Started | Filed with patent counsel |
+| Provisional #3 filed (Intent Engineering or Agent Identity) | Not Started | Filed with patent counsel |
+| Trademark applications filed | Not Started | "Admiral Framework" and "Intent Engineering" |
 
-### SD-05: Data Ecosystem (Low)
+### Phase 5: Commercialization (Months 3-12)
 
-**What:** Part 12 is the most abstract doctrine part. Well-specified conceptually but no reference implementations for feedback loops or ecosystem agents.
+**Objective:** Begin generating revenue through consulting, certification, and ecosystem licensing.
 
-**Next steps:**
-1. Read `aiStrat/admiral/spec/part12-data-ecosystem.md` — understand the 6 feedback loops and 5 ecosystem agents
-2. Pick one feedback loop to implement end-to-end as a reference (suggest: the simplest one that connects to existing Brain infrastructure)
-3. Create worked example in `admiral/data-ecosystem/` showing concrete data flow
-4. Add additional worked examples to the spec if needed (requires `aiStrat/` approval)
+| Milestone | Status | Exit Criteria |
+|---|---|---|
+| Entity incorporated (LLC/C-corp) | Not Started | Legal entity exists for SBIR/patent purposes |
+| NSF SBIR Phase I application submitted | Not Started | Application complete and submitted |
+| Cloud credits obtained (Google/AWS) | Not Started | Credits active |
+| Practitioner certification beta launched | Not Started | Exam outline defined, beta cohort identified |
+| First paying consulting engagement | Not Started | Revenue generated |
 
-**Key files to read:**
-- `aiStrat/admiral/spec/part12-data-ecosystem.md` — full spec
-- `aiStrat/brain/schema/002_data_ecosystem.sql` — existing schema
-- `aiStrat/brain/level1-spec.md` — Brain entry format
+---
 
-## PR Readiness
+## Strategic Context
 
-The branch is ready for PR whenever you decide. All completed work has tests. Suggested PR scope options:
-1. **PR now** with SD-01 + SD-04 resolved (current state) — clean, tested, two major items closed
-2. **Continue** with SD-02/SD-03/SD-05 first, then PR with more items resolved
+Admiral is positioned as the operational infrastructure for AI agent workforces. The market is early but forming: $8.5B autonomous AI agent market (2026), projected $35-45B by 2030. The governance gap identified in the spec is real and unfilled.
 
-## Commit Log
+The plan sequences: specification integrity first (credibility), market validation second (evidence), reference implementation third (proof), IP protection in parallel (defense), commercialization as the thesis proves out (revenue).
 
-```
-4daec94 feat: resolve SD-04 spec-debt — implement Monitor quarantine Layers 3-5
-d34c4d5 fix: eliminate redundant state loads, add hook test suite (34/34 passing)
-d2c2960 feat: resolve SD-01 spec-debt — increase hook enforcement from 4/15 to 8/15
-```
+---
+
+## Decision Authority for Plan Changes
+
+| Change Type | Tier |
+|---|---|
+| Task reprioritization within a phase | Autonomous |
+| Adding tasks to a phase | Autonomous |
+| Removing or deferring a milestone | Propose |
+| Adding a new phase | Propose |
+| Changing phase sequencing | Escalate |
+| Changing strategic direction | Escalate |

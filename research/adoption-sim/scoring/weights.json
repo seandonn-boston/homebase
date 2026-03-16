@@ -1,0 +1,125 @@
+{
+  "scoring_model_version": "1.0.0",
+  "last_updated": "2026-03-15",
+  "factors": {
+    "ai_investment_intensity": {
+      "weight": 0.20,
+      "description": "AI capex / revenue ratio and AI mentions in earnings calls",
+      "scoring": {
+        "0": "No AI investment disclosed",
+        "25": "Minimal AI mentions, <0.5% revenue in AI capex",
+        "50": "Moderate AI investment, 0.5-2% revenue, some AI mentions",
+        "75": "Significant AI investment, 2-5% revenue, frequent AI mentions",
+        "100": "Heavy AI investment, >5% revenue, AI is strategic priority"
+      }
+    },
+    "engineering_scale": {
+      "weight": 0.15,
+      "description": "Engineering headcount as proxy for agent fleet potential",
+      "scoring": {
+        "0": "No significant engineering org (<100 engineers)",
+        "25": "Small engineering org (100-500)",
+        "50": "Medium engineering org (500-2,000)",
+        "75": "Large engineering org (2,000-10,000)",
+        "100": "Massive engineering org (>10,000)"
+      }
+    },
+    "cloud_maturity": {
+      "weight": 0.10,
+      "description": "Cloud-native infrastructure adoption",
+      "scoring": {
+        "0": "On-premises only, no cloud strategy",
+        "25": "Early cloud migration, single provider",
+        "50": "Significant cloud presence, primary provider identified",
+        "75": "Cloud-first, multi-cloud strategy",
+        "100": "Cloud-native, born-in-cloud architecture"
+      }
+    },
+    "governance_posture": {
+      "weight": 0.15,
+      "description": "Existing governance maturity (compliance frameworks, AI ethics boards, CISO org)",
+      "scoring": {
+        "0": "No formal governance beyond basic compliance",
+        "25": "Basic regulatory compliance only",
+        "50": "Established compliance org, some AI ethics awareness",
+        "75": "Dedicated AI ethics board or responsible AI program",
+        "100": "Mature AI governance with dedicated team, published principles"
+      }
+    },
+    "regulatory_pressure": {
+      "weight": 0.15,
+      "description": "Sector-level regulatory exposure for AI systems",
+      "scoring": {
+        "0": "Minimal regulation (consumer goods, retail)",
+        "25": "Light regulation (media, entertainment)",
+        "50": "Moderate regulation (manufacturing, energy)",
+        "75": "Heavy regulation (healthcare, insurance)",
+        "100": "Critical regulation (financial services, defense, pharma)"
+      }
+    },
+    "agent_tooling_signals": {
+      "weight": 0.10,
+      "description": "Public evidence of AI agent adoption (tooling mentions, deployments)",
+      "scoring": {
+        "0": "No agent tooling signals",
+        "25": "Mentions AI assistants or copilots",
+        "50": "Uses AI coding tools or basic automation",
+        "75": "Deploying autonomous agents or multi-agent workflows",
+        "100": "Running production agent fleets, publicly discussed"
+      }
+    },
+    "build_vs_buy": {
+      "weight": 0.10,
+      "description": "Historical preference for building vs. buying infrastructure",
+      "scoring": {
+        "0": "Builds everything internally (pure tech company with platform team)",
+        "25": "Prefers build, buys selectively",
+        "50": "Mixed — builds core, buys adjacent",
+        "75": "Prefers buy, builds differentiating features only",
+        "100": "Buys almost everything, minimal internal engineering"
+      }
+    },
+    "budget_availability": {
+      "weight": 0.05,
+      "description": "Tech budget flexibility based on margins and spending patterns",
+      "scoring": {
+        "0": "Tight margins (<5%), no discretionary tech budget",
+        "25": "Low margins (5-10%), constrained spending",
+        "50": "Moderate margins (10-20%), standard tech investment",
+        "75": "Good margins (20-30%), above-average tech spend",
+        "100": "High margins (>30%), aggressive tech investment"
+      }
+    }
+  },
+  "walkaway_factors": {
+    "build_internally": {
+      "deduction": -30,
+      "condition": "engineering_headcount_est > 5000 AND has_platform_team = true",
+      "description": "Company has the scale and capability to build governance internally"
+    },
+    "no_agents": {
+      "deduction": -40,
+      "condition": "agent_tooling_signals_score = 0",
+      "description": "Company shows no evidence of AI agent adoption"
+    },
+    "compliance_only_governance": {
+      "deduction": -20,
+      "condition": "governance_posture is compliance-only with no operational component",
+      "description": "Governance is viewed as compliance checkbox, not operational enablement"
+    },
+    "open_source_only": {
+      "deduction": -15,
+      "condition": "company primarily uses open-source AI tooling and avoids paid platforms",
+      "description": "Company culture favors free/open-source tools over paid governance"
+    }
+  },
+  "scenario_modifiers": {
+    "S1-BASELINE": { "regulatory_pressure_boost": 0, "urgency_boost": 0 },
+    "S2-REGULATORY": { "regulatory_pressure_boost": 25, "urgency_boost": 20 },
+    "S3-AGENT-EXPLOSION": { "regulatory_pressure_boost": 10, "urgency_boost": 15 },
+    "S4-BUDGET-CRUNCH": { "regulatory_pressure_boost": 0, "urgency_boost": -15 },
+    "S5-COMPETITOR-CAPTURE": { "regulatory_pressure_boost": 5, "urgency_boost": 5 },
+    "S6-INCIDENT-CATALYST": { "regulatory_pressure_boost": 20, "urgency_boost": 25 },
+    "S7-WALK-AWAY": { "regulatory_pressure_boost": 10, "urgency_boost": 10 }
+  }
+}

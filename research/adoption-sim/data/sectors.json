@@ -1,0 +1,101 @@
+[
+  {
+    "gics_code": "10",
+    "name": "Energy",
+    "regulatory_pressure": "moderate",
+    "regulatory_pressure_score": 50,
+    "ai_adoption_stage": "early-moderate",
+    "governance_receptivity": "medium",
+    "notes": "Oil & gas majors investing in AI for exploration, refining optimization. Environmental compliance creates governance awareness. Large engineering orgs but conservative tech culture."
+  },
+  {
+    "gics_code": "15",
+    "name": "Materials",
+    "regulatory_pressure": "moderate",
+    "regulatory_pressure_score": 50,
+    "ai_adoption_stage": "early",
+    "governance_receptivity": "low-medium",
+    "notes": "Mining, chemicals, construction materials. Process optimization via AI growing. Environmental and safety regulation creates some governance demand."
+  },
+  {
+    "gics_code": "20",
+    "name": "Industrials",
+    "regulatory_pressure": "moderate",
+    "regulatory_pressure_score": 50,
+    "ai_adoption_stage": "early-moderate",
+    "governance_receptivity": "medium",
+    "notes": "Aerospace & defense, machinery, transportation. Defense sector has high governance requirements. Manufacturing AI growing. Mixed cloud adoption."
+  },
+  {
+    "gics_code": "25",
+    "name": "Consumer Discretionary",
+    "regulatory_pressure": "low",
+    "regulatory_pressure_score": 25,
+    "ai_adoption_stage": "moderate",
+    "governance_receptivity": "low-medium",
+    "notes": "Retail, automotive, hospitality. AI used for recommendation, pricing, customer service. Low regulatory pressure. High budget sensitivity."
+  },
+  {
+    "gics_code": "30",
+    "name": "Consumer Staples",
+    "regulatory_pressure": "low-moderate",
+    "regulatory_pressure_score": 35,
+    "ai_adoption_stage": "early",
+    "governance_receptivity": "low",
+    "notes": "Food, beverage, household products. AI used for supply chain, demand forecasting. Conservative tech adoption. Low agent fleet likelihood."
+  },
+  {
+    "gics_code": "35",
+    "name": "Health Care",
+    "regulatory_pressure": "high",
+    "regulatory_pressure_score": 75,
+    "ai_adoption_stage": "moderate-high",
+    "governance_receptivity": "high",
+    "notes": "Pharma, biotech, managed care, medical devices. HIPAA, FDA requirements create strong governance culture. AI in drug discovery, clinical trials, claims processing. High regulatory pressure drives governance demand."
+  },
+  {
+    "gics_code": "40",
+    "name": "Financials",
+    "regulatory_pressure": "critical",
+    "regulatory_pressure_score": 100,
+    "ai_adoption_stage": "high",
+    "governance_receptivity": "very-high",
+    "notes": "Banks, insurance, asset management. SEC, OCC, FINRA, state regulators. AI in trading, risk management, fraud detection, underwriting. Highest regulatory pressure of any sector. Model risk management frameworks already exist. Natural bridge to agent governance."
+  },
+  {
+    "gics_code": "45",
+    "name": "Information Technology",
+    "regulatory_pressure": "low",
+    "regulatory_pressure_score": 25,
+    "ai_adoption_stage": "very-high",
+    "governance_receptivity": "medium",
+    "notes": "Software, semiconductors, IT services. Highest AI investment intensity. Most likely to deploy agent fleets. BUT: most likely to build governance internally. Build-vs-buy is the key question for this sector."
+  },
+  {
+    "gics_code": "50",
+    "name": "Communication Services",
+    "regulatory_pressure": "low-moderate",
+    "regulatory_pressure_score": 35,
+    "ai_adoption_stage": "moderate-high",
+    "governance_receptivity": "medium",
+    "notes": "Telecom, media, entertainment. AI in content moderation, network optimization, advertising. Content moderation creates some AI governance awareness. Mixed build-vs-buy."
+  },
+  {
+    "gics_code": "55",
+    "name": "Utilities",
+    "regulatory_pressure": "moderate-high",
+    "regulatory_pressure_score": 60,
+    "ai_adoption_stage": "early",
+    "governance_receptivity": "medium",
+    "notes": "Electric, gas, water utilities. Regulated monopolies with compliance culture. AI in grid optimization, demand forecasting. Slow tech adoption but governance-receptive culture."
+  },
+  {
+    "gics_code": "60",
+    "name": "Real Estate",
+    "regulatory_pressure": "low",
+    "regulatory_pressure_score": 20,
+    "ai_adoption_stage": "early",
+    "governance_receptivity": "low",
+    "notes": "REITs, real estate services. Limited AI adoption beyond basic analytics. Low governance demand. Unlikely near-term adopter."
+  }
+]

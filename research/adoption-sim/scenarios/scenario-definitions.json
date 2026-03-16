@@ -1,0 +1,86 @@
+[
+  {
+    "scenario_id": "S1-BASELINE",
+    "name": "Baseline",
+    "description": "Current state as of Q4 2025. No new regulatory pressure. Companies experiment with 1-5 AI agents. Governance is ad hoc or nonexistent. This is the control scenario against which all others are measured.",
+    "parameters": {
+      "agent_fleet_size": 3,
+      "governance_urgency": "low",
+      "regulatory_pressure": "none",
+      "budget_sensitivity": "medium",
+      "build_vs_buy_preference": "neutral"
+    }
+  },
+  {
+    "scenario_id": "S2-REGULATORY",
+    "name": "Regulatory Trigger",
+    "description": "EU AI Act enforcement expands to cover autonomous agent systems. US follows with NIST standards mandate. Companies face compliance deadlines for AI agent governance. Governance shifts from optional to mandatory.",
+    "parameters": {
+      "agent_fleet_size": 5,
+      "governance_urgency": "critical",
+      "regulatory_pressure": "mandatory",
+      "budget_sensitivity": "low",
+      "build_vs_buy_preference": "buy"
+    }
+  },
+  {
+    "scenario_id": "S3-AGENT-EXPLOSION",
+    "name": "Agent Explosion",
+    "description": "Agent tooling matures rapidly. Companies deploy 20-100 specialized agents across engineering, operations, and business functions. Complexity makes ad hoc governance untenable. The 'Kubernetes moment' for agents.",
+    "parameters": {
+      "agent_fleet_size": 50,
+      "governance_urgency": "high",
+      "regulatory_pressure": "emerging",
+      "budget_sensitivity": "medium",
+      "build_vs_buy_preference": "buy"
+    }
+  },
+  {
+    "scenario_id": "S4-BUDGET-CRUNCH",
+    "name": "Budget Crunch",
+    "description": "AI spending tightens after initial hype cycle. CFOs demand ROI proof. Governance is seen as overhead, not enablement. Companies cut AI infrastructure budgets by 20-30%.",
+    "parameters": {
+      "agent_fleet_size": 3,
+      "governance_urgency": "low",
+      "regulatory_pressure": "none",
+      "budget_sensitivity": "high",
+      "build_vs_buy_preference": "build"
+    }
+  },
+  {
+    "scenario_id": "S5-COMPETITOR-CAPTURE",
+    "name": "Competitor Capture",
+    "description": "Google bundles basic agent governance into Vertex AI. Microsoft adds fleet monitoring to Azure AI. Basic governance becomes a platform feature. The question becomes: is Admiral's depth needed beyond what platforms provide free?",
+    "parameters": {
+      "agent_fleet_size": 10,
+      "governance_urgency": "medium",
+      "regulatory_pressure": "emerging",
+      "budget_sensitivity": "medium",
+      "build_vs_buy_preference": "buy"
+    }
+  },
+  {
+    "scenario_id": "S6-INCIDENT-CATALYST",
+    "name": "Incident Catalyst",
+    "description": "A public AI agent failure causes significant financial loss or data breach at a Fortune 500 company. Board-level attention on AI governance. Companies scramble to implement oversight. Insurance companies begin requiring governance certification.",
+    "parameters": {
+      "agent_fleet_size": 10,
+      "governance_urgency": "critical",
+      "regulatory_pressure": "active",
+      "budget_sensitivity": "low",
+      "build_vs_buy_preference": "buy"
+    }
+  },
+  {
+    "scenario_id": "S7-WALK-AWAY",
+    "name": "Walk-Away",
+    "description": "Company has budget, need, and capability — but chooses to build governance internally. Tests the thesis that governance is too complex to build in-house. This scenario applies the maximum walk-away penalties to identify which companies would never buy.",
+    "parameters": {
+      "agent_fleet_size": 20,
+      "governance_urgency": "high",
+      "regulatory_pressure": "emerging",
+      "budget_sensitivity": "low",
+      "build_vs_buy_preference": "build"
+    }
+  }
+]
