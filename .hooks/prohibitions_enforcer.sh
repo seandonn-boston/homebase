@@ -26,12 +26,12 @@ if [ "$TOOL_NAME" = "Bash" ]; then
   BYPASS_PATTERNS=(
     "--no-verify"
     "--no-gpg-sign"
-    "git commit.*--amend"
     "eslint.*--fix.*--quiet"
     "chmod.*\.hooks/"
     "rm.*\.hooks/"
     "disable.*hook"
-    "skip.*ci"
+    "\[skip ci\]"
+    "\[ci skip\]"
     "SKIP=.*pre-commit"
   )
   for PATTERN in "${BYPASS_PATTERNS[@]}"; do
@@ -65,8 +65,9 @@ if [ "$TOOL_NAME" = "Bash" ]; then
   IRREVERSIBLE_PATTERNS=(
     "rm -rf"
     "git reset --hard"
+    "git commit.*--amend"
     "git push.*--force"
-    "git push.*-f "
+    "git push.* -f( |$)"
     "git branch -D"
     "drop table"
     "DROP TABLE"
