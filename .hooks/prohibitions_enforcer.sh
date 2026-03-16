@@ -33,7 +33,7 @@ if [ "$TOOL_NAME" = "Bash" ]; then
     "SKIP=.*pre-commit"
   )
   for PATTERN in "${BYPASS_PATTERNS[@]}"; do
-    if echo "$COMMAND" | grep -qiE "$PATTERN"; then
+    if echo "$COMMAND" | grep -qiE -- "$PATTERN"; then
       ALERTS+="PROHIBITION (SO-10): Command matches bypass pattern '${PATTERN}'. Never bypass or disable enforcement mechanisms. "
       break
     fi
@@ -52,7 +52,7 @@ if [ "$TOOL_NAME" = "Bash" ]; then
     'BEGIN PGP'
   )
   for PATTERN in "${SECRET_PATTERNS[@]}"; do
-    if echo "$COMMAND" | grep -qiE "$PATTERN"; then
+    if echo "$COMMAND" | grep -qiE -- "$PATTERN"; then
       ALERTS+="PROHIBITION (SO-10): Command may contain or create secrets/credentials. Never store secrets in code or configuration. "
       break
     fi
@@ -71,7 +71,7 @@ if [ "$TOOL_NAME" = "Bash" ]; then
     "TRUNCATE"
   )
   for PATTERN in "${IRREVERSIBLE_PATTERNS[@]}"; do
-    if echo "$COMMAND" | grep -qiE "$PATTERN"; then
+    if echo "$COMMAND" | grep -qiE -- "$PATTERN"; then
       ALERTS+="PROHIBITION (SO-10): Command is potentially irreversible ('${PATTERN}'). Confirm explicit approval before proceeding. "
       break
     fi

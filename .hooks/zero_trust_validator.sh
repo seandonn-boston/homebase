@@ -4,19 +4,19 @@
 # Validates external data before it reaches downstream processing.
 # Flags untrusted sources, unverified caller identity, and excessive access scope.
 # Advisory only — emits warnings but NEVER hard-blocks (always exit 0).
+# Expects session_state in payload (passed by post_tool_use_adapter).
+# Returns hook_state and alerts via JSON output — never writes state directly.
 # Timeout: 5s
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$SCRIPT_DIR/.." && pwd)}"
-export CLAUDE_PROJECT_DIR="$PROJECT_DIR"
-
-source "$PROJECT_DIR/admiral/lib/state.sh"
-
-# Read payload from stdin
+# Read payload from stdin (includes session_state from adapter)
 PAYLOAD=$(cat)
 
 TOOL_NAME=$(echo "$PAYLOAD" | jq -r '.tool_name // "unknown"')
+PROJECT_DIR=$(echo "$PAYLOAD" | jq -r '.session_state.project_dir // ""' 2>/dev/null)
+if [ -z "$PROJECT_DIR" ]; then
+  PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
+fi
 ALERTS=""
 
 # --- External data validation (WebFetch, WebSearch) ---
@@ -70,9 +70,8 @@ if [ "$TOOL_NAME" = "Bash" ]; then
   fi
 fi
 
-# --- Track external data ingestion count ---
-STATE=$(load_state 2>/dev/null) || STATE='{}'
-EXTERNAL_COUNT=$(echo "$STATE" | jq -r '.hook_state.zero_trust.external_data_count // 0')
+# --- Track external data ingestion count from payload state (no independent load_state) ---
+EXTERNAL_COUNT=$(echo "$PAYLOAD" | jq -r '.session_state.hook_state.zero_trust.external_data_count // 0')
 
 if [ "$TOOL_NAME" = "WebFetch" ] || [ "$TOOL_NAME" = "WebSearch" ]; then
   EXTERNAL_COUNT=$((EXTERNAL_COUNT + 1))

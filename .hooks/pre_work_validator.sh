@@ -4,16 +4,12 @@
 # Checks that essential context is loaded before substantive work begins.
 # Fires on the first Write/Edit/Bash tool call — after that, tracks validation state.
 # Advisory only — emits warnings but NEVER hard-blocks (always exit 0).
+# Expects session_state in payload (passed by pre_tool_use_adapter).
+# Returns hook_state and advisory context via JSON output — never writes state directly.
 # Timeout: 5s
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$SCRIPT_DIR/.." && pwd)}"
-export CLAUDE_PROJECT_DIR="$PROJECT_DIR"
-
-source "$PROJECT_DIR/admiral/lib/state.sh"
-
-# Read payload from stdin
+# Read payload from stdin (includes session_state from adapter)
 PAYLOAD=$(cat)
 
 TOOL_NAME=$(echo "$PAYLOAD" | jq -r '.tool_name // "unknown"')
@@ -32,12 +28,13 @@ case "$TOOL_NAME" in
   *) exit 0 ;;
 esac
 
-# Load session state
-STATE=$(load_state 2>/dev/null) || STATE='{}'
+# Read session state from payload (passed by adapter — no independent load_state)
+STATE=$(echo "$PAYLOAD" | jq '.session_state // {}')
 
 # Check if pre-work validation has already passed this session
 VALIDATED=$(echo "$STATE" | jq -r '.hook_state.pre_work_validator.validated // false')
 if [ "$VALIDATED" = "true" ]; then
+  echo '{"hook_state": {"pre_work_validator": {"validated": true}}}'
   exit 0
 fi
 
@@ -62,20 +59,16 @@ if [ "$TOOL_CALL_COUNT" -lt 2 ]; then
   ALERTS+="PRE-WORK (SO-15): First substantive operation with fewer than 2 prior tool calls. SO-15 requires sufficient context before beginning work — consider reading relevant files first. "
 fi
 
-# If all checks pass, mark as validated so we don't re-check
+# If all checks pass, signal validated state back to adapter
 if [ -z "$ALERTS" ]; then
-  STATE=$(echo "$STATE" | jq '.hook_state.pre_work_validator = {"validated": true}')
-  echo "$STATE" | save_state 2>/dev/null || true
+  echo '{"hook_state": {"pre_work_validator": {"validated": true}}}'
   exit 0
 fi
 
-# Emit advisory
+# Return advisory context and current (unvalidated) state
 jq -n --arg ctx "$ALERTS" '{
-  "hookSpecificOutput": {
-    "hookEventName": "PreToolUse",
-    "permissionDecision": "allow",
-    "additionalContext": $ctx
-  }
+  "hook_state": {"pre_work_validator": {"validated": false}},
+  "additionalContext": $ctx
 }'
 
 exit 0

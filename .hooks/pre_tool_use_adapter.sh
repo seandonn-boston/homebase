@@ -41,6 +41,9 @@ if [ "$TOKEN_BUDGET" -gt 0 ]; then
   fi
 fi
 
+# Build enriched payload with session_state for sub-hooks that need it
+ENRICHED_PAYLOAD=$(echo "$PAYLOAD" | jq --argjson state "$STATE" '. + {session_state: $state}')
+
 # --- Sub-hook 2: Scope Boundary Guard (SO-03, isolated) ---
 if [ -x "$SCRIPT_DIR/scope_boundary_guard.sh" ]; then
   SCOPE_OUTPUT=""
@@ -66,13 +69,20 @@ if [ -x "$SCRIPT_DIR/prohibitions_enforcer.sh" ]; then
 fi
 
 # --- Sub-hook 4: Pre-Work Validator (SO-15, isolated) ---
+# Receives enriched payload with session_state; returns hook_state + advisory
 if [ -x "$SCRIPT_DIR/pre_work_validator.sh" ]; then
   PREWORK_OUTPUT=""
-  PREWORK_OUTPUT=$(echo "$PAYLOAD" | "$SCRIPT_DIR/pre_work_validator.sh" 2>/dev/null) || true
+  PREWORK_OUTPUT=$(echo "$ENRICHED_PAYLOAD" | "$SCRIPT_DIR/pre_work_validator.sh" 2>/dev/null) || true
   if [ -n "$PREWORK_OUTPUT" ]; then
-    PREWORK_CTX=$(echo "$PREWORK_OUTPUT" | jq -r '.hookSpecificOutput.additionalContext // empty' 2>/dev/null) || true
+    PREWORK_CTX=$(echo "$PREWORK_OUTPUT" | jq -r '.additionalContext // empty' 2>/dev/null) || true
     if [ -n "$PREWORK_CTX" ]; then
       ALL_CONTEXT+="$PREWORK_CTX "
+    fi
+    # Persist pre_work_validator state if validation passed
+    PW_VALIDATED=$(echo "$PREWORK_OUTPUT" | jq -r '.hook_state.pre_work_validator.validated // empty' 2>/dev/null) || true
+    if [ "$PW_VALIDATED" = "true" ]; then
+      STATE=$(echo "$STATE" | jq '.hook_state.pre_work_validator = {"validated": true}')
+      echo "$STATE" | save_state 2>/dev/null || true
     fi
   fi
 fi
