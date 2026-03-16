@@ -1,6 +1,6 @@
 # Specification Gaps: Vague Behavioral Claims Needing Concrete Constants
 
-> **Status: ALL GAPS RESOLVED (v0.8.1-alpha).** All 14 gaps (7 Critical, 6 Moderate, 1 Minor) have been resolved with concrete thresholds added to their source spec files and mirrored in `reference-constants.md`. This document is retained as a historical record of the gaps and their resolutions.
+> **Status: ALL GAPS RESOLVED (v0.8.1-alpha).** All 14 gaps (7 Critical, 6 Moderate, 1 Minor) have been resolved with concrete thresholds added to their source spec files and mirrored in `reference-constants.md`. This document is retained as a historical record of the gaps and their resolutions. <!-- no-version-sync -->
 >
 > **Audience:** Spec authors and reviewers. This document identifies sections across the Admiral Framework that make behavioral claims without pinning down concrete numbers, thresholds, or constants. Each gap includes the vague phrase, what should be specified, and a suggested value inferred from context.
 
@@ -251,9 +251,9 @@
 
 ~~1. **Next minor (v0.5.0):** Resolve Critical gaps #1–7 by adding concrete constants to the source spec files and mirroring them in `reference-constants.md`.~~
 ~~2. **Following minor (v0.6.0):** Resolve Moderate gaps #8–13 with quantitative thresholds.~~
-~~3. **Ongoing:** Establish a "no vague thresholds" lint rule for spec PRs — every behavioral claim must have a number or explicitly cite another document that provides one.~~ **Deferred (v0.10.0-alpha):** All 14 gaps are resolved and the spec is internally consistent. A lint rule would prevent regression but has low ROI at the current spec maturity level — manual review during spec edits is sufficient. Revisit when spec PRs become frequent enough to warrant automated enforcement.
+~~3. **Ongoing:** Establish a "no vague thresholds" lint rule for spec PRs — every behavioral claim must have a number or explicitly cite another document that provides one.~~ **Deferred (v0.10.0-alpha):** All 14 gaps are resolved and the spec is internally consistent. A lint rule would prevent regression but has low ROI at the current spec maturity level — manual review during spec edits is sufficient. Revisit when spec PRs become frequent enough to warrant automated enforcement. <!-- no-version-sync -->
 
-> **Resolution note (v0.8.1-alpha):** All 14 gaps resolved. Concrete thresholds added to source spec files and mirrored in `reference-constants.md § Spec-Gap Resolved Thresholds`.
+> **Resolution note (v0.8.1-alpha):** All 14 gaps resolved. Concrete thresholds added to source spec files and mirrored in `reference-constants.md § Spec-Gap Resolved Thresholds`. <!-- no-version-sync -->
 
 -----
 

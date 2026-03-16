@@ -8,9 +8,9 @@
 ## Phase 1: Specification Integrity — Task Decomposition [COMPLETE]
 
 ### 1.1 Version Consistency [COMPLETE]
-- [x] Sync `aiStrat/VERSION` → v0.10.0-alpha
-- [x] Update `aiStrat/admiral/spec/index.md` line 5 → v0.10.0-alpha
-- [x] Update `AGENTS.md` line 39 → v0.10.0-alpha
+- [x] Sync `aiStrat/VERSION` → v0.10.0-alpha <!-- no-version-sync -->
+- [x] Update `aiStrat/admiral/spec/index.md` line 5 → v0.10.0-alpha <!-- no-version-sync -->
+- [x] Update `AGENTS.md` line 39 → v0.10.0-alpha <!-- no-version-sync -->
 - [x] Sync PLAN.md, PLAN2.md, sales-pitch version references
 - [ ] Add version cross-check to `spec-validation.yml` CI workflow
 

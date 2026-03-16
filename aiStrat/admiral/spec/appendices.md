@@ -617,7 +617,7 @@ These frameworks handle orchestration (routing, handoffs, tool calls). Admiral a
 
 ### Version Policy
 
-The Admiral Framework uses [semantic versioning](https://semver.org/): **MAJOR.MINOR.PATCH** with pre-release labels (e.g., v0.1.0-alpha, v0.3.1-alpha, v1.0.0).
+The Admiral Framework uses [semantic versioning](https://semver.org/): **MAJOR.MINOR.PATCH** with pre-release labels (e.g., v0.1.0-alpha, v0.3.1-alpha, v1.0.0). <!-- no-version-sync -->
 
 - **MAJOR** (e.g., v0.x → v1.0): Indicates production readiness. Pre-1.0 versions (v0.x.y) are in development — the API surface, Standing Orders, agent definition format, Brain schema, and enforcement model may change without notice. Post-1.0 major bumps indicate breaking changes requiring migration.
 - **MINOR** (e.g., v0.2.0 → v0.3.0): New agent definitions, additional appendices, structural changes, or non-breaking extensions.

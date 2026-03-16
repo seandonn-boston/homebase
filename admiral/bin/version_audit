@@ -1,0 +1,97 @@
+#!/bin/bash
+# Admiral Framework — Version Audit
+# Searches the codebase for version strings and filters out:
+#   1. Files excluded by .rgignore (e.g., CHANGELOG.md)
+#   2. Lines marked with <!-- no-version-sync --> (historical references)
+#
+# Usage:
+#   admiral/bin/version_audit          # audit against current VERSION
+#   admiral/bin/version_audit --all    # show ALL version strings found
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
+VERSION_FILE="$PROJECT_DIR/aiStrat/VERSION"
+
+if [ ! -f "$VERSION_FILE" ]; then
+  echo "ERROR: $VERSION_FILE not found" >&2
+  exit 1
+fi
+
+CURRENT=$(cat "$VERSION_FILE" | tr -d '[:space:]')
+MODE="${1:---check}"
+
+echo "=== Admiral Version Audit ==="
+echo "Source of truth: $CURRENT"
+echo ""
+
+# CI-managed locations that SHOULD contain the current version
+CI_MANAGED=(
+  "aiStrat/admiral/spec/index.md"
+  "aiStrat/AGENTS.md"
+  "README.md"
+  "aiStrat/admiral/spec/appendices.md"
+)
+
+echo "--- CI-managed locations ---"
+for file in "${CI_MANAGED[@]}"; do
+  filepath="$PROJECT_DIR/$file"
+  if [ -f "$filepath" ]; then
+    if grep -q "$CURRENT" "$filepath"; then
+      echo "  OK  $file"
+    else
+      echo "  STALE  $file (does not contain $CURRENT)"
+    fi
+  else
+    echo "  MISSING  $file"
+  fi
+done
+echo ""
+
+# Search for ANY version-like strings, excluding:
+#   - .rgignore'd files (CHANGELOG.md)
+#   - Lines with <!-- no-version-sync -->
+#   - The VERSION file itself
+#   - Binary files, node_modules, .git, dist
+echo "--- Other version references (excluding no-version-sync markers) ---"
+
+PATTERN='v[0-9]+\.[0-9]+\.[0-9]+-[a-z]+'
+
+RESULTS=$(cd "$PROJECT_DIR" && rg "$PATTERN" \
+  --glob '!node_modules' \
+  --glob '!dist' \
+  --glob '!.git' \
+  --glob '!*.jsonl' \
+  --glob '!package-lock.json' \
+  --glob '!aiStrat/VERSION' \
+  --line-number \
+  2>/dev/null | grep -v 'no-version-sync' | grep -v 'CHANGELOG.md' || true)
+
+if [ -z "$RESULTS" ]; then
+  echo "  No unfiltered version references found outside CI-managed files."
+else
+  # Separate current-version matches from stale matches
+  STALE=$(echo "$RESULTS" | grep -v "$CURRENT" || true)
+  CURRENT_MATCHES=$(echo "$RESULTS" | grep "$CURRENT" || true)
+
+  if [ "$MODE" = "--all" ]; then
+    if [ -n "$CURRENT_MATCHES" ]; then
+      echo ""
+      echo "  Current version matches:"
+      echo "$CURRENT_MATCHES" | sed 's/^/    /'
+    fi
+  fi
+
+  if [ -n "$STALE" ]; then
+    echo ""
+    echo "  STALE version references (not matching $CURRENT):"
+    echo "$STALE" | sed 's/^/    /'
+    echo ""
+    echo "  To suppress a historical reference, add <!-- no-version-sync --> to that line."
+  else
+    echo "  No stale version references found."
+  fi
+fi
+
+echo ""
+echo "=== Audit complete ==="

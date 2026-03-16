@@ -50,6 +50,7 @@ aiStrat is the **Admiral Framework** — a comprehensive specification for AI ag
   - `README.md` — framework version in repo description
   - `aiStrat/admiral/spec/appendices.md` — footer version
 - **Manual bumps** are not needed. If you must bump manually, update `aiStrat/VERSION` only — CI will propagate on next merge.
+- **Historical version references** (e.g., "this analysis was performed at v0.5.3-alpha") must include the inline marker `<!-- no-version-sync -->` on the same line. This tells `admiral/bin/version_audit` to skip them during version consistency checks. Without the marker, stale version strings will be flagged as errors.
 - Per-file version comments (`<!-- Admiral Framework vX.Y.Z -->`) are legacy and no longer enforced by CI. Do not add them to new files.
 - **MANIFEST.md** is the semantic file catalog. Update it when files are added, removed, renamed, or when their content changes materially.
 
