@@ -2,7 +2,8 @@
 
 **Date:** March 16, 2026
 **Type:** Spec gap analysis — what the failure mode analysis reveals about missing framework concepts
-**Status:** Draft — requires discussion before any spec modifications
+**Status:** Approved — conservative position adopted. See "Revised Position" section below.
+**Decision:** Keep readiness assessment, preparation phase, failure modes, anti-patterns. Drop agent-led discovery mode, reconnaissance phase, and Stage 0. Ground Truth creation is a human responsibility.
 
 ---
 
@@ -267,22 +268,46 @@ Not every gap requires a spec change. Some things are better handled in document
 
 ---
 
-## Summary: The Five Spec Changes
+## ~~Summary: The Five Spec Changes~~ (Superseded — see Revised Position below)
 
-| Change | Spec Location | Impact | New Concept |
+~~| Change | Spec Location | Impact | New Concept |~~
+~~|---|---|---|---|~~
+~~| **Project Readiness Levels** | Part 1 (before Strategy Triangle) | Low | Ready / Partially Ready / Not Ready |~~
+~~| **Ground Truth Discovery Mode** | Part 2 (after Ground Truth) | Medium | Archaeology, extraction, incremental patterns |~~
+~~| **Reconnaissance Phase (Phase 0)** | Part 6 (before Requirements) | Medium | Read-only fleet exploration |~~
+~~| **Preparation Lifecycle Phase** | Part 8 (before Standup) | Medium | Pre-deployment readiness activities |~~
+~~| **Discovery Stage (Stage 0)** | Progressive Autonomy extension | Low | Pre-operational fleet mode |~~
+
+---
+
+## Revised Position (Approved)
+
+After critical review, three of the five proposals were identified as dangerous — they contradict the spec's core thesis ("deterministic enforcement beats advisory guidance") by deploying agents in judgment-heavy, context-poor situations where enforcement has nothing to enforce.
+
+### What We're Implementing
+
+| Change | Spec Location | Impact | Status |
 |---|---|---|---|
-| **Project Readiness Levels** | Part 1 (before Strategy Triangle) | Low | Ready / Partially Ready / Not Ready |
-| **Ground Truth Discovery Mode** | Part 2 (after Ground Truth) | Medium | Archaeology, extraction, incremental patterns |
-| **Reconnaissance Phase (Phase 0)** | Part 6 (before Requirements) | Medium | Read-only fleet exploration |
-| **Preparation Lifecycle Phase** | Part 8 (before Standup) | Medium | Pre-deployment readiness activities |
-| **Discovery Stage (Stage 0)** | Progressive Autonomy extension | Low | Pre-operational fleet mode |
+| **Project Readiness Assessment** | Part 1 (before Strategy Triangle) | Low | **Implementing** |
+| **5 new failure modes** | Part 7 (Failure Mode Catalog) | Low | **Implementing** |
+| **Preparation lifecycle phase** | Part 8 (before Standup) | Medium | **Implementing** (human-led, scoped down) |
+| **Step 0 readiness check** | Appendix A (Pre-Flight Checklist) | Low | **Implementing** |
+| **Anti-patterns for agent-led discovery** | Parts 1, 2, Progressive Autonomy | Low | **Implementing** |
 
-Plus supporting updates:
-- Part 3: graduated enforcement for incomplete Ground Truth
-- Part 7: 5 new failure modes for incomplete Ground Truth operations
-- Appendix A: Step 0 readiness assessment
-- Index: readiness qualifier on Quick-Start Profiles
+### What We're NOT Implementing (and Why)
 
-**The philosophical shift:** Admiral currently says "give me Ground Truth and I'll govern your fleet." The revised spec says "tell me what you know and I'll help you figure out the rest — then govern your fleet." The framework becomes the on-ramp, not just the highway.
+| Proposal | Why Dropped |
+|---|---|
+| **Ground Truth Discovery Mode** (Part 2) | An agent discovering Ground Truth without Ground Truth is the most dangerous agent in the fleet pretending to be the safest. Convention Inference from code patterns treats historical accidents as intentional decisions. The "because" behind decisions — the intent — cannot be found in code. Ground Truth creation is a human responsibility. |
+| **Reconnaissance Phase / Phase 0** (Part 6) | Creates false confidence. Agent produces a structured codebase map, human trusts it, but the map reflects what the agent understood — not what actually exists. The gap between those is exactly where legacy projects are most dangerous. If a human can't understand the codebase, an agent can't either — it just sounds more confident about its misunderstanding. |
+| **Discovery Stage / Stage 0** (Progressive Autonomy) | Stage 1 (Manual Oversight) already covers the right posture: all decisions Propose/Escalate, agents recommend, humans decide. A separate Stage 0 adds complexity without adding safety. The human should do Ground Truth work while running Stage 1. |
+
+### The Revised Philosophy
+
+Instead of: *"Tell me what you know and I'll help you figure out the rest."*
+
+The spec says: *"Tell me what you know. If it's not enough, here's exactly what's missing and why you (the human) need to figure it out before I can help. Once you do, I'll make sure nobody forgets it."*
+
+The framework is the on-ramp AND the highway — but the human drives onto the on-ramp. The fleet doesn't pull them on.
 
 ---

@@ -245,4 +245,6 @@ Stage reversions are not failures. They are the system working correctly — det
 
 > **ANTI-PATTERN: STAGE WITHOUT INFRASTRUCTURE** — Declaring Stage 3 without having the Fleet Control Plane, governance agents, or automated quality gates. The stage is meaningless without the infrastructure that makes it safe. You are not at Stage 3 because you decided to stop reviewing. You are at Stage 3 because the system reviews for you.
 
+> **ANTI-PATTERN: DISCOVERY STAGE (STAGE 0)** — Creating a pre-operational stage where the fleet "discovers" Ground Truth before beginning real work. Stage 1 (Manual Oversight) already provides the right posture: all decisions are Propose/Escalate, agents recommend, humans decide. A separate Stage 0 adds complexity without adding safety. The human should create Ground Truth during the Preparation phase (Fleet Scaling & Lifecycle, Part 8), then deploy the fleet at Stage 1 with that Ground Truth loaded. Agents cannot discover their own operating context — they can only operate within context the Admiral provides. If Ground Truth is insufficient for Stage 1, the answer is more human preparation, not a lower stage.
+
 -----

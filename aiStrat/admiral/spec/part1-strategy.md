@@ -8,6 +8,44 @@
 
 -----
 
+## Project Readiness Assessment
+
+> **TL;DR** — Before filling in the Strategy Triangle, assess whether you *can* fill it in. Ground Truth is an input to Admiral, not an output. If you cannot define Mission, Boundaries, and Success Criteria, you are not ready to deploy a fleet — you are ready to do the human work that makes deployment possible.
+
+The Strategy Triangle (Mission → Boundaries → Success Criteria) is the foundation everything else builds on. But the triangle assumes a critical precondition: **someone can articulate what this project is, what it is not, and what "done" looks like.** For many real-world projects, that precondition is not met.
+
+### Three Readiness States
+
+| Readiness State | Ground Truth Status | What the Admiral (Human) Must Do | What Admiral (Framework) Can Do |
+|---|---|---|---|
+| **Ready** | Mission, Boundaries, Success Criteria defined. Tech stack chosen. Conventions documented. Quality gates operational (CI, tests, linting). | Proceed to fleet deployment at any profile. | Full fleet operations. All enforcement. All governance. |
+| **Partially Ready** | Some Ground Truth exists but is incomplete, undocumented, or out of date. Common for existing projects with tribal knowledge or outdated docs. | Document the undocumented. Verify existing docs match reality. Establish quality gates where missing. | Starter profile only. Enforcement limited to universal constraints (budget, loops, basic prohibitions). No convention enforcement until conventions are documented. |
+| **Not Ready** | No documented Ground Truth. Greenfield with no decisions made, or legacy with no maintainers and no documentation. | Create Ground Truth from scratch. For greenfield: make and document foundational decisions (tech stack, architecture, conventions). For legacy: study the codebase, interview stakeholders if any exist, write characterization tests. | Nothing useful. The fleet cannot govern what is not defined. Deploying Admiral here produces Governance Theater — hooks enforcing nothing, agents operating without context, false confidence from structured output. |
+
+### Why "Not Ready" Cannot Be Solved by Agents
+
+Ground Truth creation requires:
+
+- **Strategic judgment:** "What are we building and why?" — requires understanding market, users, and organizational goals.
+- **Historical context:** "Why was this decision made?" — requires access to the humans who made it, or at minimum their written rationale. Code shows *what* was done, not *why*.
+- **Organizational knowledge:** "Who owns what? What's politically sensitive? What's sacred?" — requires social and institutional context no agent possesses.
+- **Intent discrimination:** "Is this pattern a convention or an accident?" — requires understanding whether observed behavior was intentional. An agent analyzing code can count occurrences but cannot determine intent. See Convention Inference (failure mode #21, Part 7).
+
+These are exactly the capabilities Part 10 (Human-Expert Routing) identifies as requiring human judgment. Ground Truth creation hits every trigger. The framework's own philosophy — that human judgment is irreplaceable for strategy, ethics, novel architecture, and institutional knowledge — applies to the creation of the framework's own inputs.
+
+### The Preparation Path
+
+Projects in the "Partially Ready" or "Not Ready" state enter a **Preparation phase** (see Fleet Scaling & Lifecycle, Part 8) before fleet deployment:
+
+1. **Assess:** Which readiness state is this project in? Use the Step 0 questions in the Pre-Flight Checklist (Appendix A).
+2. **Prepare:** The Admiral (human) creates or completes Ground Truth. For existing projects, this may involve documenting conventions, establishing CI/CD, writing characterization tests, and interviewing team members. For greenfield, this means making and recording foundational decisions.
+3. **Verify:** Run the Starter Pre-Flight Checklist. If Mission, Boundaries, and Success Criteria are checkable, proceed. If not, continue preparation.
+4. **Deploy:** Enter the Standup lifecycle phase with a Starter profile.
+
+> **ANTI-PATTERN: AGENT-LED GROUND TRUTH CREATION** — Deploying a fleet to "discover" Ground Truth for a project where no human can articulate it. The agent infers conventions from code patterns, treating historical accidents as intentional decisions. It produces a structured, confident-sounding Ground Truth document. The human trusts it because it's well-formatted. The enforcement layer now enforces wrong rules. This is worse than having no Ground Truth — it's false confidence with deterministic enforcement behind it. Ground Truth creation is a human responsibility. The Brain preserves and extends Ground Truth; it does not create it.
+
+-----
+
 ## Mission
 
 > **TL;DR** — One sentence that defines what you're building. One sentence that defines success. Without these, every agent decision drifts.
