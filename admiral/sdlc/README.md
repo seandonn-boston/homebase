@@ -69,6 +69,59 @@ The `sdlc-review.yml` workflow fires on the PR. It:
 
 Agent-authored PRs are never auto-merged to main. A human must review and merge.
 
+## Identity Provenance
+
+**Non-negotiable rule:** LLMs must never impersonate humans. Humans may impersonate agents.
+
+Every agent action in the SDLC loop carries identity markers at three levels:
+
+### 1. Git Identity (commit-level)
+
+Agent commits use dedicated bot identities that are clearly non-human:
+
+| Role | `user.name` | `user.email` |
+|---|---|---|
+| Implementation agent | `claude-agent[bot]` | `claude-agent[bot]@users.noreply.github.com` |
+| Review agent | `claude-reviewer[bot]` | `claude-reviewer[bot]@users.noreply.github.com` |
+
+These are set in the workflow before any git operations. `git log --format='%an <%ae>'` on any agent branch will show the bot identity.
+
+### 2. Commit Trailer (message-level)
+
+Every agent commit includes the trailer `Author-Type: agent` in the commit message body:
+
+```
+feat: add widget parser for issue #42
+
+Author-Type: agent
+```
+
+This is machine-parseable via `git log --format='%(trailers:key=Author-Type)'` and enables automated auditing across the entire commit history.
+
+### 3. PR & Review Attribution (GitHub-level)
+
+- PRs created by agents include an **Identity Attestation** table in the body with author type, agent name, git identity, and workflow run ID
+- Review comments from agents include the same attestation table
+- The `agent:authored` label marks all agent-created PRs
+- The GitHub Actions run ID links every PR and review to the specific CI execution
+
+### How to Verify
+
+```bash
+# Check if a commit was authored by an agent
+git log --format='%H %an' | grep 'bot]'
+
+# Extract Author-Type trailers from commit history
+git log --format='%H %(trailers:key=Author-Type,valueonly)'
+
+# List all agent-authored PRs
+gh pr list --label agent:authored
+```
+
+### Configuration
+
+Identity settings are defined in `loop-config.json` under the `identity` key. Changes to identity policy are **Escalate-tier** — they require human approval.
+
 ## Circuit Breaker
 
 The circuit breaker (`circuit-breaker.sh`) runs before every agent invocation. It checks:
