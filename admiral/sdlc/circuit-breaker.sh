@@ -44,7 +44,7 @@ TOKENS_SPENT=0
 if [ -f "$EVENT_LOG" ]; then
   if [ -n "$TRACE_ID" ]; then
     # Sum tokens from events matching this trace
-    TOKENS_SPENT=$({ grep "\"trace_id\":\"$TRACE_ID\"" "$EVENT_LOG" 2>/dev/null || true; } \
+    TOKENS_SPENT=$(grep "\"trace_id\":\"$TRACE_ID\"" "$EVENT_LOG" 2>/dev/null \
       | jq -r '.tokens_used // 0' 2>/dev/null \
       | awk '{s+=$1} END {print s+0}')
   else
@@ -69,8 +69,8 @@ VIOLATION_COUNT=0
 
 if [ -f "$EVENT_LOG" ]; then
   if [ -n "$TRACE_ID" ]; then
-    VIOLATION_COUNT=$({ grep "\"trace_id\":\"$TRACE_ID\"" "$EVENT_LOG" 2>/dev/null || true; } \
-      | { grep '"event":"policy_violation"' 2>/dev/null || true; } \
+    VIOLATION_COUNT=$(grep "\"trace_id\":\"$TRACE_ID\"" "$EVENT_LOG" 2>/dev/null \
+      | grep '"event":"policy_violation"' 2>/dev/null \
       | wc -l)
   else
     # Check for any policy violations in last hour
