@@ -1,11 +1,11 @@
 # PLAN.md — Admiral Framework Implementation Plan
 
 **Last Updated:** 2026-03-16
-**Status:** Phase 1 Complete
+**Status:** Phase 3 Complete
 
 ---
 
-## Current Phase: Reference Implementation Wedge
+## Current Phase: IP Protection
 
 ### Phase 1: Specification Integrity (Complete — Weeks 1-4)
 
@@ -33,26 +33,26 @@
 | Walk-away analysis for top 50 | Complete | deal-walkaway-analysis.md: structural vs. temporal walk-aways, cross-scenario comparison, factor distribution |
 | Trend monitoring infrastructure | Complete | monitor.sh: quarterly/monthly re-score pipeline with snapshot.sh, diff.sh, and alert generation |
 
-### Phase 3: Reference Implementation Wedge (Current — Weeks 4-12)
+### Phase 3: Reference Implementation Wedge (Complete — Weeks 4-12)
 
 **Objective:** Wire hooks to control plane, prove single-agent observability, demonstrate the wedge.
 
 | Milestone | Status | Exit Criteria |
 |---|---|---|
-| Hooks → control plane connected | Not Started | Event log ingested by control plane |
-| Dashboard renders real data | Not Started | Session state, budget, hooks, alerts visible |
-| Brain B1 round-trip tested | Not Started | Record → query → retrieve verified |
-| 5 starter agent configs created | Not Started | .claude/agents/*.md following prompt-anatomy |
-| Traced multi-agent session documented | Not Started | Full session trace in admiral/examples/ |
+| Hooks → control plane connected | Complete | Event log ingested by `control-plane/src/ingest.ts` JournalIngester; CLI entry point in `control-plane/src/cli.ts` |
+| Dashboard renders real data | Complete | Session state, budget, hooks, alerts visible in `control-plane/src/dashboard/index.html` |
+| Brain B1 round-trip tested | Complete | Record → query → retrieve verified; 13/13 assertions pass in `admiral/tests/test_brain_b1.sh`; `.brain/` seeded |
+| 7 starter agent configs created | Complete | 7 configs in `.claude/agents/` (orchestrator, backend-implementer, qa, architect, context-curator, security, triage) — exceeds 5-config target |
+| Traced multi-agent session documented | Complete | Full session trace in `admiral/examples/traced-session.md` with runner script `traced-session-runner.sh` |
 | SDLC-in-CI loop operational | Not Started | Issue label triggers autonomous implement→review→revise cycle with circuit breakers; see `admiral/sdlc/` |
 
-### Phase 4: IP Protection (Months 1-6)
+### Phase 4: IP Protection (Current — Months 1-6)
 
 **Objective:** File provisional patents on core innovations, begin trademark process.
 
 | Milestone | Status | Exit Criteria |
 |---|---|---|
-| Invention dates documented | Not Started | Git history extracted for all 23 opportunities |
+| Invention dates documented | Complete | Git history extracted for 21/23 opportunities; `research/invention-dates.md` generated with earliest commit dates per innovation; extraction script at `research/extract-invention-dates.sh` |
 | Provisional #1 filed (Enforcement Spectrum) | Not Started | Filed with patent counsel |
 | Provisional #2 filed (Brain Architecture) | Not Started | Filed with patent counsel |
 | Provisional #3 filed (Intent Engineering or Agent Identity) | Not Started | Filed with patent counsel |

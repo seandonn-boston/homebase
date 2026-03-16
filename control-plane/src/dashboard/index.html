@@ -222,58 +222,85 @@
       padding: 32px;
     }
 
-    /* Session State Bar */
-    .session-bar {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 12px 24px;
-      display: flex;
-      gap: 32px;
-      align-items: center;
-      font-size: 12px;
+    /* Session State Panel */
+    .session-panel { grid-column: 1 / -1; }
+
+    .session-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
     }
 
-    .session-bar .session-field {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
+    .session-card {
+      background: var(--surface-2);
+      border-radius: 6px;
+      padding: 12px;
     }
 
-    .session-bar .field-label {
-      color: var(--text-dim);
+    .session-card .card-label {
       font-size: 10px;
       text-transform: uppercase;
       letter-spacing: 0.05em;
+      color: var(--text-dim);
+      margin-bottom: 4px;
     }
 
-    .session-bar .field-value {
-      color: var(--text);
-      font-size: 13px;
-      font-weight: 600;
+    .session-card .card-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--accent);
     }
 
-    .budget-bar-container {
-      flex: 1;
-      max-width: 300px;
-    }
+    .session-card .card-value.warn { color: var(--yellow); }
+    .session-card .card-value.crit { color: var(--red); }
+    .session-card .card-value.ok { color: var(--green); }
 
     .budget-bar {
+      width: 100%;
       height: 8px;
-      background: var(--surface-2);
+      background: var(--bg);
       border-radius: 4px;
+      margin-top: 8px;
       overflow: hidden;
-      margin-top: 4px;
     }
 
     .budget-bar-fill {
       height: 100%;
       border-radius: 4px;
-      transition: width 0.3s ease, background 0.3s ease;
+      transition: width 0.3s ease;
     }
 
-    .budget-bar-fill.ok { background: var(--green); }
-    .budget-bar-fill.warn { background: var(--yellow); }
-    .budget-bar-fill.critical { background: var(--red); }
+    .context-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+
+    .context-tag {
+      background: var(--bg);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      color: var(--green);
+      border: 1px solid var(--green);
+    }
+
+    .hook-state-list {
+      font-size: 12px;
+      list-style: none;
+    }
+
+    .hook-state-list li {
+      padding: 3px 0;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--bg);
+    }
+
+    .hook-state-list .hook-name { color: var(--text-dim); }
+    .hook-state-list .hook-val { color: var(--text); }
   </style>
 </head>
 <body>
@@ -287,27 +314,35 @@
     </div>
   </header>
 
-  <!-- Session State -->
-  <div class="session-bar" id="session-bar" style="display:none">
-    <div class="session-field">
-      <span class="field-label">Session</span>
-      <span class="field-value" id="session-id">—</span>
-    </div>
-    <div class="session-field">
-      <span class="field-label">Tool Calls</span>
-      <span class="field-value" id="session-tools">0</span>
-    </div>
-    <div class="session-field budget-bar-container">
-      <span class="field-label">Token Budget <span id="budget-text">—</span></span>
-      <div class="budget-bar"><div class="budget-bar-fill ok" id="budget-fill" style="width:0%"></div></div>
-    </div>
-    <div class="session-field">
-      <span class="field-label">Hooks Fired</span>
-      <span class="field-value" id="session-hooks">0</span>
-    </div>
-  </div>
-
   <div class="grid">
+    <!-- Session State -->
+    <div class="panel session-panel" id="session-panel">
+      <div class="panel-header">
+        Session State
+        <span class="count" id="session-id">--</span>
+      </div>
+      <div class="session-grid" id="session-grid">
+        <div class="session-card">
+          <div class="card-label">Token Budget</div>
+          <div class="card-value" id="budget-value">--</div>
+          <div class="budget-bar"><div class="budget-bar-fill" id="budget-fill" style="width:0%;background:var(--green)"></div></div>
+        </div>
+        <div class="session-card">
+          <div class="card-label">Tool Calls</div>
+          <div class="card-value" id="tool-call-value">0</div>
+        </div>
+        <div class="session-card">
+          <div class="card-label">Standing Context</div>
+          <div class="card-value ok" id="context-tokens">--</div>
+          <div class="context-tags" id="context-tags"></div>
+        </div>
+        <div class="session-card">
+          <div class="card-label">Hook State</div>
+          <ul class="hook-state-list" id="hook-state-list"></ul>
+        </div>
+      </div>
+    </div>
+
     <!-- Event Stream -->
     <div class="panel">
       <div class="panel-header">
@@ -469,22 +504,68 @@
 
     function renderSession(session) {
       if (!session || session.error) return;
-      const bar = document.getElementById('session-bar');
-      bar.style.display = 'flex';
 
-      const sid = session.session_id || '—';
-      document.getElementById('session-id').textContent = sid.substring(0, 8);
-      document.getElementById('session-tools').textContent = session.tool_call_count || 0;
+      // Session ID
+      document.getElementById('session-id').textContent =
+        session.session_id ? session.session_id.slice(0, 12) + '...' : '--';
 
-      const used = session.tokens_used || 0;
-      const budget = session.token_budget || 0;
-      const pct = budget > 0 ? Math.min(100, (used / budget) * 100) : 0;
-      const fill = document.getElementById('budget-fill');
-      fill.style.width = budget > 0 ? pct + '%' : '0%';
-      fill.className = 'budget-bar-fill ' + (pct > 90 ? 'critical' : pct > 70 ? 'warn' : 'ok');
-      document.getElementById('budget-text').textContent = budget > 0
-        ? `${used.toLocaleString()} / ${budget.toLocaleString()}`
-        : `${used.toLocaleString()} (no budget set)`;
+      // Token budget
+      const tokensUsed = session.tokens_used || 0;
+      const tokenBudget = session.token_budget || 0;
+      const budgetEl = document.getElementById('budget-value');
+      const fillEl = document.getElementById('budget-fill');
+
+      if (tokenBudget > 0) {
+        const pct = Math.min(100, Math.round(tokensUsed * 100 / tokenBudget));
+        budgetEl.textContent = `${tokensUsed.toLocaleString()} / ${tokenBudget.toLocaleString()}`;
+        fillEl.style.width = pct + '%';
+        if (pct >= 90) {
+          budgetEl.className = 'card-value crit';
+          fillEl.style.background = 'var(--red)';
+        } else if (pct >= 80) {
+          budgetEl.className = 'card-value warn';
+          fillEl.style.background = 'var(--yellow)';
+        } else {
+          budgetEl.className = 'card-value ok';
+          fillEl.style.background = 'var(--green)';
+        }
+      } else {
+        budgetEl.textContent = `${tokensUsed.toLocaleString()} (no limit)`;
+        budgetEl.className = 'card-value';
+        fillEl.style.width = '0%';
+      }
+
+      // Tool calls
+      document.getElementById('tool-call-value').textContent = session.tool_call_count || 0;
+
+      // Standing context
+      const ctx = session.context || {};
+      document.getElementById('context-tokens').textContent =
+        (ctx.standing_context_tokens || 0).toLocaleString() + ' tokens';
+
+      const tagsEl = document.getElementById('context-tags');
+      const present = ctx.standing_context_present || [];
+      tagsEl.innerHTML = present.map(t => `<span class="context-tag">${t}</span>`).join('');
+
+      // Hook state summary
+      const hookList = document.getElementById('hook-state-list');
+      const hs = session.hook_state || {};
+      const items = [];
+      if (hs.loop_detector) {
+        items.push({ name: 'Loop Errors', val: hs.loop_detector.total_errors || 0 });
+      }
+      if (hs.self_healing) {
+        items.push({ name: 'Self-Heal Retries', val: hs.self_healing.total_retries || 0 });
+      }
+      if (hs.brain_context_router) {
+        items.push({ name: 'Brain Queries', val: hs.brain_context_router.brain_queries_count || 0 });
+      }
+      if (hs.zero_trust) {
+        items.push({ name: 'External Data', val: hs.zero_trust.external_data_count || 0 });
+      }
+      hookList.innerHTML = items.map(i =>
+        `<li><span class="hook-name">${i.name}</span><span class="hook-val">${i.val}</span></li>`
+      ).join('');
     }
 
     async function refresh() {
@@ -497,12 +578,11 @@
           fetchJSON('/api/session'),
         ]);
 
+        renderSession(session);
         renderEvents(events);
         renderAlerts(alerts);
         renderTrace(ascii);
         renderStats(stats);
-        renderSession(session);
-        document.getElementById('session-hooks').textContent = events.length;
       } catch (e) {
         // Server may not be ready yet
       }
