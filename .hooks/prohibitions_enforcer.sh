@@ -2,7 +2,8 @@
 # Admiral Framework — Prohibitions Enforcer (PreToolUse)
 # Enforces SO-10: What You Must Never Do
 # Detects violations of prohibition rules beyond budget (handled by token_budget_tracker).
-# Advisory only — emits warnings but NEVER hard-blocks (always exit 0).
+# Hard-blocks (exit 2) on bypass and irreversible patterns.
+# Advisory (exit 0) on secrets detection (false-positive risk too high to block).
 # Timeout: 5s
 set -euo pipefail
 
@@ -15,12 +16,13 @@ PAYLOAD=$(cat)
 
 TOOL_NAME=$(echo "$PAYLOAD" | jq -r '.tool_name // "unknown"')
 ALERTS=""
+HARD_BLOCK=false
 
 # --- Rule: Never bypass or disable enforcement mechanisms ---
 if [ "$TOOL_NAME" = "Bash" ]; then
   COMMAND=$(echo "$PAYLOAD" | jq -r '.tool_input.command // ""')
 
-  # Detect hook/linter/CI bypass patterns
+  # Detect hook/linter/CI bypass patterns → HARD BLOCK
   BYPASS_PATTERNS=(
     "--no-verify"
     "--no-gpg-sign"
@@ -35,11 +37,12 @@ if [ "$TOOL_NAME" = "Bash" ]; then
   for PATTERN in "${BYPASS_PATTERNS[@]}"; do
     if echo "$COMMAND" | grep -qiE -- "$PATTERN"; then
       ALERTS+="PROHIBITION (SO-10): Command matches bypass pattern '${PATTERN}'. Never bypass or disable enforcement mechanisms. "
+      HARD_BLOCK=true
       break
     fi
   done
 
-  # --- Rule: Never store secrets, credentials, or PII ---
+  # --- Rule: Never store secrets, credentials, or PII → ADVISORY ONLY ---
   SECRET_PATTERNS=(
     'password\s*='
     'api_key\s*='
@@ -58,7 +61,7 @@ if [ "$TOOL_NAME" = "Bash" ]; then
     fi
   done
 
-  # --- Rule: Never make irreversible changes without explicit approval ---
+  # --- Rule: Never make irreversible changes → HARD BLOCK ---
   IRREVERSIBLE_PATTERNS=(
     "rm -rf"
     "git reset --hard"
@@ -72,13 +75,14 @@ if [ "$TOOL_NAME" = "Bash" ]; then
   )
   for PATTERN in "${IRREVERSIBLE_PATTERNS[@]}"; do
     if echo "$COMMAND" | grep -qiE -- "$PATTERN"; then
-      ALERTS+="PROHIBITION (SO-10): Command is potentially irreversible ('${PATTERN}'). Confirm explicit approval before proceeding. "
+      ALERTS+="PROHIBITION (SO-10): Command is potentially irreversible ('${PATTERN}'). This action has been blocked. "
+      HARD_BLOCK=true
       break
     fi
   done
 fi
 
-# --- Rule: Never store secrets in files ---
+# --- Rule: Never store secrets in files → ADVISORY ONLY ---
 if [ "$TOOL_NAME" = "Write" ] || [ "$TOOL_NAME" = "Edit" ]; then
   FILE_PATH=$(echo "$PAYLOAD" | jq -r '.tool_input.file_path // ""')
   CONTENT=""
@@ -101,7 +105,18 @@ if [ "$TOOL_NAME" = "Write" ] || [ "$TOOL_NAME" = "Edit" ]; then
   esac
 fi
 
-# Emit advisory if any alerts
+# Emit output based on severity
+if [ "$HARD_BLOCK" = "true" ]; then
+  jq -n --arg ctx "$ALERTS" '{
+    "hookSpecificOutput": {
+      "hookEventName": "PreToolUse",
+      "permissionDecision": "deny",
+      "additionalContext": $ctx
+    }
+  }'
+  exit 2
+fi
+
 if [ -n "$ALERTS" ]; then
   jq -n --arg ctx "$ALERTS" '{
     "hookSpecificOutput": {

@@ -6,8 +6,8 @@
  */
 
 import { createAdmiral } from "./index";
-import { AdmiralServer } from "./server";
 import { JournalIngester } from "./ingest";
+import { AdmiralServer } from "./server";
 
 function parseArgs(args: string[]): { projectDir: string; port: number } {
   let projectDir = process.cwd();
@@ -17,7 +17,7 @@ function parseArgs(args: string[]): { projectDir: string; port: number } {
     if (args[i] === "--project-dir" && args[i + 1]) {
       projectDir = args[++i];
     } else if (args[i] === "--port" && args[i + 1]) {
-      port = parseInt(args[++i], 10);
+      port = Number.parseInt(args[++i], 10);
     }
   }
 
@@ -27,7 +27,7 @@ function parseArgs(args: string[]): { projectDir: string; port: number } {
 async function main(): Promise<void> {
   const { projectDir, port } = parseArgs(process.argv.slice(2));
 
-  console.log(`Admiral Control Plane`);
+  console.log("Admiral Control Plane");
   console.log(`  Project: ${projectDir}`);
   console.log(`  Port:    ${port}`);
   console.log();
@@ -39,7 +39,7 @@ async function main(): Promise<void> {
   // Start JSONL ingester
   const ingester = new JournalIngester(projectDir, admiral.stream);
   ingester.start();
-  console.log(`  Ingesting: .admiral/event_log.jsonl`);
+  console.log("  Ingesting: .admiral/event_log.jsonl");
 
   // Start HTTP server
   await server.start(port);

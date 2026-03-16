@@ -6,9 +6,9 @@
  * running when events were emitted.
  */
 
-import * as fs from "fs";
-import * as path from "path";
-import { EventStream } from "./events";
+import * as fs from "node:fs";
+import * as path from "node:path";
+import type { EventStream } from "./events";
 
 /** Raw event shape as emitted by hooks */
 interface HookEvent {
@@ -70,12 +70,22 @@ function extractData(raw: HookEvent): Record<string, unknown> {
   return data;
 }
 
+export interface IngesterStats {
+  ingested: number;
+  malformedLines: number;
+  readErrors: number;
+  offset: number;
+}
+
 export class JournalIngester {
   private eventLogPath: string;
   private stream: EventStream;
-  private offset: number = 0;
+  private offset = 0;
   private watcher: fs.StatWatcher | null = null;
   private pollInterval: ReturnType<typeof setInterval> | null = null;
+  private totalIngested = 0;
+  private malformedLines = 0;
+  private readErrors = 0;
 
   constructor(projectDir: string, stream: EventStream) {
     this.eventLogPath = path.join(projectDir, ".admiral", "event_log.jsonl");
@@ -86,7 +96,7 @@ export class JournalIngester {
    * Start watching the event log file.
    * Ingests any existing events first, then watches for new ones.
    */
-  start(pollMs: number = 1000): void {
+  start(pollMs = 1000): void {
     // Ingest existing events
     this.ingestNewLines();
 
@@ -149,22 +159,43 @@ export class JournalIngester {
             raw.agent_id || "claude-code",
             raw.agent_name || "Claude Code Agent",
             type as Parameters<EventStream["emit"]>[2],
-            data
+            data,
           );
           ingested++;
         } catch {
-          // Skip malformed lines
+          this.malformedLines++;
+          if (this.malformedLines === 1) {
+            console.error(
+              `[admiral-ingester] First malformed line at offset ${this.offset}: ${line.slice(0, 120)}`,
+            );
+          }
         }
       }
-    } catch {
-      // File may be in mid-write; retry next poll
+    } catch (err) {
+      this.readErrors++;
+      if (this.readErrors === 1) {
+        console.error(
+          `[admiral-ingester] First read error: ${err instanceof Error ? err.message : String(err)}`,
+        );
+      }
     }
 
+    this.totalIngested += ingested;
     return ingested;
   }
 
   /** Get current file offset (for diagnostics) */
   getOffset(): number {
     return this.offset;
+  }
+
+  /** Get ingester health stats */
+  getStats(): IngesterStats {
+    return {
+      ingested: this.totalIngested,
+      malformedLines: this.malformedLines,
+      readErrors: this.readErrors,
+      offset: this.offset,
+    };
   }
 }

@@ -2,8 +2,8 @@
 # Admiral Framework — PreToolUse Hook Adapter
 # Translates Claude Code PreToolUse payload to Admiral hook contracts.
 # Dispatches to: budget checkpoint, scope_boundary_guard, prohibitions_enforcer, pre_work_validator
-# NEVER hard-blocks (exit 2) — prevents unrecoverable deadlocks.
-# All sub-hooks are isolated — one failure cannot cascade.
+# Propagates hard-blocks (exit 2) from prohibitions_enforcer for bypass/irreversible patterns.
+# All other sub-hooks remain advisory (exit 0). Sub-hook failures are isolated.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -44,10 +44,13 @@ fi
 # Build enriched payload with session_state for sub-hooks that need it
 ENRICHED_PAYLOAD=$(echo "$PAYLOAD" | jq --argjson state "$STATE" '. + {session_state: $state}')
 
+# Ensure hook error log directory exists
+mkdir -p "$PROJECT_DIR/.admiral"
+
 # --- Sub-hook 2: Scope Boundary Guard (SO-03, isolated) ---
 if [ -x "$SCRIPT_DIR/scope_boundary_guard.sh" ]; then
   SCOPE_OUTPUT=""
-  SCOPE_OUTPUT=$(echo "$PAYLOAD" | "$SCRIPT_DIR/scope_boundary_guard.sh" 2>/dev/null) || true
+  SCOPE_OUTPUT=$(echo "$PAYLOAD" | "$SCRIPT_DIR/scope_boundary_guard.sh" 2>>"$PROJECT_DIR/.admiral/hook_errors.log") || true
   if [ -n "$SCOPE_OUTPUT" ]; then
     SCOPE_CTX=$(echo "$SCOPE_OUTPUT" | jq -r '.hookSpecificOutput.additionalContext // empty' 2>/dev/null) || true
     if [ -n "$SCOPE_CTX" ]; then
@@ -56,14 +59,20 @@ if [ -x "$SCRIPT_DIR/scope_boundary_guard.sh" ]; then
   fi
 fi
 
-# --- Sub-hook 3: Prohibitions Enforcer (SO-10, isolated) ---
+# --- Sub-hook 3: Prohibitions Enforcer (SO-10, can hard-block) ---
 if [ -x "$SCRIPT_DIR/prohibitions_enforcer.sh" ]; then
   PROHIB_OUTPUT=""
-  PROHIB_OUTPUT=$(echo "$PAYLOAD" | "$SCRIPT_DIR/prohibitions_enforcer.sh" 2>/dev/null) || true
+  PROHIB_EXIT=0
+  PROHIB_OUTPUT=$(echo "$PAYLOAD" | "$SCRIPT_DIR/prohibitions_enforcer.sh" 2>>"$PROJECT_DIR/.admiral/hook_errors.log") || PROHIB_EXIT=$?
   if [ -n "$PROHIB_OUTPUT" ]; then
     PROHIB_CTX=$(echo "$PROHIB_OUTPUT" | jq -r '.hookSpecificOutput.additionalContext // empty' 2>/dev/null) || true
     if [ -n "$PROHIB_CTX" ]; then
       ALL_CONTEXT+="$PROHIB_CTX "
+    fi
+    # Propagate hard-block: if prohibitions_enforcer exits 2, block the tool
+    if [ "$PROHIB_EXIT" -eq 2 ]; then
+      echo "$PROHIB_OUTPUT"
+      exit 2
     fi
   fi
 fi
@@ -72,7 +81,7 @@ fi
 # Receives enriched payload with session_state; returns hook_state + advisory
 if [ -x "$SCRIPT_DIR/pre_work_validator.sh" ]; then
   PREWORK_OUTPUT=""
-  PREWORK_OUTPUT=$(echo "$ENRICHED_PAYLOAD" | "$SCRIPT_DIR/pre_work_validator.sh" 2>/dev/null) || true
+  PREWORK_OUTPUT=$(echo "$ENRICHED_PAYLOAD" | "$SCRIPT_DIR/pre_work_validator.sh" 2>>"$PROJECT_DIR/.admiral/hook_errors.log") || true
   if [ -n "$PREWORK_OUTPUT" ]; then
     PREWORK_CTX=$(echo "$PREWORK_OUTPUT" | jq -r '.additionalContext // empty' 2>/dev/null) || true
     if [ -n "$PREWORK_CTX" ]; then

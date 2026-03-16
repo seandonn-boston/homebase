@@ -12,7 +12,8 @@
  * pauses the offending agent.
  */
 
-import { AgentEvent, EventStream } from "./events";
+import * as fs from "node:fs";
+import type { AgentEvent, EventStream } from "./events";
 
 export interface Alert {
   id: string;
@@ -157,8 +158,7 @@ export class ControlChart {
     const baseline = this.samples.slice(0, -1);
     const mean = this.getBaselineMean();
     const variance =
-      baseline.reduce((s, sample) => s + (sample.value - mean) ** 2, 0) /
-      (baseline.length - 1);
+      baseline.reduce((s, sample) => s + (sample.value - mean) ** 2, 0) / (baseline.length - 1);
     return Math.sqrt(variance);
   }
 
@@ -287,12 +287,7 @@ export class SPCMonitor {
    * flushes to the control chart when the interval elapses.
    * Returns any SPC violation detected on flush.
    */
-  record(
-    agentId: string,
-    metric: string,
-    count: number,
-    timestamp: number
-  ): SPCViolation | null {
+  record(agentId: string, metric: string, count: number, timestamp: number): SPCViolation | null {
     // Initialize maps if needed
     if (!this.currentInterval.has(agentId)) {
       this.currentInterval.set(agentId, new Map());
@@ -366,8 +361,27 @@ export class RunawayDetector {
     this.spcMonitor = new SPCMonitor(
       this.config.spcIntervalMs,
       this.config.spcSigmaLimit,
-      this.config.spcMinSamples
+      this.config.spcMinSamples,
     );
+  }
+
+  /**
+   * Load detector config from admiral/config.json, merging with defaults.
+   * Returns only the detector section. Falls back to defaults if file is missing.
+   */
+  static loadConfigFromFile(configPath: string): Partial<DetectorConfig> {
+    try {
+      const content = fs.readFileSync(configPath, "utf-8");
+      const parsed = JSON.parse(content);
+      return parsed.detector || {};
+    } catch {
+      return {};
+    }
+  }
+
+  /** Get the active configuration (read-only) */
+  getConfig(): Readonly<DetectorConfig> {
+    return { ...this.config };
   }
 
   /**
@@ -426,19 +440,10 @@ export class RunawayDetector {
     }
   }
 
-  private checkSPC(
-    event: AgentEvent,
-    metric: string,
-    count: number
-  ): void {
+  private checkSPC(event: AgentEvent, metric: string, count: number): void {
     if (!this.config.spcEnabled) return;
 
-    const violation = this.spcMonitor.record(
-      event.agentId,
-      metric,
-      count,
-      event.timestamp
-    );
+    const violation = this.spcMonitor.record(event.agentId, metric, count, event.timestamp);
 
     if (violation) {
       this.fireAlert({
@@ -468,18 +473,16 @@ export class RunawayDetector {
     const recentSameToolCalls = this.stream
       .getEventsByAgent(event.agentId)
       .filter(
-        (e) =>
-          e.type === "tool_called" &&
-          e.data.tool === toolName &&
-          e.timestamp >= windowStart
+        (e) => e.type === "tool_called" && e.data.tool === toolName && e.timestamp >= windowStart,
       );
 
     if (recentSameToolCalls.length >= this.config.maxRepeatedToolCalls) {
       this.fireAlert({
         type: "loop_detected",
-        severity: recentSameToolCalls.length >= this.config.maxRepeatedToolCalls * 2
-          ? "critical"
-          : "warning",
+        severity:
+          recentSameToolCalls.length >= this.config.maxRepeatedToolCalls * 2
+            ? "critical"
+            : "warning",
         agentId: event.agentId,
         agentName: event.agentName,
         message: `Loop detected: ${event.agentName} called ${toolName} ${recentSameToolCalls.length} times in ${this.config.repeatWindowMs / 1000}s`,
@@ -498,9 +501,7 @@ export class RunawayDetector {
 
     const recentSubtasks = this.stream
       .getEventsByAgent(event.agentId)
-      .filter(
-        (e) => e.type === "subtask_created" && e.timestamp >= windowStart
-      );
+      .filter((e) => e.type === "subtask_created" && e.timestamp >= windowStart);
 
     if (recentSubtasks.length >= this.config.maxSubtasks) {
       this.fireAlert({
@@ -523,14 +524,9 @@ export class RunawayDetector {
 
     const recentTokenEvents = this.stream
       .getEventsByAgent(event.agentId)
-      .filter(
-        (e) => e.type === "token_spent" && e.timestamp >= oneMinuteAgo
-      );
+      .filter((e) => e.type === "token_spent" && e.timestamp >= oneMinuteAgo);
 
-    const totalTokens = recentTokenEvents.reduce(
-      (sum, e) => sum + (e.data.count as number),
-      0
-    );
+    const totalTokens = recentTokenEvents.reduce((sum, e) => sum + (e.data.count as number), 0);
 
     if (totalTokens >= this.config.tokenSpikePerMinute) {
       this.fireAlert({
@@ -547,9 +543,7 @@ export class RunawayDetector {
     }
   }
 
-  private fireAlert(
-    partial: Omit<Alert, "id" | "timestamp" | "resolved">
-  ): void {
+  private fireAlert(partial: Omit<Alert, "id" | "timestamp" | "resolved">): void {
     const alert: Alert = {
       id: `alert_${Date.now()}_${++alertCounter}`,
       timestamp: Date.now(),

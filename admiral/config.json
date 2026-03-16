@@ -1,0 +1,32 @@
+{
+  "detector": {
+    "maxRepeatedToolCalls": 5,
+    "repeatWindowMs": 30000,
+    "maxSubtasks": 10,
+    "subtaskWindowMs": 60000,
+    "tokenSpikePerMinute": 50000,
+    "spcEnabled": true,
+    "spcMinSamples": 10,
+    "spcIntervalMs": 60000,
+    "spcSigmaLimit": 3
+  },
+  "hooks": {
+    "maxSameError": 3,
+    "maxTotalErrors": 10,
+    "successDecay": 1,
+    "budgetWarningPct": 90
+  },
+  "tokenEstimates": {
+    "Bash": 500,
+    "Read": 1000,
+    "Write": 800,
+    "Edit": 600,
+    "Glob": 300,
+    "Grep": 500,
+    "WebFetch": 2000,
+    "WebSearch": 1500,
+    "Agent": 5000,
+    "NotebookEdit": 800,
+    "default": 500
+  }
+}

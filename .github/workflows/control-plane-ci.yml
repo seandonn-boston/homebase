@@ -1,0 +1,38 @@
+name: Control Plane CI
+
+on:
+  push:
+    paths:
+      - 'control-plane/**'
+  pull_request:
+    paths:
+      - 'control-plane/**'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+          cache-dependency-path: 'control-plane/package-lock.json'
+
+      - name: Install dependencies
+        working-directory: control-plane
+        run: npm install
+
+      - name: Build
+        working-directory: control-plane
+        run: npm run build
+
+      - name: Test
+        working-directory: control-plane
+        run: npm test
+
+      - name: Lint
+        working-directory: control-plane
+        run: npm run lint

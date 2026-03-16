@@ -5,7 +5,7 @@
  * into the Admiral event stream. Framework-agnostic by design.
  */
 
-import { EventStream, EventType } from "./events";
+import type { EventStream, EventType } from "./events";
 
 export interface InstrumentationConfig {
   agentId: string;
@@ -16,7 +16,7 @@ export interface InstrumentationConfig {
 export class AgentInstrumentation {
   private stream: EventStream;
   private config: InstrumentationConfig;
-  private tokenCount: number = 0;
+  private tokenCount = 0;
 
   constructor(stream: EventStream, config: InstrumentationConfig) {
     this.stream = stream;
@@ -53,25 +53,20 @@ export class AgentInstrumentation {
 
   tokenSpent(count: number, model?: string, taskId?: string) {
     this.tokenCount += count;
-    return this.emit(
-      "token_spent",
-      { count, total: this.tokenCount, model },
-      undefined,
-      taskId
-    );
+    return this.emit("token_spent", { count, total: this.tokenCount, model }, undefined, taskId);
   }
 
   subtaskCreated(
     parentTaskId: string,
     subtaskId: string,
     description: string,
-    targetAgent?: string
+    targetAgent?: string,
   ) {
     return this.emit(
       "subtask_created",
       { parentTaskId, subtaskId, description, targetAgent },
       undefined,
-      parentTaskId
+      parentTaskId,
     );
   }
 
@@ -87,7 +82,7 @@ export class AgentInstrumentation {
     type: EventType,
     data: Record<string, unknown>,
     parentEventId?: string,
-    taskId?: string
+    taskId?: string,
   ) {
     return this.stream.emit(
       this.config.agentId,
@@ -95,7 +90,7 @@ export class AgentInstrumentation {
       type,
       data,
       parentEventId,
-      taskId ?? this.config.defaultTaskId
+      taskId ?? this.config.defaultTaskId,
     );
   }
 }

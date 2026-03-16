@@ -1,7 +1,7 @@
-import { describe, it, beforeEach } from "node:test";
 import assert from "node:assert/strict";
-import { ControlChart, SPCMonitor, RunawayDetector, Alert } from "./runaway-detector";
+import { beforeEach, describe, it } from "node:test";
 import { EventStream } from "./events";
+import { type Alert, ControlChart, RunawayDetector, SPCMonitor } from "./runaway-detector";
 
 // ---------------------------------------------------------------------------
 // ControlChart unit tests
@@ -102,7 +102,7 @@ describe("ControlChart", () => {
     // May fire as beyond_ucl if the value also exceeds 3σ
     assert.ok(
       violation!.rule === "western_electric_2of3" || violation!.rule === "beyond_ucl",
-      `Expected 2of3 or beyond_ucl, got ${violation!.rule}`
+      `Expected 2of3 or beyond_ucl, got ${violation!.rule}`,
     );
   });
 
@@ -121,7 +121,7 @@ describe("ControlChart", () => {
     // Could be 8consecutive or 4of5 — both may trigger
     assert.ok(
       violation!.rule === "western_electric_8consecutive" ||
-      violation!.rule === "western_electric_4of5"
+        violation!.rule === "western_electric_4of5",
     );
   });
 

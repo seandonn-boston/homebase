@@ -6,7 +6,7 @@
  * and how work flowed through the system.
  */
 
-import { AgentEvent, EventStream } from "./events";
+import type { AgentEvent, EventStream } from "./events";
 
 export interface TraceNode {
   event: AgentEvent;
@@ -25,9 +25,7 @@ export class ExecutionTrace {
    * Returns a forest (multiple roots) if agents operated independently.
    */
   buildTrace(taskId?: string): TraceNode[] {
-    const events = taskId
-      ? this.stream.getEventsByTask(taskId)
-      : this.stream.getEvents();
+    const events = taskId ? this.stream.getEventsByTask(taskId) : this.stream.getEvents();
 
     return this.buildForest(events);
   }
@@ -43,7 +41,7 @@ export class ExecutionTrace {
   /**
    * Render the trace as an ASCII tree for terminal/dashboard display.
    */
-  renderAscii(nodes?: TraceNode[], indent: string = ""): string {
+  renderAscii(nodes?: TraceNode[], indent = ""): string {
     const roots = nodes ?? this.buildTrace();
     const lines: string[] = [];
 
@@ -67,25 +65,18 @@ export class ExecutionTrace {
    * Get summary statistics for the trace.
    */
   getStats(taskId?: string): TraceStats {
-    const events = taskId
-      ? this.stream.getEventsByTask(taskId)
-      : this.stream.getEvents();
+    const events = taskId ? this.stream.getEventsByTask(taskId) : this.stream.getEvents();
 
     const agents = new Set(events.map((e) => e.agentName));
     const toolCalls = events.filter((e) => e.type === "tool_called");
     const tools = new Set(toolCalls.map((e) => e.data.tool as string));
     const tokenEvents = events.filter((e) => e.type === "token_spent");
-    const totalTokens = tokenEvents.reduce(
-      (sum, e) => sum + (e.data.count as number),
-      0
-    );
+    const totalTokens = tokenEvents.reduce((sum, e) => sum + (e.data.count as number), 0);
     const subtasks = events.filter((e) => e.type === "subtask_created");
     const failures = events.filter((e) => e.type === "task_failed");
 
     const duration =
-      events.length > 0
-        ? events[events.length - 1].timestamp - events[0].timestamp
-        : 0;
+      events.length > 0 ? events[events.length - 1].timestamp - events[0].timestamp : 0;
 
     return {
       agentCount: agents.size,
@@ -125,10 +116,7 @@ export class ExecutionTrace {
       for (const event of agentEvents) {
         const node = nodeMap.get(event.id)!;
 
-        if (
-          event.type === "agent_started" ||
-          event.type === "task_assigned"
-        ) {
+        if (event.type === "agent_started" || event.type === "task_assigned") {
           roots.push(node);
           if (event.type === "task_assigned") {
             currentTaskNode = node;
