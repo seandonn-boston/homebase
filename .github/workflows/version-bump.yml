@@ -7,6 +7,7 @@ name: Version Bump
 #   - fix:, docs:, chore:, refactor:, test:, ci:, style:, perf: → patch
 #   - No conventional prefix → patch (default)
 #
+# Version format: vMAJOR.MINOR.PATCH-stage.dateInMS (e.g., v0.10.0-alpha.1773619200000)
 # Creates a git tag for the new version.
 
 on:
@@ -62,11 +63,19 @@ jobs:
           # Strip leading 'v' for parsing
           SEMVER="${CURRENT#v}"
 
-          # Extract components: version-prelabel
+          # Format: MAJOR.MINOR.PATCH-stage.dateInMS
+          # Extract numeric base (everything before first '-')
           BASE="${SEMVER%%-*}"
-          LABEL=""
+          # Extract pre-release stage (between first '-' and last '.')
+          REMAINDER="${SEMVER#*-}"
+          STAGE=""
           if [[ "$SEMVER" == *-* ]]; then
-            LABEL="${SEMVER#*-}"
+            # Stage is everything after first '-' up to the last '.' (the dateInMS separator)
+            STAGE="${REMAINDER%.*}"
+            # If STAGE still contains the full remainder (no dot found), it's the old format
+            if [[ "$STAGE" == "$REMAINDER" ]]; then
+              STAGE="$REMAINDER"
+            fi
           fi
 
           IFS='.' read -r MAJOR MINOR PATCH <<< "$BASE"
@@ -86,9 +95,12 @@ jobs:
               ;;
           esac
 
+          # Generate timestamp in milliseconds
+          DATE_MS=$(date +%s%3N)
+
           NEW="v${MAJOR}.${MINOR}.${PATCH}"
-          if [ -n "$LABEL" ]; then
-            NEW="${NEW}-${LABEL}"
+          if [ -n "$STAGE" ]; then
+            NEW="${NEW}-${STAGE}.${DATE_MS}"
           fi
 
           echo "$NEW" > aiStrat/VERSION

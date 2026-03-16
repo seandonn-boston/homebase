@@ -1,6 +1,5 @@
 # PLAN2.md — Task Decomposition & Dependency Graph
 
-**Version:** v0.10.0-alpha
 **Last Updated:** 2026-03-16
 **Tracks:** PLAN.md Phases 1-2 (complete) and Phase 3 (current)
 
