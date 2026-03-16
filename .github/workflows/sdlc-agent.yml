@@ -103,15 +103,6 @@ jobs:
           # Write body to file to handle multiline
           echo "$BODY" > /tmp/issue_body.txt
 
-      - name: Set agent git identity
-        if: steps.breaker.outputs.proceed != 'false'
-        run: |
-          # LLM-authored commits MUST use a distinct non-human identity.
-          # This is non-negotiable — SO-01 (Identity Discipline) and SO-12 (Zero-Trust).
-          # Humans may impersonate agents; agents may NEVER impersonate humans.
-          git config user.name "claude-agent[bot]"
-          git config user.email "claude-agent[bot]@users.noreply.github.com"
-
       - name: Create agent branch
         if: steps.breaker.outputs.proceed != 'false'
         id: branch
@@ -155,12 +146,8 @@ jobs:
           1. Read the relevant code and understand the task.
           2. Implement the changes. Follow conventional commits.
           3. Commit your work with a clear message referencing issue #${{ steps.params.outputs.issue_number }}.
-          4. Every commit message MUST include the trailer "Author-Type: agent" on a separate line after a blank line. Example:
-             feat: add widget parser for issue #42
-
-             Author-Type: agent
-          5. Keep changes focused — do not refactor unrelated code.
-          6. Respect scope boundaries defined in AGENTS.md.
+          4. Keep changes focused — do not refactor unrelated code.
+          5. Respect scope boundaries defined in AGENTS.md.
           PROMPT
 
       - name: Run Claude Code agent
@@ -202,20 +189,12 @@ jobs:
 
           Implements #${ISSUE}
 
-          ### Identity Attestation
-          | Field | Value |
-          |---|---|
-          | **Author type** | \`agent\` (LLM-generated) |
-          | **Agent** | Claude Code via \`sdlc-agent.yml\` |
-          | **Git identity** | \`claude-agent[bot]\` |
-          | **Iteration** | ${ITER} |
-          | **Trigger** | \`${{ github.event_name }}\` |
-          | **Run ID** | \`${{ github.run_id }}\` |
-
-          > All commits in this PR were authored by an AI agent.
-          > Human merge to main is required. Verify git author before merging.
-
+          **Agent:** Claude Code (CI)
+          **Iteration:** ${ITER}
           **Circuit breaker:** ${{ steps.breaker.outputs.result }}
+
+          ---
+          *This PR was created autonomously by the SDLC agent workflow. Human merge to main is required.*
           EOF
           )" \
             --label "agent:authored" \
