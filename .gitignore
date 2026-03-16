@@ -26,9 +26,9 @@ Thumbs.db
 # Logs
 *.log
 
-# Adoption simulation generated output (regenerate with score.sh + generate-reports.sh)
-research/adoption-sim/results/
-research/adoption-sim/reports/
+# Adoption simulation — track current results and reports (the deliverables),
+# but not history snapshots (temporal data for local trend analysis)
+research/adoption-sim/results/history/
 research/adoption-sim/data/fortune500-scored.json
 
 # Monitor: state and digests are committed deliberately via CI,

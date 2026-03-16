@@ -54,7 +54,7 @@ What percentage of safety-critical rules have deterministic (hook) enforcement?
 | Metric | Definition | Target | Red Flag |
 |---|---|---|---|
 | Hook coverage | `hook_enforced_SOs / total_SOs` | > 80% (12/15) | < 50% (7/15) |
-| Current state | 4/15 (27%) | — | Acknowledged gap |
+| Current state | 8/15 (53%) | — | Above red-flag threshold; progressing toward target |
 | Safety-tier coverage | `hook_enforced_safety_SOs / total_safety_SOs` | 100% | < 75% |
 
 ### 6. Fleet Coordination Overhead

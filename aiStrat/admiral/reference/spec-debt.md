@@ -24,13 +24,9 @@
 
 -----
 
-### SD-03: Fleet Catalog Presented as Differentiator Without Validation
+### ~~SD-03: Fleet Catalog Presented as Differentiator Without Validation~~ → Resolved
 
-**Severity:** Moderate
-**Claim:** "71 pre-defined roles with interface contracts don't exist anywhere else" (sales pitch).
-**Reality:** Agent definitions are specifications based on production patterns, not battle-tested implementations (correctly acknowledged in `AGENTS.md`). External-facing documents present them as a competitive advantage without noting this caveat.
-**Where it appears:** `sales-pitch-30min-guide.md`
-**Resolution path:** Add a brief caveat in the sales pitch: "based on production patterns, refined through real-world deployment" — honest without undermining the differentiator claim.
+*Moved to Resolved Debt (see below).*
 
 -----
 
@@ -85,6 +81,15 @@
 
 **Evidence:** 39 integration tests passing (`admiral/monitor/quarantine/tests/test_quarantine.sh`). Tests cover all layers individually plus end-to-end pipeline, including: authority spoofing detection, behavior manipulation, credential fabrication, dangerous advice, clean content pass-through, Layer 3→4 short-circuit, duplicate antibody suppression, obfuscation evasion detection, and base64 payload detection.
 **Remaining gap:** Layer 4 uses deterministic heuristics as an LLM stand-in. Production deployment would require actual LLM API integration while preserving the rejection-only contract. Layer 3 Bayesian classifier is simplified (phrase matching vs. trained model). Attack corpus requires ongoing human curation.
+
+-----
+
+### SD-03: Fleet Catalog Presented as Differentiator Without Validation
+
+**Severity:** Moderate (was)
+**Resolved:** 2026-03-16
+**Resolution:** Added caveat "based on production patterns, refined through real-world deployment" to the competitive moat answer in `sales-pitch-30min-guide.md`. This is honest about the spec-based nature of the agent definitions without undermining the differentiator claim, consistent with the acknowledgment already present in `AGENTS.md`.
+**Evidence:** Updated text in sales pitch: "the 71 pre-defined roles with interface contracts — based on production patterns, refined through real-world deployment — don't exist anywhere else."
 
 -----
 

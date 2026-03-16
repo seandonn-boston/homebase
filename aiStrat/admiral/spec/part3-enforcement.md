@@ -24,18 +24,45 @@ This distinction — between advisory instructions and deterministic enforcement
 | **Firm guidance** | AGENTS.md rules, system prompt instructions, tool-specific config files | High but degradable under context pressure | Coding patterns, architectural preferences, naming conventions |
 | **Soft guidance** | Comments in code, README notes, verbal instructions | Low — easily overridden | Suggestions, preferences, nice-to-haves |
 
+### Enforcement vs. Monitoring
+
+Hooks serve two distinct functions that must not be conflated:
+
+| Function | Exit Code Behavior | Purpose | Example |
+|---|---|---|---|
+| **Enforcement** | Non-zero = block the action | Prevent violations deterministically | Secret scanner blocking a commit containing credentials |
+| **Monitoring** | Always exit 0; warnings via `additionalContext` / `systemMessage` | Observe, alert, and inform — never block | Token budget tracker warning at 80% utilization |
+
+**Why the distinction matters:** Early implementations confused these functions, leading to two failure modes:
+
+1. **Deadlock via over-enforcement:** A monitoring concern (token budget awareness) was implemented as an enforcement hook (exit 2 = hard block). The agent could not reset state, ask the user, or take corrective action. The monitoring system broke the system it monitored.
+2. **False confidence via under-enforcement:** A safety concern (secret detection) was implemented as a monitoring hook (exit 0 + warning). The agent acknowledged the warning and committed the secret anyway under context pressure.
+
+**Classification rule:** If the constraint is safety-critical and a deterministic check exists, the hook **enforces** (non-zero exit blocks). If the constraint requires judgment, is informational, or concerns resource awareness, the hook **monitors** (always exit 0, alerts via context).
+
+| Category | Function | Rationale |
+|---|---|---|
+| Secret detection | **Enforcement** | Safety-critical; deterministic check exists (regex/entropy scan) |
+| Scope boundary violations | **Enforcement** | Safety-critical; deterministic check exists (path matching) |
+| Token budget awareness | **Monitoring** | Resource awareness; agent/user retains agency to continue |
+| Loop detection | **Monitoring** | Informational; agent may have legitimate reasons to retry |
+| Context health | **Monitoring** | Informational; degraded context is when tools are most needed |
+| Identity validation | **Enforcement** | Safety-critical; deterministic check exists (token validation) |
+
+> **Anti-deadlock design principle (restated for clarity):** Monitoring hooks must NEVER hard-block. An enforcement hook blocks a specific dangerous action; a monitoring hook that blocks ALL tool use creates an unrecoverable deadlock. When in doubt, default to monitoring — a missed warning is recoverable; a deadlocked agent is not.
+
 ### Hook Lifecycle Events
 
 | Event | When It Fires | Use For |
 |---|---|---|
-| **PreToolUse** | Before any tool invocation | Blocking dangerous commands, enforcing scope boundaries |
-| **PostToolUse** | After any tool invocation | Logging, auditing, triggering downstream checks |
-| **PreCommit** | Before a git commit | Linting, test execution, formatting, secret scanning |
-| **PostCommit** | After a git commit | Notification, CI trigger, changelog update |
-| **SessionStart** | When an agent session begins | Context loading, environment validation, staleness checks |
-| **TaskCompleted** | When a task is marked complete | Quality gate execution, metric logging |
-| **PrePush** | Before pushing to remote | Branch protection, review requirements |
-| **Periodic** | On a configurable interval (not tied to tool use or task lifecycle) | Governance heartbeat monitoring, scheduled health checks |
+| **PreToolUse** | Before any tool invocation | Enforcement: blocking dangerous commands, scope boundaries. Monitoring: budget awareness, pre-work validation. |
+| **PostToolUse** | After any tool invocation | Enforcement: output integrity checks. Monitoring: logging, auditing, loop detection, context health. |
+| **PreCommit** | Before a git commit | Enforcement: linting, secret scanning. Monitoring: test coverage reporting. |
+| **PostCommit** | After a git commit | Monitoring: notification, CI trigger, changelog update |
+| **SessionStart** | When an agent session begins | Enforcement: identity validation. Monitoring: context loading, environment validation, staleness checks. |
+| **TaskCompleted** | When a task is marked complete | Monitoring: quality gate reporting, metric logging |
+| **PrePush** | Before pushing to remote | Enforcement: branch protection. Monitoring: review status reporting. |
+| **Periodic** | On a configurable interval (not tied to tool use or task lifecycle) | Monitoring: governance heartbeat, scheduled health checks |
 
 ### Hook-Brain Integration
 
@@ -105,7 +132,7 @@ The enforcement classifications above require concrete hook specifications. The 
 
 > **Enforcement level annotations:** Each hook below is tagged with the enforcement level at which it should be **deployed**. Hooks tagged **E1** are part of the Disciplined Solo checklist. Hooks tagged **E2+** or **E3+** should not be implemented until their consumers exist (e.g., do not deploy `governance_heartbeat_monitor` until governance agents are running, do not deploy `tier_validation` until a fleet roster with multiple agents exists). Reading ahead is fine; building ahead wastes effort and adds complexity with no consumer.
 
-**Token Budget Enforcement Hooks:** `E1`
+**Token Budget Hooks** *(Monitoring)* `E1`
 
 ```
 PostToolUse: token_budget_tracker
@@ -134,7 +161,7 @@ PreToolUse: token_budget_checkpoint
               the agent could not reset state, ask the user, or take any action.
 ```
 
-**Retry Loop Detection Hook:** `E1`
+**Retry Loop Detection Hook** *(Monitoring)* `E1`
 
 ```
 PostToolUse: loop_detector
@@ -156,7 +183,7 @@ PostToolUse: loop_detector
   Timeout:    5 seconds.
 ```
 
-**Context Health Monitoring Hooks:** `E1`
+**Context Health Monitoring Hooks** *(Monitoring)* `E1`
 
 ```
 SessionStart: context_baseline
@@ -182,7 +209,7 @@ PostToolUse: context_health_check
   Timeout:    10 seconds.
 ```
 
-**Model Tier Validation Hook:** `E2` — requires fleet roster with multiple agents and model tier assignments
+**Model Tier Validation Hook** *(Enforcement)* `E2` — requires fleet roster with multiple agents and model tier assignments
 
 ```
 SessionStart: tier_validation
@@ -205,7 +232,7 @@ SessionStart: tier_validation
   Timeout:    10 seconds.
 ```
 
-**Governance Heartbeat Monitoring Hook:** `E3` — requires governance agents to be deployed
+**Governance Heartbeat Monitoring Hook** *(Monitoring)* `E3` — requires governance agents to be deployed
 
 ```
 Periodic: governance_heartbeat_monitor
@@ -230,7 +257,7 @@ Periodic: governance_heartbeat_monitor
   Timeout:    10 seconds.
 ```
 
-**Identity Validation Hook:** `E2` — at E1, identity is agent-id + role without cryptographic validation; deploy this hook when hardening identity at F2+
+**Identity Validation Hook** *(Enforcement)* `E2` — at E1, identity is agent-id + role without cryptographic validation; deploy this hook when hardening identity at F2+
 
 ```
 SessionStart: identity_validation

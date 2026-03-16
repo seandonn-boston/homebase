@@ -1,14 +1,14 @@
 # PLAN.md — Admiral Framework Implementation Plan
 
-**Version:** v0.7.0-alpha
-**Last Updated:** 2026-03-15
-**Status:** Phase 1 Active
+**Version:** v0.9.0-alpha
+**Last Updated:** 2026-03-16
+**Status:** Phase 1 Complete
 
 ---
 
-## Current Phase: Specification Hardening + Market Validation
+## Current Phase: Reference Implementation Wedge
 
-### Phase 1: Specification Integrity (Current — Weeks 1-4)
+### Phase 1: Specification Integrity (Complete — Weeks 1-4)
 
 **Objective:** Resolve all internal contradictions, close the research-to-spec pipeline, and establish the codebase as internally consistent.
 
@@ -16,25 +16,25 @@
 |---|---|---|
 | Version consistency across all files | Complete | VERSION, index.md, AGENTS.md all say v0.7.0-alpha |
 | Ground truth references valid | Complete | PLAN.md and PLAN2.md exist and are current |
-| Enforcement language refined | Not Started | Part 3 distinguishes enforcement vs. monitoring |
-| Standing Orders classified by mechanism | Not Started | Each SO marked Mechanical / Judgment-Assisted / Advisory |
-| Empirical claims qualified | Not Started | All data claims cite source and scope |
-| Research-to-spec pipeline closed | Not Started | OS reframe, engineering ladder mapping, certification process defined |
+| Enforcement language refined | Complete | Part 3 distinguishes enforcement vs. monitoring; hooks tagged by function (Enforcement/Monitoring) |
+| Standing Orders classified by mechanism | Complete | Each SO classified as Mechanical / Judgment-Assisted / Advisory in enforcement map |
+| Empirical claims qualified | Complete | Sales pitch has Sources & Data Provenance table; PLAN.md cites sources; benchmarks updated |
+| Research-to-spec pipeline closed | Complete | `research-to-spec-pipeline.md` formalizes OS reframe (R-01), engineering ladder mapping (R-02), certification process (R-03) |
 
-### Phase 2: Market Validation via Simulation (Weeks 2-8)
+### Phase 2: Market Validation via Simulation (Complete — Weeks 2-8)
 
 **Objective:** Build a Fortune 500 adoption simulation using confirmed 2025 financial data. Test the thesis against real company profiles at scale.
 
 | Milestone | Status | Exit Criteria |
 |---|---|---|
-| Top 100 company profiles built | Not Started | fortune500.json with confirmed data from 10-K/earnings |
-| 7 core scenarios defined | Not Started | scenario-definitions.json with parameterized templates |
-| Scoring engine operational | Not Started | Takes (company, scenario) → adoption score (0-100) |
-| Sector-level analysis complete | Not Started | Per-sector adoption likelihood with evidence |
-| Walk-away analysis for top 50 | Not Started | Each prospect has documented walk-away scenario |
-| Trend monitoring infrastructure | Not Started | Snapshot system, diff tool, quarterly cadence |
+| Top 100 company profiles built | Complete | fortune500.json: 100 companies with confirmed FY2025 10-K/earnings data, 8 pre-scored factors each |
+| 7 core scenarios defined | Complete | scenario-definitions.json: Baseline, Regulatory, Agent Explosion, Budget Crunch, Competitor Capture, Incident Catalyst, Walk-Away |
+| Scoring engine operational | Complete | score.sh: 100 companies × 7 scenarios = 700 scored results with tier classification |
+| Sector-level analysis complete | Complete | 10 sectors ranked per scenario; Utilities, Health Care, Energy lead; IT lowest (build-internally penalty) |
+| Walk-away analysis for top 50 | Complete | deal-walkaway-analysis.md: structural vs. temporal walk-aways, cross-scenario comparison, factor distribution |
+| Trend monitoring infrastructure | Complete | monitor.sh: quarterly/monthly re-score pipeline with snapshot.sh, diff.sh, and alert generation |
 
-### Phase 3: Reference Implementation Wedge (Weeks 4-12)
+### Phase 3: Reference Implementation Wedge (Current — Weeks 4-12)
 
 **Objective:** Wire hooks to control plane, prove single-agent observability, demonstrate the wedge.
 
@@ -74,9 +74,11 @@
 
 ## Strategic Context
 
-Admiral is positioned as the operational infrastructure for AI agent workforces. The market is early but forming: $8.5B autonomous AI agent market (2026), projected $35-45B by 2030. The governance gap identified in the spec is real and unfilled.
+Admiral is positioned as the operational infrastructure for AI agent workforces. The market is early but forming: $8.5B autonomous AI agent market in 2026, projected $35-45B by 2030 (Deloitte, "AI Agents and Multiagent Systems," 2025). The governance gap identified in the spec is real and unfilled — Gartner predicts 40% of agentic AI deployments will be canceled by 2027 due to costs, unclear value, or poor risk controls ("Predicts 2025: AI Agents," October 2025).
 
 The plan sequences: specification integrity first (credibility), market validation second (evidence), reference implementation third (proof), IP protection in parallel (defense), commercialization as the thesis proves out (revenue).
+
+> **Data provenance:** Market claims in this document are sourced from analyst reports current as of March 2026. Full source table with scope and caveats: `aiStrat/sales-pitch-30min-guide.md`, Sources & Data Provenance section.
 
 ---
 
