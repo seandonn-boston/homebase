@@ -146,6 +146,8 @@ The monitor does not update Ground Truth automatically. It surfaces intelligence
 
 > **ANTI-PATTERN: PHANTOM CAPABILITIES** — Agents will confidently assume tools and access they do not have. An orchestrator might delegate a task assuming the specialist can query a database directly, when it can only read files. The specialist produces plausible-looking output grounded in fabricated data.
 
+> **ANTI-PATTERN: AGENT-GENERATED GROUND TRUTH** — Deploying an agent to "discover" or "extract" Ground Truth from a codebase it has never seen. The agent produces well-structured, confident output — dependency graphs, convention lists, architecture summaries. The Admiral trusts the output because it looks professional. But the agent cannot distinguish convention from accident, intentional coupling from technical debt, or working workarounds from bugs. Code shows *what* was done, not *why*. The *why* — the intent behind decisions — is what Ground Truth must capture, and it lives in human memory, meeting notes, and design documents, not in code patterns. An agent can assist with mechanical facts (framework versions via `package.json`, dependency lists via `npm ls`, test coverage via CI output), but the judgment calls that make Ground Truth useful — "this is intentional," "this is technical debt," "don't touch this because..." — require human knowledge. See Project Readiness Assessment (Part 1) and Convention Inference / Archaeology Hallucination (failure modes #21-22, Part 7).
+
 -----
 
 ## Context Window Strategy

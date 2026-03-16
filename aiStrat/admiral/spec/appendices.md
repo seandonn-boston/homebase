@@ -8,6 +8,20 @@ Before deploying, verify the items for your target profile. Each profile include
 
 > **Bootstrap note:** If you are deploying for the first time, follow [`QUICKSTART.md`](../../QUICKSTART.md) first — it provides a linear, step-by-step bootstrap sequence. Then return to this checklist to verify completeness. Bootstrap sequence: (1) follow QUICKSTART.md; (2) run this Pre-Flight Checklist to verify nothing was missed.
 
+### Step 0 — Project Readiness Assessment
+
+Before checking Starter items, assess whether the project is ready for fleet deployment. See Project Readiness Assessment (Part 1) for the full framework.
+
+- [ ] **Can you write the Mission statement right now?** If no: you need a strategy session, not Admiral. Enter Preparation phase (Fleet Scaling & Lifecycle, Part 8).
+- [ ] **Do documented coding conventions exist?** If no: document them first. The fleet cannot enforce conventions that don't exist. Deploying enforcement without documented conventions produces Convention Inference (failure mode #21, Part 7) — the fleet treats historical accidents as intentional decisions.
+- [ ] **Do quality gates exist (CI, tests, linting)?** If no: scaffold them before deploying enforcement hooks. Hooks enforce quality gates. Without gates, hooks have nothing to enforce.
+- [ ] **Does someone understand the codebase well enough to define scope boundaries?** If no: study the codebase first — with deterministic tools and human judgment, not with an agent. An agent mapping an unfamiliar codebase produces confident-sounding output that may not reflect reality (Archaeology Hallucination, failure mode #22, Part 7).
+- [ ] **Has the team agreed on what decisions the fleet can make autonomously?** If no: default to everything as Propose/Escalate. Widen Autonomous tier after the fleet demonstrates competence per Progressive Autonomy (progressive-autonomy.md).
+
+**If all five are checked:** Proceed to Starter Profile below.
+**If 1–2 are unchecked:** Proceed to Starter with those items as immediate tasks during the first session. Ground Truth will be completed during Standup.
+**If 3+ are unchecked:** Enter Preparation phase (Fleet Scaling & Lifecycle, Part 8). Complete the human work before deploying the fleet.
+
 ### Starter Profile
 
 **Part 1 — Strategy**

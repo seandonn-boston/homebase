@@ -95,7 +95,7 @@ Effective backtracking requires:
 
 ## Known Agent Failure Modes
 
-> **TL;DR** — Twenty systematic failure modes cataloged with their primary defenses and warning signs. Use the Diagnostic Decision Tree when things go wrong.
+> **TL;DR** — Twenty-five systematic failure modes cataloged with their primary defenses and warning signs. Use the Diagnostic Decision Tree when things go wrong.
 
 ### Failure Mode Catalog
 
@@ -121,6 +121,11 @@ Effective backtracking requires:
 | **Swarm Consensus Failure** | Agents reach consensus on an incorrect answer | Swarm Patterns (Part 6): adversarial review, multi-model cross-check |
 | **Config Accretion** | Config files grow until agents ignore rules | Configuration File Strategy (Part 2): 150-line rule, regular refactoring |
 | **Goodharting** | Optimizes tracked metrics rather than genuine outcomes | Fleet Health Metrics (Part 8): track in combination, rotate emphasis |
+| **Convention Inference** | Agent infers conventions from code patterns; inferred convention is actually a historical mistake that was never corrected | Require human confirmation of all inferred conventions before they enter Ground Truth. See Project Readiness Assessment (Part 1). |
+| **Archaeology Hallucination** | Agent "discovers" patterns in legacy code that don't exist — seeing structure where there is only accident | Confidence tagging on all discovery findings; human review mandatory before Brain seeding |
+| **Ground Truth Premature Crystallization** | Partial Ground Truth treated as complete; fleet enforces incomplete rules as if they were comprehensive | Explicit Ground Truth completeness state in Project Readiness Assessment (Part 1); alerts when enforcement references undefined Ground Truth |
+| **Legacy Entanglement** | Agent modifies code with undocumented dependencies; change breaks unrelated systems through couplings no one documented | Preparation phase mandatory for legacy projects (Fleet Scaling & Lifecycle, Part 8); human must map critical dependencies before fleet writes code |
+| **Implicit Convention Override** | Fleet establishes new conventions that conflict with undocumented but intentional existing conventions | Human validates all fleet-proposed conventions against institutional knowledge; deploy enforcement only for human-confirmed conventions |
 
 ### Diagnostic Decision Tree
 
@@ -142,6 +147,13 @@ Effective backtracking requires:
 **Work from different agents doesn't integrate:**
 - Working in parallel? → **Optimistic Parallelism** → Contract-First Parallelism (Part 6): define contracts first.
 - Different naming for same concept? → **Invocation Inconsistency** → Ground Truth (Part 2).
+
+**Fleet operating on unfamiliar or legacy codebase:**
+- Agent following conventions that don't match team intent? → **Convention Inference** → Stop fleet. Human verifies conventions before re-deploying enforcement.
+- Agent reporting confident findings about codebase structure that seem wrong? → **Archaeology Hallucination** → Do not trust agent-generated codebase maps without human verification.
+- Enforcement flagging violations in areas without documented standards? → **Ground Truth Premature Crystallization** → Check Project Readiness state (Part 1). Document missing Ground Truth before enforcing.
+- Changes breaking seemingly unrelated code? → **Legacy Entanglement** → Enter Preparation phase (Part 8). Map dependencies before resuming fleet operations.
+- Fleet output conflicting with team's established (but undocumented) practices? → **Implicit Convention Override** → Pause fleet. Extract and document conventions from team. Resume with documented Ground Truth.
 
 ### Remediation Playbook
 

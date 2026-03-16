@@ -272,7 +272,7 @@ Error budgets formalize what Fleet Health Metrics' metric interpretation already
 
 ## Fleet Scaling & Lifecycle
 
-> **TL;DR** — Fleets evolve through five phases: Standup → Acceleration → Steady State → Wind-Down → Dormant. Scale up when generalists produce lower quality in specific domains. Scale down when specialists idle.
+> **TL;DR** — Fleets evolve through six phases: Preparation → Standup → Acceleration → Steady State → Wind-Down → Dormant. Not every project starts at Standup — projects without complete Ground Truth enter Preparation first. Scale up when generalists produce lower quality in specific domains. Scale down when specialists idle.
 
 ### Scaling Signals
 
@@ -286,11 +286,31 @@ Error budgets formalize what Fleet Health Metrics' metric interpretation already
 
 | Phase | Characteristics | Admiral Focus |
 |---|---|---|
+| **Preparation** | No fleet deployed. Human creates or completes Ground Truth. Safety nets scaffolded. | Assess readiness. Document conventions. Establish quality gates. Seed Brain with foundational decisions. |
 | **Standup** | Narrow Autonomous. Frequent escalations. | Define artifacts. Build trust. Accept slower velocity. |
 | **Acceleration** | Autonomous widening. Escalations decreasing. | Widen trust. Optimize tiers. Parallelize. |
 | **Steady State** | Stable throughput. Rare escalations. | Monitor drift. Maintain Ground Truth. Optimize cost. |
 | **Wind-Down** | Volume decreasing. Specialist knowledge less critical. | Consolidate roles. Demote tiers. Reduce fleet. |
 | **Dormant** | Maintenance mode. Minimal fleet preserved. | Orchestrator + Implementer + QA on standby. Artifacts preserved. |
+
+### Preparation Phase
+
+The Preparation phase exists for projects that cannot pass the Project Readiness Assessment (Part 1) as "Ready." This is human-led work — agents are not deployed during Preparation because they cannot operate effectively without Ground Truth.
+
+**Preparation activities by project type:**
+
+| Project Type | Activities | Expected Duration |
+|---|---|---|
+| **Greenfield** | Write Mission, Boundaries, Success Criteria. Choose and document tech stack. Establish coding conventions. Set up CI/CD, linting, testing infrastructure. | Hours to 1 day |
+| **Existing (well-documented)** | Verify Ground Truth matches reality. Seed Brain with key historical decisions and their rationale. Configure scope boundaries from CODEOWNERS or equivalent. | Hours to 1 day |
+| **Existing (poorly documented)** | Document conventions by examining code and interviewing team. Establish quality gates if missing. Write down tribal knowledge. Seed Brain with extracted decisions. | 1–3 days |
+| **Legacy (no maintainers)** | Study codebase manually or with deterministic tools (dependency scanners, framework detectors, coverage reports). Write characterization tests. Document what is known vs. unknown. Establish CI. Scope boundaries conservatively. | 1–2 weeks |
+
+**Exit criteria:** The Starter Pre-Flight Checklist (Appendix A) is passable — Mission, Boundaries, and Success Criteria are defined, quality gates are operational, and at least the universal enforcement hooks (budget, loops, prohibitions) can be deployed.
+
+**What Preparation is NOT:** It is not an agent doing reconnaissance. It is not a fleet "discovering" Ground Truth. It is a human — the Admiral — doing the foundational work that makes fleet operations possible. Agents may assist with mechanical, verifiable subtasks during Preparation (e.g., running `npm ls` to inventory dependencies, generating a test coverage report), but the judgment calls — what is a convention vs. an accident, what is intentional vs. technical debt, what the project's mission actually is — belong to the human.
+
+> **ANTI-PATTERN: PERPETUAL PREPARATION** — The preparation phase becomes an excuse to never deploy. "We're still documenting conventions." Ground Truth does not need to be perfect to deploy a Starter profile — it needs to be sufficient. Mission, Boundaries, tech stack, and basic conventions are enough. Deploy with what you have, advance Ground Truth during Standup as gaps are discovered. The risk of perpetual preparation is identical to the risk of Permanent Stage 1 — it prevents the fleet from demonstrating value.
 
 > **ANTI-PATTERN: PREMATURE DECOMMISSION** — Project enters maintenance, fleet decommissioned entirely. Six months later, a critical bug. Institutional memory gone. Maintain a dormant fleet.
 

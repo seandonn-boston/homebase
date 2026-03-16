@@ -1,7 +1,8 @@
 #!/bin/bash
 # Admiral Framework — Pre-Work Validator (PreToolUse)
-# Enforces SO-15: Pre-Work Validation
+# Enforces SO-15: Pre-Work Validation + Project Readiness Assessment (Part 1)
 # Checks that essential context is loaded before substantive work begins.
+# Includes readiness checks: Mission, Ground Truth, quality gates.
 # Fires on the first Write/Edit/Bash tool call — after that, tracks validation state.
 # Advisory only — emits warnings but NEVER hard-blocks (always exit 0).
 # Expects session_state in payload (passed by pre_tool_use_adapter).
@@ -57,6 +58,21 @@ fi
 # (c) Check that read operations happened before write (context gathering)
 if [ "$TOOL_CALL_COUNT" -lt 2 ]; then
   ALERTS+="PRE-WORK (SO-15): First substantive operation with fewer than 2 prior tool calls. SO-15 requires sufficient context before beginning work — consider reading relevant files first. "
+fi
+
+# (d) Project Readiness Assessment (Part 1)
+# Check for AGENTS.md or Ground Truth markers in the project root.
+# This is a lightweight heuristic: if the project has no AGENTS.md and no
+# Ground Truth indicators, it may be in the Preparation phase and not ready
+# for fleet operations. Advisory only — surfaces awareness, never blocks.
+PROJECT_ROOT=$(echo "$PAYLOAD" | jq -r '.tool_input.file_path // .tool_input.command // ""' | head -1)
+# Extract repo root from session state if available, otherwise skip readiness check
+REPO_ROOT=$(echo "$STATE" | jq -r '.repo_root // ""')
+if [ -n "$REPO_ROOT" ]; then
+  # Check for AGENTS.md (Ground Truth carrier)
+  if [ ! -f "$REPO_ROOT/AGENTS.md" ] && [ ! -f "$REPO_ROOT/.claude/AGENTS.md" ]; then
+    ALERTS+="READINESS (Part 1): No AGENTS.md found in project root. Project may be in Preparation phase — ensure Mission, Boundaries, and Success Criteria are defined before fleet operations. See Project Readiness Assessment (Part 1). "
+  fi
 fi
 
 # If all checks pass, signal validated state back to adapter
