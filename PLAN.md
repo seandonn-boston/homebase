@@ -6,9 +6,9 @@
 
 ---
 
-## Current Phase: Specification Hardening + Market Validation
+## Current Phase: Market Validation via Simulation
 
-### Phase 1: Specification Integrity (Current — Weeks 1-4)
+### Phase 1: Specification Integrity (Complete — Weeks 1-4)
 
 **Objective:** Resolve all internal contradictions, close the research-to-spec pipeline, and establish the codebase as internally consistent.
 
@@ -21,7 +21,7 @@
 | Empirical claims qualified | Complete | Sales pitch has Sources & Data Provenance table; PLAN.md cites sources; benchmarks updated |
 | Research-to-spec pipeline closed | Complete | `research-to-spec-pipeline.md` formalizes OS reframe (R-01), engineering ladder mapping (R-02), certification process (R-03) |
 
-### Phase 2: Market Validation via Simulation (Weeks 2-8)
+### Phase 2: Market Validation via Simulation (Current — Weeks 2-8)
 
 **Objective:** Build a Fortune 500 adoption simulation using confirmed 2025 financial data. Test the thesis against real company profiles at scale.
 
