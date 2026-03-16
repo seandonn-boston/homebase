@@ -221,6 +221,59 @@
       text-align: center;
       padding: 32px;
     }
+
+    /* Session State Bar */
+    .session-bar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 24px;
+      display: flex;
+      gap: 32px;
+      align-items: center;
+      font-size: 12px;
+    }
+
+    .session-bar .session-field {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .session-bar .field-label {
+      color: var(--text-dim);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .session-bar .field-value {
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .budget-bar-container {
+      flex: 1;
+      max-width: 300px;
+    }
+
+    .budget-bar {
+      height: 8px;
+      background: var(--surface-2);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 4px;
+    }
+
+    .budget-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.3s ease, background 0.3s ease;
+    }
+
+    .budget-bar-fill.ok { background: var(--green); }
+    .budget-bar-fill.warn { background: var(--yellow); }
+    .budget-bar-fill.critical { background: var(--red); }
   </style>
 </head>
 <body>
@@ -233,6 +286,26 @@
       <span id="agent-count">0 agents</span>
     </div>
   </header>
+
+  <!-- Session State -->
+  <div class="session-bar" id="session-bar" style="display:none">
+    <div class="session-field">
+      <span class="field-label">Session</span>
+      <span class="field-value" id="session-id">—</span>
+    </div>
+    <div class="session-field">
+      <span class="field-label">Tool Calls</span>
+      <span class="field-value" id="session-tools">0</span>
+    </div>
+    <div class="session-field budget-bar-container">
+      <span class="field-label">Token Budget <span id="budget-text">—</span></span>
+      <div class="budget-bar"><div class="budget-bar-fill ok" id="budget-fill" style="width:0%"></div></div>
+    </div>
+    <div class="session-field">
+      <span class="field-label">Hooks Fired</span>
+      <span class="field-value" id="session-hooks">0</span>
+    </div>
+  </div>
 
   <div class="grid">
     <!-- Event Stream -->
@@ -394,19 +467,42 @@
       refresh();
     }
 
+    function renderSession(session) {
+      if (!session || session.error) return;
+      const bar = document.getElementById('session-bar');
+      bar.style.display = 'flex';
+
+      const sid = session.session_id || '—';
+      document.getElementById('session-id').textContent = sid.substring(0, 8);
+      document.getElementById('session-tools').textContent = session.tool_call_count || 0;
+
+      const used = session.tokens_used || 0;
+      const budget = session.token_budget || 0;
+      const pct = budget > 0 ? Math.min(100, (used / budget) * 100) : 0;
+      const fill = document.getElementById('budget-fill');
+      fill.style.width = budget > 0 ? pct + '%' : '0%';
+      fill.className = 'budget-bar-fill ' + (pct > 90 ? 'critical' : pct > 70 ? 'warn' : 'ok');
+      document.getElementById('budget-text').textContent = budget > 0
+        ? `${used.toLocaleString()} / ${budget.toLocaleString()}`
+        : `${used.toLocaleString()} (no budget set)`;
+    }
+
     async function refresh() {
       try {
-        const [events, alerts, ascii, stats] = await Promise.all([
+        const [events, alerts, ascii, stats, session] = await Promise.all([
           fetchJSON('/api/events'),
           fetchJSON('/api/alerts'),
           fetchText('/api/trace/ascii'),
           fetchJSON('/api/stats'),
+          fetchJSON('/api/session'),
         ]);
 
         renderEvents(events);
         renderAlerts(alerts);
         renderTrace(ascii);
         renderStats(stats);
+        renderSession(session);
+        document.getElementById('session-hooks').textContent = events.length;
       } catch (e) {
         // Server may not be ready yet
       }

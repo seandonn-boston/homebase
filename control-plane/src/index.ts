@@ -16,6 +16,7 @@ export { AgentInstrumentation, InstrumentationConfig } from "./instrumentation";
 export { RunawayDetector, DetectorConfig, Alert, ControlChart, SPCMonitor } from "./runaway-detector";
 export { ExecutionTrace, TraceNode, TraceStats } from "./trace";
 export { AdmiralServer } from "./server";
+export { JournalIngester } from "./ingest";
 
 import { EventStream } from "./events";
 import { RunawayDetector, DetectorConfig } from "./runaway-detector";
