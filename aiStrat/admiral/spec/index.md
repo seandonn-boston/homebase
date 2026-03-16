@@ -2,7 +2,7 @@
 
 **A Workforce Toolkit for Autonomous AI Agent Fleets**
 
-v0.11.0-alpha.1773628467735 · March 2026
+v0.12.0-alpha.1773662320606 · March 2026
 
 -----
 
