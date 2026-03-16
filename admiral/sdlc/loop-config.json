@@ -1,0 +1,22 @@
+{
+  "max_iterations": 3,
+  "token_budget_per_cycle": 100000,
+  "require_human_merge_to_main": true,
+  "auto_merge_feature_branches": true,
+  "escalation_creates_issue": true,
+  "allowed_modify_paths": [
+    "admiral/",
+    "control-plane/",
+    ".hooks/"
+  ],
+  "blocked_modify_paths": [
+    "aiStrat/",
+    ".github/workflows/",
+    ".claude/settings"
+  ],
+  "circuit_breaker_checks": [
+    "iteration_cap",
+    "token_budget",
+    "runaway_alerts"
+  ]
+}

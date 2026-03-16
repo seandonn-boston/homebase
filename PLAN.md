@@ -44,6 +44,7 @@
 | Brain B1 round-trip tested | Not Started | Record → query → retrieve verified |
 | 5 starter agent configs created | Not Started | .claude/agents/*.md following prompt-anatomy |
 | Traced multi-agent session documented | Not Started | Full session trace in admiral/examples/ |
+| SDLC-in-CI loop operational | Not Started | Issue label triggers autonomous implement→review→revise cycle with circuit breakers; see `admiral/sdlc/` |
 
 ### Phase 4: IP Protection (Months 1-6)
 
