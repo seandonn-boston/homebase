@@ -34,13 +34,9 @@
 
 -----
 
-### SD-04: Monitor Immune System Layers 3-5 Are Specified But Unimplemented
+### ~~SD-04: Monitor Immune System Layers 3-5 Are Specified But Unimplemented~~ → Resolved
 
-**Severity:** Moderate
-**Claim:** The Monitor has a five-layer immune system with deterministic semantic analysis, LLM advisory, and antibody learning.
-**Reality:** Only Layers 1-2 have partial implementation. Layers 3-5 are fully specified but have no code, pseudocode, or reference implementation.
-**Where it appears:** `monitor/README.md`
-**Resolution path:** Either write reference implementations (even pseudocode) for Layers 3-5, or adjust the specification to clearly mark them as "design intent" rather than "architecture specification."
+*Moved to Resolved Debt (see below).*
 
 -----
 
@@ -70,6 +66,25 @@
 
 **Evidence:** `standing-orders-enforcement-map.md` updated to reflect E2 coverage. All hooks follow the advisory-only pattern (never hard-block, always exit 0) consistent with the framework's fail-open design. Hook implementations in `.hooks/` directory, wired through `pre_tool_use_adapter.sh` and `post_tool_use_adapter.sh`.
 **Remaining gap:** Coverage is 53%, not the 80%+ aspirational target in `benchmarks.md`. The enforcement spectrum thesis is now defensible (majority coverage) but not fully realized. Further progression tracked in the enforcement map's E3 targets.
+
+-----
+
+### SD-04: Monitor Immune System Layers 3-5 Are Specified But Unimplemented
+
+**Severity:** Moderate (was)
+**Resolved:** 2026-03-16
+**Resolution:** Reference implementations written for all three layers plus a pipeline orchestrator. Implementations in `admiral/monitor/quarantine/`:
+
+| Component | What It Does |
+|-----------|-------------|
+| `layer3_semantic.sh` | TF-IDF-weighted authority pattern scoring against curated attack corpus. Detects authority spoofing, behavior manipulation, credential fabrication, dangerous advice. LLM-airgapped. |
+| `layer4_llm_advisory.sh` | Rejection-only advisory with hardcoded prompt template. Catches obfuscated authority claims, high imperative density, and base64-encoded payloads. Cannot approve — only reject. |
+| `layer5_antibodies.sh` | Converts rejected attacks into Brain FAILURE entries. Rate-limited (50/hour), fingerprint-deduplicated, atomic writes. Preserves defanged attack patterns for defensive learning. |
+| `quarantine_pipeline.sh` | Chains Layers 3→4→5 with short-circuit (Layer 3 REJECT skips Layer 4). Fail-closed throughout. |
+| `attack_corpus.json` | Curated phrase corpus (4 categories, 50+ phrases with weights). Human-maintained, version-controlled. |
+
+**Evidence:** 39 integration tests passing (`admiral/monitor/quarantine/tests/test_quarantine.sh`). Tests cover all layers individually plus end-to-end pipeline, including: authority spoofing detection, behavior manipulation, credential fabrication, dangerous advice, clean content pass-through, Layer 3→4 short-circuit, duplicate antibody suppression, obfuscation evasion detection, and base64 payload detection.
+**Remaining gap:** Layer 4 uses deterministic heuristics as an LLM stand-in. Production deployment would require actual LLM API integration while preserving the rejection-only contract. Layer 3 Bayesian classifier is simplified (phrase matching vs. trained model). Attack corpus requires ongoing human curation.
 
 -----
 
