@@ -98,8 +98,8 @@ jobs:
       - name: Update index.md display version
         run: |
           NEW="${{ steps.version.outputs.new }}"
-          # Update line 6 of index.md which has the display version
-          sed -i "6s/v[0-9]*\.[0-9]*\.[0-9]*[^ ]*/$NEW/" aiStrat/admiral/spec/index.md
+          # Update the display version line in index.md (pattern-based to avoid line-number drift)
+          sed -i "s/^v[0-9]*\.[0-9]*\.[0-9]*[^ ]* · /$NEW · /" aiStrat/admiral/spec/index.md
 
       - name: Update AGENTS.md version
         run: |
