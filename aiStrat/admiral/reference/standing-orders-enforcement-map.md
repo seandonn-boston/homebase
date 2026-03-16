@@ -10,29 +10,47 @@
 - **Partially enforced:** 0 of 15 (0%)
 - **Advisory only (no hook):** 7 of 15 (47%)
 
-The enforcement spectrum (part3-enforcement.md, Deterministic Enforcement) classifies constraints as requiring either **hard enforcement** (hooks) or **soft enforcement** (standing orders + agent compliance). Safety-critical orders should trend toward hard enforcement as the framework matures.
+**By mechanism type:**
+
+| Mechanism | Count | Standing Orders | Hook Coverage |
+|-----------|-------|----------------|---------------|
+| **Mechanical** | 6 | SO 1, 3, 6, 8, 10, 15 | 5/6 (83%) — SO 8 (Quality Standards) is mechanical but delegates to project CI |
+| **Judgment-Assisted** | 6 | SO 5, 7, 9, 11, 12, 14 | 2/6 (33%) — SO 11, 12 have advisory hooks; SO 5, 7, 9, 14 have no hooks |
+| **Advisory** | 3 | SO 2, 4, 13 | 0/3 (0%) — no deterministic check possible |
+
+The enforcement spectrum (part3-enforcement.md, Deterministic Enforcement) classifies constraints as requiring either **enforcement** (hooks that block) or **monitoring** (hooks that observe and alert). Safety-critical orders should trend toward enforcement hooks; judgment-assisted orders should trend toward monitoring hooks. Advisory orders remain instruction-only by design.
 
 -----
 
+## Mechanism Classification
+
+Each standing order is classified by the **type of mechanism** required to uphold it:
+
+| Mechanism | Definition | Enforcement Implication |
+|-----------|-----------|----------------------|
+| **Mechanical** | Can be checked by a deterministic program with zero judgment. Binary pass/fail. | Must be a hook. Agent compliance is irrelevant — the check fires regardless. |
+| **Judgment-Assisted** | Requires agent interpretation, but a hook can detect violations or provide advisory context to assist. | Hook provides monitoring/alerting; agent applies judgment within the hook's guardrails. |
+| **Advisory** | Inherently requires agent judgment with no deterministic check possible. | Relies on standing order text in context. No hook can meaningfully enforce this. |
+
 ## Complete Mapping
 
-| SO # | Standing Order | Priority Tier | Hook Enforcement | Enforcement Mechanism |
-|------|---------------|--------------|-----------------|----------------------|
-| 1 | Identity Discipline | Safety | **Enforced** | `identity_validation` (SessionStart) — validates agent identity token and auth config artifact |
-| 2 | Output Routing | Operational | **No hook** | Advisory — agents must route outputs to correct channels; no deterministic validation |
-| 3 | Scope Boundaries | Safety | **Enforced** | `scope_boundary_guard` (PreToolUse) — validates file operations against protected directory boundaries; flags `aiStrat/`, `.github/workflows/`, `.claude/settings` modifications |
-| 4 | Context Honesty | Integrity | **No hook** | Advisory — agents instructed to flag gaps and assumptions; no deterministic validation |
-| 5 | Decision Authority | Operational | **No hook** | Advisory — references Decision Authority framework (Part 09) but no runtime hook enforces tier assignments |
-| 6 | Recovery Protocol | Operational | **Enforced** | `loop_detector` (PostToolUse) — enforces recovery ladder by detecting and breaking retry loops |
-| 7 | Checkpointing | Operational | **No hook** | Advisory — agents must produce checkpoints; no automated validation that they occur |
-| 8 | Quality Standards | Quality | **No hook** | Advisory — "every code change must pass automated checks" but enforcement delegated to project CI, not Admiral hooks |
-| 9 | Communication Format | Operational | **No hook** | Advisory — structured format documented but no parser/validator enforces it |
-| 10 | Prohibitions | Safety | **Enforced** | `prohibitions_enforcer` (PreToolUse) — detects enforcement bypass patterns, secret/credential exposure, and irreversible operations; `token_budget_checkpoint` (PreToolUse) warns on budget exhaustion |
-| 11 | Context Discovery | Operational | **Advisory** | `context_baseline` (SessionStart) + `context_health_check` (PostToolUse) — warns if critical context missing (advisory, never blocks) |
-| 12 | Zero-Trust Self-Protection | Safety | **Enforced** | `zero_trust_validator` (PostToolUse) — flags untrusted external data (WebFetch/WebSearch), detects prompt injection markers, assesses blast radius of write operations, flags excessive access scope |
-| 13 | Bias Awareness | Integrity | **No hook** | Advisory — metacognitive discipline with no deterministic enforcement |
-| 14 | Compliance, Ethics, Legal | Safety | **No hook** | Advisory — critical safety boundary but relies on agent judgment |
-| 15 | Pre-Work Validation | Operational | **Enforced** | `pre_work_validator` (PreToolUse) — validates Standing Orders loaded, budget defined, and sufficient context gathered before first substantive write operation |
+| SO # | Standing Order | Priority Tier | Mechanism | Hook Enforcement | Enforcement Mechanism |
+|------|---------------|--------------|-----------|-----------------|----------------------|
+| 1 | Identity Discipline | Safety | **Mechanical** | **Enforced** | `identity_validation` (SessionStart) — validates agent identity token and auth config artifact |
+| 2 | Output Routing | Operational | **Advisory** | **No hook** | Advisory — agents must route outputs to correct channels; no deterministic validation possible (routing correctness requires semantic understanding) |
+| 3 | Scope Boundaries | Safety | **Mechanical** | **Enforced** | `scope_boundary_guard` (PreToolUse) — validates file operations against protected directory boundaries; flags `aiStrat/`, `.github/workflows/`, `.claude/settings` modifications |
+| 4 | Context Honesty | Integrity | **Advisory** | **No hook** | Advisory — agents instructed to flag gaps and assumptions; confidence assessment is inherently a judgment call |
+| 5 | Decision Authority | Operational | **Judgment-Assisted** | **No hook** | Advisory — references Decision Authority framework (Part 09) but no runtime hook enforces tier assignments. A hook could detect Propose/Escalate-tier keywords in autonomous actions (judgment-assisted), but full enforcement requires semantic understanding of decision scope |
+| 6 | Recovery Protocol | Operational | **Mechanical** | **Enforced** | `loop_detector` (PostToolUse) — enforces recovery ladder by detecting and breaking retry loops via `(hook_name, error_signature)` tuple tracking |
+| 7 | Checkpointing | Operational | **Judgment-Assisted** | **No hook** | Advisory — agents must produce checkpoints. A hook could verify checkpoint artifacts exist at task boundaries (mechanical component), but checkpoint completeness requires judgment |
+| 8 | Quality Standards | Quality | **Mechanical** | **No hook** | Advisory — "every code change must pass automated checks" but enforcement delegated to project CI, not Admiral hooks. Fully mechanical when CI gates exist; the gap is Admiral hook integration, not mechanism type |
+| 9 | Communication Format | Operational | **Judgment-Assisted** | **No hook** | Advisory — structured format documented but no parser/validator enforces it. A hook could validate structural elements (AGENT, TASK, STATUS fields present) while content quality requires judgment |
+| 10 | Prohibitions | Safety | **Mechanical** | **Enforced** | `prohibitions_enforcer` (PreToolUse) — detects enforcement bypass patterns, secret/credential exposure, and irreversible operations; `token_budget_checkpoint` (PreToolUse) warns on budget exhaustion |
+| 11 | Context Discovery | Operational | **Judgment-Assisted** | **Advisory** | `context_baseline` (SessionStart) + `context_health_check` (PostToolUse) — warns if critical context missing (advisory, never blocks). Hook detects missing context mechanically; agent decides whether context is sufficient (judgment) |
+| 12 | Zero-Trust Self-Protection | Safety | **Judgment-Assisted** | **Enforced** | `zero_trust_validator` (PostToolUse) — flags untrusted external data (WebFetch/WebSearch), detects prompt injection markers, assesses blast radius of write operations, flags excessive access scope. Hook detects risk signals mechanically; agent applies risk assessment judgment |
+| 13 | Bias Awareness | Integrity | **Advisory** | **No hook** | Advisory — metacognitive discipline with no deterministic enforcement; bias recognition is inherently a judgment activity |
+| 14 | Compliance, Ethics, Legal | Safety | **Judgment-Assisted** | **No hook** | Advisory — critical safety boundary but relies on agent judgment. A hook could enforce a configurable deny-list (mechanical component) while legal/ethical judgment remains advisory |
+| 15 | Pre-Work Validation | Operational | **Mechanical** | **Enforced** | `pre_work_validator` (PreToolUse) — validates Standing Orders loaded, budget defined, and sufficient context gathered before first substantive write operation |
 
 -----
 

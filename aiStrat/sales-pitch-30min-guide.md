@@ -199,3 +199,22 @@ The space is crowding from two directions — agent frameworks adding governance
 
 *Total estimated time: 25-28 minutes with natural conversation flow.*
 *Leave 2-5 minutes for questions — the cheat sheet above covers the likely ones.*
+
+---
+
+## SOURCES & DATA PROVENANCE
+
+> **Update policy:** All market data claims in this document must cite their source with enough specificity to verify. Claims are current as of March 2026 — refresh quarterly or when underlying reports update.
+
+| Claim | Source | Scope / Caveats |
+|-------|--------|----------------|
+| "Black Tuesday" — $285B single-day loss in enterprise software stocks | Financial news reporting, Feb 3, 2026. Aggregated from major indices. | Single-day snapshot; recovery trajectory varied by sector. |
+| ~$2 trillion market cap decline by mid-February 2026 | Financial news aggregate, mid-February 2026. | Cumulative over ~2 weeks; includes partial recovery days. Not all decline attributable solely to AI agent capability. |
+| $660-690B hyperscaler AI infrastructure spending (2026) | Aggregated from Q4 2025 / Q1 2026 earnings calls and capex guidance: Microsoft, Google, Amazon, Meta, Apple, Nvidia, Tesla. | Forward-looking capex guidance, not actuals. Subject to revision. Total combines announced commitments across the "Magnificent Seven." |
+| ~$400B Magnificent Seven free cash flow | Aggregated from FY2025 earnings reports. | Trailing twelve-month figure; reinvestment rate is a directional claim, not a precise ratio. |
+| Data center vacancy at 1.6%; three-quarters pre-leased | CBRE North America Data Center Report, Q4 2025 / Q1 2026. | U.S.-focused metric; global vacancy rates differ. Pre-lease figure is for new capacity under construction. |
+| 40% of agentic AI deployments canceled by 2027 | Gartner, "Predicts 2025: AI Agents" (October 2025). | Prediction, not measurement. Scope: enterprise agentic AI projects. Gartner cites costs, unclear value, and poor risk controls as primary drivers. |
+| Autonomous AI agent market: $8.5B (2026), $35-45B (2030) | Deloitte, "AI Agents and Multiagent Systems: Technology & Market Perspective" (2025). | Market sizing estimate with range. Scope: autonomous AI agent software and services. |
+| AI governance market: $940M (2025), $7.4B by 2030, 51% CAGR | MarketsandMarkets, "AI Governance Market" report (2025). | Scope: AI governance software, tools, and services globally. CAGR is projected, not observed. |
+| "50+ frameworks" in market | Author estimate based on landscape analysis (March 2026). | Includes major open-source frameworks (LangChain, LangGraph, CrewAI, AutoGen, etc.), cloud-native SDKs (OpenAI Agents SDK, Google ADK, AWS Bedrock Agents), and enterprise platforms. Count is approximate. |
+| "Three competing big tech platforms" | Refers to Microsoft (Azure AI Agent Service), Google (Vertex AI + ADK), and Amazon (Bedrock Agents). | As of March 2026. OpenAI Frontier (launched March 11, 2026) could be counted as a fourth. |

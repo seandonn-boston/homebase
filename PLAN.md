@@ -1,8 +1,8 @@
 # PLAN.md — Admiral Framework Implementation Plan
 
-**Version:** v0.7.0-alpha
-**Last Updated:** 2026-03-15
-**Status:** Phase 1 Active
+**Version:** v0.9.0-alpha
+**Last Updated:** 2026-03-16
+**Status:** Phase 1 Complete
 
 ---
 
@@ -16,10 +16,10 @@
 |---|---|---|
 | Version consistency across all files | Complete | VERSION, index.md, AGENTS.md all say v0.7.0-alpha |
 | Ground truth references valid | Complete | PLAN.md and PLAN2.md exist and are current |
-| Enforcement language refined | Not Started | Part 3 distinguishes enforcement vs. monitoring |
-| Standing Orders classified by mechanism | Not Started | Each SO marked Mechanical / Judgment-Assisted / Advisory |
-| Empirical claims qualified | Not Started | All data claims cite source and scope |
-| Research-to-spec pipeline closed | Not Started | OS reframe, engineering ladder mapping, certification process defined |
+| Enforcement language refined | Complete | Part 3 distinguishes enforcement vs. monitoring; hooks tagged by function (Enforcement/Monitoring) |
+| Standing Orders classified by mechanism | Complete | Each SO classified as Mechanical / Judgment-Assisted / Advisory in enforcement map |
+| Empirical claims qualified | Complete | Sales pitch has Sources & Data Provenance table; PLAN.md cites sources; benchmarks updated |
+| Research-to-spec pipeline closed | Complete | `research-to-spec-pipeline.md` formalizes OS reframe (R-01), engineering ladder mapping (R-02), certification process (R-03) |
 
 ### Phase 2: Market Validation via Simulation (Weeks 2-8)
 
@@ -74,9 +74,11 @@
 
 ## Strategic Context
 
-Admiral is positioned as the operational infrastructure for AI agent workforces. The market is early but forming: $8.5B autonomous AI agent market (2026), projected $35-45B by 2030. The governance gap identified in the spec is real and unfilled.
+Admiral is positioned as the operational infrastructure for AI agent workforces. The market is early but forming: $8.5B autonomous AI agent market in 2026, projected $35-45B by 2030 (Deloitte, "AI Agents and Multiagent Systems," 2025). The governance gap identified in the spec is real and unfilled — Gartner predicts 40% of agentic AI deployments will be canceled by 2027 due to costs, unclear value, or poor risk controls ("Predicts 2025: AI Agents," October 2025).
 
 The plan sequences: specification integrity first (credibility), market validation second (evidence), reference implementation third (proof), IP protection in parallel (defense), commercialization as the thesis proves out (revenue).
+
+> **Data provenance:** Market claims in this document are sourced from analyst reports current as of March 2026. Full source table with scope and caveats: `aiStrat/sales-pitch-30min-guide.md`, Sources & Data Provenance section.
 
 ---
 
