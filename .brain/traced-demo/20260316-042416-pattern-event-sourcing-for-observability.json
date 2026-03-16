@@ -1,0 +1,12 @@
+{
+  "id": "e31de390-e668-4d18-9a76-7c5c8b48976d",
+  "project": "traced-demo",
+  "category": "pattern",
+  "title": "Event sourcing for observability",
+  "content": "Every hook invocation emits a structured event to .admiral/event_log.jsonl for control plane ingestion.",
+  "metadata": {
+    "tags": []
+  },
+  "source_agent": "backend-implementer",
+  "created_at": "2026-03-16T04:24:16Z"
+}
