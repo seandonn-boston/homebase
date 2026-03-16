@@ -68,9 +68,7 @@ jobs:
           RESULT=$(bash admiral/sdlc/circuit-breaker.sh \
             "${{ steps.params.outputs.iteration }}" \
             "sdlc-issue-${{ steps.params.outputs.issue_number }}")
-          # Use compact JSON on a single line for GITHUB_OUTPUT compatibility
-          RESULT_COMPACT=$(echo "$RESULT" | jq -c '.')
-          echo "result=$RESULT_COMPACT" >> "$GITHUB_OUTPUT"
+          echo "result=$RESULT" >> "$GITHUB_OUTPUT"
           PROCEED=$(echo "$RESULT" | jq -r '.proceed')
           echo "proceed=$PROCEED" >> "$GITHUB_OUTPUT"
           if [ "$PROCEED" = "false" ]; then
