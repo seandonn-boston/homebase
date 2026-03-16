@@ -88,8 +88,8 @@
 
 **Severity:** Moderate (was)
 **Resolved:** 2026-03-16
-**Resolution:** Added caveat "based on production patterns, refined through real-world deployment" to the competitive moat answer in `sales-pitch-30min-guide.md`. This is honest about the spec-based nature of the agent definitions without undermining the differentiator claim, consistent with the acknowledgment already present in `AGENTS.md`.
-**Evidence:** Updated text in sales pitch: "the 71 pre-defined roles with interface contracts — based on production patterns, refined through real-world deployment — don't exist anywhere else."
+**Resolution:** Updated competitive moat answer in `sales-pitch-30min-guide.md` to use language consistent with `AGENTS.md` and `fleet/README.md` — "based on production patterns observed across the AI agent ecosystem" rather than claiming real-world deployment refinement. This aligns the sales pitch with the spec's honest acknowledgment that agent definitions are specifications, not battle-tested implementations.
+**Evidence:** Updated text in sales pitch: "the 71 pre-defined roles with interface contracts — based on production patterns observed across the AI agent ecosystem — don't exist anywhere else."
 
 -----
 
