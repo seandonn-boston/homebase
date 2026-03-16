@@ -53,9 +53,13 @@
 | Milestone | Status | Exit Criteria |
 |---|---|---|
 | Invention dates documented | Complete | Git history extracted for 21/23 opportunities; `research/invention-dates.md` generated with earliest commit dates per innovation; extraction script at `research/extract-invention-dates.sh` |
+| Provisional #1 drafted (Enforcement Spectrum) | Complete | Attorney-ready draft at `research/ip/provisional-1-enforcement-spectrum.md`: title, claims (9), detailed description, prior art differentiation, figures list |
+| Provisional #2 drafted (Brain Architecture) | Complete | Attorney-ready draft at `research/ip/provisional-2-brain-architecture.md`: title, claims (10), detailed description, prior art differentiation, figures list |
+| Provisional #3 drafted (Intent Engineering) | Complete | Attorney-ready draft at `research/ip/provisional-3-intent-engineering.md`: title, claims (9), detailed description, prior art differentiation, figures list |
 | Provisional #1 filed (Enforcement Spectrum) | Not Started | Filed with patent counsel |
 | Provisional #2 filed (Brain Architecture) | Not Started | Filed with patent counsel |
-| Provisional #3 filed (Intent Engineering or Agent Identity) | Not Started | Filed with patent counsel |
+| Provisional #3 filed (Intent Engineering) | Not Started | Filed with patent counsel |
+| Trademark checklists prepared | Complete | Filing checklists at `research/ip/trademark-checklist-admiral-framework.md` and `research/ip/trademark-checklist-intent-engineering.md`; Classes 42 + 41; intent-to-use basis |
 | Trademark applications filed | Not Started | "Admiral Framework" and "Intent Engineering" |
 
 ### Phase 5: Commercialization (Months 3-12)
