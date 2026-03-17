@@ -12,11 +12,11 @@ Admiral operates at the intersection of two converging markets: **agentic AI orc
 
 ### Market Size
 
-- Autonomous AI agent market: **$8.5B by 2026**, projected **$35-45B by 2030** (Deloitte)
-- AI governance market: **$940M in 2025**, projected **$7.4B by 2030** (51% CAGR)
+- Autonomous AI agent market: **$8.5B by 2026**, projected **$35–45B by 2030** [Source: Deloitte, "TMT Predictions 2026 — AI Agent Orchestration", November 2025; note: Deloitte presents $8.5B and $35B as third-party "market estimates" it is summarizing, not Deloitte's own original figures; the $45B reflects Deloitte's upside scenario]
+- AI governance market: **$940M in 2025**, projected **$7.4B by 2030** (51% CAGR) [Source: UNVERIFIED — no primary source identified for these figures]
 - Agent orchestration market: **$30B projected by 2030**, possibly arriving 3 years early
-- 40% of enterprise applications will embed AI agents by end of 2026 (Gartner)
-- 40% of agentic AI projects will be **canceled by 2027** due to costs, unclear value, or poor risk controls (Gartner)
+- 40% of enterprise applications will **feature task-specific AI agents** by end of 2026 [Source: Gartner, "Emerging Tech: The Future of Agentic AI in Enterprise Applications", August 26, 2025; up from less than 5% in 2025]
+- 40% of agentic AI **projects** will be **canceled by 2027** due to costs, unclear value, or poor risk controls [Source: Gartner press release, June 25, 2025]
 
 That last stat is Admiral's strongest market argument: governance failures will kill deployments.
 
@@ -440,7 +440,9 @@ The EU AI Act's requirement for human oversight in high-risk AI creates a **regu
 - [MCP donated to Linux Foundation](https://www.anthropic.com/news/donating-the-model-context-protocol-and-establishing-of-the-agentic-ai-foundation)
 
 ### Market Reports & Analysis
-- [Deloitte: AI Agent Orchestration Predictions 2026](https://www.deloitte.com/us/en/insights/industry/technology/technology-media-and-telecom-predictions/2026/ai-agent-orchestration.html)
+- [Deloitte: AI Agent Orchestration Predictions 2026](https://www.deloitte.com/us/en/insights/industry/technology/technology-media-and-telecom-predictions/2026/ai-agent-orchestration.html) — source for $8.5B/2026 and $35–45B/2030 figures (Deloitte summarizing third-party estimates)
+- [Gartner: 40% of Agentic AI Projects Will Be Canceled by 2027](https://www.gartner.com/en/newsroom/press-releases/2025-06-25-gartner-predicts-over-40-percent-of-agentic-ai-projects-will-be-canceled-by-end-of-2027) — June 25, 2025
+- [Gartner: 40% of Enterprise Apps Will Feature Task-Specific AI Agents by 2026](https://www.gartner.com/en/newsroom/press-releases/2025-08-26-gartner-predicts-40-percent-of-enterprise-apps-will-feature-task-specific-ai-agents-by-2026-up-from-less-than-5-percent-in-2025) — August 26, 2025
 - [Kore.ai: Best Agentic AI Platforms 2026](https://www.kore.ai/blog/7-best-agentic-ai-platforms)
 - [Shakudo: Top 9 AI Agent Frameworks March 2026](https://www.shakudo.io/blog/top-9-ai-agent-frameworks)
 - [CIO: 21 Agent Orchestration Tools](https://www.cio.com/article/4138739/21-agent-orchestration-tools-for-managing-your-ai-fleet.html)

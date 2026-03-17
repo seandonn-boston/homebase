@@ -12,6 +12,8 @@ Revised: March 2026
 > - **[INFRA]** — Data centers, semiconductors, compute buildout
 > - **[RESEARCH]** — Scientific papers, publications, awards
 > - **[GEO]** — Geopolitical events, international competition, trade
+>
+> **Fact-check note:** Entries from 2010–2023 are well-established historical facts verifiable from primary sources and Wikipedia. Entries from 2024 onward are increasingly close to or beyond the August 2025 knowledge cutoff; claims dated September 2025 or later should be independently verified against primary sources. Source links are provided inline where available.
 
 ---
 
@@ -109,7 +111,7 @@ Revised: March 2026
 
 ### [RESEARCH] Google DeepMind AlphaGo Defeats Lee Sedol
 - **Date:** March 9-15, 2016
-- **Details:** AlphaGo defeated Go world champion Lee Sedol 4-1 in Seoul. Considered a landmark moment for AI — Go was believed to be decades away from AI mastery. 200M+ people watched. AlphaGo Zero (2017) later defeated AlphaGo 100-0 using pure self-play.
+- **Details:** AlphaGo defeated Go world champion Lee Sedol 4-1 in Seoul. Considered a landmark moment for AI — Go was believed to be decades away from AI mastery. 200M+ people watched [Source: Google DeepMind official communications; note: figure originates from DeepMind's own PR and has not been independently audited by broadcast measurement firms; bulk of viewership was Asian broadcast television]. AlphaGo Zero (2017) later defeated AlphaGo 100-0 using pure self-play.
 
 ---
 

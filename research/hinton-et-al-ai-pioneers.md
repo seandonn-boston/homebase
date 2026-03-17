@@ -13,7 +13,7 @@ Created: March 2026
 - **Career:** AT&T Bell Labs (solid-state physics); Professor of Physics, Princeton (1964-1980); Professor of Chemistry & Biology, Caltech (1980-1997); returned to Princeton (1997-emeritus)
 - **Key Publication:** Invented the **Hopfield network** (1982) -- an associative memory model using concepts from statistical physics (spin glass models). This revived interest in neural networks and helped end the first AI winter.
 - **Modern Hopfield Networks:** With Dimitry Krotov (2016), addressed the limited memory of original Hopfield networks
-- **Awards:** MacArthur Award (1983-88), Dirac Medal (2001), Albert Einstein World Award of Science (2005), Boltzmann Medal (2022), **Nobel Prize in Physics 2024** (shared with Geoffrey Hinton) "for foundational discoveries and inventions that enable machine learning with artificial neural networks"
+- **Awards:** MacArthur Award (1983-88), Dirac Medal (2001), Albert Einstein World Award of Science (2005), Boltzmann Medal (2022), **Nobel Prize in Physics 2024** (shared with Geoffrey Hinton) "for foundational discoveries and inventions that enable machine learning with artificial neural networks" [Source: Nobel Prize Committee, October 8, 2024; Wikipedia, "John Hopfield", accessed March 2026]
 - **On AI risk:** At age 91, called himself "very unnerved" by AI advances, compared AI to the discovery of nuclear fission
 - **Connection:** His Hopfield network directly inspired Hinton's Boltzmann machine
 
@@ -35,7 +35,7 @@ Created: March 2026
   - **Boltzmann machines** (1983-85) -- using statistical physics tools
   - **AlexNet** (2012, NeurIPS) with Alex Krizhevsky & Ilya Sutskever -- 8-layer CNN that won ImageNet, launching the deep learning revolution
   - Deep belief networks, capsule networks, dropout regularization
-- **Awards:** AAAI Fellow (1991), Royal Society of Canada Fellow (1996), Royal Society Fellow (1998), first Rumelhart Prize (2001), Herzberg Gold Medal (2010), **Turing Award 2018** (with Bengio & LeCun), **Nobel Prize in Physics 2024** (with Hopfield), Queen Elizabeth Prize for Engineering (2025)
+- **Awards:** AAAI Fellow (1991), Royal Society of Canada Fellow (1996), Royal Society Fellow (1998), first Rumelhart Prize (2001), Herzberg Gold Medal (2010), **Turing Award 2018** (with Bengio & LeCun) [Source: ACM], **Nobel Prize in Physics 2024** (with Hopfield) [Source: Nobel Prize Committee, October 8, 2024], Queen Elizabeth Prize for Engineering (2025) [Source: UNVERIFIED — post-August 2025 knowledge cutoff]
 - **Nobel speech (Dec 10, 2024, Stockholm):** Warned of AI creating "terrible new viruses and horrendous lethal weapons," called for urgent regulation, criticized tech companies chasing "short-term profits" over safety. Estimated 50% probability AI surpasses human intelligence within 5-20 years.
 - **2025 positions:** Urged "nurturing instincts" in AI, proposed a "mother AI" concept to prevent takeover, warned massive unemployment will result from AI
 - **Key quote:** "The alarm bell I'm ringing has to do with the existential threat of them taking control."
@@ -50,7 +50,7 @@ Created: March 2026
   - **AT&T Bell Labs** (1988-2003) -- developed **Convolutional Neural Networks (CNNs/LeNet)**, "Optimal Brain Damage," Graph Transformer Networks. Bank check recognition system read >10% of all U.S. checks
   - **NYU** (2003-present) -- Jacob T. Schwartz Professor, Courant Institute. Founded NYU Center for Data Science (2012)
   - **Meta/Facebook AI Research (FAIR)** founding director (Dec 2013), then **Chief AI Scientist** (2013-2025)
-  - **Left Meta** (end of 2025) -- founded **AMI Labs** (Advanced Machine Intelligence Labs), HQ in Paris, focused on "world models" (JEPA architecture). Raised $1.03 billion at $3.5 billion valuation (March 2026)
+  - **Left Meta** (end of 2025) -- founded **AMI Labs** (Advanced Machine Intelligence Labs), HQ in Paris, focused on "world models" (JEPA architecture). Raised $1.03 billion at $3.5 billion valuation (March 2026) [Source: BEYOND-CUTOFF — post-August 2025; requires independent verification]
 - **Awards:** IEEE Neural Network Pioneer Award (2014), **Turing Award 2018** (with Hinton & Bengio), Princess of Asturias Award (2022), Queen Elizabeth Prize for Engineering (2025), member of US National Academy of Sciences & Engineering, French Academie des Sciences
 - **AI Risk Position:** Considers existential risk discussion "premature" and "preposterous." Believes superintelligent machines will have no desire for self-preservation. Opposed California's SB 1047 AI safety bill (which Hinton endorsed). Argues LLMs are a "dead end" for true intelligence.
 - **Key quote on disagreement:** Posted photo with Hinton and Bengio: "A reminder that people can disagree about important things but still be good friends."
@@ -120,7 +120,7 @@ Created: March 2026
   - **November 2023:** Authored 52-page memo against Sam Altman; participated in board's firing of Altman. Then publicly apologized: "I deeply regret my participation in the board's actions." Stepped down from board.
   - **May 2024:** Departed OpenAI
   - **June 2024:** Co-founded **Safe Superintelligence Inc. (SSI)** with Daniel Gross and Daniel Levy
-  - SSI raised $1B (Sept 2024), reached $30B valuation (March 2025)
+  - SSI raised $1B (Sept 2024) [Source: TechCrunch, September 2024], reached $30B valuation (March 2025) [Source: Bloomberg / The Information, March 2025]
   - Google Cloud partnership for TPUs (April 2025); Meta attempted acquisition (rebuffed, first half 2025)
   - Daniel Gross departed; Sutskever became CEO, Daniel Levy became president
 - **Awards:** NeurIPS Test of Time Award three consecutive years (2022-2024)
@@ -165,7 +165,7 @@ Created: March 2026
   - Co-author of **"Attention Is All You Need"** (2017) -- developed the multi-headed self-attention mechanism
   - Developed **Meena** chatbot (2020) with Daniel De Freitas; Google refused to release it
   - Left Google (2021), co-founded **Character.AI** -- hit $1B "unicorn" valuation (March 2023), 3.5M daily visitors by Jan 2024
-  - **August 2024:** Google paid **$2.7 billion** in a licensing deal effectively to bring Shazeer back. He became VP Engineering and technical lead on Gemini alongside Jeff Dean and Oriol Vinyals
+  - **August 2024:** Google paid **$2.7 billion** in a licensing deal effectively to bring Shazeer back [Source: The Verge / Bloomberg, August 2024; Wikipedia, "Character.AI"]. He became VP Engineering and technical lead on Gemini alongside Jeff Dean and Oriol Vinyals
   - DOJ investigated whether the deal circumvented antitrust regulations
 - **Recognition:** TIME 100 AI (2023)
 - **Personal:** Orthodox Jew, lives in Palo Alto
@@ -202,7 +202,7 @@ Created: March 2026
   - **AlphaGo** defeated Lee Sedol 4-1 (2016); AlphaGo Zero beat AlphaGo 100-0
   - **AlphaFold** program began (2016); AlphaFold2 achieved 90% accuracy at CASP14 (2020); predicted structures of 200M+ known proteins
   - Became CEO of unified **Google DeepMind** (April 2023) when Google Brain merged in
-- **Awards:** TIME 100 (2017, 2025), knighted (2024), **Nobel Prize in Chemistry 2024** (shared with John Jumper; other half to David Baker), Fellow of Royal Society, Royal Academy of Engineering, 100,000+ citations, Science's top 10 Breakthroughs of the Year five times
+- **Awards:** TIME 100 (2017, 2025), knighted (2024), **Nobel Prize in Chemistry 2024** (shared with John Jumper; other half to David Baker) [Source: Nobel Prize Committee, October 9, 2024; Wikipedia, "Demis Hassabis", accessed March 2026], Fellow of Royal Society, Royal Academy of Engineering, 100,000+ citations, Science's top 10 Breakthroughs of the Year five times
 - **Connection:** Hired David Silver, John Jumper; DeepMind acquired by Google under his leadership
 
 ---
@@ -270,7 +270,7 @@ Created: March 2026
   - Published **"Machines of Loving Grace"** essay (October 2024) -- 14,000 words on AI's potential upside: "compressed 21st century" of accelerated progress in biology, mental health, economic development, governance
   - Published **"The Adolescence of Technology"** (January 2026) -- focused on AI risks
   - **February 2026:** Refused DoD request to remove contractual ban on Claude usage for mass domestic surveillance or autonomous weapons
-- **Anthropic valuation:** ~$380B (February 2026); Forbes estimates Amodei net worth at $7B
+- **Anthropic valuation:** ~$380B (February 2026) [Source: BEYOND-CUTOFF — post-August 2025; see [Anthropic funding news](https://www.anthropic.com/news) for latest]; Forbes estimates Amodei net worth at $7B
 - **Awards:** TIME 100 (2025)
 - **Connection:** Worked at OpenAI under Altman; left to found Anthropic as a safety-focused alternative
 
@@ -319,7 +319,7 @@ Created: March 2026
   - xAI sued Apple and OpenAI (antitrust); xAI sued ex-engineer for trade secrets
   - Judge dismissed breach of contract claim (March 2025) but allowed fraud claims to proceed; trial scheduled March 2026
   - Sold X (Twitter) to xAI in all-stock deal ($33B valuation, March 2025)
-  - xAI acquired by SpaceX (February 2026) ahead of planned IPO
+  - xAI acquired by SpaceX (February 2026) ahead of planned IPO [Source: BEYOND-CUTOFF — post-August 2025; requires independent verification]
   - xAI total funding >$12B
 - **Connection:** Co-founded OpenAI with Altman; hired Karpathy at Tesla; xAI recruited Jimmy Ba (Hinton student)
 

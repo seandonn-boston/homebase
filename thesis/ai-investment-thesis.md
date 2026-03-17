@@ -17,7 +17,7 @@ That said — there is a genuine, unresolved gap between what's being spent and 
 
 ## I. February 2026
 
-On February 3, 2026, Anthropic released Claude Cowork. The market lost its mind. $285 billion gone in a single session across enterprise software, legal tech, and financial services.
+On February 3, 2026, Anthropic released 11 enterprise plugins for Claude Cowork, triggering a major market selloff. $285 billion gone in a single session across enterprise software, legal tech, and financial services [Source: Bloomberg, February 3, 2026; CNN Business, February 4, 2026]. Note: Claude Cowork itself launched January 12–13, 2026 [Source: Fortune, January 13, 2026; Anthropic.com]; the February 3 enterprise plugin release is what triggered the selloff.
 
 The S&P 500 Software Index dropped 5.7% that day, then fell another 13% over the next five sessions. Thomson Reuters had its worst day on record, down ~16%. Salesforce fell ~26% year-to-date. LegalZoom sank ~20%. ServiceNow dropped ~7.4%. Intuit lost ~11%. By mid-February, enterprise software had collectively shed about $2 trillion in market cap.
 
@@ -27,7 +27,7 @@ Here's the thing people miss: the market wasn't panicking about AI failing. It w
 
 ## II. The DeepSeek Precedent
 
-On January 27, 2025, DeepSeek released its R1 reasoning model. Trained for a reported $5.6M. It rivaled models that cost hundreds of millions. The market panicked. $1 trillion wiped out in a single day. Nvidia alone lost $589 billion.
+On January 27, 2025, DeepSeek released its R1 reasoning model. Trained for a reported $5.6M [Source: DeepSeek; note: this figure covers only the compute cost of the final V3 training run (~2.788M H800 GPU hours at ~$2/hr); total development cost including hardware purchase, prior runs, and R&D is estimated well above $500M per SemiAnalysis and CNBC]. It rivaled models that cost hundreds of millions. The market panicked. $1 trillion wiped out in a single day [Source: Yahoo Finance, Fortune, January 27, 2025 — confirmed for U.S. tech sector]. Nvidia alone lost $589 billion [Source: Bloomberg, January 27, 2025 — confirmed as largest single-day market cap loss in U.S. history].
 
 The recovery started the next day. Nvidia clawed back $260 billion in 24 hours. Within a week, the consensus flipped: cheaper AI means bigger markets, faster adoption.
 
@@ -59,13 +59,13 @@ Private markets are a different conversation. [Anthropic raised $30B at $380B](h
 
 ### Demand Is Outrunning Supply, Not the Other Way Around
 
-Every hyperscaler says the same thing: they can't build fast enough. [Data center vacancy is at a record-low 1.6%](https://www.cbre.com/insights/reports/us-data-center-trends-2025). Three-quarters of capacity under construction is pre-leased. In a bubble, supply runs ahead of demand. Here, it's the opposite.
+Every hyperscaler says the same thing: they can't build fast enough. [North America data center vacancy is at a record-low 1.6%](https://www.cbre.com/insights/briefs/north-america-data-center-trends-h1-2025-ai-and-hyperscaler-demand-lead-to-record-low-vacancy) [Source: CBRE, "North America Data Center Trends H1 2025", August 2025]. Three-quarters of capacity under construction is pre-leased. In a bubble, supply runs ahead of demand. Here, it's the opposite.
 
 ---
 
 ## IV. The Scale of the Down Payment
 
-- **2025 actual hyperscaler capex:** $427 billion
+- **2025 actual hyperscaler capex:** ~$416 billion (Big 4: Amazon, Microsoft, Alphabet, Meta) [Source: Platformonomics, 2025 CapEx retrospective; CNBC, February 2026; note: widely cited $427B figure could not be verified in any identified public source]
 - **2026 committed capex (Big 5):** $660-690 billion
 - **Goldman Sachs projected cumulative 2025-2027:** $1.15 trillion
 - **~75% ($450B+) of 2026 spend** goes directly to AI infrastructure
@@ -181,7 +181,12 @@ Being early and well-capitalized is painful but survivable. Being late is fatal.
 - [AI Stock Market Selloff Creates Doom Loop (The Dupree Report)](https://www.thedupreereport.com/2026/02/ai-stock-market-selloff/)
 - [Anthropic's new AI tool sends shudders through software stocks (CNN)](https://www.cnn.com/2026/02/04/investing/us-stocks-anthropic-software)
 - [Anthropic's Claude triggered a trillion-dollar selloff (Fortune)](https://fortune.com/2026/02/06/anthropic-claude-opus-4-6-stock-selloff-new-upgrade/)
+- [Bloomberg — $285B selloff, Feb 3, 2026](https://www.bloomberg.com/news/articles/2026-02-03/legal-software-stocks-plunge-as-anthropic-releases-new-ai-tool)
+- [Fortune — Claude Cowork original launch, Jan 13, 2026](https://fortune.com/2026/01/13/anthropic-claude-cowork-ai-agent-file-managing-threaten-startups/)
+- [Anthropic Cowork webinar / product page](https://www.anthropic.com/webinars/future-of-ai-at-work-introducing-cowork)
 - [DeepSeek market selloff and recovery (NPR)](https://www.npr.org/2025/01/27/nx-s1-5276097/wall-street-stock-markets-tumble-deepseek-ai-tech-stock)
+- [Bloomberg — Nvidia $589B DeepSeek loss](https://www.bloomberg.com/news/articles/2025-01-27/asml-sinks-as-china-ai-startup-triggers-panic-in-tech-stocks)
+- [Yahoo Finance — $1T DeepSeek tech wipeout](https://finance.yahoo.com/news/deepseek-tech-wipeout-erases-more-052250534.html)
 
 ### Bubble Analysis & Valuation
 - [We're not in a bubble yet (Fortune/Owen Lamont)](https://fortune.com/2026/02/01/is-ai-a-bubble-top-economist-says-no-because-ipos-fraud/)
@@ -194,9 +199,11 @@ Being early and well-capitalized is painful but survivable. Being late is fatal.
 ### Infrastructure & Capex
 - [AI Capex 2026: The $690B Infrastructure Sprint (Futurum)](https://futurumgroup.com/insights/ai-capex-2026-the-690b-infrastructure-sprint/)
 - [Why AI companies may invest more than $500B in 2026 (Goldman Sachs)](https://www.goldmansachs.com/insights/articles/why-ai-companies-may-invest-more-than-500-billion-in-2026)
-- [US Data Center Trends 2025 (CBRE)](https://www.cbre.com/insights/reports/us-data-center-trends-2025)
+- [North America Data Center Trends H1 2025 (CBRE)](https://www.cbre.com/insights/briefs/north-america-data-center-trends-h1-2025-ai-and-hyperscaler-demand-lead-to-record-low-vacancy) — confirms 1.6% vacancy rate for North America
+- [Platformonomics — 2025 CapEx Retrospective](https://platformonomics.com/2026/02/follow-the-capex-2025-retrospective/) — Big 4 hyperscalers 2025 actual: ~$416B
 - [Amazon Annual Reports / AWS Revenue (Amazon IR)](https://ir.aboutamazon.com/sec-filings/annual-reports)
 - [Barclays — Hyperscaler FCF projections](https://www.barclays.com/insights/)
+- [Crunchbase — Big AI Funding Trends EOY 2025](https://news.crunchbase.com/ai/big-funding-trends-charts-eoy-2025/) — 2025 AI funding ~$202B
 
 ### Enterprise Adoption & ROI
 - [The State of AI in 2025 (McKinsey)](https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai)
