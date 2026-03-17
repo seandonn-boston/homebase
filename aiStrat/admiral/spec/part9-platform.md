@@ -111,6 +111,8 @@ The framework assumes MCP as the universal tool access protocol. As MCP matures,
 - Confirm the server's network egress matches its declared scope (no undeclared outbound connections)
 - Pin the server version and, when deployed, monitor for updates through the Continuous Monitor
 
+> **Security note:** Automated discovery does not bypass security review. Before registering any discovered MCP server, apply the Server Addition Checklist ([Part 13](part13-mcp-integration.md) Section 2). A server with good discovery signals may still require audit before use.
+
 **Heterogeneous protocol support:** Not all agents in a fleet speak MCP. The framework must accommodate:
 - Agents using Claude Agent SDK directly (native tool definitions, not MCP-wrapped)
 - Agents using REST APIs for tool access

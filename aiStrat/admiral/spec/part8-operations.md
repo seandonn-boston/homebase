@@ -84,7 +84,7 @@ The Continuous AI Landscape Monitor (`monitor/`) is designed to surface ecosyste
 | New flagship model release (e.g., Opus 5) | Strategic Shift | Model Selection (Part 4) → Cost Management → Fleet Composition (Part 4) |
 | New economy-tier model matching workhorse quality | Strategic Shift | Model Selection (Part 4) → Cost Management |
 | Exemplar tool redesigns agent patterns | Tactical Adjustment | Agent definitions, prompt anatomy, context profiles |
-| New MCP server ecosystem emerges | Tactical or Strategic | Tool Registry (Part 4) → Protocol Integration (Part 4) |
+| New MCP server ecosystem emerges | Tactical or Strategic | Tool Registry (Part 4) → Protocol Integration (Part 4) → [Server Selection Framework (Part 13)](part13-mcp-integration.md) |
 | Security vulnerability in tracked dependency | Strategic Shift | Configuration Security (Part 3) → Tool Registry (Part 4) |
 
 The Monitor specification defines a daily scan cadence. The Admiral should review digests at matching cadence and classify findings before they accumulate into stale intelligence.
@@ -414,6 +414,8 @@ The Orchestrator's routing decisions are spot-checked, not comprehensively revie
 **1. Admiral Relay (Manual):** Admiral extracts, validates, delivers knowledge from Fleet A to Fleet B as a Ground Truth update. Agents never communicate across fleet boundaries directly.
 
 **2. Protocol-Based (Automated):** A2A enables structured cross-fleet communication with contracts and authentication. Each fleet publishes Agent Cards for shareable interfaces.
+
+> **Practitioner guide:** Cross-fleet A2A requires mTLS, OAuth 2.0 with RFC 8707 resource indicators, and cross-fleet authorization policies. See [Part 13 — Protocol Integration Guide](part13-mcp-integration.md) Section 6 Phase 3 (Cross-Fleet Federation) for requirements and Section 5 Level 5 for testing procedures.
 
 ### Cross-Fleet Review
 

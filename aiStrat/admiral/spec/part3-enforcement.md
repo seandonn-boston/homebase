@@ -138,6 +138,9 @@ Agent action
 | **Scope** | Block modifications outside assigned directories | Stay focused on the current task |
 | **Process** | Require test existence before implementation accepted | Write tests for new features |
 | **Cost** | Warn and checkpoint when token budget exceeded | Be mindful of token usage |
+| **Protocol** | Block calls to unregistered MCP servers, block `latest` version pins, validate A2A identity tokens | Follow [Part 13](part13-mcp-integration.md) server selection criteria, prefer official servers |
+
+> **Protocol enforcement:** MCP server registration and A2A identity validation are SECURITY-class constraints. Unregistered server access and unsigned A2A messages must be hook-enforced, not advisory. See [Part 13 — Protocol Integration Guide](part13-mcp-integration.md) Section 7 for the complete protocol security checklist.
 
 > **Enforcement coverage rule:** Security and scope constraints MUST be hook-enforced. Any constraint classified under the SECURITY or SCOPE categories that is assigned to INSTRUCTION or GUIDANCE enforcement level represents a compliance gap. Validate enforcement coverage at configuration time, not at runtime — a miscategorized security constraint discovered during an incident is too late.
 

@@ -106,7 +106,7 @@ Effective backtracking requires:
 | **Completion Bias** | Delivers complete but degraded output rather than incomplete but excellent | Work Decomposition (Part 6): chunk sizing ensures full attention |
 | **Confidence Uniformity** | All output presented with equal confidence regardless of certainty | Quality Assurance: require confidence levels |
 | **Context Recency Bias** | Last-loaded context dominates; early constraints deprioritized | Context Profiles (Part 2): deliberate loading order |
-| **Phantom Capabilities** | Assumes tools or access it does not have | Tool Registry (Part 4): explicit negative tool list |
+| **Phantom Capabilities** | Assumes tools or access it does not have | Tool Registry (Part 4): explicit negative tool list; [Protocol Integration (Part 13)](part13-mcp-integration.md): capability probing and server trust classification |
 | **Scope Creep via Helpfulness** | Adds unrequested features; each reasonable, collectively budget-blowing | Boundaries (Part 1): explicit non-goals |
 | **Hierarchical Drift** | Specialists make orchestrator-level decisions | Fleet Composition (Part 4): explicit role boundaries |
 | **Invocation Inconsistency** | Same context, different outputs across runs; naming drifts | Ground Truth (Part 2): explicit conventions |
@@ -116,7 +116,7 @@ Effective backtracking requires:
 | **Instruction Decay** | Rules followed early, ignored as session lengthens | Deterministic Enforcement (Part 3): critical rules must be hooks |
 | **Memory Poisoning** | False info in agent memory persists across sessions | Configuration Security (Part 3): audit memory files |
 | **Configuration Injection** | Attacker modifies config to override constraints | Configuration Security (Part 3): CODEOWNERS, review requirements |
-| **Tool Hallucination via MCP** | Assumes MCP server provides capabilities it does not | Tool Registry (Part 4): explicit MCP capability list |
+| **Tool Hallucination via MCP** | Assumes MCP server provides capabilities it does not | Tool Registry (Part 4): explicit MCP capability list; [Protocol Integration (Part 13)](part13-mcp-integration.md) Section 8: anti-patterns and remedies including tool discovery verification |
 | **Session Amnesia** | Loses critical context between sessions despite checkpointing | Institutional Memory (Part 8): structured persistence patterns |
 | **Swarm Consensus Failure** | Agents reach consensus on an incorrect answer | Swarm Patterns (Part 6): adversarial review, multi-model cross-check |
 | **Config Accretion** | Config files grow until agents ignore rules | Configuration File Strategy (Part 2): 150-line rule, regular refactoring |
