@@ -30,6 +30,15 @@ export interface AgentEvent {
 
 export type EventListener = (event: AgentEvent) => void;
 
+export interface EventStreamConfig {
+  /** Maximum number of events to retain. Oldest events are evicted when exceeded. Default: 10000 */
+  maxEvents: number;
+}
+
+const DEFAULT_STREAM_CONFIG: EventStreamConfig = {
+  maxEvents: 10_000,
+};
+
 let eventCounter = 0;
 
 function generateId(): string {
@@ -39,6 +48,12 @@ function generateId(): string {
 export class EventStream {
   private events: AgentEvent[] = [];
   private listeners: EventListener[] = [];
+  private config: EventStreamConfig;
+  private evictedCount = 0;
+
+  constructor(config: Partial<EventStreamConfig> = {}) {
+    this.config = { ...DEFAULT_STREAM_CONFIG, ...config };
+  }
 
   emit(
     agentId: string,
@@ -60,6 +75,13 @@ export class EventStream {
     };
 
     this.events.push(event);
+
+    // Evict oldest events when over capacity
+    if (this.events.length > this.config.maxEvents) {
+      const overflow = this.events.length - this.config.maxEvents;
+      this.events.splice(0, overflow);
+      this.evictedCount += overflow;
+    }
 
     for (const listener of this.listeners) {
       listener(event);
@@ -89,6 +111,16 @@ export class EventStream {
 
   getEventsSince(timestamp: number): AgentEvent[] {
     return this.events.filter((e) => e.timestamp >= timestamp);
+  }
+
+  /** Number of events evicted since stream creation */
+  getEvictedCount(): number {
+    return this.evictedCount;
+  }
+
+  /** Total events ever emitted (retained + evicted) */
+  getTotalEmitted(): number {
+    return this.events.length + this.evictedCount;
   }
 
   clear(): void {

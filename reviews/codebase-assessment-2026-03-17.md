@@ -64,7 +64,6 @@ The code that exists is genuinely good:
 - **Zero-dependency policy** is admirable discipline for an early-stage project.
 
 **Issues found:**
-- The `biome.json` configuration has lint errors preventing `npm run lint` from succeeding (invalid keys `ignoreUnknown`, `includes`, `experimentalScannerIgnores`). This suggests Biome was upgraded but config wasn't updated.
 - `npm install` needed before build works — `node_modules` isn't committed (correct) but there's no documented setup step.
 - Module-level `let alertCounter = 0` and `let eventCounter = 0` are global mutable state — fine for single-process but won't scale to multi-instance.
 
@@ -168,11 +167,9 @@ The gap between spec and implementation is the project's primary risk. The spec 
 
 1. **Ship more code, write fewer specs.** The spec-to-code ratio needs to invert. A 500-line working fleet orchestrator is worth more than 5,000 lines of specification about how fleet orchestration should work.
 
-2. **Fix the broken lint configuration.** `biome.json` has invalid keys that prevent linting. This is a CI gap — the `control-plane-ci.yml` workflow should catch this.
+2. **Test the untested modules.** `server.ts`, `ingest.ts`, `trace.ts`, `instrumentation.ts`, and `cli.ts` need tests. The tested modules (runaway-detector, hooks) are the strongest parts of the codebase — the pattern is clear.
 
-3. **Test the untested modules.** `server.ts`, `ingest.ts`, `trace.ts`, `instrumentation.ts`, and `cli.ts` need tests. The tested modules (runaway-detector, hooks) are the strongest parts of the codebase — the pattern is clear.
-
-4. **Bound the event stream.** `EventStream.events` grows without limit. Add eviction, windowing, or persistence.
+3. **Bound the event stream.** `EventStream.events` grows without limit. Add eviction, windowing, or persistence.
 
 5. **Get customer validation.** Talk to 5-10 enterprises running multi-agent systems. The simulation is a hypothesis; customer conversations are evidence.
 
