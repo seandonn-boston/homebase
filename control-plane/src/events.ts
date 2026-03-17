@@ -31,7 +31,12 @@ export interface AgentEvent {
 export type EventListener = (event: AgentEvent) => void;
 
 export interface EventStreamConfig {
-  /** Maximum number of events to retain. Oldest events are evicted when exceeded. Default: 10000 */
+  /**
+   * Maximum number of events to retain. Oldest events are evicted when exceeded.
+   * Default: 10000. Keep this well above RunawayDetector's analysis windows
+   * (default: 5 calls in 30s, 10 subtasks in 60s) to avoid evicting events
+   * the detector still needs for pattern matching.
+   */
   maxEvents: number;
 }
 

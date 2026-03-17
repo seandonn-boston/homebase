@@ -6,7 +6,7 @@
 
 ---
 
-## Overall Rating: 7.2 / 10
+## Overall Rating: 7.5 / 10
 
 **Verdict: Strong foundation with real technical substance, but the spec-to-implementation ratio creates execution risk. The ideas are genuinely novel; the code that exists is high quality; the gap is turning specification into shipped product.**
 
@@ -19,13 +19,13 @@
 | Vision & Thesis | 9/10 | 15% | 1.35 |
 | Specification Quality | 8.5/10 | 15% | 1.28 |
 | Code Quality | 8/10 | 20% | 1.60 |
-| Test Coverage | 6.5/10 | 15% | 0.98 |
+| Test Coverage | 7.5/10 | 15% | 1.13 |
 | Architecture | 8/10 | 15% | 1.20 |
 | Market Viability | 6/10 | 10% | 0.60 |
 | Execution Completeness | 5/10 | 10% | 0.50 |
-| **Total** | | **100%** | **7.51** |
+| **Total** | | **100%** | **7.66** |
 
-Rounded composite: **7.2/10** (adjusted down slightly for the spec-heavy, implementation-light profile).
+Rounded composite: **7.5/10** (adjusted down slightly for the spec-heavy, implementation-light profile).
 
 ---
 
@@ -67,19 +67,18 @@ The code that exists is genuinely good:
 - `npm install` needed before build works — `node_modules` isn't committed (correct) but there's no documented setup step.
 - Module-level `let alertCounter = 0` and `let eventCounter = 0` are global mutable state — fine for single-process but won't scale to multi-instance.
 
-### 4. Test Coverage — 6.5/10
+### 4. Test Coverage — 7.5/10
 
-What exists is well-written:
-- **24 unit tests** for `RunawayDetector` — covers ControlChart statistics, SPC violations, all Western Electric rules, edge cases (zero stddev, insufficient samples)
+Strong coverage across most modules:
+- **77 unit tests** for the control plane — 24 for RunawayDetector/SPC, 13 for EventStream, 12 for ExecutionTrace, 15 for AgentInstrumentation, 13 for JournalIngester
 - **59 hook integration tests** — comprehensive coverage of enforcement scenarios (bypass detection, scope boundaries, privilege escalation, compliance alerts, adapter routing)
 - **13 Brain B1 assertions** — round-trip record/query/retrieve
 
-**Gaps:**
-- No tests for `server.ts`, `ingest.ts`, `trace.ts`, `instrumentation.ts`, `cli.ts` — that's 5 of 9 TypeScript source files untested
+**Remaining gaps:**
+- No tests for `server.ts` or `cli.ts` (HTTP routing and CLI arg parsing)
 - No code coverage metrics configured
 - No end-to-end tests (full hook → control plane → alert pipeline)
 - No performance/load tests for the event stream
-- Test ratio: ~55% of implementation lines have corresponding tests
 
 ### 5. Architecture — 8/10
 
@@ -100,7 +99,7 @@ Key design strengths:
 - **Fail-open design** — corruption triggers recovery, not crashes
 
 **Concerns:**
-- In-memory event storage (`EventStream.events: AgentEvent[]`) will grow unbounded in long sessions
+- In-memory event storage is bounded (maxEvents: 10,000 with LRU eviction), but eviction could cause the RunawayDetector to miss patterns if `maxEvents` is set too low — the detector scans the event stream for repeated calls within a time window
 - No event persistence beyond the session (events lost on restart)
 - The HTTP server in `server.ts` is hand-rolled (no framework) — fine for a prototype, but routing/middleware will accumulate complexity
 - Brain B2/B3 levels are designed but not implemented — the session-scoped B1 limits institutional memory
@@ -167,15 +166,13 @@ The gap between spec and implementation is the project's primary risk. The spec 
 
 1. **Ship more code, write fewer specs.** The spec-to-code ratio needs to invert. A 500-line working fleet orchestrator is worth more than 5,000 lines of specification about how fleet orchestration should work.
 
-2. **Test the untested modules.** `server.ts`, `ingest.ts`, `trace.ts`, `instrumentation.ts`, and `cli.ts` need tests. The tested modules (runaway-detector, hooks) are the strongest parts of the codebase — the pattern is clear.
+2. **Add event persistence.** Events are bounded in memory (10,000 max) but lost on restart. Wire `EventStream.emit()` to append to `.admiral/event_log.jsonl` so the `JournalIngester` can replay on startup. ~20 lines to close the loop.
 
-3. **Bound the event stream.** `EventStream.events` grows without limit. Add eviction, windowing, or persistence.
+3. **Test `server.ts` and `cli.ts`.** These are the last two untested TypeScript modules. HTTP routing is the most likely place for regressions as the API surface grows.
 
-5. **Get customer validation.** Talk to 5-10 enterprises running multi-agent systems. The simulation is a hypothesis; customer conversations are evidence.
+4. **Get customer validation.** Talk to 5-10 enterprises running multi-agent systems. The simulation is a hypothesis; customer conversations are evidence.
 
-6. **Reduce bus factor.** One contributor = existential risk. Open-source the non-IP-protected portions, recruit contributors, or bring on a co-founder.
-
-7. **Add a `Makefile` or root `package.json`.** There's no single command to build + test the entire project. Developer onboarding friction is unnecessarily high.
+5. **Add a `Makefile` or root `package.json`.** There's no single command to build + test the entire project. Developer onboarding friction is unnecessarily high.
 
 ---
 
@@ -200,4 +197,4 @@ Admiral is a **thoughtful, well-engineered foundation** for a genuinely importan
 
 The critical question is **execution velocity.** The project has spent ~3 months primarily on specification, simulation, and IP preparation. That's defensible strategic sequencing (credibility → evidence → proof → protection), but the window for agent governance tooling is opening now. Competitors are shipping features monthly.
 
-**Rating: 7.2/10** — Above average overall. Strong vision, solid code quality, good architecture. Pulled down by incomplete implementation, no market validation, and single-contributor risk. The path from here to a viable product is clear but requires a significant acceleration in shipping working software.
+**Rating: 7.5/10** — Above average overall. Strong vision, solid code quality, good architecture. Pulled down by incomplete implementation and no market validation. The path from here to a viable product is clear but requires a significant acceleration in shipping working software.
