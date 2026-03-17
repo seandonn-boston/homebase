@@ -79,6 +79,8 @@ The power of fleet architecture lies in parallelism. But parallelism without coo
 
 **4. Git Worktree Isolation:** Each agent works in a separate worktree — a complete repository copy on a different branch. Integration happens through merge after completion.
 
+**5. Cross-Process Coordination via A2A:** When agents operate in separate processes (CI/CD-triggered agents, distributed fleet), use the Handoff Protocol (Part 11) as the message format wrapped in [A2A (Part 13)](part13-mcp-integration.md) for transport. A2A adds timeout, idempotency, and authentication that in-process handoffs do not require.
+
 ### Assumption Divergence Detection
 
 **Warning signs:** Agent makes a design decision not in the contract. Agent asks questions the contract should answer. Two agents produce outputs using different naming or data shapes.

@@ -458,6 +458,8 @@ AWAITING: Admiral direction. All work ceased.
 
 > **TL;DR** — Every time one agent's output becomes another agent's input, it must follow a structured format. Unstructured handoffs produce the "I assumed you would give me X" failure mode.
 
+> **Transport scope:** The Handoff Protocol defines the *message format* for agent-to-agent work transfer. It operates within a single session or process. When agents operate across process or machine boundaries, wrap the Handoff in [A2A (Part 13)](part13-mcp-integration.md) for transport, authentication, and timeout handling. See Part 13 Section 6 (A2A Adoption Path) for the decision matrix on when A2A becomes necessary.
+
 ### Handoff Structure
 
 Every handoff between agents must include:

@@ -124,6 +124,8 @@ The Continuous AI Landscape Monitor (`monitor/`) produces intelligence that may 
 
 The monitor does not update Ground Truth automatically. It surfaces intelligence; the Admiral decides what enters Ground Truth and what remains Brain context.
 
+> **Protocol governance:** When the monitor surfaces new MCP servers, apply the Server Addition Checklist ([Part 13](part13-mcp-integration.md) Section 2) before adding to Ground Truth. All servers require trust classification (Official/Community/Internal) and security review. Version pins are mandatory — `latest` is never acceptable in production.
+
 ### Configuration as Ground Truth
 
 | Artifact | Purpose | Location | Review Cadence |
@@ -142,7 +144,7 @@ The monitor does not update Ground Truth automatically. It surfaces intelligence
 >
 > ENVIRONMENT: Stack: [Exact versions]. Infra: [Topology]. Access: [Per-role list]. Known issues: [List]. External deps: [Service, limits, quirks].
 >
-> CONFIGURATION: AGENTS.md: [lines/date]. Tool pointers: [CLAUDE.md / .cursorrules / etc.]. Hooks: [count/last audit]. Skills: [count/domains]. MCP servers: [list/versions].
+> CONFIGURATION: AGENTS.md: [lines/date]. Tool pointers: [CLAUDE.md / .cursorrules / etc.]. Hooks: [count/last audit]. Skills: [count/domains]. MCP servers: [name/version (pinned)/trust classification per [Part 13](part13-mcp-integration.md) Section 2].
 
 > **ANTI-PATTERN: PHANTOM CAPABILITIES** — Agents will confidently assume tools and access they do not have. An orchestrator might delegate a task assuming the specialist can query a database directly, when it can only read files. The specialist produces plausible-looking output grounded in fabricated data.
 
