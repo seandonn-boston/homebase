@@ -83,7 +83,7 @@ When a problem is well-defined, AI is better than you. Most consequential decisi
 
 AI is great at answering questions. It's bad at knowing which question matters. The person who identifies the right problem is now worth a lot more than the person who solves the given one, because solving the given one gets cheaper every quarter.
 
-[McKinsey's 2025 State of AI survey](https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai) found that the companies with the highest AI ROI ($10.30 per $1 invested vs. $3.70 average) didn't have the best AI. They had leadership that identified the right problems to apply AI to.
+[Microsoft/IDC research](https://blogs.microsoft.com/blog/2024/11/12/new-agentic-ai-idc-report/) found that the companies with the highest AI ROI ($10.30 per $1 invested vs. $3.70 average) didn't have the best AI. They had leadership that identified the right problems to apply AI to.
 
 Autonomous research agents like [Perplexity Deep Research](https://www.perplexity.ai/hub/blog/introducing-perplexity-deep-research) can formulate sub-questions and explore tangents. [AI Scientist-v2](https://arxiv.org/abs/2408.06292) formulates hypotheses on its own. But they all operate within a problem space that a human defined. The truly hard question — which problem space to enter — remains ours.
 
@@ -133,7 +133,7 @@ Shorten the timeline: macro productivity data showing clear AI-driven accelerati
 
 Stop getting faster at solving problems. Get better at finding the right ones. Everything downstream of problem identification is getting automated. The identification itself is not.
 
-[McKinsey](https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai) backs this up: the gap between the best AI outcomes ($10.30 per $1) and the average ($3.70 per $1) comes down entirely to problem selection. [Sectors with high AI exposure show 3x higher revenue growth per worker](https://openai.com/index/the-state-of-enterprise-ai-2025-report/), but only when the AI is pointed at the right problems.
+[Microsoft/IDC research](https://blogs.microsoft.com/blog/2024/11/12/new-agentic-ai-idc-report/) backs this up: the gap between the best AI outcomes ($10.30 per $1) and the average ($3.70 per $1) comes down entirely to problem selection. [Sectors with high AI exposure show 3x higher revenue growth per worker](https://openai.com/index/the-state-of-enterprise-ai-2025-report/), but only when the AI is pointed at the right problems.
 
 **2. Directing instead of doing.**
 
@@ -225,3 +225,4 @@ One more thing. Don't let any of this make you forget that some things are worth
 - [MIT NANDA Project — 95% of GenAI pilots fail to reach production (Fortune)](https://fortune.com/2025/08/18/mit-report-95-percent-generative-ai-pilots-at-companies-failing-cfo/)
 - [Gartner — 30%+ of GenAI projects abandoned after POC](https://www.gartner.com/en/newsroom/press-releases/2024-11-18-gartner-says-more-than-30-percent-of-generative-ai-projects-will-be-abandoned-after-proof-of-concept-by-end-of-2025)
 - [CNBC — DeepSeek hardware costs estimated at $500M+](https://www.cnbc.com/2025/01/31/deepseeks-hardware-spend-could-be-as-high-as-500-million-report.html)
+- [Microsoft/IDC — AI ROI: $10.30 per $1 for top performers](https://blogs.microsoft.com/blog/2024/11/12/new-agentic-ai-idc-report/)

@@ -88,10 +88,10 @@ These companies can afford to be early. They're sitting on $400B+ in trailing fr
 
 Enterprise adoption is real. The numbers undercut the "solution in search of a problem" line. But they also reveal a gap between adoption and impact that we can't wave away.
 
-- **94% of organizations** use AI (2026), up from 55% in 2023
+- **88% of organizations** use AI (2025), up from 55% in 2023
 - Enterprise AI revenue went from **$1.7B to $37B** in three years, capturing 6% of global SaaS
 - ChatGPT Enterprise reasoning token consumption: **320x** year-over-year increase
-- Top performers see **$10.30 in value per $1 invested** ($3.70 average)
+- Top performers see **[$10.30 in value per $1 invested](https://blogs.microsoft.com/blog/2024/11/12/new-agentic-ai-idc-report/)** ($3.70 average) (Microsoft/IDC)
 - AI funding hit [**$211B in 2025**](https://news.crunchbase.com/ai/big-funding-trends-charts-eoy-2025/) (Crunchbase; OECD estimates $258.7B), up from ~$114B in 2024
 
 ### Addressable Value
@@ -139,7 +139,7 @@ Yes. Nvidia invests in OpenAI. OpenAI buys Nvidia chips. Microsoft invests in Op
 
 **89% of executives see no productivity impact. How do you justify $660B in spending?**
 
-We don't fully justify it. 94% of organizations use AI. [89% of executives](https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai) report no measurable productivity impact. Adoption and value capture are different things. The organizational transformation required to turn AI capability into productivity has historically taken 15-25 years. Current capex assumes 3-5. That's the biggest risk in this thesis, and we're saying it out loud.
+We don't fully justify it. 88% of organizations use AI. [89% of executives](https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai) report no measurable productivity impact. Adoption and value capture are different things. The organizational transformation required to turn AI capability into productivity has historically taken 15-25 years. Current capex assumes 3-5. That's the biggest risk in this thesis, and we're saying it out loud.
 
 **You keep citing AWS. Isn't that a different situation?**
 
