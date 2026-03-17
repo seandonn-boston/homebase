@@ -25,7 +25,7 @@ Revised: March 2026
 - **Date:** 2010 (first competition)
 - **Details:** Annual competition using the ImageNet dataset (14M+ labeled images, 20,000+ categories). Created by Fei-Fei Li (Stanford) and collaborators. Published as "ImageNet: A Large-Scale Hierarchical Image Database" at CVPR 2009. The ILSVRC competition ran from 2010 to 2017 and was the crucible in which modern deep learning was forged — AlexNet (2012), GoogLeNet (2014), ResNet (2015) all emerged from it.
 - **2010 winner:** NEC-UIUC (28.2% top-5 error, using traditional computer vision methods — SIFT features + SVMs)
-- **2011 winner:** XRCE (25.8% top-5 error, still pre-deep-learning)
+- **2011 winner:** XRCE (25.7% top-5 error, still pre-deep-learning)
 - [ImageNet](https://www.image-net.org/) | [Stanford Vision Lab](http://vision.stanford.edu/)
 
 ---
@@ -52,13 +52,13 @@ Revised: March 2026
 - [Google Patents US9037464](https://patents.google.com/patent/US9037464B2/en)
 
 ### [RESEARCH] Dropout Patent Filed (US9,406,017)
-- **Date:** December 24, 2012 (filed); August 2, 2016 (granted)
-- **Details:** "System and method for addressing overfitting in a neural network." Google patented the dropout regularization technique — randomly disabling feature detectors during training to prevent overfitting. Inventors: Geoffrey Hinton, Alexander Krizhevsky, Ilya Sutskever. Continuation patents filed in 2013, 2016, 2019, and 2021 (US10366329B2, US10977557B2, US11829882B2). Not included in Google's Open Patent Non-Assertion Pledge.
+- **Date:** December 24, 2012 (provisional priority date); August 30, 2013 (non-provisional filed); August 2, 2016 (granted)
+- **Details:** "System and method for addressing overfitting in a neural network." Google patented the dropout regularization technique — randomly disabling feature detectors during training to prevent overfitting. Inventors: Geoffrey Hinton, Alexander Krizhevsky, Ilya Sutskever, Nitish Srivastava. Continuation patents filed in 2013, 2016, 2019, and 2021 (US10366329B2, US10977557B2, US11829882B2). Not included in Google's Open Patent Non-Assertion Pledge.
 - [Google Patents US9406017](https://patents.google.com/patent/US9406017B2/en)
 
 ### [RESEARCH] ZFNet Wins ILSVRC 2013
 - **Date:** 2013
-- **Details:** Matthew Zeiler and Rob Fergus (NYU) won ILSVRC 2013. Introduced visualization techniques for understanding CNNs. Top-5 error: 11.7%.
+- **Details:** Matthew Zeiler and Rob Fergus (NYU) won ILSVRC 2013. Introduced visualization techniques for understanding CNNs. Top-5 error: [11.2%](https://medium.com/coinmonks/paper-review-of-zfnet-the-winner-of-ilsvlc-2013-image-classification-d1a5a0c45103).
 
 ---
 
@@ -123,7 +123,7 @@ Revised: March 2026
 - [arXiv 1706.03762](https://arxiv.org/abs/1706.03762)
 
 ### [RESEARCH] Google Transformer Patent Filed (US10,452,978)
-- **Date:** October 27, 2017 (filed); October 22, 2019 (granted)
+- **Date:** June 28, 2018 (non-provisional filed; priority dates: May 23, 2017 and August 4, 2017); October 22, 2019 (granted)
 - **Details:** "Attention-based sequence transduction neural networks." The single most valuable AI patent in existence — protects the Transformer architecture described in "Attention Is All You Need." Inventors: Aidan Gomez, Jakob Uszkoreit, Llion Jones, Illia Polosukhin, Ashish Vaswani, Niki Parmar, Lukasz Kaiser, Noam Shazeer. Assigned to Google LLC. Has accrued hundreds of forward citations; virtually every major LLM or generative AI patent filed since 2017 references it. Continuation patent US10,719,764B2 filed 2019. Google grants patent rights to users of its open-source code (TensorFlow, JAX) but retains rights against independent implementors. Google has not enforced the patent, likely due to mutual assured destruction with other big tech patent portfolios.
 - [Google Patents US10452978](https://patents.google.com/patent/US10452978B2/en)
 
@@ -194,7 +194,7 @@ Revised: March 2026
 ## 2020
 
 ### [RESEARCH] Scaling Laws for Neural Language Models (Kaplan et al.)
-- **Date:** January 22, 2020
+- **Date:** January 23, 2020
 - **Details:** First systematic study showing loss scales as power-law with model size, dataset size, and compute. Authors include Jared Kaplan, Sam McCandlish, Dario Amodei (later Anthropic founders).
 - [arXiv 2001.08361](https://arxiv.org/abs/2001.08361)
 
@@ -1493,7 +1493,7 @@ The intellectual property landscape of AI reveals a concentrated patent moat hel
 | US5067164 | Hierarchical Constrained Automatic Learning Neural Network | Yann LeCun et al. | AT&T Bell Labs | 1989 | 1991 |
 | US5625708 | Symbol recognition using multidimensional preprocessing (CNN) | Yann LeCun | AT&T Bell Labs | 1992 | 1997 |
 | US9037464B2 | Computing numeric representations of words (Word2Vec) | Tomas Mikolov, Kai Chen, Gregory Corrado, Jeffrey Dean | Google Inc. | 2013 | 2015 |
-| US9406017B2 | Addressing overfitting in a neural network (Dropout) | Geoffrey Hinton, Alexander Krizhevsky, Ilya Sutskever | Google Inc. | 2012 | 2016 |
+| US9406017B2 | Addressing overfitting in a neural network (Dropout) | Geoffrey Hinton, Alexander Krizhevsky, Ilya Sutskever, Nitish Srivastava | Google Inc. | 2012 | 2016 |
 | US10417562B2 | Batch normalization layers | Sergey Ioffe, Corinna Cortes | Google LLC | 2016 | 2019 |
 | US10452978B2 | Attention-based sequence transduction neural networks (Transformer) | Vaswani, Shazeer, Parmar, Uszkoreit, Jones, Gomez, Kaiser, Polosukhin | Google LLC | 2017 | 2019 |
 | US10521718B2 | Adversarial training of neural networks | (Google researchers) | Google Inc. | — | 2019 |

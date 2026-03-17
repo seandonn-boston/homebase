@@ -124,7 +124,7 @@ At Opus 4.6 pricing ($15/$75 per M input/output tokens), a single recursive plan
 - **The cost paradox:** Inference costs have fallen 1,000-fold, but demand has risen 10,000-fold. Google researchers found multi-agent performance drops 39–70% while token spend multiplies.
 - **The compounding accuracy problem:** If an agent achieves 85% accuracy per action, a 10-step workflow only succeeds ~20% of the time. Failed workflows still burn tokens.
 - **Gartner predicts 40%+ of agentic AI projects will be canceled by end of 2027** — escalating costs is listed as a primary reason alongside unclear ROI and inadequate risk controls.
-- **DeepSeek's rise** (near-frontier performance at ~1/30th the cost of GPT-5.2 Pro) is partially a response to cost pressure from multi-agent deployments.
+- **DeepSeek's rise** (near-frontier performance at ~1/10th to 1/25th the cost of GPT-5.2 Pro) is partially a response to cost pressure from multi-agent deployments.
 - **CrewAI's** framework analysis found that many teams using their platform were spending 3–5x expected budgets because agents would re-query tools and re-process context unnecessarily.
 
 ### Who's Trying to Solve It
@@ -242,7 +242,7 @@ Multi-agent systems introduce novel attack surfaces: prompt injection propagatin
 - **The Promptware Kill Chain** (Schneier et al., 2026) — a framework modeling prompt injection as malware: initial access → privilege escalation (jailbreaking) → persistence (memory corruption) → lateral movement (spreading across agents/services). OpenAI acknowledged in December 2025 that prompt injection "is unlikely to ever be fully solved."
 - **Cross-agent privilege escalation:** A researcher got GitHub Copilot and Claude to rewrite each other's configuration files. Each AI assumed instructions from the other were legitimate, creating a feedback loop of mutual privilege escalation — a cross-agent insider threat.
 - **Memory Poisoning Attacks** — adversaries implant false info into agent long-term storage that persists across sessions. Unlike prompt injection that ends with the chat, poisoned memory persists indefinitely.
-- **Opus 4.6 found 22 Firefox zero-days** — demonstrating that frontier models (and therefore agents powered by them) have the capability to discover and potentially exploit vulnerabilities autonomously.
+- **Opus 4.6 found [22 previously unknown Firefox vulnerabilities](https://www.anthropic.com/news/mozilla-firefox-security)** — demonstrating that frontier models (and therefore agents powered by them) have the capability to discover and potentially exploit vulnerabilities autonomously.
 - [OWASP MCP Top 10](https://owasp.org/www-project-mcp-top-10/)
 - [The Promptware Kill Chain (arXiv)](https://arxiv.org/pdf/2601.09625)
 - [Simon Willison: MCP Has Prompt Injection Problems](https://simonwillison.net/2025/Apr/9/mcp-prompt-injection/)

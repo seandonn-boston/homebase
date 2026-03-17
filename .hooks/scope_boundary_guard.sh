@@ -88,7 +88,17 @@ if [ -z "$MATCHED_DIR" ]; then
 fi
 
 # Protected path matched and this is a write operation — check for session override
+# Check env var first, then session state file (allows in-session override via state)
 OVERRIDE="${ADMIRAL_SCOPE_OVERRIDE:-}"
+if [ -z "$OVERRIDE" ]; then
+  STATE_FILE="${PROJECT_DIR}/.admiral/session_state.json"
+  if [ -f "$STATE_FILE" ]; then
+    STATE_OVERRIDE=$(jq -r '.scope_override // empty' "$STATE_FILE" 2>/dev/null) || true
+    if [ -n "$STATE_OVERRIDE" ]; then
+      OVERRIDE="$STATE_OVERRIDE"
+    fi
+  fi
+fi
 OVERRIDE_MATCH=false
 if [ -n "$OVERRIDE" ]; then
   # Support comma-separated override list (e.g., ADMIRAL_SCOPE_OVERRIDE=aiStrat,.github/workflows)

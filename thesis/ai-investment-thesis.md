@@ -19,7 +19,7 @@ That said — there is a genuine, unresolved gap between what's being spent and 
 
 On February 3, 2026, Anthropic released 11 enterprise plugins for Claude Cowork, triggering a major market selloff. $285 billion gone in a single session across enterprise software, legal tech, and financial services [Source: Bloomberg, February 3, 2026; CNN Business, February 4, 2026]. Note: Claude Cowork itself launched January 12–13, 2026 [Source: Fortune, January 13, 2026; Anthropic.com]; the February 3 enterprise plugin release is what triggered the selloff.
 
-The S&P 500 Software Index dropped 5.7% that day, then fell another 13% over the next five sessions. Thomson Reuters had its worst day on record, down 16%. Salesforce fell 26% year-to-date. LegalZoom sank 20%. ServiceNow dropped 7.6%. Intuit lost 11%. By mid-February, enterprise software had collectively shed about $2 trillion in market cap.
+The S&P 500 Software Index dropped 5.7% that day, then fell another 13% over the next five sessions. Thomson Reuters had its worst day on record, down ~16%. Salesforce fell ~26% year-to-date. LegalZoom sank ~20%. ServiceNow dropped ~7.4%. Intuit lost ~11%. By mid-February, enterprise software had collectively shed about $2 trillion in market cap.
 
 Here's the thing people miss: the market wasn't panicking about AI failing. It was panicking about AI working so well that it could compress the total addressable market for per-seat SaaS by 80%. That's not bubble behavior. Bubbles happen when the technology doesn't deliver. This technology threatened $2+ trillion in incumbent value precisely because it delivered.
 
@@ -44,7 +44,7 @@ We've seen this movie before and we'll see it again. A disruption event triggers
 | Cisco P/E ratio | 472x | Nvidia: 44-47x |
 | Mag 7 P/E (sector avg) | ~60x+ | ~28x expected earnings |
 | Revenue growth | Mostly speculative | $37B enterprise GenAI spend, 3.2x YoY |
-| Cash generation | Minimal | Big 5: ~$400B trailing FCF |
+| Cash generation | Minimal | Big 5: ~$600B trailing operating cash flow |
 | Funding source | Debt and IPO proceeds | >$200B annual mega-cap FCF |
 
 These are profitable companies funding expansion from cash flow, not leverage. That matters.
@@ -55,7 +55,7 @@ These are profitable companies funding expansion from cash flow, not leverage. T
 
 Keep an eye on OpenAI's Q4 2026 IPO. If it triggers a wave of AI equity issuance, this changes.
 
-Private markets are a different conversation. [Anthropic raised $30B at $380B](https://www.anthropic.com/news). [OpenAI raised $110B at $730B pre-money](https://openai.com/index/openai-funding/). [Cursor raised at $14B+ on $1B ARR](https://www.cursor.com/). Big numbers with less price discovery than public markets. But private-market froth is less dangerous than public-market froth because it concentrates risk among venture funds, sovereign wealth funds, and mega-cap corporations that can absorb losses. The dotcom bubble was devastating because equity issuance put the risk on regular people. The AI buildout keeps the risk in Redmond and on Sand Hill Road.
+Private markets are a different conversation. [Anthropic raised $30B at $380B](https://www.anthropic.com/news). [OpenAI raised $110B at $730B pre-money](https://openai.com/index/openai-funding/). [Cursor raised at $29.3B on ~$1B ARR](https://www.cnbc.com/2025/11/13/cursor-ai-startup-funding-round-valuation.html). Big numbers with less price discovery than public markets. But private-market froth is less dangerous than public-market froth because it concentrates risk among venture funds, sovereign wealth funds, and mega-cap corporations that can absorb losses. The dotcom bubble was devastating because equity issuance put the risk on regular people. The AI buildout keeps the risk in Redmond and on Sand Hill Road.
 
 ### Demand Is Outrunning Supply, Not the Other Way Around
 
@@ -80,7 +80,7 @@ Every hyperscaler says the same thing: they can't build fast enough. [North Amer
 | Microsoft | $120B+ |
 | Oracle | ~$50B |
 
-These companies can afford to be early. They're sitting on $400B+ in trailing free cash flow. Amazon ran negative FCF for years while building AWS, and AWS now generates [$100B+ in annual revenue at 30%+ margins](https://ir.aboutamazon.com/sec-filings/annual-reports). The question isn't whether they survive a timing miss. It's whether the returns come in 3 years or 10.
+These companies can afford to be early. They're sitting on $600B+ in trailing operating cash flow (roughly $200B+ in free cash flow after capex). Amazon ran negative FCF for years while building AWS, and AWS now generates [$100B+ in annual revenue at 30%+ margins](https://ir.aboutamazon.com/sec-filings/annual-reports). The question isn't whether they survive a timing miss. It's whether the returns come in 3 years or 10.
 
 ---
 
@@ -88,17 +88,17 @@ These companies can afford to be early. They're sitting on $400B+ in trailing fr
 
 Enterprise adoption is real. The numbers undercut the "solution in search of a problem" line. But they also reveal a gap between adoption and impact that we can't wave away.
 
-- **94% of organizations** use AI (2026), up from 55% in 2023
+- **88% of organizations** use AI (2025), up from 55% in 2023
 - Enterprise AI revenue went from **$1.7B to $37B** in three years, capturing 6% of global SaaS
 - ChatGPT Enterprise reasoning token consumption: **320x** year-over-year increase
-- Top performers see **$10.30 in value per $1 invested** ($3.70 average)
-- AI funding hit approximately **$202B in 2025**, up ~75% from approximately $110B in 2024 [Source: Crunchbase, "Big Funding Trends EOY 2025"; note: the specific $232.3B figure could not be verified in any publicly indexed source; Crunchbase's figure of ~$202B is the most widely cited verified total for 2025]
+- Top performers see **[$10.30 in value per $1 invested](https://blogs.microsoft.com/blog/2024/11/12/new-agentic-ai-idc-report/)** ($3.70 average) (Microsoft/IDC)
+- AI funding hit [**$211B in 2025**](https://news.crunchbase.com/ai/big-funding-trends-charts-eoy-2025/) (Crunchbase; OECD estimates $258.7B), up from ~$114B in 2024
 
 ### Addressable Value
 
 [WEF/Cognizant](https://www.weforum.org/stories/2026/01/ai-bubble-value-gap/) says AI could tackle $4.5 trillion in U.S. work and add $1 trillion to GDP. [Goldman Sachs](https://www.goldmansachs.com/insights/articles/generative-ai-could-raise-global-gdp-by-7-percent) projects a 7% boost to global GDP over a decade. [McKinsey](https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-economic-potential-of-generative-ai-the-next-productivity-frontier) estimates $2.6-$4.4 trillion annually.
 
-Those are projections about what the technology could capture, not what it has captured. "Addressable" and "captured" are very different words. [Robert Gordon](https://www.nber.org/papers/w18315) showed the internet created trillions in consumer surplus while median wage growth stayed sluggish. [Acemoglu](https://www.nber.org/papers/w32487) estimates a more conservative 0.5-0.9% TFP growth over a decade. Even his floor implies hundreds of billions in new value. And the companies actually capturing it are growing at absurd rates: [Anthropic's ARR grew 14x in 14 months](https://www.anthropic.com/). [Cursor hit $1B+ ARR in two years](https://www.cursor.com/).
+Those are projections about what the technology could capture, not what it has captured. "Addressable" and "captured" are very different words. [Robert Gordon](https://www.nber.org/papers/w18315) showed the internet created trillions in consumer surplus while median wage growth stayed sluggish. [Acemoglu](https://www.nber.org/papers/w32487) estimates a more conservative 0.53-0.66% TFP growth over a decade. Even his floor implies hundreds of billions in new value. And the companies actually capturing it are growing at absurd rates: [Anthropic's ARR grew 14x in 14 months](https://www.anthropic.com/). [Cursor hit $1B+ ARR in two years](https://www.cursor.com/).
 
 ---
 
@@ -127,9 +127,9 @@ Every major infrastructure buildout in history looked like a bubble to the peopl
 
 ## FAQ
 
-**How is this not a bubble when spending outpaces revenue by $500B+?**
+**How is this not a bubble when spending outpaces revenue by $600B+?**
 
-[Sequoia](https://www.sequoiacap.com/article/ais-600b-question/) puts the gap between AI infrastructure spend and AI revenue at about $500B. That gap tripled in 12 months, even as [revenue went from $1.7B to $37B](https://menlovc.com/perspective/2025-the-state-of-generative-ai-in-the-enterprise/).
+[Sequoia](https://www.sequoiacap.com/article/ais-600b-question/) puts the gap between AI infrastructure spend and AI revenue at about $600B. That gap tripled in 12 months, even as [revenue went from $1.7B to $37B](https://menlovc.com/perspective/2025-the-state-of-generative-ai-in-the-enterprise/).
 
 We think the gap is temporal, not structural. But we should be honest: every bubble investor in history believed the gap was temporal. Sometimes they were right — AWS ran negative free cash flow for years before generating $100B+ in annual revenue. Sometimes they were wrong — fiber optics sat 85-95% unused for years. The AI gap has fewer structural blockers than the dotcom gap. That's not proof it closes on time. What we actually watch is the ratio of spend-to-revenue, not just the absolute numbers.
 
@@ -139,7 +139,7 @@ Yes. Nvidia invests in OpenAI. OpenAI buys Nvidia chips. Microsoft invests in Op
 
 **89% of executives see no productivity impact. How do you justify $660B in spending?**
 
-We don't fully justify it. 94% of organizations use AI. [89% of executives](https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai) report no measurable productivity impact. Adoption and value capture are different things. The organizational transformation required to turn AI capability into productivity has historically taken 15-25 years. Current capex assumes 3-5. That's the biggest risk in this thesis, and we're saying it out loud.
+We don't fully justify it. 88% of organizations use AI. [89% of executives](https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai) report no measurable productivity impact. Adoption and value capture are different things. The organizational transformation required to turn AI capability into productivity has historically taken 15-25 years. Current capex assumes 3-5. That's the biggest risk in this thesis, and we're saying it out loud.
 
 **You keep citing AWS. Isn't that a different situation?**
 
@@ -147,7 +147,7 @@ In important ways, yes. AWS was demand-proven — it served Amazon's own e-comme
 
 **What about fiber optics?**
 
-The fiber buildout (1998-2001) was also supply-constrained with construction crews backlogged. But the demand projections were wrong, and [installed fiber utilization dropped to about 2.5%](https://en.wikipedia.org/wiki/Dot-com_bubble). Here's where the comparison breaks down: the fiber buildout was driven by speculative demand projections. AI demand is backed by real revenue — $37B in enterprise AI, $14B ARR at Anthropic, $1B+ at Cursor. [Gartner](https://www.gartner.com/en/newsroom/press-releases/2024-11-18-gartner-says-more-than-30-percent-of-generative-ai-projects-will-be-abandoned-after-proof-of-concept-by-end-of-2025) says 30%+ of AI pilots will be abandoned after proof of concept, and that's worth taking seriously. But the companies that do convert pilots are growing at rates nobody has seen in enterprise software before. Watch vacancy rates in 2027-2028.
+The fiber buildout (1998-2001) was also supply-constrained with construction crews backlogged. But the demand projections were wrong, and [installed fiber utilization dropped to under 5%](https://en.wikipedia.org/wiki/Dot-com_bubble). Here's where the comparison breaks down: the fiber buildout was driven by speculative demand projections. AI demand is backed by real revenue — $37B in enterprise AI, $14B ARR at Anthropic, $1B+ at Cursor. [Gartner](https://www.gartner.com/en/newsroom/press-releases/2024-11-18-gartner-says-more-than-30-percent-of-generative-ai-projects-will-be-abandoned-after-proof-of-concept-by-end-of-2025) says 30%+ of AI pilots will be abandoned after proof of concept, and that's worth taking seriously. But the companies that do convert pilots are growing at rates nobody has seen in enterprise software before. Watch vacancy rates in 2027-2028.
 
 **What about geopolitics, security, and regulation?**
 
@@ -223,3 +223,5 @@ Being early and well-capitalized is painful but survivable. Being late is fatal.
 - [Anthropic $30B round at $380B valuation](https://www.anthropic.com/news)
 - [OpenAI $110B funding at $730B valuation](https://openai.com/index/openai-funding/)
 - [Thomson Reuters Press Releases](https://www.thomsonreuters.com/en/press-releases.html)
+- [Crunchbase — AI funding trends 2025](https://news.crunchbase.com/ai/big-funding-trends-charts-eoy-2025/)
+- [CNBC — Cursor raises $2.3B at $29.3B valuation](https://www.cnbc.com/2025/11/13/cursor-ai-startup-funding-round-valuation.html)

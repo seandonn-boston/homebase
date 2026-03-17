@@ -131,6 +131,8 @@ The Model Context Protocol (Protocol Integration, Part 4) is how agents access t
 - **Authentication is standard.** OAuth 2.0 or API key auth, same as any other MCP server.
 - **The protocol evolves.** As MCP evolves (streaming, subscriptions, richer types), the Brain gains capabilities without schema changes.
 
+> **Practitioner guide:** For MCP testing procedures, incremental adoption from B1→B3, and security checklists, see [Part 13 — Protocol Integration Guide](part13-mcp-integration.md).
+
 ### MCP Server Tools
 
 The Brain MCP server exposes a focused set of tools:

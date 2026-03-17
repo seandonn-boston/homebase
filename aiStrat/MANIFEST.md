@@ -164,6 +164,24 @@ aiStrat/admiral/spec/part11-protocols.md
 ```
 
 ```
+
+```
+part13-mcp-integration.md - admiral/doctrine - 2026-03-17:
+Consolidated MCP and A2A integration guide. Fills five gaps identified in spec review:
+(1) Consolidated reference map — navigation table linking all MCP/A2A references across
+Parts 2–5, 9, and appendices; (2) Server selection framework — decision criteria,
+trust classification decision tree, addition/removal checklists; (3) Testing and
+validation — five test levels from connection validation to OWASP MCP Top 10, with
+validation cadence per profile; (4) Incremental adoption path — six phases from no
+MCP (Starter) to full protocol maturity (Enterprise), bridging the Starter→Governed
+gap; (5) Security checklist — per-server and fleet-wide review consolidated from
+research on real-world MCP vulnerabilities (36.7% SSRF rate); (6) A2A adoption path —
+four phases from discovery to cross-fleet federation. Seven anti-patterns with remedies.
+Cross-references all source sections without duplicating content.
+aiStrat/admiral/spec/part13-mcp-integration.md
+```
+
+```
 intent-engineering.md - admiral/doctrine - 2026-03-10:
 The shared dialect between Admirals and Brains. Defines intent engineering as the
 evolution beyond prompt engineering (single call-and-response) and context engineering

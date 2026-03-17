@@ -85,7 +85,7 @@ These help you **build and run** multi-agent systems. They don't provide governa
 
 **What it is:** LangGraph is an open-source graph-based agent orchestration framework. LangSmith provides observability, evaluation, and deployment infrastructure on top.
 
-**Why it matters for Admiral:** The LangChain ecosystem is the most widely adopted agent toolchain (47M+ PyPI downloads). LangSmith's monitoring, evaluation, and governance features are expanding into Admiral's territory.
+**Why it matters for Admiral:** The LangChain ecosystem is the most widely adopted agent toolchain ([500M+ cumulative PyPI downloads, ~222M/month](https://pypistats.org/packages/langchain)). LangSmith's monitoring, evaluation, and governance features are expanding into Admiral's territory.
 
 | Dimension | LangGraph/LangSmith | Admiral |
 |---|---|---|
@@ -107,9 +107,9 @@ These help you **build and run** multi-agent systems. They don't provide governa
 
 ---
 
-### OpenAI Agents SDK + Frontier (March 2026)
+### OpenAI Agents SDK + Frontier (February 2026)
 
-**What it is:** Production-ready evolution of Swarm. Lightweight primitives: Agents, Handoffs, Guardrails. **Frontier** (launched March 11, 2026) is OpenAI's new enterprise platform for managing AI agent teams.
+**What it is:** Production-ready evolution of Swarm. Lightweight primitives: Agents, Handoffs, Guardrails. **Frontier** ([launched February 5, 2026](https://openai.com/index/introducing-openai-frontier/)) is OpenAI's new enterprise platform for managing AI agent teams.
 
 **Why it matters for Admiral:** Frontier is the most direct competitive threat to materialize recently. It provides agent identity management, permissions, shared context, and performance tracking — core Admiral concepts — bundled with OpenAI's models and distribution.
 
@@ -390,7 +390,7 @@ The market is fragmenting: 50+ frameworks, 3 big tech platforms, multiple govern
 
 ### 5. Watch OpenAI Frontier Closely
 
-Launched March 11, 2026 — two days ago. This is the most direct threat to Admiral's positioning. Monitor its feature development, enterprise adoption, and whether it remains OpenAI-locked or opens up.
+Launched [February 5, 2026](https://openai.com/index/introducing-openai-frontier/). This is the most direct threat to Admiral's positioning. Monitor its feature development, enterprise adoption, and whether it remains OpenAI-locked or opens up.
 
 ---
 

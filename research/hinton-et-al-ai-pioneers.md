@@ -92,7 +92,7 @@ Created: March 2026
   - Co-founded **AI4ALL** nonprofit (2017) for inclusive AI education
   - Co-founded **World Labs** (2024) -- AI startup for spatial intelligence, $1B valuation
 - **Key Contribution:** **ImageNet** (2009-2017) -- 14+ million labeled images, one of the "three driving forces" of the deep learning revolution. The 2012 AlexNet breakthrough on ImageNet demonstrated deep learning's power.
-- **Awards:** ACM Fellow (2018), TIME Person of the Year (2025), Queen Elizabeth Prize for Engineering (2025)
+- **Awards:** ACM Fellow (2018), TIME Person of the Year 2025 (as part of ["Architects of AI"](https://www.pbs.org/newshour/nation/architects-of-ai-named-time-magazines-2025-person-of-the-year) group), Queen Elizabeth Prize for Engineering (2025)
 - **Insight:** "The data was the key" -- recognized that scale of data mattered as much as algorithms
 - **Connection:** PhD advisor to Andrej Karpathy at Stanford
 

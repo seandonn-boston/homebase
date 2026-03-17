@@ -167,7 +167,7 @@ A comprehensive research dossier of the most impressive LLM agent projects, AI c
 
 ### Claude Opus 4.6 / Sonnet 4.6 (Anthropic)
 - **What:** Frontier models powering most agent workflows. Opus 4.6: 1M token context, $15/$75 per M input/output tokens. Sonnet 4.6: faster variant at $3/$15 per M tokens.
-- **Impressive:** Opus 4.6 benchmarks: 80.8% SWE-Bench Verified (highest of any model), 58.7% OSWorld, 32.6% ARC-AGI-2, 74.1% GPQA Diamond, 80.4% GDPval. Found 22 Firefox zero-days. Powers Perplexity Computer orchestration. Sonnet 4.6 hits 70.3% SWE-Bench Verified — competitive with most frontier models at 1/5th the cost.
+- **Impressive:** Opus 4.6 benchmarks: 80.8% SWE-Bench Verified (highest of any model), 58.7% OSWorld, 32.6% ARC-AGI-2, 74.1% GPQA Diamond, 80.4% GDPval. Found [22 previously unknown Firefox vulnerabilities](https://www.anthropic.com/news/mozilla-firefox-security). Powers Perplexity Computer orchestration. Sonnet 4.6 hits 70.3% SWE-Bench Verified — competitive with most frontier models at 1/5th the cost.
 - [Anthropic](https://www.anthropic.com/claude)
 
 ### GPT-5.2 Pro (OpenAI)
@@ -179,7 +179,7 @@ A comprehensive research dossier of the most impressive LLM agent projects, AI c
 - **Impressive:** 77.1% ARC-AGI-2, 80.6% SWE-Bench Verified, 94.3% GPQA Diamond. Powers Jules and Google's agent ecosystem. Strongest benchmark-per-dollar ratio of any frontier model.
 
 ### DeepSeek V3.2-Speciale
-- **What:** Near-frontier performance at ~1/30th the cost of GPT-5.2 Pro
+- **What:** Near-frontier performance at ~1/10th to 1/25th the cost of GPT-5.2 Pro
 - **Impressive:** Reshaping the industry's cost structure. DeepSeek won gold medals at IMO/IOI math/programming competitions.
 
 ### Qwen 3.5 (Alibaba)
@@ -469,7 +469,7 @@ A comprehensive research dossier of the most impressive LLM agent projects, AI c
 ### Adoption Statistics
 - 64% of organizations deploying AI agents (up from ~40% in mid-2025)
 - 40% of enterprise apps will feature AI agents by end of 2026 (Gartner)
-- 92% of US developers use AI coding tools daily
+- 82% of developers use AI coding tools, 51% daily ([Stack Overflow 2025](https://survey.stackoverflow.co/2025/))
 - 41% of all code written globally is now AI-generated
 - 30% of code at Google and Microsoft written by AI
 - 57% of companies have AI agents in production (up from 33%)
@@ -541,7 +541,7 @@ A comprehensive research dossier of the most impressive LLM agent projects, AI c
 1. **The coding agent war intensified** — Claude Code, Codex, Copilot, Cursor, Cline, OpenHands, Augment, and JetBrains are all shipping rapidly. March 2026 saw JetBrains Air, Cursor Automations, and GPT-5.4 in a single week.
 2. **Protocol fragmentation is real** — MCP (tool access), A2A (agent-to-agent), and ACP (JetBrains/Zed) are now three competing standards. UCP adds a fourth for commerce. The "TCP/IP of agents" hasn't been decided yet.
 3. **The boring agents still win** — narrow, specialized, deeply integrated agents outperform ambitious generalists in production. Spotify's Honk and Salesforce Agentforce prove this at scale.
-4. **Security is the critical gap** — 36.7% of MCP servers vulnerable to SSRF, ClawHavoc found 1,184 malicious skills, Opus found 22 Firefox zero-days, and only 29% of orgs feel ready to deploy securely.
+4. **Security is the critical gap** — 36.7% of MCP servers vulnerable to SSRF, ClawHavoc found 1,184 malicious skills, Opus found 22 previously unknown Firefox vulnerabilities, and 29% of employees use unsanctioned AI agents bypassing governance.
 5. **Science is being transformed** — 79x gene editing gains, mathematical proofs, black hole symmetries, IMO gold medals, solar cell breakthroughs — all AI-assisted.
 6. **The market is accelerating** — $9-11B in 2026, 64% of orgs deploying agents, 57% with agents in production, 41% of code AI-generated globally.
-7. **Models are commoditizing** — 12+ frontier models released in a single week. DeepSeek at 1/30th cost. The moat is in agent orchestration, not model capability alone.
+7. **Models are commoditizing** — 12+ frontier models released in a single week. DeepSeek at ~1/10th to 1/25th cost. The moat is in agent orchestration, not model capability alone.
