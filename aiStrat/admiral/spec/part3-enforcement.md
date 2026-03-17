@@ -51,6 +51,25 @@ Hooks serve two distinct functions that must not be conflated:
 
 > **Anti-deadlock design principle (restated for clarity):** Monitoring hooks must NEVER hard-block. An enforcement hook blocks a specific dangerous action; a monitoring hook that blocks ALL tool use creates an unrecoverable deadlock. When in doubt, default to monitoring — a missed warning is recoverable; a deadlocked agent is not.
 
+### Privileged Escalation Guarantee
+
+Deterministic enforcement works because it blocks *specific dangerous actions* while leaving the agent with at least one permitted path forward. This guarantee is structural, not advisory:
+
+> **The Privileged Escalation Principle:** No combination of enforcement hooks may reduce an agent's permitted actions to zero. Escalation is a privileged operation — no hook may block it. An agent that cannot proceed can always escalate. There are no deadlocks, only hurdles making themselves known.
+
+This principle resolves the apparent tension between "deterministic enforcement beats advisory guidance" and the token_budget_gate failure:
+
+| Enforcement target | Can hard-block? | Why it works |
+|---|---|---|
+| **Specific dangerous action** (secrets in commits, `rm -rf`, `--no-verify`) | Yes | Agent retains agency — choose a different action or escalate |
+| **Global resource state** (budget exhausted, loop threshold, context degraded) | No — monitor only | Hard-blocking all tool use eliminates all paths, including escalation |
+
+The distinction is not "enforcement vs. monitoring" in the abstract — it is whether the enforcement *preserves at least one path out*. An enforcement hook that blocks `rm -rf` leaves the agent with every other action available. A monitoring hook that blocks all tool use at 100% budget leaves the agent with nothing — not even the ability to report the problem.
+
+**Design rule:** When designing an enforcement hook, answer this question: *after this hook blocks the action, what can the agent do instead?* If the answer is "nothing," the hook is a deadlock and must be redesigned as a monitor. If the answer includes at least one constructive path (including escalation), the hook is safe to enforce.
+
+**Escalation is always available.** The Escalation Resolution System (Part 11) catches these escalations, evaluates the problem, and presents the Admiral with a structured explanation and recommended resolution paths. Enforcement creates the hurdle; escalation routes it to resolution. The system never stalls — it surfaces the problem to the entity with the authority to resolve it.
+
 ### Hook Lifecycle Events
 
 | Event | When It Fires | Use For |
