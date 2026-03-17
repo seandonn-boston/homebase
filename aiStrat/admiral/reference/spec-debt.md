@@ -45,13 +45,22 @@
 
 -----
 
+### SD-06: Protocol Governance Standing Order (SO-16) Lacks Hook Enforcement
+
+**Severity:** Low
+**Claim:** SO-16 mandates MCP server vetting and A2A connection testing before deployment.
+**Reality:** No hook enforces this — compliance is advisory. A PreToolUse hook could block MCP tool calls to servers not in the approved registry (mechanical check), but no such hook exists yet.
+**Resolution path:** Implement `protocol_registry_guard` PreToolUse hook that validates MCP server calls against an approved server list. Track as enforcement spectrum improvement.
+
+-----
+
 ## Resolved Debt
 
 ### SD-01: Hook Coverage vs. Enforcement Spectrum Thesis
 
 **Severity:** High (was)
 **Resolved:** 2026-03-15
-**Resolution:** Increased hook enforcement from 4/15 (27%) to 8/15 (53%), meeting the stated target of 8/15 minimum. Four new hooks implemented:
+**Resolution:** Increased hook enforcement from 4/15 (27%) to 8/15 (53%), meeting the stated target of 8/15 minimum. (Denominator subsequently increased to 16 with the addition of SO-16: Protocol Governance.) Four new hooks implemented:
 
 | Hook | Standing Order | Lifecycle | What It Enforces |
 |------|---------------|-----------|-----------------|

@@ -14,7 +14,7 @@
 
 ## Standing Orders
 
-> **TL;DR** — Fifteen rules loaded into every agent's standing context. Non-negotiable. Project-specific instructions layer on top but cannot contradict them.
+> **TL;DR** — Sixteen rules loaded into every agent's standing context. Non-negotiable. Project-specific instructions layer on top but cannot contradict them.
 
 These orders apply to every agent in the fleet regardless of role, category, or model tier.
 
@@ -24,7 +24,7 @@ When Standing Orders conflict, the higher-priority category prevails:
 
 1. **Safety** (SO 10: Prohibitions, SO 12: Zero-Trust Self-Protection, SO 14: Compliance/Ethics) — always takes precedence
 2. **Authority** (SO 5: Decision Authority, SO 6: Recovery Protocol) — governs how decisions are made
-3. **Process** (SO 7: Checkpointing, SO 8: Quality Standards, SO 15: Pre-Work Validation) — governs how work is done
+3. **Process** (SO 7: Checkpointing, SO 8: Quality Standards, SO 15: Pre-Work Validation, SO 16: Protocol Governance) — governs how work is done
 4. **Communication** (SO 2: Output Routing, SO 4: Context Honesty, SO 9: Communication Format) — governs how information flows
 5. **Scope** (SO 1: Identity Discipline, SO 3: Scope Boundaries, SO 11: Context Discovery, SO 13: Bias Awareness) — governs what the agent addresses
 
@@ -172,6 +172,13 @@ OUTPUT GOES TO: [Next recipient]
   - **(c) Explicit scope boundaries** — What is in and out of scope?
   - **(d) Sufficient context** — Do I have what I need, or am I context-starved (see SO 11)?
 - Front-load hard decisions. Identify irreversible choices, high-blast-radius decisions, and architectural commitments at the start of the task — not in the middle of implementation. Escalate or propose these decisions before executing downstream work that depends on them.
+
+### 16. Protocol Governance
+
+- MCP servers must pass the Server Addition Checklist ([Part 13](part13-mcp-integration.md) Section 2) before entering the Tool Registry. Servers require trust classification (Official/Community/Internal) and security review.
+- Pin exact versions. `latest` is never acceptable in production.
+- A2A connections must pass testing appropriate to fleet profile before deployment. Cross-fleet A2A requires mTLS and OAuth 2.0.
+- Record all protocol decisions (server additions, removals, A2A connections) in the Brain with rationale and test results.
 - Validate that no conflict exists with in-flight work by other agents. If you suspect overlap or contradiction, flag it to the Orchestrator before proceeding.
 - Estimate complexity before executing. If estimated complexity exceeds budget, escalate before starting. If complexity exceeds your estimate during execution, checkpoint and reassess rather than pushing through with degrading quality.
 

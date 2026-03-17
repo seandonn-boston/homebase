@@ -20,7 +20,7 @@ Minimum Viable Reading Path (~800 lines of targeted reading):
   2. part1-strategy.md — Full file (Mission, Boundaries, Success Criteria)
   3. part3-enforcement.md — Deterministic Enforcement only (enforcement spectrum: hooks over instructions)
   3.5. intent-engineering.md — Six Elements of Intent (how to write effective agent directives)
-  4. part11-protocols.md — Standing Orders only (15 non-negotiable rules)
+  4. part11-protocols.md — Standing Orders only (16 non-negotiable rules)
   5. appendices.md — Appendix A only (Pre-Flight Checklist: go/no-go gate)
 
 Also includes: operating model ("You are the Admiral" with intent engineering as
@@ -154,7 +154,7 @@ aiStrat/admiral/spec/part10-admiral.md
 
 ```
 part11-protocols.md - admiral/doctrine - 2026-03-10:
-Six protocol areas: Standing Orders (36) — 15 non-negotiable rules with Starter-profile
+Six protocol areas: Standing Orders (36) — 16 non-negotiable rules with Starter-profile
 sequencing note (Standing Orders are P1 requirements despite Part 11 position);
 Escalation Protocol (37) with forward reference from SO 6; Handoff Protocol (38);
 Human Referral Protocol (39); Paid Resource Authorization Protocol (40); Data

@@ -1,21 +1,21 @@
 # Standing Orders → Enforcement Mechanism Map
 
-> **Audience:** Implementers and auditors verifying that standing orders have deterministic enforcement where required. This document maps each of the 15 standing orders to its enforcement mechanism (or documents the gap).
+> **Audience:** Implementers and auditors verifying that standing orders have deterministic enforcement where required. This document maps each of the 16 standing orders to its enforcement mechanism (or documents the gap).
 
 -----
 
 ## Coverage Summary
 
-- **Hook-enforced:** 8 of 15 (53%)
-- **Partially enforced:** 0 of 15 (0%)
-- **Advisory only (no hook):** 7 of 15 (47%)
+- **Hook-enforced:** 8 of 16 (50%)
+- **Partially enforced:** 0 of 16 (0%)
+- **Advisory only (no hook):** 8 of 16 (50%)
 
 **By mechanism type:**
 
 | Mechanism | Count | Standing Orders | Hook Coverage |
 |-----------|-------|----------------|---------------|
 | **Mechanical** | 6 | SO 1, 3, 6, 8, 10, 15 | 5/6 (83%) — SO 8 (Quality Standards) is mechanical but delegates to project CI |
-| **Judgment-Assisted** | 6 | SO 5, 7, 9, 11, 12, 14 | 2/6 (33%) — SO 11, 12 have advisory hooks; SO 5, 7, 9, 14 have no hooks |
+| **Judgment-Assisted** | 7 | SO 5, 7, 9, 11, 12, 14, 16 | 2/7 (29%) — SO 11, 12 have advisory hooks; SO 5, 7, 9, 14, 16 have no hooks |
 | **Advisory** | 3 | SO 2, 4, 13 | 0/3 (0%) — no deterministic check possible |
 
 The enforcement spectrum (part3-enforcement.md, Deterministic Enforcement) classifies constraints as requiring either **enforcement** (hooks that block) or **monitoring** (hooks that observe and alert). Safety-critical orders should trend toward enforcement hooks; judgment-assisted orders should trend toward monitoring hooks. Advisory orders remain instruction-only by design.
@@ -51,6 +51,7 @@ Each standing order is classified by the **type of mechanism** required to uphol
 | 13 | Bias Awareness | Integrity | **Advisory** | **No hook** | Advisory — metacognitive discipline with no deterministic enforcement; bias recognition is inherently a judgment activity |
 | 14 | Compliance, Ethics, Legal | Safety | **Judgment-Assisted** | **No hook** | Advisory — critical safety boundary but relies on agent judgment. A hook could enforce a configurable deny-list (mechanical component) while legal/ethical judgment remains advisory |
 | 15 | Pre-Work Validation | Operational | **Mechanical** | **Enforced** | `pre_work_validator` (PreToolUse) — validates Standing Orders loaded, budget defined, and sufficient context gathered before first substantive write operation |
+| 16 | Protocol Governance | Operational | **Judgment-Assisted** | **No hook** | Advisory — MCP server registration and A2A connection testing are partially mechanical (server name against approved list), but trust classification and security review require judgment. A `protocol_registry_guard` PreToolUse hook could enforce the mechanical component. |
 
 -----
 
@@ -90,11 +91,11 @@ As the framework matures through levels, enforcement coverage should increase:
 
 | Enforcement Level | Expected Coverage | Focus |
 |-------------------|------------------|-------|
-| E1 | 4/15 (achieved) | Budget, loops, identity, context — the runtime essentials |
-| E2 | 8/15 (current) | Added scope boundaries, prohibitions enforcement, zero-trust validation, pre-work validation |
-| E3 | 12/15 (target) | Add compliance boundaries, output routing validation, checkpoint verification, quality gate integration |
-| E3 + Production profile | 15/15 (target) | Full deterministic enforcement; all advisory orders graduate to hooks |
-| E3 + Enterprise profile | 15/15 + cross-fleet | Cross-fleet enforcement coordination, multi-operator hook policies |
+| E1 | 4/16 (achieved) | Budget, loops, identity, context — the runtime essentials |
+| E2 | 8/16 (current) | Added scope boundaries, prohibitions enforcement, zero-trust validation, pre-work validation |
+| E3 | 12/16 (target) | Add compliance boundaries, output routing validation, checkpoint verification, quality gate integration |
+| E3 + Production profile | 16/16 (target) | Full deterministic enforcement; all advisory orders graduate to hooks |
+| E3 + Enterprise profile | 16/16 + cross-fleet | Cross-fleet enforcement coordination, multi-operator hook policies |
 
 -----
 
@@ -107,7 +108,7 @@ The Admiral Framework must eat its own dogfood. While the spec repository is not
 | `version_consistency` | SO 1 (Identity Discipline) | All files carry correct version string | `hooks/version_consistency/hook.manifest.json` |
 | `manifest_freshness` | SO 11 (Context Discovery) | MANIFEST.md reflects actual file inventory | `hooks/manifest_freshness/hook.manifest.json` |
 | `link_validator` | SO 4 (Context Honesty) | Markdown cross-references resolve to existing files | `hooks/link_validator/hook.manifest.json` |
-| `standing_order_integrity` | SO 3 (Scope Boundaries) | All 15 Standing Orders present and numbered correctly | `hooks/standing_order_integrity/hook.manifest.json` |
+| `standing_order_integrity` | SO 3 (Scope Boundaries) | All 16 Standing Orders present and numbered correctly | `hooks/standing_order_integrity/hook.manifest.json` |
 
 These hooks are specification-only (manifests without executables), consistent with the framework's current state. They document the enforcement intent for the spec repository. Implementation targets:
 - **E1 (current):** Manifest-only — enforcement is manual

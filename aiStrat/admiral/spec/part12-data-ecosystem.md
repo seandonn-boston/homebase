@@ -202,7 +202,7 @@ Every decision, recommendation, and artifact produced by the fleet is captured a
 - Handoff documents between agents (task state, rationale, trade-offs)
 - Recommendations and confidence levels (what agents suggested, how certain they were)
 - Generated artifacts (code, analysis, content, configurations)
-- Tool invocations and results (which tools agents used and what they returned)
+- Tool invocations and results (which tools agents used and what they returned). MCP tool invocations should include server identity, tool name, and validation status per [Part 13](part13-mcp-integration.md) Section 3. A2A messages should preserve trace_id per Part 13 Section 5 for cross-fleet attribution.
 - Escalation events (what agents couldn't handle and why)
 
 **Output Schema:**
