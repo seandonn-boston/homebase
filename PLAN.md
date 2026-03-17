@@ -16,6 +16,7 @@
 | Version consistency across all files | Complete | Single source of truth in `aiStrat/VERSION`; CI propagates to index.md, AGENTS.md, README.md, appendices.md. No version strings in non-CI-managed files. |
 | Ground truth references valid | Complete | PLAN.md and PLAN2.md exist and are current |
 | Enforcement language refined | Complete | Part 3 distinguishes enforcement vs. monitoring; hooks tagged by function (Enforcement/Monitoring) |
+| Enforcement thesis resolution | Complete | Privileged Escalation Guarantee (Part 3) + Escalation Resolution System (Part 11) close the deadlock gap; scope/zero-trust hooks upgraded to conditional enforcement; integration tests validate full pipeline |
 | Standing Orders classified by mechanism | Complete | Each SO classified as Mechanical / Judgment-Assisted / Advisory in enforcement map |
 | Empirical claims qualified | Complete | Sales pitch has Sources & Data Provenance table; PLAN.md cites sources; benchmarks updated |
 | Research-to-spec pipeline closed | Complete | `research-to-spec-pipeline.md` formalizes OS reframe (R-01), engineering ladder mapping (R-02), certification process (R-03) |

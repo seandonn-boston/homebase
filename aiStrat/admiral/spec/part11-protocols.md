@@ -244,15 +244,159 @@ RECOMMENDATION:
 - **Document the escalation** in your checkpoint.
 - **Do not re-escalate the same issue** unless new information changes the analysis.
 
-### Receiving Escalations (Orchestrator / Admiral)
+### Escalation Resolution System
 
-When an escalation arrives:
+> **TL;DR** — Escalation is not just "stop and report." It is a structured resolution pipeline: intake, evaluate, recommend, decide, execute. The system catches every escalation, analyzes the problem, generates resolution paths, and presents the Admiral with a structured decision interface. No escalation enters limbo. Every hurdle gets evaluated, recommended upon, and resolved.
 
-1. Acknowledge receipt
-2. Assess severity and validate the escalation is warranted
-3. Either resolve directly, route to the right decision-maker, or request more information
-4. Communicate the resolution back to the escalating agent
-5. Log the escalation and resolution in the decision log
+The Escalation Resolution System implements the **Privileged Escalation Guarantee** (Part 3): no combination of enforcement hooks may reduce an agent's permitted actions to zero. Escalation is always available. This system ensures that availability leads to resolution, not just reporting.
+
+> **Profile scaling:** At F1 (Starter), the Admiral performs all five steps manually — reading the report, querying the Brain, generating options, and deciding. At F2+ (Coordinated), the Orchestrator handles Intake and Evaluation, presenting the Admiral with pre-analyzed options. At F3+ (Fleet), automated classification and Brain-powered precedent matching accelerate the pipeline.
+
+#### Step 1: Escalation Intake
+
+When an escalation arrives, classify it before acting on it:
+
+| Classification | Trigger Pattern | Priority Multiplier |
+|---|---|---|
+| **Enforcement conflict** | Hook blocked an action the agent believes is necessary | Severity × 1.5 (time-sensitive — agent is stopped) |
+| **Resource exhaustion** | Budget, time, or tool-call limits reached | Severity × 1.0 |
+| **Contradictory requirements** | Two or more constraints conflict | Severity × 1.5 (may affect architecture) |
+| **Authority exceeded** | Decision required above agent's tier | Severity × 1.0 |
+| **Blocking dependency** | External input unavailable | Severity × 0.5 (may resolve itself) |
+| **Safety concern** | Potential data loss, security exposure, or harm | Severity × 2.0 (non-negotiable urgency) |
+| **Recovery ladder exhausted** | Agent tried retry, fallback, backtrack, isolate — all failed | Severity × 1.5 (agent has no remaining options) |
+
+**Deduplication:** Before creating a new resolution workflow, check if the same or substantially similar escalation is already in progress. If so, attach the new report to the existing resolution rather than starting a parallel one. *(At F1, this is the Admiral recognizing "I already addressed this." At F3+, this is automated matching against active escalation records.)*
+
+**Intake output:** A classified escalation with priority score, ready for evaluation.
+
+#### Step 2: Problem Evaluation
+
+Analyze the escalation to understand the problem before generating solutions:
+
+1. **Parse the escalation report.** Extract: what was blocked, what was tried, what the agent's root cause assessment says.
+
+2. **Query the Brain for precedent.** `brain_query` with the escalation classification + key terms from the blocker description. Has a similar escalation been resolved before? What worked? What didn't?
+
+3. **Identify constraint tension.** Which constraints are in conflict? Map the specific Standing Orders, hooks, or spec rules that are pulling in different directions. Name them explicitly — "SO-03 blocks the write, but the task requires modifying the spec."
+
+4. **Assess downstream impact.** What work is blocked by this escalation? What's the cost of delay? Are other agents waiting on this resolution?
+
+**Evaluation output:** A structured summary:
+
+```
+EVALUATION SUMMARY
+==================
+
+ESCALATION: [One-line description]
+CLASSIFICATION: [From intake table]
+PRIORITY: [Severity × multiplier = score]
+
+ROOT CAUSE: [What is actually causing the block]
+CONSTRAINT TENSION: [Which rules conflict and why]
+BRAIN PRECEDENT: [Similar past escalation and its resolution, or "No precedent found"]
+DOWNSTREAM IMPACT: [What's blocked, cost of delay]
+```
+
+#### Step 3: Resolution Path Generation
+
+Generate 2–4 ranked resolution options. Every escalation must produce at least one recommended path — this is the Privileged Escalation Guarantee in action. Zero paths is a system failure.
+
+Each resolution path includes:
+
+| Field | Description |
+|---|---|
+| **Path name** | Short descriptive label (e.g., "Grant scoped override," "Redirect to alternative approach") |
+| **Description** | What this path does concretely |
+| **Tradeoffs** | What you gain and what you give up |
+| **Confidence** | Verified (proven by precedent), Inferred (reasonable but untested), Assumed (best guess) — per SO-13 |
+| **Reversibility** | Fully reversible, partially reversible, or irreversible |
+| **Downstream impact** | How this resolution affects in-flight work |
+
+**Standard resolution path types:**
+
+| Type | When to use |
+|---|---|
+| **Modify constraints** | A Standing Order, hook threshold, or scope boundary needs adjustment to accommodate a legitimate need |
+| **Grant scoped override** | The constraint is correct in general but an exception is warranted for this specific case (e.g., `ADMIRAL_SCOPE_OVERRIDE`) |
+| **Redirect approach** | The agent's approach triggered the escalation; a different approach avoids the conflict entirely |
+| **Update governance** | The escalation reveals a gap or contradiction in Standing Orders or spec — fix the governance, not the symptom |
+| **Defer and preserve** | The resolution requires information or authority not currently available; checkpoint and wait |
+| **Route to human expert** | The decision requires domain expertise (legal, security, compliance) beyond the fleet's authority |
+
+**Path generation rule:** If the Brain returns a precedent, the precedent-based path must be included as one of the options (with "Verified" confidence if the precedent was successful, "Inferred" if the context differs materially).
+
+#### Step 4: Admiral Decision Interface
+
+Present the Admiral with a structured decision package. The Admiral is never handed a raw problem — they receive an evaluated situation with recommended paths and the authority to choose, modify, or override.
+
+```
+ESCALATION RESOLUTION
+=====================
+
+SITUATION:
+[What happened — the agent's task, what went wrong, what was tried]
+
+EVALUATION:
+[Root cause, which constraints are in tension, brain precedent findings]
+
+IMPACT:
+[What's blocked downstream, cost of continued delay]
+
+RECOMMENDED PATHS:
+
+  [1] [Path name] — [description]
+      Tradeoffs: [what you gain / what you give up]
+      Confidence: [verified / inferred / assumed]
+      Reversibility: [fully / partially / irreversible]
+
+  [2] [Path name] — [description]
+      Tradeoffs: [what you gain / what you give up]
+      Confidence: [verified / inferred / assumed]
+      Reversibility: [fully / partially / irreversible]
+
+  ...
+
+  [N] Custom direction — Provide your own resolution
+
+ADMIRAL DECISION:
+  [ ] CONTINUE — Select a resolution path, resume the original plan
+  [ ] REDIRECT — Steer work in a different direction (new plan, reassign, reprioritize)
+  [ ] STOP — Halt work on this task, preserve state, document the decision
+```
+
+**Decision options explained:**
+
+| Decision | Effect |
+|---|---|
+| **CONTINUE** | Admiral selects one of the recommended paths (or provides a custom one). The system applies the resolution, the blocked agent resumes its original plan with the obstacle removed. |
+| **REDIRECT** | Admiral changes direction. The original plan is interrupted — work may be reassigned, reprioritized, or replaced with a new plan. The system preserves the original state for potential future resumption. |
+| **STOP** | Admiral decides this task should not continue. State is preserved, the decision is documented in the Brain and decision log, and the agent is released from the task. |
+
+> **The Admiral is never limited to the system's suggestions.** The "Custom direction" option exists because the system's analysis may be incomplete, the Admiral may have context the system lacks, or the right answer may be something the system couldn't generate. The recommended paths are a starting point, not a constraint.
+
+#### Step 5: Resolution Execution
+
+After the Admiral decides:
+
+1. **Apply the chosen path.** If it's a constraint modification, update the relevant config. If it's a scope override, set the session flag. If it's a redirect, produce a new task assignment via the Handoff Protocol.
+
+2. **Record the precedent.** `brain_record` the full escalation→evaluation→resolution cycle:
+   - Category: the escalation classification
+   - Content: what happened, what was decided, why
+   - Tags: escalation type, resolution type, outcome
+   - Relationships: `caused_by` the original blocker, `supports` or `contradicts` any prior precedent found in Step 2
+
+3. **Notify affected agents.** If other agents were blocked waiting on this resolution, send them a structured handoff with the resolution and any updated constraints or scope.
+
+4. **Resume, redirect, or stop.**
+   - CONTINUE: The blocked agent receives the resolution context and resumes its task.
+   - REDIRECT: The Orchestrator (or Admiral at F1) produces new task assignments. The original task is checkpointed.
+   - STOP: The task is marked as terminated-by-Admiral. State is preserved. The agent is available for new work.
+
+5. **Log the full cycle.** The decision log entry includes: escalation report, evaluation summary, resolution paths generated, Admiral's decision, and execution result. At CP2+, this is visible in the Control Plane escalation dashboard.
+
+> **Closed loop verification:** Every escalation that enters the system must exit through one of three doors: CONTINUE, REDIRECT, or STOP. If an escalation remains unresolved — no Admiral decision has been recorded — the system surfaces it as a stale escalation at the next checkpoint or periodic hook cycle. Escalations do not silently expire.
 
 ### Emergency Halt Protocol
 
