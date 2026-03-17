@@ -11,7 +11,7 @@
  * 3. Execution Trace — visualization of agent reasoning trees
  */
 
-export { EventStream, AgentEvent, EventType, EventListener } from "./events";
+export { EventStream, EventStreamConfig, AgentEvent, EventType, EventListener } from "./events";
 export { AgentInstrumentation, InstrumentationConfig } from "./instrumentation";
 export {
   RunawayDetector,
