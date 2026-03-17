@@ -173,7 +173,7 @@ A comprehensive research dossier of the best projects and products that are **no
 ### 23. FDA-Cleared AI Diagnostic Agents
 - **What:** AI diagnostic systems with FDA clearance for clinical use
 - **How it uses AI agents:** Multi-agent diagnostic pipelines — image analysis agents, clinical data agents, differential diagnosis agents, and recommendation agents work in sequence to support physician decision-making. 700+ FDA-cleared AI medical devices.
-- **Scale:** 700+ FDA-cleared AI devices. AI lung nodule detection: 94% accuracy vs. 65% for radiologists. Breast cancer: 90% sensitivity vs. 78% human. $150B potential annual US savings. 80%+ healthcare executives expect moderate-to-significant value from agentic AI in 2026. North Kansas City Hospital reduced check-in from 4 min to 10 seconds; AtlantiCare saves 66 min/provider/day.
+- **Scale:** 700+ FDA-cleared AI devices. AI lung nodule detection: ~94% sensitivity vs. ~68-92% for radiologists (varying by experience). Breast cancer: 90% sensitivity vs. 78% human. $150B potential annual US savings. 80%+ healthcare executives expect moderate-to-significant value from agentic AI in 2026. North Kansas City Hospital reduced check-in from 4 min to 10 seconds; AtlantiCare saves 66 min/provider/day.
 - **Why it's here:** The most regulated deployment of AI agent pipelines — multi-agent systems with FDA clearance treating real patients.
 - [BCG 2026 Outlook](https://www.bcg.com/publications/2026/how-ai-agents-will-transform-health-care)
 
@@ -209,7 +209,7 @@ A comprehensive research dossier of the best projects and products that are **no
 ### 28. Autonomous Red Team / Blue Team Exercises
 - **What:** AI agents conducting offensive security testing and defensive response simultaneously
 - **How it uses AI agents:** Red team agents autonomously probe for vulnerabilities, attempt exploits, and chain attacks. Blue team agents detect, classify, and respond to attacks. Both fleets operate independently in continuous adversarial testing.
-- **Scale:** Cybersecurity AI (CAI) captured 41/45 flags at Neurogrid. Opus 4.6 found 22 Firefox zero-days. GTG-1002 campaign (Nov 2025) demonstrated AI swarms executing 80–90% of an attack lifecycle autonomously. Attackers outnumber defenders 82:1 via autonomous agents. "Jeopardy-style CTFs have become a solved game for well-engineered AI agents."
+- **Scale:** Cybersecurity AI (CAI) captured 41/45 flags at Neurogrid. Opus 4.6 found 22 previously unknown Firefox vulnerabilities. GTG-1002 campaign (Nov 2025) demonstrated AI swarms executing 80–90% of an attack lifecycle autonomously. Attackers outnumber defenders 82:1 via autonomous agents. "Jeopardy-style CTFs have become a solved game for well-engineered AI agents."
 - **Why it's here:** Agent swarms fighting agent swarms — the most adversarial deployment of fleet AI.
 - [Palo Alto Networks](https://www.paloaltonetworks.com/blog/2025/11/2026-predictions-for-autonomous-ai/)
 
