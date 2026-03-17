@@ -435,6 +435,15 @@ Topics are ordered by impact and grouped by relevance.
 | Feedback Loops | Six loops connecting outcomes back to inputs for continuous improvement. | |
 | Dataset Strategy | Seven proprietary datasets that compound in value over time. | |
 | Implementation Levels | Progressive adoption from manual observation to autonomous optimization. | |
+| **PART 13 — PROTOCOL INTEGRATION GUIDE (MCP + A2A)** | *The consolidated practitioner reference for MCP and A2A adoption, testing, and governance.* | [`part13-mcp-integration.md`](part13-mcp-integration.md) |
+| Protocol References — Consolidated Map | Navigation table linking all MCP and A2A references across Parts 2–5, 9, 11, and appendices. | |
+| MCP Server Selection Framework | Decision criteria, trust classification, addition/removal checklists. | |
+| MCP Testing and Validation | Five test levels from connection validation to OWASP MCP Top 10. | |
+| Incremental MCP Adoption Path | Six phases from no MCP (Starter) to full protocol maturity (Enterprise). | |
+| A2A Testing and Validation | Five test levels from Agent Card discovery to cross-fleet security. | |
+| Incremental A2A Adoption Path | Four phases from orchestrator-mediated handoffs to cross-fleet federation. | |
+| Protocol Security Checklist | Per-server, per-connection, and fleet-wide review for both MCP and A2A. | |
+| Common Protocol Anti-Patterns | Seven MCP and seven A2A anti-patterns with remedies. | |
 | **INTENT ENGINEERING** | *The shared dialect between Admirals and Brains.* | [`intent-engineering.md`](../extensions/intent-engineering.md) |
 | — Intent Engineering | Structuring instructions around outcomes, values, constraints, failure modes, and judgment boundaries. | |
 | — The Six Elements of Intent | Goal, Priority, Constraints, Failure Modes, Judgment Boundaries, Values. | |
