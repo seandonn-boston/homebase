@@ -1,7 +1,7 @@
 #!/bin/bash
 # Admiral Framework — PostToolUse Hook Adapter
 # Translates Claude Code PostToolUse payload to Admiral hook contracts.
-# Fires in order: token_budget_tracker, loop_detector, context_health_check (every 10th), zero_trust_validator, brain_context_router
+# Fires in order: token_budget_tracker, loop_detector, context_health_check (every 10th), zero_trust_validator, compliance_ethics_advisor, brain_context_router
 # DESIGN PRINCIPLE: All hooks are advisory-only (exit 0). No hook can block tool use.
 # Hook failures are isolated — one failing hook cannot cascade into others.
 set -euo pipefail
@@ -117,7 +117,23 @@ if [ -x "$SCRIPT_DIR/zero_trust_validator.sh" ]; then
   fi
 fi
 
-# --- Hook 5: brain_context_router (isolated, advisory only) ---
+# --- Hook 5: compliance_ethics_advisor (SO-14, isolated, advisory only) ---
+if [ -x "$SCRIPT_DIR/compliance_ethics_advisor.sh" ]; then
+  COMP_OUTPUT=""
+  COMP_OUTPUT=$(echo "$PAYLOAD" | jq --argjson state "$STATE" '. + {session_state: $state}' | "$SCRIPT_DIR/compliance_ethics_advisor.sh" 2>>"$HOOK_ERROR_LOG") || true
+  if [ -n "$COMP_OUTPUT" ]; then
+    COMP_STATE=$(echo "$COMP_OUTPUT" | jq '.hook_state.compliance // empty' 2>/dev/null) || true
+    if [ -n "$COMP_STATE" ] && [ "$COMP_STATE" != "null" ]; then
+      STATE=$(echo "$STATE" | jq --argjson cs "$COMP_STATE" '.hook_state.compliance = $cs')
+    fi
+    COMP_ALERT=$(echo "$COMP_OUTPUT" | jq -r '.alert // empty' 2>/dev/null) || true
+    if [ -n "$COMP_ALERT" ]; then
+      MESSAGES+="[Compliance] $COMP_ALERT\n"
+    fi
+  fi
+fi
+
+# --- Hook 6: brain_context_router (isolated, advisory only) ---
 if [ -x "$SCRIPT_DIR/brain_context_router.sh" ]; then
   BRAIN_OUTPUT=""
   BRAIN_OUTPUT=$(echo "$PAYLOAD" | jq --argjson state "$STATE" '. + {session_state: $state}' | "$SCRIPT_DIR/brain_context_router.sh" 2>>"$HOOK_ERROR_LOG") || true

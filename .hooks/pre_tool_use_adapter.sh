@@ -47,14 +47,20 @@ ENRICHED_PAYLOAD=$(echo "$PAYLOAD" | jq --argjson state "$STATE" '. + {session_s
 # Ensure hook error log directory exists
 mkdir -p "$PROJECT_DIR/.admiral"
 
-# --- Sub-hook 2: Scope Boundary Guard (SO-03, isolated) ---
+# --- Sub-hook 2: Scope Boundary Guard (SO-03, can hard-block writes to protected paths) ---
 if [ -x "$SCRIPT_DIR/scope_boundary_guard.sh" ]; then
   SCOPE_OUTPUT=""
-  SCOPE_OUTPUT=$(echo "$PAYLOAD" | "$SCRIPT_DIR/scope_boundary_guard.sh" 2>>"$PROJECT_DIR/.admiral/hook_errors.log") || true
+  SCOPE_EXIT=0
+  SCOPE_OUTPUT=$(echo "$PAYLOAD" | "$SCRIPT_DIR/scope_boundary_guard.sh" 2>>"$PROJECT_DIR/.admiral/hook_errors.log") || SCOPE_EXIT=$?
   if [ -n "$SCOPE_OUTPUT" ]; then
     SCOPE_CTX=$(echo "$SCOPE_OUTPUT" | jq -r '.hookSpecificOutput.additionalContext // empty' 2>/dev/null) || true
     if [ -n "$SCOPE_CTX" ]; then
       ALL_CONTEXT+="$SCOPE_CTX "
+    fi
+    # Propagate hard-block: if scope_boundary_guard exits 2, block the tool
+    if [ "$SCOPE_EXIT" -eq 2 ]; then
+      echo "$SCOPE_OUTPUT"
+      exit 2
     fi
   fi
 fi

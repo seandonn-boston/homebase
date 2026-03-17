@@ -63,3 +63,4 @@ Spec reference: `aiStrat/admiral/spec/part11-protocols.md`
 - Hook contracts: `aiStrat/admiral/spec/part3-enforcement.md`
 - Brain entry format: `aiStrat/brain/level1-spec.md`
 - Standing Orders text: `aiStrat/admiral/spec/part11-protocols.md`
+- Specification debt: `aiStrat/admiral/reference/spec-debt.md`

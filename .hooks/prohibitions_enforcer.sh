@@ -61,6 +61,26 @@ if [ "$TOOL_NAME" = "Bash" ]; then
     fi
   done
 
+  # --- Rule: Never escalate privileges without approval (SO-12 enforcement) → HARD BLOCK ---
+  PRIVILEGE_PATTERNS=(
+    "^sudo "
+    " sudo "
+    "su -[[:space:]]"
+    "su root"
+    "chmod [0-7]*7[0-7]*"
+    "chmod a\+"
+    "chmod 777"
+    "chown root"
+    "setuid"
+  )
+  for PATTERN in "${PRIVILEGE_PATTERNS[@]}"; do
+    if echo "$COMMAND" | grep -qE -- "$PATTERN"; then
+      ALERTS+="PROHIBITION (SO-12/SO-10): Command involves privilege escalation ('${PATTERN}'). Privilege escalation requires Admiral approval. Escalate with justification or use non-privileged alternatives. "
+      HARD_BLOCK=true
+      break
+    fi
+  done
+
   # --- Rule: Never make irreversible changes → HARD BLOCK ---
   IRREVERSIBLE_PATTERNS=(
     "rm -rf"
