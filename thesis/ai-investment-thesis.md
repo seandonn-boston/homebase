@@ -55,7 +55,7 @@ These are profitable companies funding expansion from cash flow, not leverage. T
 
 Keep an eye on OpenAI's Q4 2026 IPO. If it triggers a wave of AI equity issuance, this changes.
 
-Private markets are a different conversation. [Anthropic raised $30B at $380B](https://www.anthropic.com/news). [OpenAI raised $110B at $730B pre-money](https://openai.com/index/openai-funding/). [Cursor raised at $14B+ on $1B ARR](https://www.cursor.com/). Big numbers with less price discovery than public markets. But private-market froth is less dangerous than public-market froth because it concentrates risk among venture funds, sovereign wealth funds, and mega-cap corporations that can absorb losses. The dotcom bubble was devastating because equity issuance put the risk on regular people. The AI buildout keeps the risk in Redmond and on Sand Hill Road.
+Private markets are a different conversation. [Anthropic raised $30B at $380B](https://www.anthropic.com/news). [OpenAI raised $110B at $730B pre-money](https://openai.com/index/openai-funding/). [Cursor raised at $29.3B on ~$1B ARR](https://www.cnbc.com/2025/11/13/cursor-ai-startup-funding-round-valuation.html). Big numbers with less price discovery than public markets. But private-market froth is less dangerous than public-market froth because it concentrates risk among venture funds, sovereign wealth funds, and mega-cap corporations that can absorb losses. The dotcom bubble was devastating because equity issuance put the risk on regular people. The AI buildout keeps the risk in Redmond and on Sand Hill Road.
 
 ### Demand Is Outrunning Supply, Not the Other Way Around
 
@@ -92,7 +92,7 @@ Enterprise adoption is real. The numbers undercut the "solution in search of a p
 - Enterprise AI revenue went from **$1.7B to $37B** in three years, capturing 6% of global SaaS
 - ChatGPT Enterprise reasoning token consumption: **320x** year-over-year increase
 - Top performers see **$10.30 in value per $1 invested** ($3.70 average)
-- AI funding hit **$232.3B in 2025**, doubled from $110.1B in 2024
+- AI funding hit [**$211B in 2025**](https://news.crunchbase.com/ai/big-funding-trends-charts-eoy-2025/) (Crunchbase; OECD estimates $258.7B), up from ~$114B in 2024
 
 ### Addressable Value
 
@@ -216,3 +216,5 @@ Being early and well-capitalized is painful but survivable. Being late is fatal.
 - [Anthropic $30B round at $380B valuation](https://www.anthropic.com/news)
 - [OpenAI $110B funding at $730B valuation](https://openai.com/index/openai-funding/)
 - [Thomson Reuters Press Releases](https://www.thomsonreuters.com/en/press-releases.html)
+- [Crunchbase — AI funding trends 2025](https://news.crunchbase.com/ai/big-funding-trends-charts-eoy-2025/)
+- [CNBC — Cursor raises $2.3B at $29.3B valuation](https://www.cnbc.com/2025/11/13/cursor-ai-startup-funding-round-valuation.html)

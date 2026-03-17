@@ -83,7 +83,7 @@ But shorter is not fast.
 
 **If the revolution is happening, why does the productivity data show nothing?**
 
-[Goldman Sachs:](https://www.goldmansachs.com/insights/articles/generative-ai-could-raise-global-gdp-by-7-percent) AI added zero to GDP in 2025. [89% of executives:](https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai) no measurable productivity impact. [95% of AI pilots](https://www.gartner.com/en/newsroom/press-releases/2024-11-18-gartner-says-more-than-30-percent-of-generative-ai-projects-will-be-abandoned-after-proof-of-concept-by-end-of-2025) fail to reach production. Adoption is wide (94%) and shallow. The technology works in demos and at AI-native companies. The organizational transformation needed to capture value at scale has barely started.
+[Goldman Sachs:](https://www.goldmansachs.com/insights/articles/generative-ai-could-raise-global-gdp-by-7-percent) AI added zero to GDP in 2025. [89% of executives:](https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai) no measurable productivity impact. [95% of AI pilots](https://fortune.com/2025/08/18/mit-report-95-percent-generative-ai-pilots-at-companies-failing-cfo/) fail to reach production (MIT NANDA Project; [Gartner](https://www.gartner.com/en/newsroom/press-releases/2024-11-18-gartner-says-more-than-30-percent-of-generative-ai-projects-will-be-abandoned-after-proof-of-concept-by-end-of-2025) separately found 30%+ abandoned after POC). Adoption is wide (94%) and shallow. The technology works in demos and at AI-native companies. The organizational transformation needed to capture value at scale has barely started.
 
 The revolution is real and slow. The data isn't wrong.
 
@@ -154,3 +154,4 @@ The internet was the infrastructure. AI is the intelligence. The combination is 
 - [Goldman Sachs — Generative AI GDP impact](https://www.goldmansachs.com/insights/articles/generative-ai-could-raise-global-gdp-by-7-percent)
 - [EU AI Act](https://artificialintelligenceact.eu/)
 - [IBM — A2A Protocol and enterprise AI](https://www.ibm.com/think/topics/agent2agent-protocol)
+- [MIT NANDA Project — 95% of GenAI pilots fail (Fortune)](https://fortune.com/2025/08/18/mit-report-95-percent-generative-ai-pilots-at-companies-failing-cfo/)
