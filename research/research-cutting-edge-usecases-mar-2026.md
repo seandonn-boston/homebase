@@ -2,6 +2,8 @@
 
 A comprehensive research dossier of the best projects and products that are **not strictly AI tools** but heavily leverage AI and fleets of AI agents to achieve their goals. These are products where AI agents are a key enabler, but the product itself serves a non-AI purpose. Evaluated on **ingenuity, effectiveness, real-world impact, and impressiveness**. Ordered by a triple-weighted balance of **relevance, recency, and scale** (stars/downloads/revenue/impact).
 
+> **Fact-check note:** This document was compiled in March 2026. All company metrics, valuations, and operational statistics cited here are post-August 2025 (the knowledge cutoff for AI-assisted verification) and should be verified against the linked primary sources. Source links are provided inline for each entry where available.
+
 ---
 
 ## CATEGORY 1: Autonomous Vehicles & Robotics
