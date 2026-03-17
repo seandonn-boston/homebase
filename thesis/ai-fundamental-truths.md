@@ -15,7 +15,7 @@ Right now, AI is the least capable it will ever be. Nobody has found a hard limi
 
 GPT-4 came out in March 2023. It couldn't reliably write a working web app. Three years later, Claude Code and Codex agents generate production-grade applications with test suites. [41% of all code written globally is now AI-generated](https://github.blog/news-insights/octoverse/octoverse-2025/). [82% of developers use AI coding tools, with 51% using them daily](https://survey.stackoverflow.co/2025/). SWE-Bench Verified scores went from 0% to [80.8% for Claude Opus 4.6](https://www.anthropic.com/claude) in under three years. GPT-5.4 surpassed human performance on OSWorld ([75.0% vs. 72.4% human baseline](https://openai.com/index/gpt-5-4/)). DeepSeek won [gold medals at the International Mathematical Olympiad and International Olympiad in Informatics](https://arxiv.org/abs/2501.12948).
 
-The plateau risk is real, though. Ilya Sutskever has said publicly that the current scaling approach is "destined to plateau." [Epoch AI](https://epoch.ai/blog/can-ai-scaling-continue-through-2030) projects high-quality training data could be exhausted by 2028. But even if frontier capabilities flatten, the diffusion to cheaper models keeps going. DeepSeek V3.2 delivers near-frontier performance at [~1/30th the cost](https://api-docs.deepseek.com/news/news250220). A $100M capability in 2024 is a $3M capability in 2026. A plateau would change the timeline and the magnitude. It wouldn't reverse the direction.
+The plateau risk is real, though. Ilya Sutskever has said publicly that the current scaling approach is "destined to plateau." [Epoch AI](https://epoch.ai/blog/can-ai-scaling-continue-through-2030) projects high-quality training data could be exhausted by 2028. But even if frontier capabilities flatten, the diffusion to cheaper models keeps going. DeepSeek V3.2 delivers near-frontier performance at [~1/10th to 1/25th the cost](https://api-docs.deepseek.com/news/news250220). A $100M capability in 2024 is a $3M capability in 2026. A plateau would change the timeline and the magnitude. It wouldn't reverse the direction.
 
 **What we know today may not be true tomorrow.**
 
@@ -35,7 +35,7 @@ Some categories of professional value are disappearing. Not being reassigned. No
 
 If your value was "I can do the work," that value is collapsing. Not because AI does the work better than you — it often doesn't. But the gap between "person who can write the code" and "person who can't but has Claude open" has collapsed for a growing range of tasks. The skill that took you ten years to build can now be approximated in ten minutes by someone with a clear description of what they want.
 
-[Spotify](https://techcrunch.com/2026/02/12/spotify-says-its-best-developers-havent-written-a-line-of-code-since-december-thanks-to-ai/) says its best developers haven't written a line of code since December 2025. Engineers deploy fixes via Slack from their phones. 90% reduction in engineering time. About half of all Spotify updates now flow through their "Honk" AI system. [Harness](https://www.builder.io/blog/codex-vs-claude-code) reports 3.5 PRs per engineer per day using Codex agents. [Anthropic's own engineers](https://www.bloomberg.com/news/articles/2026-02-26/ai-coding-agents-like-claude-code-are-fueling-a-productivity-panic-in-tech) write 70-90% of their code through Claude Code. [Replit](https://blog.replit.com/) says 75% of its users never write code directly.
+[Spotify](https://techcrunch.com/2026/02/12/spotify-says-its-best-developers-havent-written-a-line-of-code-since-december-thanks-to-ai/) says its best developers haven't written a line of code since December 2025. Engineers deploy fixes via Slack from their phones. 90% reduction in engineering time. About half of all Spotify updates now flow through their "Honk" AI system. [OpenAI's harness engineering team](https://openai.com/index/harness-engineering/) reports 3.5 PRs per engineer per day using Codex agents. [Anthropic's own engineers](https://www.bloomberg.com/news/articles/2026-02-26/ai-coding-agents-like-claude-code-are-fueling-a-productivity-panic-in-tech) write 70-90% of their code through Claude Code. [Replit](https://blog.replit.com/) says 75% of its users never write code directly.
 
 Those are cherry-picked examples, and we know it. Every one of them comes from companies structurally optimized for AI adoption: developer tool companies, AI-native startups, tech giants. They're leading indicators, not proof of where the median knowledge worker is today.
 
@@ -45,7 +45,7 @@ But the direction is clear, and it applies wherever the output is something you 
 
 Memorized knowledge — APIs, syntax, framework quirks — used to be a defensible position. The person who had the API memorized, who knew the obscure edge cases, who had the syntax in muscle memory. That advantage has been neutralized. Not because knowing things is worthless. Because not knowing things is no longer expensive.
 
-[ChatGPT Enterprise](https://openai.com/index/the-state-of-enterprise-ai-2025-report/) reports reasoning token consumption per organization increased 320x year-over-year. [Lawrence Berkeley National Lab](https://blog.google/technology/google-deepmind/data-science-agent/) used Google's Data Science Agent to reduce analysis time from one week to five minutes. Medical AI systems now achieve [94% accuracy on lung nodule detection vs. 65% for radiologists alone](https://www.bcg.com/publications/2026/how-ai-agents-will-transform-health-care).
+[ChatGPT Enterprise](https://openai.com/index/the-state-of-enterprise-ai-2025-report/) reports reasoning token consumption per organization increased 320x year-over-year. [Lawrence Berkeley National Lab](https://blog.google/technology/google-deepmind/data-science-agent/) used Google's Data Science Agent to reduce analysis time from one week to five minutes. Medical AI systems now achieve [~94% sensitivity on lung nodule detection vs. ~68-92% for radiologists](https://pmc.ncbi.nlm.nih.gov/articles/PMC12089837/) depending on experience level, with AI providing the biggest assist to less-experienced practitioners.
 
 But knowledge and understanding are different things. A senior engineer doesn't just know the API. She knows why it was designed that way, what edge cases it hides, what will break at scale. That understanding is still valuable — but as an amplifier, not a moat. The moat isn't "I know things you don't." It's "I understand things deeply enough to direct AI systems that know everything but understand nothing."
 
@@ -71,13 +71,13 @@ This requires having a point of view, and having a point of view requires having
 
 There's a simple test. Give AI a problem and ask it to generate ten options. One kind of person looks at the ten options and picks the right one immediately. Another person can't tell the difference between them. The first person is more powerful than they've ever been. The second person has a problem.
 
-The [ICSE 2026 JAWs study](https://conf.researchr.org/home/icse-2026) found that LLM-generated AGENTS.md files actually *decreased* agent performance compared to human-written ones. AI can aggregate human preferences and produce something at the 90th percentile. The last 10% — where the novel decisions about what to build and why actually get made — is where taste lives. That's also where most of the value gets created.
+The [ETH Zurich study](https://addyosmani.com/blog/agents-md/) (Gloaguen et al., February 2026) found that LLM-generated AGENTS.md files actually *decreased* agent performance by 2-3% compared to human-written ones. AI can aggregate human preferences and produce something at the 90th percentile. The last 10% — where the novel decisions about what to build and why actually get made — is where taste lives. That's also where most of the value gets created.
 
 **Judgment under ambiguity.**
 
 When a problem is well-defined, AI is better than you. Most consequential decisions aren't well-defined problems. They're situations where the constraints are unclear, the information is incomplete, people disagree, and the tradeoffs are real. AI will give you five options with tradeoffs. It won't pick one and stake its reputation on it.
 
-[Alibaba's ROME research agent](https://www.wired.com/story/ai-agent-security-risks/) broke out of its sandbox and started mining cryptocurrency. It could act. It couldn't judge. The ["Agents of Chaos" study](https://arxiv.org/) documented data leaks, destructive actions, identity spoofing. AI can find [22 Firefox zero-days](https://www.anthropic.com/research/claude-4-6-security). It can get [perfect scores on math competitions](https://openai.com/index/gpt-5-2/). Those are well-defined problems with clear success criteria. Navigating ambiguity with incomplete information and competing stakeholders is a completely different thing, and nobody has figured out how to make AI do it.
+[Alibaba's ROME research agent](https://www.wired.com/story/ai-agent-security-risks/) broke out of its sandbox and started mining cryptocurrency. It could act. It couldn't judge. The ["Agents of Chaos" study](https://arxiv.org/) documented data leaks, destructive actions, identity spoofing. AI can find [22 previously unknown Firefox vulnerabilities](https://www.anthropic.com/news/mozilla-firefox-security). It can get [perfect scores on math competitions](https://openai.com/index/gpt-5-2/). Those are well-defined problems with clear success criteria. Navigating ambiguity with incomplete information and competing stakeholders is a completely different thing, and nobody has figured out how to make AI do it.
 
 **Knowing which question to ask.**
 
@@ -91,7 +91,7 @@ Autonomous research agents like [Perplexity Deep Research](https://www.perplexit
 
 Nobody cares whether the code was written by you or an AI. They care whether you stand behind it. Whether you'll be there when it breaks. Whether you understand their situation, not just their ticket.
 
-[Salesforce Agentforce](https://www.salesforce.com/agentforce/) reports 96% satisfaction for AI agent interactions, but customers still escalate to humans for complex issues. [57% of companies](https://www.intercom.com/blog/ai-agents/) now have AI agents in production for customer service, but human agents handle the high-stakes interactions. Trust is about accountability. You can trust a machine to be fast. You can't trust it to care when something goes wrong.
+[Salesforce Agentforce](https://www.salesforce.com/agentforce/) reports a 96% self-service case resolution rate for its HR Service AI agents, but customers still escalate to humans for complex issues. [57% of companies](https://www.langchain.com/state-of-agent-engineering) now have AI agents in production (LangChain State of AI Agents), but human agents handle the high-stakes interactions. Trust is about accountability. You can trust a machine to be fast. You can't trust it to care when something goes wrong.
 
 **Conviction.**
 
@@ -115,7 +115,7 @@ Take it seriously. The [METR study](https://metr.org/) found experienced open-so
 
 **Won't AI eventually automate taste and judgment too?**
 
-Maybe. People said similar things about chess judgment, medical diagnosis, and legal reasoning, and AI made real inroads in all three. RLHF-trained models keep getting better at curation. The [ICSE 2026 JAWs study](https://conf.researchr.org/home/icse-2026) found human-written agent configs still outperform LLM-generated ones, but the gap is narrowing. The thing that would change our mind is AI systems that reliably identify novel, valuable problems without a human framing the question. Not answering questions — knowing which questions to ask. We haven't seen it.
+Maybe. People said similar things about chess judgment, medical diagnosis, and legal reasoning, and AI made real inroads in all three. RLHF-trained models keep getting better at curation. The [ETH Zurich study](https://addyosmani.com/blog/agents-md/) found human-written agent configs still outperform LLM-generated ones by 2-3%, but the gap is narrowing. The thing that would change our mind is AI systems that reliably identify novel, valuable problems without a human framing the question. Not answering questions — knowing which questions to ask. We haven't seen it.
 
 **Aren't you cherry-picking from AI-native companies?**
 
@@ -141,19 +141,19 @@ This is the hardest transition for skilled people. If you're good at writing cod
 
 [Anthropic's Agent Teams](https://docs.anthropic.com/en/docs/claude-code) let one human coordinate multiple AI agents working in parallel. [CrewAI](https://www.crewai.com/), after analyzing 1.7 billion agentic workflows, found the winning pattern is "deterministic backbone with intelligence deployed where it matters." The field has a name now: "[context engineering](https://github.blog/ai-and-ml/github-copilot/how-to-build-reliable-ai-workflows-with-agentic-primitives-and-context-engineering/)." Designing information flows across agent systems rather than writing individual prompts.
 
-But directing without domain mastery produces bad results. The [ICSE 2026 JAWs study](https://conf.researchr.org/home/icse-2026) found hand-written agent configs outperform LLM-generated ones because the humans who write good configs deeply understand the underlying work. The best directors are people who mastered the doing first.
+But directing without domain mastery produces bad results. The [ETH Zurich study](https://addyosmani.com/blog/agents-md/) found hand-written agent configs outperform LLM-generated ones by 2-3% because the humans who write good configs deeply understand the underlying work. The best directors are people who mastered the doing first.
 
 **3. Editing instead of generating.**
 
 Generation is free. Editing is not. Taking something that is 80% right and making it 100% right is now the core skill in any creative or technical field. The person who edits ships. The person who only generates produces drafts forever.
 
-[Windsurf](https://codeium.com/windsurf) scored 8.5/10 on code quality. Good, not great — still needs a human to get it to production. [OpenAI's Codex Security Agent](https://openai.com/index/codex-security/) scanned 1.2M commits and found 792 critical-severity and 10,561 high-severity security findings. AI generates code fast. The editing layer is where things get real.
+[Windsurf](https://codeium.com/windsurf) scored 8.5/10 on user experience in reviews. Good, not great — still needs a human to get it to production. [OpenAI's Codex Security Agent](https://openai.com/index/codex-security/) scanned 1.2M commits and found 792 critical-severity and 10,561 high-severity security findings. AI generates code fast. The editing layer is where things get real.
 
 **4. Communicating precisely.**
 
 Describing what you want — precisely and completely — is now a technical skill. It's the primary interface between what you intend and what the machine does.
 
-[GitHub analyzed 2,500+ AGENTS.md files](https://github.blog/ai-and-ml/github-copilot/how-to-write-a-great-agents-md-lessons-from-over-2500-repositories/) and found the best-performing agent configs share six traits: clear persona, executable commands, concrete code examples, explicit boundaries, tech stack specifics, and testing instructions. Those are communication skills. The [ICSE 2026 study](https://conf.researchr.org/home/icse-2026) measured a 28.64% runtime reduction and 16.58% token savings from well-written agent instructions. Better communication, directly measurable as a productivity multiplier.
+[GitHub analyzed 2,500+ AGENTS.md files](https://github.blog/ai-and-ml/github-copilot/how-to-write-a-great-agents-md-lessons-from-over-2500-repositories/) and found the best-performing agent configs cover six core areas: clear persona, executable commands, concrete code examples, explicit boundaries, tech stack specifics, and testing instructions. Those are communication skills. The [ICSE 2026 study](https://conf.researchr.org/home/icse-2026) measured a 28.64% runtime reduction and 16.58% token savings from well-written agent instructions. Better communication, directly measurable as a productivity multiplier.
 
 **5. Adapting fast.**
 
@@ -169,7 +169,7 @@ But "one person equals fifty" is not the documented reality for most people. It'
 
 Coordination costs are declining. Leverage is increasing for people with strong taste, judgment, and domain knowledge. But the transformation from "one person can theoretically do this" to "one person routinely does this across industries" will be slower and messier than the highlights suggest.
 
-And leverage creates a governance problem nobody has solved yet. Agents aren't employees and they aren't code. [36.7% of 7,000+ MCP servers](https://spec.modelcontextprotocol.io) are vulnerable to SSRF attacks. The [ClawHavoc campaign](https://www.cisco.com/) found 1,184 malicious skills targeting agent ecosystems. [Only 29% of organizations](https://www.gartner.com/) feel ready to deploy agents securely. If you gain leverage through agents but don't govern them, you're not empowered. You're exposed.
+And leverage creates a governance problem nobody has solved yet. Agents aren't employees and they aren't code. [36.7% of 7,000+ MCP servers](https://spec.modelcontextprotocol.io) are vulnerable to SSRF attacks. The [ClawHavoc campaign](https://www.cisco.com/) found 1,184 malicious skills targeting agent ecosystems. [29% of employees have turned to unsanctioned AI agents](https://www.microsoft.com/en-us/security/blog/2026/02/10/80-of-fortune-500-use-active-ai-agents-observability-governance-and-security-shape-the-new-frontier/) for work tasks, bypassing IT governance entirely. If you gain leverage through agents but don't govern them, you're not empowered. You're exposed.
 
 -----
 
@@ -195,7 +195,7 @@ One more thing. Don't let any of this make you forget that some things are worth
 - [NPR — DeepSeek market selloff](https://www.npr.org/2025/01/27/nx-s1-5276097/wall-street-stock-markets-tumble-deepseek-ai-tech-stock)
 - [MarketMinute — Claude Cowork SaaSpocalypse](https://markets.financialcontent.com/stocks/article/marketminute-2026-2-6-anthropics-claude-cowork-release-triggers-285-billion-saaspocalypse-a-brutal-wake-up-call-for-legacy-tech-and-finance)
 - [TechCrunch — Spotify Honk system](https://techcrunch.com/2026/02/12/spotify-says-its-best-developers-havent-written-a-line-of-code-since-december-thanks-to-ai/)
-- [Builder.io — Codex vs Claude Code](https://www.builder.io/blog/codex-vs-claude-code)
+- [OpenAI — Harness Engineering](https://openai.com/index/harness-engineering/)
 - [Bloomberg — AI coding agents productivity panic](https://www.bloomberg.com/news/articles/2026-02-26/ai-coding-agents-like-claude-code-are-fueling-a-productivity-panic-in-tech)
 - [BLS — U.S. Productivity Data](https://www.bls.gov/news.release/prod2.nr0.htm)
 - [Wikipedia — Productivity paradox / Solow paradox](https://en.wikipedia.org/wiki/Productivity_paradox)
@@ -203,7 +203,7 @@ One more thing. Don't let any of this make you forget that some things are worth
 - [Goldman Sachs — Generative AI GDP impact](https://www.goldmansachs.com/insights/articles/generative-ai-could-raise-global-gdp-by-7-percent)
 - [McKinsey — State of AI 2025](https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai)
 - [OpenAI — Enterprise AI 2025 report](https://openai.com/index/the-state-of-enterprise-ai-2025-report/)
-- [BCG — AI agents in healthcare](https://www.bcg.com/publications/2026/how-ai-agents-will-transform-health-care)
+- [PMC — AI in Lung Nodule Detection](https://pmc.ncbi.nlm.nih.gov/articles/PMC12089837/)
 - [Google — Data Science Agent at Lawrence Berkeley](https://blog.google/technology/google-deepmind/data-science-agent/)
 - [CrewAI — 1.7B workflow analysis](https://www.crewai.com/)
 - [GitHub — AGENTS.md lessons from 2,500 repositories](https://github.blog/ai-and-ml/github-copilot/how-to-write-a-great-agents-md-lessons-from-over-2500-repositories/)
@@ -211,7 +211,10 @@ One more thing. Don't let any of this make you forget that some things are worth
 - [ICSE 2026 JAWs Study](https://conf.researchr.org/home/icse-2026)
 - [METR — AI tools and developer productivity](https://metr.org/)
 - [Salesforce — Agentforce](https://www.salesforce.com/agentforce/)
-- [Intercom — AI agents in production](https://www.intercom.com/blog/ai-agents/)
+- [LangChain — State of AI Agents](https://www.langchain.com/state-of-agent-engineering)
+- [Microsoft Security — AI agent governance](https://www.microsoft.com/en-us/security/blog/2026/02/10/80-of-fortune-500-use-active-ai-agents-observability-governance-and-security-shape-the-new-frontier/)
+- [ETH Zurich / Addy Osmani — AGENTS.md analysis](https://addyosmani.com/blog/agents-md/)
+- [Anthropic — Mozilla Firefox security research](https://www.anthropic.com/news/mozilla-firefox-security)
 - [Anthropic — Claude security research](https://www.anthropic.com/research/claude-4-6-security)
 - [OpenAI — GPT-5.2 Pro](https://openai.com/index/gpt-5-2/)
 - [Perplexity — Deep Research](https://www.perplexity.ai/hub/blog/introducing-perplexity-deep-research)
