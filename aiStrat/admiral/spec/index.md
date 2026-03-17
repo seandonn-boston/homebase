@@ -141,7 +141,7 @@ If you are starting with the Starter profile, you do not need to read the entire
 | 2 | [`part1-strategy.md`](part1-strategy.md) | Full file | Mission, Boundaries, Success Criteria — the three inputs every agent needs. |
 | 3 | [`part3-enforcement.md`](part3-enforcement.md) | Deterministic Enforcement only | The enforcement spectrum: hooks over instructions. Decision Authority and Configuration Security are F2+ — read them when you add a fleet. |
 | 3.5 | [`intent-engineering.md`](../extensions/intent-engineering.md) | Six Elements of Intent | How to write mission, boundaries, and task assignments that give agents enough context to handle unexpected situations. |
-| 4 | [`part11-protocols.md`](part11-protocols.md) | Standing Orders only | The fifteen non-negotiable rules loaded into every agent's standing context. |
+| 4 | [`part11-protocols.md`](part11-protocols.md) | Standing Orders only | The sixteen non-negotiable rules loaded into every agent's standing context. |
 | 4.5 | [`fleet-control-plane.md`](../extensions/fleet-control-plane.md) | CP1 section | The CLI dashboard: event logging, status, and runaway detection from day one. |
 | 5 | [`appendices.md`](appendices.md) | Appendix A (Pre-Flight Checklist) | Go/no-go gate — confirms you have not missed anything critical. |
 

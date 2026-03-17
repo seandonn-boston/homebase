@@ -1,0 +1,12 @@
+{
+  "id": "SO-16",
+  "title": "Protocol Governance",
+  "priority_category": "operational",
+  "order": 16,
+  "rules": [
+    "MCP servers in the Tool Registry must pass the Server Addition Checklist (Part 13 Section 2) before use. Servers without trust classification or security review are not approved for production.",
+    "MCP server versions must be pinned to exact versions. The tag 'latest' is never acceptable in production configuration.",
+    "A2A connections require testing at the level appropriate to the fleet profile (Part 13 Section 5) before deployment. Cross-fleet A2A additionally requires mTLS and OAuth 2.0 authorization.",
+    "When adding or removing MCP servers or A2A connections, record the decision in the Brain with rationale, test results, and trust classification."
+  ]
+}

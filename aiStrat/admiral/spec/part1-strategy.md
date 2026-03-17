@@ -101,6 +101,7 @@ Hard constraints prevent catastrophic misalignment — the class of errors where
 - **External deadlines:** Ship dates, demo dates, review dates.
 - **Compatibility requirements:** Browser support, API backward compatibility, platform requirements.
 - **Regulatory or policy constraints:** Anything legally or organizationally mandated.
+- **Protocol scope:** MCP servers approved for use, A2A requirements (if any), and trust classification policy. See [Part 13](part13-mcp-integration.md) Section 2 for server selection criteria.
 
 ### Resource Budgets
 
