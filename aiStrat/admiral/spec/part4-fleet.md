@@ -236,6 +236,8 @@ Agent ←→ MCP Client ←→ MCP Server ←→ Tool/Data Source
 - **Version pinning:** Pin versions. Never `latest` in production.
 - **Security classification:** Official vs. community vs. internal trust level.
 
+> **Practitioner guide:** For server selection criteria, testing/validation procedures, incremental adoption paths, and security checklists for both MCP and A2A, see [Part 13 — Protocol Integration Guide](part13-mcp-integration.md).
+
 ### A2A — Agent-to-Agent Protocol
 
 A2A enables structured communication between agents across process, machine, and organizational boundaries. Where MCP connects agents to tools, A2A connects agents to each other.
