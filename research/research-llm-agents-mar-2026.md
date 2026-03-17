@@ -469,7 +469,7 @@ A comprehensive research dossier of the most impressive LLM agent projects, AI c
 ### Adoption Statistics
 - 64% of organizations deploying AI agents (up from ~40% in mid-2025)
 - 40% of enterprise apps will feature AI agents by end of 2026 (Gartner)
-- 92% of US developers use AI coding tools daily
+- 82% of developers use AI coding tools, 51% daily ([Stack Overflow 2025](https://survey.stackoverflow.co/2025/))
 - 41% of all code written globally is now AI-generated
 - 30% of code at Google and Microsoft written by AI
 - 57% of companies have AI agents in production (up from 33%)
