@@ -35,7 +35,7 @@
 
 ### ~~3. PLAN.md Decoupled from Reality~~ → RESOLVED
 
-**Original finding:** PLAN.md claimed Phase 1.1 (version consistency at v0.7.0-alpha) was COMPLETE while actual codebase was at v0.8.5-alpha. Phase 1.3 (Enforcement Language Refinement) was listed as NOT STARTED but Part 3 already contained the distinction.
+**Original finding:** PLAN.md claimed Phase 1.1 (version consistency at v0.7.0-alpha) was COMPLETE while actual codebase was at a later version. Phase 1.3 (Enforcement Language Refinement) was listed as NOT STARTED but Part 3 already contained the distinction. <!-- no-version-sync -->
 
 **Resolution:** PLAN.md has been updated. All Phase 1 milestones are marked Complete with accurate exit criteria. New milestone added for "Enforcement thesis resolution" tracking the Privileged Escalation Guarantee and Escalation Resolution System work.
 
@@ -55,7 +55,7 @@ SO-05 JSON requires brain queries before Propose/Escalate decisions. Part 11 spe
 
 AGENTS.md references spec-repo hooks as deployed enforcement. Only hook manifests existed — no executable implementations.
 
-**Status:** As of v0.8.5-alpha, 12 executable hooks exist in `.hooks/` with 34+ unit tests. The enforcement gap identified in SD-01 (spec-debt) has been resolved. Remaining gap: hooks specified in Part 3 for E2+ and E3+ deployment levels do not have implementations yet, which is by design (they await their consumers).
+**Status:** As of the current version, 13 executable hooks exist in `.hooks/` with 59 unit tests and 68 integration tests (127 total). The enforcement gap identified in SD-01 (spec-debt) has been resolved. Remaining gap: hooks specified in Part 3 for E2+ and E3+ deployment levels do not have implementations yet, which is by design (they await their consumers).
 
 ### 6. Standing Orders Placement Acknowledged as Design Error → OPEN
 
