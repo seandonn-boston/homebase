@@ -53,6 +53,7 @@ TMPDIR_ROOT=$(mktemp -d)
 export CLAUDE_PROJECT_DIR="$TMPDIR_ROOT"
 # brain scripts derive BRAIN_DIR as $CLAUDE_PROJECT_DIR/.brain
 
+# shellcheck disable=SC2317  # invoked via trap
 cleanup() {
   rm -rf "$TMPDIR_ROOT"
 }
@@ -76,11 +77,11 @@ DECISION_FILE=$(echo "$OUTPUT1" | sed 's/Recorded: //')
 
 OUTPUT2=$("$BRAIN_RECORD" "test-project" "lesson" "Hooks must fail open" "Advisory-only hooks prevent deadlocks in enforcement layer")
 assert_contains "Record lesson entry" "$OUTPUT2" "Recorded:"
-LESSON_FILE=$(echo "$OUTPUT2" | sed 's/Recorded: //')
+_LESSON_FILE=$(echo "$OUTPUT2" | sed 's/Recorded: //')
 
 OUTPUT3=$("$BRAIN_RECORD" "test-project" "pattern" "Event sourcing for observability" "All hook events emit to JSONL for control plane ingestion")
 assert_contains "Record pattern entry" "$OUTPUT3" "Recorded:"
-PATTERN_FILE=$(echo "$OUTPUT3" | sed 's/Recorded: //')
+_PATTERN_FILE=$(echo "$OUTPUT3" | sed 's/Recorded: //')
 
 echo ""
 

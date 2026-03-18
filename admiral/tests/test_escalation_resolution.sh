@@ -98,9 +98,8 @@ assert_contains "Step 1: Output suggests escalation" "$SUDO_OUTPUT" "Escalate"
 # Step 2: Verify non-privileged alternative is available
 # The same tool call without sudo should pass
 PAYLOAD_NOSUDO='{"tool_name":"Bash","tool_input":{"command":"apt-get install jq"}}'
-NOSUDO_OUTPUT=""
 NOSUDO_EXIT=0
-NOSUDO_OUTPUT=$(echo "$PAYLOAD_NOSUDO" | "$HOOKS_DIR/prohibitions_enforcer.sh" 2>/dev/null) || NOSUDO_EXIT=$?
+echo "$PAYLOAD_NOSUDO" | "$HOOKS_DIR/prohibitions_enforcer.sh" >/dev/null 2>&1 || NOSUDO_EXIT=$?
 
 assert_true "Step 2: Non-privileged alternative passes (exit 0)" "$([ "$NOSUDO_EXIT" -eq 0 ] && echo true || echo false)"
 

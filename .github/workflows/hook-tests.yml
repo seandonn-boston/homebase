@@ -23,7 +23,7 @@ jobs:
         run: shellcheck -s bash -S warning .hooks/*.sh admiral/lib/*.sh
 
       - name: ShellCheck test scripts
-        run: shellcheck -s bash -S error .hooks/tests/*.sh admiral/tests/*.sh
+        run: shellcheck -s bash -S info .hooks/tests/*.sh admiral/tests/*.sh
 
   hook-tests:
     runs-on: ubuntu-latest

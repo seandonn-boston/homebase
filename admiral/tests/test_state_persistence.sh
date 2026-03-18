@@ -6,7 +6,6 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
-HOOKS_DIR="$PROJECT_DIR/.hooks"
 export CLAUDE_PROJECT_DIR="$PROJECT_DIR"
 
 # Use temp dir for state to avoid polluting real state
@@ -14,6 +13,7 @@ TEST_ADMIRAL_DIR=$(mktemp -d)
 export ADMIRAL_DIR="$TEST_ADMIRAL_DIR"
 
 # Source state library
+# shellcheck disable=SC1091  # path resolved at runtime via $PROJECT_DIR
 source "$PROJECT_DIR/admiral/lib/state.sh"
 
 PASS=0
@@ -47,6 +47,7 @@ assert_equals() {
   fi
 }
 
+# shellcheck disable=SC2317  # invoked via trap
 cleanup() {
   rm -rf "$TEST_ADMIRAL_DIR"
 }
@@ -86,7 +87,7 @@ echo ""
 echo "--- Test 2: State updates persist ---"
 
 # Simulate 5 tool calls incrementing counters
-for i in 1 2 3 4 5; do
+for _ in 1 2 3 4 5; do
   increment_state_field '.tool_call_count' 1
   increment_state_field '.tokens_used' 500
 done
