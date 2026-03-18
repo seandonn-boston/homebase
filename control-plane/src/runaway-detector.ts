@@ -251,7 +251,7 @@ export class ControlChart {
   }
 }
 
-interface SPCViolation {
+export interface SPCViolation {
   rule: string;
   message: string;
   value: number;

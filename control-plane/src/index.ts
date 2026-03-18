@@ -19,6 +19,7 @@ export {
   Alert,
   ControlChart,
   SPCMonitor,
+  SPCViolation,
 } from "./runaway-detector";
 export { ExecutionTrace, TraceNode, TraceStats } from "./trace";
 export { AdmiralServer } from "./server";
@@ -29,10 +30,18 @@ import { AgentInstrumentation } from "./instrumentation";
 import { type DetectorConfig, RunawayDetector } from "./runaway-detector";
 import { ExecutionTrace } from "./trace";
 
+export interface AdmiralInstance {
+  stream: EventStream;
+  detector: RunawayDetector;
+  trace: ExecutionTrace;
+  instrument(agentId: string, agentName: string): AgentInstrumentation;
+  shutdown(): void;
+}
+
 /**
  * Create a fully wired Admiral control plane instance.
  */
-export function createAdmiral(detectorConfig?: Partial<DetectorConfig>) {
+export function createAdmiral(detectorConfig?: Partial<DetectorConfig>): AdmiralInstance {
   const stream = new EventStream();
   const detector = new RunawayDetector(stream, detectorConfig);
   const trace = new ExecutionTrace(stream);
