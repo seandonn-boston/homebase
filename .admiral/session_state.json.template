@@ -18,6 +18,15 @@
       "last_brain_query_tool_call": 0,
       "propose_without_brain": 0,
       "escalate_without_brain": 0
+    },
+    "zero_trust": {
+      "external_data_count": 0
+    },
+    "compliance": {
+      "flags_count": 0
+    },
+    "pre_work_validator": {
+      "validated": false
     }
   },
   "context": {

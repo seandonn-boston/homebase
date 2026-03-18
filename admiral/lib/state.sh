@@ -32,7 +32,10 @@ init_session_state() {
   "hook_state": {
     "loop_detector": { "error_counts": {}, "total_errors": 0 },
     "self_healing": { "retry_counts": {}, "total_retries": 0 },
-    "brain_context_router": { "brain_queries_count": 0, "last_brain_query_tool_call": 0, "propose_without_brain": 0, "escalate_without_brain": 0 }
+    "brain_context_router": { "brain_queries_count": 0, "last_brain_query_tool_call": 0, "propose_without_brain": 0, "escalate_without_brain": 0 },
+    "zero_trust": { "external_data_count": 0 },
+    "compliance": { "flags_count": 0 },
+    "pre_work_validator": { "validated": false }
   },
   "context": {
     "standing_context_tokens": 0,
