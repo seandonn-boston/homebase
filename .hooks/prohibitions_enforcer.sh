@@ -11,6 +11,9 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$SCRIPT_DIR/.." && pwd)}"
 export CLAUDE_PROJECT_DIR="$PROJECT_DIR"
 
+# shellcheck source=../admiral/lib/heredoc_strip.sh
+source "$PROJECT_DIR/admiral/lib/heredoc_strip.sh"
+
 # Read payload from stdin
 PAYLOAD=$(cat)
 
@@ -22,26 +25,8 @@ HARD_BLOCK=false
 if [ "$TOOL_NAME" = "Bash" ]; then
   COMMAND=$(echo "$PAYLOAD" | jq -r '.tool_input.command // ""')
 
-  # Strip heredoc body content before pattern scanning.
-  # Without this, patterns like "rm.*\.hooks/" false-positive on documentation
-  # text inside heredocs (e.g., "transforms .hooks/foo.sh" matches because
-  # "transforms" contains "rm"). Only the command lines should be scanned.
-  CMD_FOR_SCAN=$(printf '%s\n' "$COMMAND" | awk '
-    BEGIN { skip=0 }
-    skip {
-      t=$0; gsub(/^[[:space:]]+|[[:space:]]+$/, "", t)
-      if (t == delim) skip=0
-      next
-    }
-    /<<-?[[:space:]]*["'"'"'\\]?[A-Za-z_]/ {
-      line=$0
-      sub(/.*<<-?[[:space:]]*/, "", line)
-      gsub(/["'"'"'\\]/, "", line)
-      gsub(/[[:space:]]*$/, "", line)
-      if (line != "") { delim=line; skip=1 }
-    }
-    { print }
-  ')
+  # Strip heredoc body content before pattern scanning (see admiral/lib/heredoc_strip.sh)
+  CMD_FOR_SCAN=$(strip_heredoc_content "$COMMAND")
 
   # Detect hook/linter/CI bypass patterns → HARD BLOCK
   # Why hard-block: bypassing enforcement undermines the core thesis of the Admiral

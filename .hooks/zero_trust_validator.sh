@@ -9,6 +9,10 @@
 # Timeout: 5s
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=../admiral/lib/heredoc_strip.sh
+source "${CLAUDE_PROJECT_DIR:-$(cd "$SCRIPT_DIR/.." && pwd)}/admiral/lib/heredoc_strip.sh"
+
 # Read payload from stdin (includes session_state from adapter)
 PAYLOAD=$(cat)
 
@@ -61,14 +65,16 @@ fi
 # "Request only the minimum access scope needed"
 if [ "$TOOL_NAME" = "Bash" ]; then
   COMMAND=$(echo "$PAYLOAD" | jq -r '.tool_input.command // ""' 2>/dev/null)
+  # Strip heredoc body content before scanning (see admiral/lib/heredoc_strip.sh)
+  CMD_FOR_SCAN=$(strip_heredoc_content "$COMMAND")
 
   # Detect overly broad operations
-  if echo "$COMMAND" | grep -qE '(chmod -R|chown -R|find / |rm -rf /|git add -A|git add \.)'; then
+  if echo "$CMD_FOR_SCAN" | grep -qE '(chmod -R|chown -R|find / |rm -rf /|git add -A|git add \.)'; then
     ALERTS+="ZERO-TRUST (SO-12): Command uses broad scope. Prefer minimum-access operations (specific files over recursive, targeted adds over 'git add -A'). "
   fi
 
   # Detect privilege escalation
-  if echo "$COMMAND" | grep -qE '(sudo |su -|chmod [0-7]*7[0-7]*|chmod a\+)'; then
+  if echo "$CMD_FOR_SCAN" | grep -qE '(sudo |su -|chmod [0-7]*7[0-7]*|chmod a\+)'; then
     ALERTS+="ZERO-TRUST (SO-12): Command involves privilege escalation or broad permissions. Verify minimum-access principle. "
   fi
 fi

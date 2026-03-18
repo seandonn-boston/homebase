@@ -10,6 +10,10 @@
 # Timeout: 5s
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=../admiral/lib/heredoc_strip.sh
+source "${CLAUDE_PROJECT_DIR:-$(cd "$SCRIPT_DIR/.." && pwd)}/admiral/lib/heredoc_strip.sh"
+
 # Read payload from stdin (includes session_state from adapter)
 PAYLOAD=$(cat)
 
@@ -20,8 +24,10 @@ case "$TOOL_NAME" in
   Write|Edit|NotebookEdit) ;;
   Bash)
     COMMAND=$(echo "$PAYLOAD" | jq -r '.tool_input.command // ""')
+    # Strip heredoc body content before scanning (see admiral/lib/heredoc_strip.sh)
+    CMD_FOR_SCAN=$(strip_heredoc_content "$COMMAND")
     # Only check bash commands that modify state
-    case "$COMMAND" in
+    case "$CMD_FOR_SCAN" in
       git\ commit*|git\ push*|npm\ *|yarn\ *|pip\ *) ;;
       *) exit 0 ;;
     esac

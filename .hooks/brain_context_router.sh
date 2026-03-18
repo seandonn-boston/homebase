@@ -8,6 +8,10 @@
 # OUTPUT: JSON with optional alert and updated hook_state.brain_context_router
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=../admiral/lib/heredoc_strip.sh
+source "${CLAUDE_PROJECT_DIR:-$(cd "$SCRIPT_DIR/.." && pwd)}/admiral/lib/heredoc_strip.sh"
+
 # Read payload from stdin
 PAYLOAD=$(cat)
 
@@ -33,7 +37,9 @@ ALERT=""
 # Detect Bash tool calls that invoke brain_query or brain_retrieve
 if [ "$TOOL_NAME" = "Bash" ]; then
   COMMAND=$(echo "$PAYLOAD" | jq -r '.tool_input.command // ""' | head -c 2000)
-  if echo "$COMMAND" | grep -qiE 'brain_query|brain_retrieve'; then
+  # Strip heredoc body content before scanning (see admiral/lib/heredoc_strip.sh)
+  CMD_FOR_SCAN=$(strip_heredoc_content "$COMMAND")
+  if echo "$CMD_FOR_SCAN" | grep -qiE 'brain_query|brain_retrieve'; then
     BRAIN_QUERIES=$((BRAIN_QUERIES + 1))
     LAST_QUERY_AT=$TOOL_CALL_COUNT
   fi

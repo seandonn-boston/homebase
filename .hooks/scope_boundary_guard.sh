@@ -13,6 +13,9 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$SCRIPT_DIR/.." && pwd)}"
 export CLAUDE_PROJECT_DIR="$PROJECT_DIR"
 
+# shellcheck source=../admiral/lib/heredoc_strip.sh
+source "$PROJECT_DIR/admiral/lib/heredoc_strip.sh"
+
 # Read payload from stdin
 PAYLOAD=$(cat)
 
@@ -26,8 +29,10 @@ case "$TOOL_NAME" in
   Bash)
     # Check if bash command modifies protected paths
     COMMAND=$(echo "$PAYLOAD" | jq -r '.tool_input.command // ""')
+    # Strip heredoc body content before scanning (see admiral/lib/heredoc_strip.sh)
+    CMD_FOR_SCAN=$(strip_heredoc_content "$COMMAND")
     # Skip non-modifying commands
-    case "$COMMAND" in
+    case "$CMD_FOR_SCAN" in
       git\ status*|git\ log*|git\ diff*|git\ add*|git\ commit*|git\ push*|ls*|cat*|head*|tail*|echo*|pwd*)
         exit 0 ;;
     esac
@@ -57,7 +62,7 @@ case "$TOOL_NAME" in
     TARGET_PATH=$(echo "$PAYLOAD" | jq -r '.tool_input.notebook_path // ""')
     ;;
   Bash)
-    TARGET_PATH="$COMMAND"
+    TARGET_PATH="$CMD_FOR_SCAN"
     ;;
 esac
 
@@ -79,12 +84,12 @@ done
 # For Bash commands, check for dangerous patterns against protected paths
 if [ "$TOOL_NAME" = "Bash" ] && [ -z "$MATCHED_DIR" ]; then
   for PROTECTED in "${PROTECTED_DIRS[@]}"; do
-    if echo "$COMMAND" | grep -q "$PROTECTED"; then
+    if echo "$CMD_FOR_SCAN" | grep -q "$PROTECTED"; then
       # Detect write operations in Bash commands. Trailing spaces prevent substring
       # false positives (e.g., "rmdir" won't match "rm "). Covers: file deletion (rm),
       # moves (mv), copies (cp), in-place edits (sed -i), permission changes (chmod/chown),
       # and output redirection (>, >>, tee).
-      if echo "$COMMAND" | grep -qE '(rm |mv |cp |sed -i|chmod |chown |>|>>|tee )'; then
+      if echo "$CMD_FOR_SCAN" | grep -qE '(rm |mv |cp |sed -i|chmod |chown |>|>>|tee )'; then
         MATCHED_DIR="$PROTECTED"
         break
       fi
