@@ -8,7 +8,7 @@ Homebase is a monorepo containing four major workstreams — all converging on a
 
 ## What's Here
 
-### 🔷 [`aiStrat/`](aiStrat/) — The Admiral Framework `v0.18.15-alpha.1773831495756`
+### 🔷 [`aiStrat/`](aiStrat/) — The Admiral Framework `v0.18.16-alpha.1773832693350`
 
 The flagship project. **Admiral** is a comprehensive, model-agnostic specification for AI agent fleet orchestration — 114 files across 22 groups defining how autonomous AI agent systems should be structured, secured, coordinated, and governed.
 
