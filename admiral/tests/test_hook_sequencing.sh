@@ -149,6 +149,53 @@ assert_true "With override: allowed (exit 0)" "$([ "$EXIT_CODE" -eq 0 ] && echo 
 echo ""
 
 # ============================================================
+# Test 5b: State-file scope_override requires matching session_id
+# ============================================================
+echo "--- Test 5b: State-file override is session-scoped ---"
+
+# Set up a temp state file with scope_override matching the current session
+REAL_STATE="$PROJECT_DIR/.admiral/session_state.json"
+BACKUP_STATE="${REAL_STATE}.test-backup"
+[ -f "$REAL_STATE" ] && cp "$REAL_STATE" "$BACKUP_STATE"
+
+CURRENT_SID="test-session-$$"
+cat > "$REAL_STATE" <<SEOF
+{"session_id":"$CURRENT_SID","scope_override":"aiStrat","scope_override_session":"$CURRENT_SID","started_at":0,"tokens_used":0,"token_budget":0,"tool_call_count":0,"hook_state":{}}
+SEOF
+
+PAYLOAD='{"tool_name":"Edit","tool_input":{"file_path":"'"$PROJECT_DIR"'/aiStrat/test.md","old_string":"a","new_string":"b"}}'
+EXIT_CODE=0
+echo "$PAYLOAD" | "$HOOKS_DIR/pre_tool_use_adapter.sh" >/dev/null 2>&1 || EXIT_CODE=$?
+assert_true "State-file override with matching session: allowed (exit 0)" "$([ "$EXIT_CODE" -eq 0 ] && echo true || echo false)"
+
+# Now set a stale override (session_id doesn't match scope_override_session)
+cat > "$REAL_STATE" <<SEOF
+{"session_id":"new-session-different","scope_override":"aiStrat","scope_override_session":"$CURRENT_SID","started_at":0,"tokens_used":0,"token_budget":0,"tool_call_count":0,"hook_state":{}}
+SEOF
+
+EXIT_CODE=0
+echo "$PAYLOAD" | "$HOOKS_DIR/pre_tool_use_adapter.sh" >/dev/null 2>&1 || EXIT_CODE=$?
+assert_true "Stale override from old session: blocked (exit 2)" "$([ "$EXIT_CODE" -eq 2 ] && echo true || echo false)"
+
+# Override without scope_override_session field (legacy/missing) should also be rejected
+cat > "$REAL_STATE" <<SEOF
+{"session_id":"any-session","scope_override":"aiStrat","started_at":0,"tokens_used":0,"token_budget":0,"tool_call_count":0,"hook_state":{}}
+SEOF
+
+EXIT_CODE=0
+echo "$PAYLOAD" | "$HOOKS_DIR/pre_tool_use_adapter.sh" >/dev/null 2>&1 || EXIT_CODE=$?
+assert_true "Override without session tag: blocked (exit 2)" "$([ "$EXIT_CODE" -eq 2 ] && echo true || echo false)"
+
+# Restore original state
+if [ -f "$BACKUP_STATE" ]; then
+  mv "$BACKUP_STATE" "$REAL_STATE"
+else
+  rm -f "$REAL_STATE"
+fi
+
+echo ""
+
+# ============================================================
 # Test 6: Multiple violations — first blocking hook wins
 # ============================================================
 echo "--- Test 6: Multiple violations → first blocker wins (fail-fast) ---"

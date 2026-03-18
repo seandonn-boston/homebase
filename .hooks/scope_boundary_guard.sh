@@ -98,9 +98,16 @@ OVERRIDE="${ADMIRAL_SCOPE_OVERRIDE:-}"
 if [ -z "$OVERRIDE" ]; then
   STATE_FILE="${PROJECT_DIR}/.admiral/session_state.json"
   if [ -f "$STATE_FILE" ]; then
-    STATE_OVERRIDE=$(jq -r '.scope_override // empty' "$STATE_FILE" 2>/dev/null) || true
-    if [ -n "$STATE_OVERRIDE" ]; then
-      OVERRIDE="$STATE_OVERRIDE"
+    # Read override and verify it belongs to the current session (prevents cross-session leakage)
+    STATE_JSON=$(cat "$STATE_FILE" 2>/dev/null) || true
+    if [ -n "$STATE_JSON" ]; then
+      STATE_OVERRIDE=$(echo "$STATE_JSON" | jq -r '.scope_override // empty' 2>/dev/null) || true
+      OVERRIDE_SESSION=$(echo "$STATE_JSON" | jq -r '.scope_override_session // empty' 2>/dev/null) || true
+      CURRENT_SESSION=$(echo "$STATE_JSON" | jq -r '.session_id // empty' 2>/dev/null) || true
+      if [ -n "$STATE_OVERRIDE" ] && [ -n "$OVERRIDE_SESSION" ] && [ "$OVERRIDE_SESSION" = "$CURRENT_SESSION" ]; then
+        OVERRIDE="$STATE_OVERRIDE"
+      fi
+      # If scope_override_session doesn't match current session_id, ignore stale override
     fi
   fi
 fi
