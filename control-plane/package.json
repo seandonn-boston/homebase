@@ -8,6 +8,7 @@
     "build": "tsc",
     "start": "node dist/src/cli.js",
     "test": "node --test dist/src/**/*.test.js",
+    "test:coverage": "node --test --experimental-test-coverage dist/src/**/*.test.js",
     "dev": "tsc --watch",
     "example": "tsc && node dist/examples/demo.js",
     "lint": "npx @biomejs/biome check src/",
