@@ -345,8 +345,6 @@ export class SPCMonitor {
   }
 }
 
-let alertCounter = 0;
-
 export class RunawayDetector {
   private config: DetectorConfig;
   private stream: EventStream;
@@ -354,6 +352,7 @@ export class RunawayDetector {
   private pausedAgents: Set<string> = new Set();
   private unsubscribe: (() => void) | null = null;
   private spcMonitor: SPCMonitor;
+  private alertCounter = 0;
 
   constructor(stream: EventStream, config: Partial<DetectorConfig> = {}) {
     this.stream = stream;
@@ -545,7 +544,7 @@ export class RunawayDetector {
 
   private fireAlert(partial: Omit<Alert, "id" | "timestamp" | "resolved">): void {
     const alert: Alert = {
-      id: `alert_${Date.now()}_${++alertCounter}`,
+      id: `alert_${Date.now()}_${++this.alertCounter}`,
       timestamp: Date.now(),
       resolved: false,
       ...partial,
@@ -556,9 +555,15 @@ export class RunawayDetector {
     if (this.config.onAlert) {
       const shouldPause = this.config.onAlert(alert);
       if (shouldPause instanceof Promise) {
-        shouldPause.then((pause) => {
-          if (pause) this.pausedAgents.add(alert.agentId);
-        });
+        shouldPause
+          .then((pause) => {
+            if (pause) this.pausedAgents.add(alert.agentId);
+          })
+          .catch((err) => {
+            console.error(`[admiral] onAlert rejected for ${alert.id}:`, err);
+            // Fail-safe: pause agent when callback errors
+            this.pausedAgents.add(alert.agentId);
+          });
       } else if (shouldPause) {
         this.pausedAgents.add(alert.agentId);
       }
