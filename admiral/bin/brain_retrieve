@@ -27,7 +27,7 @@ if [ -n "$FOUND" ]; then
 fi
 
 # Try as ID (search all entries)
-FOUND=$(grep -rl "\"id\": \"$TARGET\"" "$BRAIN_DIR" 2>/dev/null | head -1 || true)
+FOUND=$(grep -rlF "\"id\": \"$TARGET\"" "$BRAIN_DIR" 2>/dev/null | head -1 || true)
 if [ -n "$FOUND" ]; then
   jq '.' "$FOUND"
   exit 0
