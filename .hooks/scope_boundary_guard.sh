@@ -66,6 +66,8 @@ REL_PATH="${TARGET_PATH#$PROJECT_DIR/}"
 
 MATCHED_DIR=""
 for PROTECTED in "${PROTECTED_DIRS[@]}"; do
+  # Match both prefix ("aiStrat/foo") and substring ("/full/path/to/aiStrat/foo")
+  # to catch absolute paths, relative paths, and paths embedded in commands.
   case "$REL_PATH" in
     "$PROTECTED"*|*"$PROTECTED"*)
       MATCHED_DIR="$PROTECTED"
@@ -78,7 +80,10 @@ done
 if [ "$TOOL_NAME" = "Bash" ] && [ -z "$MATCHED_DIR" ]; then
   for PROTECTED in "${PROTECTED_DIRS[@]}"; do
     if echo "$COMMAND" | grep -q "$PROTECTED"; then
-      # Check if it's a write operation
+      # Detect write operations in Bash commands. Trailing spaces prevent substring
+      # false positives (e.g., "rmdir" won't match "rm "). Covers: file deletion (rm),
+      # moves (mv), copies (cp), in-place edits (sed -i), permission changes (chmod/chown),
+      # and output redirection (>, >>, tee).
       if echo "$COMMAND" | grep -qE '(rm |mv |cp |sed -i|chmod |chown |>|>>|tee )'; then
         MATCHED_DIR="$PROTECTED"
         break

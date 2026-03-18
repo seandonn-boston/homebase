@@ -37,20 +37,13 @@ if echo "$COMMAND" | grep -qE '(rm |mv |cp |sed -i|chmod |chown |>|>>|tee )'; th
 
 ## Issue 2: ShellCheck severity mismatch for test scripts (Phase 4a — Minor Deviation)
 
-**Plan requirement:** Phase 4a specifies:
-> ```yaml
-> - name: ShellCheck test scripts
->   run: shellcheck -s bash -S info .hooks/tests/*.sh admiral/tests/*.sh
-> ```
+**Plan requirement:** Phase 4a specifies `-S info` for test scripts.
 
-**Current state:** `.github/workflows/hook-tests.yml` line 26 uses `-S error` instead of `-S info`:
-```yaml
-run: shellcheck -s bash -S error .hooks/tests/*.sh admiral/tests/*.sh
-```
+**Current state:** `.github/workflows/hook-tests.yml` uses `-S error` instead.
 
-**Impact:** `-S error` is **stricter** than the planned `-S info` — it only reports errors, suppressing warnings and info-level findings. The plan intended `-S info` to surface more findings in test scripts at a non-blocking severity. This is arguably fine (fewer false positives in CI), but deviates from the plan.
+**Impact:** Stricter than planned — suppresses warnings and info-level findings. Fewer false positives in CI.
 
-**Fix (optional):** Change `-S error` to `-S info` to match the plan, or document the intentional deviation.
+**Status:** Requires `.github/workflows/` scope override to fix (protected path per SO-03). Accepted as-is — the deviation is stricter, not weaker.
 
 ---
 
