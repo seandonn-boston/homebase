@@ -264,7 +264,7 @@ describe("RunawayDetector SPC integration", () => {
   it("emits spc_violation alerts on behavioral drift", () => {
     // Build baseline: 10 intervals of 2 tool calls each
     for (let i = 0; i < 10; i++) {
-      const ts = 1000 + i * 1000;
+      const _ts = 1000 + i * 1000;
       stream.emit("agent1", "TestAgent", "tool_called", { tool: "read" });
       stream.emit("agent1", "TestAgent", "tool_called", { tool: "write" });
       // Force interval boundary by emitting a token event at next interval
@@ -276,7 +276,7 @@ describe("RunawayDetector SPC integration", () => {
     }
 
     // Check if any SPC alerts fired
-    const spcAlerts = firedAlerts.filter((a) => a.type === "spc_violation");
+    const _spcAlerts = firedAlerts.filter((a) => a.type === "spc_violation");
     // SPC may or may not fire depending on timing (Date.now() based)
     // but the existing threshold detector should fire loop_detected
     const allAlerts = firedAlerts;
