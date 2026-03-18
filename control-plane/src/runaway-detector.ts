@@ -14,6 +14,7 @@
 
 import * as fs from "node:fs";
 import type { AgentEvent, EventStream } from "./events";
+import { RingBuffer } from "./ring-buffer";
 
 export interface Alert {
   id: string;
@@ -85,42 +86,39 @@ interface SPCSample {
  * Implements Shewhart control chart with Western Electric rules.
  */
 export class ControlChart {
-  private samples: SPCSample[] = [];
-  private readonly maxSamples: number;
+  private samples: RingBuffer<SPCSample>;
 
   constructor(maxSamples = 100) {
-    this.maxSamples = maxSamples;
+    this.samples = new RingBuffer(maxSamples);
   }
 
   addSample(timestamp: number, value: number): void {
     this.samples.push({ timestamp, value });
-    if (this.samples.length > this.maxSamples) {
-      this.samples.shift();
-    }
   }
 
   getSampleCount(): number {
-    return this.samples.length;
+    return this.samples.size;
   }
 
   /**
    * Compute the mean (center line) of all samples.
    */
   getMean(): number {
-    if (this.samples.length === 0) return 0;
-    const sum = this.samples.reduce((s, sample) => s + sample.value, 0);
-    return sum / this.samples.length;
+    if (this.samples.size === 0) return 0;
+    const all = this.samples.toArray();
+    const sum = all.reduce((s, sample) => s + sample.value, 0);
+    return sum / all.length;
   }
 
   /**
    * Compute the standard deviation of all samples.
    */
   getStdDev(): number {
-    if (this.samples.length < 2) return 0;
+    if (this.samples.size < 2) return 0;
+    const all = this.samples.toArray();
     const mean = this.getMean();
     const variance =
-      this.samples.reduce((s, sample) => s + (sample.value - mean) ** 2, 0) /
-      (this.samples.length - 1);
+      all.reduce((s, sample) => s + (sample.value - mean) ** 2, 0) / (all.length - 1);
     return Math.sqrt(variance);
   }
 
@@ -144,8 +142,9 @@ export class ControlChart {
    * the baseline, not against a distribution that includes itself.
    */
   private getBaselineMean(): number {
-    if (this.samples.length < 2) return 0;
-    const baseline = this.samples.slice(0, -1);
+    if (this.samples.size < 2) return 0;
+    const all = this.samples.toArray();
+    const baseline = all.slice(0, -1);
     const sum = baseline.reduce((s, sample) => s + sample.value, 0);
     return sum / baseline.length;
   }
@@ -154,8 +153,9 @@ export class ControlChart {
    * Compute standard deviation of all samples EXCEPT the latest.
    */
   private getBaselineStdDev(): number {
-    if (this.samples.length < 3) return 0;
-    const baseline = this.samples.slice(0, -1);
+    if (this.samples.size < 3) return 0;
+    const all = this.samples.toArray();
+    const baseline = all.slice(0, -1);
     const mean = this.getBaselineMean();
     const variance =
       baseline.reduce((s, sample) => s + (sample.value - mean) ** 2, 0) / (baseline.length - 1);
@@ -169,8 +169,9 @@ export class ControlChart {
    * Returns null if no violation, or a description of the violation.
    */
   checkLatest(sigma: number): SPCViolation | null {
-    if (this.samples.length < 2) return null;
-    const latest = this.samples[this.samples.length - 1];
+    if (this.samples.size < 2) return null;
+    const all = this.samples.toArray();
+    const latest = all[all.length - 1];
     const mean = this.getBaselineMean();
     const stdDev = this.getBaselineStdDev();
 
@@ -194,8 +195,8 @@ export class ControlChart {
 
     // Rule 2 (Western Electric): 2 of 3 consecutive points beyond 2σ
     const twoSigma = mean + 2 * stdDev;
-    if (this.samples.length >= 3) {
-      const last3 = this.samples.slice(-3);
+    if (all.length >= 3) {
+      const last3 = all.slice(-3);
       const beyondTwoSigma = last3.filter((s) => s.value > twoSigma).length;
       if (beyondTwoSigma >= 2) {
         return {
@@ -212,8 +213,8 @@ export class ControlChart {
 
     // Rule 3 (Western Electric): 4 of 5 consecutive points beyond 1σ
     const oneSigma = mean + 1 * stdDev;
-    if (this.samples.length >= 5) {
-      const last5 = this.samples.slice(-5);
+    if (all.length >= 5) {
+      const last5 = all.slice(-5);
       const beyondOneSigma = last5.filter((s) => s.value > oneSigma).length;
       if (beyondOneSigma >= 4) {
         return {
@@ -229,8 +230,8 @@ export class ControlChart {
     }
 
     // Rule 4 (Western Electric): 8 consecutive points on one side of center
-    if (this.samples.length >= 8) {
-      const last8 = this.samples.slice(-8);
+    if (all.length >= 8) {
+      const last8 = all.slice(-8);
       const allAbove = last8.every((s) => s.value > mean);
       const allBelow = last8.every((s) => s.value < mean);
       if (allAbove || allBelow) {
