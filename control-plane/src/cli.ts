@@ -39,6 +39,7 @@ async function main(): Promise<void> {
   // Start JSONL ingester
   const ingester = new JournalIngester(projectDir, admiral.stream);
   ingester.start();
+  server.setIngester(ingester);
   console.log("  Ingesting: .admiral/event_log.jsonl");
 
   // Start HTTP server
