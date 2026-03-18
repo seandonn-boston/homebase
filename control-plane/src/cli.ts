@@ -9,7 +9,7 @@ import { createAdmiral } from "./index";
 import { JournalIngester } from "./ingest";
 import { AdmiralServer } from "./server";
 
-function parseArgs(args: string[]): { projectDir: string; port: number } {
+export function parseArgs(args: string[]): { projectDir: string; port: number } {
   let projectDir = process.cwd();
   let port = 4510;
 
@@ -57,7 +57,15 @@ async function main(): Promise<void> {
   process.on("SIGTERM", shutdown);
 }
 
-main().catch((err) => {
-  console.error("Failed to start:", err);
-  process.exit(1);
-});
+// Only run when executed directly, not when imported for testing
+const isMainModule =
+  typeof require !== "undefined"
+    ? require.main === module
+    : process.argv[1]?.endsWith("cli.js");
+
+if (isMainModule) {
+  main().catch((err) => {
+    console.error("Failed to start:", err);
+    process.exit(1);
+  });
+}
