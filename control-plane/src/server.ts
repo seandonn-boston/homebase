@@ -39,12 +39,13 @@ export class AdmiralServer {
     this.ingester = ingester;
   }
 
-  start(port = 4510): Promise<void> {
+  start(port = 4510): Promise<number> {
     return new Promise((resolve) => {
       this.server = http.createServer((req, res) => this.handleRequest(req, res));
       this.server.listen(port, () => {
-        console.log(`Admiral Control Dashboard: http://localhost:${port}`);
-        resolve();
+        const addr = this.server!.address() as { port: number };
+        console.log(`Admiral Control Dashboard: http://localhost:${addr.port}`);
+        resolve(addr.port);
       });
     });
   }
