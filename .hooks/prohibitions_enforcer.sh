@@ -22,6 +22,27 @@ HARD_BLOCK=false
 if [ "$TOOL_NAME" = "Bash" ]; then
   COMMAND=$(echo "$PAYLOAD" | jq -r '.tool_input.command // ""')
 
+  # Strip heredoc body content before pattern scanning.
+  # Without this, patterns like "rm.*\.hooks/" false-positive on documentation
+  # text inside heredocs (e.g., "transforms .hooks/foo.sh" matches because
+  # "transforms" contains "rm"). Only the command lines should be scanned.
+  CMD_FOR_SCAN=$(printf '%s\n' "$COMMAND" | awk '
+    BEGIN { skip=0 }
+    skip {
+      t=$0; gsub(/^[[:space:]]+|[[:space:]]+$/, "", t)
+      if (t == delim) skip=0
+      next
+    }
+    /<<-?[[:space:]]*["'"'"'\\]?[A-Za-z_]/ {
+      line=$0
+      sub(/.*<<-?[[:space:]]*/, "", line)
+      gsub(/["'"'"'\\]/, "", line)
+      gsub(/[[:space:]]*$/, "", line)
+      if (line != "") { delim=line; skip=1 }
+    }
+    { print }
+  ')
+
   # Detect hook/linter/CI bypass patterns → HARD BLOCK
   # Why hard-block: bypassing enforcement undermines the core thesis of the Admiral
   # Framework. An agent that can disable its own guardrails has no guardrails.
@@ -37,7 +58,7 @@ if [ "$TOOL_NAME" = "Bash" ]; then
     "SKIP=.*pre-commit"
   )
   for PATTERN in "${BYPASS_PATTERNS[@]}"; do
-    if echo "$COMMAND" | grep -qiE -- "$PATTERN"; then
+    if echo "$CMD_FOR_SCAN" | grep -qiE -- "$PATTERN"; then
       ALERTS+="PROHIBITION (SO-10): Command matches bypass pattern '${PATTERN}'. Never bypass or disable enforcement mechanisms. "
       HARD_BLOCK=true
       break
@@ -59,7 +80,7 @@ if [ "$TOOL_NAME" = "Bash" ]; then
     'BEGIN PGP'
   )
   for PATTERN in "${SECRET_PATTERNS[@]}"; do
-    if echo "$COMMAND" | grep -qiE -- "$PATTERN"; then
+    if echo "$CMD_FOR_SCAN" | grep -qiE -- "$PATTERN"; then
       ALERTS+="PROHIBITION (SO-10): Command may contain or create secrets/credentials. Never store secrets in code or configuration. "
       break
     fi
@@ -78,7 +99,7 @@ if [ "$TOOL_NAME" = "Bash" ]; then
     "setuid"
   )
   for PATTERN in "${PRIVILEGE_PATTERNS[@]}"; do
-    if echo "$COMMAND" | grep -qE -- "$PATTERN"; then
+    if echo "$CMD_FOR_SCAN" | grep -qE -- "$PATTERN"; then
       ALERTS+="PROHIBITION (SO-12/SO-10): Command involves privilege escalation ('${PATTERN}'). Privilege escalation requires Admiral approval. Escalate with justification or use non-privileged alternatives. "
       HARD_BLOCK=true
       break
@@ -99,7 +120,7 @@ if [ "$TOOL_NAME" = "Bash" ]; then
     "TRUNCATE"
   )
   for PATTERN in "${IRREVERSIBLE_PATTERNS[@]}"; do
-    if echo "$COMMAND" | grep -qiE -- "$PATTERN"; then
+    if echo "$CMD_FOR_SCAN" | grep -qiE -- "$PATTERN"; then
       ALERTS+="PROHIBITION (SO-10): Command is potentially irreversible ('${PATTERN}'). This action has been blocked. "
       HARD_BLOCK=true
       break
