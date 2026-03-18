@@ -59,9 +59,7 @@ async function main(): Promise<void> {
 
 // Only run when executed directly, not when imported for testing
 const isMainModule =
-  typeof require !== "undefined"
-    ? require.main === module
-    : process.argv[1]?.endsWith("cli.js");
+  typeof require !== "undefined" ? require.main === module : process.argv[1]?.endsWith("cli.js");
 
 if (isMainModule) {
   main().catch((err) => {

@@ -7,25 +7,38 @@ import { AdmiralServer } from "./server";
 import { ExecutionTrace } from "./trace";
 
 /** Make a GET request and return { status, headers, body }. */
-function httpGet(url: string): Promise<{ status: number; headers: http.IncomingHttpHeaders; body: string }> {
+function httpGet(
+  url: string,
+): Promise<{ status: number; headers: http.IncomingHttpHeaders; body: string }> {
   return new Promise((resolve, reject) => {
-    http.get(url, (res) => {
-      let body = "";
-      res.on("data", (chunk: string) => (body += chunk));
-      res.on("end", () => resolve({ status: res.statusCode!, headers: res.headers, body }));
-    }).on("error", reject);
+    http
+      .get(url, (res) => {
+        let body = "";
+        res.on("data", (chunk: string) => {
+          body += chunk;
+        });
+        res.on("end", () => resolve({ status: res.statusCode!, headers: res.headers, body }));
+      })
+      .on("error", reject);
   });
 }
 
 /** Make an OPTIONS request. */
-function httpOptions(url: string): Promise<{ status: number; headers: http.IncomingHttpHeaders; body: string }> {
+function httpOptions(
+  url: string,
+): Promise<{ status: number; headers: http.IncomingHttpHeaders; body: string }> {
   return new Promise((resolve, reject) => {
     const parsed = new URL(url);
-    const req = http.request({ hostname: parsed.hostname, port: parsed.port, path: parsed.pathname, method: "OPTIONS" }, (res) => {
-      let body = "";
-      res.on("data", (chunk: string) => (body += chunk));
-      res.on("end", () => resolve({ status: res.statusCode!, headers: res.headers, body }));
-    });
+    const req = http.request(
+      { hostname: parsed.hostname, port: parsed.port, path: parsed.pathname, method: "OPTIONS" },
+      (res) => {
+        let body = "";
+        res.on("data", (chunk: string) => {
+          body += chunk;
+        });
+        res.on("end", () => resolve({ status: res.statusCode!, headers: res.headers, body }));
+      },
+    );
     req.on("error", reject);
     req.end();
   });
