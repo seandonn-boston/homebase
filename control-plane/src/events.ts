@@ -5,6 +5,8 @@
  * Admiral collects these events into a unified stream.
  */
 
+import { RingBuffer } from "./ring-buffer";
+
 export type EventType =
   | "agent_started"
   | "agent_stopped"
@@ -44,20 +46,19 @@ const DEFAULT_STREAM_CONFIG: EventStreamConfig = {
   maxEvents: 10_000,
 };
 
-let eventCounter = 0;
-
-function generateId(): string {
-  return `evt_${Date.now()}_${++eventCounter}`;
-}
-
 export class EventStream {
-  private events: AgentEvent[] = [];
+  private events: RingBuffer<AgentEvent>;
   private listeners: EventListener[] = [];
   private config: EventStreamConfig;
-  private evictedCount = 0;
+  private eventCounter = 0;
 
   constructor(config: Partial<EventStreamConfig> = {}) {
     this.config = { ...DEFAULT_STREAM_CONFIG, ...config };
+    this.events = new RingBuffer(this.config.maxEvents);
+  }
+
+  private generateId(): string {
+    return `evt_${Date.now()}_${++this.eventCounter}`;
   }
 
   emit(
@@ -69,7 +70,7 @@ export class EventStream {
     taskId?: string,
   ): AgentEvent {
     const event: AgentEvent = {
-      id: generateId(),
+      id: this.generateId(),
       timestamp: Date.now(),
       agentId,
       agentName,
@@ -80,13 +81,6 @@ export class EventStream {
     };
 
     this.events.push(event);
-
-    // Evict oldest events when over capacity
-    if (this.events.length > this.config.maxEvents) {
-      const overflow = this.events.length - this.config.maxEvents;
-      this.events.splice(0, overflow);
-      this.evictedCount += overflow;
-    }
 
     for (const listener of this.listeners) {
       listener(event);
@@ -103,7 +97,7 @@ export class EventStream {
   }
 
   getEvents(): AgentEvent[] {
-    return [...this.events];
+    return this.events.toArray();
   }
 
   getEventsByAgent(agentId: string): AgentEvent[] {
@@ -120,15 +114,15 @@ export class EventStream {
 
   /** Number of events evicted since stream creation */
   getEvictedCount(): number {
-    return this.evictedCount;
+    return this.events.evictedCount;
   }
 
   /** Total events ever emitted (retained + evicted) */
   getTotalEmitted(): number {
-    return this.events.length + this.evictedCount;
+    return this.events.size + this.events.evictedCount;
   }
 
   clear(): void {
-    this.events = [];
+    this.events.clear();
   }
 }

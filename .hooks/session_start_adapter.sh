@@ -29,6 +29,7 @@ set_state_field '.trace_id' "\"$TRACE_ID\""
 # 3. Fire context_baseline hook (surface failures as warnings, don't suppress)
 BASELINE_WARNING=""
 if [ -x "$SCRIPT_DIR/context_baseline.sh" ]; then
+  # shellcheck disable=SC2034  # Output captured to suppress stdout; only exit code matters
   BASELINE_OUTPUT=$(echo "$PAYLOAD" | "$SCRIPT_DIR/context_baseline.sh" 2>&1) || {
     BASELINE_WARNING="Context baseline hook failed — standing context metrics may be inaccurate. "
   }

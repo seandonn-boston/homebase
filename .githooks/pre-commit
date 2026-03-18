@@ -1,0 +1,24 @@
+#!/bin/bash
+# Admiral pre-commit hook — practice what we preach
+# Runs ShellCheck on staged .sh files and Biome on staged .ts files
+set -euo pipefail
+
+STAGED_SH=$(git diff --cached --name-only --diff-filter=ACM | grep '\.sh$' || true)
+STAGED_TS=$(git diff --cached --name-only --diff-filter=ACM | grep '\.ts$' || true)
+
+FAIL=0
+
+if [ -n "$STAGED_SH" ] && command -v shellcheck &>/dev/null; then
+  echo "Running ShellCheck on staged .sh files..."
+  echo "$STAGED_SH" | xargs shellcheck -s bash -S warning || FAIL=1
+fi
+
+if [ -n "$STAGED_TS" ]; then
+  echo "Running Biome check on staged .ts files..."
+  (cd control-plane && npx @biomejs/biome check --no-errors-on-unmatched $STAGED_TS) || FAIL=1
+fi
+
+if [ "$FAIL" -ne 0 ]; then
+  echo "Pre-commit checks failed. Fix issues before committing."
+  exit 1
+fi

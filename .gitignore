@@ -1,5 +1,6 @@
 # Admiral runtime state (ephemeral, session-scoped)
 .admiral/session_state.json
+.admiral/session_state.json.lock
 .admiral/event_log.jsonl
 
 # Dependencies

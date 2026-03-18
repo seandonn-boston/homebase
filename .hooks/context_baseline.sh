@@ -10,7 +10,8 @@ export CLAUDE_PROJECT_DIR="$PROJECT_DIR"
 
 source "$PROJECT_DIR/admiral/lib/state.sh"
 
-# Read payload from stdin
+# Read payload from stdin (consumed to clear stdin buffer)
+# shellcheck disable=SC2034
 PAYLOAD=$(cat)
 
 # Count Standing Orders tokens (approximate: character count / 4)

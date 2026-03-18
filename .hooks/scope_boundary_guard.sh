@@ -19,6 +19,7 @@ PAYLOAD=$(cat)
 TOOL_NAME=$(echo "$PAYLOAD" | jq -r '.tool_name // "unknown"')
 
 # Only check file-modifying tools
+# shellcheck disable=SC2034  # IS_WRITE tracks tool type for readability
 IS_WRITE=false
 case "$TOOL_NAME" in
   Write|Edit|NotebookEdit) IS_WRITE=true ;;
@@ -30,12 +31,16 @@ case "$TOOL_NAME" in
       git\ status*|git\ log*|git\ diff*|git\ add*|git\ commit*|git\ push*|ls*|cat*|head*|tail*|echo*|pwd*)
         exit 0 ;;
     esac
+    # shellcheck disable=SC2034
     IS_WRITE=true
     ;;
   *) exit 0 ;;
 esac
 
-# Protected directories that require explicit approval
+# Protected directories that require explicit approval.
+# aiStrat/ — frozen spec, changes require human review (Decision Authority: Escalate)
+# .github/workflows/ — CI pipelines affect all contributors (Decision Authority: Escalate)
+# .claude/settings — agent permissions, must not be self-modified (security boundary)
 PROTECTED_DIRS=(
   "aiStrat/"
   ".github/workflows/"

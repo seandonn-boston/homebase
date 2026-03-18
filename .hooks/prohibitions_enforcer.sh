@@ -23,6 +23,8 @@ if [ "$TOOL_NAME" = "Bash" ]; then
   COMMAND=$(echo "$PAYLOAD" | jq -r '.tool_input.command // ""')
 
   # Detect hook/linter/CI bypass patterns → HARD BLOCK
+  # Why hard-block: bypassing enforcement undermines the core thesis of the Admiral
+  # Framework. An agent that can disable its own guardrails has no guardrails.
   BYPASS_PATTERNS=(
     "--no-verify"
     "--no-gpg-sign"
@@ -43,6 +45,8 @@ if [ "$TOOL_NAME" = "Bash" ]; then
   done
 
   # --- Rule: Never store secrets, credentials, or PII → ADVISORY ONLY ---
+  # Why advisory-only: these patterns have high false-positive rates (e.g., "token="
+  # appears in legitimate code). Hard-blocking would disrupt legitimate work.
   SECRET_PATTERNS=(
     'password\s*='
     'api_key\s*='

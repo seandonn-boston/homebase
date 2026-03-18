@@ -4,6 +4,14 @@
 # Advisory only — NEVER hard-blocks (always exit 0).
 # Emits warnings when loop patterns are detected.
 # Successful tool calls decay error counts to prevent monotonic accumulation.
+#
+# Error signature approach: Each unique error is hashed (SHA-256, first 16 chars)
+# from agent_id + normalized error message. This enables tracking specific error
+# patterns without storing full error text in state, and makes comparison O(1).
+#
+# Decay mechanism: On each successful tool call, total_errors is decremented by
+# successDecay (default 1). This prevents transient errors from accumulating
+# into false-positive loop warnings over long sessions.
 # Timeout: 5s
 set -euo pipefail
 
@@ -29,6 +37,7 @@ fi
 PAYLOAD=$(cat)
 
 # Extract tool response and check for errors
+# shellcheck disable=SC2034  # TOOL_NAME reserved for future use in error signatures
 TOOL_NAME=$(echo "$PAYLOAD" | jq -r '.tool_name // "unknown"')
 TOOL_RESPONSE=$(echo "$PAYLOAD" | jq -r '.tool_response // empty' 2>/dev/null)
 

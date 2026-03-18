@@ -39,12 +39,13 @@ export class AdmiralServer {
     this.ingester = ingester;
   }
 
-  start(port = 4510): Promise<void> {
+  start(port = 4510): Promise<number> {
     return new Promise((resolve) => {
       this.server = http.createServer((req, res) => this.handleRequest(req, res));
       this.server.listen(port, () => {
-        console.log(`Admiral Control Dashboard: http://localhost:${port}`);
-        resolve();
+        const addr = this.server!.address() as { port: number };
+        console.log(`Admiral Control Dashboard: http://localhost:${addr.port}`);
+        resolve(addr.port);
       });
     });
   }
@@ -56,68 +57,71 @@ export class AdmiralServer {
   }
 
   private handleRequest(req: http.IncomingMessage, res: http.ServerResponse): void {
-    const url = req.url || "/";
+    try {
+      const url = req.url || "/";
 
-    // CORS headers
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+      // CORS headers
+      res.setHeader("Access-Control-Allow-Origin", "*");
+      res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+      res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-    if (req.method === "OPTIONS") {
-      res.writeHead(204);
-      res.end();
-      return;
-    }
-
-    // API routes
-    if (url === "/health") {
-      this.serveHealth(res);
-    } else if (url === "/api/config") {
-      this.json(res, this.detector.getConfig());
-    } else if (url === "/api/events") {
-      this.json(res, this.stream.getEvents());
-    } else if (url === "/api/alerts") {
-      this.json(res, this.detector.getAlerts());
-    } else if (url === "/api/alerts/active") {
-      this.json(res, this.detector.getActiveAlerts());
-    } else if (url === "/api/trace") {
-      this.json(res, this.trace.buildTrace());
-    } else if (url === "/api/trace/ascii") {
-      res.writeHead(200, { "Content-Type": "text/plain" });
-      res.end(this.trace.renderAscii());
-    } else if (url === "/api/session") {
-      this.serveSessionState(res);
-    } else if (url === "/api/stats") {
-      const stats: Record<string, unknown> = { trace: this.trace.getStats() };
-      if (this.ingester) {
-        stats.ingester = this.ingester.getStats();
+      if (req.method === "OPTIONS") {
+        res.writeHead(204);
+        res.end();
+        return;
       }
-      this.json(res, stats);
-    } else if (url.startsWith("/api/agents/") && url.endsWith("/resume")) {
-      const parts = url.split("/").filter(Boolean);
-      const agentId = parts[2];
-      if (agentId && agentId !== "resume") {
-        this.detector.resumeAgent(agentId);
-        this.json(res, { resumed: agentId });
+
+      // API routes
+      if (url === "/health") {
+        this.serveHealth(res);
+      } else if (url === "/api/config") {
+        this.json(res, this.detector.getConfig());
+      } else if (url === "/api/events") {
+        this.json(res, this.stream.getEvents());
+      } else if (url === "/api/alerts") {
+        this.json(res, this.detector.getAlerts());
+      } else if (url === "/api/alerts/active") {
+        this.json(res, this.detector.getActiveAlerts());
+      } else if (url === "/api/trace") {
+        this.json(res, this.trace.buildTrace());
+      } else if (url === "/api/trace/ascii") {
+        res.writeHead(200, { "Content-Type": "text/plain" });
+        res.end(this.trace.renderAscii());
+      } else if (url === "/api/session") {
+        this.serveSessionState(res);
+      } else if (url === "/api/stats") {
+        const stats: Record<string, unknown> = { trace: this.trace.getStats() };
+        if (this.ingester) {
+          stats.ingester = this.ingester.getStats();
+        }
+        this.json(res, stats);
+      } else if (url.startsWith("/api/agents/") && url.endsWith("/resume")) {
+        const parts = url.split("/").filter(Boolean);
+        const agentId = parts[2];
+        if (agentId && agentId !== "resume") {
+          this.detector.resumeAgent(agentId);
+          this.json(res, { resumed: agentId });
+        } else {
+          this.errorJson(res, 400, "Missing agent ID");
+        }
+      } else if (url.startsWith("/api/alerts/") && url.endsWith("/resolve")) {
+        const parts = url.split("/").filter(Boolean);
+        const alertId = parts[2];
+        if (alertId && alertId !== "resolve") {
+          this.detector.resolveAlert(alertId);
+          this.json(res, { resolved: alertId });
+        } else {
+          this.errorJson(res, 400, "Missing alert ID");
+        }
+      } else if (url === "/" || url === "/index.html") {
+        this.serveDashboard(res);
       } else {
-        res.writeHead(400);
-        res.end("Missing agent ID");
+        this.errorJson(res, 404, "Not found");
       }
-    } else if (url.startsWith("/api/alerts/") && url.endsWith("/resolve")) {
-      const parts = url.split("/").filter(Boolean);
-      const alertId = parts[2];
-      if (alertId && alertId !== "resolve") {
-        this.detector.resolveAlert(alertId);
-        this.json(res, { resolved: alertId });
-      } else {
-        res.writeHead(400);
-        res.end("Missing alert ID");
-      }
-    } else if (url === "/" || url === "/index.html") {
-      this.serveDashboard(res);
-    } else {
-      res.writeHead(404);
-      res.end("Not found");
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      console.error(`[admiral-server] Unhandled error: ${message}`);
+      this.errorJson(res, 500, "Internal server error");
     }
   }
 
@@ -169,6 +173,11 @@ export class AdmiralServer {
   private json(res: http.ServerResponse, data: unknown): void {
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(JSON.stringify(data, null, 2));
+  }
+
+  private errorJson(res: http.ServerResponse, status: number, message: string): void {
+    res.writeHead(status, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ error: message, status }));
   }
 
   private serveDashboard(res: http.ServerResponse): void {

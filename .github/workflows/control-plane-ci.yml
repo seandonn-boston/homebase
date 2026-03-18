@@ -25,13 +25,17 @@ jobs:
         working-directory: control-plane
         run: npm install
 
+      - name: Audit dependencies
+        working-directory: control-plane
+        run: npm audit --audit-level=high
+
       - name: Build
         working-directory: control-plane
         run: npm run build
 
-      - name: Test
+      - name: Test with coverage
         working-directory: control-plane
-        run: npm test
+        run: npm run test:coverage
 
       - name: Lint
         working-directory: control-plane

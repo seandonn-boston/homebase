@@ -67,6 +67,9 @@ load_state() {
 
 # Save session state from stdin
 # Atomic write with validation — only overwrites if new content is valid JSON.
+# Fail-open by design (ADR-004): if new state is invalid JSON, we silently keep
+# the old state rather than crashing the hook pipeline. A corrupt state file would
+# break all subsequent hooks in the session, which is worse than stale data.
 save_state() {
   ensure_admiral_dir
   local content
@@ -78,31 +81,55 @@ save_state() {
   # If validation fails, silently keep the existing state file (fail-open)
 }
 
+# Run a read-modify-write operation under advisory file lock.
+# Falls back to unlocked operation if flock is not available (fail-open).
+with_state_lock() {
+  local lockfile="${STATE_FILE}.lock"
+  if command -v flock &>/dev/null; then
+    (
+      flock -w 5 200 || { echo "Warning: state lock timeout" >&2; }
+      "$@"
+    ) 200>"$lockfile"
+  else
+    "$@"
+  fi
+}
+
 # Read a specific field from session state
 get_state_field() {
   local field="$1"
   load_state | jq -r "$field"
 }
 
-# Update a specific field in session state
+# Update a specific field in session state (locked read-modify-write)
 set_state_field() {
   local field="$1"
   local value="$2"
-  local state
-  state=$(load_state)
-  echo "$state" | jq "$field = $value" | save_state
+  _set_state_field_inner() {
+    local state
+    state=$(load_state)
+    echo "$state" | jq "$field = $value" | save_state
+  }
+  with_state_lock _set_state_field_inner
 }
 
-# Increment a numeric field
+# Increment a numeric field (locked read-modify-write)
 increment_state_field() {
   local field="$1"
   local amount="${2:-1}"
-  local state
-  state=$(load_state)
-  echo "$state" | jq "$field = ($field + $amount)" | save_state
+  _increment_state_field_inner() {
+    local state
+    state=$(load_state)
+    echo "$state" | jq "$field = ($field + $amount)" | save_state
+  }
+  with_state_lock _increment_state_field_inner
 }
 
-# Get token estimation for a tool — reads from central config with hardcoded fallback
+# Get token estimation for a tool — reads from central config with hardcoded fallback.
+# Token estimates are rough approximations based on typical Claude Code tool call sizes.
+# Read tools return file content (higher tokens). Agent spawns include full prompts (highest).
+# These defaults are overridable via admiral/config.json → tokenEstimates.
+# Source: empirical observation of ~50 Claude Code sessions, rounded to nearest 100.
 estimate_tokens() {
   local tool_name="$1"
   local config_file="${CLAUDE_PROJECT_DIR:-$PROJECT_DIR}/admiral/config.json"
@@ -137,6 +164,7 @@ estimate_tokens() {
 compute_loop_sig() {
   local agent_id="$1"
   local error_msg="$2"
-  local input="${agent_id}:$(echo "$error_msg" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' | tr '[:upper:]' '[:lower:]')"
+  local input
+  input="${agent_id}:$(echo "$error_msg" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' | tr '[:upper:]' '[:lower:]')"
   echo -n "$input" | sha256sum | cut -c1-16
 }
