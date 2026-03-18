@@ -151,7 +151,9 @@ assert_exit_code "Bash rm in aiStrat/ exits 2 (hard-block)" "scope_boundary_guar
 
 # 1f: Write to aiStrat/ with ADMIRAL_SCOPE_OVERRIDE should allow (exit 0)
 PAYLOAD_AISTRAT_OVERRIDE='{"tool_name":"Edit","tool_input":{"file_path":"'"$PROJECT_DIR"'/aiStrat/some-file.md","old_string":"a","new_string":"b"}}'
-ADMIRAL_SCOPE_OVERRIDE="aiStrat" OUTPUT=$(run_hook "scope_boundary_guard.sh" "$PAYLOAD_AISTRAT_OVERRIDE")
+export ADMIRAL_SCOPE_OVERRIDE="aiStrat"
+OUTPUT=$(run_hook "scope_boundary_guard.sh" "$PAYLOAD_AISTRAT_OVERRIDE")
+unset ADMIRAL_SCOPE_OVERRIDE
 assert_contains "Edit to aiStrat/ with override contains advisory note" "$OUTPUT" "ADMIRAL_SCOPE_OVERRIDE"
 ADMIRAL_SCOPE_OVERRIDE="aiStrat" assert_exit_zero "Edit to aiStrat/ with override exits 0" "scope_boundary_guard.sh" "$PAYLOAD_AISTRAT_OVERRIDE"
 

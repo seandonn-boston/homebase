@@ -40,6 +40,7 @@ assert_contains() {
   fi
 }
 
+# shellcheck disable=SC2317  # called dynamically in some test variants
 assert_not_contains() {
   local test_name="$1"
   local haystack="$2"
@@ -76,9 +77,8 @@ assert_true "Adapter exits 2 on rm -rf aiStrat/" "$([ "$EXIT_CODE" -eq 2 ] && ec
 assert_contains "Output contains SCOPE BOUNDARY (first blocker in chain)" "$OUTPUT" "SCOPE BOUNDARY"
 
 # Verify prohibitions_enforcer would also catch it independently
-PROHIB_OUTPUT=""
 PROHIB_EXIT=0
-PROHIB_OUTPUT=$(echo "$PAYLOAD" | "$HOOKS_DIR/prohibitions_enforcer.sh" 2>/dev/null) || PROHIB_EXIT=$?
+echo "$PAYLOAD" | "$HOOKS_DIR/prohibitions_enforcer.sh" >/dev/null 2>&1 || PROHIB_EXIT=$?
 assert_true "Prohibitions enforcer independently catches rm -rf (exit 2)" "$([ "$PROHIB_EXIT" -eq 2 ] && echo true || echo false)"
 
 echo ""
