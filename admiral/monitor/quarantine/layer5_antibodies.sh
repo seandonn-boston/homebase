@@ -84,7 +84,7 @@ if [ "$L3_DECISION" != "REJECT" ]; then
 fi
 
 # Defang content: truncate to 500 chars, escape dangerous patterns
-DEFANGED=$(echo "$CONTENT" | head -c 500 | jq -Rs '.')
+DEFANGED=$(echo "$CONTENT" | jq -Rs '.[0:500]')
 
 # Build Brain FAILURE entry
 ENTRY_SLUG="attack-${FINGERPRINT}"

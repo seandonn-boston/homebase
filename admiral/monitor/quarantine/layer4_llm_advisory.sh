@@ -82,7 +82,7 @@ fi
 # Heuristic 2: Detect multi-step manipulation (spread across sentences)
 IMPERATIVE_COUNT=0
 for PATTERN in "you must" "you should" "you need to" "you have to" "always " "never "; do
-  if echo "$NORMALIZED" | grep -qcF "$PATTERN" 2>/dev/null; then
+  if echo "$NORMALIZED" | grep -qF "$PATTERN" 2>/dev/null; then
     IMPERATIVE_COUNT=$((IMPERATIVE_COUNT + 1))
   fi
 done

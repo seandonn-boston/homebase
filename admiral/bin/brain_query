@@ -44,7 +44,7 @@ fi
 
 # Search using grep to find matching files
 FOUND=0
-MATCHING_FILES=$(grep -rli "$KEYWORD" "$SEARCH_PATH" 2>/dev/null || true)
+MATCHING_FILES=$(grep -rlFi "$KEYWORD" "$SEARCH_PATH" 2>/dev/null || true)
 
 for file in $MATCHING_FILES; do
   [ -f "$file" ] || continue
