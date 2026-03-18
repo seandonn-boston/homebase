@@ -31,8 +31,10 @@ init_session_state() {
   "tool_call_count": 0,
   "hook_state": {
     "loop_detector": { "error_counts": {}, "total_errors": 0 },
-    "self_healing": { "retry_counts": {}, "total_retries": 0 },
-    "brain_context_router": { "brain_queries_count": 0, "last_brain_query_tool_call": 0, "propose_without_brain": 0, "escalate_without_brain": 0 }
+    "brain_context_router": { "brain_queries_count": 0, "last_brain_query_tool_call": 0, "propose_without_brain": 0, "escalate_without_brain": 0 },
+    "zero_trust": { "external_data_count": 0 },
+    "compliance": { "flags_count": 0 },
+    "pre_work_validator": { "validated": false }
   },
   "context": {
     "standing_context_tokens": 0,
@@ -129,15 +131,6 @@ estimate_tokens() {
     NotebookEdit) echo 800  ;;
     *)            echo 500  ;;
   esac
-}
-
-# Compute error signature for self-healing (SHA256 truncated to 16 hex chars)
-compute_self_healing_sig() {
-  local hook_name="$1"
-  local first_line="$2"
-  local exit_code="$3"
-  local input="${hook_name}:$(echo "$first_line" | tr '[:upper:]' '[:lower:]'):${exit_code}"
-  echo -n "$input" | sha256sum | cut -c1-16
 }
 
 # Compute error signature for loop detection

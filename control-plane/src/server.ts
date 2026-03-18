@@ -94,13 +94,25 @@ export class AdmiralServer {
       }
       this.json(res, stats);
     } else if (url.startsWith("/api/agents/") && url.endsWith("/resume")) {
-      const agentId = url.split("/")[3];
-      this.detector.resumeAgent(agentId);
-      this.json(res, { resumed: agentId });
+      const parts = url.split("/").filter(Boolean);
+      const agentId = parts[2];
+      if (agentId && agentId !== "resume") {
+        this.detector.resumeAgent(agentId);
+        this.json(res, { resumed: agentId });
+      } else {
+        res.writeHead(400);
+        res.end("Missing agent ID");
+      }
     } else if (url.startsWith("/api/alerts/") && url.endsWith("/resolve")) {
-      const alertId = url.split("/")[3];
-      this.detector.resolveAlert(alertId);
-      this.json(res, { resolved: alertId });
+      const parts = url.split("/").filter(Boolean);
+      const alertId = parts[2];
+      if (alertId && alertId !== "resolve") {
+        this.detector.resolveAlert(alertId);
+        this.json(res, { resolved: alertId });
+      } else {
+        res.writeHead(400);
+        res.end("Missing alert ID");
+      }
     } else if (url === "/" || url === "/index.html") {
       this.serveDashboard(res);
     } else {

@@ -1,6 +1,5 @@
 # Spec-Debt Resolution — Next Steps
 
-**Branch:** `claude/resolve-spec-debt-YJnxS`
 **Last updated:** 2026-03-16
 
 ## Completed
