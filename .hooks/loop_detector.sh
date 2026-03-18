@@ -29,6 +29,7 @@ fi
 PAYLOAD=$(cat)
 
 # Extract tool response and check for errors
+# shellcheck disable=SC2034  # TOOL_NAME reserved for future use in error signatures
 TOOL_NAME=$(echo "$PAYLOAD" | jq -r '.tool_name // "unknown"')
 TOOL_RESPONSE=$(echo "$PAYLOAD" | jq -r '.tool_response // empty' 2>/dev/null)
 

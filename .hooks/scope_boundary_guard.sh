@@ -19,6 +19,7 @@ PAYLOAD=$(cat)
 TOOL_NAME=$(echo "$PAYLOAD" | jq -r '.tool_name // "unknown"')
 
 # Only check file-modifying tools
+# shellcheck disable=SC2034  # IS_WRITE tracks tool type for readability
 IS_WRITE=false
 case "$TOOL_NAME" in
   Write|Edit|NotebookEdit) IS_WRITE=true ;;
@@ -30,6 +31,7 @@ case "$TOOL_NAME" in
       git\ status*|git\ log*|git\ diff*|git\ add*|git\ commit*|git\ push*|ls*|cat*|head*|tail*|echo*|pwd*)
         exit 0 ;;
     esac
+    # shellcheck disable=SC2034
     IS_WRITE=true
     ;;
   *) exit 0 ;;
