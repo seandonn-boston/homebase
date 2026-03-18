@@ -101,8 +101,7 @@ export class AdmiralServer {
         this.detector.resumeAgent(agentId);
         this.json(res, { resumed: agentId });
       } else {
-        res.writeHead(400);
-        res.end("Missing agent ID");
+        this.errorJson(res, 400, "Missing agent ID");
       }
     } else if (url.startsWith("/api/alerts/") && url.endsWith("/resolve")) {
       const parts = url.split("/").filter(Boolean);
@@ -111,14 +110,12 @@ export class AdmiralServer {
         this.detector.resolveAlert(alertId);
         this.json(res, { resolved: alertId });
       } else {
-        res.writeHead(400);
-        res.end("Missing alert ID");
+        this.errorJson(res, 400, "Missing alert ID");
       }
     } else if (url === "/" || url === "/index.html") {
       this.serveDashboard(res);
     } else {
-      res.writeHead(404);
-      res.end("Not found");
+      this.errorJson(res, 404, "Not found");
     }
   }
 
@@ -170,6 +167,11 @@ export class AdmiralServer {
   private json(res: http.ServerResponse, data: unknown): void {
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(JSON.stringify(data, null, 2));
+  }
+
+  private errorJson(res: http.ServerResponse, status: number, message: string): void {
+    res.writeHead(status, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ error: message, status }));
   }
 
   private serveDashboard(res: http.ServerResponse): void {

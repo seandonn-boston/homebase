@@ -168,9 +168,12 @@ describe("AdmiralServer", () => {
       assert.equal(res.headers["access-control-allow-origin"], "*");
     });
 
-    it("GET /unknown returns 404", async () => {
+    it("GET /unknown returns 404 with JSON error", async () => {
       const res = await httpGet(`${baseUrl}/unknown`);
       assert.equal(res.status, 404);
+      const data = JSON.parse(res.body);
+      assert.equal(data.error, "Not found");
+      assert.equal(data.status, 404);
     });
 
     it("GET / returns HTML", async () => {
