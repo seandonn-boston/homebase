@@ -44,20 +44,19 @@ const DEFAULT_STREAM_CONFIG: EventStreamConfig = {
   maxEvents: 10_000,
 };
 
-let eventCounter = 0;
-
-function generateId(): string {
-  return `evt_${Date.now()}_${++eventCounter}`;
-}
-
 export class EventStream {
   private events: AgentEvent[] = [];
   private listeners: EventListener[] = [];
   private config: EventStreamConfig;
   private evictedCount = 0;
+  private eventCounter = 0;
 
   constructor(config: Partial<EventStreamConfig> = {}) {
     this.config = { ...DEFAULT_STREAM_CONFIG, ...config };
+  }
+
+  private generateId(): string {
+    return `evt_${Date.now()}_${++this.eventCounter}`;
   }
 
   emit(
@@ -69,7 +68,7 @@ export class EventStream {
     taskId?: string,
   ): AgentEvent {
     const event: AgentEvent = {
-      id: generateId(),
+      id: this.generateId(),
       timestamp: Date.now(),
       agentId,
       agentName,
