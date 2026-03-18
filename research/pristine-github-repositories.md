@@ -151,6 +151,10 @@ Smaller projects that punch above their weight in code quality.
 | **`Homebrew/brew`** | Ruby | Package manager with excellent testing, CI, and contribution docs. A model of open-source project governance. |
 | **`caddyserver/caddy`** | Go | *(New)* Web server with automatic HTTPS. Clean architecture with a dedicated community walkthrough. Recommended on HN specifically for studying well-structured Go. |
 | **`id-Software/DOOM-3-BFG`** | C++ | *(New)* John Carmack's code is consistently described as "some of the best in the industry." Game engine architecture that is remarkably clean for its era. |
+| **`rxi/fe`** | C | *(New, Lobsters rec)* A complete Lisp implementation in 800 lines of ANSI C. Parser and mark-and-sweep GC in minimal code. Pedagogical masterpiece alongside `antirez/kilo`. |
+| **`jgm/pandoc`** | Haskell | *(New, Lobsters rec)* "Surprisingly readable" — excellent example of monadic parsing for non-trivial inputs. The Markdown reader is recommended as the entry point for study. |
+| **`openbsd/src`** | C | *(New, Lobsters rec)* Praised for simplicity and clarity of intent. `bin` and `usr.bin` directories recommended as starting points. Security-focused codebase with clean, auditable C. |
+| **`sorbet/sorbet`** | C++/Ruby | *(New, Lobsters rec)* Ruby typechecker that teaches data-oriented design for compilers. Worth studying for how it applies compiler techniques to a dynamic language. |
 
 ---
 
@@ -184,9 +188,31 @@ TigerBeetle's [TIGER_STYLE.md](https://github.com/tigerbeetle/tigerbeetle/blob/m
 
 GitHub's [Code Quality](https://github.blog/changelog/2025-10-28-github-code-quality-in-public-preview/) (public preview Oct 2025) brings AI-powered code review to every PR. The bar for "pristine" is rising because tooling makes it easier to catch issues that were previously manual-review-only.
 
-### 5. Rust Dominance in New Pristine Projects
+### 5. Rust/Zig Dominance in New Pristine Projects
 
-Of the new Tier 1-2 additions in this update: TigerBeetle (Zig), Zed (Rust), Jujutsu (Rust), Deno (Rust/TS), uv (Rust), Roc (Rust). Memory-safe systems languages are now the default for projects aspiring to "pristine" status.
+Of the new Tier 1-2 additions in this update: TigerBeetle (Zig), Zed (Rust), Jujutsu (Rust), Deno (Rust/TS), uv (Rust), Roc (Rust→Zig). Memory-safe systems languages are now the default for projects aspiring to "pristine" status.
+
+### 6. Agent-Friendly Codebase Design (the biggest new paradigm)
+
+Simon Willison has become the leading voice on this topic. His core insight:
+
+> "Anything that makes a codebase easier for humans to maintain turns out to help agents as well."
+
+Key principles from his [agentic engineering patterns](https://simonwillison.net/guides/agentic-engineering-patterns/) and [coding agent tips](https://simonwillison.net/2025/Oct/25/coding-agent-tips/):
+- **Comprehensive automated tests are now non-negotiable** — not just for correctness but because coding agents use tests to understand codebases, validate their own changes, and produce higher-quality output
+- **Even 1-2 well-written tests set the style** — agents will write new tests matching the existing patterns
+- **Detailed error messages** are cheap investments that pay off enormously for agent-assisted development
+- **High codebase quality begets high agent output quality** — agents mirror the quality level of existing code
+
+### 7. The AI Code Quality Backlash
+
+The [GitClear 2025 report](https://www.gitclear.com/ai_assistant_code_quality_2025_research) (analyzing 211M lines from Google, Microsoft, Meta repos) found:
+- **8x increase** in duplicated code blocks during 2024
+- **Refactoring dropped from 25% to under 10%** of changed lines (2021-2024)
+- AI-generated code has **1.7x more issues** than human-written code
+- **Only 20%** of developers fully trust AI-generated code (Stack Overflow 2025)
+
+This is driving a counter-movement where "pristine" now explicitly includes aggressive deduplication, mandatory human review of AI-generated code, and quality metrics beyond lines-of-code (churn rate, duplication ratio, refactoring ratio).
 
 ---
 
@@ -204,6 +230,10 @@ Curated lists for discovering more high-quality codebases:
 | [HN: The highest quality codebase (Dec 2025)](https://news.ycombinator.com/item?id=46197930) | Latest HN discussion on code quality in the LLM era |
 | [HN: High code quality repos](https://news.ycombinator.com/item?id=11604871) | Classic HN discussion with community-sourced recommendations |
 | [HN: Highest code quality](https://news.ycombinator.com/item?id=18037613) | Another classic HN thread focused on engineering excellence |
+| [Lobsters: Favorite codebases to study](https://lobste.rs/s/sp606q/what_are_your_favorite_codebases_study) | Lobsters thread with OpenBSD, Pandoc, Fe, Sorbet recs |
+| [Simon Willison: Agentic Engineering Patterns](https://simonwillison.net/guides/agentic-engineering-patterns/) | Definitive guide on making codebases agent-friendly |
+| [GitClear AI Code Quality 2025](https://www.gitclear.com/ai_assistant_code_quality_2025_research) | 211M-line analysis showing AI code quality trends |
+| [Interesting Codebases — Mark Papadakis](https://markpapadakis.medium.com/interesting-codebases-159fec5a8cc) | TensorFlow, Seastar/ScyllaDB, Chrome/V8, Unreal Engine recs |
 
 ---
 
@@ -234,3 +264,5 @@ Several patterns from pristine codebases directly validate or challenge Admiral'
 | Deterministic simulation testing | SPC-based runaway detection | Admiral uses statistical process control, not simulation. Different approach, similar goal. |
 | FoundationDB: built in simulation first | Admiral hooks: enforcement-first design | Both share the thesis that correctness infrastructure comes before features. |
 | SQLite: test suite 745x larger than code | Hook tests exist but not in CI | The critical gap. Practice what you preach. |
+| Willison: codebase quality → agent output quality | AGENTS.md, Standing Orders, hook enforcement | Admiral's governance docs are *already* agent-friendly infrastructure. The missing piece is test coverage that agents can use to validate their own changes. |
+| GitClear: AI code causes 8x duplication growth | Admiral's scope boundary guard, loop detector | Admiral is uniquely positioned to *prevent* AI code quality degradation through enforcement hooks. This is a differentiating capability. |
