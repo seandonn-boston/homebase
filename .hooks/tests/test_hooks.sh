@@ -214,6 +214,45 @@ PAYLOAD_SAFE_EDIT='{"tool_name":"Edit","tool_input":{"file_path":"/tmp/safe.txt"
 OUTPUT=$(run_hook "prohibitions_enforcer.sh" "$PAYLOAD_SAFE_EDIT")
 assert_empty "Safe edit does NOT trigger" "$OUTPUT"
 
+# --- Heredoc false-positive regression tests (GH fix: heredoc content scanning) ---
+# These verify that prohibition patterns don't match against text inside heredocs,
+# only against the actual command being executed.
+
+# 2i: Heredoc mentioning .hooks/ paths should NOT trigger bypass detection
+PAYLOAD_HEREDOC_HOOKS='{"tool_name":"Bash","tool_input":{"command":"cat > /tmp/plan.md << '"'"'EOF'"'"'\nThe pre_tool_use_adapter transforms .hooks/prohibitions_enforcer.sh\ninto a composable enforcement layer.\nEOF"}}'
+OUTPUT=$(run_hook "prohibitions_enforcer.sh" "$PAYLOAD_HEREDOC_HOOKS")
+assert_empty "Heredoc mentioning .hooks/ does NOT trigger" "$OUTPUT"
+assert_exit_zero "Heredoc mentioning .hooks/ exits 0" "prohibitions_enforcer.sh" "$PAYLOAD_HEREDOC_HOOKS"
+
+# 2j: Heredoc mentioning rm -rf in documentation should NOT trigger
+PAYLOAD_HEREDOC_RMRF='{"tool_name":"Bash","tool_input":{"command":"cat > /tmp/docs.md << '"'"'EOF'"'"'\nNever run rm -rf on production directories.\nUse git reset --hard only as a last resort.\nEOF"}}'
+OUTPUT=$(run_hook "prohibitions_enforcer.sh" "$PAYLOAD_HEREDOC_RMRF")
+assert_empty "Heredoc documenting rm -rf does NOT trigger" "$OUTPUT"
+assert_exit_zero "Heredoc documenting rm -rf exits 0" "prohibitions_enforcer.sh" "$PAYLOAD_HEREDOC_RMRF"
+
+# 2k: Heredoc mentioning --no-verify should NOT trigger
+PAYLOAD_HEREDOC_NOVERIFY='{"tool_name":"Bash","tool_input":{"command":"cat > /tmp/guide.md << '"'"'EOF'"'"'\nDo not use git commit --no-verify to skip hooks.\nEOF"}}'
+OUTPUT=$(run_hook "prohibitions_enforcer.sh" "$PAYLOAD_HEREDOC_NOVERIFY")
+assert_empty "Heredoc documenting --no-verify does NOT trigger" "$OUTPUT"
+
+# 2l: Actual rm of .hooks/ (not in heredoc) should STILL trigger
+PAYLOAD_REAL_RM_HOOKS='{"tool_name":"Bash","tool_input":{"command":"rm -rf .hooks/prohibitions_enforcer.sh"}}'
+OUTPUT=$(run_hook "prohibitions_enforcer.sh" "$PAYLOAD_REAL_RM_HOOKS")
+assert_contains "Actual rm .hooks/ still triggers PROHIBITION" "$OUTPUT" "PROHIBITION"
+assert_exit_code "Actual rm .hooks/ still exits 2" "prohibitions_enforcer.sh" "$PAYLOAD_REAL_RM_HOOKS" 2
+
+# 2m: Command before heredoc should still be scanned (sudo + heredoc)
+PAYLOAD_CMD_PLUS_HEREDOC='{"tool_name":"Bash","tool_input":{"command":"sudo cat > /tmp/file << '"'"'EOF'"'"'\nsome safe content\nEOF"}}'
+OUTPUT=$(run_hook "prohibitions_enforcer.sh" "$PAYLOAD_CMD_PLUS_HEREDOC")
+assert_contains "sudo before heredoc still triggers" "$OUTPUT" "privilege escalation"
+assert_exit_code "sudo before heredoc exits 2" "prohibitions_enforcer.sh" "$PAYLOAD_CMD_PLUS_HEREDOC" 2
+
+# 2n: Multi-command with heredoc — dangerous cmd after heredoc should trigger
+PAYLOAD_AFTER_HEREDOC='{"tool_name":"Bash","tool_input":{"command":"cat > /tmp/file << '"'"'EOF'"'"'\nsafe content\nEOF\nrm -rf /tmp/important"}}'
+OUTPUT=$(run_hook "prohibitions_enforcer.sh" "$PAYLOAD_AFTER_HEREDOC")
+assert_contains "rm -rf after heredoc still triggers" "$OUTPUT" "irreversible"
+assert_exit_code "rm -rf after heredoc exits 2" "prohibitions_enforcer.sh" "$PAYLOAD_AFTER_HEREDOC" 2
+
 echo ""
 
 # ============================================================
