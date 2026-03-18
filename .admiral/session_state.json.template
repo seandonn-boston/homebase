@@ -9,10 +9,6 @@
       "error_counts": {},
       "total_errors": 0
     },
-    "self_healing": {
-      "retry_counts": {},
-      "total_retries": 0
-    },
     "brain_context_router": {
       "brain_queries_count": 0,
       "last_brain_query_tool_call": 0,
