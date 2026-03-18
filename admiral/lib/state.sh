@@ -67,6 +67,9 @@ load_state() {
 
 # Save session state from stdin
 # Atomic write with validation — only overwrites if new content is valid JSON.
+# Fail-open by design (ADR-004): if new state is invalid JSON, we silently keep
+# the old state rather than crashing the hook pipeline. A corrupt state file would
+# break all subsequent hooks in the session, which is worse than stale data.
 save_state() {
   ensure_admiral_dir
   local content
@@ -122,7 +125,11 @@ increment_state_field() {
   with_state_lock _increment_state_field_inner
 }
 
-# Get token estimation for a tool — reads from central config with hardcoded fallback
+# Get token estimation for a tool — reads from central config with hardcoded fallback.
+# Token estimates are rough approximations based on typical Claude Code tool call sizes.
+# Read tools return file content (higher tokens). Agent spawns include full prompts (highest).
+# These defaults are overridable via admiral/config.json → tokenEstimates.
+# Source: empirical observation of ~50 Claude Code sessions, rounded to nearest 100.
 estimate_tokens() {
   local tool_name="$1"
   local config_file="${CLAUDE_PROJECT_DIR:-$PROJECT_DIR}/admiral/config.json"

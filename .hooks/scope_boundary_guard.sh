@@ -37,7 +37,10 @@ case "$TOOL_NAME" in
   *) exit 0 ;;
 esac
 
-# Protected directories that require explicit approval
+# Protected directories that require explicit approval.
+# aiStrat/ — frozen spec, changes require human review (Decision Authority: Escalate)
+# .github/workflows/ — CI pipelines affect all contributors (Decision Authority: Escalate)
+# .claude/settings — agent permissions, must not be self-modified (security boundary)
 PROTECTED_DIRS=(
   "aiStrat/"
   ".github/workflows/"
