@@ -3,7 +3,7 @@
 # Enforces SO-15: Pre-Work Validation + Project Readiness Assessment (Part 1)
 # Checks that essential context is loaded before substantive work begins.
 # Includes readiness checks: Mission, Ground Truth, quality gates.
-# Fires on the first Write/Edit/Bash tool call — after that, tracks validation state.
+# Fires on the first Write/Edit/NotebookEdit/Bash tool call — after that, tracks validation state.
 # Advisory only — emits warnings but NEVER hard-blocks (always exit 0).
 # Expects session_state in payload (passed by pre_tool_use_adapter).
 # Returns hook_state and advisory context via JSON output — never writes state directly.
@@ -65,7 +65,6 @@ fi
 # This is a lightweight heuristic: if the project has no AGENTS.md and no
 # Ground Truth indicators, it may be in the Preparation phase and not ready
 # for fleet operations. Advisory only — surfaces awareness, never blocks.
-PROJECT_ROOT=$(echo "$PAYLOAD" | jq -r '.tool_input.file_path // .tool_input.command // ""' | head -1)
 # Extract repo root from session state if available, otherwise skip readiness check
 REPO_ROOT=$(echo "$STATE" | jq -r '.repo_root // ""')
 if [ -n "$REPO_ROOT" ]; then

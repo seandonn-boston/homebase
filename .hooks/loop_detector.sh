@@ -86,11 +86,11 @@ LOOP_STATE=$(echo "$LOOP_STATE" | jq \
 
 # Check thresholds — emit advisory alerts, NEVER block
 if [ "$NEW_COUNT" -ge "$MAX_SAME_ERROR" ]; then
-  ALERT="LOOP WARNING: Error signature '${SIG}' repeated ${NEW_COUNT} times. Consider recovery ladder (SO-06). Try a different approach."
+  ALERT+="LOOP WARNING: Error signature '${SIG}' repeated ${NEW_COUNT} times. Consider recovery ladder (SO-06). Try a different approach. "
 fi
 
 if [ "$NEW_TOTAL" -ge "$MAX_TOTAL_ERRORS" ]; then
-  ALERT="LOOP WARNING: ${NEW_TOTAL} total errors in session (threshold: ${MAX_TOTAL_ERRORS}). Consider pausing to reassess approach."
+  ALERT+="LOOP WARNING: ${NEW_TOTAL} total errors in session (threshold: ${MAX_TOTAL_ERRORS}). Consider pausing to reassess approach."
 fi
 
 # Output updated state with alert (if any)

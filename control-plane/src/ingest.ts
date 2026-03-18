@@ -81,7 +81,7 @@ export class JournalIngester {
   private eventLogPath: string;
   private stream: EventStream;
   private offset = 0;
-  private watcher: fs.StatWatcher | null = null;
+  private isWatching = false;
   private pollInterval: ReturnType<typeof setInterval> | null = null;
   private totalIngested = 0;
   private malformedLines = 0;
@@ -105,7 +105,7 @@ export class JournalIngester {
       fs.watchFile(this.eventLogPath, { interval: pollMs }, () => {
         this.ingestNewLines();
       });
-      this.watcher = {} as fs.StatWatcher; // track that we're watching
+      this.isWatching = true;
     } catch {
       // Fallback to polling if watchFile fails
       this.pollInterval = setInterval(() => {
@@ -116,9 +116,9 @@ export class JournalIngester {
 
   /** Stop watching */
   stop(): void {
-    if (this.watcher) {
+    if (this.isWatching) {
       fs.unwatchFile(this.eventLogPath);
-      this.watcher = null;
+      this.isWatching = false;
     }
     if (this.pollInterval) {
       clearInterval(this.pollInterval);
