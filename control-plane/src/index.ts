@@ -11,19 +11,19 @@
  * 3. Execution Trace — visualization of agent reasoning trees
  */
 
-export { EventStream, EventStreamConfig, AgentEvent, EventType, EventListener } from "./events";
+export { AgentEvent, EventListener, EventStream, EventStreamConfig, EventType } from "./events";
+export { JournalIngester } from "./ingest";
 export { AgentInstrumentation, InstrumentationConfig } from "./instrumentation";
 export {
-  RunawayDetector,
-  DetectorConfig,
   Alert,
   ControlChart,
+  DetectorConfig,
+  RunawayDetector,
   SPCMonitor,
   SPCViolation,
 } from "./runaway-detector";
-export { ExecutionTrace, TraceNode, TraceStats } from "./trace";
 export { AdmiralServer } from "./server";
-export { JournalIngester } from "./ingest";
+export { ExecutionTrace, TraceNode, TraceStats } from "./trace";
 
 import { EventStream } from "./events";
 import { AgentInstrumentation } from "./instrumentation";
