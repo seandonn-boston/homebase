@@ -30,7 +30,7 @@ case "$TOOL_NAME" in
     # Check if bash command modifies protected paths
     COMMAND=$(echo "$PAYLOAD" | jq -r '.tool_input.command // ""')
     # Strip heredoc body content before scanning (see admiral/lib/heredoc_strip.sh)
-    CMD_FOR_SCAN=$(strip_heredoc_content "$COMMAND")
+    CMD_FOR_SCAN=$(strip_data_from_command "$COMMAND")
     # Skip non-modifying commands
     case "$CMD_FOR_SCAN" in
       git\ status*|git\ log*|git\ diff*|git\ add*|git\ commit*|git\ push*|ls*|cat*|head*|tail*|echo*|pwd*)

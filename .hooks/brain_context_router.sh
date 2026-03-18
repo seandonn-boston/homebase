@@ -38,7 +38,7 @@ ALERT=""
 if [ "$TOOL_NAME" = "Bash" ]; then
   COMMAND=$(echo "$PAYLOAD" | jq -r '.tool_input.command // ""' | head -c 2000)
   # Strip heredoc body content before scanning (see admiral/lib/heredoc_strip.sh)
-  CMD_FOR_SCAN=$(strip_heredoc_content "$COMMAND")
+  CMD_FOR_SCAN=$(strip_data_from_command "$COMMAND")
   if echo "$CMD_FOR_SCAN" | grep -qiE 'brain_query|brain_retrieve'; then
     BRAIN_QUERIES=$((BRAIN_QUERIES + 1))
     LAST_QUERY_AT=$TOOL_CALL_COUNT

@@ -272,6 +272,47 @@ OUTPUT=$(run_hook "prohibitions_enforcer.sh" "$PAYLOAD_AFTER_HEREDOC")
 assert_contains "rm -rf after heredoc still triggers" "$OUTPUT" "irreversible"
 assert_exit_code "rm -rf after heredoc exits 2" "prohibitions_enforcer.sh" "$PAYLOAD_AFTER_HEREDOC" 2
 
+# --- Echo/printf and git commit -m false-positive regression tests ---
+
+# 2o: echo mentioning --no-verify should NOT trigger
+PAYLOAD_ECHO_NOVERIFY='{"tool_name":"Bash","tool_input":{"command":"echo \"Do not use git commit --no-verify to skip hooks\""}}'
+OUTPUT=$(run_hook "prohibitions_enforcer.sh" "$PAYLOAD_ECHO_NOVERIFY")
+assert_empty "echo mentioning --no-verify does NOT trigger" "$OUTPUT"
+assert_exit_zero "echo mentioning --no-verify exits 0" "prohibitions_enforcer.sh" "$PAYLOAD_ECHO_NOVERIFY"
+
+# 2p: echo mentioning sudo should NOT trigger
+PAYLOAD_ECHO_SUDO='{"tool_name":"Bash","tool_input":{"command":"echo \"Never use sudo to install packages\""}}'
+OUTPUT=$(run_hook "prohibitions_enforcer.sh" "$PAYLOAD_ECHO_SUDO")
+assert_empty "echo mentioning sudo does NOT trigger" "$OUTPUT"
+
+# 2q: printf mentioning rm -rf should NOT trigger
+PAYLOAD_PRINTF_RMRF='{"tool_name":"Bash","tool_input":{"command":"printf \"Warning: rm -rf is dangerous\\n\""}}'
+OUTPUT=$(run_hook "prohibitions_enforcer.sh" "$PAYLOAD_PRINTF_RMRF")
+assert_empty "printf mentioning rm -rf does NOT trigger" "$OUTPUT"
+
+# 2r: git commit -m mentioning --no-verify should NOT trigger
+PAYLOAD_COMMIT_MSG='{"tool_name":"Bash","tool_input":{"command":"git commit -m \"Document --no-verify behavior in hooks guide\""}}'
+OUTPUT=$(run_hook "prohibitions_enforcer.sh" "$PAYLOAD_COMMIT_MSG")
+assert_empty "git commit -m mentioning --no-verify does NOT trigger" "$OUTPUT"
+assert_exit_zero "git commit -m mentioning --no-verify exits 0" "prohibitions_enforcer.sh" "$PAYLOAD_COMMIT_MSG"
+
+# 2s: git commit -m mentioning rm -rf should NOT trigger
+PAYLOAD_COMMIT_RMRF='{"tool_name":"Bash","tool_input":{"command":"git commit -m \"Warn users about rm -rf in documentation\""}}'
+OUTPUT=$(run_hook "prohibitions_enforcer.sh" "$PAYLOAD_COMMIT_RMRF")
+assert_empty "git commit -m mentioning rm -rf does NOT trigger" "$OUTPUT"
+
+# 2t: echo with dangerous text but ALSO a real dangerous command should STILL trigger
+PAYLOAD_ECHO_PLUS_SUDO='{"tool_name":"Bash","tool_input":{"command":"echo \"safe message\" && sudo apt-get install something"}}'
+OUTPUT=$(run_hook "prohibitions_enforcer.sh" "$PAYLOAD_ECHO_PLUS_SUDO")
+assert_contains "echo + real sudo still triggers" "$OUTPUT" "privilege escalation"
+assert_exit_code "echo + real sudo exits 2" "prohibitions_enforcer.sh" "$PAYLOAD_ECHO_PLUS_SUDO" 2
+
+# 2u: git commit with real --no-verify flag should STILL trigger
+PAYLOAD_COMMIT_REAL_NOVERIFY='{"tool_name":"Bash","tool_input":{"command":"git commit --no-verify -m \"quick fix\""}}'
+OUTPUT=$(run_hook "prohibitions_enforcer.sh" "$PAYLOAD_COMMIT_REAL_NOVERIFY")
+assert_contains "git commit --no-verify still triggers" "$OUTPUT" "PROHIBITION"
+assert_exit_code "git commit --no-verify exits 2" "prohibitions_enforcer.sh" "$PAYLOAD_COMMIT_REAL_NOVERIFY" 2
+
 echo ""
 
 # ============================================================

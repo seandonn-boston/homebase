@@ -25,7 +25,7 @@ case "$TOOL_NAME" in
   Bash)
     COMMAND=$(echo "$PAYLOAD" | jq -r '.tool_input.command // ""')
     # Strip heredoc body content before scanning (see admiral/lib/heredoc_strip.sh)
-    CMD_FOR_SCAN=$(strip_heredoc_content "$COMMAND")
+    CMD_FOR_SCAN=$(strip_data_from_command "$COMMAND")
     # Only check bash commands that modify state
     case "$CMD_FOR_SCAN" in
       git\ commit*|git\ push*|npm\ *|yarn\ *|pip\ *) ;;

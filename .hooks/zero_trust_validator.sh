@@ -66,7 +66,7 @@ fi
 if [ "$TOOL_NAME" = "Bash" ]; then
   COMMAND=$(echo "$PAYLOAD" | jq -r '.tool_input.command // ""' 2>/dev/null)
   # Strip heredoc body content before scanning (see admiral/lib/heredoc_strip.sh)
-  CMD_FOR_SCAN=$(strip_heredoc_content "$COMMAND")
+  CMD_FOR_SCAN=$(strip_data_from_command "$COMMAND")
 
   # Detect overly broad operations
   if echo "$CMD_FOR_SCAN" | grep -qE '(chmod -R|chown -R|find / |rm -rf /|git add -A|git add \.)'; then

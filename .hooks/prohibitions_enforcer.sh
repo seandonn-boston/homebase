@@ -26,7 +26,7 @@ if [ "$TOOL_NAME" = "Bash" ]; then
   COMMAND=$(echo "$PAYLOAD" | jq -r '.tool_input.command // ""')
 
   # Strip heredoc body content before pattern scanning (see admiral/lib/heredoc_strip.sh)
-  CMD_FOR_SCAN=$(strip_heredoc_content "$COMMAND")
+  CMD_FOR_SCAN=$(strip_data_from_command "$COMMAND")
 
   # Detect hook/linter/CI bypass patterns → HARD BLOCK
   # Why hard-block: bypassing enforcement undermines the core thesis of the Admiral
