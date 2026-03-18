@@ -26,7 +26,14 @@ These are near-universally cited as the gold standard. Developers study these to
 ### SQLite — `sqlite/sqlite`
 - **Language:** C
 - **Why pristine:** The most deployed database in the world, with a codebase that is meticulous in its correctness, portability, and documentation. SQLite's testing is legendary — 100% branch coverage, billions of test cases, and a test suite that is ~745x larger than the library itself. Every function is well-commented. The single-file amalgamation build is an engineering marvel. Richard Hipp's coding style is a masterclass in disciplined C.
-- **Testing deep-dive:** Three test harnesses — TH3 (proprietary, 100% branch coverage, aircraft-grade), the public TCL test suite, and OSSFuzz integration for continuous fuzzing. Defense-in-depth: out-of-memory testing, I/O error injection, crash recovery verification, boundary value analysis. The `sqlite3_test_control()` API exposes internal instrumentation hooks. Valgrind and address sanitizer runs are standard. Formal proofs of key invariants exist.
+- **Testing deep-dive (590:1 test-to-code ratio):**
+  - **TH3 (Test Harness #3):** Proprietary C test suite providing **100% MC/DC (Modified Condition/Decision Coverage)**. Contains ~76.9 MB / 1,055,400 SLOC implementing 50,362 distinct test cases. A full-coverage run executes ~2.4 million test instances; pre-release soak tests run ~248.5 million tests. Designed to run on embedded platforms that cannot support TCL.
+  - **dbsqlfuzz:** Proprietary libFuzzer-based fuzzer that fuzzes both SQL input and database files simultaneously with a custom mutator. So effective that bug reports from external fuzzers like OSSFuzz have "all but stopped." A second tool "jfuzz" added January 2024. Both kept private to prevent adversarial use.
+  - **OOM testing:** Substituted `malloc()` rigged to fail after N allocations, verifying graceful handling.
+  - **I/O error testing:** Custom VFS layer simulates I/O failures after a set number of operations.
+  - **Crash simulation:** TH3 uses an in-memory VFS to snapshot the filesystem, revert it, introduce random damage characteristic of power loss, then verify database integrity and transaction atomicity.
+  - **TCL test suite:** 51,445 distinct test cases in the open-source harness.
+  - **SQL Logic Test:** Independent harness for cross-database SQL correctness testing.
 - **Study for:** Testing strategy, C coding discipline, portability, single-file architecture, defense-in-depth
 
 ### Redis — `redis/redis`
@@ -58,7 +65,9 @@ These are near-universally cited as the gold standard. Developers study these to
 - **Language:** Zig
 - **Why pristine:** A financial transactions database that may be the most rigorously engineered open-source project since SQLite. The team adheres to [TigerStyle](https://github.com/tigerbeetle/tigerbeetle/blob/main/docs/TIGER_STYLE.md), a coding standard inspired by NASA's Power of Ten rules. **Zero dependencies** beyond the Zig toolchain. Static memory allocation only — designing away entire categories of bugs (memory fragmentation, OOM, use-after-free). The VOPR (Viewstamped Operation Replicator) deterministic simulator runs on **1,000 dedicated CPU cores 24/7**, achieving ~700x time acceleration — **nearly 2 millennia of simulated runtime per day**. The codebase contains **6,000+ assertions in production code**. Passed one of the longest Jepsen audits ever conducted (4x typical duration). Additionally underwent testing within Antithesis's deterministic simulation environment.
 - **Defense-in-depth:** DST (VOPR), non-deterministic fault injection (Vörtex), fuzzers, integration tests, unit tests, snap tests, large-scale tests of up to 100 billion transactions, plus those 6,000+ runtime assertions.
-- **Study for:** Deterministic simulation testing, zero-dependency architecture, static allocation, coding standards, Zig idioms, financial-grade correctness
+- **Fuzzer-driven design philosophy:** "You don't first build a system, then add a fuzzer. The starting point is sketching minimal interfaces that yield themselves to efficient fuzzing." Each subsystem gets its own targeted fuzzer in addition to the whole-system VOPR. Interfaces are kept minimal specifically to enable thorough state-space exploration. The VOPR mocks all I/O: network simulator for partitions/packet loss/reordering/latency; storage simulator for corruption on reads (up to 8%) and writes (up to 9%).
+- **TigerStyle priorities:** Safety > Performance > Developer Experience, in that order. No compound conditions — all branching uses simple nested branches for verifiability. Hard 100-column line limit. Zero technical debt policy.
+- **Study for:** Deterministic simulation testing, zero-dependency architecture, static allocation, coding standards, Zig idioms, financial-grade correctness, fuzzer-driven interface design
 
 ---
 
@@ -78,8 +87,8 @@ Broadly recognized as best-in-class within their language or domain.
 | **`etcd-io/etcd`** | Go | The backbone of Kubernetes. "Designed to always be up and always correct." Clean Raft implementation with gRPC. |
 | **`cockroachdb/cockroach`** | Go | Distributed SQL database with serializable transactions. Excellent design docs and RFCs document every major decision. |
 | **`hashicorp/terraform`** | Go | Plugin architecture, state management, and provider ecosystem demonstrate extensible systems design. HashiCorp's Go code is consistently clean. |
-| **`zed-industries/zed`** | Rust | *(New)* GPU-accelerated code editor with a custom UI framework (GPUI). Hybrid immediate/retained mode rendering, Metal/Vulkan/DX11 backends, WASM-sandboxed extensions. Launches in 0.12s vs VS Code's 1.2s. Uses 142MB RAM vs 730MB. Multi-core architecture keeps UI fluid while offloading heavy work to background threads. GPUI targeted for 1.0 in Spring 2026. |
-| **`jj-vcs/jj`** | Rust | *(New)* Jujutsu — a Git-compatible VCS with clean separation between library (`jj-lib`) and CLI (`jj-cli`). Pluggable storage backends (local disk, cloud, Git). First-class conflict tracking, operation log with undo, working-copy-as-a-commit model. Used at Google-scale on one of the world's largest repositories. Architecture explicitly designed for GUI/TUI/server use beyond the CLI. |
+| **`zed-industries/zed`** | Rust | *(New)* GPU-accelerated code editor with a custom UI framework (GPUI). Hybrid immediate/retained mode rendering using SDFs on the GPU at 120 FPS. Metal/Vulkan/DX11 backends. All models and views owned by a single top-level `App` object (solving Rust's UI ownership challenge). Effects queue provides run-to-completion semantics — `emit`/`notify` push to a queue flushed at frame end, eliminating reentrancy bugs. CRDTs for real-time collaboration. WASM-sandboxed extensions. Launches in 0.12s vs VS Code's 1.2s, uses 142MB RAM vs 730MB. Built by creators of Atom, Tree-sitter, and Electron. |
+| **`jj-vcs/jj`** | Rust | *(New)* Jujutsu — a Git-compatible VCS with strict two-crate separation: `jj-lib` (library, never touches terminal) and `jj-cli`. Pluggable storage backends with interfaces in plain Rust data types, not tied to any format. Append-only operation log means no destructive operations on underlying data — fundamentally safer than Git. All repository modifications occur within transactions. First-class conflict tracking as objects, working-copy-as-a-commit model. Library crate cannot read from user home or environment variables (enforced for server compatibility). Used at Google-scale. |
 | **`denoland/deno`** | Rust/TypeScript | *(New)* Secure-by-default runtime with clean Rust/TypeScript layering. Sandboxed permissions model, built-in toolchain (formatter, linter, test runner, bundler). Single executable with zero external dependency on npm for core functionality. |
 
 ### Libraries & Frameworks
@@ -123,7 +132,7 @@ Broadly recognized as best-in-class within their language or domain.
 |---|---|---|
 | **`llvm/llvm-project`** | C++ | *(New)* Modular compiler infrastructure with rigorous coding standards, extensive regression tests, and clear code review practices. The gold standard for compiler engineering. |
 | **`elm/compiler`** | Haskell | *(New)* Small, readable compiler with emphasis on simplicity and useful error messages. Demonstrates how to build a compiler that prioritizes developer experience. |
-| **`roc-lang/roc`** | Rust | *(New)* Functional programming language focused on speed, friendly error messages, and a clean implementation. Worth studying for its approach to type inference and compilation pipeline. |
+| **`roc-lang/roc`** | Rust/Zig | *(New)* Functional programming language with 100% type inference, compile-time exhaustiveness checking, and pure functional single-paradigm design. Notable for rewriting the compiler from Rust to Zig in 2025 — citing Rust's compile times as a productivity bottleneck for ~300K LOC, Zig's better struct-of-arrays patterns, and the fact that for a compiler with simple lifetimes, Rust's borrow checker provided little benefit relative to complexity. A significant data point on language-quality tradeoffs. |
 
 ---
 
