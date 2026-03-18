@@ -702,6 +702,6 @@ See [`CHANGELOG.md`](CHANGELOG.md) for the full version history.
 
 -----
 
-*The Fleet Admiral Framework · v0.18.14-alpha.1773809685231
+*The Fleet Admiral Framework · v0.18.15-alpha.1773831495756
 
 *Context is the currency of autonomous AI. Intent is its purpose. The Brain is where both compound.*
