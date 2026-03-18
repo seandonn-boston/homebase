@@ -57,6 +57,7 @@ export class AdmiralServer {
   }
 
   private handleRequest(req: http.IncomingMessage, res: http.ServerResponse): void {
+    try {
     const url = req.url || "/";
 
     // CORS headers
@@ -116,6 +117,11 @@ export class AdmiralServer {
       this.serveDashboard(res);
     } else {
       this.errorJson(res, 404, "Not found");
+    }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      console.error(`[admiral-server] Unhandled error: ${message}`);
+      this.errorJson(res, 500, "Internal server error");
     }
   }
 
