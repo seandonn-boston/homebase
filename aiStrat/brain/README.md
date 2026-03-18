@@ -162,10 +162,22 @@ brain/
 | Knowledge Protocol (Part 5) | MCP server tools, access control, audit logging, identity token lifecycle, RAG security |
 | Intelligence Lifecycle (Part 5) | Retrieval pipeline, multi-hop retrieval, knowledge graph, cross-project intelligence |
 
+## Equal Brain Access
+
+The Brain serves two fundamentally different kinds of intelligence: **fleet agents** (LLMs) and the **Admiral** (human). Both must have equal opportunity to query and communicate with the Brain.
+
+- **Fleet agents** access the Brain through MCP tools — programmatic, high-frequency, optimized for structured I/O.
+- **The Admiral** accesses the Brain through human-optimized interfaces — CLI tools, dashboards (CP2+), natural language queries via LLM intermediary, or direct database access.
+
+LLMs are highly skilled at retrieval across large knowledge sets. Humans are more institutionally insightful and capable of judgment but much slower. Enabling and empowering both is required for optimal communication. Every operation available to fleet agents must have a human-accessible equivalent.
+
+See [admiral/part5-brain.md](../admiral/spec/part5-brain.md) Knowledge Protocol, Equal Brain Access for the full specification, and [admiral/part10-admiral.md](../admiral/spec/part10-admiral.md) Admiral Brain Access for the Admiral's query patterns and recording workflows.
+
 ## Architecture Decisions
 
 - **Postgres + pgvector** chosen for combined structured/unstructured/vector storage in a single transactional system. No vendor lock-in.
-- **MCP as the universal interface.** Any agent that speaks MCP speaks to the Brain — Claude Code, Agent SDK agents, third-party agents. Protocol-agnostic by design.
+- **Equal access for humans and agents.** The Brain is not a fleet-only resource. Human-optimized interfaces (CLI, dashboard, natural language, direct SQL) provide the Admiral with equally powerful access to institutional knowledge. See Equal Brain Access above.
+- **MCP as the universal interface.** Any agent that speaks MCP speaks to the Brain — Claude Code, Agent SDK agents, third-party agents. Protocol-agnostic by design. Human access complements MCP through CLI wrappers and dashboard views that invoke the same underlying operations.
 - **Zero-trust access control.** Identity tokens are cryptographically signed, session-scoped, non-delegable. No caller-declared identity trusted.
 - **Embedding generation is pluggable.** The `EmbeddingProvider` interface accepts any implementation — OpenAI, local models, or future alternatives. The `embedding_model` column tracks which model produced each entry's embedding for migration purposes, but no MCP tool exposes embedding model selection or re-embedding. Embedding generation is an infrastructure concern managed at the MCP server configuration level, not an agent-facing operation. At B2 (SQLite), the embedding model is configured at deployment time. Agents interact with embeddings indirectly through `brain_query` (semantic search) and `brain_record` (automatic embedding on write).
 - **Retrieval is multi-signal.** Vector similarity alone is insufficient. The pipeline applies eight ranking signals from Part 5, Intelligence Lifecycle, including multi-hop traversal and contradiction awareness.

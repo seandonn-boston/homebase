@@ -292,18 +292,43 @@ Example: `brain_query("authentication approach for stateless API", project="task
 
 > **Why mandatory for Propose/Escalate but not Autonomous?** Autonomous decisions are high-frequency, low-risk, and within established patterns — adding a Brain query to every one would create latency without proportional value. Propose and Escalate decisions are low-frequency, high-impact, and often novel — exactly the cases where institutional memory prevents the most expensive mistakes.
 
+### Equal Brain Access
+
+The Brain serves two fundamentally different kinds of intelligence: **fleet agents** (LLMs) and the **Admiral** (human). Both must have equal opportunity to query and communicate with the Brain. This is a permissions requirement as much as it is an accessibility requirement.
+
+**Why equal access matters:**
+
+- **LLMs** are highly skilled at retrieval across large knowledge sets — they can synthesize patterns, surface non-obvious connections, and query at machine speed across every entry the Brain holds.
+- **Humans** are often more institutionally insightful and capable of judgment — they bring strategic context, organizational knowledge, and ethical reasoning that no model possesses — but they are much slower.
+- **Optimal communication** requires empowering both. A Brain that is easy for agents to query but opaque to humans creates an information asymmetry that undermines the Admiral's judgment. A Brain that requires human expertise to navigate but lacks programmatic interfaces cripples the fleet's institutional memory.
+
+**Equal access does not mean identical interfaces.** Fleet agents access the Brain through MCP tools (`brain_query`, `brain_record`, etc.) optimized for programmatic, high-frequency interaction. The Admiral accesses the Brain through human-optimized interfaces — dashboards, CLI tools, natural language queries mediated by an LLM, or direct database access. The principle is that **every operation available to fleet agents must have a human-accessible equivalent**, and the Admiral's ability to query, explore, and understand the Brain must never lag behind the fleet's.
+
+| Interface | Serves | Optimized For |
+|---|---|---|
+| **MCP tools** (`brain_query`, etc.) | Fleet agents | Programmatic access, high frequency, structured I/O |
+| **CLI tools** (`brain_record`, `brain_query` shell wrappers) | Admiral (human) | Terminal workflows, scripted queries, quick lookups |
+| **Dashboard** (Control Plane CP2+) | Admiral (human) | Visual exploration, trend analysis, knowledge health |
+| **Natural language query** (via LLM intermediary) | Admiral (human) | Semantic exploration, "what do we know about X?" |
+| **Direct database access** (B2+) | Admiral (human) | Ad hoc analysis, bulk operations, custom reports |
+
+**The principle:** The Admiral must never need to ask an agent "what does the Brain say about X?" as the only path to Brain knowledge. The Admiral queries the Brain directly — through whichever interface suits the moment — and brings human judgment to what the Brain returns. Equally, agents must never be blocked from Brain access while waiting for human mediation. Both parties query independently, contribute independently, and the Brain serves both without preference.
+
+> **ANTI-PATTERN: FLEET-ONLY BRAIN** — The Brain's interfaces are optimized exclusively for MCP tool access. The Admiral can only see Brain contents by asking an agent to query on their behalf, or by reading raw JSON files. The Admiral's slower pace of interaction means they fall behind on institutional knowledge. Decisions that should be informed by Brain precedent are made without it — not because the knowledge doesn't exist, but because the human couldn't access it in time. Equal access prevents this asymmetry.
+
 ### Access Control
 
-Not every agent should read or write everything. **Access control is mandatory and enforced — not advisory.**
+Not every agent should read or write everything. **Access control is mandatory and enforced — not advisory.** Access control governs *authority* (who may perform which operations), not *accessibility* (whether the interface exists). Both the Admiral and fleet agents must have accessible interfaces at every authority level they hold.
 
 | Permission | Who | Why |
 |---|---|---|
-| **Read own project** | All agents in the fleet | Agents need project-specific history |
+| **Read own project** | All agents in the fleet, Admiral | Agents need project-specific history; the Admiral needs visibility into any project |
 | **Read cross-project** | Orchestrators, Admiral | Cross-pollination requires trust |
-| **Write** | All agents (own project only) | Every agent contributes knowledge |
+| **Write** | All agents (own project only), Admiral | Every agent contributes knowledge; the Admiral contributes from any interface |
 | **Write cross-project** | Admiral only | Cross-project entries must be validated |
 | **Supersede** | Admiral, orchestrator | Correcting the record requires authority |
 | **Delete** | Admiral only (soft delete) | The Brain does not forget; it supersedes |
+| **Audit** | Admiral only | Full operational visibility requires human accountability |
 
 #### Zero-Trust Identity Verification
 

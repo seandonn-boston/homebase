@@ -82,6 +82,49 @@ The Admiral performs coarse-grained task decomposition — breaking the current 
 
 -----
 
+## Admiral Brain Access
+
+> **TL;DR** — The Admiral must have direct, independent access to the Brain — not mediated through fleet agents. The Brain is a shared knowledge system serving two kinds of intelligence, and the Admiral's slower but more judgment-rich interaction style requires purpose-built interfaces.
+
+The fleet accesses the Brain through MCP tools at machine speed, querying hundreds of entries per session. The Admiral accesses the Brain through human-optimized interfaces — but the underlying access must be equally powerful. See Part 5, Knowledge Protocol, Equal Brain Access for the full specification.
+
+### Why This Matters for the Admiral
+
+The Admiral's primary value is **institutional insight and judgment** — understanding *why* a decision was made, whether a pattern is accidental or intentional, and how organizational context affects technical choices. These are exactly the questions the Brain can answer, but only if the Admiral can ask them directly.
+
+Without direct Brain access, the Admiral is dependent on fleet agents to retrieve and summarize institutional knowledge. This creates two failure modes:
+
+1. **Lossy mediation** — the agent retrieves Brain entries but summarizes away the nuance the Admiral needs for judgment. The Admiral makes decisions on incomplete institutional context.
+2. **Latency bottleneck** — the Admiral must wait for an agent to be available, formulate a query, return results, and explain them. For time-sensitive escalations, this delay degrades decision quality.
+
+### Admiral Query Patterns
+
+The Admiral's Brain queries differ from fleet agent queries in important ways:
+
+| Pattern | Fleet Agent | Admiral |
+|---|---|---|
+| **Frequency** | High (dozens per session) | Lower (targeted, judgment-driven) |
+| **Breadth** | Usually project-scoped | Often cross-project, looking for institutional patterns |
+| **Depth** | Retrieve and apply | Retrieve, evaluate, contextualize, and decide |
+| **Follow-up** | Rare (apply first result) | Common (explore chains, contradictions, history) |
+| **Time horizon** | Current session needs | Long-term trends, recurring failures, strategic patterns |
+
+These patterns require interfaces that support exploration and follow-up, not just single-shot retrieval. The Control Plane dashboard (CP2+), CLI tools, and natural language Brain queries via an LLM intermediary all serve this need.
+
+### Recording Admiral Knowledge
+
+The Admiral is often the sole source of institutional knowledge that no agent possesses — organizational context, stakeholder intent, strategic rationale, historical decisions made before the fleet existed. The Brain's recording interfaces must be equally accessible to the Admiral:
+
+- **CLI:** `brain_record` shell wrappers for terminal workflows
+- **Dashboard:** Entry creation forms in the Control Plane (CP2+)
+- **Inline:** During escalation review, the Admiral records decisions and rationale directly into the Brain as part of the resolution workflow
+
+The Admiral's contributions carry `authority_tier: admiral` provenance, giving them the highest trust weight in the retrieval pipeline's provenance signal.
+
+> **ANTI-PATTERN: ADMIRAL AS PASSIVE CONSUMER** — The Admiral reads Brain entries but never writes them. Institutional knowledge stays in the Admiral's head, inaccessible to the fleet. When the Admiral is unavailable, the fleet operates without strategic context. The Admiral must actively contribute knowledge, not just consume it.
+
+-----
+
 ## Human-Expert Routing
 
 > **TL;DR** — The Admiral is not omniscient. Route regulatory, design, business strategy, domain performance, and security risk decisions to subject-matter experts. Package the question. Track the response. Integrate it as Ground Truth.
