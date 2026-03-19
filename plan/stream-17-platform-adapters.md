@@ -89,6 +89,34 @@
 
 ---
 
+## Event-Driven & Scheduled Agent Patterns (Part 9)
+
+- [ ] **PA-10: Event-driven agent framework**
+  - **Description:** Define agent trigger patterns for automated events: PR opened triggers code review agent, CI failure triggers diagnosis agent, issue created triggers triage agent, webhook triggers custom agent, monitor finding triggers intelligence agent. Each pattern specifies: trigger condition, context bootstrap sequence, authority level (Autonomous-1 by default — shifted one tier down from interactive), allowed actions, result routing, and cost cap.
+  - **Files:** `platform/event-driven/framework.ts` (new), `platform/event-driven/triggers.ts` (new), `platform/event-driven/bootstrap.ts` (new)
+  - **Size:** L
+  - **Spec ref:** Part 9 — CI/CD & Event-Driven Operations
+
+- [ ] **PA-11: Headless agent authority narrowing**
+  - **Description:** Default headless agents to Autonomous-1 tier (Autonomous→Propose, Propose→Escalate). Cannot merge PRs, delete branches, modify production infrastructure without explicit config. Enforced by hook, not instruction.
+  - **Files:** `platform/event-driven/authority.ts` (new), `.hooks/headless_authority_gate.sh` (new)
+  - **Size:** M
+  - **Spec ref:** Part 9 — Headless Guardrails
+
+- [ ] **PA-12: Scheduled agent runner**
+  - **Description:** Cron-like scheduler for maintenance agents: knowledge gardening, stale entry cleanup, health report generation, dependency auditing. Config-driven schedule with cost circuit breakers per invocation and monthly budget ceilings.
+  - **Files:** `platform/scheduled/runner.ts` (new), `platform/scheduled/config.json` (new), `platform/scheduled/cost-breaker.ts` (new)
+  - **Size:** M
+  - **Spec ref:** Part 9 — Scheduled Agents
+
+- [ ] **PA-13: Context bootstrap for headless agents**
+  - **Description:** Automated context assembly for agents without interactive sessions: load event payload, load Ground Truth, query Brain for relevant context, apply scope constraints, configure result routing.
+  - **Files:** `platform/event-driven/context-bootstrap.ts` (new)
+  - **Size:** M
+  - **Spec ref:** Part 9 — Context Bootstrapping
+
+---
+
 ## PA-07: Platform Capability Matrix
 
 - [ ] **PA-07: Platform capability matrix documentation**
@@ -122,3 +150,24 @@
   - **Size:** M
   - **Spec ref:** `fleet/context-injection.md` — Context Budget Guidelines, `fleet/prompt-anatomy.md` — Assembly Order
   - **Depends on:** PA-01, Stream 15 O-03a (context assembly)
+
+---
+
+## Stream 17 Summary
+
+| Item | Description | Size | Depends on |
+|------|-------------|------|------------|
+| PA-01 | Platform adapter interface specification | L | — |
+| PA-02a | Extract Claude Code-specific logic into adapter | L | PA-01 |
+| PA-02b | Claude Code adapter tests | M | PA-02a |
+| PA-03 | Cursor IDE adapter | L | PA-01 |
+| PA-04 | Windsurf/Codeium IDE adapter | L | PA-01 |
+| PA-05 | Headless API-direct adapter | L | PA-01 |
+| PA-06 | VS Code extension scaffold | L | PA-01, Stream 16 M-01 |
+| PA-07 | Platform capability matrix documentation | M | PA-02a, PA-03, PA-04, PA-05, PA-06 |
+| PA-08 | Shared adapter test suite | M | PA-01, PA-02a |
+| PA-09 | Platform-specific context injection | M | PA-01, Stream 15 O-03a |
+| PA-10 | Event-driven agent framework | L | — |
+| PA-11 | Headless agent authority narrowing | M | — |
+| PA-12 | Scheduled agent runner | M | — |
+| PA-13 | Context bootstrap for headless agents | M | — |

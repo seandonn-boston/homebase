@@ -120,15 +120,26 @@
 
 ---
 
+## 26.5 Pre-Flight Verification
+
+- [ ] **DX-13: Pre-Flight Checklist tooling**
+  - **Description:** Implement automated verification against profile-specific requirements (Starter/Team/Governed/Production/Enterprise). 54 verification items across 5 profiles. The checklist evaluates: project readiness (5 gates), profile-specific requirements, and negative items (what Starter explicitly does NOT need). Outputs structured pass/fail report with remediation suggestions.
+  - **Files:** `admiral/bin/preflight.sh`, `admiral/config/preflight-profiles.json`
+  - **Size:** L (3+ hours)
+  - **Spec ref:** Appendices — Pre-Flight Checklist (Appendix A)
+
+---
+
 ## Stream 26 Summary
 
 | Subsection | Items | Total Size |
 |---|---|---|
-| 23.1 Environment Setup | DX-01, DX-02, DX-08 | 2M + 1S |
-| 23.2 Development Workflow | DX-04, DX-05, DX-06, DX-11 | 1S + 3M |
-| 23.3 Documentation and Guides | DX-03, DX-07, DX-09, DX-10 | 2L + 2M |
-| 23.4 Contributor Onboarding | DX-12 | 1M |
-| **Totals** | **12 items** | **2L + 8M + 2S** |
+| 26.1 Environment Setup | DX-01, DX-02, DX-08 | 2M + 1S |
+| 26.2 Development Workflow | DX-04, DX-05, DX-06, DX-11 | 1S + 3M |
+| 26.3 Documentation and Guides | DX-03, DX-07, DX-09, DX-10 | 2L + 2M |
+| 26.4 Contributor Onboarding | DX-12 | 1M |
+| 26.5 Pre-Flight Verification | DX-13 | 1L |
+| **Totals** | **13 items** | **3L + 8M + 2S** |
 
 **Critical path:** DX-02 (one-command setup) is the foundation — everything else assumes a working development environment. DX-01 (dev container) depends on DX-02 (it wraps the setup script). DX-03 (interactive guide) depends on DX-02 and DX-05 (hook CLI). DX-12 (good first issues) depends on DX-02 and DX-06 (local CI).
 

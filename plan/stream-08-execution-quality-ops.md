@@ -82,20 +82,114 @@ The control plane exists but operates as a closed system. Events are collected b
 
 ---
 
+### 8.4 Cost Management (Part 8)
+
+The spec defines cost tracking across four token dimensions and budget enforcement with circuit breakers. No cost attribution or budget enforcement exists today — token spend is invisible and unbounded.
+
+- [ ] **S-18a: Per-agent cost attribution**
+  - **Description:** Track token costs in four dimensions (input, output, thinking, tool call) attributed to each agent. Reveals which agents waste tokens and enables data-driven optimization of prompts and tool usage patterns.
+  - **Done when:** Every agent invocation records token counts across all four dimensions, costs are aggregated per-agent and per-task, a summary report can be generated showing top token consumers, data is persisted for trend analysis.
+  - **Files:** `admiral/cost/attribution.sh` (new), `control-plane/src/cost-tracker.ts` (new)
+  - **Size:** L
+  - **Spec ref:** Part 8 — Cost Management
+
+- [ ] **S-18b: Cost budget enforcement**
+  - **Description:** Configurable per-agent and per-task token budgets with circuit breakers. When budget is exceeded, agent is paused and escalated. Prevents runaway token spend from a single agent or task consuming disproportionate resources.
+  - **Done when:** Per-agent and per-task budgets are configurable, circuit breaker triggers when budget threshold is reached, agent is paused on breach with escalation to Admiral, budget state survives restarts.
+  - **Files:** `admiral/cost/budget.sh` (new), `admiral/cost/circuit-breaker.sh` (new)
+  - **Size:** M
+  - **Spec ref:** Part 8 — Cost Dimensions
+
+- [ ] **S-18c: Metered service broker**
+  - **Description:** Credential vault for paid external services, session-scoped allocation, fair-split billing, audit trail. Ensures paid API keys are not shared unsafely and usage is tracked per-agent for cost accountability.
+  - **Done when:** Credential vault stores and issues scoped credentials, session-scoped allocation prevents credential leakage, usage is tracked per-agent with fair-split billing, audit trail records every credential checkout/checkin.
+  - **Files:** `admiral/cost/service-broker.sh` (new), `admiral/cost/credential-vault.sh` (new)
+  - **Size:** L
+  - **Spec ref:** Part 8 — Metered Service Broker; Part 11 — Paid Resource Authorization Protocol
+
+---
+
+### 8.5 Fleet Lifecycle Management (Part 8)
+
+The spec defines a six-phase fleet lifecycle with distinct Admiral responsibilities per phase and project-type-specific preparation workflows. No lifecycle state machine or phase management exists today — fleet scaling is ad hoc.
+
+- [ ] **S-19a: Fleet lifecycle state machine**
+  - **Description:** Implement six phases (Preparation → Standup → Acceleration → Steady State → Wind-Down → Dormant) with entry/exit criteria, Admiral focus areas per phase. Provides structure for how a fleet of agents is spun up, managed, and retired.
+  - **Done when:** State machine enforces phase transitions with entry/exit criteria validation, current phase is persisted and queryable, Admiral focus areas are loaded per phase, invalid transitions are rejected with explanation.
+  - **Files:** `admiral/lifecycle/state-machine.sh` (new), `admiral/lifecycle/phases.json` (new)
+  - **Size:** L
+  - **Spec ref:** Part 8 — Fleet Scaling & Lifecycle
+
+- [ ] **S-19b: Fleet preparation phase workflows**
+  - **Description:** Four project-type workflows (greenfield, existing-documented, existing-undocumented, legacy) with preparation checklists per type. Each project type has different prerequisites before agents can be productive.
+  - **Done when:** All four project-type workflows are defined with specific checklists, preparation phase selects correct workflow based on project classification, checklist completion is tracked and gates entry to Standup phase.
+  - **Files:** `admiral/lifecycle/preparation.sh` (new), `admiral/lifecycle/workflows/` (new directory)
+  - **Size:** M
+  - **Spec ref:** Part 8 — Preparation Phase
+
+- [ ] **S-19c: Agent retirement protocol**
+  - **Description:** Complete in-flight work, update routing, archive Brain entries with retirement tag, reset trust scores. Ensures clean agent removal without orphaned work or stale state.
+  - **Done when:** Retirement protocol completes or reassigns in-flight work, routing tables are updated to remove retired agent, Brain entries are tagged with retirement metadata, trust scores are reset, retirement is logged for audit.
+  - **Files:** `admiral/lifecycle/retirement.sh` (new)
+  - **Size:** M
+  - **Spec ref:** Part 8 — Fleet Scaling & Lifecycle
+
+---
+
+### 8.6 Adaptation & Institutional Memory (Part 8)
+
+The spec defines change classification, fleet pause protocols, checkpoint files, and decision logs. These are the mechanisms for adapting to requirement changes mid-flight and preserving institutional knowledge across sessions.
+
+- [ ] **S-20a: Change classification system**
+  - **Description:** Three-tier classification (Tactical/Strategic/Full Pivot) with cascade map showing which framework artifacts must be updated when changes occur. Prevents under-reaction to major changes and over-reaction to minor ones.
+  - **Done when:** Changes are classified into one of three tiers, cascade map defines affected artifacts per tier, classification triggers appropriate update workflow, cascade map is configurable per project.
+  - **Files:** `admiral/adaptation/classify.sh` (new), `admiral/adaptation/cascade-map.json` (new)
+  - **Size:** M
+  - **Spec ref:** Part 8 — Adaptation Protocol
+
+- [ ] **S-20b: Fleet pause protocol**
+  - **Description:** Structured fleet pause for strategic changes: checkpoint all agents, pause routing, apply changes, validate, resume. Prevents agents from working against outdated instructions during significant changes.
+  - **Done when:** Fleet pause checkpoints all active agents, routing is suspended during pause, changes are applied and validated before resume, resume restores agents from checkpoints, partial pause (subset of agents) is supported.
+  - **Files:** `admiral/adaptation/fleet-pause.sh` (new)
+  - **Size:** M
+  - **Spec ref:** Part 8 — Adaptation Protocol
+
+- [ ] **S-20c: Checkpoint file format**
+  - **Description:** Structured checkpoint files with completed/in-progress/blocked/decisions/assumptions/resources sections. Used for session persistence across restarts and fleet pause/resume cycles.
+  - **Done when:** Checkpoint schema is defined and validated, checkpoints capture all required sections, checkpoints can be written and restored reliably, checkpoint age and staleness are tracked.
+  - **Files:** `admiral/memory/checkpoint-schema.json` (new), `admiral/memory/checkpoint.sh` (new)
+  - **Size:** M
+  - **Spec ref:** Part 8 — Institutional Memory
+
+- [ ] **S-20d: Decision log**
+  - **Description:** Append-only decision log recording timestamp, decision, alternatives, rationale, authority tier used. Provides institutional memory of why decisions were made, enabling future agents and humans to understand historical context.
+  - **Done when:** Decision log schema is defined, decisions are appended immutably, each entry includes timestamp/decision/alternatives/rationale/authority, log is queryable by time range and decision type, log survives restarts.
+  - **Files:** `admiral/memory/decision-log.sh` (new), `admiral/memory/decision-schema.json` (new)
+  - **Size:** M
+  - **Spec ref:** Part 8 — Institutional Memory
+
+---
+
 ## Summary
 
 | Subsection | Items | Total Size | Spec Parts Covered |
 |---|---|---|---|
-| 7.3 Execution Patterns | S-10 through S-12 | 3L | Part 5 |
-| 7.4 Quality Gates | S-13 through S-14 | 2M | Part 6 |
-| 7.5 Operations & Alerting | S-15 through S-17 | 1L + 2M | Part 7 |
-| **Totals** | **8 items** | **4L + 4M** | **3 spec parts** |
+| 8.1 Execution Patterns | S-10 through S-12 | 3L | Part 5 |
+| 8.2 Quality Gates | S-13 through S-14 | 2M | Part 6 |
+| 8.3 Operations & Alerting | S-15 through S-17 | 1L + 2M | Part 7 |
+| 8.4 Cost Management | S-18a through S-18c | 2L + 1M | Part 8 |
+| 8.5 Fleet Lifecycle Management | S-19a through S-19c | 1L + 2M | Part 8 |
+| 8.6 Adaptation & Institutional Memory | S-20a through S-20d | 4M | Part 8 |
+| **Totals** | **18 items** | **7L + 11M** | **4 spec parts** |
 
-**Status:** All 8 items (S-10 through S-17) are unimplemented. Execution patterns define how agents collaborate; quality gates enforce standards; the alerting pipeline closes the loop between detection and human awareness. None of these subsystems exist in code today.
+**Status:** All 18 items (S-10 through S-20d) are unimplemented. S-10 through S-17 cover execution patterns, quality gates, and operations/alerting. S-18 through S-20 items are newly added to close Part 8 coverage gaps — cost management, fleet lifecycle, adaptation protocols, and institutional memory were identified in gap analysis as specified but not previously tracked.
 
 **Critical dependencies within this scope:**
 - S-15 (alerting pipeline) must exist before S-03 (governance heartbeat monitor, defined in 7.1) can deliver alerts externally.
 - S-10 (handoff) and S-11 (escalation) are prerequisites for meaningful parallel coordination (S-12), since parallel tasks need a structured way to hand off results and escalate conflicts.
+- S-18a (cost attribution) must exist before S-18b (budget enforcement), since budgets require measurement.
+- S-19a (lifecycle state machine) must exist before S-19b (preparation workflows) and S-19c (retirement protocol), since both operate within the lifecycle framework.
+- S-20c (checkpoint file format) must exist before S-20b (fleet pause protocol), since fleet pause depends on checkpointing agents.
 
 **Recommended execution order within this scope:**
 1. S-10 (handoff protocol) — foundational schema that other coordination patterns build on.
@@ -106,3 +200,13 @@ The control plane exists but operates as a closed system. Events are collected b
 6. S-16 (persistent event store) — makes history durable; pairs with S-15.
 7. S-17 (health check enhancement) — final observability layer; depends on S-15 and S-16 being in place to have metrics worth reporting.
 8. S-12 (parallel coordinator) — largest item; depends on S-10 and S-11 being stable.
+9. S-18a (cost attribution) — measurement foundation for cost management.
+10. S-18b (cost budget enforcement) — depends on S-18a for token tracking data.
+11. S-18c (metered service broker) — credential vault and billing; can parallel with S-18b.
+12. S-19a (fleet lifecycle state machine) — framework for lifecycle phases.
+13. S-19b (fleet preparation workflows) — depends on S-19a for phase management.
+14. S-19c (agent retirement protocol) — depends on S-19a for lifecycle transitions.
+15. S-20a (change classification) — foundation for adaptation protocol.
+16. S-20c (checkpoint file format) — schema needed before fleet pause.
+17. S-20b (fleet pause protocol) — depends on S-20c for checkpointing.
+18. S-20d (decision log) — independent; can be built any time after S-20a.

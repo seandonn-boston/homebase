@@ -101,3 +101,47 @@
   - **Size:** M (1-3 hours)
   - **Spec ref:** Part 8 — Fleet Health Metrics; Part 12 — Stream 4: Admiral Operational Data
   - **Depends on:** MG-05, MG-07
+
+---
+
+## 19.5 Multi-Operator & Admiral Fallback
+
+- [ ] **MG-11: Multi-operator governance**
+  - **Description:** Implement operator roles (Owner/Operator/Observer) with authority matrix. Owner has full authority, Operator manages fleet within Owner-defined policy, Observer has read-only access. Conflict resolution: higher tier wins; same tier: conservative action wins. Emergency Halt is non-negotiable regardless of role. Max 2-3 Operators per fleet to prevent authority fragmentation.
+  - **Files:** `admiral/governance/multi-operator.sh` (new), `admiral/governance/operator-roles.json` (new)
+  - **Size:** L
+  - **Spec ref:** Part 10 — Multi-Operator Governance
+
+- [ ] **MG-12: Operator handoff procedure**
+  - **Description:** Export fleet state (trust calibration, roster, Brain health, task manifest) for incoming operator. Incoming operator reviews and acknowledges. Identity token revocation for outgoing, renewal for incoming.
+  - **Files:** `admiral/governance/operator-handoff.sh` (new)
+  - **Size:** M
+  - **Spec ref:** Part 10 — Operator Handoff
+
+- [ ] **MG-13: Fallback decomposer mode**
+  - **Description:** Admiral acts as temporary Orchestrator when Orchestrator fails. Generates 1-3 macro-tasks, routes to Tier 1 specialists only, serial execution only, 5-minute duration limit. Automatically reverts when Orchestrator recovers.
+  - **Files:** `admiral/governance/fallback-decomposer.sh` (new)
+  - **Size:** M
+  - **Spec ref:** Part 10 — Fallback Decomposer Mode
+
+---
+
+## Stream 19 Summary
+
+Total items: MG-01 through MG-13.
+
+| Item | Description | Size | Section |
+|------|-------------|------|---------|
+| MG-01 | Governance agent framework | L | 19.1 |
+| MG-02 | Sentinel agent full implementation | L | 19.2 |
+| MG-03 | Arbiter agent | L | 19.2 |
+| MG-04 | Compliance Monitor agent | L | 19.2 |
+| MG-05 | Governance event bus | M | 19.3 |
+| MG-06 | Governance rule engine | L | 19.3 |
+| MG-07 | Governance intervention protocol | M | 19.3 |
+| MG-08 | Governance audit dashboard | M | 19.4 |
+| MG-09 | Governance agent self-governance | L | 19.4 |
+| MG-10 | Governance metrics and KPIs | M | 19.4 |
+| MG-11 | Multi-operator governance | L | 19.5 |
+| MG-12 | Operator handoff procedure | M | 19.5 |
+| MG-13 | Fallback decomposer mode | M | 19.5 |
