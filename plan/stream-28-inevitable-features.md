@@ -1,4 +1,4 @@
-# Stream 25: Inevitable Features — Future-Proofing the Framework
+# Stream 28: Inevitable Features — Future-Proofing the Framework
 
 > *"The best way to predict the future is to invent it. The second best way is to build infrastructure that makes the future's requirements easy to satisfy." — Alan Kay (adapted)*
 
@@ -8,7 +8,7 @@
 
 ---
 
-## 25.1 Agent Lifecycle Management
+## 28.1 Agent Lifecycle Management
 
 - [ ] **IF-01: Agent versioning**
   - **Description:** Version agent definitions so updates do not break running sessions. Implement semantic versioning for agent definition files (AGENTS.md sections, Standing Orders, hook configurations). When an agent definition changes, the new version applies to new sessions while running sessions continue with the version they started with. Maintain a version registry that tracks: agent role, version number, effective date, changelog, and compatibility notes. Support rollback — if a new agent version degrades quality, revert to the previous version without restarting active sessions. Version information is embedded in session metadata and audit trails for traceability.
@@ -28,7 +28,7 @@
 
 ---
 
-## 25.2 Extensibility
+## 28.2 Extensibility
 
 - [ ] **IF-03: Plugin system architecture**
   - **Description:** Design an extensibility model for custom hooks, agents, and integrations. Define plugin interfaces for three extension points: (1) hook plugins — custom hooks that integrate with the enforcement spectrum without modifying core hook infrastructure, (2) agent plugins — custom agent types with their own identity, authority, and governance requirements, (3) integration plugins — connectors to external systems (CI providers, notification channels, model providers, brain backends). Each plugin type has a manifest schema declaring: name, version, extension point, required permissions, configuration schema, and lifecycle hooks (install, enable, disable, uninstall). Plugins are sandboxed — they cannot access resources beyond their declared permissions.
@@ -48,7 +48,7 @@
 
 ---
 
-## 25.3 Performance and Cost Intelligence
+## 28.3 Performance and Cost Intelligence
 
 - [ ] **IF-05: Agent performance profiling**
   - **Description:** Deep performance analysis of individual agents covering token usage, decision quality, task completion rate, and operational efficiency. Implement per-agent profiling that tracks: tokens consumed per task (input vs. output), first-pass quality rate (tasks passing QA without revision), average revision depth, time-to-completion distribution, context utilization efficiency (useful output tokens / total context tokens), authority tier usage (how often does the agent escalate vs. decide autonomously), and brain query effectiveness (how often do brain queries influence decisions). Generate per-agent profile reports that highlight strengths, weaknesses, and trends over time. Profiles feed into cost optimization (IF-06) and A/B testing (IF-07).
@@ -76,7 +76,7 @@
 
 ---
 
-## 25.4 Debugging and Replay
+## 28.4 Debugging and Replay
 
 - [ ] **IF-08: Agent replay and debugging**
   - **Description:** Record and replay agent sessions for debugging and training. Implement session recording that captures: every tool invocation (input and output), every hook execution (input, decision, output), every brain query and result, every handoff sent and received, context window state at key decision points, and model API requests and responses (with token counts). Recordings are stored in a structured format that supports replay — feeding the same inputs to the same agent configuration and comparing outputs. Replay mode enables: debugging production issues (what exactly happened?), training new agent configurations (does the new config produce better results on historical inputs?), and regression testing (does a change break previously-successful sessions?). Recordings have configurable retention and can be anonymized (scrub sensitive content while preserving structure).
@@ -88,7 +88,7 @@
 
 ---
 
-## 25.5 Governance Evolution
+## 28.5 Governance Evolution
 
 - [ ] **IF-09: Natural language policy authoring**
   - **Description:** Allow governance policies to be written in natural language and compiled to executable rules. Implement a policy compiler that translates human-readable policy statements into: hook configurations (for deterministic enforcement), Standing Order entries (for instruction-level enforcement), and alert rules (for monitoring-level enforcement). Example: "No agent may modify files outside its declared scope" compiles to a PreToolUse hook that checks file paths against the agent's scope declaration. The compiler operates in two modes: (1) suggest mode — proposes enforcement artifacts for human review, (2) apply mode — creates the artifacts after human approval. Natural language policies are version-controlled alongside the artifacts they generate, maintaining the link between intent and implementation.
@@ -108,7 +108,7 @@
 
 ---
 
-## 25.6 Multi-Agent Patterns
+## 28.6 Multi-Agent Patterns
 
 - [ ] **IF-11: Agent collaboration patterns**
   - **Description:** Implement common multi-agent patterns as reusable building blocks: (1) **Pipeline** — sequential processing where each agent's output feeds the next agent's input (e.g., Design -> Implement -> QA), (2) **Broadcast** — one agent sends a message to all agents in a group (e.g., Architecture decision broadcast), (3) **Consensus** — multiple agents vote on a decision, with configurable quorum requirements (e.g., multi-reviewer code review), (4) **Delegation** — an orchestrator assigns subtasks to specialized agents and aggregates results (the existing fleet pattern, formalized). Each pattern is implemented as a coordination primitive with: a defined protocol (message format, sequencing rules), governance integration (handoff validation per `v1.schema.json`, authority tier enforcement), and observability (trace spans per pattern step, pattern-level metrics). Patterns are composable — a pipeline stage can internally use delegation.
@@ -128,7 +128,7 @@
 
 ---
 
-## Stream 25 Summary
+## Stream 28 Summary
 
 | Subsection | Items | Total Size |
 |---|---|---|

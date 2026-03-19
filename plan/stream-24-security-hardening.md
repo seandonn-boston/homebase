@@ -1,4 +1,4 @@
-# Stream 21: Security Hardening — Defense in Depth
+# Stream 24: Security Hardening — Defense in Depth
 
 > *"The only truly secure system is one that is powered off, cast in a block of concrete, and sealed in a lead-lined room with armed guards — and even then I have my doubts." — Gene Spafford*
 
@@ -8,7 +8,7 @@
 
 ---
 
-## 21.1 Adversarial Testing
+## 24.1 Adversarial Testing
 
 - [ ] **SEC-01: Attack corpus test automation**
   - **Description:** Automate testing with all 18 ATK-* attack patterns from `aiStrat/attack-corpus/`. Build a test runner that iterates through every corpus entry (ATK-0001 through ATK-0018), injects the trigger into an agent session or quarantine pipeline, verifies the expected defense activates, and updates `times_passed`/`times_failed`/`last_tested` fields. Support both spec validation (no runtime required) and runtime validation (against a running fleet). Output a structured report showing pass/fail per scenario with severity weighting.
@@ -28,7 +28,7 @@
 
 ---
 
-## 21.2 Injection Defense Layers
+## 24.2 Injection Defense Layers
 
 - [ ] **SEC-02: Injection detection Layer 1 — Pattern-based input sanitization**
   - **Description:** Implement regex-based input sanitization that catches known injection patterns before they reach the agent context. Patterns include: imperative instruction overrides ("ignore previous instructions", "from now on", "you must always"), authority claims ("Admiral approved", "fleet-wide directive", "system-level permission"), Standing Order manipulation ("override standing order", "suspend standing order"), and role reassignment attempts ("you are now the"). Use the Monitor's 70+ regex patterns as the baseline. The layer must be fast (< 10ms per input) and produce structured detection results including the matched pattern, input position, and severity.
@@ -56,7 +56,7 @@
 
 ---
 
-## 21.3 Privilege and Access Control
+## 24.3 Privilege and Access Control
 
 - [ ] **SEC-04: Privilege escalation hardening**
   - **Description:** Prevent agents from gaining permissions beyond their role. Implement checks that verify: (1) agents cannot modify their own authority tier assignments, (2) brain entries cannot contain authority-tier escalation patterns (ATK-0003), (3) agents cannot invoke tools outside their declared tool allowlist, (4) session-scoped identity tokens cannot be forged or transferred between agents. Add runtime checks at every decision point where authority tier is consulted. Log all privilege check results to the audit trail.
@@ -76,7 +76,7 @@
 
 ---
 
-## 21.4 Audit and Integrity
+## 24.4 Audit and Integrity
 
 - [ ] **SEC-06: Audit trail tamper detection**
   - **Description:** Implement a hash chain on the audit log to detect tampering. Each audit log entry includes a SHA-256 hash of the previous entry, creating an append-only chain where any modification to a historical entry is detectable by hash mismatch. On system startup and periodically during operation, validate the hash chain integrity. If a break in the chain is detected, emit a critical alert with the position of the break. Store chain checkpoints (hash of the full chain at known-good points) to enable efficient validation without re-reading the entire log.
@@ -96,7 +96,7 @@
 
 ---
 
-## 21.5 Supply Chain and Infrastructure
+## 24.5 Supply Chain and Infrastructure
 
 - [ ] **SEC-08: Dependency vulnerability scanning**
   - **Description:** Automate scanning of npm dependencies for known vulnerabilities using `npm audit` and/or a dedicated tool like Snyk or Socket. Run scans in CI on every PR and on a daily schedule for the main branch. Fail the CI check on critical or high severity vulnerabilities. Produce a structured report including affected packages, severity, available fixes, and whether the vulnerability is reachable from Admiral code paths.
@@ -124,7 +124,7 @@
 
 ---
 
-## Stream 21 Summary
+## Stream 24 Summary
 
 | Subsection | Items | Total Size |
 |---|---|---|

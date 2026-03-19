@@ -1,4 +1,4 @@
-# Stream 20: Governance Platform — Admiral as a Service
+# Stream 23: Governance Platform — Admiral as a Service
 
 > *"Products that win the infrastructure layer become the place operators live." — Admiral Framework, governance-platform.md*
 
@@ -10,7 +10,7 @@
 
 ---
 
-## 20.1 Core Platform
+## 23.1 Core Platform
 
 - [ ] **GP-01: Governance API server**
   - **Description:** Implement a REST API server exposing all governance capabilities. The server provides a unified interface for: policy management (create, read, update, deactivate governance policies), agent management (view fleet composition, agent status, trust calibration), audit trail access (query governance events, interventions, escalation history), fleet health (real-time metrics, predictions, alerts), and Brain access (knowledge search, entry management). The API follows REST conventions with JSON request/response bodies. The server builds on the existing control plane server architecture (`control-plane/src/server.ts`) and extends it with governance-specific endpoints. Authentication is required for all endpoints. API versioning (`/api/v1/...`) supports future evolution without breaking clients.
@@ -30,7 +30,7 @@
 
 ---
 
-## 20.2 Multi-Tenancy and Configuration
+## 23.2 Multi-Tenancy and Configuration
 
 - [ ] **GP-03: Multi-tenant support**
   - **Description:** Implement support for multiple teams or projects with isolated governance configurations. Each tenant has: (1) **Isolated policies** — policies defined for one tenant do not affect another; (2) **Isolated audit trails** — governance events are scoped to the tenant that generated them; (3) **Isolated Brain namespaces** — Brain entries are namespaced per tenant (consistent with the spec's cross-project namespacing); (4) **Shared global policies** — some policies (e.g., data sensitivity, emergency halt) apply across all tenants and cannot be overridden; (5) **Tenant-scoped authentication** — API access is scoped to a specific tenant, with cross-tenant access requiring elevated privileges. Tenant isolation must be enforced at the data layer, not just the API layer — a bug in the API should not leak data across tenants.
@@ -50,7 +50,7 @@
 
 ---
 
-## 20.3 Event Streaming and Reporting
+## 23.3 Event Streaming and Reporting
 
 - [ ] **GP-05: Governance event streaming**
   - **Description:** Implement a real-time event stream of all governance actions for external consumers. The stream exposes governance events (policy evaluations, interventions, escalations, trust calibration changes, audit entries) via: (1) **Server-Sent Events (SSE)** endpoint — `GET /api/v1/events/stream` for real-time browser/CLI consumption; (2) **Polling endpoint** — `GET /api/v1/events?since=<timestamp>` for consumers that cannot maintain persistent connections; (3) **Event filtering** — consumers can filter by event type, severity, agent, tenant, and time range; (4) **Event schema** — every event follows a consistent schema (event_id, timestamp, type, severity, source, detail, tenant_id). The stream is the external-facing counterpart to the internal governance event bus (MG-05). Events are buffered for replay — consumers that disconnect can resume from their last-seen event ID.
@@ -70,7 +70,7 @@
 
 ---
 
-## 20.4 Integration and Deployment
+## 23.4 Integration and Deployment
 
 - [ ] **GP-07: Governance SDK**
   - **Description:** Build a client SDK for integrating with the governance platform from external tools and scripts. The SDK wraps the governance API with a typed, ergonomic interface. Capabilities: (1) **Policy management** — create, read, update, deactivate policies programmatically; (2) **Event subscription** — subscribe to governance event streams with type-safe event handlers; (3) **Fleet queries** — query fleet status, agent health, and trust calibration; (4) **Brain access** — search and retrieve Brain entries; (5) **Report generation** — trigger and retrieve governance reports. The SDK handles authentication, retry logic, error handling, and connection management. Initially target TypeScript/JavaScript (matching the control plane stack) with a shell wrapper for CLI integration.

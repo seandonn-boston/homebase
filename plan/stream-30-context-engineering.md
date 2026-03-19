@@ -1,4 +1,4 @@
-# Stream 27: Context Engineering — Optimal Context Window Utilization
+# Stream 30: Context Engineering — Optimal Context Window Utilization
 
 > *"Context is the currency of autonomous AI. Most fleet performance problems that look like capability failures are actually context management failures." — Admiral Spec, Part 2*
 
@@ -8,7 +8,7 @@
 
 ---
 
-## 27.1 Context Profiles & Budget Tracking
+## 30.1 Context Profiles & Budget Tracking
 
 - [ ] **CE-01: Context profile implementation — Implement spec-defined context profiles with allocation tracking**
   - **Description:** Implement the three context zones defined in Part 2 (Standing Context 15-25%, Session Context 50-65%, Working Context 20-30%) as a runtime data model. Each zone tracks: allocated percentage, actual token count, items loaded, loading order, and last refresh timestamp. The implementation must enforce the Context Window Scaling rules: standing context must not exceed 50K tokens regardless of window size, with warnings at 45K. Create a `ContextProfile` data structure that agents declare at session start and that the runtime validates against throughout the session.
@@ -28,7 +28,7 @@
 
 ---
 
-## 27.2 Context Optimization
+## 30.2 Context Optimization
 
 - [ ] **CE-03: Context compression strategies — Implement compression for long sessions**
   - **Description:** Implement three context compression strategies for when sessions approach context limits: (1) **Summarization** — compress verbose tool outputs into structured summaries preserving key facts, (2) **Prioritization** — rank context items by relevance to current task and evict lowest-ranked items first, (3) **Eviction** — remove items according to the sacrifice order defined in the context profile. The compression engine must preserve: identity and constraints (never compressed), active task context (compressed last), and decision log entries (compressed to key decisions only). Implement the sacrifice order as a configurable priority list per context profile.
@@ -56,7 +56,7 @@
 
 ---
 
-## 27.3 Context Lifecycle Management
+## 30.3 Context Lifecycle Management
 
 - [ ] **CE-06: Context window utilization dashboard — Visualize context usage across sessions**
   - **Description:** Create a dashboard view (integrated into the control plane) that visualizes how the context window is being used. Display: (1) per-zone utilization as a stacked bar (standing/session/working), (2) utilization over time within a session (line chart showing context growth), (3) top-10 largest context items with their relevance scores, (4) compression events and their impact (how much space was reclaimed), (5) sacrifice order execution log, (6) comparison against the spec-defined allocation targets. The dashboard should highlight anomalies: standing context exceeding 25%, working context growing without checkpoints, context approaching the window limit.
@@ -84,7 +84,7 @@
 
 ---
 
-## 27.4 Context Intelligence
+## 30.4 Context Intelligence
 
 - [ ] **CE-09: Context preloading — Pre-load relevant context based on task prediction**
   - **Description:** Implement predictive context preloading that loads relevant context before the agent explicitly requests it. Preloading sources: (1) file dependencies — when a task targets file X, pre-load files that import/require X, (2) historical patterns — query the Brain for context that was useful in similar past tasks, (3) skill triggers — match task description against skill file patterns and pre-load matching skills, (4) interface contracts — when a task involves agent handoffs, pre-load the relevant interface contracts. Preloading must respect context budgets — preloaded items go into the session context zone and count against its allocation.

@@ -1,4 +1,4 @@
-# Stream 18: Spec Debt Resolution — Completing the Specification
+# Stream 21: Spec Debt Resolution — Completing the Specification
 
 > *"A specification that is incomplete is worse than no specification at all — it creates false confidence." — Leslie Lamport (paraphrased)*
 
@@ -10,7 +10,7 @@
 
 ---
 
-## 18.1 Spec Debt Inventory and Prioritization
+## 21.1 Spec Debt Inventory and Prioritization
 
 - [ ] **SD-01: Document all spec-debt items as plan tasks with resolution paths**
   - **Description:** Audit `spec-debt.md` and `spec-gaps.md` comprehensively. For each active debt item, document: the specific spec section affected, the nature of the gap (missing detail, unvalidated claim, internal inconsistency), the downstream implementation impact (what cannot be built without resolution), and a proposed resolution path. Currently `spec-debt.md` has 2 active items (SD-02: benchmark targets lack empirical basis, SD-05: data ecosystem is thin) and `spec-gaps.md` has all 14 gaps resolved. This task captures the full inventory and identifies any additional gaps discovered during implementation work across all streams.
@@ -30,7 +30,7 @@
 
 ---
 
-## 18.2 Spec Amendment Proposals
+## 21.2 Spec Amendment Proposals
 
 - [ ] **SD-03: Create spec amendment proposals for each gap**
   - **Description:** For each active spec gap identified in SD-01 and SD-02, write a formal amendment proposal. Each proposal follows a standard format: (1) **Gap ID and title** — reference to the original spec-debt or spec-gaps entry; (2) **Affected spec section** — exact file and line range; (3) **Current text** — the existing spec language (or absence thereof); (4) **Proposed text** — the amended language with concrete thresholds, definitions, or missing content; (5) **Rationale** — why this change is needed and what implementation it unblocks; (6) **Impact assessment** — what existing implementations (if any) would need updating. Proposals are written to `docs/spec-proposals/` and require Admiral review before any spec modification.
@@ -42,7 +42,7 @@
 
 ---
 
-## 18.3 Enforcement and Compliance Completeness
+## 21.3 Enforcement and Compliance Completeness
 
 - [ ] **SD-04: Standing Orders enforcement map completion**
   - **Description:** Ensure every Standing Order maps to at least one enforcement mechanism. Currently the enforcement map (`standing-orders-enforcement-map.md`) shows 8/16 SOs with hook enforcement and 8/16 advisory-only. The E3 target is 12/16. For each advisory-only SO, produce a proposal that either: (1) defines a hook that can partially enforce it (judgment-assisted), or (2) documents why the SO is inherently advisory with no deterministic enforcement possible, plus alternative monitoring strategies. Focus on the critical gap: SO-14 (Compliance, Ethics, Legal) is safety-tier with zero enforcement.
@@ -70,7 +70,7 @@
 
 ---
 
-## 18.4 Spec Versioning and Compliance
+## 21.4 Spec Versioning and Compliance
 
 - [ ] **SD-07: Spec version tracking**
   - **Description:** Implement a mechanism to track which spec version each implementation feature targets. As the spec evolves (currently at v0.10.0-alpha), implementations built against earlier spec versions may drift. Create a version tracking manifest that maps: (1) each implementation component (hook, agent, Brain feature, control plane module) to the spec version it was built against; (2) spec version changelog entries to the implementation changes they require; (3) a "spec compliance gap" indicator showing where implementation lags behind the current spec version.
@@ -98,7 +98,7 @@
 
 ---
 
-## 18.5 Spec Gap Proposals — Underspecified Areas
+## 21.5 Spec Gap Proposals — Underspecified Areas
 
 - [ ] **SD-10: Spec gap proposal — Fleet orchestration protocol details**
   - **Description:** The spec defines the Orchestrator role and its responsibilities (task decomposition, agent routing, coordination) but underspecifies the orchestration protocol itself. Missing details include: (1) how the Orchestrator selects which agent to assign a task to when multiple agents qualify; (2) how the Orchestrator handles agent unavailability (timeout, crash, context exhaustion); (3) the precise format and content of Orchestrator-to-agent task assignments beyond the Handoff Protocol; (4) how the Orchestrator tracks task dependencies and parallelism constraints; (5) how the Orchestrator manages its own context window when coordinating many agents. Write a spec amendment proposal that provides concrete protocol details for fleet orchestration.

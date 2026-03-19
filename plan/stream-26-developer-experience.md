@@ -1,4 +1,4 @@
-# Stream 23: Developer Experience — First-Class Contributor Journey
+# Stream 26: Developer Experience — First-Class Contributor Journey
 
 > *"The best documentation is a working example. The best onboarding is a single command. The best architecture is one that makes the wrong thing hard and the right thing obvious." — Kelsey Hightower (paraphrased)*
 
@@ -8,7 +8,7 @@
 
 ---
 
-## 23.1 Environment Setup
+## 26.1 Environment Setup
 
 - [ ] **DX-01: Dev container configuration**
   - **Description:** Create a VS Code dev container (`.devcontainer/`) with all dependencies pre-installed: Node.js (matching control plane requirements), jq, shellcheck, shfmt, biome, bash 5+, curl, and git. Include the recommended VS Code extensions (ShellCheck, Biome, Markdown All in One). The container should start with all dependencies available and no additional setup required. Include a `postCreateCommand` that runs `npm install` in the control plane directory. Test that the full test suite passes inside the container.
@@ -36,7 +36,7 @@
 
 ---
 
-## 23.2 Development Workflow
+## 26.2 Development Workflow
 
 - [ ] **DX-04: Hot reload for control plane**
   - **Description:** Auto-restart the control plane server on file changes during development. Use `node --watch` (Node.js 18+) or a lightweight file watcher that monitors `control-plane/src/` for `.ts` file changes and automatically restarts the server. The restart should preserve the event log and state — only the server process restarts, not the data. Include a `make dev` target that starts the server in watch mode with appropriate environment variables for development (debug logging, relaxed rate limits). Log a clear message on each restart showing what file triggered it.
@@ -72,7 +72,7 @@
 
 ---
 
-## 23.3 Documentation and Guides
+## 26.3 Documentation and Guides
 
 - [ ] **DX-03: Interactive development guide**
   - **Description:** Create a step-by-step walkthrough for common development tasks: (1) adding a new hook (from scaffold to CI), (2) adding a new control plane API endpoint, (3) adding a new Standing Order, (4) adding a new brain entry type, (5) modifying the quarantine pipeline, (6) adding a new attack corpus entry. Each walkthrough includes: prerequisites, step-by-step commands, expected output at each step, and verification commands to confirm the task was completed correctly. The guide should be usable by a developer who has never seen the codebase.
@@ -108,7 +108,7 @@
 
 ---
 
-## 23.4 Contributor Onboarding
+## 26.4 Contributor Onboarding
 
 - [ ] **DX-12: Good first issues catalog**
   - **Description:** Tag and maintain a list of approachable issues for new contributors. Identify at least 15 issues across the codebase that meet the "good first issue" criteria: (1) well-scoped (completable in a single PR), (2) self-contained (does not require understanding the full architecture), (3) has clear acceptance criteria, (4) touches only one component (hooks OR control plane OR docs, not multiple), (5) has a suggested approach or starting point. Categorize issues by component and difficulty (beginner, intermediate). Include a contributing guide that explains how to pick an issue, set up the development environment, make changes, run tests, and submit a PR.
@@ -120,7 +120,7 @@
 
 ---
 
-## Stream 23 Summary
+## Stream 26 Summary
 
 | Subsection | Items | Total Size |
 |---|---|---|

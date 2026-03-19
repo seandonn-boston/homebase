@@ -1,4 +1,4 @@
-# Stream 19: Intent Engineering — Beyond Prompt Engineering
+# Stream 22: Intent Engineering — Beyond Prompt Engineering
 
 > *"The measure of intent engineering is not whether the instruction is long. It is whether the agent, encountering an unexpected situation halfway through execution, has enough context to either make the right call or know that it cannot." — Admiral Framework, intent-engineering.md*
 
@@ -8,7 +8,7 @@
 
 ---
 
-## 19.1 Intent Capture
+## 22.1 Intent Capture
 
 - [ ] **IE-01: Intent capture schema**
   - **Description:** Define the structured format for capturing user intent based on the six elements from the intent engineering extension: (1) **Goal** — the outcome, not the steps; (2) **Priority** — how this ranks against competing work; (3) **Constraints** — what must not happen; (4) **Failure modes** — what to do when things go wrong; (5) **Judgment boundaries** — where the agent's authority ends and the human's begins; (6) **Values** — principles guiding ambiguous decisions. The schema must be: machine-parseable (JSON schema for validation and tooling), human-readable (text rendering for agent prompts and Admiral review), and progressively completable (not all six elements are required for every intent, but missing elements are flagged). Include validation rules: a goal is always required; constraints and failure modes are required for Propose-tier and above; judgment boundaries are required for Escalate-tier.
@@ -36,7 +36,7 @@
 
 ---
 
-## 19.2 Intent Tracking and Routing
+## 22.2 Intent Tracking and Routing
 
 - [ ] **IE-04: Intent tracking dashboard**
   - **Description:** Build a view that tracks intent progress from capture through completion. The dashboard shows: (1) **Active intents** — all in-progress intents with their current status (captured, decomposed, assigned, in-progress, blocked, completed); (2) **Sub-intent progress** — for decomposed intents, show the task graph with per-sub-intent status; (3) **Intent health** — flag intents where sub-intents are blocked, where constraints are being violated, or where the work is drifting from the original intent; (4) **Intent history** — completed intents with outcomes, allowing the Admiral to review whether the original intent was actually fulfilled; (5) **Constraint violation alerts** — real-time alerts when agent work appears to violate an intent's stated constraints or cross a judgment boundary. The dashboard integrates with the control plane (if available) or operates as a standalone CLI view.
@@ -56,7 +56,7 @@
 
 ---
 
-## 19.3 Intent Learning and Templates
+## 22.3 Intent Learning and Templates
 
 - [ ] **IE-06: Intent history and learning**
   - **Description:** Record intent patterns to improve future intent capture and routing. Implement: (1) **Intent outcome recording** — when an intent completes, record the full lifecycle: original intent, decomposition, agent assignments, execution path, and final outcome (success/partial/failure with reasons); (2) **Pattern extraction** — identify recurring intent patterns (e.g., "migration intents always need backward compatibility constraints," "security intents always need human judgment boundaries for risk acceptance"); (3) **Routing effectiveness tracking** — did the agent-to-intent mapping produce good outcomes? Track which mappings led to successful completions vs. rework; (4) **Brain integration** — store intent patterns and routing effectiveness as Brain entries (category: pattern) so they inform future intent processing. Over time, the system learns which intents succeed and which fail, and why.

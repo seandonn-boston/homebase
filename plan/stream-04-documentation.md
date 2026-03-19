@@ -84,7 +84,7 @@
   - **Depends on:** —
 
 - [ ] **D-13: Architecture decision record for fleet orchestration approach**
-  - **Description:** Document the chosen approach for fleet orchestration: how agents are discovered, how tasks are routed to agents, how parallel execution is managed, and how agent handoffs work. Compare alternatives: centralized dispatcher vs peer-to-peer vs hybrid. Document why the chosen approach suits the Admiral model (71 defined agent roles, brain-level tiering, Standing Order governance). This ADR is foundational for Stream 7 (spec implementation) fleet work.
+  - **Description:** Document the chosen approach for fleet orchestration: how agents are discovered, how tasks are routed to agents, how parallel execution is managed, and how agent handoffs work. Compare alternatives: centralized dispatcher vs peer-to-peer vs hybrid. Document why the chosen approach suits the Admiral model (71 defined agent roles, brain-level tiering, Standing Order governance). This ADR is foundational for Streams 7-10 (spec implementation) fleet work.
   - **Done when:** `docs/adr/009-fleet-orchestration.md` exists with Status, Context, Decision, Consequences. Alternatives section covers at least 3 approaches.
   - **Files:** `docs/adr/009-fleet-orchestration.md` (new)
   - **Size:** M (1-3 hours)

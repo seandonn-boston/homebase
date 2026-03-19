@@ -1,4 +1,4 @@
-# Stream 30: Thesis Validation — Proving the Admiral Framework Works
+# Stream 33: Thesis Validation — Proving the Admiral Framework Works
 
 > *"Admiral is what makes it safe to run AI agents as a workforce instead of using them as tools." — Admiral Thesis*
 
@@ -8,7 +8,7 @@
 
 ---
 
-## 30.1 Metrics & Measurement Design
+## 33.1 Metrics & Measurement Design
 
 - [ ] **TV-01: Thesis metrics definition — Define measurable metrics that prove/disprove the thesis**
   - **Description:** Define the specific, measurable metrics that constitute evidence for or against the Admiral thesis. The thesis has two claims: (1) "deterministic enforcement beats advisory guidance" — measurable by comparing outcomes with hooks enabled vs. hooks advisory-only, (2) "AI agents can be governed as a workforce" — measurable by tracking whether governance enables sustained, multi-session, multi-agent work that would be chaotic without it. For each claim, define: the metric, the measurement method, the threshold that constitutes evidence for the claim, and the threshold that would disprove it. Include null hypothesis definitions so the validation is scientifically rigorous.
@@ -28,7 +28,7 @@
 
 ---
 
-## 30.2 Case Studies & Qualitative Evidence
+## 33.2 Case Studies & Qualitative Evidence
 
 - [ ] **TV-03: Before/after case studies — Document cases where enforcement prevented issues**
   - **Description:** Create a case study framework for documenting real instances where enforcement caught problems that advisory guidance would have missed. Each case study captures: (1) the task and context, (2) what the agent attempted, (3) which hook fired and why, (4) what would have happened without enforcement (counterfactual analysis), (5) the estimated impact of the prevented issue (severity, blast radius, remediation cost). Case studies should include both true positives (enforcement correctly prevented a problem) and false positives (enforcement blocked a legitimate action). The ratio between true and false positives is itself thesis evidence.
@@ -48,7 +48,7 @@
 
 ---
 
-## 30.3 Developer Experience & Cost Analysis
+## 33.3 Developer Experience & Cost Analysis
 
 - [ ] **TV-05: Developer experience survey framework — Measure satisfaction with governance**
   - **Description:** Create a lightweight framework for measuring developer (Admiral user) satisfaction with governance. The framework defines: (1) survey questions covering friction, trust, productivity impact, and perceived value, (2) a scoring system (Net Promoter Score adapted for governance: "How likely are you to recommend this governance approach?"), (3) qualitative feedback categories (what helps, what hinders, what's missing), (4) administration cadence (quarterly), (5) anonymization for honest feedback. The survey should be short (< 5 minutes) to maximize completion rate. Results are stored and trended.
@@ -84,7 +84,7 @@
 
 ---
 
-## 30.4 Publication & Community
+## 33.4 Publication & Community
 
 - [ ] **TV-09: Academic paper outline — Outline for a research paper documenting thesis and evidence**
   - **Description:** Create a structured outline for an academic-style paper documenting the Admiral thesis, methodology, and evidence. Sections: (1) Abstract — the thesis in one paragraph, (2) Introduction — the third category problem (agents are neither code nor humans), (3) Related Work — existing agent governance approaches and their limitations, (4) The Admiral Framework — architecture, enforcement spectrum, standing orders, (5) Methodology — how we measured (metrics, A/B framework, case studies), (6) Results — what we found (quantitative and qualitative), (7) Discussion — implications, limitations, threats to validity, (8) Future Work — what remains to be proven. The outline should be detailed enough that sections can be drafted independently. Include placeholder references for key citations (Kubernetes governance parallels, LLM behavioral research, software engineering process studies).

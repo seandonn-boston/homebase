@@ -1,4 +1,4 @@
-# Stream 28: Quality Assurance System — Automated Quality at Scale
+# Stream 31: Quality Assurance System — Automated Quality at Scale
 
 > *"Self-healing quality loops are more effective than multi-pass review. Reserve human-judgment review for what machines cannot check: logic correctness, design quality, architectural alignment." — Admiral Spec, Part 7*
 
@@ -8,7 +8,7 @@
 
 ---
 
-## 28.1 Automated Review & Test Generation
+## 31.1 Automated Review & Test Generation
 
 - [ ] **QA-01: Code review automation — Automated code review checks**
   - **Description:** Implement an automated code review system that runs on every code change and checks for: (1) naming convention compliance (variables, functions, files match Ground Truth conventions), (2) cyclomatic complexity violations (functions exceeding configurable threshold), (3) test presence (every new source file has a corresponding test file, every bug fix commit includes a test), (4) import hygiene (no circular dependencies, no banned imports), (5) documentation presence (public functions have doc comments), (6) file size limits (files exceeding line count threshold trigger split recommendations). The review produces a structured report matching the QA Issue Report template from Part 7 (ISSUE, SEVERITY, LOCATION, EXPECTED, ACTUAL, CONFIDENCE).
@@ -28,7 +28,7 @@
 
 ---
 
-## 28.2 Quality Pipeline
+## 31.2 Quality Pipeline
 
 - [ ] **QA-03: Quality gate pipeline — Multi-stage quality pipeline**
   - **Description:** Implement a multi-stage quality pipeline that runs checks in dependency order: (1) **Lint** — ShellCheck for `.sh`, Biome for `.ts`, (2) **Type-check** — `tsc --noEmit` for TypeScript, (3) **Test** — run test suites with failure reporting, (4) **Coverage** — check coverage thresholds (fail if below minimum), (5) **Security** — scan for secrets, known vulnerabilities, unsafe patterns, (6) **Review** — run automated code review (QA-01). Each stage produces a structured pass/fail result. The pipeline stops on first Blocker-severity failure but continues through Minor/Cosmetic issues to collect the full report. The pipeline implements the self-healing loop from Part 7: failures are fed back to the agent for fixing before proceeding.
@@ -48,7 +48,7 @@
 
 ---
 
-## 28.3 Quality Intelligence
+## 31.3 Quality Intelligence
 
 - [ ] **QA-05: Quality trend analysis — Track trends and alert on decline**
   - **Description:** Implement trend analysis over the collected quality metrics (QA-04). The analyzer: (1) computes moving averages for each metric over configurable windows (7-day, 30-day), (2) detects declining trends (3+ consecutive measurement periods with declining quality), (3) identifies modules with the steepest quality decline, (4) generates alerts when a metric drops below a threshold or declines by more than 10% over a window, (5) produces a trend report showing quality trajectory per module. Alerts are structured and actionable: they specify which metric declined, in which module, by how much, and link to the specific commits that introduced the decline.
@@ -76,7 +76,7 @@
 
 ---
 
-## 28.4 Quality Scoring & Regression Prevention
+## 31.4 Quality Scoring & Regression Prevention
 
 - [ ] **QA-08: Review checklist automation — Generate checklists based on change risk profile**
   - **Description:** Implement automatic review checklist generation based on the files changed and their risk profile. The generator: (1) classifies changed files by risk (hooks = high, config = high, tests = low, docs = low), (2) generates a checklist appropriate to the risk level (high-risk changes get security review, backwards compatibility check, performance impact assessment; low-risk changes get basic correctness check), (3) includes domain-specific items (database changes get migration reversibility check, API changes get contract compliance check), (4) pre-fills items that can be verified automatically (lint passes, tests pass, coverage maintained). The checklist is output as a markdown checklist suitable for PR descriptions.

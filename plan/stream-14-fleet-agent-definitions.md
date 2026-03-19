@@ -1,4 +1,4 @@
-# Stream 11: Fleet Agent Definitions — Implementing All 71 Agent Roles
+# Stream 14: Fleet Agent Definitions — Implementing All 71 Agent Roles
 
 > *"The boring agents win." — Admiral Spec, Part 4*
 

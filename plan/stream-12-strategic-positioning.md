@@ -1,4 +1,4 @@
-# Stream 9: Strategic Positioning & Standards Alignment
+# Stream 12: Strategic Positioning & Standards Alignment
 
 > *"If you want to be adopted by enterprises, speak their language. Map your capabilities to the frameworks they already use." — Enterprise adoption pattern*
 

@@ -1,4 +1,4 @@
-# Stream 26: Standing Orders Complete Implementation — All 16 SOs Enforced
+# Stream 29: Standing Orders Complete Implementation — All 16 SOs Enforced
 
 > *"Rules that exist only in documentation are suggestions. Rules that exist in code are laws." — Admiral Spec, Part 3*
 
@@ -8,7 +8,7 @@
 
 ---
 
-## 26.1 Identity & Scope Enforcement
+## 29.1 Identity & Scope Enforcement
 
 - [ ] **SO-01: Identity Discipline enforcement — Implement identity validation hook**
   - **Description:** Implement a PreToolUse hook that validates agent identity consistency throughout a session. The hook checks that the agent's declared role matches its session-start identity and that outputs do not claim capabilities outside the declared role. If identity validation already exists in Stream 1 (S-01), reference and extend it rather than duplicating. The hook should detect role drift patterns: an agent saying "I can also help with..." when the task is outside its scope, or an agent producing output tagged with a different agent role.
@@ -36,7 +36,7 @@
 
 ---
 
-## 26.2 Communication & Honesty Enforcement
+## 29.2 Communication & Honesty Enforcement
 
 - [ ] **SO-02: Output Routing enforcement — Validate agent output destinations**
   - **Description:** Implement a PostToolUse hook that validates every agent output has a declared destination. Per SO-02, every output must include "Output goes to: [recipient]" with the reason. The hook scans agent output for the routing declaration. If missing, the output is held and the agent is prompted to add routing. If the declared destination is not a valid agent role or known recipient, the hook flags it for Orchestrator review. This prevents orphaned outputs that no agent processes.
@@ -64,7 +64,7 @@
 
 ---
 
-## 26.3 Authority & Recovery Enforcement
+## 29.3 Authority & Recovery Enforcement
 
 - [ ] **SO-05: Decision Authority enforcement — Validate authority tiers before actions**
   - **Description:** Implement a PreToolUse hook that evaluates the decision authority tier required for the current action and validates the agent has sufficient authority. The hook maintains a classification of action types to authority tiers: (1) Enforced-tier actions are handled by hooks (no agent decision), (2) Autonomous-tier actions are logged, (3) Propose-tier actions require the agent to have submitted a proposal with rationale and alternatives, (4) Escalate-tier actions must be stopped and routed to the Admiral. The hook checks whether the agent is attempting to execute a Propose-tier or Escalate-tier action without the required approval workflow.
@@ -92,7 +92,7 @@
 
 ---
 
-## 26.4 Quality & Safety Enforcement
+## 29.4 Quality & Safety Enforcement
 
 - [ ] **SO-08: Quality Standards enforcement — Enforce minimum quality on agent outputs**
   - **Description:** Implement a PostToolUse hook that enforces quality gates on agent outputs before they are marked complete. The hook verifies: (1) automated checks have been run (type checker, linter, tests) and passed, (2) the agent has not marked a task complete with failing quality gates, (3) quality gates have not been disabled or bypassed. The hook cross-references the tool use trace for evidence of quality check execution. If an agent attempts to declare completion without running required checks, the hook blocks the completion and lists the checks that must pass first.
@@ -120,7 +120,7 @@
 
 ---
 
-## 26.5 Bias, Compliance & Protocol Governance Enforcement
+## 29.5 Bias, Compliance & Protocol Governance Enforcement
 
 - [ ] **SO-13: Bias Awareness enforcement — Implement bias detection in agent outputs**
   - **Description:** Implement a PostToolUse hook that detects common LLM bias patterns in agent outputs: (1) sycophantic drift (declining finding counts, softening language over session), (2) confidence uniformity (all claims presented with equal confidence, no uncertainty labels), (3) missing disconfirming evidence (recommendations without "what would make this wrong?" analysis), (4) unattributed RAG blending (retrieved facts mixed with generated reasoning without clear attribution), (5) premature convergence (first solution adopted without exploring alternatives for critical decisions). The hook tracks patterns across the session, not just individual outputs.
@@ -156,7 +156,7 @@
 
 ---
 
-## 26.6 Enforcement Completeness
+## 29.6 Enforcement Completeness
 
 - [ ] **SO-17: Standing Orders enforcement completeness report**
   - **Description:** Create an automated report that measures enforcement coverage across all 16 Standing Orders. The report: (1) maps each SO to its enforcement mechanism(s) (hook, CI check, validator), (2) reports enforcement type (hard-block, soft-warning, advisory-only, none), (3) calculates overall enforcement coverage percentage, (4) identifies SOs with no enforcement (the governance gap), (5) tracks enforcement coverage over time (trend). The report should be runnable as a standalone script and integrated into CI. It produces both a human-readable summary and a machine-parseable JSON output for the control plane dashboard.

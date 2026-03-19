@@ -1,4 +1,4 @@
-# Stream 7A: Missing Hooks & Fleet Orchestration (Spec Parts 3)
+# Stream 7: Missing Hooks & Fleet Orchestration (Spec Parts 3)
 
 > *"A specification without implementation is a wish list." — The Admiral Philosophy*
 

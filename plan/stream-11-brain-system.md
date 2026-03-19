@@ -1,4 +1,4 @@
-# Stream 8: Brain Knowledge System — From B1 to B3
+# Stream 11: Brain Knowledge System — From B1 to B3
 
 > *"Memory makes intelligence. Without persistent knowledge, every session starts from zero — the antithesis of institutional learning." — Admiral Framework Thesis*
 
@@ -8,17 +8,17 @@
 
 ---
 
-## Stream 8: Brain Knowledge System — From B1 to B3
+## Stream 11: Brain Knowledge System — From B1 to B3
 
 > *"Memory makes intelligence. Without persistent knowledge, every session starts from zero — the antithesis of institutional learning." — Admiral Framework Thesis*
 
 **Current state:** B1 file-based brain with 9 JSON entries across 2 projects (`homebase`, `traced-demo`), manual creation only via `admiral/bin/brain_record`. Four CLI utilities exist (`brain_record`, `brain_query`, `brain_retrieve`, `brain_audit`) — all grep/jq-based. `brain_context_router.sh` hook detects Propose/Escalate decisions made without a preceding `brain_query` (advisory only). No automatic entry creation from hooks. No demand signal tracking. No contradiction detection. B2 (SQLite) and B3 (Production/MCP) not started. Graduation criteria defined in spec but not measured.
 
-**Dependencies:** B1 completion is prerequisite to B2. B2 graduation is prerequisite to B3. Quarantine pipeline (Stream 4 / SD-04) resolved — available for B-18 integration. Control plane (`control-plane/src/server.ts`) exists for B-21 dashboard integration.
+**Dependencies:** B1 completion is prerequisite to B2. B2 graduation is prerequisite to B3. Quarantine pipeline (Stream 21 / SD-04) resolved — available for B-18 integration. Control plane (`control-plane/src/server.ts`) exists for B-21 dashboard integration.
 
 ---
 
-### 8.1 B1 Completion (File-Based Brain)
+### 11.1 B1 Completion (File-Based Brain)
 
 - [ ] **B-01: Automatic brain entry creation from hooks**
   - **Description:** Hooks auto-record significant decisions (hard-blocks, escalations, new patterns) to `.brain/`. Create a shared `brain_writer.sh` library that hooks call to emit entries. Wire into at least `prohibitions_enforcer.sh` (records hard-block events), `loop_detector.sh` (records detected loops), and `scope_boundary_guard.sh` (records boundary violations).
@@ -64,7 +64,7 @@
 
 ---
 
-### 8.2 B2 Implementation (SQLite Brain)
+### 11.2 B2 Implementation (SQLite Brain)
 
 - [ ] **B-07: SQLite schema creation**
   - **Description:** Create SQLite schema matching level2-spec.md: `entries` table (id, project, category, title, content, source_agent, created_at, updated_at, superseded_by), `links` table (source_id, target_id, link_type, created_at), `embeddings` table (entry_id, vector BLOB, model_version), `demand_signals` table (query, project, timestamp, agent). Include versioned migration system so schema can evolve without data loss.
@@ -103,7 +103,7 @@
 
 ---
 
-### 8.3 B3 Implementation (Production Brain)
+### 11.3 B3 Implementation (Production Brain)
 
 - [ ] **B-12: MCP server scaffold**
   - **Description:** Create MCP (Model Context Protocol) server exposing 8 tool endpoints: `brain_record`, `brain_query`, `brain_retrieve`, `brain_strengthen` (increase entry confidence), `brain_supersede` (mark entry as replaced), `brain_status` (health and stats), `brain_audit` (compliance reporting), `brain_purge` (controlled deletion with audit trail). Server should start, register tools, handle basic request/response lifecycle.
@@ -170,7 +170,7 @@
 
 ---
 
-### 8.4 Brain Graduation Criteria
+### 11.4 Brain Graduation Criteria
 
 - [ ] **B-21: Graduation measurement system**
   - **Description:** Automated measurement of spec-defined graduation criteria for each brain level. B1-to-B2 graduation: hit rate >= 85% (queries that return useful results), precision >= 90% (returned results are relevant), entry count >= 50. B2-to-B3 graduation: reuse rate >= 30% (entries queried more than once), >= 5% improvement in agent task completion over baseline, semantic search precision >= 80%. Metrics collected per-session, aggregated over rolling 7-day window. Dashboard endpoint in control plane shows graduation readiness with per-criterion pass/fail.
@@ -181,7 +181,7 @@
 
 ---
 
-### Stream 8 Summary
+### Stream 11 Summary
 
 | Phase | Tasks | Sizes | Estimated Effort |
 |-------|-------|-------|-----------------|
@@ -195,7 +195,7 @@
 
 **Parallelism opportunities:** Within B1, B-03 (demand signals) and B-04 (contradiction scan) are independent. Within B3, B-14/B-15 (identity/access) are independent of B-16/B-17 (retrieval/graph). B-18 (quarantine integration) depends on B-12 (MCP scaffold) but not on B-14/B-15.
 
-### 8.5 Brain Excellence
+### 11.5 Brain Excellence
 
 - [ ] **B-22: Brain entry versioning** — Track versions with supersession chain. Done when: Version chain queryable, rollback supported. Files: `admiral/brain/versioning.sh` (new). Size: M
 
@@ -213,7 +213,7 @@
 
 ---
 
-### Updated Stream 8 Summary
+### Updated Stream 11 Summary
 
 | Phase | Tasks | Sizes |
 |---|---|---|

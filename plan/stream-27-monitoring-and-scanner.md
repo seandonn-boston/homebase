@@ -1,4 +1,4 @@
-# Stream 24: Monitoring & Scanner — Automated Codebase Health
+# Stream 27: Monitoring & Scanner — Automated Codebase Health
 
 > *"What gets measured gets managed. What gets measured continuously gets managed proactively." — Adaptation of Peter Drucker*
 
@@ -8,7 +8,7 @@
 
 ---
 
-## 24.1 Core Scanner
+## 27.1 Core Scanner
 
 - [ ] **MON-01: Scanner implementation**
   - **Description:** Implement the scanner from `aiStrat/monitor/scanner-spec.md`. The scanner supports five scan types: `full` (daily, all sources), `models` (model releases and capabilities), `patterns` (emerging agent patterns), `releases` (framework/tool releases), and `discover` (new repos, trend detection). Input sources include model providers, agent frameworks, research, community, and regulatory categories. The scanner must: (1) iterate through configured sources per scan type, (2) fetch updates since last scan (using state tracking), (3) classify findings by priority (HIGH/MEDIUM/LOW), (4) generate structured output for digest consumption, (5) create GitHub issues automatically for HIGH priority findings. Respect the security constraints: read-only external access, untrusted content handling, `--body-file` for issue creation.
@@ -28,7 +28,7 @@
 
 ---
 
-## 24.2 Reporting
+## 27.2 Reporting
 
 - [ ] **MON-02: Daily digest generation**
   - **Description:** Generate automated daily digests of codebase health metrics and scanner findings. Digest format follows `monitor/digest-format.md`. Each digest includes: scan date, sources checked, findings by priority, new releases detected, model updates, pattern shifts, and a summary of codebase health metrics (test count, coverage, hook count, Standing Order compliance). Digests are stored as markdown files at `monitor/digests/YYYY-MM-DD.md`. The daily digest runs as part of the `full` scan type (daily at 07:00 UTC) and can also be triggered manually.
@@ -48,7 +48,7 @@
 
 ---
 
-## 24.3 Extensibility
+## 27.3 Extensibility
 
 - [ ] **MON-05: Custom scan rules**
   - **Description:** Allow defining custom scan rules for project-specific checks. Custom rules are defined as JSON or YAML files in a `monitor/rules/` directory, each specifying: rule ID, description, scan type (which scan triggers this rule), check command (shell command that performs the check), expected output pattern (regex or exit code), severity (HIGH/MEDIUM/LOW), and remediation guidance. The scanner loads custom rules alongside built-in rules and includes their results in digests. Provide a `make scan-rule <name>` scaffold command that generates a rule template. Validate rule files against a rule schema on load.
@@ -68,7 +68,7 @@
 
 ---
 
-## 24.4 Integration
+## 27.4 Integration
 
 - [ ] **MON-07: Scanner CI integration**
   - **Description:** Run the scanner as part of the CI pipeline, failing on critical findings. Add a CI workflow that executes a subset of scanner checks relevant to PR validation: (1) dependency vulnerability check (are new dependencies introducing known vulnerabilities?), (2) custom rule checks (do project-specific rules pass?), (3) handoff schema validation (do any modified handoff documents conform to v1.schema.json?). Full ecosystem scans (model releases, framework updates) run on schedule, not per-PR. CI integration should produce structured output that GitHub Actions can annotate on the PR.
@@ -104,7 +104,7 @@
 
 ---
 
-## Stream 24 Summary
+## Stream 27 Summary
 
 | Subsection | Items | Total Size |
 |---|---|---|

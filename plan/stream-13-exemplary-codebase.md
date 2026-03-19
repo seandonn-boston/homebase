@@ -1,4 +1,4 @@
-# Stream 10: Exemplary Codebase — Beyond 10/10
+# Stream 13: Exemplary Codebase — Beyond 10/10
 
 > *"The difference between a good codebase and a legendary one is that the legendary one anticipated the questions you haven't asked yet." — Engineering excellence*
 

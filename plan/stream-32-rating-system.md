@@ -1,4 +1,4 @@
-# Stream 29: Rating System Implementation — Measuring Excellence
+# Stream 32: Rating System Implementation — Measuring Excellence
 
 > *"The rating measures the system, not the model. A state-of-the-art model running without governance is ADM-5. A modest model under full Admiral governance with verified Human Judgment Gates can achieve ADM-2." — Admiral Rating System*
 
@@ -8,7 +8,7 @@
 
 ---
 
-## 29.1 Data Model & Calculation
+## 32.1 Data Model & Calculation
 
 - [ ] **RT-01: Rating system data model — Define dimensions, scales, and calculation formulas**
   - **Description:** Define the complete data model for the Admiral Rating System. This includes: (1) the 5 rating tiers (ADM-1 through ADM-5) with their criteria from the reference, (2) the 7 core automated evaluation dimensions per entity category (agents, fleets, platforms, models, workflows) from the reference tables, (3) the hard cap rules (first-pass quality <50% caps at ADM-4, etc.), (4) the Human Judgment Gate requirements per tier, (5) the Phase 1 metric thresholds that determine tier eligibility. The data model should be a JSON schema that tooling can validate against. Include the certification tier suffixes (-SA, -IA, no suffix).
@@ -28,7 +28,7 @@
 
 ---
 
-## 29.2 CI Integration & Badges
+## 32.2 CI Integration & Badges
 
 - [ ] **RT-03: Rating CI integration — Calculate and report ratings in CI**
   - **Description:** Integrate the rating calculation into CI so that ratings are computed on every significant change and tracked over time. The CI job: (1) runs the rating calculation script (RT-02), (2) compares the result against the previous rating, (3) alerts if the rating would decrease (regression), (4) stores the rating result as a CI artifact for historical tracking, (5) posts a rating summary to PR comments showing current rating and impact of the change. The CI job should run on a schedule (weekly) for trend tracking and on-demand for PRs that modify governance-related files (hooks, standing orders, config).
@@ -48,7 +48,7 @@
 
 ---
 
-## 29.3 Historical Tracking & Trends
+## 32.3 Historical Tracking & Trends
 
 - [ ] **RT-05: Rating history tracking — Store historical ratings and generate trend charts**
   - **Description:** Implement a rating history system that stores every rating calculation result with timestamp and generates trend visualizations. The system: (1) stores rating results in a structured log (JSON Lines), (2) tracks per-dimension scores over time (not just the aggregate rating), (3) identifies the specific changes that caused rating transitions (which commit moved the rating from ADM-5 to ADM-4), (4) generates a trend summary showing rating trajectory over the last 30/60/90 days, (5) detects plateau patterns (rating stuck at the same level for extended periods) and suggests actions to break through. History is append-only and immutable — past ratings cannot be retroactively modified.
@@ -68,7 +68,7 @@
 
 ---
 
-## 29.4 Module-Level & Comparative Ratings
+## 32.4 Module-Level & Comparative Ratings
 
 - [ ] **RT-07: Per-module ratings — Calculate ratings at the module level**
   - **Description:** Extend the rating system to calculate ratings at the module/directory level, not just project level. This reveals quality variance across the codebase: the hooks directory might be ADM-3 while the control plane is ADM-4. Per-module ratings use the same dimensions but scoped to the module's files: (1) test coverage for that module, (2) complexity within that module, (3) enforcement coverage for hooks in that module's domain, (4) documentation completeness for that module. Module ratings roll up to the project rating (project rating cannot exceed the lowest module rating for critical modules).
@@ -88,7 +88,7 @@
 
 ---
 
-## 29.5 Dashboard & Alerts
+## 32.5 Dashboard & Alerts
 
 - [ ] **RT-09: Rating dashboard — Display ratings in control plane with visual indicators**
   - **Description:** Add a rating dashboard to the control plane that displays: (1) current overall rating with tier badge and color coding, (2) per-dimension scores as a radar chart or bar chart, (3) rating history trend line, (4) per-module rating heatmap (green/yellow/red), (5) active hard caps and their impact, (6) Human Judgment Gate status (passed/pending/failed), (7) next-tier requirements (what must improve to reach the next rating). The dashboard is the single place where governance health is visible at a glance.

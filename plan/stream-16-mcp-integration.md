@@ -1,4 +1,4 @@
-# Stream 13: MCP Integration — Model Context Protocol Implementation
+# Stream 16: MCP Integration — Model Context Protocol Implementation
 
 > *"MCP connects agents to tools. USB-C for AI." — Admiral Spec, Part 4*
 
@@ -75,15 +75,15 @@
   - **Files:** `mcp-server/src/tools/agent-registry.ts` (new), `mcp-server/src/tools/agent-registry.test.ts` (new)
   - **Size:** M
   - **Spec ref:** Part 4 — Tool & Capability Registry
-  - **Depends on:** Stream 11 F-13 (agent capability registry)
+  - **Depends on:** Stream 14 F-13 (agent capability registry)
 
 - [ ] **M-03c: Task routing tool**
-  - **Description:** Implement `task_route` MCP tool — given a task description, returns the recommended agent assignment using the routing engine (Stream 12, O-01). This allows any agent to suggest routing for discovered work without being the Orchestrator. The tool returns the routing decision (agent, confidence, fallback) but does not execute the assignment — only the Orchestrator can assign tasks.
+  - **Description:** Implement `task_route` MCP tool — given a task description, returns the recommended agent assignment using the routing engine (Stream 15, O-01). This allows any agent to suggest routing for discovered work without being the Orchestrator. The tool returns the routing decision (agent, confidence, fallback) but does not execute the assignment — only the Orchestrator can assign tasks.
   - **Done when:** `task_route` accepts task description and returns routing recommendation with confidence score. Tool is read-only (does not assign tasks). Routing uses the full routing chain (task-type -> file-ownership -> capability-match). Tool schema is defined.
   - **Files:** `mcp-server/src/tools/task-route.ts` (new), `mcp-server/src/tools/task-route.test.ts` (new)
   - **Size:** M
   - **Spec ref:** `fleet/routing-rules.md`, Part 4 — Routing Logic
-  - **Depends on:** Stream 12 O-01 (routing engine)
+  - **Depends on:** Stream 15 O-01 (routing engine)
 
 ---
 
@@ -171,7 +171,7 @@
 ## M-08: MCP Client SDK
 
 - [ ] **M-08: Lightweight MCP client SDK**
-  - **Description:** Create a lightweight client library for interacting with the Admiral MCP server. The SDK must handle: connection management (stdio and HTTP+SSE), tool discovery, request/response serialization, identity token injection (automatic inclusion in every request), error handling with typed errors, and retry logic (exponential backoff for transient failures). The SDK is used by platform adapters (Stream 14) and by agents that need programmatic access to Admiral tools.
+  - **Description:** Create a lightweight client library for interacting with the Admiral MCP server. The SDK must handle: connection management (stdio and HTTP+SSE), tool discovery, request/response serialization, identity token injection (automatic inclusion in every request), error handling with typed errors, and retry logic (exponential backoff for transient failures). The SDK is used by platform adapters (Stream 17) and by agents that need programmatic access to Admiral tools.
   - **Done when:** SDK connects to the Admiral MCP server via both transports. All tools are callable through typed wrapper functions. Identity tokens are automatically injected. Errors are typed and include recovery hints. Retry logic handles transient failures. SDK is published as a package consumable by platform adapters.
   - **Files:** `mcp-server/client/index.ts` (new), `mcp-server/client/types.ts` (new), `mcp-server/client/connection.ts` (new), `mcp-server/client/tools.ts` (new), `mcp-server/client/client.test.ts` (new)
   - **Size:** L

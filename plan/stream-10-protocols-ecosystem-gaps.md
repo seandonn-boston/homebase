@@ -1,4 +1,4 @@
-# Stream 7D: Protocols, Data Ecosystem & Additional Spec Gaps (Spec Parts 11, 12)
+# Stream 10: Protocols, Data Ecosystem & Additional Spec Gaps (Spec Parts 11, 12)
 
 > *"Protocols without tooling are suggestions. Tooling without protocols is chaos." — The Admiral Philosophy*
 
@@ -8,7 +8,7 @@ Protocols have partial implementation through standing orders but no tooling. Da
 
 ---
 
-### 7.9 Protocol Completeness (Part 11)
+### 10.1 Protocol Completeness (Part 11)
 
 The spec defines several operational protocols. Some have partial implementation through standing orders; none have tooling support.
 
@@ -35,7 +35,7 @@ The spec defines several operational protocols. Some have partial implementation
 
 ---
 
-### 7.10 Data Ecosystem (Part 12)
+### 10.2 Data Ecosystem (Part 12)
 
 The spec defines a data ecosystem where agents both consume and produce knowledge through the Brain. Current Brain implementation supports storage and retrieval but has no feedback loops or ecosystem agents.
 

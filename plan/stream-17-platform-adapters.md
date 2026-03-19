@@ -1,4 +1,4 @@
-# Stream 14: Platform Adapters — Beyond Claude Code
+# Stream 17: Platform Adapters — Beyond Claude Code
 
 > *"The Orchestrator speaks all protocols; specialists speak their native protocol." — Admiral Spec, Part 9*
 
@@ -81,11 +81,11 @@
 
 - [ ] **PA-06: VS Code extension scaffold**
   - **Description:** Create a VS Code extension that integrates with Admiral hooks and provides a basic Control Plane UI within the editor. The extension must: display fleet status in a sidebar panel (CP1/CP2 level), show agent identity and current task in the status bar, fire Admiral hooks when VS Code-based AI tools (GitHub Copilot, Continue, etc.) execute actions, and surface alerts as VS Code notifications. This is a scaffold — full feature parity with the web-based Control Plane is not required.
-  - **Done when:** VS Code extension installs, displays fleet status in a sidebar, shows agent identity in status bar, and surfaces CRITICAL/HIGH alerts as VS Code notifications. Extension communicates with the MCP server (Stream 13) for fleet data. Extension scaffold is documented for future feature development.
+  - **Done when:** VS Code extension installs, displays fleet status in a sidebar, shows agent identity in status bar, and surfaces CRITICAL/HIGH alerts as VS Code notifications. Extension communicates with the MCP server (Stream 16) for fleet data. Extension scaffold is documented for future feature development.
   - **Files:** `platform/vscode/extension.ts` (new), `platform/vscode/package.json` (new), `platform/vscode/sidebar.ts` (new), `platform/vscode/status-bar.ts` (new), `platform/vscode/README.md` (new)
   - **Size:** L
   - **Spec ref:** Fleet Control Plane extension — CP1/CP2
-  - **Depends on:** PA-01, Stream 13 M-01 (MCP server)
+  - **Depends on:** PA-01, Stream 16 M-01 (MCP server)
 
 ---
 
@@ -121,4 +121,4 @@
   - **Files:** `platform/context-injection/strategy.ts` (new), `platform/context-injection/budget.ts` (new), `platform/context-injection/strategy.test.ts` (new)
   - **Size:** M
   - **Spec ref:** `fleet/context-injection.md` — Context Budget Guidelines, `fleet/prompt-anatomy.md` — Assembly Order
-  - **Depends on:** PA-01, Stream 12 O-03a (context assembly)
+  - **Depends on:** PA-01, Stream 15 O-03a (context assembly)

@@ -1,4 +1,4 @@
-# Stream 17: Data Ecosystem — Knowledge That Grows
+# Stream 20: Data Ecosystem — Knowledge That Grows
 
 > *"The only sustainable competitive advantage is an organization's ability to learn faster than the competition." — Peter Senge*
 
@@ -8,7 +8,7 @@
 
 ---
 
-## 17.1 Knowledge Graph
+## 20.1 Knowledge Graph
 
 - [ ] **DE-01: Knowledge graph implementation**
   - **Description:** Implement the Brain entry link system that connects related knowledge entries into a navigable graph. Link types from the spec: `supports` (entry A reinforces entry B), `contradicts` (entry A conflicts with entry B), `supersedes` (entry A replaces entry B), `related_to` (entries share a topic), `derived_from` (entry A was produced from entry B), and `caused_by` (entry A was caused by event/decision B). The implementation must support: creating links with confidence scores, traversing links in both directions, multi-hop queries (e.g., "find all entries that support entries derived from entry X"), and link strength that adjusts based on outcome data. Store links in the existing Brain database schema with a new `entry_links` table.
@@ -20,7 +20,7 @@
 
 ---
 
-## 17.2 Knowledge Maintenance Agents
+## 20.2 Knowledge Maintenance Agents
 
 - [ ] **DE-02: Knowledge gardener agent**
   - **Description:** Implement an automated maintenance agent that keeps the Brain healthy. The gardener performs: (1) staleness detection — identify entries not accessed within the decay window (90 days default per spec) and flag them for review or archival; (2) contradiction detection — find entries linked with `contradicts` and surface them for resolution; (3) duplicate consolidation — identify semantically similar entries (cosine similarity > 0.95) that should be merged; (4) orphan detection — find entries with no links and no recent access that may be noise; (5) metadata hygiene — flag entries missing required metadata fields (category, tags, source_agent). The gardener runs on a configurable schedule and produces a maintenance report.
@@ -48,7 +48,7 @@
 
 ---
 
-## 17.3 Feedback Loops
+## 20.3 Feedback Loops
 
 - [ ] **DE-05: Feedback loop — code review outcomes to Brain**
   - **Description:** Implement the feedback loop that connects code review outcomes back to Brain entries. When a code pattern suggested by a Brain entry is accepted in review, strengthen the entry (increase usefulness score). When a Brain-suggested pattern is rejected in review, weaken the entry and record the rejection reason. This creates a closed loop: the Brain suggests patterns -> agents use them -> reviewers accept or reject -> the Brain learns which patterns work. Track the acceptance/rejection ratio per Brain entry over time. Entries with consistently high rejection rates should be flagged for supersession.
@@ -68,7 +68,7 @@
 
 ---
 
-## 17.4 Knowledge Quality and Access
+## 20.4 Knowledge Quality and Access
 
 - [ ] **DE-07: Knowledge quality metrics**
   - **Description:** Implement metrics that track Brain knowledge quality over time. Metrics: (1) entry freshness — distribution of entry ages and last-access times, percentage within/outside the 90-day decay window; (2) accuracy proxy — ratio of strengthened to weakened entries (entries that lead to good vs. bad outcomes); (3) usage frequency — how often entries are accessed via brain_query, distribution of access counts; (4) contradiction rate — percentage of entries involved in `contradicts` links; (5) coverage — which project areas have Brain entries vs. which are knowledge deserts; (6) link density — average links per entry, distribution of link types. Produce a periodic "Brain Health Report" summarizing all metrics with trends.

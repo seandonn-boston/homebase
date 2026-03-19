@@ -1,4 +1,4 @@
-# Stream 7B: Execution Patterns, Quality Gates & Operations (Spec Parts 5, 6, 7)
+# Stream 8: Execution Patterns, Quality Gates & Operations (Spec Parts 5, 6, 7)
 
 > *"Only tested implementation is truth." — The Admiral Philosophy*
 
@@ -8,7 +8,7 @@ Execution patterns (handoff, escalation, parallel), quality gates, and alerting 
 
 ---
 
-### 7.3 Execution Patterns (Part 5)
+### 8.1 Execution Patterns (Part 5)
 
 The spec defines three execution patterns — handoff, escalation, and parallel coordination. None are implemented. These patterns are how agents collaborate; without them, multi-agent work is just sequential single-agent work repeated.
 
@@ -35,7 +35,7 @@ The spec defines three execution patterns — handoff, escalation, and parallel 
 
 ---
 
-### 7.4 Quality Assurance Gates (Part 6)
+### 8.2 Quality Assurance Gates (Part 6)
 
 The spec defines SDLC quality automation — automated gates that prevent low-quality work from merging. Currently, quality is entirely advisory; nothing enforces it.
 
@@ -55,7 +55,7 @@ The spec defines SDLC quality automation — automated gates that prevent low-qu
 
 ---
 
-### 7.5 Operations & Alerting (Part 7)
+### 8.3 Operations & Alerting (Part 7)
 
 The control plane exists but operates as a closed system. Events are collected but not pushed externally. Health checks are minimal. Event storage is volatile.
 

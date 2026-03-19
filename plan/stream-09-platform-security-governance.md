@@ -1,4 +1,4 @@
-# Stream 7C: Platform Adapters, Security & Meta-Governance (Spec Parts 8, 9, 10)
+# Stream 9: Platform Adapters, Security & Meta-Governance (Spec Parts 8, 9, 10)
 
 > *"Defense in depth is not optional — it is the architecture." — The Admiral Philosophy*
 
@@ -8,7 +8,7 @@ Only Claude Code has an adapter. Security lacks data sensitivity and audit trail
 
 ---
 
-### 7.6 Platform Adapters (Part 8)
+### 9.1 Platform Adapters (Part 8)
 
 Currently only Claude Code has an adapter. The spec envisions platform-agnostic operation. Without a defined adapter interface, each new platform integration is built from scratch.
 
@@ -28,7 +28,7 @@ Currently only Claude Code has an adapter. The spec envisions platform-agnostic 
 
 ---
 
-### 7.7 Security Hardening (Part 9)
+### 9.2 Security Hardening (Part 9)
 
 Security infrastructure exists (zero-trust validator, prohibitions enforcer) but lacks data sensitivity handling and audit trails. The spec defines layered security; current implementation covers the outer layers only.
 
@@ -55,7 +55,7 @@ Security infrastructure exists (zero-trust validator, prohibitions enforcer) but
 
 ---
 
-### 7.8 Meta-Agent Governance (Part 10)
+### 9.3 Meta-Agent Governance (Part 10)
 
 The spec defines agents governing other agents — the meta-governance layer. This is entirely unimplemented. Without it, agent quality degrades silently because no one is watching the watchers.
 

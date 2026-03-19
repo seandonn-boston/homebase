@@ -1,4 +1,4 @@
-# Stream 15: Progressive Autonomy — Trust That Scales
+# Stream 18: Progressive Autonomy — Trust That Scales
 
 > *"Full autonomy is a destination, not a starting point." — Admiral Spec, Progressive Autonomy Extension*
 
@@ -77,7 +77,7 @@
   - **Files:** `fleet/autonomy/persistence.ts` (new), `fleet/autonomy/persistence.test.ts` (new)
   - **Size:** M
   - **Spec ref:** Progressive Autonomy Extension — Trust Decay
-  - **Depends on:** AU-01, Stream 13 M-02b (brain_record), Stream 13 M-02a (brain_query)
+  - **Depends on:** AU-01, Stream 16 M-02b (brain_record), Stream 16 M-02a (brain_query)
 
 ---
 
@@ -108,12 +108,12 @@
 ## AU-09: Trust-Aware Routing
 
 - [ ] **AU-09: Route sensitive tasks only to high-trust agents**
-  - **Description:** Integrate trust levels into the routing engine (Stream 12, O-01). When routing a task, the routing engine considers not just capability matching but also the agent's trust level for the relevant category. Sensitive tasks (security review, architecture decisions, production deployment) require minimum trust thresholds — a Stage 1 agent cannot receive a production deployment task even if it has the capability. The routing engine must: check trust level against task sensitivity, prefer higher-trust agents when multiple candidates exist, and escalate when no agent meets the trust threshold for a sensitive task.
+  - **Description:** Integrate trust levels into the routing engine (Stream 15, O-01). When routing a task, the routing engine considers not just capability matching but also the agent's trust level for the relevant category. Sensitive tasks (security review, architecture decisions, production deployment) require minimum trust thresholds — a Stage 1 agent cannot receive a production deployment task even if it has the capability. The routing engine must: check trust level against task sensitivity, prefer higher-trust agents when multiple candidates exist, and escalate when no agent meets the trust threshold for a sensitive task.
   - **Done when:** Routing engine checks trust levels when assigning tasks. Tasks with sensitivity annotations (configurable per task type) require minimum trust stages. Lower-trust agents receive lower-sensitivity tasks. No sensitive task routes to an agent below the trust threshold. Escalation fires when no qualifying agent exists. Unit tests verify trust-based routing for high and low sensitivity tasks.
   - **Files:** `fleet/autonomy/trust-routing.ts` (new), `fleet/autonomy/trust-routing.test.ts` (new)
   - **Size:** M
   - **Spec ref:** Progressive Autonomy Extension — The Autonomy Matrix (asymmetric trust per capability), Part 4 — Routing Logic
-  - **Depends on:** AU-01, Stream 12 O-01 (routing engine)
+  - **Depends on:** AU-01, Stream 15 O-01 (routing engine)
 
 ---
 

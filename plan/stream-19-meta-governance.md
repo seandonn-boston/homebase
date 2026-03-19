@@ -1,4 +1,4 @@
-# Stream 16: Meta-Governance — Agents Governing Agents
+# Stream 19: Meta-Governance — Agents Governing Agents
 
 > *"Quis custodiet ipsos custodes?" — Juvenal*
 
@@ -8,7 +8,7 @@
 
 ---
 
-## 16.1 Governance Agent Framework
+## 19.1 Governance Agent Framework
 
 - [ ] **MG-01: Governance agent framework**
   - **Description:** Design and implement the base class/template for governance agents (Sentinel, Arbiter, Compliance Monitor). Define the shared interface: event subscription, finding emission, intervention authority, audit trail production. Governance agents are distinct from fleet agents — they operate on the fleet's behavior, not on user tasks. The framework must enforce that governance agents cannot be assigned user work and cannot modify their own configuration.
@@ -20,7 +20,7 @@
 
 ---
 
-## 16.2 Core Governance Agents
+## 19.2 Core Governance Agents
 
 - [ ] **MG-02: Sentinel agent full implementation**
   - **Description:** Implement the Sentinel governance agent with four detection capabilities: (1) loop detection — identify agents repeating the same action pattern more than 3 times without progress, extending beyond what the existing `loop_detector` hook catches to include cross-session and multi-agent loops; (2) budget monitoring — track per-agent and per-task token consumption against budgets, detect burn rate anomalies; (3) scope drift detection — compare agent actions against their defined scope boundaries over time, detecting gradual drift that individual hook checks miss; (4) automatic intervention — when a violation is detected, execute the governance intervention protocol (MG-07). The Sentinel operates continuously during fleet sessions.
@@ -48,7 +48,7 @@
 
 ---
 
-## 16.3 Governance Infrastructure
+## 19.3 Governance Infrastructure
 
 - [ ] **MG-05: Governance event bus**
   - **Description:** Implement an event system for governance agents to communicate findings, subscribe to fleet events, and coordinate interventions. The event bus carries three event types: (1) fleet events — agent actions, tool calls, handoffs, escalations from the normal fleet operation; (2) governance findings — detection results from Sentinel, Arbiter, and Compliance Monitor; (3) intervention events — actions taken by governance agents (warnings issued, restrictions applied, agents suspended). The bus must support pub/sub, event filtering by type/agent/severity, and durable event storage for audit. Design for single-process operation initially (shared event log file) with a path to multi-process (IPC/message queue) at fleet scale.
@@ -76,7 +76,7 @@
 
 ---
 
-## 16.4 Governance Oversight and Metrics
+## 19.4 Governance Oversight and Metrics
 
 - [ ] **MG-08: Governance audit dashboard**
   - **Description:** Build a view (CLI and/or control plane integration) that displays all governance actions, interventions, and their outcomes. The dashboard surfaces: (1) active governance findings — current violations being tracked; (2) intervention history — what interventions were taken, on which agents, with what outcomes; (3) compliance scorecard — per-SO compliance scores from the Compliance Monitor; (4) governance agent health — are governance agents themselves running, responsive, and producing findings; (5) false positive tracking — interventions that were reversed or overridden by the Admiral, indicating the governance rules need tuning.
@@ -95,7 +95,7 @@
   - **Depends on:** MG-01, MG-02, MG-06
 
 - [ ] **MG-10: Governance metrics and KPIs**
-  - **Description:** Define and implement metrics that track governance effectiveness. Key metrics: (1) intervention rate — how often governance agents intervene, trending over time; (2) false positive rate — interventions reversed or overridden by Admiral / total interventions; (3) detection latency — time from violation occurrence to governance detection; (4) resolution time — time from detection to resolution (intervention or Admiral decision); (5) compliance score trend — per-SO compliance over time; (6) governance overhead — what percentage of fleet resources are consumed by governance agents themselves. Metrics feed into the Data Ecosystem (Stream 17) as operational data. Establish baseline targets and track improvement.
+  - **Description:** Define and implement metrics that track governance effectiveness. Key metrics: (1) intervention rate — how often governance agents intervene, trending over time; (2) false positive rate — interventions reversed or overridden by Admiral / total interventions; (3) detection latency — time from violation occurrence to governance detection; (4) resolution time — time from detection to resolution (intervention or Admiral decision); (5) compliance score trend — per-SO compliance over time; (6) governance overhead — what percentage of fleet resources are consumed by governance agents themselves. Metrics feed into the Data Ecosystem (Stream 20) as operational data. Establish baseline targets and track improvement.
   - **Done when:** All six metrics are computed from governance event data. Metrics are persisted and trend-trackable across sessions. Baseline targets are documented. Metrics are exportable for dashboard consumption. Tests verify metric computation with synthetic governance event sequences.
   - **Files:** `admiral/governance/metrics.sh` (new), `admiral/governance/tests/test_metrics.sh` (new)
   - **Size:** M (1-3 hours)

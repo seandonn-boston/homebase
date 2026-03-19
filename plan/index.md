@@ -43,57 +43,57 @@
 | 5 | [CI/CD & Infrastructure](stream-05-ci-cd.md) | `stream-05-ci-cd.md` | C-01 to C-15 | Coverage gates, matrix builds, automation |
 | 6 | [Self-Enforcement](stream-06-self-enforcement.md) | `stream-06-self-enforcement.md` | P-01 to P-10 | Meta-governance, dog-fooding, drift detection |
 
-### Part II: Spec Implementation (Streams 7A-7D, 8)
+### Part II: Spec Implementation (Streams 7-11)
 
 | # | Stream | File | Items | Focus |
 |---|---|---|---|---|
-| 7A | [Hooks & Fleet](stream-07a-hooks-and-fleet.md) | `stream-07a-hooks-and-fleet.md` | S-01 to S-09 | Missing hooks, fleet orchestration (Part 3) |
-| 7B | [Execution, Quality & Ops](stream-07b-execution-quality-ops.md) | `stream-07b-execution-quality-ops.md` | S-10 to S-17 | Execution patterns, quality gates, alerting (Parts 5, 6, 7) |
-| 7C | [Platform, Security & Governance](stream-07c-platform-security-governance.md) | `stream-07c-platform-security-governance.md` | S-18 to S-25 | Platform adapters, security, meta-governance (Parts 8, 9, 10) |
-| 7D | [Protocols, Ecosystem & Gaps](stream-07d-protocols-ecosystem-gaps.md) | `stream-07d-protocols-ecosystem-gaps.md` | S-26 to S-43 | Protocols, data ecosystem, additional spec gaps (Parts 11, 12, Ext) |
-| 8 | [Brain Knowledge System](stream-08-brain-system.md) | `stream-08-brain-system.md` | B-01 to B-28 | B1 completion, B2 SQLite, B3 production, graduation, excellence |
+| 7 | [Hooks & Fleet](stream-07-hooks-and-fleet.md) | `stream-07-hooks-and-fleet.md` | S-01 to S-09 | Missing hooks, fleet orchestration (Part 3) |
+| 8 | [Execution, Quality & Ops](stream-08-execution-quality-ops.md) | `stream-08-execution-quality-ops.md` | S-10 to S-17 | Execution patterns, quality gates, alerting (Parts 5, 6, 7) |
+| 9 | [Platform, Security & Governance](stream-09-platform-security-governance.md) | `stream-09-platform-security-governance.md` | S-18 to S-25 | Platform adapters, security, meta-governance (Parts 8, 9, 10) |
+| 10 | [Protocols, Ecosystem & Gaps](stream-10-protocols-ecosystem-gaps.md) | `stream-10-protocols-ecosystem-gaps.md` | S-26 to S-43 | Protocols, data ecosystem, additional spec gaps (Parts 11, 12, Ext) |
+| 11 | [Brain Knowledge System](stream-11-brain-system.md) | `stream-11-brain-system.md` | B-01 to B-28 | B1 completion, B2 SQLite, B3 production, graduation, excellence |
 
-### Part III: Fleet & Multi-Agent (Streams 11-15)
-
-| # | Stream | File | Items | Focus |
-|---|---|---|---|---|
-| 11 | [Fleet Agent Definitions](stream-11-fleet-agent-definitions.md) | `stream-11-fleet-agent-definitions.md` | F-01 to F-14 | All 71 agent roles, schema, registry, templates |
-| 12 | [Fleet Routing & Orchestration](stream-12-fleet-routing-and-orchestration.md) | `stream-12-fleet-routing-and-orchestration.md` | O-01 to O-10 | Routing rules, model tiers, context injection, handoff |
-| 13 | [MCP Integration](stream-13-mcp-integration.md) | `stream-13-mcp-integration.md` | M-01 to M-09 | MCP server, brain/fleet/governance tools, auth |
-| 14 | [Platform Adapters](stream-14-platform-adapters.md) | `stream-14-platform-adapters.md` | PA-01 to PA-09 | Adapter interface, Claude Code, Cursor, Windsurf, API-direct |
-| 15 | [Progressive Autonomy](stream-15-progressive-autonomy.md) | `stream-15-progressive-autonomy.md` | AU-01 to AU-10 | Trust levels, scoring, promotion/demotion, routing |
-
-### Part IV: Governance & Data (Streams 16-20)
+### Part III: Fleet & Multi-Agent (Streams 14-18)
 
 | # | Stream | File | Items | Focus |
 |---|---|---|---|---|
-| 16 | [Meta-Governance](stream-16-meta-governance.md) | `stream-16-meta-governance.md` | MG-01 to MG-10 | Sentinel, Arbiter, Compliance Monitor, self-governance |
-| 17 | [Data Ecosystem](stream-17-data-ecosystem.md) | `stream-17-data-ecosystem.md` | DE-01 to DE-10 | Knowledge graph, gardener/curator/harvester agents, feedback loops |
-| 18 | [Spec Debt Resolution](stream-18-spec-debt-resolution.md) | `stream-18-spec-debt-resolution.md` | SD-01 to SD-12 | Spec gaps, amendment proposals, compliance testing |
-| 19 | [Intent Engineering](stream-19-intent-engineering.md) | `stream-19-intent-engineering.md` | IE-01 to IE-08 | Intent capture, decomposition, validation, tracking |
-| 20 | [Governance Platform](stream-20-governance-platform.md) | `stream-20-governance-platform.md` | GP-01 to GP-10 | API server, multi-tenant, policy DSL, SDK, webhooks |
+| 14 | [Fleet Agent Definitions](stream-14-fleet-agent-definitions.md) | `stream-14-fleet-agent-definitions.md` | F-01 to F-14 | All 71 agent roles, schema, registry, templates |
+| 15 | [Fleet Routing & Orchestration](stream-15-fleet-routing-and-orchestration.md) | `stream-15-fleet-routing-and-orchestration.md` | O-01 to O-10 | Routing rules, model tiers, context injection, handoff |
+| 16 | [MCP Integration](stream-16-mcp-integration.md) | `stream-16-mcp-integration.md` | M-01 to M-09 | MCP server, brain/fleet/governance tools, auth |
+| 17 | [Platform Adapters](stream-17-platform-adapters.md) | `stream-17-platform-adapters.md` | PA-01 to PA-09 | Adapter interface, Claude Code, Cursor, Windsurf, API-direct |
+| 18 | [Progressive Autonomy](stream-18-progressive-autonomy.md) | `stream-18-progressive-autonomy.md` | AU-01 to AU-10 | Trust levels, scoring, promotion/demotion, routing |
 
-### Part V: Hardening & Observability (Streams 21-25)
-
-| # | Stream | File | Items | Focus |
-|---|---|---|---|---|
-| 21 | [Security Hardening](stream-21-security-hardening.md) | `stream-21-security-hardening.md` | SEC-01 to SEC-12 | Attack corpus automation, injection layers, SBOM, rate limiting |
-| 22 | [Observability](stream-22-observability.md) | `stream-22-observability.md` | OB-01 to OB-10 | Structured logging, distributed tracing, metrics, SLOs |
-| 23 | [Developer Experience](stream-23-developer-experience.md) | `stream-23-developer-experience.md` | DX-01 to DX-12 | Dev containers, one-command setup, debugging guides |
-| 24 | [Monitoring & Scanner](stream-24-monitoring-and-scanner.md) | `stream-24-monitoring-and-scanner.md` | MON-01 to MON-10 | Scanner, daily digests, handoff validation |
-| 25 | [Inevitable Features](stream-25-inevitable-features.md) | `stream-25-inevitable-features.md` | IF-01 to IF-12 | Versioning, marketplace, plugins, multi-repo, A/B testing |
-
-### Part VI: Strategic & Excellence (Streams 9-10, 26-30)
+### Part IV: Governance & Data (Streams 19-23)
 
 | # | Stream | File | Items | Focus |
 |---|---|---|---|---|
-| 9 | [Strategic Positioning](stream-09-strategic-positioning.md) | `stream-09-strategic-positioning.md` | R-01 to R-13 | OWASP, AEGIS, NIST, McKinsey, IMDA, ISO, EU AI Act |
-| 10 | [Exemplary Codebase](stream-10-exemplary-codebase.md) | `stream-10-exemplary-codebase.md` | X-01 to X-18 | Simulation testing, chaos, profiling, contract testing |
-| 26 | [Standing Orders Implementation](stream-26-standing-orders-implementation.md) | `stream-26-standing-orders-implementation.md` | SO-01 to SO-17 | All 16 SOs enforced with automated mechanisms |
-| 27 | [Context Engineering](stream-27-context-engineering.md) | `stream-27-context-engineering.md` | CE-01 to CE-10 | Context profiles, budgets, compression, relevance scoring |
-| 28 | [Quality Assurance System](stream-28-quality-assurance-system.md) | `stream-28-quality-assurance-system.md` | QA-01 to QA-10 | Code review automation, quality gates, tech debt tracking |
-| 29 | [Rating System](stream-29-rating-system.md) | `stream-29-rating-system.md` | RT-01 to RT-10 | Rating dimensions, automated calculation, badges, dashboards |
-| 30 | [Thesis Validation](stream-30-thesis-validation.md) | `stream-30-thesis-validation.md` | TV-01 to TV-10 | Metrics, case studies, ROI, academic paper |
+| 19 | [Meta-Governance](stream-19-meta-governance.md) | `stream-19-meta-governance.md` | MG-01 to MG-10 | Sentinel, Arbiter, Compliance Monitor, self-governance |
+| 20 | [Data Ecosystem](stream-20-data-ecosystem.md) | `stream-20-data-ecosystem.md` | DE-01 to DE-10 | Knowledge graph, gardener/curator/harvester agents, feedback loops |
+| 21 | [Spec Debt Resolution](stream-21-spec-debt-resolution.md) | `stream-21-spec-debt-resolution.md` | SD-01 to SD-12 | Spec gaps, amendment proposals, compliance testing |
+| 22 | [Intent Engineering](stream-22-intent-engineering.md) | `stream-22-intent-engineering.md` | IE-01 to IE-08 | Intent capture, decomposition, validation, tracking |
+| 23 | [Governance Platform](stream-23-governance-platform.md) | `stream-23-governance-platform.md` | GP-01 to GP-10 | API server, multi-tenant, policy DSL, SDK, webhooks |
+
+### Part V: Hardening & Observability (Streams 24-28)
+
+| # | Stream | File | Items | Focus |
+|---|---|---|---|---|
+| 24 | [Security Hardening](stream-24-security-hardening.md) | `stream-24-security-hardening.md` | SEC-01 to SEC-12 | Attack corpus automation, injection layers, SBOM, rate limiting |
+| 25 | [Observability](stream-25-observability.md) | `stream-25-observability.md` | OB-01 to OB-10 | Structured logging, distributed tracing, metrics, SLOs |
+| 26 | [Developer Experience](stream-26-developer-experience.md) | `stream-26-developer-experience.md` | DX-01 to DX-12 | Dev containers, one-command setup, debugging guides |
+| 27 | [Monitoring & Scanner](stream-27-monitoring-and-scanner.md) | `stream-27-monitoring-and-scanner.md` | MON-01 to MON-10 | Scanner, daily digests, handoff validation |
+| 28 | [Inevitable Features](stream-28-inevitable-features.md) | `stream-28-inevitable-features.md` | IF-01 to IF-12 | Versioning, marketplace, plugins, multi-repo, A/B testing |
+
+### Part VI: Strategic & Excellence (Streams 12-13, 29-33)
+
+| # | Stream | File | Items | Focus |
+|---|---|---|---|---|
+| 12 | [Strategic Positioning](stream-12-strategic-positioning.md) | `stream-12-strategic-positioning.md` | R-01 to R-13 | OWASP, AEGIS, NIST, McKinsey, IMDA, ISO, EU AI Act |
+| 13 | [Exemplary Codebase](stream-13-exemplary-codebase.md) | `stream-13-exemplary-codebase.md` | X-01 to X-18 | Simulation testing, chaos, profiling, contract testing |
+| 29 | [Standing Orders Implementation](stream-29-standing-orders-implementation.md) | `stream-29-standing-orders-implementation.md` | SO-01 to SO-17 | All 16 SOs enforced with automated mechanisms |
+| 30 | [Context Engineering](stream-30-context-engineering.md) | `stream-30-context-engineering.md` | CE-01 to CE-10 | Context profiles, budgets, compression, relevance scoring |
+| 31 | [Quality Assurance System](stream-31-quality-assurance-system.md) | `stream-31-quality-assurance-system.md` | QA-01 to QA-10 | Code review automation, quality gates, tech debt tracking |
+| 32 | [Rating System](stream-32-rating-system.md) | `stream-32-rating-system.md` | RT-01 to RT-10 | Rating dimensions, automated calculation, badges, dashboards |
+| 33 | [Thesis Validation](stream-33-thesis-validation.md) | `stream-33-thesis-validation.md` | TV-01 to TV-10 | Metrics, case studies, ROI, academic paper |
 
 ---
 
@@ -102,12 +102,12 @@
 | Part | Streams | Items | Description |
 |---|---|---|---|
 | Part I: Codebase Quality | 1-6 | ~83 items | Testing, quality, architecture, docs, CI, self-enforcement |
-| Part II: Spec Implementation | 7-8 | ~71 items | Core spec gaps and brain system |
-| Part III: Fleet & Multi-Agent | 11-15 | ~57 items | Agent definitions, routing, MCP, adapters, autonomy |
-| Part IV: Governance & Data | 16-20 | ~50 items | Meta-governance, data ecosystem, spec debt, intent, platform |
-| Part V: Hardening & Observability | 21-25 | ~56 items | Security, observability, DX, monitoring, future features |
-| Part VI: Strategic & Excellence | 9-10, 26-30 | ~88 items | Positioning, excellence, SOs, context, QA, rating, thesis |
-| **Total** | **30 streams** | **~405 items** | **Complete roadmap** |
+| Part II: Spec Implementation | 7-11 | ~71 items | Core spec gaps and brain system |
+| Part III: Fleet & Multi-Agent | 14-18 | ~57 items | Agent definitions, routing, MCP, adapters, autonomy |
+| Part IV: Governance & Data | 19-23 | ~50 items | Meta-governance, data ecosystem, spec debt, intent, platform |
+| Part V: Hardening & Observability | 24-28 | ~56 items | Security, observability, DX, monitoring, future features |
+| Part VI: Strategic & Excellence | 12-13, 29-33 | ~88 items | Positioning, excellence, SOs, context, QA, rating, thesis |
+| **Total** | **33 streams** | **~405 items** | **Complete roadmap** |
 
 ---
 
@@ -216,7 +216,7 @@ P-03 (meta-test) ← A-02 (bridge)
 ## Definition of Done: 10/10
 
 The codebase is 10/10 when:
-- [ ] All ~405 items across 30 streams are complete
+- [ ] All ~405 items across 33 streams are complete
 - [ ] Current Score shows 9+ in every dimension
 - [ ] A new contributor can set up, understand, and contribute in under 30 minutes
 - [ ] The hook directory is the most tested code in the repository

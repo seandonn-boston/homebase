@@ -1,8 +1,8 @@
-# Stream 12: Fleet Routing & Orchestration — Making Multi-Agent Work Real
+# Stream 15: Fleet Routing & Orchestration — Making Multi-Agent Work Real
 
 > *"Routing rules that communicate intent produce better specialist output." — Admiral Spec, Part 4*
 
-**Scope:** This stream covers the concrete implementation of the routing engine, model tier enforcement, context injection pipeline, interface contract validation, agent-to-agent handoffs, fleet health monitoring, task decomposition, conflict resolution, scaling policies, and agent lifecycle management. These are the runtime systems that turn a collection of agent definitions (Stream 11) into a coordinated fleet.
+**Scope:** This stream covers the concrete implementation of the routing engine, model tier enforcement, context injection pipeline, interface contract validation, agent-to-agent handoffs, fleet health monitoring, task decomposition, conflict resolution, scaling policies, and agent lifecycle management. These are the runtime systems that turn a collection of agent definitions (Stream 14) into a coordinated fleet.
 
 **Current state:** Routing rules exist as a markdown table in `fleet/routing-rules.md`. Model tiers are documented in `fleet/model-tiers.md`. Context injection patterns are described in `fleet/context-injection.md`. Interface contracts are specified in `fleet/interface-contracts.md`. None of these have executable implementations. The Orchestrator cannot actually route a task, enforce a model tier, inject context, or validate a handoff.
 
@@ -27,12 +27,12 @@
   - **Spec ref:** `fleet/routing-rules.md` — Route by File Ownership
 
 - [ ] **O-01c: Capability-matching routing**
-  - **Description:** Implement routing by capability matching against the agent capability registry (Stream 11, F-13). When task-type and file-ownership routing both fail to produce a clear assignment, the engine falls back to capability matching: compare task requirements against agent capabilities in the registry and return the best-match agent. Must include a confidence score for the match and escalate when confidence is below threshold.
+  - **Description:** Implement routing by capability matching against the agent capability registry (Stream 14, F-13). When task-type and file-ownership routing both fail to produce a clear assignment, the engine falls back to capability matching: compare task requirements against agent capabilities in the registry and return the best-match agent. Must include a confidence score for the match and escalate when confidence is below threshold.
   - **Done when:** Capability matching produces ranked agent candidates with confidence scores. Low-confidence matches trigger escalation. Integration tests verify the fallback chain: task-type -> file-ownership -> capability-match -> escalation.
   - **Files:** `fleet/routing/capability-match.ts` (new), `fleet/routing/capability-match.test.ts` (new)
   - **Size:** M
   - **Spec ref:** Part 4 — Routing Logic, `fleet/routing-rules.md` — Escalate Ambiguous Routing
-  - **Depends on:** Stream 11 F-13 (agent capability registry)
+  - **Depends on:** Stream 14 F-13 (agent capability registry)
 
 ---
 

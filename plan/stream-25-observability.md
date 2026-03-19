@@ -1,4 +1,4 @@
-# Stream 22: Observability — See Everything, Miss Nothing
+# Stream 25: Observability — See Everything, Miss Nothing
 
 > *"Observability is not about dashboards. It is about being able to ask arbitrary questions about your system's behavior without having to deploy new code." — Charity Majors*
 
@@ -8,7 +8,7 @@
 
 ---
 
-## 22.1 Logging and Tracing Foundation
+## 25.1 Logging and Tracing Foundation
 
 - [ ] **OB-01: Structured logging standard**
   - **Description:** Define and implement structured JSON logging across all components — hooks (bash), control plane (TypeScript), and brain queries. Every log entry must include: timestamp (ISO 8601), level (debug/info/warn/error/fatal), component (hook name, server module, brain operation), correlation ID (linking related operations across components), message, and structured context fields. Replace all `echo` statements in hooks with a `log_structured` function. Replace all `console.log` calls in the control plane with a structured logger. Define log level conventions: debug (development only), info (operational events), warn (recoverable issues), error (failures requiring attention), fatal (unrecoverable failures).
@@ -28,7 +28,7 @@
 
 ---
 
-## 22.2 Metrics and Health
+## 25.2 Metrics and Health
 
 - [ ] **OB-03: Metrics collection**
   - **Description:** Collect and expose Prometheus-compatible metrics for all Admiral components. Core metrics to implement: hook execution latency (histogram, per hook), hook pass/fail rate (counter, per hook), event throughput (counter, events per second), brain query latency (histogram), brain entry count (gauge), control plane API request latency (histogram, per endpoint), active sessions (gauge), governance overhead ratio (gauge — governance tokens / total tokens). Expose metrics at a `/metrics` endpoint on the control plane server in Prometheus exposition format. Include metric labels for component, operation, and status.
@@ -56,7 +56,7 @@
 
 ---
 
-## 22.3 Alerting and Log Management
+## 25.3 Alerting and Log Management
 
 - [ ] **OB-05: Alert routing rules**
   - **Description:** Route alerts to appropriate channels based on severity and component. Define alert routing rules: critical alerts (security incidents, audit chain breaks, identity violations) route to immediate notification channels, high alerts (SLO budget depletion, enforcement failures) route to operational channels, medium alerts (performance degradation, elevated error rates) route to monitoring channels, low alerts (informational, trend changes) route to digest summaries. Implement alert deduplication (same alert within a window produces one notification, not N), alert escalation (unacknowledged alerts escalate after configurable timeout), and alert suppression (during maintenance windows). Support webhook-based notification delivery for integration with Slack, PagerDuty, or custom endpoints.
@@ -76,7 +76,7 @@
 
 ---
 
-## 22.4 Visualization and Analysis
+## 25.4 Visualization and Analysis
 
 - [ ] **OB-07: Dashboard improvements**
   - **Description:** Enhance the control plane dashboard with real-time event timeline, hook execution visualization, and brain query log. Event timeline: scrollable, filterable timeline showing all events in chronological order with color-coding by type (hook, brain, session, error). Hook execution visualization: per-hook latency sparklines, pass/fail rate over time, and currently active hooks. Brain query log: recent brain queries with results, latency, and relevance scores. Add auto-refresh with configurable interval. The dashboard should be the primary operational interface — the place where an Admiral goes first to understand fleet status.
@@ -104,7 +104,7 @@
 
 ---
 
-## Stream 22 Summary
+## Stream 25 Summary
 
 | Subsection | Items | Total Size |
 |---|---|---|
