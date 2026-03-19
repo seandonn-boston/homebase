@@ -268,7 +268,6 @@ The codebase is 10/10 when:
 
 ## References
 
-- [PLAN.md](../PLAN.md) — Legacy single-file plan (preserved for reference)
 - [AGENTS.md](../AGENTS.md) — Agent governance and decision authority
 - [admiral/IMPLEMENTATION_STATUS.md](../admiral/IMPLEMENTATION_STATUS.md) — Spec-to-implementation tracking
 - [admiral/SPEC-DEBT-NEXT-STEPS.md](../admiral/SPEC-DEBT-NEXT-STEPS.md) — Spec debt resolution
