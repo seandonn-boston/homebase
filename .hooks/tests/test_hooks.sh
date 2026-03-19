@@ -160,6 +160,26 @@ ADMIRAL_SCOPE_OVERRIDE="aiStrat" assert_exit_zero "Edit to aiStrat/ with overrid
 # 1g: Write to aiStrat/ with wrong override should still block
 ADMIRAL_SCOPE_OVERRIDE=".github" assert_exit_code "Edit to aiStrat/ with wrong override exits 2" "scope_boundary_guard.sh" "$PAYLOAD_AISTRAT" 2
 
+# --- Heredoc false positive regression tests (SD-01.1) ---
+
+# 1h: Heredoc referencing aiStrat/ in documentation should NOT trigger scope guard
+PAYLOAD_HEREDOC_AISTRAT='{"tool_name":"Bash","tool_input":{"command":"cat > /tmp/plan.md << '"'"'EOF'"'"'\nThe aiStrat/ directory contains frozen specs.\nSee aiStrat/admiral/spec/part3-enforcement.md for details.\nEOF"}}'
+OUTPUT=$(run_hook "scope_boundary_guard.sh" "$PAYLOAD_HEREDOC_AISTRAT")
+assert_empty "Heredoc referencing aiStrat/ does NOT trigger scope guard" "$OUTPUT"
+assert_exit_zero "Heredoc referencing aiStrat/ exits 0" "scope_boundary_guard.sh" "$PAYLOAD_HEREDOC_AISTRAT"
+
+# 1i: Heredoc referencing .github/workflows/ should NOT trigger scope guard
+PAYLOAD_HEREDOC_GH='{"tool_name":"Bash","tool_input":{"command":"cat > /tmp/ci-docs.md << '"'"'EOF'"'"'\nThe .github/workflows/ci.yml file runs on every push.\nEOF"}}'
+OUTPUT=$(run_hook "scope_boundary_guard.sh" "$PAYLOAD_HEREDOC_GH")
+assert_empty "Heredoc referencing .github/workflows/ does NOT trigger scope guard" "$OUTPUT"
+assert_exit_zero "Heredoc referencing .github/workflows/ exits 0" "scope_boundary_guard.sh" "$PAYLOAD_HEREDOC_GH"
+
+# 1j: Actual rm command targeting aiStrat/ (no heredoc) SHOULD still trigger
+PAYLOAD_DIRECT_RM_AISTRAT='{"tool_name":"Bash","tool_input":{"command":"rm aiStrat/some-file.md"}}'
+OUTPUT=$(run_hook "scope_boundary_guard.sh" "$PAYLOAD_DIRECT_RM_AISTRAT")
+assert_contains "Direct rm aiStrat/ triggers SCOPE BOUNDARY" "$OUTPUT" "SCOPE BOUNDARY"
+assert_exit_code "Direct rm aiStrat/ exits 2 (hard-block)" "scope_boundary_guard.sh" "$PAYLOAD_DIRECT_RM_AISTRAT" 2
+
 echo ""
 
 # ============================================================
@@ -213,6 +233,41 @@ assert_empty "Normal ls does NOT trigger" "$OUTPUT"
 PAYLOAD_SAFE_EDIT='{"tool_name":"Edit","tool_input":{"file_path":"/tmp/safe.txt","new_string":"hello world"}}'
 OUTPUT=$(run_hook "prohibitions_enforcer.sh" "$PAYLOAD_SAFE_EDIT")
 assert_empty "Safe edit does NOT trigger" "$OUTPUT"
+
+# --- Heredoc false positive regression tests (SD-01.1) ---
+# These test the fix for heredoc content being scanned by operation patterns.
+# Documentation/plan text referencing .hooks/ paths must NOT trigger bypass detection.
+
+# 2i: Heredoc containing .hooks/ path references should NOT trigger bypass (false positive fix)
+PAYLOAD_HEREDOC_HOOKS='{"tool_name":"Bash","tool_input":{"command":"cat > /tmp/plan.md << '"'"'EOF'"'"'\nThe .hooks/prohibitions_enforcer.sh file handles enforcement.\nSee also .hooks/loop_detector.sh for retry detection.\nEOF"}}'
+OUTPUT=$(run_hook "prohibitions_enforcer.sh" "$PAYLOAD_HEREDOC_HOOKS")
+assert_empty "Heredoc referencing .hooks/ does NOT trigger bypass" "$OUTPUT"
+assert_exit_zero "Heredoc referencing .hooks/ exits 0" "prohibitions_enforcer.sh" "$PAYLOAD_HEREDOC_HOOKS"
+
+# 2j: Actual rm .hooks/ command (no heredoc) SHOULD still trigger bypass
+PAYLOAD_RM_HOOKS='{"tool_name":"Bash","tool_input":{"command":"rm -rf .hooks/prohibitions_enforcer.sh"}}'
+OUTPUT=$(run_hook "prohibitions_enforcer.sh" "$PAYLOAD_RM_HOOKS")
+assert_contains "Direct rm .hooks/ triggers PROHIBITION" "$OUTPUT" "PROHIBITION"
+assert_exit_code "Direct rm .hooks/ exits 2 (hard-block)" "prohibitions_enforcer.sh" "$PAYLOAD_RM_HOOKS" 2
+
+# 2k: Heredoc containing rm -rf in documentation text should NOT trigger irreversible
+PAYLOAD_HEREDOC_RMRF='{"tool_name":"Bash","tool_input":{"command":"cat > /tmp/safety-guide.md << '"'"'EOF'"'"'\nNever use rm -rf in production environments.\ngit push --force is also prohibited.\nEOF"}}'
+OUTPUT=$(run_hook "prohibitions_enforcer.sh" "$PAYLOAD_HEREDOC_RMRF")
+assert_empty "Heredoc documenting rm -rf does NOT trigger" "$OUTPUT"
+assert_exit_zero "Heredoc documenting rm -rf exits 0" "prohibitions_enforcer.sh" "$PAYLOAD_HEREDOC_RMRF"
+
+# 2l: Secrets in heredoc content SHOULD still trigger advisory (data patterns scan full content)
+PAYLOAD_HEREDOC_SECRET='{"tool_name":"Bash","tool_input":{"command":"cat > /tmp/config.env << '"'"'EOF'"'"'\npassword= mysecretvalue\napi_key= sk-12345\nEOF"}}'
+OUTPUT=$(run_hook "prohibitions_enforcer.sh" "$PAYLOAD_HEREDOC_SECRET")
+assert_contains "Secrets in heredoc triggers advisory" "$OUTPUT" "PROHIBITION"
+assert_exit_zero "Secrets in heredoc exits 0 (advisory, not block)" "prohibitions_enforcer.sh" "$PAYLOAD_HEREDOC_SECRET"
+
+# 2m: Heredoc body referencing chmod .hooks/ should NOT trigger bypass
+PAYLOAD_HEREDOC_CHMOD='{"tool_name":"Bash","tool_input":{"command":"cat > /tmp/hook-docs.md << '"'"'EOF'"'"'\nTo make a hook executable: chmod +x .hooks/script.sh\nEOF"}}'
+OUTPUT_CHMOD=$(run_hook "prohibitions_enforcer.sh" "$PAYLOAD_HEREDOC_CHMOD")
+# The first line is cat > ..., heredoc body with chmod .hooks/ should be stripped
+assert_empty "Heredoc body with chmod .hooks/ ref does NOT trigger" "$OUTPUT_CHMOD"
+assert_exit_zero "Heredoc body with chmod .hooks/ ref exits 0" "prohibitions_enforcer.sh" "$PAYLOAD_HEREDOC_CHMOD"
 
 echo ""
 
