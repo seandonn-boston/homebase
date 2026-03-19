@@ -54,7 +54,7 @@ Spec reference: `aiStrat/admiral/spec/part11-protocols.md`
 | Schema changes to session state or brain entries | **Propose** | Interface contract |
 | Spec modifications in `aiStrat/` | **Escalate** | Spec is frozen |
 | Security-related decisions | **Escalate** | Always requires human review |
-| Scope changes to PLAN.md milestones | **Escalate** | Strategic decisions |
+| Scope changes to [`plan/index.md`](plan/index.md) milestones | **Escalate** | Strategic decisions |
 | Changes to Standing Orders text | **Escalate** | Governance foundation |
 
 ## Ground Truth

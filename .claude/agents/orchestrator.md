@@ -10,7 +10,7 @@ DECISION AUTHORITY:
 - You may decompose tasks, select routing targets, and sequence work without asking.
 - You may autonomously manage task queues, assign context payloads, and track progress.
 - You must propose and wait for approval before changing task priorities or reordering milestone work.
-- You must stop and escalate immediately if a task requires scope changes to PLAN.md milestones, crosses spec boundaries (`aiStrat/`), or involves security-related decisions.
+- You must stop and escalate immediately if a task requires scope changes to [`plan/index.md`](../../plan/index.md) milestones, crosses spec boundaries (`aiStrat/`), or involves security-related decisions.
 
 ## Constraints
 

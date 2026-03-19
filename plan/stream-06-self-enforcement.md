@@ -74,9 +74,9 @@ These items transform the hooks directory from "implementation code" into "the s
   - **Size:** L
   - **Spec ref:** Part 10 — Meta-Governance
 
-- [ ] **P-08: PLAN.md auto-validation**
-  - **Description:** CI check that verifies PLAN.md task counts match actual items, no orphaned references. Parses PLAN.md to extract all task IDs (T-XX, H-XX, A-XX, etc.), counts items per stream, and validates: (1) summary table counts match actual item counts in each stream, (2) no task ID is referenced in "Depends on" fields that does not exist as an actual task, (3) no duplicate task IDs exist across the entire plan, (4) all task IDs follow the correct prefix convention for their stream. Prevents the plan document itself from accumulating inconsistencies as items are added, completed, or reorganized.
-  - **Done when:** CI check validates PLAN.md on every PR that modifies it. Mismatched counts, orphaned references, and duplicate IDs cause the check to fail with specific error messages identifying the discrepancy.
+- [ ] **P-08: Plan auto-validation**
+  - **Description:** CI check that verifies `plan/index.md` and stream file task counts match actual items, no orphaned references. Parses all `plan/stream-*.md` files to extract task IDs (T-XX, H-XX, A-XX, etc.), counts items per stream, and validates: (1) `plan/index.md` summary table counts match actual item counts in each stream file, (2) no task ID is referenced in "Depends on" fields that does not exist as an actual task, (3) no duplicate task IDs exist across the entire plan, (4) all task IDs follow the correct prefix convention for their stream. Prevents the plan directory from accumulating inconsistencies as items are added, completed, or reorganized.
+  - **Done when:** CI check validates `plan/` on every PR that modifies it. Mismatched counts, orphaned references, and duplicate IDs cause the check to fail with specific error messages identifying the discrepancy.
   - **Files:** `admiral/tests/test_plan_validation.sh` (new), `.github/workflows/control-plane-ci.yml` (modify — add plan-validation job)
   - **Size:** M
 

@@ -6,7 +6,6 @@ This directory contains the comprehensive roadmap for bringing the Admiral Frame
 
 - **[index.md](index.md)** — Master index with all streams, scores, and execution guide
 - **Stream files** — One file per stream (e.g., `stream-01-testing.md`)
-- **PLAN.md** (repo root) — Legacy single-file plan (preserved for reference)
 
 ## Stream Overview
 
