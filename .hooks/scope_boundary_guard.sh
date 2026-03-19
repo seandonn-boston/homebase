@@ -76,15 +76,23 @@ for PROTECTED in "${PROTECTED_DIRS[@]}"; do
   esac
 done
 
-# For Bash commands, check for dangerous patterns against protected paths
+# For Bash commands, check for dangerous patterns against protected paths.
+# Strip heredoc content before checking — heredoc bodies contain data (documentation,
+# plan text), not commands. Scanning them causes false positives when content references
+# protected paths like aiStrat/ or .hooks/. See part3-enforcement.md § Command Content
+# Scanning for the full design rationale.
 if [ "$TOOL_NAME" = "Bash" ] && [ -z "$MATCHED_DIR" ]; then
+  COMMAND_TO_CHECK="$COMMAND"
+  if printf '%s\n' "$COMMAND" | grep -qE '<<[-~]?\s*\\?['"'"'"]?[A-Za-z_]'; then
+    COMMAND_TO_CHECK=$(printf '%s\n' "$COMMAND" | head -n1)
+  fi
   for PROTECTED in "${PROTECTED_DIRS[@]}"; do
-    if echo "$COMMAND" | grep -q "$PROTECTED"; then
+    if echo "$COMMAND_TO_CHECK" | grep -q "$PROTECTED"; then
       # Detect write operations in Bash commands. Trailing spaces prevent substring
       # false positives (e.g., "rmdir" won't match "rm "). Covers: file deletion (rm),
       # moves (mv), copies (cp), in-place edits (sed -i), permission changes (chmod/chown),
       # and output redirection (>, >>, tee).
-      if echo "$COMMAND" | grep -qE '(rm |mv |cp |sed -i|chmod |chown |>|>>|tee )'; then
+      if echo "$COMMAND_TO_CHECK" | grep -qE '(rm |mv |cp |sed -i|chmod |chown |>|>>|tee )'; then
         MATCHED_DIR="$PROTECTED"
         break
       fi

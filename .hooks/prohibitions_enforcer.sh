@@ -55,6 +55,10 @@ if [ "$TOOL_NAME" = "Bash" ]; then
   # --- Rule: Never store secrets, credentials, or PII → ADVISORY ONLY ---
   # Why advisory-only: these patterns have high false-positive rates (e.g., "token="
   # appears in legitimate code). Hard-blocking would disrupt legitimate work.
+  # NOTE: Scans full $COMMAND (including heredoc content), NOT $COMMAND_TO_CHECK.
+  # Secrets in heredoc bodies ARE worth flagging — a heredoc writing a config file
+  # with embedded credentials is exactly the scenario this detects. False positives
+  # are acceptable here because the pattern is advisory-only (never blocks).
   SECRET_PATTERNS=(
     'password\s*='
     'api_key\s*='
@@ -67,7 +71,7 @@ if [ "$TOOL_NAME" = "Bash" ]; then
     'BEGIN PGP'
   )
   for PATTERN in "${SECRET_PATTERNS[@]}"; do
-    if echo "$COMMAND_TO_CHECK" | grep -qiE -- "$PATTERN"; then
+    if echo "$COMMAND" | grep -qiE -- "$PATTERN"; then
       ALERTS+="PROHIBITION (SO-10): Command may contain or create secrets/credentials. Never store secrets in code or configuration. "
       break
     fi

@@ -144,6 +144,51 @@ Agent action
 
 > **Enforcement coverage rule:** Security and scope constraints MUST be hook-enforced. Any constraint classified under the SECURITY or SCOPE categories that is assigned to INSTRUCTION or GUIDANCE enforcement level represents a compliance gap. Validate enforcement coverage at configuration time, not at runtime — a miscategorized security constraint discovered during an incident is too late.
 
+### Command Content Scanning
+
+> **TL;DR** — When scanning Bash commands via regex, distinguish between the *operation* (what the command does) and the *data* (what content flows through it). Operation patterns strip embedded content. Data patterns scan everything. Getting this wrong causes false positives that block legitimate work — which is worse than the threats the patterns detect.
+
+Hooks that scan Bash commands via regex face a fundamental challenge: the `command` field in the tool payload contains the *entire* command string, including heredoc bodies, inline scripts, and quoted multi-line strings. A command like `cat > /tmp/plan.md << 'EOF'\n...content...\nEOF` delivers the heredoc body as part of the command string, making every word in the content a potential regex match.
+
+**The design principle:** Command scanning must distinguish between the operation being performed and the data being operated on.
+
+| Pattern Category | What It Detects | Scan Target | Rationale |
+|---|---|---|---|
+| **Operation patterns** (bypass, destruction, privilege escalation) | Dangerous *commands* being executed | Command line only — strip heredoc/here-string bodies | A documentation file that *mentions* `rm -rf` is not performing deletion. Scanning the heredoc body treats data as operations and blocks legitimate work. |
+| **Data patterns** (secrets, PII, credentials) | Dangerous *content* flowing through any channel | Full command including heredoc bodies | A heredoc writing `password=mysecret` to a config file IS the threat scenario. The secret exists in the data stream regardless of whether it appears on the command line or in a heredoc body. |
+
+**Implementation: heredoc stripping.** When a heredoc marker (`<<`) is detected in the command string, extract only the first line (the actual command) for operation pattern matching. The heredoc body — which is data, not commands — is excluded from operation scans but remains visible to data scans.
+
+```bash
+# Strip heredoc content for operation patterns (bypass, privilege, irreversible)
+COMMAND_TO_CHECK="$COMMAND"
+if printf '%s\n' "$COMMAND" | grep -qE '<<[-~]?\s*\\?['"'"'"]?[A-Za-z_]'; then
+  COMMAND_TO_CHECK=$(printf '%s\n' "$COMMAND" | head -n1)
+fi
+
+# Operation patterns use $COMMAND_TO_CHECK (heredoc-stripped)
+# Data patterns use $COMMAND (full content including heredoc bodies)
+```
+
+**Other embedded content forms** that may cause false positives in operation patterns:
+
+| Construct | Example | Risk | Handling |
+|---|---|---|---|
+| **Heredoc** | `cat << 'EOF'\n...\nEOF` | HIGH — confirmed false positives in production | Stripped via `head -n1` when `<<` detected |
+| **Quoted multi-line strings** | `python3 -c "...\n..."` | MEDIUM — inline scripts referencing paths | Handled by same `head -n1` approach (content on subsequent lines) |
+| **Here-strings** | `grep foo <<< "$var"` | LOW — single-line, content on same line as command | Not stripped; low false positive risk |
+| **Pipe from echo/printf** | `echo "text" \| cmd` | LOW — echo content on same line | Not stripped; pattern anchoring mitigates |
+
+**Known limitations of regex-based command scanning:**
+
+1. **Evasion via indirection:** `CMD=rm; $CMD -rf .hooks/` — variable interpolation is not evaluated by regex scanners. This is an accepted limitation; hooks are a safety net for mistakes and drift, not an adversarial sandbox.
+2. **Evasion via encoding:** Base64, hex escapes, or Unicode confusables can bypass literal pattern matching. Layer 2 of the External Intelligence Quarantine addresses this with encoding normalization, but PreToolUse hooks do not currently normalize.
+3. **False positives in string literals:** `echo "never use rm -rf"` matches `rm -rf` even though it's a string argument. The heredoc stripping approach mitigates the most common case (heredocs), but single-line string content remains a potential false positive source for operation patterns.
+
+> **Anti-pattern: scanning everything, everywhere.** The original implementation scanned the full `$COMMAND` string (including heredoc bodies) against all patterns indiscriminately. This caused agents writing documentation or plan files to be hard-blocked when their content referenced hook file paths — treating a documentation reference as an actual bypass attempt. Agents that hit this false positive repeatedly would stall or hang, unable to complete legitimate work. The fix (heredoc stripping for operation patterns) was discovered during Admiral-builds-Admiral when agents were unable to write plan files referencing `.hooks/` paths via shell heredocs. **When a safety mechanism blocks legitimate work, it trains agents to work around the mechanism — undermining the enforcement it was designed to provide.**
+
+> **Regression testing requirement:** Any hook that scans command content via regex MUST include regression tests for both true positives (actual prohibited commands are caught) and false negatives from content embedding (heredoc/inline-script references to protected paths are NOT caught as false positives). See `.hooks/tests/test_hooks.sh` tests 1h-1j and 2i-2m for reference implementations.
+
 ### Reference Hook Implementations
 
 The enforcement classifications above require concrete hook specifications. The following hooks implement deterministic monitoring for token budgets, loop detection, and context health — three areas where advisory instructions alone are insufficient and hook-based awareness is essential.
