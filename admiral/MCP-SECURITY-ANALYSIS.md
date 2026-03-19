@@ -92,7 +92,7 @@ MCP tool responses are equally untrusted external data. A compromised or malicio
 
 This is the core concern of this analysis and the most under-addressed threat class in the current Admiral specification. A review of the existing attack corpus (ATK-0001 through ATK-0018) reveals **zero entries addressing time-delayed or temporally-triggered threats**. Every documented attack assumes malicious behavior is detectable at or near the point of introduction. That assumption is the gap.
 
-### 3.1 Defining the Threat
+### 2.1 Defining the Threat
 
 A sleeper cell, in the MCP context, is a server or A2A agent that:
 
@@ -107,7 +107,7 @@ A sleeper cell, in the MCP context, is a server or A2A agent that:
 
 > **Key insight:** The sleeper cell does not need to defeat Admiral's defenses. It needs only to outlast them. Every defense in the current spec is episodic; no defense is continuous.
 
-### 3.2 Why Current Defenses Fail
+### 2.2 Why Current Defenses Fail
 
 **Point-in-time testing cannot catch time-delayed threats.** All testing defined in Part 13 executes at two moments: server addition and the configured update cadence. Between those moments, the server runs unexamined. A sleeper that activates between verification cycles operates in a blind spot whose width is determined by the update check interval.
 
@@ -117,7 +117,7 @@ A sleeper cell, in the MCP context, is a server or A2A agent that:
 
 **The attack corpus has no temporal dimension.** ATK-0001 through ATK-0018 model attacks that are immediate or near-immediate. None model an adversary who is willing to wait. This is a significant gap because the most dangerous real-world supply chain compromises — SolarWinds, XZ Utils, event-stream — all involved extended dormancy periods.
 
-### 3.3 Proposed Defenses
+### 2.3 Proposed Defenses
 
 #### Defense 1: Behavioral Baselining
 
@@ -172,18 +172,24 @@ Part 13 Level 5 testing already mentions hash verification as a test criterion. 
 
 This defense directly addresses the rug pull scenario: an upstream maintainer pushes a malicious update that matches the pinned version identifier but contains different code. Version identifiers can be reused or spoofed; cryptographic hashes cannot.
 
-#### Defense 5: New Attack Corpus Entries (ATK-0019 through ATK-0024)
+#### Defense 5: New Attack Corpus Entries (ATK-0019 through ATK-0030)
 
-The attack corpus must be extended with temporal threat scenarios:
+The attack corpus must be extended with temporal threat scenarios (ATK-0019 through ATK-0024) and additional vectors identified throughout this analysis (ATK-0025 through ATK-0030). See Section 8 for the full corpus entries.
 
 | Entry | Title | Trigger Type | Primary Target |
 |---|---|---|---|
-| ATK-0019 | Time-delayed activation after trust promotion | Time condition | Trust Model |
-| ATK-0020 | External C2 signal embedded in API response | External signal | Egress monitoring |
-| ATK-0021 | Rug pull via version update post-trust-establishment | Version update | Version pinning |
-| ATK-0022 | Shadow tool injection after initial vetting | Accumulated access | Tool discovery |
-| ATK-0023 | Data exfiltration via gradual response size inflation | Data pattern | Behavioral baseline |
-| ATK-0024 | Sleeper activation triggered by sensitive data access | Accumulated trust | Trust decay |
+| ATK-0019 | Sleeper activation via time trigger | Time condition | Trust Model |
+| ATK-0020 | Rug pull via trusted server version update | Version update | Version pinning |
+| ATK-0021 | Shadow tool injection post-discovery | Accumulated access | Tool discovery |
+| ATK-0022 | Slow data exfiltration via response padding | Data pattern | Behavioral baseline |
+| ATK-0023 | Behavioral drift after trust promotion | Accumulated trust | Trust decay |
+| ATK-0024 | C2 communication via tool response metadata | External signal | Egress monitoring |
+| ATK-0025 | Tool description poisoning | Prompt injection | Tool vetting (Section 4.1) |
+| ATK-0026 | Cross-server data exfiltration | Data flow | Server boundaries (Section 4.4) |
+| ATK-0027 | Server-side prompt injection via MCP tool response | Prompt injection | Zero-trust validator (Section 4.5) |
+| ATK-0028 | Cascading compromise through A2A | Agent mesh | A2A payload inspection (Section 5.1) |
+| ATK-0029 | Trust transitivity via relayed A2A data | Trust relay | Provenance chains (Section 5.2) |
+| ATK-0030 | Brain poisoning via compromised MCP tool output | Persistence | Brain provenance (Section 3.3) |
 
 Each entry should follow the existing corpus format: threat description, preconditions, attack sequence, expected detection point, and recommended mitigations. The absence of these entries means Admiral's threat model has a blind spot precisely where sophisticated adversaries operate.
 
@@ -191,13 +197,13 @@ Each entry should follow the existing corpus format: threat description, precond
 
 ## 3. The Corruption and Infection Cascade Problem
 
-If Section 3 addresses the question "How does a threat enter the system?", this section addresses the more dangerous question: **"How does a threat propagate through the system once inside?"** Admiral's multi-agent architecture, shared Brain, and A2A communication channels create infection pathways that do not exist in single-agent systems.
+If Section 2 addresses the question "How does a threat enter the system?", this section addresses the more dangerous question: **"How does a threat propagate through the system once inside?"** Admiral's multi-agent architecture, shared Brain, and A2A communication channels create infection pathways that do not exist in single-agent systems.
 
-### 4.1 The Promptware Kill Chain Applied to Admiral
+### 3.1 The Promptware Kill Chain Applied to Admiral
 
 Mapping the Schneier et al. Promptware Kill Chain to Admiral's architecture reveals a complete attack path from initial compromise to persistent, self-propagating infection:
 
-**Stage 1 — Initial Access.** A compromised MCP server delivers a poisoned tool response. The response contains content that, when processed by the receiving agent, manipulates the agent's behavior beyond its intended scope. This is the entry point that Section 3's defenses aim to prevent. Section 4 assumes this prevention has failed.
+**Stage 1 — Initial Access.** A compromised MCP server delivers a poisoned tool response. The response contains content that, when processed by the receiving agent, manipulates the agent's behavior beyond its intended scope. This is the entry point that Section 2's defenses aim to prevent. Section 3 assumes this prevention has failed.
 
 **Stage 2 — Privilege Escalation.** The poisoned response manipulates the receiving agent into acting beyond its authority tier. For example, a tool response to a Tier 2 agent contains instructions that the agent interprets as requiring Tier 3 actions — and the agent, trusting the tool response as legitimate data, attempts those actions. If hook enforcement is imperfect or if the escalation is subtle (e.g., writing to a Brain namespace the agent technically has access to but should not use in this context), the escalation succeeds.
 
@@ -207,7 +213,7 @@ Mapping the Schneier et al. Promptware Kill Chain to Admiral's architecture reve
 
 > **The Brain is the persistence and lateral movement mechanism.** In traditional security, attackers must maintain access to maintain persistence. In Admiral, a single successful write to the Brain creates persistence that outlives the attacker's access.
 
-### 4.2 Infection Vectors
+### 3.2 Infection Vectors
 
 | Vector | Source | Target | Current Defense | Gap |
 |---|---|---|---|---|
@@ -217,7 +223,7 @@ Mapping the Schneier et al. Promptware Kill Chain to Admiral's architecture reve
 | Agent to agent via handoff | Compromised agent produces poisoned output in handoff | Receiving agent ingests poisoned input | Handoff protocol structure (Part 11) | Handoff protocol defines the **structure** of handoffs but does not validate the **content** of handoff payloads. A structurally valid handoff can carry semantically poisoned content. |
 | MCP server to multiple agents | Single compromised server serves multiple agents | All agents using the server are exposed | Per-agent server assignments limit blast radius | If the compromised server is assigned to multiple agents (e.g., a shared utility server for file operations), all assigned agents are poisoned simultaneously. The blast radius equals the server's agent assignment set. |
 
-### 4.3 Proposed Containment Mechanisms
+### 3.3 Proposed Containment Mechanisms
 
 #### Mechanism 1: Blast Radius Isolation via Provenance Tagging
 
@@ -234,7 +240,7 @@ This converts the Brain from a flat knowledge store (all entries equally trusted
 
 #### Mechanism 2: Circuit Breakers
 
-When an MCP server is flagged as compromised (by any of the Section 3 defenses or by manual review), the system executes a containment cascade:
+When an MCP server is flagged as compromised (by any of the Section 2 defenses or by manual review), the system executes a containment cascade:
 
 1. **Quarantine all Brain entries** written by any agent that used the flagged server since its last clean verification. Quarantined entries are not deleted — they are marked as potentially compromised and excluded from query results until reviewed.
 2. **Suspend A2A connections** involving agents that used the flagged server. This prevents lateral movement through direct agent-to-agent communication while the blast radius is assessed.
@@ -263,7 +269,7 @@ This requires changes to the Brain's query interface (Part 8) and to agent reaso
 
 The OWASP MCP Top 10 provides a taxonomy of known risks. This section extends that taxonomy with attack vectors specific to Admiral's architecture, identifies gaps in current defenses, and proposes mitigations prioritized by effort-to-impact ratio.
 
-### 5.1 Tool Description Poisoning
+### 4.1 Tool Description Poisoning
 
 **Vector:** MCP tool descriptions are natural-language strings consumed by LLMs to decide when and how to invoke tools. A malicious or compromised server can craft descriptions that subtly manipulate agent behavior without altering the tool's functional interface.
 
@@ -293,7 +299,7 @@ The description steers the agent toward invoking `export_all` — potentially an
 
 ---
 
-### 5.2 Rug Pulls
+### 4.2 Rug Pulls
 
 **Vector:** A trusted MCP server pushes a new version containing malicious code. The server passed all vetting at version N; version N+1 introduces a subtle exfiltration pathway alongside normal functionality.
 
@@ -313,7 +319,7 @@ The description steers the agent toward invoking `export_all` — potentially an
 
 ---
 
-### 5.3 Shadow Tools
+### 4.3 Shadow Tools
 
 **Vector:** An MCP server exposes additional tools *after* initial discovery and vetting. The server presents a clean tool manifest during Level 1 testing, then dynamically adds undeclared tools at runtime. These shadow tools bypass the vetting pipeline entirely.
 
@@ -332,7 +338,7 @@ The description steers the agent toward invoking `export_all` — potentially an
 
 ---
 
-### 5.4 Cross-Server Data Exfiltration
+### 4.4 Cross-Server Data Exfiltration
 
 **Vector:** An agent reads sensitive data from Server A (e.g., a secrets manager) and writes it to Server B (e.g., a logging or analytics service) as part of what appears to be a legitimate workflow. Neither server is malicious individually; the attack exploits the data flow *between* them.
 
@@ -349,7 +355,7 @@ The description steers the agent toward invoking `export_all` — potentially an
 
 ---
 
-### 5.5 Server-Side Prompt Injection via Tool Responses
+### 4.5 Server-Side Prompt Injection via Tool Responses
 
 **Vector:** An MCP server returns tool results containing embedded instructions targeting the consuming LLM agent:
 
@@ -391,11 +397,45 @@ fi
 
 ---
 
+### 4.6 Shadow Server Access via Unregistered MCP Endpoints
+
+**Vector:** A prompt injection or misconfigured workflow directs the agent to connect to an MCP server that was never registered, vetted, or approved. The agent treats the server as a legitimate tool provider and executes its tools without any of the Part 13 vetting pipeline having been applied.
+
+**Current defense:** SO-16 (Protocol Governance) requires that all MCP servers be registered and vetted. Part 13 defines the addition checklist. However, SD-06 explicitly confirms that no hook enforces this requirement at runtime — the governance is advisory.
+
+**Gap:** There is no runtime gate between the agent and an arbitrary MCP endpoint. If the agent is instructed (via prompt injection, a poisoned tool description, or a misconfigured workflow) to connect to `mcp://attacker.example.com`, nothing in the hook chain blocks the connection.
+
+**Proposed mitigation — `protocol_registry_guard` PreToolUse hook:**
+
+1. **Maintain a registry of approved MCP server endpoints.** The registry is populated during the Part 13 addition process and stored in a hook-accessible location (e.g., `hook_state` or a dedicated configuration file).
+2. **Intercept every PreToolUse event.** The `protocol_registry_guard` hook extracts the target server identifier from the tool call metadata.
+3. **Compare against the approved registry.** If the target server is not in the registry, the hook returns a hard-block, preventing the tool call from executing.
+4. **Log blocked attempts.** Every blocked call is recorded with the requesting agent identity, the target endpoint, and the originating context, enabling forensic analysis of how the unregistered server was introduced.
+
+**Implementation sketch:**
+
+```bash
+# protocol_registry_guard.sh — PreToolUse hook
+APPROVED_SERVERS=$(cat "$HOOK_STATE_DIR/approved_mcp_servers.json" | jq -r '.[]')
+TARGET_SERVER=$(echo "$TOOL_INPUT" | jq -r '.server // empty')
+
+if [ -n "$TARGET_SERVER" ]; then
+    if ! echo "$APPROVED_SERVERS" | grep -qF "$TARGET_SERVER"; then
+        echo "BLOCKED: Tool call targets unregistered MCP server: $TARGET_SERVER"
+        exit 1
+    fi
+fi
+```
+
+> **Maps to:** OWASP MCP09 (Shadow MCP Servers). Resolves specification debt item SD-06.
+
+---
+
 ## 5. A2A-Specific Attack Vectors
 
 The Agent-to-Agent (A2A) protocol introduces a qualitatively different attack surface: agents are both consumers *and* producers of potentially adversarial content. Unlike MCP servers (external, vetted, monitored), peer agents operate within the trust boundary — making compromise harder to detect and easier to propagate.
 
-### 6.1 Cascading Compromise Through Agent Mesh
+### 5.1 Cascading Compromise Through Agent Mesh
 
 **Vector:** Agent A is compromised (via prompt injection, tool poisoning, or any vector from Sections 4-5). Agent A then sends a manipulated task to Agent B via A2A. Agent B validates the message — the signature is valid, Agent A is a registered member of the fleet with a legitimate Agent Card — and executes the task. The poisoned output propagates to Agent C, and onward through the mesh.
 
@@ -424,7 +464,7 @@ Compromised Agent A
 
 ---
 
-### 6.2 Trust Transitivity Attacks
+### 5.2 Trust Transitivity Attacks
 
 **Vector:** Agent A trusts Agent B (same fleet, mutual authentication). Agent B trusts Agent C (different fleet, federated trust). Agent A *implicitly* trusts Agent C through Agent B, even though A has no direct trust relationship with C.
 
@@ -450,7 +490,7 @@ Implicit: A trusts C's data via B's relay
 
 ---
 
-### 6.3 Agent Card Spoofing
+### 5.3 Agent Card Spoofing
 
 **Vector:** An attacker registers a rogue Agent Card in the discovery service, impersonating a legitimate agent. Other agents discover the spoofed card and route tasks to the attacker-controlled endpoint.
 
@@ -470,7 +510,7 @@ Implicit: A trusts C's data via B's relay
 
 ---
 
-### 6.4 Task Injection via A2A
+### 5.4 Task Injection via A2A
 
 **Vector:** An attacker sends a valid-looking A2A request containing a malicious task to an agent. The request conforms to the A2A protocol specification, carries plausible metadata, and targets an agent that accepts peer tasks.
 
@@ -489,7 +529,7 @@ Implicit: A trusts C's data via B's relay
 
 ## 6. Broader Protocol Landscape
 
-### 7.1 Technology Classification
+### 6.1 Technology Classification
 
 The attack vectors described in this document are not unique to MCP or A2A. Any protocol enabling LLM-to-external-capability interaction creates analogous risks. The following table classifies the major technologies and maps them to Admiral's existing defenses.
 
@@ -497,12 +537,12 @@ The attack vectors described in this document are not unique to MCP or A2A. Any 
 |---|---|---|---|
 | **Function Calling** (OpenAI, Anthropic, Google native) | Schema injection, parameter manipulation, hallucinated function calls | LLM invents functions or parameters not in schema; malicious schema definitions steer behavior | Decision Authority tiers enforce human approval for high-impact calls; hook enforcement validates parameters against schema before execution |
 | **MCP** (Anthropic) | Full OWASP MCP Top 10: tool poisoning, rug pulls, shadow tools, server-side injection, cross-server exfiltration | Broadest attack surface due to dynamic discovery, natural-language descriptions, and bidirectional data flow | Primary focus of this document; Sections 4-5 detail current and proposed defenses |
-| **A2A** (Google) | Agent mesh attacks, trust transitivity, card spoofing, task injection | Peer-to-peer trust creates cascading compromise risk; mesh topology removes centralized validation | Section 6 details current and proposed defenses; Phase 1 hub-and-spoke limits exposure |
+| **A2A** (Google) | Agent mesh attacks, trust transitivity, card spoofing, task injection | Peer-to-peer trust creates cascading compromise risk; mesh topology removes centralized validation | Section 5 details current and proposed defenses; Phase 1 hub-and-spoke limits exposure |
 | **OpenAI Plugin System** (deprecated; pattern persists) | Supply chain compromise, data exfiltration via plugin responses, prompt injection via descriptions | Same fundamental patterns as MCP with less formal specification | Covered by same mitigations — tool registry, description analysis, response scanning |
 | **LangChain/LangGraph Tool System** | Tool definition injection, chain-of-tool exploitation, agent loop manipulation | Framework-level tool definitions can be poisoned; chains create multi-step attack paths | Tool registry + negative tool lists prevent unauthorized tool access; hook enforcement applies regardless of framework |
-| **Custom REST/gRPC Integrations** | Standard API security (authn/authz, injection, SSRF) combined with prompt injection in responses | API responses consumed by LLM may contain injected instructions; LLM may construct malicious API calls | Covered by `zero_trust_validator.sh` if extended per Section 5.5; parameter validation hooks apply to all tool types |
+| **Custom REST/gRPC Integrations** | Standard API security (authn/authz, injection, SSRF) combined with prompt injection in responses | API responses consumed by LLM may contain injected instructions; LLM may construct malicious API calls | Covered by `zero_trust_validator.sh` if extended per Section 4.5; parameter validation hooks apply to all tool types |
 
-### 7.2 The Generalized Principle
+### 6.2 The Generalized Principle
 
 > Any protocol that allows an LLM to invoke external capabilities or receive external data creates the same fundamental tension: **capability requires trust, and trust creates attack surface.**
 
@@ -534,7 +574,7 @@ The following recommendations are organized into three priority tiers based on r
 |---|---|---|---|
 | 1 | Extend `zero_trust_validator.sh` to scan ALL tool responses for injection patterns, not just WebFetch/WebSearch | Low | OWASP MCP06, server-side prompt injection |
 | 2 | Implement `protocol_registry_guard` PreToolUse hook — block calls to unregistered MCP servers | Medium | OWASP MCP09, shadow servers. Resolves SD-06 |
-| 3 | Add 6 new attack corpus entries (ATK-0019–ATK-0024) for temporal/sleeper threats | Low | Zero coverage of time-delayed attacks |
+| 3 | Add 12 new attack corpus entries (ATK-0019–ATK-0030) for temporal, MCP, A2A, and Brain threats | Low | Zero coverage of time-delayed attacks; missing corpus entries for vectors in Sections 3–5 |
 
 **Recommendation 1: Extend `zero_trust_validator.sh` to scan all tool responses.**
 The current zero-trust validator inspects responses only from WebFetch and WebSearch tools, leaving every other MCP tool response unscreened. An attacker who delivers a prompt injection payload through any non-web tool — a database query result, a file read, or a code execution output — bypasses validation entirely. Extending the validator to cover all tool responses closes this gap with minimal implementation effort, since the scanning logic already exists and only the scope filter needs to change.
@@ -542,48 +582,54 @@ The current zero-trust validator inspects responses only from WebFetch and WebSe
 **Recommendation 2: Implement `protocol_registry_guard` PreToolUse hook.**
 Without a registry enforcement mechanism, there is no runtime gate preventing the agent from invoking an MCP server that was never explicitly authorized. A compromised or malicious prompt can direct the agent to connect to an attacker-controlled server, enabling tool poisoning, credential theft, and data exfiltration. The `protocol_registry_guard` hook would intercept every PreToolUse event, compare the target server against the approved registry, and reject calls to any unregistered endpoint. This directly resolves the specification debt item SD-06 and addresses the OWASP MCP09 shadow server threat.
 
-**Recommendation 3: Add temporal/sleeper attack corpus entries (ATK-0019–ATK-0024).**
-The existing attack corpus contains no test cases for time-delayed or conditional-activation threats — attacks that appear benign on initial inspection but activate after a delay, a specific date, or a trigger condition. Without corpus entries modeling these patterns, the quarantine system cannot be tested against sleeper payloads. Adding six entries covering temporal triggers, conditional activation, multi-stage delayed execution, and dormant payload patterns provides the foundation for detection rule development and regression testing.
+**Recommendation 3: Add attack corpus entries (ATK-0019–ATK-0030).**
+The existing attack corpus contains no test cases for time-delayed threats, MCP-specific vectors (tool description poisoning, cross-server exfiltration, server-side prompt injection), A2A cascade attacks, or Brain poisoning. Adding twelve entries — six temporal/sleeper scenarios (ATK-0019–ATK-0024) and six additional vectors identified in Sections 3–5 (ATK-0025–ATK-0030) — provides the foundation for detection rule development and regression testing. See Section 8 for the full corpus.
 
 ### Priority 2 — Important (Next Milestone)
 
 | # | Recommendation | Complexity | Addresses |
 |---|---|---|---|
 | 4 | Behavioral baselining for MCP servers — new `mcp_behavior_monitor` PostToolUse hook | High | Sleeper activation, behavioral drift |
-| 5 | Tool manifest snapshot + continuous comparison at runtime | Medium | OWASP MCP03/MCP09, shadow tools |
-| 6 | A2A payload content inspection — extend quarantine Layers 1-2 to A2A messages | Medium | Cascading compromise through agent mesh |
+| 5 | Trust decay for MCP servers — periodic re-verification and passive trust degradation | Medium | OWASP MCP02/MCP03, temporal scope creep |
+| 6 | Tool manifest snapshot + continuous comparison at runtime | Medium | OWASP MCP03/MCP09, shadow tools |
+| 7 | Version pinning with binary hash verification at server startup | Medium | OWASP MCP04, rug pulls |
+| 8 | A2A payload content inspection — extend quarantine Layers 1-2 to A2A messages | Medium | Cascading compromise through agent mesh |
 
 **Recommendation 4: Behavioral baselining for MCP servers.**
 A new `mcp_behavior_monitor` PostToolUse hook would record baseline behavioral profiles for each MCP server — typical response sizes, latency ranges, output structure, and invocation frequency. Subsequent interactions would be compared against the baseline, and significant deviations would trigger alerts or automatic quarantine. This addresses sleeper activation scenarios where a compromised server behaves normally during initial use but shifts behavior after a trigger event. While high in complexity, this is the primary runtime detection mechanism for behavioral drift that static validation cannot catch.
 
-**Recommendation 5: Tool manifest snapshot and continuous comparison.**
+**Recommendation 5: Trust decay for MCP servers.**
+The Trust Model (Part 3) currently ratchets trust upward based on demonstrated reliability, with no mechanism for passive degradation. A server that earned high trust six months ago retains that trust indefinitely without re-verification. Trust decay introduces scheduled re-verification independent of version updates, tool discovery comparison at each re-verification, and passive trust level reduction if re-verification does not occur within a configurable window. This converts trust from a ratchet (up-only until failure) into an equilibrium system requiring ongoing evidence. See Section 2.3 Defense 2 for the full design.
+
+**Recommendation 6: Tool manifest snapshot and continuous comparison.**
 At startup or server registration, the framework should capture a cryptographic snapshot of each MCP server's declared tool manifest — the set of tools, their schemas, and their descriptions. At runtime, the framework should periodically re-fetch and compare manifests against the snapshot. Any change in tool names, parameter schemas, or descriptions between snapshots indicates potential tool poisoning (MCP03) or shadow tool injection (MCP09). This provides a detection layer for attacks that modify server capabilities after initial trust establishment.
 
-**Recommendation 6: A2A payload content inspection.**
+**Recommendation 7: Version pinning with binary hash verification.**
+Part 13 Level 5 testing mentions hash verification as a test-time check. This recommendation promotes it to a runtime enforcement gate: before each server start, verify the binary/package hash (SHA-256 minimum) against the value recorded at installation. Hash mismatch blocks startup and drops trust to zero pending manual review. This directly addresses rug pull scenarios where an upstream maintainer pushes malicious code under a reused version identifier. Version identifiers can be spoofed; cryptographic hashes cannot. See Section 2.3 Defense 4 for the full design.
+
+**Recommendation 8: A2A payload content inspection.**
 The current quarantine pipeline processes external content ingested through MCP tools but does not inspect messages exchanged between agents in the A2A protocol mesh. A compromised agent could embed prompt injection payloads, exfiltration instructions, or malicious tool invocation directives within inter-agent messages. Extending quarantine Layers 1 (pattern matching) and 2 (structural analysis) to cover A2A message payloads prevents cascading compromise through the agent communication fabric.
 
 ### Priority 3 — Strategic (Plan and Implement)
 
 | # | Recommendation | Complexity | Addresses |
 |---|---|---|---|
-| 7 | Canary operations framework for MCP servers | High | Silent data exfiltration |
-| 8 | Provenance-aware Brain queries | High | Infection cascade via Brain poisoning |
-| 9 | Data classification tags following data through pipeline | High | Cross-server exfiltration |
-| 10 | Cascade containment circuit breakers | High | Promptware Kill Chain persistence |
+| 9 | Canary operations framework for MCP servers | High | Silent data exfiltration |
+| 10 | Provenance-aware Brain queries | High | Infection cascade via Brain poisoning |
+| 11 | Data classification tags following data through pipeline | High | Cross-server exfiltration |
+| 12 | Cascade containment circuit breakers | High | Promptware Kill Chain persistence |
 
-**Recommendation 7: Canary operations framework for MCP servers.**
+**Recommendation 9: Canary operations framework for MCP servers.**
 A canary operations framework would periodically issue synthetic requests containing uniquely tagged decoy data to MCP servers. If the tagged data appears in any unauthorized location — another server's responses, external network traffic, or log files outside the expected path — the framework has evidence of data exfiltration. This is the only proposed mechanism capable of detecting silent, low-volume data theft that does not trigger behavioral anomalies or pattern-based alerts.
 
-**Recommendation 8: Provenance-aware Brain queries.**
+**Recommendation 10: Provenance-aware Brain queries.**
 The Brain (persistent memory layer) currently stores and retrieves information without tracking which source contributed each piece of data or whether that source was fully trusted at the time of contribution. If a compromised agent writes poisoned data to the Brain, every subsequent agent that queries the Brain inherits the poisoned content. Provenance-aware queries would attach source identity, trust level, and timestamp metadata to every Brain entry and allow consuming agents to filter or weight results based on provenance, breaking the infection cascade vector.
 
-**Recommendation 9: Data classification tags following data through the pipeline.**
+**Recommendation 11: Data classification tags following data through the pipeline.**
 Implementing a tagging system that classifies data at ingestion (e.g., public, internal, sensitive, restricted) and propagates those tags through every processing stage enables policy enforcement at server boundaries. An MCP server rated for public data would be prevented from receiving data tagged as restricted, regardless of how the data arrived in the pipeline. This addresses cross-server exfiltration scenarios where sensitive data is laundered through a chain of servers to reach an unauthorized endpoint.
 
-**Recommendation 10: Cascade containment circuit breakers.**
+**Recommendation 12: Cascade containment circuit breakers.**
 Circuit breakers would impose automatic limits on the blast radius of a detected compromise. When anomalous behavior is detected in one component — an MCP server, an agent, or a Brain partition — the circuit breaker isolates that component by severing its communication channels, revoking its credentials, and halting its pending operations. This prevents the Promptware Kill Chain from progressing through lateral movement and persistence stages after initial detection, converting a potential full-framework compromise into a contained single-component incident.
-
----
 
 ---
 
@@ -865,13 +911,15 @@ The following table maps each recommendation to the relevant OWASP MCP security 
 
 | # | Recommendation | OWASP MCP Item | Spec Section | Standing Order | Spec Debt |
 |---|---|---|---|---|---|
-| 1 | Extend `zero_trust_validator.sh` | MCP06 (Prompt Injection) | Part 3 (Quarantine) | SO-12 (Zero-Trust) | — |
+| 1 | Extend `zero_trust_validator.sh` | MCP06 (Prompt Injection) | Part 7 (Quarantine) | SO-12 (Zero-Trust) | — |
 | 2 | `protocol_registry_guard` hook | MCP09 (Shadow Servers) | Part 13 S2 (Selection), Part 3 (Enforcement) | SO-16 (Protocol Governance) | SD-06 |
-| 3 | Temporal attack corpus entries | MCP03, MCP04 | Attack Corpus README | SO-12, SO-16 | — |
+| 3 | Attack corpus entries (ATK-0019–ATK-0030) | MCP03, MCP04, MCP06, MCP09, MCP10 | Attack Corpus README | SO-12, SO-16 | — |
 | 4 | Behavioral baselining | MCP03 (Tool Poisoning) | Part 13 S3 (Testing) | SO-12 | — |
-| 5 | Tool manifest snapshot | MCP03, MCP09 | Part 13 S3 Level 1 | SO-16 | — |
-| 6 | A2A payload inspection | — (A2A-specific) | Part 4 (A2A Protocol Security) | SO-12, SO-16 | — |
-| 7 | Canary operations | MCP01 (Token), MCP04 (Supply Chain) | Part 13 S3 Level 5 | SO-12 | — |
-| 8 | Provenance-aware Brain | MCP10 (Over-Sharing) | Part 5 (Brain) | SO-05 (Brain Consultation), SO-11 | — |
-| 9 | Data classification tags | MCP10 (Over-Sharing) | Part 4 (Fleet), Part 5 (Brain) | SO-12 | — |
-| 10 | Circuit breakers | MCP03, MCP04 | Part 3 (Enforcement), Part 7 (Recovery) | SO-12 | — |
+| 5 | Trust decay for MCP servers | MCP02, MCP03 | Part 3 (Trust Model) | SO-12, SO-16 | — |
+| 6 | Tool manifest snapshot | MCP03, MCP09 | Part 13 S3 Level 1 | SO-16 | — |
+| 7 | Version pinning with binary hash verification | MCP04 (Supply Chain) | Part 13 S3 Level 5 | SO-16 | — |
+| 8 | A2A payload inspection | — (A2A-specific) | Part 4 (A2A Protocol Security) | SO-12, SO-16 | — |
+| 9 | Canary operations | MCP01 (Token), MCP04 (Supply Chain) | Part 13 S3 Level 5 | SO-12 | — |
+| 10 | Provenance-aware Brain | MCP10 (Over-Sharing) | Part 8 (Brain) | SO-05 (Brain Consultation), SO-11 | — |
+| 11 | Data classification tags | MCP10 (Over-Sharing) | Part 4 (Fleet), Part 8 (Brain) | SO-12 | — |
+| 12 | Circuit breakers | MCP03, MCP04 | Part 3 (Enforcement), Part 7 (Recovery) | SO-12 | — |
