@@ -104,15 +104,51 @@
 
 ---
 
+## 25.5 Control Plane Progressive Implementation
+
+- [ ] **OB-11: CP1 — CLI Dashboard baseline**
+  - **Description:** Structured JSON-lines event logging with fields (ts, event, agent, tool, duration_ms, tokens). Terminal status display showing agent state, task progress, token budget bar, error/retry counts, last 3 events. Runaway detection: loop at 3+ errors, token budget advisory at 90%+, idle detection.
+  - **Files:** `control-plane/src/cp1-cli.ts`, `control-plane/src/cp1-terminal.ts`
+  - **Size:** L (3+ hours)
+  - **Spec ref:** Fleet Control Plane Extension — CP1
+
+- [ ] **OB-12: CP2 — Fleet Dashboard**
+  - **Description:** Fleet status answering five questions: what's running, what's healthy, what's consuming resources, what needs attention, what happened recently. Agent detail drill-down. Task flow visualization. Alert system with four severity tiers (CRITICAL/HIGH/MEDIUM/LOW) with alert fatigue prevention (deduplication, suppression, severity gating).
+  - **Files:** `control-plane/src/cp2-fleet-dashboard.ts`, `control-plane/public/fleet.html`
+  - **Size:** L (3+ hours)
+  - **Spec ref:** Fleet Control Plane Extension — CP2
+
+- [ ] **OB-13: CP3 — Governance Dashboard**
+  - **Description:** Governance agent health monitoring. Decision authority visualization. Intervention audit trail. Policy management interface. Connects to meta-governance agents (Stream 19).
+  - **Files:** `control-plane/src/cp3-governance.ts`, `control-plane/public/governance.html`
+  - **Size:** L (3+ hours)
+  - **Spec ref:** Fleet Control Plane Extension — CP3
+  - **Depends on:** Stream 19 MG-01
+
+- [ ] **OB-14: Intervention catalog**
+  - **Description:** Implement 10 operator intervention actions: pause agent, pause fleet, emergency halt, kill task, adjust budget, override decision, reroute task, promote/demote tier, modify policy, inject context. Each action has confirmation requirement, audit logging, and reversal path.
+  - **Files:** `control-plane/src/interventions.ts`, `control-plane/src/interventions.test.ts`
+  - **Size:** L (3+ hours)
+  - **Spec ref:** Fleet Control Plane Extension — Interventions
+
+- [ ] **OB-15: Session thermal model**
+  - **Description:** Budget as descriptive (not prescriptive). Budgets default to 0 (unlimited). Warnings via additionalContext at advisory checkpoints. Sessions can run "hot" without hard blocks at 100%.
+  - **Files:** `control-plane/src/thermal-model.ts`
+  - **Size:** M (1-3 hours)
+  - **Spec ref:** Fleet Control Plane Extension — Session Thermal Model
+
+---
+
 ## Stream 25 Summary
 
 | Subsection | Items | Total Size |
 |---|---|---|
-| 22.1 Logging and Tracing Foundation | OB-01, OB-02 | 2L |
-| 22.2 Metrics and Health | OB-03, OB-04, OB-08 | 3M |
-| 22.3 Alerting and Log Management | OB-05, OB-06 | 1M + 1L |
-| 22.4 Visualization and Analysis | OB-07, OB-09, OB-10 | 2L + 1M |
-| **Totals** | **10 items** | **5L + 5M** |
+| 25.1 Logging and Tracing Foundation | OB-01, OB-02 | 2L |
+| 25.2 Metrics and Health | OB-03, OB-04, OB-08 | 3M |
+| 25.3 Alerting and Log Management | OB-05, OB-06 | 1M + 1L |
+| 25.4 Visualization and Analysis | OB-07, OB-09, OB-10 | 2L + 1M |
+| 25.5 Control Plane Progressive Implementation | OB-11, OB-12, OB-13, OB-14, OB-15 | 4L + 1M |
+| **Totals** | **15 items** | **9L + 6M** |
 
 **Critical path:** OB-01 (structured logging) is the foundation — everything else depends on consistent, structured log output. OB-02 (tracing) depends on OB-01 and enables OB-09 (timeline reconstruction). OB-03 (metrics) enables OB-05 (alerting), OB-08 (SLOs), OB-10 (regression detection), and OB-07 (dashboard).
 

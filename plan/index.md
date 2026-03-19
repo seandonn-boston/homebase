@@ -24,6 +24,7 @@
 | Performance | 2/10 | 10/10 | No benchmarks of any kind |
 | Brain & Knowledge | 2/10 | 10/10 | B1 file-based only, manual, no auto-recording, no semantic search |
 | Fleet & Orchestration | 1/10 | 10/10 | 71 roles defined, only Claude Code governed, no routing/handoff/parallel |
+| Strategy Foundation | 1/10 | 10/10 | No Ground Truth tooling, no readiness assessment, no Go/No-Go gate |
 | Security & Compliance | 4/10 | 10/10 | Missing data sensitivity L1-L2, audit trail, privilege escalation hardening |
 | Strategic Positioning | 2/10 | 10/10 | Missing OWASP/AEGIS/NIST/McKinsey/IMDA crosswalks |
 | **Overall** | **4/10** | **10/10** | Strong foundation, critical gaps in spec implementation |
@@ -31,6 +32,12 @@
 ---
 
 ## Table of Contents
+
+### Part 0: Strategy Foundation (Stream 0)
+
+| # | Stream | File | Items | Focus |
+|---|---|---|---|---|
+| 0 | [Strategy Triangle](stream-00-strategy-triangle.md) | `stream-00-strategy-triangle.md` | ST-01 to ST-08 | Ground Truth, readiness, Go/No-Go gate, spec-first, validation hooks |
 
 ### Part I: Codebase Quality (Streams 1-6)
 
@@ -101,19 +108,21 @@
 
 | Part | Streams | Items | Description |
 |---|---|---|---|
+| Part 0: Strategy Foundation | 0 | ~8 items | Ground Truth, readiness, Go/No-Go, validation hooks |
 | Part I: Codebase Quality | 1-6 | ~83 items | Testing, quality, architecture, docs, CI, self-enforcement |
-| Part II: Spec Implementation | 7-11 | ~74 items | Core spec gaps, brain system, A2A/MCP security items |
-| Part III: Fleet & Multi-Agent | 14-18 | ~62 items | Agent definitions, routing, MCP (incl. server security), adapters, autonomy |
-| Part IV: Governance & Data | 19-23 | ~50 items | Meta-governance, data ecosystem, spec debt, intent, platform |
-| Part V: Hardening & Observability | 24-28 | ~58 items | Security (incl. MCP/A2A), observability, DX, monitoring, future features |
-| Part VI: Strategic & Excellence | 12-13, 29-33 | ~88 items | Positioning, excellence, SOs, context, QA, rating, thesis |
-| **Total** | **33 streams** | **~415 items** | **Complete roadmap** |
+| Part II: Spec Implementation | 7-11 | ~84 items | Core spec gaps, brain system, A2A/MCP security items |
+| Part III: Fleet & Multi-Agent | 14-18 | ~66 items | Agent definitions, routing, MCP (incl. server security), adapters, autonomy |
+| Part IV: Governance & Data | 19-23 | ~53 items | Meta-governance, data ecosystem, spec debt, intent, platform |
+| Part V: Hardening & Observability | 24-28 | ~63 items | Security (incl. MCP/A2A), observability, DX, monitoring, future features |
+| Part VI: Strategic & Excellence | 12-13, 29-33 | ~89 items | Positioning, excellence, SOs, context, QA, rating, thesis |
+| **Total** | **34 streams** | **~463 items** | **Complete roadmap** |
 
 ---
 
 ## Execution Guide
 
 ### Phase 1: Spec Debt & Foundation (Sessions 1-10) — Know What We're Building
+0. ST-01, ST-02, ST-03 — Strategy Triangle foundation (Ground Truth template, readiness assessment, Go/No-Go gate)
 1. SD-01, SD-02 — Spec debt inventory and prioritization (identifies gaps that inform all other work)
 2. SD-04, SD-05 — Standing Orders enforcement map completion, hook manifest audit
 3. SEC-13 — Extend zero_trust_validator.sh to all tool responses (highest-impact quick fix)
@@ -188,6 +197,11 @@
 ## Cross-Stream Dependencies
 
 ```
+# Strategy foundation dependencies (Phase 0 — everything depends on this)
+ST-01 (Ground Truth template) ← ST-06 (validation hook)
+ST-02 (readiness assessment) ← ST-03 (Go/No-Go gate)
+ST-04 (task acceptance criteria) ← all task-level work
+
 # Spec debt dependencies (Phase 1 — informs all other work)
 SD-01 (inventory) ← SD-02 (prioritization) ← SD-03 (amendment proposals)
 SD-06 (constants) + SD-07 (version tracking) ← SD-08 (compliance testing)
@@ -240,7 +254,8 @@ P-03 (meta-test) ← A-02 (bridge)
 ## Definition of Done: 10/10
 
 The codebase is 10/10 when:
-- [ ] All ~415 items across 33 streams are complete
+- [ ] Strategy Triangle (Ground Truth, Boundaries, Success Criteria) is documented and validated for the project
+- [ ] All ~463 items across 34 streams are complete
 - [ ] Current Score shows 9+ in every dimension
 - [ ] A new contributor can set up, understand, and contribute in under 30 minutes
 - [ ] The hook directory is the most tested code in the repository

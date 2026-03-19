@@ -86,8 +86,9 @@
 
 ## 33.4 Publication & Community
 
-- [ ] **TV-09: Academic paper outline — Outline for a research paper documenting thesis and evidence**
+- [ ] **TV-09: Academic paper outline — Outline for a research paper documenting thesis and evidence** ⏳ DEFERRED (Phase 3+)
   - **Description:** Create a structured outline for an academic-style paper documenting the Admiral thesis, methodology, and evidence. Sections: (1) Abstract — the thesis in one paragraph, (2) Introduction — the third category problem (agents are neither code nor humans), (3) Related Work — existing agent governance approaches and their limitations, (4) The Admiral Framework — architecture, enforcement spectrum, standing orders, (5) Methodology — how we measured (metrics, A/B framework, case studies), (6) Results — what we found (quantitative and qualitative), (7) Discussion — implications, limitations, threats to validity, (8) Future Work — what remains to be proven. The outline should be detailed enough that sections can be drafted independently. Include placeholder references for key citations (Kubernetes governance parallels, LLM behavioral research, software engineering process studies).
+  > **Deferred rationale:** Academic paper outline is a research artifact, not an implementation task. Defer to Phase 3+.
   - **Done when:** Paper outline covers all 8 sections with subsection detail. Each section has a 2-3 sentence description of its content. Placeholder references are identified for key claims. The outline is reviewable by someone unfamiliar with Admiral. Word count target is set (aim for conference paper length: 8000-12000 words).
   - **Files:** `admiral/thesis/paper/outline.md` (new), `admiral/thesis/paper/references.md` (new)
   - **Size:** M (1-3 hours)

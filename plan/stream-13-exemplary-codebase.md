@@ -98,8 +98,9 @@ These items transform homebase from "well-built" into "a reference implementatio
   - **Size:** M
   - **Inspired by:** Visual documentation
 
-- [ ] **X-12: Contribution Complexity Analyzer**
+- [ ] **X-12: Contribution Complexity Analyzer** ⏳ DEFERRED (Phase 3+)
   - **Description:** Build a script that classifies areas of the codebase by contribution difficulty. Analyze file complexity (lines of code, cyclomatic complexity), test coverage, number of dependencies, and historical change frequency. Automatically generate a list of "good first issue" candidates — files or modules that are low-complexity, well-tested, and relatively isolated.
+  > **Deferred rationale:** Nice-to-have contribution complexity analyzer; not blocking core implementation.
   - **Done when:** Script generates a ranked list of easy-to-contribute areas. Output includes rationale for each recommendation. Results can be used to auto-label GitHub issues with difficulty tags.
   - **Files:** `admiral/scripts/contribution-analyzer.sh` (new)
   - **Size:** M
@@ -140,8 +141,9 @@ These items transform homebase from "well-built" into "a reference implementatio
   - **Size:** M
   - **Inspired by:** Code coverage applied to documentation
 
-- [ ] **X-18: Accessibility Audit for Dashboard**
+- [ ] **X-18: Accessibility Audit for Dashboard** ⏳ DEFERRED (Phase 3+)
   - **Description:** Ensure the control plane dashboard meets basic accessibility standards (WCAG 2.1 Level AA). Audit keyboard navigation (all interactive elements reachable via Tab, actionable via Enter/Space), screen reader compatibility (proper ARIA labels, semantic HTML, meaningful alt text), color contrast (minimum 4.5:1 ratio for normal text, 3:1 for large text), focus management (visible focus indicators, logical focus order), and responsive design (usable at 200% zoom). Use automated tools (axe-core, Lighthouse accessibility audit) supplemented by manual testing of key user flows.
+  > **Deferred rationale:** WCAG 2.1 AA accessibility audit; dashboard does not exist yet. Defer until dashboard is built.
   - **Done when:** Automated accessibility audit passes with zero critical violations. All interactive dashboard elements are keyboard-accessible. Screen reader can navigate the full dashboard and announce all data meaningfully. Color contrast meets WCAG 2.1 AA minimums. Accessibility test added to CI using axe-core or equivalent. Manual audit checklist completed for top 5 user flows (session list, session detail, event timeline, brain viewer, settings).
   - **Files:** `control-plane/tests/accessibility/` (new), `control-plane/playwright.config.ts` (modify for accessibility tests)
   - **Size:** L

@@ -32,16 +32,18 @@
 
 ## 23.2 Multi-Tenancy and Configuration
 
-- [ ] **GP-03: Multi-tenant support**
+- [ ] **GP-03: Multi-tenant support** ⏳ DEFERRED (Phase 3+)
   - **Description:** Implement support for multiple teams or projects with isolated governance configurations. Each tenant has: (1) **Isolated policies** — policies defined for one tenant do not affect another; (2) **Isolated audit trails** — governance events are scoped to the tenant that generated them; (3) **Isolated Brain namespaces** — Brain entries are namespaced per tenant (consistent with the spec's cross-project namespacing); (4) **Shared global policies** — some policies (e.g., data sensitivity, emergency halt) apply across all tenants and cannot be overridden; (5) **Tenant-scoped authentication** — API access is scoped to a specific tenant, with cross-tenant access requiring elevated privileges. Tenant isolation must be enforced at the data layer, not just the API layer — a bug in the API should not leak data across tenants.
+  > **Deferred rationale:** Multi-tenant support is enterprise scope; premature when single-tenant governance doesn't exist yet.
   - **Done when:** Multiple tenants can be created with isolated policies, audit trails, and Brain namespaces. Global policies apply across tenants. Cross-tenant data leakage is prevented at the data layer. Tenant-scoped authentication works. Tests verify tenant isolation, global policy enforcement, and cross-tenant access controls.
   - **Files:** `control-plane/src/tenants.ts` (new), `control-plane/src/tenants.test.ts` (new)
   - **Size:** L (3+ hours)
   - **Spec ref:** Part 5 — Brain Architecture (cross-project namespacing); Part 10 — Multi-Operator Governance
   - **Depends on:** GP-01, GP-02
 
-- [ ] **GP-04: Governance policy language**
+- [ ] **GP-04: Governance policy language** ⏳ DEFERRED (Phase 3+)
   - **Description:** Define a DSL or structured configuration format for expressing governance rules declaratively. The policy language must support: (1) **Threshold rules** — `when token_usage > 80% of budget then warn`; (2) **Pattern rules** — `when error_count(same_signature) > 3 within 5m then intervene`; (3) **Temporal rules** — `when no checkpoint within 30m then warn`; (4) **Scope selectors** — apply rules to specific agent roles, model tiers, or task categories; (5) **Action definitions** — specify what happens when a rule triggers (log, warn, restrict, suspend, escalate); (6) **Composition** — combine rules with AND/OR/NOT logic; (7) **Inheritance** — tenant policies can extend global policies without redefining them. The language should be expressible as JSON/YAML (for programmatic use) and as a human-readable text format (for Admiral review). Include a linter that validates policy syntax and detects common errors (conflicting rules, unreachable conditions, infinite loops).
+  > **Deferred rationale:** Governance policy DSL is over-engineering at this stage; use JSON/YAML initially.
   - **Done when:** Policy language supports all seven capabilities. Policies can be expressed in JSON/YAML and rendered as human-readable text. A linter validates policy syntax and detects errors. At least 10 example policies demonstrate the language's expressiveness. Tests verify parsing, evaluation, composition, inheritance, and linter detection of common errors.
   - **Files:** `admiral/governance/policy_language/` (new directory), `admiral/governance/policy_language/parser.sh` (new), `admiral/governance/policy_language/evaluator.sh` (new), `admiral/governance/policy_language/linter.sh` (new), `admiral/governance/policy_language/examples/` (new), `admiral/governance/policy_language/tests/test_policy_language.sh` (new)
   - **Size:** L (3+ hours)
