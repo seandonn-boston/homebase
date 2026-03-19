@@ -4,9 +4,17 @@
 
 **Current score:** 2/10 | **Target:** 8/10
 
-**Current state:** B1 file-based brain with 9 JSON entries, manual creation only. Four CLI utilities exist (brain_record, brain_query, brain_retrieve, brain_audit). brain_context_router.sh hook detects Propose/Escalate decisions without preceding brain_query (advisory only). No automatic entry creation. No demand signal tracking. No contradiction detection. B2 (SQLite) and B3 (Production/MCP) not started.
+**Current state:** B1 file-based brain with 9 JSON entries, manual creation only. Four CLI utilities (brain_record, brain_query, brain_retrieve, brain_audit). brain_context_router.sh hook detects Propose/Escalate decisions without preceding brain_query (advisory). No automatic entry creation. B2/B3 not started.
 
-**Dependencies:** B1 completion → B2. B2 graduation → B3.
+---
+
+## Stream 8: Brain Knowledge System — From B1 to B3
+
+> *"Memory makes intelligence. Without persistent knowledge, every session starts from zero — the antithesis of institutional learning." — Admiral Framework Thesis*
+
+**Current state:** B1 file-based brain with 9 JSON entries across 2 projects (`homebase`, `traced-demo`), manual creation only via `admiral/bin/brain_record`. Four CLI utilities exist (`brain_record`, `brain_query`, `brain_retrieve`, `brain_audit`) — all grep/jq-based. `brain_context_router.sh` hook detects Propose/Escalate decisions made without a preceding `brain_query` (advisory only). No automatic entry creation from hooks. No demand signal tracking. No contradiction detection. B2 (SQLite) and B3 (Production/MCP) not started. Graduation criteria defined in spec but not measured.
+
+**Dependencies:** B1 completion is prerequisite to B2. B2 graduation is prerequisite to B3. Quarantine pipeline (Stream 4 / SD-04) resolved — available for B-18 integration. Control plane (`control-plane/src/server.ts`) exists for B-21 dashboard integration.
 
 ---
 
@@ -173,60 +181,39 @@
 
 ---
 
+### Stream 8 Summary
+
+| Phase | Tasks | Sizes | Estimated Effort |
+|-------|-------|-------|-----------------|
+| B1 Completion | B-01 through B-06 | 1S + 5M | ~6 sessions |
+| B2 Implementation | B-07 through B-11 | 3M + 2L | ~7 sessions |
+| B3 Implementation | B-12 through B-20 | 4L + 5M | ~14 sessions |
+| Graduation | B-21 | 1L | ~2 sessions |
+| **Total** | **21 tasks** | **1S + 13M + 7L** | **~29 sessions** |
+
+**Critical path:** B-01 through B-06 (B1 completion) -> B-21 graduation metrics -> B-07 through B-11 (B2) -> B-21 validates B2 graduation -> B-12 through B-20 (B3). The graduation measurement system (B-21) should be built early so it can measure B1 and validate readiness for B2 transition.
+
+**Parallelism opportunities:** Within B1, B-03 (demand signals) and B-04 (contradiction scan) are independent. Within B3, B-14/B-15 (identity/access) are independent of B-16/B-17 (retrieval/graph). B-18 (quarantine integration) depends on B-12 (MCP scaffold) but not on B-14/B-15.
+
 ### 8.5 Brain Excellence
 
-- [ ] **B-22: Brain entry versioning**
-  - **Description:** Track entry versions with supersession chain. Edits create new versions linked to previous.
-  - **Done when:** Version chain queryable, rollback supported, version metadata tracked.
-  - **Files:** `admiral/brain/versioning.sh` (new)
-  - **Size:** M
-  - **Spec ref:** level2-spec.md
+- [ ] **B-22: Brain entry versioning** — Track versions with supersession chain. Done when: Version chain queryable, rollback supported. Files: `admiral/brain/versioning.sh` (new). Size: M
 
-- [ ] **B-23: Brain entry expiration**
-  - **Description:** TTL-based expiration for time-sensitive knowledge.
-  - **Done when:** Optional TTL on entries, auto-archive on expiry, warnings before TTL, archived entries queryable with --include-archived.
-  - **Files:** `admiral/brain/expiration.sh` (new)
-  - **Size:** M
-  - **Spec ref:** level2-spec.md
+- [ ] **B-23: Brain entry expiration** — TTL-based expiration for time-sensitive knowledge. Done when: Optional TTL, auto-archive, warnings before TTL. Files: `admiral/brain/expiration.sh` (new). Size: M
 
-- [ ] **B-24: Cross-project knowledge sharing**
-  - **Description:** Share entries across projects with permission controls.
-  - **Done when:** Entries markable as shareable, visible cross-project, permissions enforced, provenance maintained.
-  - **Files:** `admiral/brain/sharing.sh` (new)
-  - **Size:** L
-  - **Spec ref:** level3-spec.md
+- [ ] **B-24: Cross-project knowledge sharing** — Share entries across projects with permissions. Done when: Entries shareable, permissions enforced, provenance maintained. Files: `admiral/brain/sharing.sh` (new). Size: L
 
-- [ ] **B-25: Brain usage analytics**
-  - **Description:** Track most/least used entries, identify gaps, measure ROI.
-  - **Done when:** Per-entry usage tracking, analytics dashboard endpoint, gap detection, monthly reports.
-  - **Files:** `admiral/brain/analytics.sh` (new)
-  - **Size:** M
-  - **Spec ref:** level2-spec.md
+- [ ] **B-25: Brain usage analytics** — Track most/least used entries, gaps, ROI. Done when: Per-entry usage tracking, analytics endpoint, gap detection. Files: `admiral/brain/analytics.sh` (new). Size: M
 
-- [ ] **B-26: Brain backup and restore**
-  - **Description:** Automated backup with point-in-time recovery for B1 and B2.
-  - **Done when:** Scheduled backups, point-in-time recovery, integrity verification, restore documented.
-  - **Files:** `admiral/brain/backup.sh` (new)
-  - **Size:** M
-  - **Spec ref:** Operations
+- [ ] **B-26: Brain backup and restore** — Automated backup with point-in-time recovery. Done when: Scheduled backups, recovery works, integrity verified. Files: `admiral/brain/backup.sh` (new). Size: M
 
-- [ ] **B-27: Brain schema migration testing**
-  - **Description:** Test B1→B2→B3 migrations preserve data.
-  - **Done when:** All entry types covered, metadata preserved, edge cases tested, rollback tested.
-  - **Files:** `admiral/tests/test_brain_migration.sh` (new)
-  - **Size:** M
-  - **Spec ref:** level2-spec.md
+- [ ] **B-27: Brain schema migration testing** — Test B1→B2→B3 migrations. Done when: All types covered, metadata preserved, edge cases tested. Files: `admiral/tests/test_brain_migration.sh` (new). Size: M
 
-- [ ] **B-28: Brain entry templates**
-  - **Description:** Pre-defined templates for decision records, patterns, bug-fixes, architecture decisions, code review findings.
-  - **Done when:** 5+ templates defined, brain_record --template flag works, validation ensures required fields.
-  - **Files:** `admiral/brain/templates/` (new), `admiral/bin/brain_record`
-  - **Size:** S
-  - **Spec ref:** level1-spec.md
+- [ ] **B-28: Brain entry templates** — Pre-defined templates for common entry types. Done when: 5+ templates, --template flag, validation. Files: `admiral/brain/templates/` (new). Size: S
 
 ---
 
-### Stream 8 Summary
+### Updated Stream 8 Summary
 
 | Phase | Tasks | Sizes |
 |---|---|---|
@@ -236,5 +223,3 @@
 | 8.4 Graduation | B-21 | 1L |
 | 8.5 Brain Excellence | B-22 to B-28 | 1S + 5M + 1L |
 | **Total** | **28 items** | **2S + 18M + 8L** |
-
-**Critical path:** B-01 to B-06 (B1) → B-21 (graduation metrics) → B-07 to B-11 (B2) → B-12 to B-20 (B3). B-22 to B-28 can be worked in parallel with B2/B3 phases.
