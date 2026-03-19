@@ -22,6 +22,14 @@ HARD_BLOCK=false
 if [ "$TOOL_NAME" = "Bash" ]; then
   COMMAND=$(echo "$PAYLOAD" | jq -r '.tool_input.command // ""')
 
+  # Strip heredoc/here-string content before pattern matching to prevent false
+  # positives when documentation or plan text references paths like .hooks/.
+  # Only the actual command line is checked, not the heredoc body.
+  COMMAND_TO_CHECK="$COMMAND"
+  if printf '%s\n' "$COMMAND" | grep -qE '<<[-~]?\s*\\?['"'"'"]?[A-Za-z_]'; then
+    COMMAND_TO_CHECK=$(printf '%s\n' "$COMMAND" | head -n1)
+  fi
+
   # Detect hook/linter/CI bypass patterns → HARD BLOCK
   # Why hard-block: bypassing enforcement undermines the core thesis of the Admiral
   # Framework. An agent that can disable its own guardrails has no guardrails.
@@ -37,7 +45,7 @@ if [ "$TOOL_NAME" = "Bash" ]; then
     "SKIP=.*pre-commit"
   )
   for PATTERN in "${BYPASS_PATTERNS[@]}"; do
-    if echo "$COMMAND" | grep -qiE -- "$PATTERN"; then
+    if echo "$COMMAND_TO_CHECK" | grep -qiE -- "$PATTERN"; then
       ALERTS+="PROHIBITION (SO-10): Command matches bypass pattern '${PATTERN}'. Never bypass or disable enforcement mechanisms. "
       HARD_BLOCK=true
       break
@@ -59,7 +67,7 @@ if [ "$TOOL_NAME" = "Bash" ]; then
     'BEGIN PGP'
   )
   for PATTERN in "${SECRET_PATTERNS[@]}"; do
-    if echo "$COMMAND" | grep -qiE -- "$PATTERN"; then
+    if echo "$COMMAND_TO_CHECK" | grep -qiE -- "$PATTERN"; then
       ALERTS+="PROHIBITION (SO-10): Command may contain or create secrets/credentials. Never store secrets in code or configuration. "
       break
     fi
@@ -78,7 +86,7 @@ if [ "$TOOL_NAME" = "Bash" ]; then
     "setuid"
   )
   for PATTERN in "${PRIVILEGE_PATTERNS[@]}"; do
-    if echo "$COMMAND" | grep -qE -- "$PATTERN"; then
+    if echo "$COMMAND_TO_CHECK" | grep -qE -- "$PATTERN"; then
       ALERTS+="PROHIBITION (SO-12/SO-10): Command involves privilege escalation ('${PATTERN}'). Privilege escalation requires Admiral approval. Escalate with justification or use non-privileged alternatives. "
       HARD_BLOCK=true
       break
@@ -99,7 +107,7 @@ if [ "$TOOL_NAME" = "Bash" ]; then
     "TRUNCATE"
   )
   for PATTERN in "${IRREVERSIBLE_PATTERNS[@]}"; do
-    if echo "$COMMAND" | grep -qiE -- "$PATTERN"; then
+    if echo "$COMMAND_TO_CHECK" | grep -qiE -- "$PATTERN"; then
       ALERTS+="PROHIBITION (SO-10): Command is potentially irreversible ('${PATTERN}'). This action has been blocked. "
       HARD_BLOCK=true
       break
