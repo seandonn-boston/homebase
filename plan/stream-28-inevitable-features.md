@@ -18,8 +18,9 @@
   - **Spec ref:** `aiStrat/admiral/extensions/inevitable-features.md` — Living Operational Memory (versioned knowledge)
   - **Depends on:** —
 
-- [ ] **IF-02: Agent marketplace concept**
+- [ ] **IF-02: Agent marketplace concept** ⏳ DEFERRED (Phase 3+)
   - **Description:** Design the framework for sharing agent definitions across teams and organizations. Define a package format for agent definitions that bundles: agent identity (role, boundaries, authority tiers), associated hooks, Standing Orders, brain entry templates, and test scenarios. Design a registry protocol for publishing, discovering, and installing agent packages. Address key questions: how are packages versioned (follows IF-01), how are trust boundaries maintained when importing external agents, how are imported agents sandboxed to prevent privilege escalation, how are package updates distributed. This is a design document and prototype — not a full marketplace implementation.
+  > **Deferred rationale:** Agent marketplace concept; no agents exist yet to have a marketplace for.
   - **Done when:** Agent package format is defined with a JSON schema. A prototype `admiral agent publish` and `admiral agent install` workflow exists. Trust boundaries for imported agents are documented. At least 2 example agent packages are created from existing agent definitions. Design document covers versioning, trust, sandboxing, and distribution.
   - **Files:** `admiral/marketplace/package-schema.json` (new), `admiral/marketplace/README.md` (new), `admiral/cli/agent-package.sh` (new), `admiral/marketplace/examples/` (new directory)
   - **Size:** L (3+ hours)
@@ -66,8 +67,9 @@
   - **Spec ref:** `aiStrat/admiral/reference/benchmarks.md` — Context Efficiency, Governance Overhead
   - **Depends on:** IF-05
 
-- [ ] **IF-07: A/B testing framework for agents**
+- [ ] **IF-07: A/B testing framework for agents** ⏳ DEFERRED (Phase 3+)
   - **Description:** Test different agent configurations against each other to measure the impact of changes. Implement a framework that: (1) defines an experiment (two or more agent configurations, a success metric, and a sample size), (2) routes tasks to configurations based on the experiment assignment (round-robin or random), (3) tracks per-configuration metrics (first-pass quality, token usage, time-to-completion, revision depth), (4) computes statistical significance when the sample size is reached, (5) declares a winner and optionally promotes the winning configuration. Support experiments on: model tier selection, prompt variations, Standing Order variations, context profile variations, and hook configuration variations.
+  > **Deferred rationale:** A/B testing framework for agents; need agents running first before testing variations.
   - **Done when:** Experiments can be defined, started, and concluded. Task routing splits traffic between configurations. Per-configuration metrics are tracked and compared. Statistical significance is computed (at minimum, a simple two-proportion z-test or Mann-Whitney U test). At least one example experiment is documented end-to-end.
   - **Files:** `control-plane/src/ab-testing.ts` (new), `control-plane/src/ab-testing.test.ts` (new), `admiral/docs/ab-testing-guide.md` (new)
   - **Size:** L (3+ hours)
@@ -90,16 +92,18 @@
 
 ## 28.5 Governance Evolution
 
-- [ ] **IF-09: Natural language policy authoring**
+- [ ] **IF-09: Natural language policy authoring** ⏳ DEFERRED (Phase 3+)
   - **Description:** Allow governance policies to be written in natural language and compiled to executable rules. Implement a policy compiler that translates human-readable policy statements into: hook configurations (for deterministic enforcement), Standing Order entries (for instruction-level enforcement), and alert rules (for monitoring-level enforcement). Example: "No agent may modify files outside its declared scope" compiles to a PreToolUse hook that checks file paths against the agent's scope declaration. The compiler operates in two modes: (1) suggest mode — proposes enforcement artifacts for human review, (2) apply mode — creates the artifacts after human approval. Natural language policies are version-controlled alongside the artifacts they generate, maintaining the link between intent and implementation.
+  > **Deferred rationale:** Natural language policy authoring is a luxury feature; policies can be YAML/JSON first.
   - **Done when:** At least 10 common governance policies can be expressed in natural language and compiled to enforcement artifacts. Suggest mode produces human-reviewable proposals. Apply mode creates working hooks/SOs/alerts after approval. Policy-to-artifact mapping is traceable. Generated artifacts pass the same validation as hand-written artifacts.
   - **Files:** `admiral/policy/compiler.sh` (new), `admiral/policy/templates/` (new directory — policy-to-artifact templates), `admiral/policy/examples/` (new — example natural language policies), `admiral/tests/test_policy_compiler.sh` (new)
   - **Size:** L (3+ hours)
   - **Spec ref:** `aiStrat/admiral/extensions/inevitable-features.md` — thesis on governance vocabulary
   - **Depends on:** —
 
-- [ ] **IF-10: Governance compliance certification**
+- [ ] **IF-10: Governance compliance certification** ⏳ DEFERRED (Phase 3+)
   - **Description:** Generate certifiable compliance reports for enterprise customers. Implement a certification report generator that produces reports aligned with the Admiral Rating System (`aiStrat/admiral/reference/rating-system.md`). Reports include: (1) Phase 1 evidence — automated metrics collection for all 7 core benchmarks, behavioral probe results, attack corpus pass rates, enforcement coverage audit, (2) Phase 2 preparation — structured templates for Human Judgment Gates with required evidence checklists, (3) rating determination — automated rating calculation based on metric caps and gate verdicts, (4) continuous validation status — current metric values against rating thresholds, re-evaluation trigger status. Reports are generated in both human-readable (PDF/markdown) and machine-readable (JSON) formats. This is the bridge between the rating system specification and operational certification.
+  > **Deferred rationale:** Governance compliance certification overlaps with rating system (stream-32); consolidate later.
   - **Done when:** Certification reports generate with all Phase 1 evidence collected automatically. Human Judgment Gate templates are produced with pre-filled evidence. Rating calculation applies metric caps correctly. Reports include both markdown and JSON formats. At least one self-assessment (Tier 1) report can be generated end-to-end.
   - **Files:** `admiral/certification/report-generator.sh` (new), `admiral/certification/templates/` (new directory — gate templates), `admiral/certification/examples/` (new — example reports), `admiral/tests/test_certification.sh` (new)
   - **Size:** L (3+ hours)
