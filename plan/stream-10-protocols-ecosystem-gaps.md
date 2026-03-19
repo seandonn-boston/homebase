@@ -85,11 +85,32 @@ The spec defines a data ecosystem where agents both consume and produce knowledg
 
 ---
 
+### 10.3 MCP/A2A Security (from MCP-SECURITY-ANALYSIS.md)
+
+- [ ] **S-44: A2A payload content inspection**
+  - **Description:** Treat A2A task content with the same suspicion as external content. Run incoming A2A messages through Layers 1-2 of the quarantine pipeline (deterministic pattern matching, schema validation) before execution. Establish behavioral baselines for each agent's typical output patterns and flag statistically anomalous outputs for quarantine before they propagate to downstream agents. Implement taint tracking — data flowing through the agent mesh carries taint flags indicating which agents contributed to it, with configurable maximum taint depth. This addresses the cascading compromise vector (ATK-0028) and trust transitivity attacks (ATK-0029) from `admiral/MCP-SECURITY-ANALYSIS.md` Section 5.
+  - **Done when:** A2A messages pass through quarantine Layers 1-2 before execution. Injection patterns in A2A payloads are detected and blocked. Output anomaly detection flags unusual agent behavior. Taint tracking records agent contribution chain. Tests verify cascade containment with synthetic compromise scenarios.
+  - **Files:** `admiral/protocols/a2a_content_inspector.sh` (new), `admiral/tests/test_a2a_content_inspection.sh` (new)
+  - **Size:** L
+  - **Spec ref:** MCP-SECURITY-ANALYSIS.md Rec 8; Part 4 A2A Protocol Security; ATK-0028, ATK-0029
+  - **Depends on:** S-40 (inter-agent communication)
+
+- [ ] **S-45: Data classification tags and cross-server flow control**
+  - **Description:** Introduce sensitivity labels (`PUBLIC`, `INTERNAL`, `CONFIDENTIAL`, `RESTRICTED`) that attach to data at the point of origin. MCP server tool responses carry the classification of the data they return. Each MCP server is assigned a maximum sensitivity level it can receive. Cross-classification transfers (data from a higher-sensitivity server to a lower-sensitivity destination) require explicit Admiral authorization. Data objects carry origin metadata through the pipeline, enabling audit trails showing how sensitive data moved between servers and agents. This addresses the cross-server exfiltration vector (ATK-0026) from `admiral/MCP-SECURITY-ANALYSIS.md` Section 4.4.
+  - **Done when:** Data classification labels are defined and enforced. Server sensitivity ceilings are configurable. Cross-classification transfers require approval gates. Provenance tracking follows data through the pipeline. Tests verify label enforcement and transfer gates.
+  - **Files:** `admiral/protocols/data_classification.sh` (new), `admiral/config/server_sensitivity.json` (new), `admiral/tests/test_data_classification.sh` (new)
+  - **Size:** L
+  - **Spec ref:** MCP-SECURITY-ANALYSIS.md Rec 11; OWASP MCP10; ATK-0026; Part 4, Part 8
+  - **Depends on:** —
+
+---
+
 ### Summary
 
 | Subsection | Items | Sizes | Spec Parts Covered |
 |---|---|---|---|
-| 7.9 Protocol Completeness | S-26 through S-28 | 1L + 1M + 1S | Part 11 |
-| 7.10 Data Ecosystem | S-29 through S-30 | 2L | Part 12 |
+| 10.1 Protocol Completeness | S-26 through S-28 | 1L + 1M + 1S | Part 11 |
+| 10.2 Data Ecosystem | S-29 through S-30 | 2L | Part 12 |
 | Additional Spec Gaps | S-31 through S-43 | 4L + 7M + 2S | Parts 2, 3, 5, 11, SO-07, SO-09, SO-13, SO-14, Extensions |
-| **Totals** | **18 items** | **7L + 8M + 3S** | **9 spec areas** |
+| 10.3 MCP/A2A Security | S-44 through S-45 | 2L | MCP-SECURITY-ANALYSIS Recs 8, 11 |
+| **Totals** | **20 items** | **9L + 8M + 3S** | **11 spec areas** |

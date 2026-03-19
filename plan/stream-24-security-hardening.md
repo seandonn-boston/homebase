@@ -11,11 +11,11 @@
 ## 24.1 Adversarial Testing
 
 - [ ] **SEC-01: Attack corpus test automation**
-  - **Description:** Automate testing with all 18 ATK-* attack patterns from `aiStrat/attack-corpus/`. Build a test runner that iterates through every corpus entry (ATK-0001 through ATK-0018), injects the trigger into an agent session or quarantine pipeline, verifies the expected defense activates, and updates `times_passed`/`times_failed`/`last_tested` fields. Support both spec validation (no runtime required) and runtime validation (against a running fleet). Output a structured report showing pass/fail per scenario with severity weighting.
-  - **Done when:** A single command runs all 18 scenarios, produces a structured JSON report, and updates corpus entry metadata. Spec validation passes for all 18 entries. Runtime validation framework is functional (actual pass rates depend on defense implementation maturity).
-  - **Files:** `admiral/tests/attack_corpus_runner.sh` (new), `admiral/tests/attack_corpus_report.json` (generated output)
+  - **Description:** Automate testing with all ATK-* attack patterns from `aiStrat/attack-corpus/`. The corpus includes 18 original entries (ATK-0001 through ATK-0018) plus 12 new entries from the MCP Security Analysis (ATK-0019 through ATK-0030) covering temporal threats (sleeper activation, rug pulls, behavioral drift), MCP-specific vectors (tool description poisoning, cross-server exfiltration, server-side prompt injection), A2A cascade attacks, trust transitivity, and Brain poisoning. Build a test runner that iterates through every corpus entry, injects the trigger into an agent session or quarantine pipeline, verifies the expected defense activates, and updates `times_passed`/`times_failed`/`last_tested` fields. Support both spec validation (no runtime required) and runtime validation (against a running fleet). Output a structured report showing pass/fail per scenario with severity weighting.
+  - **Done when:** A single command runs all 30 scenarios, produces a structured JSON report, and updates corpus entry metadata. Spec validation passes for all entries. Runtime validation framework is functional (actual pass rates depend on defense implementation maturity). ATK-0019 through ATK-0030 entries are created from the templates in `admiral/MCP-SECURITY-ANALYSIS.md` Section 8.
+  - **Files:** `admiral/tests/attack_corpus_runner.sh` (new), `admiral/tests/attack_corpus_report.json` (generated output), `aiStrat/attack-corpus/ATK-0019.json` through `aiStrat/attack-corpus/ATK-0030.json` (new, 12 entries)
   - **Size:** L (3+ hours)
-  - **Spec ref:** `aiStrat/attack-corpus/README.md` — Testing Methodology section
+  - **Spec ref:** `aiStrat/attack-corpus/README.md` — Testing Methodology section; `admiral/MCP-SECURITY-ANALYSIS.md` Rec 3, Section 8
   - **Depends on:** —
 
 - [ ] **SEC-10: Security regression tests**
@@ -124,20 +124,42 @@
 
 ---
 
+## 24.6 MCP/A2A Security (from MCP-SECURITY-ANALYSIS.md)
+
+- [ ] **SEC-13: Extend `zero_trust_validator.sh` to scan ALL tool responses**
+  - **Description:** The current `zero_trust_validator.sh` restricts injection detection to `WebFetch` and `WebSearch` tool responses (lines 24-35). MCP tool responses bypass injection scanning entirely. This is the #1 priority fix from `admiral/MCP-SECURITY-ANALYSIS.md`. Remove the tool name filter so injection marker scanning applies to all tool responses from all tools. Additionally, escalate severity for MCP-sourced injection — a vetted server delivering injection payloads indicates compromise or rug pull, warranting CRITICAL severity vs. the expected-and-handled web injection.
+  - **Done when:** `zero_trust_validator.sh` scans ALL tool responses for injection patterns, not just WebFetch/WebSearch. MCP tool responses receive CRITICAL severity on detection. Existing regex patterns apply universally. Tests verify injection detection in MCP tool responses (ATK-0027 scenario).
+  - **Files:** `.hooks/zero_trust_validator.sh` (modify), `admiral/tests/test_zero_trust_all_tools.sh` (new)
+  - **Size:** S (< 1 hour)
+  - **Spec ref:** MCP-SECURITY-ANALYSIS.md Rec 1; OWASP MCP06; ATK-0027
+  - **Depends on:** —
+
+- [ ] **SEC-14: Cascade containment circuit breakers**
+  - **Description:** When an MCP server is flagged as compromised, execute an automated containment cascade: (1) quarantine all Brain entries written by any agent that used the flagged server since its last clean verification — entries are marked as potentially compromised and excluded from query results until reviewed; (2) suspend A2A connections involving agents that used the flagged server to prevent lateral movement; (3) trace data lineage from the compromised server through all agents that consumed its outputs, through all Brain entries those agents wrote, and through all agents that subsequently read those entries — producing a contamination graph. This is analogous to the epoch-based trust revocation in Part 3, applied to data integrity rather than credentials.
+  - **Done when:** Compromise detection triggers automated containment. Brain entries are quarantined (excluded from queries, not deleted). A2A connections are suspended for affected agents. Contamination graph computation traces data lineage through agents and Brain. Containment completes within hook chain response time, not manual review time. Tests verify cascade mechanics with synthetic compromise scenarios.
+  - **Files:** `admiral/security/circuit_breaker.sh` (new), `admiral/security/contamination_graph.sh` (new), `admiral/tests/test_circuit_breaker.sh` (new)
+  - **Size:** L (3+ hours)
+  - **Spec ref:** MCP-SECURITY-ANALYSIS.md Rec 12; Part 3 epoch mechanism; Part 7 Recovery
+  - **Depends on:** SEC-01, M-10 (behavioral baselining provides compromise detection signals)
+
+---
+
 ## Stream 24 Summary
 
 | Subsection | Items | Total Size |
 |---|---|---|
-| 21.1 Adversarial Testing | SEC-01, SEC-10 | 1L + 1M |
-| 21.2 Injection Defense Layers | SEC-02, SEC-03, SEC-12 | 3M |
-| 21.3 Privilege and Access Control | SEC-04, SEC-05 | 1L + 1M |
-| 21.4 Audit and Integrity | SEC-06, SEC-07 | 2M |
-| 21.5 Supply Chain and Infrastructure | SEC-08, SEC-09, SEC-11 | 1S + 2M |
-| **Totals** | **12 items** | **2L + 9M + 1S** |
+| 24.1 Adversarial Testing | SEC-01, SEC-10 | 1L + 1M |
+| 24.2 Injection Defense Layers | SEC-02, SEC-03, SEC-12 | 3M |
+| 24.3 Privilege and Access Control | SEC-04, SEC-05 | 1L + 1M |
+| 24.4 Audit and Integrity | SEC-06, SEC-07 | 2M |
+| 24.5 Supply Chain and Infrastructure | SEC-08, SEC-09, SEC-11 | 1S + 2M |
+| 24.6 MCP/A2A Security | SEC-13, SEC-14 | 1S + 1L |
+| **Totals** | **14 items** | **3L + 9M + 2S** |
 
-**Critical path:** SEC-01 (attack corpus automation) is the foundation — it provides the test infrastructure that validates everything else. SEC-10 depends on SEC-01. SEC-07 depends on SEC-06. SEC-09 depends on SEC-08. All other items are independent and can be parallelized.
+**Critical path:** SEC-13 (zero_trust_validator extension) is the highest-priority security fix — smallest code change, highest impact (MCP-SECURITY-ANALYSIS Rec 1). SEC-01 (attack corpus automation) is the testing foundation — now covers 30 ATK entries including 12 new MCP/A2A/temporal scenarios. SEC-14 (circuit breakers) depends on SEC-01 and Stream 16 M-10 (behavioral baselining).
 
 **Recommended execution order:**
-1. **Foundation:** SEC-01 (attack corpus automation) — enables validation of all other security work.
-2. **Independent:** SEC-02, SEC-03, SEC-04, SEC-05, SEC-06, SEC-08, SEC-11, SEC-12 — no dependencies, can be parallelized.
-3. **Dependent:** SEC-07 (playbook, after SEC-06), SEC-09 (SBOM, after SEC-08), SEC-10 (regression tests, after SEC-01).
+1. **Immediate:** SEC-13 (zero_trust_validator extension) — smallest change, highest impact.
+2. **Foundation:** SEC-01 (attack corpus automation, now 30 entries) — enables validation of all other security work.
+3. **Independent:** SEC-02, SEC-03, SEC-04, SEC-05, SEC-06, SEC-08, SEC-11, SEC-12 — no dependencies, can be parallelized.
+4. **Dependent:** SEC-07 (playbook, after SEC-06), SEC-09 (SBOM, after SEC-08), SEC-10 (regression tests, after SEC-01), SEC-14 (circuit breakers, after SEC-01 + M-10).

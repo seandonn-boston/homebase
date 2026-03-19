@@ -34,11 +34,12 @@ The spec requires 15 hooks. 8 are implemented. 4 are missing entirely, and the r
   - **Spec ref:** Part 3, E3+
 
 - [ ] **S-04: protocol_registry_guard.sh**
-  - **Description:** Enforces SO-16 protocol governance rules. Validates that protocol changes (new protocols, protocol modifications, protocol deprecations) go through proper approval workflow rather than being unilaterally modified by individual agents.
-  - **Done when:** Hook validates protocol modifications against SO-16 rules (approval required, versioning enforced, backwards compatibility checked), blocks unauthorized protocol changes with exit code 2.
-  - **Files:** `.hooks/protocol_registry_guard.sh` (new)
-  - **Size:** M
-  - **Spec ref:** Part 3, SO-16
+  - **Description:** Enforces SO-16 protocol governance rules with two enforcement surfaces: (1) **Protocol change governance** — validates that protocol changes (new protocols, modifications, deprecations) go through proper approval workflow rather than being unilaterally modified by individual agents. (2) **MCP server registration enforcement** — intercepts every PreToolUse event, extracts the target server identifier, and compares against the approved MCP server registry. Calls to unregistered MCP servers are hard-blocked. This directly resolves spec debt item SD-06 and closes the OWASP MCP09 (shadow server) gap identified in `admiral/MCP-SECURITY-ANALYSIS.md` Recommendation 2.
+  - **Done when:** Hook validates protocol modifications against SO-16 rules (approval required, versioning enforced, backwards compatibility checked), blocks unauthorized protocol changes with exit code 2. Hook also maintains an approved MCP server registry (populated during Part 13 addition process), blocks calls to unregistered servers, and logs all blocked attempts with requesting agent identity and target endpoint.
+  - **Files:** `.hooks/protocol_registry_guard.sh` (new), `admiral/config/approved_mcp_servers.json` (new)
+  - **Size:** L
+  - **Spec ref:** Part 3, SO-16, Part 13 S2, MCP-SECURITY-ANALYSIS.md Rec 2
+  - **Depends on:** —
 
 - [ ] **S-05: Standing Orders enforcement map**
   - **Description:** Document which hooks enforce which Standing Orders. Creates a complete mapping of all 16 Standing Orders to their enforcement mechanism — whether enforced by a hook (automated), by instruction embedding (agent-side), or by guidance only (advisory). This map is the accountability ledger for the entire governance system.
@@ -90,13 +91,13 @@ The spec defines 71 agent roles. Zero fleet orchestration code exists. Without o
 | S-01 | identity_validation.sh | M | Part 3, SO-01 |
 | S-02 | tier_validation.sh | M | Part 3, E2+ |
 | S-03 | governance_heartbeat_monitor.sh | M | Part 3, E3+ |
-| S-04 | protocol_registry_guard.sh | M | Part 3, SO-16 |
+| S-04 | protocol_registry_guard.sh | L | Part 3, SO-16, MCP-SECURITY-ANALYSIS Rec 2 |
 | S-05 | Standing Orders enforcement map | M | Part 3 |
 | S-06 | Agent registry | L | Part 3 |
 | S-07 | Task routing engine | L | Part 3 |
 | S-08 | Tool permission matrix | M | Part 3 |
 | S-09 | Fleet configuration validator | M | Part 3 |
 
-**Totals:** 9 items — 2L + 7M across two subsections, all targeting Part 3 of the spec.
+**Totals:** 9 items — 3L + 6M across two subsections, all targeting Part 3 of the spec.
 
 **Critical path:** S-06 (registry) must be implemented first — it is a hard dependency for S-07 (routing), S-08 (tool permissions), and S-09 (fleet validation). S-05 (enforcement map) is a prerequisite for identifying remaining hook gaps. Recommended order: S-05 → S-06 → S-01 through S-04 → S-08 → S-09 → S-07.

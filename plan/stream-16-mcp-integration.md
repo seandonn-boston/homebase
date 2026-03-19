@@ -179,6 +179,51 @@
 
 ---
 
+## M-10: MCP Server Security (from MCP-SECURITY-ANALYSIS.md)
+
+The following items implement Priority 2 and Priority 3 security recommendations from `admiral/MCP-SECURITY-ANALYSIS.md`. Priority 1 items (zero_trust_validator extension, protocol_registry_guard, attack corpus expansion) are covered in Streams 7 and 24.
+
+- [ ] **M-10: Behavioral baselining — `mcp_behavior_monitor` PostToolUse hook**
+  - **Description:** Record a behavioral baseline for each MCP server at registration time: tools declared, response size distribution (mean/median/P95/P99 per tool), latency distribution, egress patterns (destination hosts/ports/frequency), and error rates. A new `mcp_behavior_monitor` PostToolUse hook records per-server, per-tool metrics into `hook_state`, building a rolling statistical model. Alerts fire on: new tools appearing post-vetting (shadow tools), response size exceeding P99 baseline (possible exfiltration), latency increases uncorrelated with payload (possible C2 communication), new egress destinations (covert channels). Baseline is versioned alongside the server's version pin — version updates reset the baseline and trigger a heightened scrutiny period.
+  - **Done when:** Behavioral baselines are recorded for MCP servers. PostToolUse hook compares runtime metrics against baselines. Alerts fire on statistical anomalies with configurable thresholds. Baselines reset on version update. Tests verify anomaly detection with synthetic data.
+  - **Files:** `.hooks/mcp_behavior_monitor.sh` (new), `admiral/config/mcp_baselines/` (new directory), `admiral/tests/test_mcp_behavior_monitor.sh` (new)
+  - **Size:** L
+  - **Spec ref:** MCP-SECURITY-ANALYSIS.md Rec 4; OWASP MCP03 (Tool Poisoning)
+  - **Depends on:** M-01a, M-09
+
+- [ ] **M-11: Trust decay for MCP servers**
+  - **Description:** Apply degradation mechanics to MCP server trust levels. Scheduled re-verification independent of version update cycles — re-run Level 1-3 tests on a configurable cadence (e.g., weekly) even if no update has occurred. Tool discovery comparison at each re-verification — any delta (tools added, removed, schemas changed) triggers trust freeze and Level 4-5 re-testing. Passive trust decay: if a server has not been re-verified within its configured window, its effective trust level decreases by one tier. This converts the Trust Model from a ratchet (up-only until failure) into an equilibrium system requiring ongoing evidence.
+  - **Done when:** Re-verification schedule is configurable per server. Trust levels decay automatically on missed verification windows. Tool discovery diffs trigger trust freeze. Re-verification results update trust levels. Tests verify decay mechanics and re-verification triggers.
+  - **Files:** `admiral/fleet/mcp_trust_decay.sh` (new), `admiral/tests/test_mcp_trust_decay.sh` (new)
+  - **Size:** M
+  - **Spec ref:** MCP-SECURITY-ANALYSIS.md Rec 5; Part 3 Trust Model; OWASP MCP02/MCP03
+  - **Depends on:** M-01b
+
+- [ ] **M-12: Tool manifest snapshot and continuous comparison**
+  - **Description:** Capture a cryptographic snapshot of each MCP server's declared tool manifest (tool names, schemas, descriptions) at installation time. At runtime, periodically re-fetch manifests and compare against the snapshot. Any change — tools added, removed, or with changed schemas/descriptions — triggers a hard block on new tools and a security alert. Description drift detection catches tool description poisoning (ATK-0025). This provides runtime enforcement of the Level 1 tool discovery check that currently only runs at test time.
+  - **Done when:** Canonical manifests are captured at server registration. Runtime comparison runs on configurable interval. New/changed tools are blocked until re-vetted. Description changes trigger alerts. Manifest snapshots are stored alongside server configuration.
+  - **Files:** `admiral/fleet/mcp_manifest_guard.sh` (new), `admiral/config/mcp_manifests/` (new directory), `admiral/tests/test_mcp_manifest_guard.sh` (new)
+  - **Size:** M
+  - **Spec ref:** MCP-SECURITY-ANALYSIS.md Rec 6; OWASP MCP03/MCP09; ATK-0021, ATK-0025
+  - **Depends on:** M-01a
+
+- [ ] **M-13: Version pinning with binary hash verification**
+  - **Description:** Promote binary hash verification from a Level 5 test-time check to a runtime enforcement gate. At server addition, record the version pin AND the cryptographic hash (SHA-256 minimum) of the server binary/package. Before each server start, verify the binary hash against the recorded value. Hash mismatch blocks server startup and drops trust to zero pending manual review. This directly addresses rug pull scenarios (ATK-0020) where an upstream maintainer pushes malicious code under a reused version identifier.
+  - **Done when:** Binary hashes are recorded at server registration. Hash verification runs before server startup. Mismatch blocks startup with critical alert. Trust drops to zero on mismatch. Tests verify the rug pull defense scenario.
+  - **Files:** `admiral/fleet/mcp_hash_verify.sh` (new), `admiral/tests/test_mcp_hash_verify.sh` (new)
+  - **Size:** M
+  - **Spec ref:** MCP-SECURITY-ANALYSIS.md Rec 7; Part 13 S3 Level 5; OWASP MCP04; ATK-0020
+
+- [ ] **M-14: Canary operations framework**
+  - **Description:** Inject known-safe canary data through MCP servers at randomized intervals and verify unmodified passage. PreToolUse hook injects a cryptographically tagged canary marker into a subset of tool invocations (recorded in hook_state). PostToolUse hook verifies the canary marker is present and unmodified in the response. Separate egress monitoring verifies canary markers do NOT appear in outbound traffic (if they do, the server is exfiltrating data). Canary data must be indistinguishable from real tool inputs to prevent server-side filtering.
+  - **Done when:** Canary injection occurs at configurable rate. Canary verification catches unmodified passage. Canary-in-egress detection works. Canaries are statistically indistinguishable from real inputs. Tests verify all three detection scenarios.
+  - **Files:** `admiral/fleet/mcp_canary.sh` (new), `admiral/tests/test_mcp_canary.sh` (new)
+  - **Size:** L
+  - **Spec ref:** MCP-SECURITY-ANALYSIS.md Rec 9; ATK-0022
+  - **Depends on:** M-10
+
+---
+
 ## M-09: MCP Server Health and Metrics
 
 - [ ] **M-09: MCP server health endpoint and usage metrics**

@@ -213,13 +213,26 @@
 
 ---
 
+### 11.6 Brain Security (from MCP-SECURITY-ANALYSIS.md)
+
+- [ ] **B-29: Provenance-aware Brain writes and queries**
+  - **Description:** Every Brain write must be tagged with a provenance chain: writing agent identity, source classification (direct observation / derived from MCP tool response / received via A2A / received via handoff), source server identity (if derived from MCP data), and confidence level (initial confidence based on provenance, not content). Entries derived from external data (MCP responses, A2A messages) carry lower initial confidence than entries derived from direct agent computation. Brain queries must include provenance metadata alongside semantic content — agents weight results by provenance trust, not solely by semantic relevance. This breaks the infection cascade vector identified in `admiral/MCP-SECURITY-ANALYSIS.md` Section 3 (Brain poisoning via compromised MCP tool output, ATK-0030).
+  - **Done when:** Brain entries include provenance fields (source_agent, source_type, source_server, confidence). Confidence defaults based on source classification. Brain queries return provenance metadata. Agents can filter/weight by provenance. Tests verify provenance propagation and confidence scoring.
+  - **Files:** `admiral/brain/provenance.sh` (new), `admiral/tests/test_brain_provenance.sh` (new), `admiral/bin/brain_record` (modify — add provenance fields)
+  - **Size:** L
+  - **Spec ref:** MCP-SECURITY-ANALYSIS.md Rec 10; Part 8 Brain; ATK-0030
+  - **Depends on:** B-01 (B1 completion baseline)
+
+---
+
 ### Updated Stream 11 Summary
 
 | Phase | Tasks | Sizes |
 |---|---|---|
-| 8.1 B1 Completion | B-01 to B-06 | 1S + 5M |
-| 8.2 B2 Implementation | B-07 to B-11 | 3M + 2L |
-| 8.3 B3 Implementation | B-12 to B-20 | 4L + 5M |
-| 8.4 Graduation | B-21 | 1L |
-| 8.5 Brain Excellence | B-22 to B-28 | 1S + 5M + 1L |
-| **Total** | **28 items** | **2S + 18M + 8L** |
+| 11.1 B1 Completion | B-01 to B-06 | 1S + 5M |
+| 11.2 B2 Implementation | B-07 to B-11 | 3M + 2L |
+| 11.3 B3 Implementation | B-12 to B-20 | 4L + 5M |
+| 11.4 Graduation | B-21 | 1L |
+| 11.5 Brain Excellence | B-22 to B-28 | 1S + 5M + 1L |
+| 11.6 Brain Security | B-29 | 1L |
+| **Total** | **29 items** | **2S + 18M + 9L** |
