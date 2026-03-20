@@ -3,6 +3,7 @@
   "agent_id": "backend-implementer",
   "version": "1.0.0",
   "role": "implementer",
+  "asp_spec_ref": null,
   "model_tier": "tier2_workhorse",
   "tools": {
     "allowed": ["Read", "Edit", "Write", "Bash", "Glob", "Grep", "TodoWrite"],

@@ -2,9 +2,9 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "admiral/schemas/agent-definition.v1.schema.json",
   "title": "Admiral Agent Definition Contract v1",
-  "description": "Machine-readable contract for Admiral agent definitions. Validated at session start. Used by tool_grant_enforcer to enforce capability grants at execution time.",
+  "description": "Enforcement-layer contract for Admiral agent definitions. Captures tool capability grants and path scopes for runtime enforcement by tool_grant_enforcer. Companion to the Agent Spec Protocol (ASP) which captures identity, scope, boundaries, and authority. See aiStrat/admiral/spec/agent-spec-protocol/README.md.",
   "type": "object",
-  "required": ["agent_id", "version", "role", "tools", "paths", "authority", "standing_orders"],
+  "required": ["agent_id", "version", "role", "asp_spec_ref", "tools", "paths", "authority", "standing_orders"],
   "additionalProperties": false,
   "properties": {
     "agent_id": {
@@ -22,10 +22,14 @@
       "enum": ["orchestrator", "architect", "implementer", "qa", "security", "triage", "curator", "custom"],
       "description": "Functional role category. Controls which role-specific defaults apply."
     },
+    "asp_spec_ref": {
+      "type": ["string", "null"],
+      "description": "Path to the ASP document that defines this agent's full identity, scope, boundaries, and authority. Null until full ASP migration (F-15b). See aiStrat/admiral/spec/agent-spec-protocol/README.md."
+    },
     "model_tier": {
       "type": "string",
-      "enum": ["tier1_reasoning", "tier2_workhorse", "tier3_fast"],
-      "description": "Preferred model tier. tier1_reasoning for design/security, tier2_workhorse for implementation, tier3_fast for triage/routing."
+      "enum": ["tier1_flagship", "tier2_workhorse", "tier3_utility", "tier4_economy"],
+      "description": "Model tier per ASP Part 4 Model Selection. tier1_flagship for orchestration/security/design, tier2_workhorse for implementation/QA, tier3_utility for triage/routing, tier4_economy for high-volume lightweight tasks."
     },
     "tools": {
       "type": "object",

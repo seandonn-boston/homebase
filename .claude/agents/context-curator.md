@@ -3,6 +3,7 @@
   "agent_id": "context-curator",
   "version": "1.0.0",
   "role": "curator",
+  "asp_spec_ref": null,
   "model_tier": "tier2_workhorse",
   "tools": {
     "allowed": ["Read", "Glob", "Grep", "TodoWrite"],

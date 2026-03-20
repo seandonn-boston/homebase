@@ -3,6 +3,7 @@
   "agent_id": "qa-agent",
   "version": "1.0.0",
   "role": "qa",
+  "asp_spec_ref": null,
   "model_tier": "tier2_workhorse",
   "tools": {
     "allowed": ["Read", "Write", "Bash", "Glob", "Grep", "TodoWrite"],

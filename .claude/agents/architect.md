@@ -3,7 +3,8 @@
   "agent_id": "architect",
   "version": "1.0.0",
   "role": "architect",
-  "model_tier": "tier1_reasoning",
+  "asp_spec_ref": null,
+  "model_tier": "tier1_flagship",
   "tools": {
     "allowed": ["Read", "Glob", "Grep", "TodoWrite", "AskUserQuestion"],
     "denied": ["Write", "Edit", "Bash", "Agent", "WebFetch", "WebSearch", "NotebookEdit"]

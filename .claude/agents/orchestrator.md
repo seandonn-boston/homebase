@@ -3,7 +3,8 @@
   "agent_id": "orchestrator",
   "version": "1.0.0",
   "role": "orchestrator",
-  "model_tier": "tier1_reasoning",
+  "asp_spec_ref": null,
+  "model_tier": "tier1_flagship",
   "tools": {
     "allowed": ["Read", "Glob", "Grep", "TodoWrite", "Agent"],
     "denied": ["Write", "Edit", "Bash", "WebFetch", "WebSearch", "NotebookEdit", "AskUserQuestion"]

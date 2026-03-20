@@ -3,7 +3,8 @@
   "agent_id": "security-agent",
   "version": "1.0.0",
   "role": "security",
-  "model_tier": "tier1_reasoning",
+  "asp_spec_ref": null,
+  "model_tier": "tier1_flagship",
   "tools": {
     "allowed": ["Read", "Glob", "Grep", "TodoWrite"],
     "denied": ["Write", "Edit", "Bash", "Agent", "WebFetch", "WebSearch", "NotebookEdit", "AskUserQuestion"]

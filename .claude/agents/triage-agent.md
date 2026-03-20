@@ -3,7 +3,8 @@
   "agent_id": "triage-agent",
   "version": "1.0.0",
   "role": "triage",
-  "model_tier": "tier3_fast",
+  "asp_spec_ref": null,
+  "model_tier": "tier3_utility",
   "tools": {
     "allowed": ["Read", "Glob", "Grep", "TodoWrite"],
     "denied": ["Write", "Edit", "Bash", "Agent", "WebFetch", "WebSearch", "NotebookEdit", "AskUserQuestion"]
