@@ -1,0 +1,337 @@
+{
+  "$schema": "spec-version-manifest.v1",
+  "description": "Maps each implementation component to the spec part it targets, with compliance gap indicators. Generated for SD-07.",
+  "spec_version": "v0.17.1-alpha",
+  "control_plane_version": "v0.6.0-alpha",
+  "last_audited": "2026-03-20",
+  "compliance_levels": {
+    "full": "All spec requirements for this component are implemented and tested",
+    "partial": "Core logic exists but not all spec requirements are met",
+    "minimal": "Basic implementation exists, significant spec gaps remain",
+    "none": "Specified but not implemented"
+  },
+  "components": [
+    {
+      "id": "session-start-adapter",
+      "file": ".hooks/session_start_adapter.sh",
+      "spec_parts": ["part2-context", "part3-enforcement"],
+      "spec_sections": ["Standing Orders Injection", "Context Baseline"],
+      "compliance": "full",
+      "gap_notes": null
+    },
+    {
+      "id": "pre-tool-use-adapter",
+      "file": ".hooks/pre_tool_use_adapter.sh",
+      "spec_parts": ["part3-enforcement", "part9-platform"],
+      "spec_sections": ["Hook Adapter Pattern", "Budget Checkpoint"],
+      "compliance": "full",
+      "gap_notes": null
+    },
+    {
+      "id": "post-tool-use-adapter",
+      "file": ".hooks/post_tool_use_adapter.sh",
+      "spec_parts": ["part3-enforcement", "part9-platform"],
+      "spec_sections": ["Hook Adapter Pattern", "PostToolUse Chain"],
+      "compliance": "full",
+      "gap_notes": null
+    },
+    {
+      "id": "token-budget-tracker",
+      "file": ".hooks/token_budget_tracker.sh",
+      "spec_parts": ["part3-enforcement"],
+      "spec_sections": ["Token Budget Alert Thresholds"],
+      "compliance": "full",
+      "gap_notes": null
+    },
+    {
+      "id": "loop-detector",
+      "file": ".hooks/loop_detector.sh",
+      "spec_parts": ["part3-enforcement"],
+      "spec_sections": ["Loop Detection Thresholds", "Error Signature Formulas"],
+      "compliance": "full",
+      "gap_notes": null
+    },
+    {
+      "id": "context-health-check",
+      "file": ".hooks/context_health_check.sh",
+      "spec_parts": ["part2-context"],
+      "spec_sections": ["Critical Context Sections", "Context Health Check Invocation Frequency"],
+      "compliance": "full",
+      "gap_notes": null
+    },
+    {
+      "id": "context-baseline",
+      "file": ".hooks/context_baseline.sh",
+      "spec_parts": ["part2-context"],
+      "spec_sections": ["Session State Persistence", "Critical Context Sections"],
+      "compliance": "full",
+      "gap_notes": null
+    },
+    {
+      "id": "prohibitions-enforcer",
+      "file": ".hooks/prohibitions_enforcer.sh",
+      "spec_parts": ["part3-enforcement"],
+      "spec_sections": ["Standing Order 10 — Prohibited Actions"],
+      "compliance": "full",
+      "gap_notes": null
+    },
+    {
+      "id": "scope-boundary-guard",
+      "file": ".hooks/scope_boundary_guard.sh",
+      "spec_parts": ["part3-enforcement"],
+      "spec_sections": ["Standing Order 03 — Scope Discipline"],
+      "compliance": "full",
+      "gap_notes": null
+    },
+    {
+      "id": "zero-trust-validator",
+      "file": ".hooks/zero_trust_validator.sh",
+      "spec_parts": ["part3-enforcement"],
+      "spec_sections": ["Standing Order 12 — Zero Trust"],
+      "compliance": "partial",
+      "gap_notes": "Advisory-only; spec envisions full zero-trust pipeline with credential rotation and blast-radius enforcement"
+    },
+    {
+      "id": "brain-context-router",
+      "file": ".hooks/brain_context_router.sh",
+      "spec_parts": ["part5-brain"],
+      "spec_sections": ["Brain Query Defaults", "Brain Context Routing"],
+      "compliance": "partial",
+      "gap_notes": "Routes to brain queries but only at B1 level; B2/B3 query patterns not implemented"
+    },
+    {
+      "id": "pre-work-validator",
+      "file": ".hooks/pre_work_validator.sh",
+      "spec_parts": ["part6-execution"],
+      "spec_sections": ["Standing Order 15 — Pre-Work Validation"],
+      "compliance": "full",
+      "gap_notes": null
+    },
+    {
+      "id": "compliance-ethics-advisor",
+      "file": ".hooks/compliance_ethics_advisor.sh",
+      "spec_parts": ["part3-enforcement"],
+      "spec_sections": ["Standing Order 14 — Compliance, Ethics, Legal"],
+      "compliance": "partial",
+      "gap_notes": "Advisory-only; spec defines safety-tier gap requiring stronger enforcement"
+    },
+    {
+      "id": "state-management",
+      "file": "admiral/lib/state.sh",
+      "spec_parts": ["part11-protocols"],
+      "spec_sections": ["Session State Persistence", "Error Signature Formulas", "Tool Token Estimation"],
+      "compliance": "full",
+      "gap_notes": null
+    },
+    {
+      "id": "standing-orders-lib",
+      "file": "admiral/lib/standing_orders.sh",
+      "spec_parts": ["part2-context"],
+      "spec_sections": ["Standing Orders Injection"],
+      "compliance": "full",
+      "gap_notes": null
+    },
+    {
+      "id": "injection-detection",
+      "file": "admiral/lib/injection_detect.sh",
+      "spec_parts": ["part3-enforcement"],
+      "spec_sections": ["Zero Trust — Injection Detection"],
+      "compliance": "partial",
+      "gap_notes": "Pattern-based detection; no ML-based or contextual analysis"
+    },
+    {
+      "id": "reference-constants",
+      "file": "admiral/config/reference_constants.sh",
+      "spec_parts": ["part2-context", "part3-enforcement", "part4-fleet", "part5-brain", "part6-execution", "part7-quality", "part8-operations"],
+      "spec_sections": ["All reference-constants.md sections"],
+      "compliance": "full",
+      "gap_notes": null
+    },
+    {
+      "id": "central-config",
+      "file": "admiral/config.json",
+      "spec_parts": ["part3-enforcement"],
+      "spec_sections": ["Runtime configuration overrides"],
+      "compliance": "full",
+      "gap_notes": null
+    },
+    {
+      "id": "ground-truth-schema",
+      "file": "admiral/schemas/ground-truth.v1.schema.json",
+      "spec_parts": ["part1-strategy"],
+      "spec_sections": ["Ground Truth document structure"],
+      "compliance": "full",
+      "gap_notes": null
+    },
+    {
+      "id": "agent-definition-schema",
+      "file": "admiral/schemas/agent-definition.v1.schema.json",
+      "spec_parts": ["part4-fleet"],
+      "spec_sections": ["Agent role definitions"],
+      "compliance": "partial",
+      "gap_notes": "Schema defined; no fleet orchestration runtime to consume it"
+    },
+    {
+      "id": "ground-truth-generator",
+      "file": "admiral/bin/generate_ground_truth",
+      "spec_parts": ["part1-strategy"],
+      "spec_sections": ["Ground Truth scaffolding"],
+      "compliance": "full",
+      "gap_notes": null
+    },
+    {
+      "id": "ground-truth-validator",
+      "file": "admiral/bin/validate_ground_truth",
+      "spec_parts": ["part1-strategy"],
+      "spec_sections": ["Ground Truth validation"],
+      "compliance": "full",
+      "gap_notes": null
+    },
+    {
+      "id": "boundaries-validator",
+      "file": "admiral/bin/validate_boundaries",
+      "spec_parts": ["part1-strategy"],
+      "spec_sections": ["Boundaries checklist"],
+      "compliance": "full",
+      "gap_notes": null
+    },
+    {
+      "id": "brain-b1-tools",
+      "file": "admiral/bin/brain_query, admiral/bin/brain_record, admiral/bin/brain_retrieve, admiral/bin/brain_audit",
+      "spec_parts": ["part5-brain"],
+      "spec_sections": ["Brain Level 1 — File-based knowledge"],
+      "compliance": "partial",
+      "gap_notes": "B1 (file-based) implemented; B2 (vector store) and B3 (HNSW index) not started"
+    },
+    {
+      "id": "version-audit",
+      "file": "admiral/bin/version_audit",
+      "spec_parts": ["part11-protocols"],
+      "spec_sections": ["Version tracking"],
+      "compliance": "partial",
+      "gap_notes": "Basic version audit; no automated spec-implementation drift detection"
+    },
+    {
+      "id": "session-summary",
+      "file": "admiral/bin/session_summary",
+      "spec_parts": ["part8-operations"],
+      "spec_sections": ["Session telemetry"],
+      "compliance": "partial",
+      "gap_notes": "Summary generation exists; no integration with alerting pipeline"
+    },
+    {
+      "id": "control-plane-server",
+      "file": "control-plane/src/server.ts",
+      "spec_parts": ["part8-operations"],
+      "spec_sections": ["Fleet Control Plane — HTTP API"],
+      "compliance": "partial",
+      "gap_notes": "HTTP API and /health endpoint; no alerting pipeline or external integrations"
+    },
+    {
+      "id": "control-plane-events",
+      "file": "control-plane/src/events.ts",
+      "spec_parts": ["part12-data-ecosystem"],
+      "spec_sections": ["Event stream"],
+      "compliance": "full",
+      "gap_notes": null
+    },
+    {
+      "id": "control-plane-traces",
+      "file": "control-plane/src/trace.ts",
+      "spec_parts": ["part12-data-ecosystem"],
+      "spec_sections": ["Execution traces"],
+      "compliance": "full",
+      "gap_notes": null
+    },
+    {
+      "id": "runaway-detector",
+      "file": "control-plane/src/runaway-detector.ts",
+      "spec_parts": ["part7-quality"],
+      "spec_sections": ["SPC-based anomaly detection", "Loop detection", "Token spike detection"],
+      "compliance": "full",
+      "gap_notes": null
+    },
+    {
+      "id": "control-plane-ingest",
+      "file": "control-plane/src/ingest.ts",
+      "spec_parts": ["part12-data-ecosystem"],
+      "spec_sections": ["JSONL journal ingestion"],
+      "compliance": "full",
+      "gap_notes": null
+    },
+    {
+      "id": "control-plane-dashboard",
+      "file": "control-plane/src/dashboard/",
+      "spec_parts": ["part8-operations"],
+      "spec_sections": ["Fleet Control Plane — Dashboard"],
+      "compliance": "partial",
+      "gap_notes": "Basic dashboard; no real-time fleet visualization or multi-agent views"
+    },
+    {
+      "id": "standing-orders",
+      "file": "admiral/standing-orders/",
+      "spec_parts": ["part2-context", "part3-enforcement"],
+      "spec_sections": ["All 15 Standing Orders"],
+      "compliance": "full",
+      "gap_notes": null
+    }
+  ],
+  "unimplemented_spec_areas": [
+    {
+      "spec_part": "part4-fleet",
+      "section": "Fleet Composition & Orchestration",
+      "description": "71 agent roles defined; no fleet orchestration runtime, agent routing, or multi-agent coordination",
+      "blocked_by": null
+    },
+    {
+      "spec_part": "part5-brain",
+      "section": "Brain Levels B2/B3",
+      "description": "Vector store (B2) and HNSW index (B3) brain levels not implemented",
+      "blocked_by": "B1 complete"
+    },
+    {
+      "spec_part": "part6-execution",
+      "section": "Execution Patterns Runtime",
+      "description": "Parallelism, handoff, escalation, swarm patterns not implemented as runtime",
+      "blocked_by": "part4-fleet"
+    },
+    {
+      "spec_part": "part7-quality",
+      "section": "SDLC Quality Gates",
+      "description": "Automated review, test generation, coverage tracking not implemented",
+      "blocked_by": null
+    },
+    {
+      "spec_part": "part8-operations",
+      "section": "Alerting Pipeline",
+      "description": "Push alerts from control plane to external systems not implemented",
+      "blocked_by": null
+    },
+    {
+      "spec_part": "part9-platform",
+      "section": "Cross-Platform Adapters",
+      "description": "Only Claude Code adapter exists; Cursor, Windsurf, API-direct not started",
+      "blocked_by": null
+    },
+    {
+      "spec_part": "part10-admiral",
+      "section": "Meta-Agent Governance",
+      "description": "Agent-governing-agents infrastructure not implemented",
+      "blocked_by": "part4-fleet"
+    },
+    {
+      "spec_part": "part13-mcp-integration",
+      "section": "MCP Protocol Integration",
+      "description": "MCP server and tool integration not implemented",
+      "blocked_by": null
+    }
+  ],
+  "summary": {
+    "total_components": 33,
+    "full_compliance": 23,
+    "partial_compliance": 10,
+    "minimal_compliance": 0,
+    "unimplemented_areas": 8,
+    "compliance_score_pct": 70
+  }
+}
