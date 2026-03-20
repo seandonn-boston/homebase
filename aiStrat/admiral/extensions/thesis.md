@@ -67,6 +67,30 @@ Admiral is the equivalent infrastructure for AI workforces.
 
 ---
 
+## Why Not Point Solutions?
+
+As of March 2026, enterprises can assemble a stack of point solutions that addresses slices of the AI workforce problem:
+
+- **StrongDM Leash** — runtime enforcement and containment for individual agents
+- **Perplexity Computer** — multi-model orchestration with enterprise APIs
+- **Perplexity Comet Enterprise** — browser-level agent governance with admin controls
+- **Delinea + StrongDM PAM** — human and machine identity management
+
+Each addresses one of the five structural gaps — partially. Leash provides enforcement but with binary allow/deny, not graduated trust. Comet provides audit but only for browser sessions, not cross-platform fleets. Computer provides orchestration but only for Perplexity agents.
+
+**The assembled stack has no:**
+- Persistent memory across sessions, projects, or platforms
+- Graduated trust earned through demonstrated performance
+- Behavioral governance (standing orders, identity discipline, recovery protocols)
+- Fleet-as-workforce coordination (roles, handoffs, institutional memory)
+- Cross-platform governance spanning CLI agents, API agents, browser agents, and backend fleets
+
+These are not features. They are the structural requirements for the organizational form Admiral enables. Point solutions govern *tools*. Admiral governs a *workforce*. The distinction is the same as the difference between a scheduling app and an HR department — one manages tasks, the other manages an organization.
+
+> **The risk:** If the point solutions converge fast enough, enterprises may settle for "good enough" governance and never adopt the unified model. Admiral's compounding features (the Brain, causality tracing, predictive health) must ship before that convergence window closes. See `inevitable-features.md` for competitive timelines.
+
+---
+
 ## One Sentence
 
 Admiral is what makes it safe to run AI agents as a workforce instead of using them as tools.

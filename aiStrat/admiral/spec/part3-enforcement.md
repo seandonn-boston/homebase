@@ -427,6 +427,46 @@ One deterministic check that fires every time and self-heals is more effective t
 
 > **ANTI-PATTERN: ALL INSTRUCTIONS, NO HOOKS** — The Admiral writes comprehensive AGENTS.md rules but implements zero hooks. For the first 60% of a session, rules are followed. As context pressure builds, rules near the beginning lose attention weight. The agent violates constraints it followed an hour ago. More rules are added. The file grows. The agent ignores more. Death spiral. **Defense:** Standing Order 6 (Recovery Protocol) — when rules aren't being followed, convert to hooks. The Admiral-builds-Admiral reference implementation (Case Study 4, Appendix D) made this exact error by deferring hooks in favor of instructions.
 
+### Enforcement Layer Comparison: Admiral Hooks vs. StrongDM Leash
+
+StrongDM's Leash (open-source, Apache 2.0, October 2025) implements enforcement at the kernel level via eBPF/container interception, governed by Cedar policies. This is the most direct competitive challenge to Admiral's enforcement spectrum, and understanding the difference is essential for positioning and potential integration.
+
+| Dimension | Admiral Hooks | StrongDM Leash |
+|---|---|---|
+| **Abstraction level** | Application-layer. Hooks run in the same shell/process as the agent runtime. | Kernel-layer. eBPF syscall interception below the application. Agents have zero visibility into the enforcement layer. |
+| **Bypass resistance** | Medium. A sufficiently capable agent could theoretically manipulate hook scripts, `$PATH`, or file permissions. Mitigated by hook isolation and scope boundaries. | High. Kernel-level interception cannot be bypassed by the agent — it operates below the agent's awareness. |
+| **Policy language** | Shell scripts and JSON manifests. Powerful and flexible, but not standardized. | Cedar (Amazon-backed, formally verified). Standardized, auditable, human-readable. Growing enterprise adoption. |
+| **Deployment model** | Per-repository configuration. Hooks are version-controlled alongside agent configs. | Container wrapping with progressive deployment: Record (observe) → Shadow (simulate) → Enforce (block). |
+| **Network enforcement** | None. Admiral has no network-layer enforcement. | Per-agent, per-destination network policies. Can block outbound connections to prevent data exfiltration. |
+| **Graduated trust** | Yes — four tiers (Enforced/Autonomous/Propose/Escalate) per decision category. | No — binary allow/deny per policy. |
+| **MCP awareness** | Hooks fire on tool lifecycle events. No MCP-specific inspection. | MCP observer correlates tool calls with filesystem/network telemetry. |
+
+**Where Leash is stronger:** Kernel-level enforcement is structurally more secure than application-layer hooks. An agent cannot `chmod -x` a kernel-level policy. The Record → Shadow → Enforce adoption ramp is operationally superior to Admiral's "configure and deploy" model. Network-level containment addresses data exfiltration scenarios Admiral cannot currently detect.
+
+**Where Admiral is stronger:** Leash is binary — allow or deny. It has no concept of "propose an alternative" or "escalate to a human." It enforces *actions* but cannot evaluate *intent*, *behavior patterns*, or *cross-session drift*. It governs individual agents, not fleets. It has no memory, no standing orders, no quality assurance.
+
+**Integration path:** Admiral and Leash are complementary, not competitive. The recommended architecture:
+
+```
+┌─────────────────────────────────────────┐
+│  Admiral (governance logic)              │
+│  Decision authority tiers, standing      │
+│  orders, fleet coordination, the Brain   │
+├─────────────────────────────────────────┤
+│  Admiral → Cedar policy generation       │
+│  (Admiral's per-category trust tiers     │
+│   translate to Cedar allow/deny rules)   │
+├─────────────────────────────────────────┤
+│  StrongDM Leash (enforcement backend)    │
+│  Kernel-level enforcement of Cedar       │
+│  policies + network containment          │
+└─────────────────────────────────────────┘
+```
+
+Admiral decides *what* the policy should be based on trust, memory, and context. Leash enforces *that* policy at the kernel level where it cannot be bypassed. This gives both layers what they lack alone: Admiral gets unhackable enforcement; Leash gets graduated trust and institutional memory.
+
+> **Implementation note:** This integration is aspirational (March 2026). Leash's Cedar policies are currently hand-written. Automated generation from Admiral's decision authority tiers would require a Cedar policy compiler that translates per-category trust configurations into Cedar policy documents. This is a natural B2/E2+ enhancement.
+
 -----
 
 ## Decision Authority

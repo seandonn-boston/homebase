@@ -268,6 +268,36 @@ Do not attempt Predictive Health without Causality Tracing. Predictions without 
 
 -----
 
+## Competitive Urgency: The Window Is Closing
+
+These three features are Admiral's defensible moat — but only if they ship before the point solutions converge.
+
+### The Landscape (March 2026)
+
+No competitor has any of the three inevitable features. But each is moving toward adjacent territory:
+
+| Competitor | Current State | Trajectory | Time to Overlap |
+|---|---|---|---|
+| **StrongDM Leash** | Kernel-level enforcement only. No memory, no prediction. | Leash's Record → Shadow → Enforce lifecycle collects operational data. If they add trend analysis on that data, they have a primitive version of Predictive Health. | 12-18 months |
+| **Perplexity Comet** | Browser-level audit logs. Per-session only. No cross-session memory. | Comet Enterprise already captures per-user AI interaction patterns. If they persist and index these patterns, they have a primitive version of Living Memory — scoped to browser agents only. | 12-18 months |
+| **Perplexity Computer** | Multi-model orchestration with subagent generation. No tracing across subagents. | Computer's subagent generation creates natural trace trees. If they expose these as causality chains, they have Causality Tracing for Perplexity agents only. | 6-12 months |
+
+**The critical window:** None of these competitors can build *cross-platform, cross-session, fleet-wide* versions of these features — because they each govern only their own surface. Admiral's versions are structurally different: they span all agents, all platforms, all sessions. But that structural advantage only matters if the features exist. A shipped primitive beats an unshipped ideal.
+
+### Ship Priority Reframed
+
+The implementation priority (Causality Tracing → Living Memory → Predictive Health) is unchanged. The urgency is new:
+
+| Feature | Without competitive pressure | With competitive pressure |
+|---|---|---|
+| **Causality Tracing** | Ship when Fleet Observability infrastructure is ready | Ship within 90 days — before Perplexity exposes subagent trace trees |
+| **Living Memory (Brain B2)** | Ship when B1 metrics justify the upgrade | Ship within 120 days — before Comet Enterprise adds persistent user-AI interaction patterns |
+| **Predictive Health** | Ship after 30+ days of trace data | Ship within 180 days — before Leash adds trend analysis to its Record data |
+
+The compounding effect (§ The Compounding Effect above) is Admiral's ultimate advantage: no single point solution will build all three features, and no assembled stack will make them compound across platforms. But the compounding only starts when the first feature ships.
+
+-----
+
 ## The Lock-In Effect
 
 These three features, once operational, create a switching cost that is not commercial but operational:

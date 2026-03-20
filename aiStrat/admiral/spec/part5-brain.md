@@ -30,6 +30,24 @@ Each level should run for at least 2 weeks of active fleet operation before adva
 
 > **ANTI-PATTERN: PREMATURE ARCHITECTURE** — Deploying the full B3 Brain (Postgres + pgvector + MCP + identity tokens) for a fleet that hasn't yet determined whether persistent memory helps. The infrastructure cost (setup, maintenance, security surface) is justified only when lighter approaches hit their limits. Start at B1. Graduate when you have evidence.
 
+### Why the Brain Is Admiral's Primary Competitive Moat
+
+As of March 2026, no competing product has persistent semantic memory:
+
+| Competitor | Memory Capability | Gap vs. the Brain |
+|---|---|---|
+| **StrongDM Leash** | None. Every container session starts from zero. | No memory of any kind. Cannot learn from prior enforcement decisions. |
+| **Perplexity Computer** | None across sessions. Subagent context is ephemeral. | Orchestration without memory. Cannot recall that "approach X failed last time." |
+| **Perplexity Comet Enterprise** | Per-user audit logs (admin-visible, not agent-accessible). | Audit is not memory. Logs record what happened; the Brain records what it *meant* and what to do differently. |
+
+The Brain is the hardest capability for any competitor to replicate because:
+
+1. **It compounds.** A Brain with 90 days of entries is structurally more valuable than a Brain with 1 day. No competitor can ship a shortcut to accumulated institutional knowledge.
+2. **It creates operational lock-in.** Switching away from a system with 1,000 semantically indexed decisions, lessons, and failure modes means losing the fleet's institutional memory. This is not vendor lock-in through contracts — it is lock-in through genuine, irreplaceable value.
+3. **It requires the full stack.** Useful memory requires not just storage (any database) but semantic retrieval (embeddings), strengthening signals (usage tracking), decay awareness (staleness detection), multi-hop traversal (knowledge graph), and quarantine (security). Building one piece without the others produces a database, not a Brain.
+
+**Competitive urgency:** Perplexity Comet Enterprise already captures per-user AI interaction patterns for admin dashboards. If they persist and semantically index these patterns, they have a primitive version of Living Memory — scoped to browser agents only. The window to establish the Brain as the cross-platform standard for agent memory is approximately 12-18 months. Ship B2 (SQLite + embeddings) within 120 days to begin the compounding effect before competitors enter the space.
+
 ### Why a Database, Not Files
 
 Institutional Memory (Part 8) defines five file-based persistence patterns — checkpoint files, ledger files, handoff documents, git-based state, and continuous operation. Files work for single-agent, single-project, single-session persistence. They break down when:
