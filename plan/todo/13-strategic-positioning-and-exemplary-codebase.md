@@ -25,9 +25,6 @@ Strategic positioning makes Admiral legible to enterprises, regulators, analysts
 - [ ] **R-07: AI Work OS Positioning Document** *(DEFERRED Phase 3+)* — Reframe Admiral from "governance tool" to "operating system for AI work" with complete OS-to-Admiral concept mapping; produce executive summary for pitch decks and technical depth for engineering leadership. Updated positioning: **"Governance for AI workforces"** — distinct from "security for AI agents" (Leash) or "AI-powered enterprise" (Perplexity).
 - [ ] **R-10: Competitive Differentiation Matrix** *(DEFERRED Phase 3+)* — Feature-by-feature comparison against LangGraph, CrewAI, AutoGen, Semantic Kernel, **StrongDM Leash** (kernel enforcement), **Perplexity Computer** (multi-model orchestration), **Perplexity Comet Enterprise** (browser governance), and the **assembled "good enough" stack** (Leash + Computer + Comet). Compare across 10+ dimensions including cross-platform scope, persistent memory, graduated trust, behavioral governance, and fleet coordination. Include honest trade-off assessment and quarterly update cadence.
 - [ ] **R-11: Enterprise Adoption Playbook** *(DEFERRED Phase 3+)* — Step-by-step guide covering discovery, evaluation, pilot, rollout, and operationalization; include decision frameworks, persona-specific content, and top-10 objection FAQ.
-- **R-12: Open-Source Community Strategy** — *Relocated to `plan/strategy-and-community.md`* (non-engineering item)
-- **R-13: Academic Research Positioning** — *Relocated to `plan/strategy-and-community.md`* (non-engineering item)
-
 ## Simulation & Chaos Testing
 
 - [ ] **X-01: Deterministic Simulation Testing** — Create simulation harness that replays recorded hook sequences and verifies byte-identical outcomes across runs; normalize non-determinism (timestamps, random values); produce clear diffs on divergence.
@@ -75,5 +72,5 @@ Strategic positioning makes Admiral legible to enterprises, regulators, analysts
 | X-14 | S-19 (injection detection), S-20 (data sensitivity) | Defense implementations |
 | X-15 | X-07 (unified event log) | Realistic event ingestion testing |
 | X-18 | Dashboard implementation | Cannot audit what does not exist |
-| R-01, R-02, R-03, R-05, R-06, R-10, R-12, R-13 | — | Independent |
+| R-01, R-02, R-03, R-05, R-06, R-10 | — | Independent |
 | X-04, X-07, X-08, X-09, X-10, X-11, X-12, X-16, X-17 | — | Independent |

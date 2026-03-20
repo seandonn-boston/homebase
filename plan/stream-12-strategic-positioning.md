@@ -4,7 +4,7 @@
 
 **Current Score:** 2/10
 **Target Score:** 7/10
-**Items:** R-01 to R-11 (11 items; R-12, R-13 relocated to `plan/strategy-and-community.md`)
+**Items:** R-01 to R-11 (11 items)
 **Size Distribution:** 0S, 8M, 5L
 
 ---
@@ -96,9 +96,6 @@ The Admiral Framework needs industry alignment to be recognized by enterprises a
   - **Files:** `docs/strategy/enterprise-adoption-playbook.md` (new)
   - **Size:** L
 
-- **R-12: Open-Source Community Strategy** — *Relocated to `plan/strategy-and-community.md`* (non-engineering item)
-- **R-13: Academic Research Positioning** — *Relocated to `plan/strategy-and-community.md`* (non-engineering item)
-
 ---
 
 ## Dependencies
@@ -111,8 +108,6 @@ R-08 (ISO 42001) can be done independently but benefits from R-01, R-04 complete
 R-09 (EU AI Act) can be done independently but benefits from R-04 (NIST) for security references
 R-10 (competitive matrix) can be done independently — external research task
 R-11 (enterprise playbook) should follow R-07 (AI Work OS) and R-10 (competitive matrix) for positioning clarity
-R-12 (community strategy) can be done independently — organizational planning task
-R-13 (academic positioning) can be done independently — research and writing task
 ```
 
 ## Competitive Intelligence Integration (from research/)

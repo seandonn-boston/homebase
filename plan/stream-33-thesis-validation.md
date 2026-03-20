@@ -95,4 +95,3 @@
   - **Spec ref:** Admiral Thesis; Rating System reference — The Third Category Problem
   - **Depends on:** TV-01, TV-02, TV-03
 
-- **TV-10: Community feedback collection** — *Relocated to `plan/strategy-and-community.md`* (community infrastructure, not measurement code)
