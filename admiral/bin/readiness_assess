@@ -73,7 +73,7 @@ if [ ! -f "$GT_PATH" ]; then
 else
   gt_output=""
   gt_rc=0
-  gt_output=$(bash "$VALIDATE_GT" "$GT_PATH" 2>&1) || gt_rc=$?
+  gt_output=$("$VALIDATE_GT" "$GT_PATH" 2>&1) || gt_rc=$?
 
   if [ "$gt_rc" -eq 0 ]; then
     gt_status="pass"
@@ -93,7 +93,7 @@ else
   # Also run boundaries check if GT exists
   if [ -f "$VALIDATE_BOUNDS" ]; then
     bounds_rc=0
-    bounds_output=$(bash "$VALIDATE_BOUNDS" "$GT_PATH" 2>&1) || bounds_rc=$?
+    bounds_output=$("$VALIDATE_BOUNDS" "$GT_PATH" 2>&1) || bounds_rc=$?
     if [ "$bounds_rc" -eq 2 ]; then
       CHECKS_FAIL+=("Boundaries: missing required categories — run validate_boundaries $GT_PATH")
       PREP_STEPS+=("Complete boundaries section: validate_boundaries $GT_PATH")
