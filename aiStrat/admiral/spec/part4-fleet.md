@@ -8,6 +8,24 @@
 
 -----
 
+## Agent Spec Protocol (ASP)
+
+> **TL;DR** — Every agent definition follows the Agent Spec Protocol — a standard format covering identity, scope, boundaries, authority, and guardrails. ASP separates what an agent IS (specification) from what the enforcement layer DOES (blocking vs. advisory). See [`agent-spec-protocol/`](agent-spec-protocol/) for the full specification, schemas, templates, and examples.
+
+ASP is the canonical format for agent definitions in the Admiral Framework. It unifies the markdown agent template (`agent-example.md`), the JSON identity token (`agent-identity.json`), and the decision authority model (Part 3) into a single, self-contained document per agent role.
+
+**Key design decision:** ASP defines **authority relationships** (who can command/suggest/escalate to whom), not **enforcement behavior** (what blocks vs. advises at runtime). The fleet has many actions — only some are blocking (e.g., script injection detected by a PreToolUse hook). The rest are non-blocking (budget advisories, loop warnings, context health). Authority and enforcement are complementary layers that operate simultaneously; neither subsumes the other.
+
+**Resources:**
+- [ASP README](agent-spec-protocol/README.md) — Full specification and rationale
+- [Authoring Guide](agent-spec-protocol/authoring-guide.md) — How to write effective agent specs
+- [JSON Schema (full)](agent-spec-protocol/validation/asp.schema.json) — Validates all 12 sections
+- [JSON Schema (minimal)](agent-spec-protocol/validation/asp-minimal.schema.json) — Validates sections 1-5 only
+- Templates: [minimal](agent-spec-protocol/templates/minimal.asp.md) | [standard](agent-spec-protocol/templates/standard.asp.md) | [production](agent-spec-protocol/templates/production.asp.md)
+- Examples: [Orchestrator](agent-spec-protocol/examples/orchestrator.asp.md) | [Custom Implementer](agent-spec-protocol/examples/custom-implementer.asp.md)
+
+-----
+
 ## Fleet Composition
 
 > **TL;DR** — Define every agent role, what it does, what it does NOT do, how tasks route to it, and how it hands off to others. Five to twelve agents, not fifty. The boring agents win.

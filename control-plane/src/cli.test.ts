@@ -26,9 +26,10 @@ describe("parseArgs", () => {
     assert.equal(result.port, 9000);
   });
 
-  it("handles --port with non-numeric value (NaN)", () => {
-    const result = parseArgs(["--port", "abc"]);
-    assert.ok(Number.isNaN(result.port));
+  it("handles --port with non-numeric value (throws)", () => {
+    assert.throws(() => parseArgs(["--port", "abc"]), {
+      message: "Invalid port: must be between 1 and 65535",
+    });
   });
 
   it("ignores unknown flags", () => {

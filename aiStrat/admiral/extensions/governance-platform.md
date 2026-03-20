@@ -246,6 +246,59 @@ The key insight: you do not become indispensable by being the best toolkit. You 
 
 -----
 
+## Competitive Landscape: Why "Good Enough" Is the Real Threat
+
+Admiral does not compete with any single product. It competes with the assembled stack of point solutions that enterprises may adopt instead.
+
+### The Point Solution Landscape (March 2026)
+
+| Layer | Point Solution | What It Does | What It Doesn't Do |
+|---|---|---|---|
+| **Enforcement** | StrongDM Leash | Kernel-level containment, Cedar policy enforcement, MCP observer | No graduated trust, no memory, no fleet coordination |
+| **Orchestration** | Perplexity Computer | Multi-model agent orchestration, subagent generation, enterprise APIs | Only governs Perplexity agents, no cross-platform governance |
+| **Browser governance** | Perplexity Comet Enterprise | Domain-level agent action controls, CrowdStrike integration, audit logs | Only governs browser-based agents, no CLI/API/backend governance |
+| **Identity/Access** | Delinea + StrongDM PAM | Unified human + machine identity, privileged access management | No agent-specific trust model, no decision authority tiers |
+
+### The "Good Enough" Stack
+
+The most dangerous competitive scenario is not any single product — it is the assembled stack:
+
+```
+Enforcement:        StrongDM Leash (Cedar policies, kernel-level)
+Orchestration:      Perplexity Computer (multi-model, subagent generation)
+Browser governance:  Perplexity Comet Enterprise (admin controls, audit)
+Identity/Access:    Delinea + StrongDM PAM (human + machine identity)
+Security:           CrowdStrike (via Comet integration)
+```
+
+An enterprise that deploys this stack has runtime security, browser-level governance, multi-model orchestration, and identity management. They may never feel the need for a separate governance layer.
+
+### What Only Admiral Provides
+
+The "good enough" stack has five structural gaps that only a unified governance layer can fill:
+
+| Gap | Why Point Solutions Can't Fill It |
+|---|---|
+| **Persistent semantic memory** | No point solution has cross-session memory with decay, strengthening, and semantic retrieval. Leash has no memory. Comet sessions are stateless. Every deployment starts from zero. |
+| **Graduated trust** | Every point solution is binary: allow or deny. No per-category decision authority tiers. No trust earned through demonstrated performance. No graduated autonomy. |
+| **Behavioral governance** | No point solution has standing orders, identity discipline, context honesty rules, or recovery protocols. Leash governs *actions*. Admiral governs *behavior*. |
+| **Fleet-as-workforce** | No point solution treats agents as a permanent workforce with roles, specialization, handoff contracts, and institutional memory. Leash governs individuals. Comet governs browser sessions. Admiral governs the *organization*. |
+| **Cross-platform governance** | Each point solution governs its own surface. Leash governs containers. Comet governs browsers. Perplexity Computer governs Perplexity agents. Admiral governs *all agents on all platforms*. |
+
+### Strategic Position
+
+Admiral is the layer *above* enforcement, orchestration, and browser governance — not a replacement for them. The correct competitive framing:
+
+- StrongDM Leash is Admiral's **enforcement backend** (Cedar policies can implement Admiral's decision authority tiers)
+- Perplexity Computer is a **managed fleet** that Admiral can govern alongside other fleets
+- Perplexity Comet is a **governed endpoint** — one surface in a multi-surface fleet
+
+Admiral is not the flight plan. It is not the airplane. **It is air traffic control** — and the point solutions are the individual aircraft following its directions.
+
+> **The urgency:** Every competitor analyzed is a shipped product with enterprise customers. Admiral is a specification. The strategic risk is not being out-featured — it is being out-shipped. The compounding features (the Brain, causality tracing, predictive health) must ship before the point solutions converge enough to make a unified governance layer feel unnecessary.
+
+-----
+
 ## Anti-Patterns
 
 > **ANTI-PATTERN: ELEGANCE OVER RESILIENCE** — Designing a beautiful agent pipeline that assumes every agent will behave as specified, every tool will respond, and every workflow will follow the happy path. The first week of production shatters every assumption. Design for the messy week, not the clean diagram.

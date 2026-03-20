@@ -1,14 +1,14 @@
-# Homebase
+# Helm
 
 **The operational headquarters for the Admiral Framework and supporting research, thesis documents, and early-stage implementation.**
 
-Homebase is a monorepo containing four major workstreams — all converging on a single question: *How should organizations govern, coordinate, and operate fleets of autonomous AI agents?*
+Helm is a monorepo containing four major workstreams — all converging on a single question: *How should organizations govern, coordinate, and operate fleets of autonomous AI agents?*
 
 ---
 
 ## What's Here
 
-### 🔷 [`aiStrat/`](aiStrat/) — The Admiral Framework `v0.20.1-alpha.1773956527082`
+### 🔷 [`aiStrat/`](aiStrat/) — The Admiral Framework `v0.21.2-alpha.1773977464082`
 
 The flagship project. **Admiral** is a comprehensive, model-agnostic specification for AI agent fleet orchestration — 114 files across 22 groups defining how autonomous AI agent systems should be structured, secured, coordinated, and governed.
 

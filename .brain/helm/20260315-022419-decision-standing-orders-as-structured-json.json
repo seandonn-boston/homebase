@@ -1,6 +1,6 @@
 {
   "id": "4f949f8e-0b2f-42d7-a88e-e63aa61d8bd1",
-  "project": "homebase",
+  "project": "helm",
   "category": "decision",
   "title": "Standing Orders as structured JSON",
   "content": "Chose to store Standing Orders as individual JSON files (so01-*.json through so15-*.json) in admiral/standing-orders/ rather than a single markdown file. JSON enables programmatic loading, validation, and selective rendering. Each file has id, title, priority_category, order, and rules array.",

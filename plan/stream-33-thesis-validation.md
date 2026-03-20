@@ -32,7 +32,7 @@
 
 - [ ] **TV-03: Before/after case studies — Document cases where enforcement prevented issues**
   - **Description:** Create a case study framework for documenting real instances where enforcement caught problems that advisory guidance would have missed. Each case study captures: (1) the task and context, (2) what the agent attempted, (3) which hook fired and why, (4) what would have happened without enforcement (counterfactual analysis), (5) the estimated impact of the prevented issue (severity, blast radius, remediation cost). Case studies should include both true positives (enforcement correctly prevented a problem) and false positives (enforcement blocked a legitimate action). The ratio between true and false positives is itself thesis evidence.
-  - **Done when:** Case study template is defined. At least 5 case studies are documented from actual Admiral usage (from the homebase repo's own development). Each case study includes counterfactual analysis. True positive / false positive classification is applied. Case studies are stored in a structured format for aggregation.
+  - **Done when:** Case study template is defined. At least 5 case studies are documented from actual Admiral usage (from the Helm repo's own development). Each case study includes counterfactual analysis. True positive / false positive classification is applied. Case studies are stored in a structured format for aggregation.
   - **Files:** `admiral/thesis/case_studies/template.md` (new), `admiral/thesis/case_studies/` (new directory), `admiral/thesis/case_study_index.json` (new)
   - **Size:** M (1-3 hours)
   - **Spec ref:** Admiral Thesis; Part 7, Failure Mode Catalog

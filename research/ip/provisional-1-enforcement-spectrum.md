@@ -6,7 +6,7 @@
 **Date:** March 16, 2026
 **Inventor:** Sean Donn
 **Priority Date:** March 13, 2026
-**Priority Evidence:** Git commit `50ffb14`, repository `seandonn-boston/homebase`
+**Priority Evidence:** Git commit `50ffb14`, repository `seandonn-boston/helm`
 
 ---
 

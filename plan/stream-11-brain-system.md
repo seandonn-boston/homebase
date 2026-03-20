@@ -12,7 +12,7 @@
 
 > *"Memory makes intelligence. Without persistent knowledge, every session starts from zero — the antithesis of institutional learning." — Admiral Framework Thesis*
 
-**Current state:** B1 file-based brain with 9 JSON entries across 2 projects (`homebase`, `traced-demo`), manual creation only via `admiral/bin/brain_record`. Four CLI utilities exist (`brain_record`, `brain_query`, `brain_retrieve`, `brain_audit`) — all grep/jq-based. `brain_context_router.sh` hook detects Propose/Escalate decisions made without a preceding `brain_query` (advisory only). No automatic entry creation from hooks. No demand signal tracking. No contradiction detection. B2 (SQLite) and B3 (Production/MCP) not started. Graduation criteria defined in spec but not measured.
+**Current state:** B1 file-based brain with 9 JSON entries across 2 projects (`helm`, `traced-demo`), manual creation only via `admiral/bin/brain_record`. Four CLI utilities exist (`brain_record`, `brain_query`, `brain_retrieve`, `brain_audit`) — all grep/jq-based. `brain_context_router.sh` hook detects Propose/Escalate decisions made without a preceding `brain_query` (advisory only). No automatic entry creation from hooks. No demand signal tracking. No contradiction detection. B2 (SQLite) and B3 (Production/MCP) not started. Graduation criteria defined in spec but not measured.
 
 **Dependencies:** B1 completion is prerequisite to B2. B2 graduation is prerequisite to B3. Quarantine pipeline (Stream 21 / SD-04) resolved — available for B-18 integration. Control plane (`control-plane/src/server.ts`) exists for B-21 dashboard integration.
 

@@ -1,6 +1,6 @@
 {
   "id": "51d32865-f2b4-4a6d-8325-c176ec804c31",
-  "project": "homebase",
+  "project": "helm",
   "category": "decision",
   "title": "Session state in .admiral directory",
   "content": "Session state stored in .admiral/session_state.json with template at .admiral/session_state.json.template. Runtime state is gitignored, templates are tracked. State is reset at SessionStart and updated atomically (write to .tmp then mv).",
