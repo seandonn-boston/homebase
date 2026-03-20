@@ -1,12 +1,12 @@
-# Gap Analysis: Homebase vs. Pristine Repositories
+# Gap Analysis: Helm vs. Pristine Repositories
 
-Comparison of the homebase repository against the collective patterns observed in the world's best-engineered open source codebases (SQLite, Redis, Lua, PostgreSQL, CPython, FoundationDB, ripgrep, Go stdlib, etc.).
+Comparison of the helm repository against the collective patterns observed in the world's best-engineered open source codebases (SQLite, Redis, Lua, PostgreSQL, CPython, FoundationDB, ripgrep, Go stdlib, etc.).
 
 ---
 
 ## Summary Scorecard
 
-| Dimension | Pristine Standard | Homebase Current | Gap Severity |
+| Dimension | Pristine Standard | Helm Current | Gap Severity |
 |---|---|---|---|
 | Testing | 100% coverage, simulation testing, property-based | 2 test files (TS), 1 bash test script | **Critical** |
 | Code Quality Tooling | Linter + formatter + type checker, enforced in CI | Biome configured but no `.biome.json` config file; no pre-commit hooks enforcing it | **High** |
@@ -32,7 +32,7 @@ Comparison of the homebase repository against the collective patterns observed i
 - Redis: Comprehensive test suite with TCL-based integration tests and unit tests.
 - ripgrep: Property-based testing, regression tests for every bug fix, benchmarks.
 
-**Where homebase stands:**
+**Where helm stands:**
 - 2 TypeScript test files: `runaway-detector.test.ts` (341 lines), `events-trace-ingest.test.ts`
 - 1 bash test script: `.hooks/tests/test_hooks.sh` (430 lines) — thorough but not in CI
 - 4 additional bash test scripts in `admiral/tests/` — also not in CI
@@ -57,7 +57,7 @@ Comparison of the homebase repository against the collective patterns observed i
 - Automated dependency updates (Dependabot/Renovate)
 - Branch protection rules enforcing green CI
 
-**Where homebase stands:**
+**Where helm stands:**
 - `control-plane-ci.yml`: install → build → test → lint (good basics)
 - `spec-validation.yml`: validates VERSION, JSON/YAML syntax, markdown cross-refs
 - `version-bump.yml`: auto-bumps version on merge
@@ -80,7 +80,7 @@ Comparison of the homebase repository against the collective patterns observed i
 - Static analysis beyond linting (CodeQL, Semgrep, ShellCheck)
 - Type checking at strictest level
 
-**Where homebase stands:**
+**Where helm stands:**
 - Biome in `devDependencies`, invoked via `npx @biomejs/biome check`
 - TypeScript `strict: true` (good)
 - No Biome config file (no `.biome.json` or `biome.json`) — uses defaults only
@@ -102,7 +102,7 @@ Comparison of the homebase repository against the collective patterns observed i
 - Redis: Inline comments explain algorithms (e.g., HyperLogLog header comment is a mini-paper)
 - Go stdlib: Every exported function has a godoc comment
 
-**Where homebase stands:**
+**Where helm stands:**
 - Excellent high-level documentation: README.md, AGENTS.md, CLAUDE.md are thorough
 - Spec documentation (aiStrat/) is comprehensive
 - TypeScript files have module-level doc comments (good)
@@ -124,7 +124,7 @@ Comparison of the homebase repository against the collective patterns observed i
 - Clear data flow (events in → processing → output)
 - Layered architecture with each layer independently testable
 
-**Where homebase stands:**
+**Where helm stands:**
 - Good high-level separation: spec (aiStrat/) / runtime (admiral/) / control-plane / hooks
 - TypeScript code has clean type definitions and reasonable module boundaries
 - Zero runtime dependencies (strong architectural constraint)
@@ -143,7 +143,7 @@ Comparison of the homebase repository against the collective patterns observed i
 - Naming conventions documented and followed
 - Error handling follows a single pattern throughout
 
-**Where homebase stands:**
+**Where helm stands:**
 - TypeScript: consistent style, Biome-formatted
 - Bash hooks: mostly consistent headers, but internal style varies
 
@@ -161,7 +161,7 @@ Comparison of the homebase repository against the collective patterns observed i
 - Go stdlib: `(value, error)` tuple pattern everywhere
 - Rust: `Result<T, E>` with custom error types
 
-**Where homebase stands:**
+**Where helm stands:**
 - Bash hooks: fail-open design (documented), but silent failures are possible
 - TypeScript: mix of try/catch and unchecked operations
 
@@ -181,7 +181,7 @@ Comparison of the homebase repository against the collective patterns observed i
 - `CODEOWNERS` file for automatic review assignment
 - "Good first issue" labels
 
-**Where homebase stands:**
+**Where helm stands:**
 - None of these exist
 - `AGENTS.md` and `CLAUDE.md` serve as contributor guides for AI agents, but not for human contributors
 
@@ -200,7 +200,7 @@ Comparison of the homebase repository against the collective patterns observed i
 - Minimal dependency surface
 - Pinned versions, not ranges
 
-**Where homebase stands:**
+**Where helm stands:**
 - Zero runtime dependencies (excellent — mirrors SQLite/Lua philosophy)
 - 3 dev dependencies: `@biomejs/biome`, `@types/node`, `typescript`
 - Uses `^` version ranges (caret = minor version float)
@@ -218,7 +218,7 @@ Comparison of the homebase repository against the collective patterns observed i
 - SQLite: `speedtest1` program with published results
 - Go: `go test -bench` as standard practice
 
-**Where homebase stands:**
+**Where helm stands:**
 - No benchmarks of any kind
 - No performance testing for hooks (which run on every tool call and add latency)
 - No load testing for the HTTP server
@@ -274,7 +274,7 @@ Comparison of the homebase repository against the collective patterns observed i
 
 ## The Philosophical Gap
 
-The deepest gap is not in any single dimension but in the relationship between homebase's *thesis* and its *practice*:
+The deepest gap is not in any single dimension but in the relationship between helm's *thesis* and its *practice*:
 
 > "Deterministic enforcement beats advisory guidance."
 
@@ -286,4 +286,4 @@ Yet the project itself lacks deterministic enforcement of its own code quality:
 
 Pristine repositories practice what they preach. SQLite's testing strategy *is* the product. Redis's readable code *is* the documentation. FoundationDB's simulation testing *is* the correctness guarantee.
 
-Homebase should make its own governance framework the most visible proof of its thesis. The hooks directory should be the single best demonstration of what Admiral makes possible — and that means those hooks should be the most thoroughly tested, most consistently styled, most rigorously enforced code in the entire repository.
+Helm should make its own governance framework the most visible proof of its thesis. The hooks directory should be the single best demonstration of what Admiral makes possible — and that means those hooks should be the most thoroughly tested, most consistently styled, most rigorously enforced code in the entire repository.

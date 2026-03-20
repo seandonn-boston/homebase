@@ -6,7 +6,7 @@
 
 ## Context
 
-Independent assessment of the homebase repository (Admiral Framework implementation) covering architecture, code quality, testing, security, and documentation.
+Independent assessment of the helm repository (Admiral Framework implementation) covering architecture, code quality, testing, security, and documentation.
 
 ## Summary
 

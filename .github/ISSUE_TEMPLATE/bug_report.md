@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-about: Report a bug in homebase
+about: Report a bug in helm
 labels: bug
 ---
 
@@ -22,4 +22,4 @@ labels: bug
 
 - Node.js version:
 - OS:
-- Homebase version/commit:
+- Helm version/commit:

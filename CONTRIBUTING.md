@@ -1,4 +1,4 @@
-# Contributing to Homebase
+# Contributing to Helm
 
 ## Getting Started
 
@@ -11,8 +11,8 @@
 ### Setup
 
 ```bash
-git clone https://github.com/seandonn-boston/homebase.git
-cd homebase/control-plane
+git clone https://github.com/seandonn-boston/helm.git
+cd helm/control-plane
 npm install && npm run build && npm test
 ```
 

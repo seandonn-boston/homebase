@@ -11,7 +11,7 @@
 
 ## Overview
 
-These items transform homebase from "well-built" into "a reference implementation that others study and emulate." Each item draws inspiration from legendary engineering practices — FoundationDB's simulation testing, Netflix's chaos engineering, FastAPI's auto-documentation — and applies them to the Admiral context. The goal is a codebase that does not merely work but demonstrates how agentic governance infrastructure should be built.
+These items transform helm from "well-built" into "a reference implementation that others study and emulate." Each item draws inspiration from legendary engineering practices — FoundationDB's simulation testing, Netflix's chaos engineering, FastAPI's auto-documentation — and applies them to the Admiral context. The goal is a codebase that does not merely work but demonstrates how agentic governance infrastructure should be built.
 
 ---
 
