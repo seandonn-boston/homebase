@@ -9,7 +9,7 @@ All deliverables in this stream are specification proposals written to `docs/spe
 ## Inventory and Prioritization
 
 - [x] **SD-01: Document all spec-debt items as plan tasks with resolution paths** — Audit `spec-debt.md` and `spec-gaps.md` comprehensively; for each active debt item, document the affected spec section, nature of the gap, downstream implementation impact, and proposed resolution path.
-- [ ] **SD-02: Identify which spec gaps block implementation and prioritize accordingly** — Cross-reference the debt inventory against all plan streams; classify each gap as blocking, constraining, or cosmetic and produce a prioritized resolution queue.
+- [x] **SD-02: Identify which spec gaps block implementation and prioritize accordingly** — Cross-reference the debt inventory against all plan streams; classify each gap as blocking, constraining, or cosmetic and produce a prioritized resolution queue.
 
 ## Amendment Proposals
 
