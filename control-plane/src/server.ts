@@ -98,20 +98,20 @@ export class AdmiralServer {
       } else if (url.startsWith("/api/agents/") && url.endsWith("/resume")) {
         const parts = url.split("/").filter(Boolean);
         const agentId = parts[2];
-        if (agentId && agentId !== "resume") {
+        if (agentId && agentId !== "resume" && /^[a-zA-Z0-9_-]+$/.test(agentId)) {
           this.detector.resumeAgent(agentId);
           this.json(res, { resumed: agentId });
         } else {
-          this.errorJson(res, 400, "Missing agent ID");
+          this.errorJson(res, 400, "Missing or invalid agent ID");
         }
       } else if (url.startsWith("/api/alerts/") && url.endsWith("/resolve")) {
         const parts = url.split("/").filter(Boolean);
         const alertId = parts[2];
-        if (alertId && alertId !== "resolve") {
+        if (alertId && alertId !== "resolve" && /^[a-zA-Z0-9_-]+$/.test(alertId)) {
           this.detector.resolveAlert(alertId);
           this.json(res, { resolved: alertId });
         } else {
-          this.errorJson(res, 400, "Missing alert ID");
+          this.errorJson(res, 400, "Missing or invalid alert ID");
         }
       } else if (url === "/" || url === "/index.html") {
         this.serveDashboard(res);

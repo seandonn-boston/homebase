@@ -165,6 +165,6 @@ compute_loop_sig() {
   local agent_id="$1"
   local error_msg="$2"
   local input
-  input="${agent_id}:$(echo "$error_msg" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' | tr '[:upper:]' '[:lower:]')"
-  echo -n "$input" | sha256sum | cut -c1-16
+  input="${agent_id}:$(printf '%s' "$error_msg" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' | tr '[:upper:]' '[:lower:]')"
+  printf '%s' "$input" | sha256sum | cut -c1-16
 }
