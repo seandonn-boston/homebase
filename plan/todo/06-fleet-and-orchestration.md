@@ -43,6 +43,11 @@ Source streams: **Stream 14 (Fleet Agent Definitions, F-01 to F-14)** | **Stream
 
 - [ ] **F-15** — Align agent definitions with Agent Spec Protocol (ASP) format: update F-12a schema to validate ASP-compliant definitions, convert Orchestrator/QA/Security Auditor to full ASP format, integrate ASP validation schemas, enforce negative tool lists. ASP introduces authority relationships, `extends` inheritance, and per-agent Decision Authority tiers. Depends on F-12a.
 
+## ASP Templates & Migration
+
+- [ ] **F-15b** — ASP template creation (minimal, standard, production): Three ASP templates matching spec tiers — minimal (Sections 1-5, lightweight specialists), standard (Sections 1-8, 10-11, most production agents), production (all 12 sections, command/critical agents). Each with YAML frontmatter, guidance comments, and example content.
+- [ ] **F-16** — Legacy-to-ASP migration path: Migration script scanning existing agent definitions, identifying gaps (missing frontmatter, unformalized sections), generating ASP-compliant versions preserving content, validating against ASP schemas. Non-destructive — originals preserved.
+
 ## Capability Registry
 
 - [ ] **F-13** — Machine-readable agent capability registry: generation script producing consolidated JSON from all agent definitions, queryable by Orchestrator, auto-regenerates on definition changes

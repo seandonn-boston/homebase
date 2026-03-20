@@ -34,6 +34,10 @@ Consider promoting IF-05 (performance profiling) and IF-08 (session replay) from
 
 - [ ] **IF-08: Agent replay and debugging** — Record and replay agent sessions capturing every tool invocation, hook execution, brain query, handoff, and model API call. Supports replay comparison, configurable retention, and anonymization.
 
+## Predictive Health Models
+
+- [ ] **IF-13: Prediction model specifications** — Implement 6 prediction models from the inevitable-features extension: context exhaustion (linear extrapolation), budget exhaustion (burn rate projection), quality degradation (correlated threshold warning), retry loop risk (frequency-based >3 errors/5min), tool failure cascade (latency trend extrapolation), orchestrator overload (multi-signal composite). Simple trend extrapolation, not ML.
+
 ## Governance Evolution
 
 - [ ] **IF-09: Natural language policy authoring** *(deferred Phase 3+)* — Compile human-readable policy statements into executable hooks, Standing Order entries, and alert rules. Operates in suggest mode (human review) and apply mode (after approval).

@@ -124,7 +124,27 @@
 
 ---
 
-## 24.6 MCP/A2A Security (from MCP-SECURITY-ANALYSIS.md)
+## 24.6 Advanced Quarantine Layers (from Part 3)
+
+- [ ] **SEC-16: Quarantine Layer 4 — LLM Advisory (Additive Rejection Only)**
+  - **Description:** Implement Layer 4 of the 5-layer quarantine pipeline. Layer 4 is invoked ONLY on content that passes Layers 1-3. It uses an LLM classifier with a fixed, hardcoded prompt template — no dynamic generation, no variable interpolation beyond the content being inspected. Critical constraint: Layer 4 can only REJECT, never APPROVE. A compromised Layer 4 can only fail to reject; it cannot approve what Layer 3 rejected. Logic: Layer 3 passes + Layer 4 rejects = rejected. Layer 3 passes + Layer 4 passes = content proceeds. Layer 3 rejects = Layer 4 never consulted. This asymmetric design ensures that even if the LLM is compromised via prompt injection, it cannot weaken the pipeline — it can only fail to strengthen it.
+  - **Done when:** Layer 4 runs only on content that passed Layers 1-3. Uses hardcoded prompt template with no dynamic interpolation. Can reject but cannot approve. Layer 3 rejection bypasses Layer 4 entirely. Tests verify asymmetric rejection behavior and that Layer 4 compromise cannot approve previously-rejected content.
+  - **Files:** `admiral/monitor/quarantine/layer4_llm_advisory.sh` (new), `admiral/monitor/quarantine/tests/test_layer4.sh` (new)
+  - **Size:** M
+  - **Spec ref:** Part 3, External Intelligence Quarantine — Layer 4 (LLM Advisory)
+  - **Depends on:** SEC-02, SEC-03
+
+- [ ] **SEC-17: Quarantine Layer 5 — Antibody**
+  - **Description:** Implement Layer 5 of the 5-layer quarantine pipeline. Layer 5 converts detected attacks into Brain FAILURE entries for future defense learning. No LLM involvement — deterministic write only. Attack patterns are preserved in "defanged form" as antibody entries, teaching future agents to recognize similar threats. Additionally, all monitor findings arrive as seed candidates with `"approved": False`, requiring Admiral review before Brain activation — a sixth gate on top of the five quarantine layers.
+  - **Done when:** Detected attacks are recorded as Brain FAILURE entries in defanged form. No LLM involved in Layer 5 processing. Antibody entries are queryable for future threat recognition. Admiral approval gate prevents auto-activation. Tests verify antibody creation and defanging.
+  - **Files:** `admiral/monitor/quarantine/layer5_antibody.sh` (new), `admiral/monitor/quarantine/tests/test_layer5.sh` (new)
+  - **Size:** S
+  - **Spec ref:** Part 3, External Intelligence Quarantine — Layer 5 (Antibody)
+  - **Depends on:** SEC-16
+
+---
+
+## 24.7 MCP/A2A Security (from MCP-SECURITY-ANALYSIS.md)
 
 - [ ] **SEC-13: Extend `zero_trust_validator.sh` to scan ALL tool responses**
   - **Description:** The current `zero_trust_validator.sh` restricts injection detection to `WebFetch` and `WebSearch` tool responses (lines 24-35). MCP tool responses bypass injection scanning entirely. This is the #1 priority fix from `admiral/MCP-SECURITY-ANALYSIS.md`. Remove the tool name filter so injection marker scanning applies to all tool responses from all tools. Additionally, escalate severity for MCP-sourced injection — a vetted server delivering injection payloads indicates compromise or rug pull, warranting CRITICAL severity vs. the expected-and-handled web injection.

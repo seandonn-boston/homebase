@@ -195,6 +195,37 @@
 
 **Parallelism opportunities:** Within B1, B-03 (demand signals) and B-04 (contradiction scan) are independent. Within B3, B-14/B-15 (identity/access) are independent of B-16/B-17 (retrieval/graph). B-18 (quarantine integration) depends on B-12 (MCP scaffold) but not on B-14/B-15.
 
+### 11.5 Brain Self-Instrumentation and Integrity
+
+- [ ] **B-21b: Brain Stale Detection (`BRAIN STALE` alert)**
+  - **Description:** Implement the `brain_context_router` hook's BRAIN STALE alert. When a `brain_query` occurred but was more than 20 tool calls ago, emit a `BRAIN STALE` advisory warning — institutional memory may be outdated for the current decision context. Complement the existing BRAIN BYPASS alert (no `brain_query` called this session but Propose/Escalate marker detected). The hook is advisory-only (E1, never blocks) and enforces SO-05 and SO-11.
+  - **Done when:** Hook emits BRAIN STALE when last brain_query was 20+ tool calls ago. Alert includes tool call count since last query. Advisory only (exit 0). Tests verify threshold detection.
+  - **Files:** `.hooks/brain_context_router.sh` (modify), `admiral/tests/test_brain_stale.sh` (new)
+  - **Size:** S
+  - **Spec ref:** Part 3, Hook-Brain Integration — brain_context_router
+
+- [ ] **B-21c: Möbius Loop `_meta` namespace self-instrumentation**
+  - **Description:** Implement Brain self-instrumentation using the reserved `_meta` project namespace. The Brain records knowledge about itself using the same entry format: `context` entries for health snapshots (write rate, read rate, entry count, stale count — triggered periodically), `failure` entries for knowledge gap detection (e.g., "5 queries about X returned 0 results"), `pattern` entries for query pattern analysis (e.g., "73% of queries are decision-category"), `outcome` entries for graduation criteria assessments, and `decision` entries for retention decisions from Admiral review. Access control: all agents can read `_meta`; only Admiral, orchestrator, and the Brain MCP server can write.
+  - **Done when:** `_meta` namespace is reserved and protected. At least 3 self-instrumentation entry types are generated automatically. Access control enforced (read-all, write-restricted). `brain_status` output is recorded as a `_meta/context` entry. Tests verify namespace protection and entry generation.
+  - **Files:** `admiral/brain/meta-instrumentation.sh` (new), `admiral/tests/test_brain_meta.sh` (new)
+  - **Size:** M
+  - **Spec ref:** Part 5, The Möbius Loop — Self-Instrumentation (`_meta` Namespace)
+
+- [ ] **B-21d: Contradiction resolution workflow**
+  - **Description:** Implement the full contradiction resolution workflow from Part 5. Every `brain_record` triggers a contradiction scan (B1: keyword match; B2+: vector similarity >0.80). When conflicts are found, the writing agent must: (1) acknowledge and explain why the new entry supersedes the old (triggering `brain_supersede`), OR (2) acknowledge as legitimate divergence (different context justifies different conclusion), OR (3) withdraw the new entry. During retrieval, when two entries contradict each other (linked via `contradicts`), both are returned with conflict explicitly flagged — the consuming agent must present both sides and escalate if the decision depends on which is correct. This extends B-04's basic contradiction detection with the full resolution protocol.
+  - **Done when:** Contradiction scan triggers on every brain_record. Writing agent receives conflict options (supersede, diverge, withdraw). Retrieval returns both sides of contradictions with explicit conflict flag. Escalation triggered when decisions depend on conflicting entries. Tests verify all three resolution paths.
+  - **Files:** `admiral/brain/contradiction-resolver.sh` (new), `admiral/bin/brain_record` (modify), `admiral/tests/test_contradiction_resolution.sh` (new)
+  - **Size:** M
+  - **Spec ref:** Part 5, Contradiction Scan (Write Hooks), Retrieval Confidence Levels
+  - **Depends on:** B-04
+
+- [ ] **B-21e: Decision entry schema for Brain**
+  - **Description:** Define and implement the structured schema for decision entries stored in the Brain. Per Part 5, the `brain_record` tool accepts parameters: `project`, `category` (decision/outcome/lesson/context/failure/pattern), `title`, `content`, `metadata`, and `links`. Decision entries specifically must capture: the decision made, the alternatives considered, the reasoning, the authority tier under which the decision was made, the agent that made it, and the outcome (when known). This is the canonical format for persisting decisions so that future agents can learn from past choices. Integrates with the Inevitable Features causality tracing (decisions are nodes in the causal graph).
+  - **Done when:** Decision entry schema is formalized as JSON schema. brain_record validates decision entries against schema. At least 5 example decision entries demonstrate the format. Schema covers all required fields. Tests verify validation.
+  - **Files:** `admiral/brain/schemas/decision-entry.schema.json` (new), `admiral/bin/brain_record` (modify — add schema validation)
+  - **Size:** S
+  - **Spec ref:** Part 5, brain_record tool parameters; inevitable-features.md Feature 1
+
 ### 11.5 Brain Excellence
 
 - [ ] **B-22: Brain entry versioning** — Track versions with supersession chain. Done when: Version chain queryable, rollback supported. Files: `admiral/brain/versioning.sh` (new). Size: M
@@ -233,7 +264,7 @@ The Brain is Admiral's primary competitive moat. Three competitors are convergin
 - **StrongDM Leash** is adding trend analysis to enforcement data (Record layer). Leash's enforcement data could evolve into a lightweight operational memory — not semantic, but sufficient for pattern detection.
 - **Perplexity Computer** is exposing subagent trace trees. Trace data that flows into persistent storage becomes a form of operational memory.
 
-**Competitive timeline:** Brain B2 (SQLite + embeddings) must ship within **120 days** — before Comet persists user-AI interaction patterns (estimated 12–18 months from March 2026). Compounding value means early deployment creates a moat that cannot be replicated retroactively. Each day of Brain operation produces knowledge that strengthens future queries.
+**Internal target:** Brain B2 (SQLite + embeddings) has a **120-day internal target** — ahead of Comet's estimated persistent interaction patterns (est. 12–18 months from March 2026, per competitive analysis). Compounding value means early deployment creates an advantage that is difficult to replicate retroactively. Each day of Brain operation produces knowledge that strengthens future queries.
 
 **Implication for execution order:** B-21 (graduation metrics) should be built concurrently with B1 completion, not after. Measuring B1 early accelerates the B1→B2 graduation decision. The spec-defined graduation criteria (hit rate ≥85%, precision ≥90%, entry count ≥50) are the gates — don't wait to build the gate measurement system.
 

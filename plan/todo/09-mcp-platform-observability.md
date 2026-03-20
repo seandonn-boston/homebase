@@ -103,6 +103,11 @@ Ship causality tracing (OB-02 + OB-09) within **90 days** — before Perplexity 
 - [ ] **OB-09: Incident timeline reconstruction** — Given session ID, reconstruct complete chronological timeline with causal links; flag anomalies; < 5s for 1000 events; markdown and JSON output.
 - [ ] **OB-10: Performance regression detection** — Compare current metrics against statistical baselines (rolling averages + stddev); detect > 20% latency increase, > 20% throughput decrease; run in CI per PR; auto-update baselines on merge.
 
+## Fleet Control Plane Authorization & Tracing
+
+- [ ] **OB-16: Intervention authorization model** — Authorization checks for all 10 intervention types per Fleet Control Plane Extension: any operator (pause agent, emergency halt), operator-level (kill task, adjust budget, override Propose-tier, reroute, promote/demote tier), owner-level (modify policies). Emergency halt callable by any tier; resume requires Owner. 403 on authorization failure.
+- [ ] **OB-17: Canonical trace format specification** — JSON schema for fleet-wide causality tracing: trace ID, spans with parent-child relationships, causal links across tasks, agent identity per span, cost attribution, governance metadata. OpenTelemetry-exportable. Foundation for OB-02 and OB-09.
+
 ## Control Plane
 
 - [ ] **OB-11: CP1 — CLI Dashboard baseline** — JSON-lines event logging (ts, event, agent, tool, duration_ms, tokens); terminal status display with agent state, task progress, token budget bar, error/retry counts; runaway detection (loop at 3+ errors, budget advisory at 90%+, idle detection).

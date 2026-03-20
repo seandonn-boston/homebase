@@ -19,10 +19,21 @@ Brain is Admiral's primary competitive moat. Ship B2 within **120 days** before 
 - [ ] **B-05** Brain entry consolidation — `brain_consolidate` utility merges overlapping entries with provenance, archives originals to `.brain/_archived/`
 - [ ] **B-06** Brain B1 comprehensive tests — 20+ tests covering all utilities, edge cases (empty brain, special chars, long content), concurrent access
 
+## Brain Self-Instrumentation & Integrity
+
+- [ ] **B-21b** Brain Stale Detection — `brain_context_router` emits BRAIN STALE advisory when last brain_query was 20+ tool calls ago; complements BRAIN BYPASS; enforces SO-05/SO-11
+- [ ] **B-21c** Möbius Loop `_meta` namespace — Brain self-instrumentation recording health snapshots, knowledge gaps, query patterns, graduation assessments in reserved `_meta` project; all agents read, only Admiral/orchestrator/Brain MCP write
+- [ ] **B-21d** Contradiction resolution workflow — Full resolution protocol: writing agent chooses supersede, diverge, or withdraw on conflict; retrieval returns both sides with explicit conflict flag; escalation when decisions depend on conflicting entries
+- [ ] **B-21e** Decision entry schema — Formalized JSON schema for decision entries (decision, alternatives, reasoning, authority tier, agent, outcome); validated by brain_record; canonical format for causality tracing integration
+
 ## B1 Excellence
 
 - [ ] **B-22** Brain entry versioning — supersession chain tracking, rollback support
 - [ ] **B-23** Brain entry expiration — TTL-based expiration, auto-archive, pre-expiry warnings
+- [ ] **B-24** Cross-project knowledge sharing — share entries across projects with permissions, provenance maintained
+- [ ] **B-25** Brain usage analytics — per-entry usage tracking, analytics endpoint, gap detection, ROI
+- [ ] **B-26** Brain backup and restore — automated backup with point-in-time recovery, integrity verification
+- [ ] **B-27** Brain schema migration testing — test B1→B2→B3 migrations, all types covered, metadata preserved, edge cases
 - [ ] **B-28** Brain entry templates — 5+ pre-defined templates for common entry types, `--template` flag, validation
 
 ## B2 SQLite Core

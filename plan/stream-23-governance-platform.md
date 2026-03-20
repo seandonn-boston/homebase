@@ -22,6 +22,14 @@
   - **Spec ref:** Governance Platform extension — The Four Pillars (Visibility, Control); Part 9 — Fleet Observability
   - **Depends on:** —
 
+- [ ] **GP-01b: Visibility pillar API endpoints**
+  - **Description:** Implement the Visibility pillar (pillar 1 of 4) as concrete API endpoints on the governance server. The governance-platform extension defines Visibility as: fleet status, task progress, resource consumption, decision history, and failure patterns. These are currently spread across the Fleet Control Plane (Part 9), Cost Management (Part 8), Brain audit trail, and Failure Mode Catalog (Part 7). This item unifies them behind a single governance API surface: `GET /api/v1/visibility/fleet-status` (aggregated fleet view), `GET /api/v1/visibility/task-progress` (active task board with progress), `GET /api/v1/visibility/resources` (token/budget consumption), `GET /api/v1/visibility/decisions` (decision history from Brain), `GET /api/v1/visibility/failures` (failure pattern summary). This is what makes the governance platform a single pane of glass rather than a collection of separate queries.
+  - **Done when:** All 5 visibility endpoints return structured data. Endpoints aggregate from underlying systems (fleet registry, Brain, event log, cost tracker). Response format is consistent across endpoints. Tests verify each endpoint with synthetic data.
+  - **Files:** `control-plane/src/visibility-api.ts` (new), `control-plane/src/visibility-api.test.ts` (new)
+  - **Size:** M
+  - **Spec ref:** Governance Platform extension — The Four Pillars / 1. Visibility
+  - **Depends on:** GP-01
+
 - [ ] **GP-02: Policy management API**
   - **Description:** Implement CRUD operations for governance policies through the API. A governance policy is a named, versioned rule that the governance layer enforces. Operations: (1) **Create** — define a new policy with name, description, rule definition (from governance rule engine MG-06), enforcement level (enforce/monitor/disabled), and scope (fleet-wide, per-agent-role, per-project); (2) **Read** — retrieve a policy by ID or list all policies with filtering by status, scope, and enforcement level; (3) **Update** — modify a policy's rule definition or enforcement level, creating a new version (policies are append-only — updates create new versions, old versions are preserved for audit); (4) **Deactivate** — disable a policy without deleting it (deactivated policies remain in the audit trail). All policy changes require authentication and are logged with the change author, timestamp, and rationale.
   - **Done when:** All four CRUD operations work through the API. Policies are versioned (updates create new versions). Deactivation preserves audit trail. Policy changes are logged with author and rationale. Tests verify create, read, update, deactivate, version history, and access control.

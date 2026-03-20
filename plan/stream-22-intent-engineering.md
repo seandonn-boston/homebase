@@ -74,6 +74,22 @@
   - **Spec ref:** Intent Engineering extension — Writing Intent-Engineered Instructions (full example)
   - **Depends on:** IE-01, IE-03
 
+- [ ] **IE-09: Human inflection point detection**
+  - **Description:** Implement detection of "human inflection points" — moments where agent execution must pause for human judgment. Per the intent engineering extension, these are decisions involving taste, ethics, strategy, stakeholder judgment, or novel ambiguity where "an agent that encounters a human inflection point must stop and fetch the human angle. Not approximate it. Not infer it from patterns. Not skip it." Implement as a detection layer that: (1) identifies inflection point signals in the current task context (keywords, authority tier boundaries, constraint proximity), (2) maps to the Escalate decision-authority tier from Part 3, (3) integrates with Standing Orders (which encode many inflection points as escalation triggers), (4) surfaces the inflection point to the operator with context about why human judgment is needed. Intent engineering makes these triggers understandable, not just enforceable.
+  - **Done when:** Inflection point detector identifies at least 5 categories of human-required decisions (taste, ethics, strategy, stakeholder, novel ambiguity). Detection integrates with Escalate tier enforcement. Operator receives structured notification with context. Tests verify detection of each inflection category.
+  - **Files:** `admiral/intent/inflection-detector.sh` (new), `admiral/intent/tests/test_inflection.sh` (new)
+  - **Size:** M
+  - **Spec ref:** Intent Engineering extension — The Human Inflection Point; Part 3 — Decision Authority Tiers (Escalate)
+  - **Depends on:** IE-01
+
+- [ ] **IE-10: Judgment boundary enforcement**
+  - **Description:** Enforce the judgment boundaries defined in captured intents. When an intent specifies judgment boundaries (element 5 of the six-element intent), implement runtime enforcement that: (1) monitors agent actions against declared boundaries, (2) detects when an agent is approaching or crossing a boundary (e.g., making design decisions above component level when the intent restricts to component-level), (3) triggers escalation before the boundary is crossed, not after, (4) logs boundary proximity events for intent health tracking (IE-04). Judgment boundaries are the operational translation of "where the agent's authority ends and the human's begins."
+  - **Done when:** Judgment boundaries from captured intents are enforced at runtime. Boundary proximity triggers pre-emptive escalation. Boundary violations are logged and reported to intent health dashboard. At least 3 boundary types are enforceable (scope, risk level, architectural impact). Tests verify enforcement and pre-emptive escalation.
+  - **Files:** `admiral/intent/boundary-enforcer.sh` (new), `admiral/intent/tests/test_boundaries.sh` (new)
+  - **Size:** M
+  - **Spec ref:** Intent Engineering extension — Writing Intent-Engineered Instructions (judgment boundaries element); Part 3 — Enforcement Spectrum
+  - **Depends on:** IE-01, IE-03
+
 - [ ] **IE-08: Intent conflict detection**
   - **Description:** Implement detection of conflicts between concurrent intents. Conflicts arise when: (1) **Goal contradiction** — two intents have mutually exclusive goals (e.g., "add feature X to module M" and "remove module M"); (2) **Constraint violation** — one intent's goal violates another intent's constraints (e.g., intent A constrains "no changes to auth module" while intent B's goal requires auth module changes); (3) **Resource contention** — two intents require the same agent type and the fleet does not have enough capacity; (4) **Scope overlap** — two intents operate on the same files or modules, risking merge conflicts; (5) **Priority inversion** — a low-priority intent is blocking a high-priority intent's resource needs. When a conflict is detected, produce a structured conflict report with: the conflicting intents, the type of conflict, and recommended resolution (reorder, defer, merge, or escalate to Admiral).
   - **Done when:** Conflict detection identifies all five conflict types. Produces structured conflict reports with resolution recommendations. Detection runs when new intents are added (not just at decomposition time). Tests verify detection of each conflict type with synthetic intent pairs.

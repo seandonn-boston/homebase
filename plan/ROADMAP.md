@@ -296,20 +296,20 @@ Phase 8  ║ [Stream 13: Exemplary] [Stream 33: Thesis] [Stream 28: Inevitable] 
 
 > Source: `research/competitive-threat-strongdm-perplexity-comet-2026.md`, `aiStrat/admiral/extensions/inevitable-features.md`
 
-Three competitors are converging on adjacent capabilities. The following competitive deadlines overlay the phased roadmap:
+Three competitors are converging on adjacent capabilities. The following internal targets overlay the phased roadmap, based on estimated competitor timelines from `research/competitive-threat-strongdm-perplexity-comet-2026.md` (March 2026 analysis — estimates, not confirmed roadmaps):
 
-| Feature | Phase | Ship Target | Competitor Threat | Defensible Differentiator |
+| Feature | Phase | Internal Target | Competitor Context | Designed-for Differentiator |
 |---|---|---|---|---|
-| **Causality Tracing** (OB-02 + OB-09) | 4–5 | 90 days | Perplexity Computer exposing subagent traces (6–12 mo) | Cross-platform tracing (CLI + API + browser + backend) |
-| **Brain B2** (B-07 to B-11) | 6 | 120 days | Comet Enterprise persistent interaction patterns (12–18 mo) | Institutional memory compounding across sessions, projects, agents |
-| **Predictive Health** (IF-05 + fleet health) | 8 | 180 days | Leash trend analysis on Record data (12–18 mo) | Requires Brain + tracing operational data; self-improving |
-| **Decision Authority Tiers** (enforcement) | 3 | Now | Comet binary domain-level controls (shipped) | Graduated trust — 4 tiers, not on/off |
-| **Standing Orders** (Stream 29) | 3 | Now | None | Category doesn't exist in competitor products |
+| **Causality Tracing** (OB-02 + OB-09) | 4 | 90-day internal target | Perplexity Computer exposing subagent traces (est. 6–12 mo) | Designed for cross-platform tracing (CLI + API + browser + backend) |
+| **Brain B2** (B-07 to B-11) | 6 | 120-day internal target | Comet Enterprise persistent interaction patterns (est. 12–18 mo) | Designed for institutional memory compounding across sessions, projects, agents |
+| **Predictive Health** (IF-05 + fleet health) | 8 | 180-day internal target | Leash trend analysis on Record data (est. 12–18 mo) | Requires Brain + tracing operational data; designed to be self-improving |
+| **Decision Authority Tiers** (enforcement) | 3 | Current priority | Comet binary domain-level controls (shipped) | Graduated trust — 4 tiers, not on/off |
+| **Standing Orders** (Stream 29) | 3 | Current priority | None | Category doesn't exist in competitor products |
 | **Leash Cedar integration** (SEC-15) | 4–5 | After SEC-04 | Leash as standalone enforcement | Turns competitor into enforcement backend |
 
-**The compounding effect:** Each feature feeds the next — Causality Tracing → Living Memory → Predictive Health. By 90 days of operation, these form a self-improving system competitors cannot replicate retroactively.
+**The compounding effect:** Each feature is designed to feed the next — Causality Tracing → Living Memory → Predictive Health. By 90 days of operation, these would form a self-improving system that is difficult to replicate retroactively.
 
-**Implication for phasing:** Consider promoting IF-05 (performance profiling) and IF-08 (session replay) from Phase 8 to Phase 5–6. These produce the data that causality tracing and predictive health consume. The "good enough" stack risk (Leash + Computer + Comet) closes the window — enterprises that assemble point solutions may never need unified governance.
+**Implication for phasing:** Consider promoting IF-05 (performance profiling) and IF-08 (session replay) from Phase 8 to Phase 5–6. These produce the data that causality tracing and predictive health consume.
 
 ---
 

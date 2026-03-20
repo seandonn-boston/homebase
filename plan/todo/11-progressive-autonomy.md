@@ -22,6 +22,10 @@ Trust mechanics let agents earn independence through demonstrated competence. Wi
 - [ ] **AU-05: Trust promotion on consistent success** — Surface promotion recommendations when graduation criteria are met (configurable thresholds over minimum time windows). Promotions require explicit operator approval and are logged with full context.
 - [ ] **AU-06: Trust persistence across sessions** — Store trust state in the Brain so trust survives session boundaries. Implement trust decay — categories not exercised within 30 days revert to the previous stage to prevent stale calibration.
 
+## Trust Approval & Operations
+
+- [ ] **AU-11: Admiral approval UI/API** — Operator-facing interface for approving/deferring trust promotions via CLI and API. Presents evidence (consecutive successes, time period, failure history); requires rationale; logs to Brain; pattern recognition for rubber-stamped approvals.
+
 ## Trust Operations
 
 - [ ] **AU-07: Trust dashboard** — Visualize per-agent trust levels by category, score trends, recent promotions/demotions, upcoming graduation signals, decay warnings, and the fleet-wide autonomy matrix. Provide both terminal rendering and API access.
@@ -44,3 +48,4 @@ Trust mechanics let agents earn independence through demonstrated competence. Wi
 | AU-08 | AU-01, AU-06 | — |
 | AU-09 | AU-01, Stream 15 O-01 (routing engine) | — |
 | AU-10 | AU-01, AU-06, AU-07 | — |
+| AU-11 | AU-01, AU-05 | — |
