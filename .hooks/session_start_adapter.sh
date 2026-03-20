@@ -26,7 +26,16 @@ init_session_state "$SESSION_ID"
 TRACE_ID=$(uuidgen 2>/dev/null || python3 -c "import uuid; print(uuid.uuid4())" 2>/dev/null || echo "trace-${SESSION_ID}-$(date +%s)")
 set_state_field '.trace_id' "\"$TRACE_ID\""
 
-# 3. Fire context_baseline hook (surface failures as warnings, don't suppress)
+# 3. Validate Strategy Triangle (advisory — warns but does not block)
+STRATEGY_WARNING=""
+if [ -f "$SCRIPT_DIR/strategy_triangle_validate.sh" ]; then
+  STRATEGY_OUTPUT=$(bash "$SCRIPT_DIR/strategy_triangle_validate.sh" 2>&1) || true
+  if echo "$STRATEGY_OUTPUT" | grep -q "STRATEGY:"; then
+    STRATEGY_WARNING=$(echo "$STRATEGY_OUTPUT" | grep "STRATEGY:" | head -1)
+  fi
+fi
+
+# 4. Fire context_baseline hook (surface failures as warnings, don't suppress)
 BASELINE_WARNING=""
 if [ -x "$SCRIPT_DIR/context_baseline.sh" ]; then
   # shellcheck disable=SC2034  # Output captured to suppress stdout; only exit code matters
@@ -35,11 +44,11 @@ if [ -x "$SCRIPT_DIR/context_baseline.sh" ]; then
   }
 fi
 
-# 4. Render Standing Orders for context injection
+# 5. Render Standing Orders for context injection
 SO_TEXT=$(render_standing_orders)
 SO_COUNT=$(count_standing_orders)
 
-# 5. Log session start event
+# 6. Log session start event
 EVENT_LOG="$PROJECT_DIR/.admiral/event_log.jsonl"
 jq -n --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
       --arg trace "$TRACE_ID" \
@@ -49,11 +58,18 @@ jq -n --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
       '{event: "session_start", timestamp: $ts, trace_id: $trace, session_id: $sid, model: $model, standing_orders_loaded: $so_count}' \
       >> "$EVENT_LOG" 2>/dev/null || true
 
-# 6. Output for Claude Code — inject Standing Orders as system message
+# 7. Output for Claude Code — inject Standing Orders as system message
 # Include any initialization warnings so they're visible
 FULL_MSG="$SO_TEXT"
+INIT_WARNINGS=""
+if [ -n "$STRATEGY_WARNING" ]; then
+  INIT_WARNINGS="${INIT_WARNINGS}${STRATEGY_WARNING} "
+fi
 if [ -n "$BASELINE_WARNING" ]; then
-  FULL_MSG="[Session Init Warning] ${BASELINE_WARNING}\n\n${SO_TEXT}"
+  INIT_WARNINGS="${INIT_WARNINGS}${BASELINE_WARNING} "
+fi
+if [ -n "$INIT_WARNINGS" ]; then
+  FULL_MSG="[Session Init] ${INIT_WARNINGS}\n\n${SO_TEXT}"
 fi
 jq -n --arg msg "$FULL_MSG" '{
   "continue": true,
