@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "asp-minimal/v1",
+  "title": "Agent Spec Protocol v1 — Minimal Schema",
+  "description": "Validates ASP sections 1-5 only (Header, Identity, Scope, Boundaries, Output Routing). Use for lightweight specialists and early development. For full validation, use asp.schema.json.",
+  "type": "object",
+  "required": ["header", "identity", "scope", "boundaries", "output_routing"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "asp-minimal/v1",
+      "description": "Schema version identifier"
+    },
+    "header": {
+      "type": "object",
+      "description": "Section 1: Machine-readable metadata",
+      "required": ["asp_version", "name", "category", "model_tier", "schedule"],
+      "properties": {
+        "asp_version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "category": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model_tier": {
+          "type": "string",
+          "enum": ["tier1_flagship", "tier2_workhorse", "tier3_utility", "tier4_economy"]
+        },
+        "schedule": {
+          "type": "string",
+          "enum": ["continuous", "triggered", "periodic"]
+        },
+        "extends": {
+          "type": ["string", "null"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "identity": {
+      "type": "string",
+      "minLength": 10
+    },
+    "scope": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1
+    },
+    "boundaries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["must_not", "handled_by"],
+        "properties": {
+          "must_not": { "type": "string", "minLength": 1 },
+          "handled_by": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    },
+    "output_routing": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["destination", "when"],
+        "properties": {
+          "destination": { "type": "string", "minLength": 1 },
+          "when": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+  "additionalProperties": true
+}

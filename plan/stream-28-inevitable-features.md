@@ -90,7 +90,19 @@
 
 ---
 
-## 28.5 Governance Evolution
+## 28.5 Predictive Health Models
+
+- [ ] **IF-13: Prediction model specifications and implementation**
+  - **Description:** Implement the six prediction models defined in the inevitable-features extension for Predictive Fleet Health: (1) **Context exhaustion** — linear extrapolation with input size weighting from context utilization trend over last 10 operations; (2) **Budget exhaustion** — burn rate projection from token consumption rate and remaining work estimate; (3) **Quality degradation** — threshold-based warning when rolling first-pass rate and context health correlation align; (4) **Retry loop risk** — frequency-based detection of >3 errors in 5 minutes with same error signature; (5) **Tool failure cascade** — latency trend extrapolation against timeout threshold from MCP server metrics; (6) **Orchestrator overload** — multi-signal composite threshold from task queue depth, decomposition latency, and context utilization. As the spec notes: "Predictive health does not require machine learning or complex forecasting. Most predictions are simple trend extrapolation from operational data."
+  - **Done when:** All 6 prediction models are implemented with the specified input signals and methods. Predictions are generated from real operational data (or synthetic test data). Each prediction produces a structured warning with confidence level and recommended action. Predictions feed into the alerting system (OB-05). Tests verify each prediction model with synthetic data.
+  - **Files:** `control-plane/src/predictive-health/` (new directory), `control-plane/src/predictive-health/models.ts` (new), `control-plane/src/predictive-health/models.test.ts` (new)
+  - **Size:** L
+  - **Spec ref:** `aiStrat/admiral/extensions/inevitable-features.md` — Feature 3: Predictive Fleet Health / Prediction Models
+  - **Depends on:** OB-03 (metrics collection), IF-05 (performance profiling)
+
+---
+
+## 28.6 Governance Evolution
 
 - [ ] **IF-09: Natural language policy authoring** ⏳ DEFERRED (Phase 3+)
   - **Description:** Allow governance policies to be written in natural language and compiled to executable rules. Implement a policy compiler that translates human-readable policy statements into: hook configurations (for deterministic enforcement), Standing Order entries (for instruction-level enforcement), and alert rules (for monitoring-level enforcement). Example: "No agent may modify files outside its declared scope" compiles to a PreToolUse hook that checks file paths against the agent's scope declaration. The compiler operates in two modes: (1) suggest mode — proposes enforcement artifacts for human review, (2) apply mode — creates the artifacts after human approval. Natural language policies are version-controlled alongside the artifacts they generate, maintaining the link between intent and implementation.
@@ -153,6 +165,24 @@
 4. **Governance:** IF-09 (natural language policies), IF-10 (compliance certification) — governance maturity.
 5. **Collaboration:** IF-11 (collaboration patterns), IF-12 (real-time dashboard) — fleet-scale operations.
 6. **Marketplace:** IF-02 (marketplace, after IF-01) — ecosystem building, build last.
+
+### 28.7 Competitive Urgency (from research/competitive-threat-strongdm-perplexity-comet-2026.md)
+
+The three inevitable features are Admiral's defensible moat against point-solution convergence. Competitive timelines demand specific ship dates:
+
+| Feature | Competitor Threat | Admiral Ship Target | Why |
+|---|---|---|---|
+| **Causality Tracing** | Perplexity Computer exposing subagent traces (est. 6–12 mo) | 90-day internal target | Designed for cross-platform scope |
+| **Living Memory (Brain B2)** | Comet persistent user-AI interaction patterns (est. 12–18 mo) | 120-day internal target | Designed for compounding value across sessions/projects |
+| **Predictive Health** | Leash trend analysis on enforcement data (est. 12–18 mo) | 180-day internal target | Requires 30+ days of trace/memory operational data |
+
+**The compounding effect is the intended moat:** Each feature is designed to feed the next. Causality Tracing produces data for Living Memory. Living Memory produces patterns for Predictive Health. By 90 days of operation, the three features form a self-improving system competitors cannot replicate retroactively — they would need to also replicate the accumulated operational data.
+
+**"Good enough" stack risk:** Enterprises may assemble StrongDM Leash (enforcement) + Perplexity Computer (orchestration) + Comet Enterprise (browser governance) as a point-solution stack. This stack covers enforcement, orchestration, and browser governance — but would miss persistent memory, graduated trust, behavioral governance, fleet coordination, and cross-platform scope. The inevitable features are designed to make Admiral categorically different from an assembled stack.
+
+**Implication for this stream:** IF-05 (performance profiling), IF-08 (session replay), and IF-12 (real-time dashboard) are not Phase 8 luxuries — they are the building blocks for the three inevitable features. Consider promoting IF-05 and IF-08 to Phase 5–6 to feed causality tracing and predictive health data pipelines earlier.
+
+---
 
 **Alignment with Inevitable Features:** This stream's items create the building blocks for the three inevitable features identified in the extension document:
 - **Causality Tracing** is enabled by IF-05 (profiling), IF-08 (replay), and IF-12 (real-time dashboard).

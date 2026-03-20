@@ -119,6 +119,14 @@
 
 ## AU-10: Trust Reporting and Analytics
 
+- [ ] **AU-11: Admiral approval UI/API for trust promotions**
+  - **Description:** Implement the operator-facing interface for approving or deferring trust promotions. Per Part 3's Unified Trust Model, when an agent accumulates 5 consecutive successful decisions in a category, the system presents the promotion for Admiral review. The Admiral approves or defers, and the decision is logged. The interface must: (1) present the promotion recommendation with supporting evidence (consecutive successes, time period, category, failure history), (2) accept approve/defer decisions with required rationale, (3) log decisions in the Brain as auditable entries, (4) be accessible via both CLI (for CP1-level usage) and API (for CP3+ dashboard integration). Stage 2 infrastructure requires pattern recognition — the system identifies which proposals the operator always accepts and suggests promoting them to Autonomous.
+  - **Done when:** Promotion recommendations are surfaced via CLI and API. Approve/defer requires rationale. Decisions logged to Brain. Pattern recognition identifies rubber-stamped approvals. API endpoint exists for dashboard integration. Tests verify approval workflow.
+  - **Files:** `fleet/autonomy/approval-api.ts` (new), `fleet/autonomy/approval-cli.sh` (new), `fleet/autonomy/approval-api.test.ts` (new)
+  - **Size:** M
+  - **Spec ref:** Part 3 — Unified Trust Model; Progressive Autonomy Extension — Stage Transitions; Fleet Control Plane Extension — CP3
+  - **Depends on:** AU-01, AU-05
+
 - [ ] **AU-10: Fleet-wide trust distribution reports and trend analytics**
   - **Description:** Implement reporting and analytics for trust across the fleet. Generate periodic reports showing: fleet-wide trust distribution (how many agents at each stage, per category), trust velocity (how fast agents are earning trust — time from Stage 1 to Stage 2 on average), demotion frequency (how often and why agents are demoted — recurring failure patterns), trust-cost correlation (does higher trust correlate with lower cost per task, as expected from reduced human review overhead), and operator override frequency (how often humans intervene in trust decisions — high override frequency suggests the automatic criteria need recalibration). Reports feed into the Fleet Evaluation framework (Part 9) for fleet configuration optimization.
   - **Done when:** Trust reports generate on demand and on schedule (weekly default). Reports include all five dimensions listed above. Trust velocity is calculated per agent and per category. Demotion patterns are analyzed for recurring causes. Cost correlation analysis compares review overhead at each trust stage. Reports are stored in Brain for trend analysis across months. Report format is structured (JSON) for programmatic consumption plus human-readable (markdown) for operator review.

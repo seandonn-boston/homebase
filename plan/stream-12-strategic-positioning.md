@@ -4,7 +4,7 @@
 
 **Current Score:** 2/10
 **Target Score:** 7/10
-**Items:** R-01 to R-13 (13 items)
+**Items:** R-01 to R-11 (11 items)
 **Size Distribution:** 0S, 8M, 5L
 
 ---
@@ -96,20 +96,6 @@ The Admiral Framework needs industry alignment to be recognized by enterprises a
   - **Files:** `docs/strategy/enterprise-adoption-playbook.md` (new)
   - **Size:** L
 
-- [ ] **R-12: Open-Source Community Strategy** ⏳ DEFERRED (Phase 3+)
-  - **Description:** Define a comprehensive plan for building a contributor community around Admiral. Cover governance model (benevolent dictator, steering committee, or foundation model), contribution workflow (fork-and-PR, issue triage process, review SLAs), release cadence (semantic versioning policy, LTS strategy, breaking change policy), community channels (discussions, Discord/Slack, office hours), recognition programs (contributor levels, maintainer path), and documentation requirements for contributions. Address the bootstrapping problem — how to attract the first 10, 100, and 1000 contributors. Include a licensing strategy review ensuring chosen license supports both open-source community and potential commercial offerings.
-  > **Deferred rationale:** Marketing/compliance documents, not implementation. Valuable for positioning but not needed to build Admiral. Defer to Phase 3+ after core implementation exists.
-  - **Done when:** Community strategy document covering governance, contribution workflow, release cadence, and channels. First-contributor experience documented and tested (clone to merged PR in under 30 minutes). Maintainer onboarding guide. License compatibility analysis. Roadmap for first 12 months of community building with quarterly milestones.
-  - **Files:** `docs/strategy/community-strategy.md` (new)
-  - **Size:** M
-
-- [ ] **R-13: Academic Research Positioning** ⏳ DEFERRED (Phase 3+)
-  - **Description:** Position Admiral in the context of multi-agent systems (MAS) research and publish a framework description paper outline. Survey the academic landscape: BDI agent architectures, organizational models (AGR, MOISE+), normative multi-agent systems, electronic institutions, and recent LLM-based agent frameworks. Identify Admiral's novel contributions: governance-as-code for LLM agents, shell-native zero-dependency implementation, brain layer architecture for persistent agent memory, and standing orders as normative specifications. Draft an outline for a workshop or conference paper (suitable for AAMAS, AAAI, or a NeurIPS workshop) that positions Admiral as a practical contribution to the normative MAS literature.
-  > **Deferred rationale:** Marketing/compliance documents, not implementation. Valuable for positioning but not needed to build Admiral. Defer to Phase 3+ after core implementation exists.
-  - **Done when:** Literature survey covering 20+ relevant papers across MAS governance, normative systems, and LLM agent frameworks. Clear articulation of Admiral's novel contributions vs. prior work. Paper outline with abstract, introduction, related work, system description, evaluation plan, and conclusion sections. Target venue identified with submission timeline. BibTeX file with all referenced works.
-  - **Files:** `docs/strategy/academic-positioning.md` (new), `docs/strategy/paper-outline.md` (new)
-  - **Size:** M
-
 ---
 
 ## Dependencies
@@ -122,9 +108,32 @@ R-08 (ISO 42001) can be done independently but benefits from R-01, R-04 complete
 R-09 (EU AI Act) can be done independently but benefits from R-04 (NIST) for security references
 R-10 (competitive matrix) can be done independently — external research task
 R-11 (enterprise playbook) should follow R-07 (AI Work OS) and R-10 (competitive matrix) for positioning clarity
-R-12 (community strategy) can be done independently — organizational planning task
-R-13 (academic positioning) can be done independently — research and writing task
 ```
+
+## Competitive Intelligence Integration (from research/)
+
+Recent competitive analysis (`research/competitive-threat-strongdm-perplexity-comet-2026.md`, `research/perplexity-strongdm-ai-mastery-analysis.md`) has reshaped the strategic positioning landscape:
+
+**Positioning shift:** Admiral must position as **"Governance for AI workforces"** — not "security for AI agents" (Leash's territory) or "AI-powered enterprise" (Perplexity's territory). The governance category doesn't exist elsewhere; Admiral defines it.
+
+**R-10 (Competitive Differentiation Matrix) expansion:** The original competitor set (LangGraph, CrewAI, AutoGen, Semantic Kernel) is now insufficient. Must also include:
+- **StrongDM Leash** — kernel-level enforcement, Cedar policies, Record data. Competes on enforcement layer.
+- **Perplexity Computer** — multi-model orchestration, subagent tracing. Competes on fleet coordination.
+- **Perplexity Comet Enterprise** — AI-native browser with domain-level governance. Competes on user-facing governance.
+- The **assembled "good enough" stack** (Leash + Computer + Comet) as a composite competitor.
+
+**Key differentiators to emphasize in all positioning documents:**
+1. **Cross-platform scope** — No competitor governs beyond their surface (Leash→containers, Comet→browser, Perplexity→Perplexity agents). Admiral governs CLI + API + browser + backend unified.
+2. **Persistent memory (Brain)** — No competitor has institutional memory that compounds across sessions, projects, and agents.
+3. **Graduated trust** — No competitor has a trust model where agents earn autonomy through demonstrated performance. Comet has binary domain-level controls; Leash has static Cedar policies.
+4. **Behavioral governance** — Standing Orders and intent engineering are categories that don't exist in competitor products.
+5. **Fleet coordination** — Point solutions cannot coordinate agents across surfaces. Admiral's Orchestrator + routing + handoff protocol is unique.
+
+**Lessons from StrongDM's "dark factory" model** (from `research/perplexity-strongdm-ai-mastery-analysis.md`):
+- Specifications are the bottleneck, not code. Admiral's Standing Orders, Intent Engineering, and Decision Authority Tiers are specification-first — this is the right architecture for the agentic era.
+- Validation should be probabilistic (scenario-based satisfaction), not boolean (pass/fail tests). This insight should inform Stream 31 (Quality Assurance System) and Stream 33 (Thesis Validation).
+
+---
 
 ## Execution Notes
 

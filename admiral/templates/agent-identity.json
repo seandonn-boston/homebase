@@ -2,8 +2,9 @@
   "agent_id": "",
   "role": "implementer",
   "authority_tier": "starter",
-  "project": "homebase",
+  "project": "helm",
   "model_tier": "tier2_workhorse",
+  "asp_spec_ref": null,
   "scope_boundaries": {
     "allowed_paths": [],
     "denied_paths": ["aiStrat/", ".github/"],

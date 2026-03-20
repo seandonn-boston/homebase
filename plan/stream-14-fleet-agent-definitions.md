@@ -4,6 +4,8 @@
 
 **Scope:** The fleet spec defines 71 core agent roles across 12 categories plus 4 command & coordination agents, with an additional 34 extended agents. None are implemented as runnable agent configurations. This stream covers creating concrete, AGENTS.md-compatible definitions for every agent role, building the schema and tooling to validate them, and establishing a machine-readable capability registry so the Orchestrator can route tasks to the right specialist.
 
+**Competitive context:** The Agent Spec Protocol (ASP) introduced in `aiStrat/admiral/spec/agent-spec-protocol/` defines the canonical format. Part 4 of the spec (updated) emphasizes starting with a core fleet of 11 roles — not 71 — to avoid coordination cost dominance. The competitive threat analysis shows no competitor has structured agent definitions with authority relationships, negative tool lists, and per-agent decision authority tiers. This is a defensible differentiator.
+
 **Current state:** Agent definitions exist as prose descriptions in `fleet/agents/` markdown files. They describe roles, responsibilities, and "Does NOT Do" boundaries, but they are not structured for machine consumption. No agent definition schema exists. No validator ensures consistency. No registry maps capabilities to agents.
 
 **Why this matters:** Without concrete agent definitions, the fleet spec is a design document, not an operational system. Routing rules reference agents that do not exist as deployable configurations. The Orchestrator cannot discover agent capabilities. Context injection has no structured target. Every downstream stream (routing, orchestration, MCP integration, platform adapters) depends on agents being defined in a consistent, machine-readable format.
@@ -204,6 +206,18 @@
 
 ---
 
+## F-15: Agent Spec Protocol (ASP) Alignment
+
+- [ ] **F-15: Align agent definitions with ASP format**
+  - **Description:** The Agent Spec Protocol (`aiStrat/admiral/spec/agent-spec-protocol/`) defines a canonical format for agent definitions with 12 sections (Identity, Scope, Boundaries, Output Routing, Context Profile, Interface Contracts, Decision Authority, Context Discovery, Guardrails, Prompt Anchor, Liveness & Failover — only 4 required). All agent definitions created in F-01 through F-11 should conform to ASP format rather than ad-hoc markdown. ASP introduces key concepts not in the current schema: authority relationships (who can command/suggest/escalate), negative tool lists (what agents explicitly cannot do), `extends` for inheritance to avoid spec duplication, and per-agent Decision Authority (same agent may be Autonomous for formatting but Propose for architecture). Leverage ASP templates (minimal, standard, production) from `aiStrat/admiral/spec/agent-spec-protocol/templates/`.
+  - **Done when:** F-12a schema is updated to validate ASP-compliant definitions. At least 3 agent definitions (Orchestrator, QA Agent, Security Auditor) are converted to full ASP format. ASP validation schemas (`asp.schema.json`, `asp-minimal.schema.json`) are integrated into the F-12b validator. Negative tool lists are enforced — agents cannot assume tools they don't have.
+  - **Files:** `fleet/agents/schema/agent-definition.schema.json` (update to align with ASP), `fleet/agents/definitions/orchestrator.asp.md` (new), `fleet/agents/definitions/qa-agent.asp.md` (new), `fleet/agents/definitions/security-auditor.asp.md` (new)
+  - **Size:** L
+  - **Spec ref:** `aiStrat/admiral/spec/agent-spec-protocol/README.md`, `aiStrat/admiral/spec/agent-spec-protocol/validation/asp.schema.json`
+  - **Depends on:** F-12a
+
+---
+
 ## F-14: Agent Template Generator
 
 - [ ] **F-14: Agent definition template generator**
@@ -213,3 +227,25 @@
   - **Size:** S
   - **Spec ref:** Part 4
   - **Depends on:** F-12a
+
+---
+
+## F-15b: ASP Template Creation
+
+- [ ] **F-15b: ASP template creation (minimal, standard, production)**
+  - **Description:** Create the three ASP templates defined in the Agent Spec Protocol: (1) **Minimal** (`minimal.asp.md`) — Sections 1-5 only, for lightweight specialists where full specification is unnecessary overhead. (2) **Standard** (`standard.asp.md`) — Sections 1-8, 10-11, for most production agents. (3) **Production** (`production.asp.md`) — All 12 sections, for command agents and critical infrastructure agents (Orchestrator, Incident Response, Security Auditor). Each template includes YAML frontmatter, section headers with guidance comments, and example content. Templates are the input for F-14 (template generator) and F-15 (ASP alignment).
+  - **Done when:** Three templates exist matching ASP spec. Each template passes ASP schema validation with placeholder content filled. Templates include guidance comments explaining each section. F-14 generator updated to use ASP templates.
+  - **Files:** `fleet/agents/templates/minimal.asp.md` (new), `fleet/agents/templates/standard.asp.md` (new), `fleet/agents/templates/production.asp.md` (new)
+  - **Size:** M
+  - **Spec ref:** `aiStrat/admiral/spec/agent-spec-protocol/templates/`, ASP README.md
+  - **Depends on:** F-12a
+
+## F-16: ASP Migration Path
+
+- [ ] **F-16: Legacy-to-ASP migration path**
+  - **Description:** Define and implement the migration path from existing agent definitions to ASP format. Per the ASP README, existing agent definitions (`agent-example.md` format) are valid ASP with minimal changes: add YAML frontmatter, formalize optional sections, and map `agent-identity.json` fields to the ASP Header's `asp_spec_ref` field. Create a migration script that: (1) scans existing agent definition files, (2) identifies what needs to change (missing frontmatter, unformalized sections), (3) generates an ASP-compliant version preserving all existing content, (4) validates the migrated definition against ASP schemas. The migration is non-destructive — original files are preserved alongside ASP versions until manually removed.
+  - **Done when:** Migration script converts existing agent definitions to ASP format. At least 3 agent definitions are successfully migrated. Migrated definitions pass ASP validation. Original files preserved. Migration report shows what was changed.
+  - **Files:** `fleet/agents/schema/migrate-to-asp.sh` (new), `admiral/docs/asp-migration-guide.md` (new)
+  - **Size:** M
+  - **Spec ref:** `aiStrat/admiral/spec/agent-spec-protocol/README.md` — Relationship to Existing Artifacts
+  - **Depends on:** F-12a, F-15

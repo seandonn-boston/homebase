@@ -32,7 +32,7 @@
 
 - [ ] **TV-03: Before/after case studies — Document cases where enforcement prevented issues**
   - **Description:** Create a case study framework for documenting real instances where enforcement caught problems that advisory guidance would have missed. Each case study captures: (1) the task and context, (2) what the agent attempted, (3) which hook fired and why, (4) what would have happened without enforcement (counterfactual analysis), (5) the estimated impact of the prevented issue (severity, blast radius, remediation cost). Case studies should include both true positives (enforcement correctly prevented a problem) and false positives (enforcement blocked a legitimate action). The ratio between true and false positives is itself thesis evidence.
-  - **Done when:** Case study template is defined. At least 5 case studies are documented from actual Admiral usage (from the homebase repo's own development). Each case study includes counterfactual analysis. True positive / false positive classification is applied. Case studies are stored in a structured format for aggregation.
+  - **Done when:** Case study template is defined. At least 5 case studies are documented from actual Admiral usage (from the Helm repo's own development). Each case study includes counterfactual analysis. True positive / false positive classification is applied. Case studies are stored in a structured format for aggregation.
   - **Files:** `admiral/thesis/case_studies/template.md` (new), `admiral/thesis/case_studies/` (new directory), `admiral/thesis/case_study_index.json` (new)
   - **Size:** M (1-3 hours)
   - **Spec ref:** Admiral Thesis; Part 7, Failure Mode Catalog
@@ -95,10 +95,3 @@
   - **Spec ref:** Admiral Thesis; Rating System reference — The Third Category Problem
   - **Depends on:** TV-01, TV-02, TV-03
 
-- [ ] **TV-10: Community feedback collection — Framework for collecting user feedback on governance**
-  - **Description:** Create a framework for systematically collecting and acting on community feedback about Admiral's governance effectiveness. The framework includes: (1) feedback channels (GitHub Discussions categories, issue templates for governance feedback, structured feedback forms), (2) feedback taxonomy (enforcement feedback, documentation feedback, developer experience feedback, thesis challenge feedback), (3) feedback triage process (how feedback is categorized, prioritized, and routed to action), (4) feedback-to-improvement pipeline (how feedback becomes thesis evidence, spec changes, or implementation improvements), (5) public feedback summary (periodic summary of feedback received and actions taken, building trust through transparency). The framework should make it easy for users to challenge the thesis — disagreement is evidence too.
-  - **Done when:** Feedback channels are defined with templates. Taxonomy covers all 4 feedback categories. Triage process is documented. Feedback-to-improvement pipeline is defined. Public summary template is created. GitHub issue templates for governance feedback are ready to deploy.
-  - **Files:** `admiral/thesis/feedback/framework.md` (new), `admiral/thesis/feedback/templates/` (new directory), `admiral/thesis/feedback/triage_process.md` (new)
-  - **Size:** S (< 1 hour)
-  - **Spec ref:** Admiral Thesis — governance must be validated by evidence, including dissent
-  - **Depends on:** —

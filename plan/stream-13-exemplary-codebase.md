@@ -11,7 +11,7 @@
 
 ## Overview
 
-These items transform homebase from "well-built" into "a reference implementation that others study and emulate." Each item draws inspiration from legendary engineering practices — FoundationDB's simulation testing, Netflix's chaos engineering, FastAPI's auto-documentation — and applies them to the Admiral context. The goal is a codebase that does not merely work but demonstrates how agentic governance infrastructure should be built.
+These items transform Helm from "well-built" into "a reference implementation that others study and emulate." Each item draws inspiration from legendary engineering practices — FoundationDB's simulation testing, Netflix's chaos engineering, FastAPI's auto-documentation — and applies them to the Admiral context. The goal is a codebase that does not merely work but demonstrates how agentic governance infrastructure should be built.
 
 ---
 
@@ -26,8 +26,8 @@ These items transform homebase from "well-built" into "a reference implementatio
   - **Depends on:** A-01 (schema validation) — needs validated payloads
 
 - [ ] **X-02: Chaos Testing for Hooks**
-  - **Description:** Randomly inject failures into the hook execution environment: missing `jq`, corrupted state file, huge payloads (1MB+), slow disk (simulated via sleep), concurrent hook execution, read-only filesystem, missing environment variables, and malformed JSON input. Verify that every hook fails open per ADR-004 — no hook failure should block the developer's workflow.
-  - **Done when:** Chaos suite runs 20+ failure scenarios, all hooks survive gracefully. Each scenario documents the failure mode, expected behavior, and actual behavior. No hook causes Claude Code to hang or crash under any chaos condition.
+  - **Description:** Randomly inject failures into the hook execution environment: missing `jq`, corrupted state file, huge payloads (1MB+), slow disk (simulated via sleep), concurrent hook execution, read-only filesystem, missing environment variables, malformed JSON input, and **hook crash mid-execution** (SIGKILL/SIGTERM during hook processing, partial state writes, interrupted file locks). Verify that every hook fails open per ADR-004 — no hook failure should block the developer's workflow. Mid-execution crash testing specifically verifies: state file integrity after interrupted writes, lock file cleanup after crashes, partial brain entry handling, and adapter recovery from subprocess death.
+  - **Done when:** Chaos suite runs 25+ failure scenarios (including 5+ mid-execution crash scenarios), all hooks survive gracefully. Each scenario documents the failure mode, expected behavior, and actual behavior. No hook causes Claude Code to hang or crash under any chaos condition. State files are never corrupted by interrupted writes.
   - **Files:** `admiral/tests/chaos/chaos_runner.sh` (new), `admiral/tests/chaos/scenarios/` (new)
   - **Size:** L
   - **Inspired by:** Netflix Chaos Monkey

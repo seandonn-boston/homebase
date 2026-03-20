@@ -120,7 +120,19 @@
 
 ---
 
-## 26.5 Pre-Flight Verification
+## 26.5 Local Testing & Simulation
+
+- [ ] **DX-14: Local agent session simulator**
+  - **Description:** Create a lightweight CLI tool that simulates a multi-agent Admiral session locally, without requiring actual LLM API calls. The simulator generates realistic hook payloads (SessionStart, PreToolUse, PostToolUse sequences), triggers hooks with those payloads, and displays the results in real-time. Features: (1) scenario files defining sequences of tool uses with expected outcomes; (2) realistic payloads matching actual Claude Code hook payload shapes (tested against A-01 schemas); (3) multiple agent identity simulation (switch between agent roles mid-session); (4) brain entry creation and retrieval during simulated sessions; (5) state file progression visualization; (6) hook timing and pass/fail reporting. This enables contributors to develop and test hooks, standing orders, and brain interactions without needing an active AI session.
+  - **Done when:** `admiral session simulate <scenario>` runs a simulated session. At least 3 built-in scenarios (simple session, multi-tool session, escalation scenario). Hook payloads match actual Claude Code format. All hooks fire and produce real results. Results include timing and pass/fail per hook. Contributors can create custom scenario files.
+  - **Files:** `admiral/cli/session-simulator.sh` (new), `admiral/cli/scenarios/` (new directory with 3+ scenario files), `admiral/tests/test_session_simulator.sh` (new)
+  - **Size:** L (3+ hours)
+  - **Spec ref:** —
+  - **Depends on:** A-01 (schema validation), DX-05 (hook CLI patterns)
+
+---
+
+## 26.6 Pre-Flight Verification
 
 - [ ] **DX-13: Pre-Flight Checklist tooling**
   - **Description:** Implement automated verification against profile-specific requirements (Starter/Team/Governed/Production/Enterprise). 54 verification items across 5 profiles. The checklist evaluates: project readiness (5 gates), profile-specific requirements, and negative items (what Starter explicitly does NOT need). Outputs structured pass/fail report with remediation suggestions.
@@ -138,8 +150,9 @@
 | 26.2 Development Workflow | DX-04, DX-05, DX-06, DX-11 | 1S + 3M |
 | 26.3 Documentation and Guides | DX-03, DX-07, DX-09, DX-10 | 2L + 2M |
 | 26.4 Contributor Onboarding | DX-12 | 1M |
-| 26.5 Pre-Flight Verification | DX-13 | 1L |
-| **Totals** | **13 items** | **3L + 8M + 2S** |
+| 26.5 Local Testing & Simulation | DX-14 | 1L |
+| 26.6 Pre-Flight Verification | DX-13 | 1L |
+| **Totals** | **14 items** | **4L + 8M + 2S** |
 
 **Critical path:** DX-02 (one-command setup) is the foundation — everything else assumes a working development environment. DX-01 (dev container) depends on DX-02 (it wraps the setup script). DX-03 (interactive guide) depends on DX-02 and DX-05 (hook CLI). DX-12 (good first issues) depends on DX-02 and DX-06 (local CI).
 

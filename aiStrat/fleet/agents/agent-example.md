@@ -1,5 +1,10 @@
 # {Agent Name}
 
+<!-- ASP Compatibility Note: This template is compatible with the Agent Spec Protocol (ASP).
+     To convert to a full ASP document, add YAML frontmatter with asp_version, name, category,
+     model_tier, schedule, and extends fields. See admiral/spec/agent-spec-protocol/ for the
+     full specification, schemas, templates, and authoring guide. -->
+
 **Category:** {Category name — e.g., Command & Coordination, Engineering — Frontend, Governance}
 **Model Tier:** {Tier 1 — Flagship | Tier 2 — Workhorse | Tier 3 — Utility | Tier 4 — Economy}
 **Schedule:** {Continuous | Triggered (describe trigger) | Periodic (describe cadence)}

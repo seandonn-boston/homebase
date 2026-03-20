@@ -2,7 +2,7 @@
 
 **A Workforce Toolkit for Autonomous AI Agent Fleets**
 
-v0.20.1-alpha.1773956527082 · March 2026
+v0.21.5-alpha.1773981603583 · March 2026
 
 -----
 
@@ -40,7 +40,7 @@ Admiral enables a new form of organization: **the hybrid organization where AI a
 
 The new behavior Admiral enables: *treating AI capacity as an operational workforce, not a feature.*
 
-See [`thesis.md`](../extensions/thesis.md) for the full analysis. *External reference: `research/future-operations.md` in the homebase repo root contains the underlying thought experiment.*
+See [`thesis.md`](../extensions/thesis.md) for the full analysis. *External reference: `research/future-operations.md` in the Helm repo root contains the underlying thought experiment.*
 
 -----
 

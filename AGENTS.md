@@ -1,10 +1,10 @@
 # AGENTS.md
 
-This file governs AI agents working on the homebase repository — the Admiral Framework implementation. For the framework specification itself, see `aiStrat/AGENTS.md`.
+This file governs AI agents working on the Helm repository — the Admiral Framework implementation. For the framework specification itself, see `aiStrat/AGENTS.md`.
 
 ## Project Overview
 
-Homebase is the implementation repository for the **Admiral Framework** — an AI agent fleet governance system. It contains both the framework specification (`aiStrat/`) and the runtime implementation (`admiral/`, `control-plane/`, `.hooks/`, `.brain/`). The core thesis: deterministic enforcement beats advisory guidance.
+Helm is the implementation repository for the **Admiral Framework** — an AI agent fleet governance system. It contains both the framework specification (`aiStrat/`) and the runtime implementation (`admiral/`, `control-plane/`, `.hooks/`, `.brain/`). The core thesis: deterministic enforcement beats advisory guidance.
 
 ## Tech Stack
 

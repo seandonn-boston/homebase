@@ -41,6 +41,13 @@ The spec requires 15 hooks. 8 are implemented. 4 are missing entirely, and the r
   - **Spec ref:** Part 3, SO-16, Part 13 S2, MCP-SECURITY-ANALYSIS.md Rec 2
   - **Depends on:** —
 
+- [ ] **S-04b: Hook input/output contract specification**
+  - **Description:** Document the formal input/output contracts for all hooks. Each hook receives structured JSON on stdin (`{ "event": "<EventType>", "tool": "<ToolName>", "params": { ... }, "agent_identity": "...", "trace_id": "..." }`). Output contract: exit code 0 = pass, non-zero = block. Stdout is captured and fed back to the agent as context. Stderr is logged. Hooks are synchronous executables with a 30s default timeout. Multiple hooks on the same event execute in declared order, fail-fast. Document per-hook JSON input shapes (e.g., `token_budget_tracker` receives `session_state.tokens_used` and `session_state.token_budget`; `loop_detector` receives `result.exit_code` and `result.error`). Create machine-readable contract schemas for each hook.
+  - **Done when:** Contract spec exists with JSON schemas for every hook's input payload. Output contract (exit codes, stdout semantics, stderr logging) is documented. Per-hook input shapes are specified for all 15 hooks. Contract schemas are validateable by tooling.
+  - **Files:** `admiral/docs/hook-contracts.md` (new), `admiral/hooks/schemas/` (new directory with per-hook JSON schemas)
+  - **Size:** M
+  - **Spec ref:** Part 3, Hook Execution Model
+
 - [ ] **S-05: Standing Orders enforcement map**
   - **Description:** Document which hooks enforce which Standing Orders. Creates a complete mapping of all 16 Standing Orders to their enforcement mechanism — whether enforced by a hook (automated), by instruction embedding (agent-side), or by guidance only (advisory). This map is the accountability ledger for the entire governance system.
   - **Done when:** `admiral/docs/standing-orders-enforcement-map.md` exists with complete mapping of all 16 SOs, each entry identifies enforcement type (hook/instruction/guidance), lists the specific file(s) responsible, and notes any enforcement gaps.

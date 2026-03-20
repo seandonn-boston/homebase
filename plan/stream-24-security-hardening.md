@@ -124,7 +124,27 @@
 
 ---
 
-## 24.6 MCP/A2A Security (from MCP-SECURITY-ANALYSIS.md)
+## 24.6 Advanced Quarantine Layers (from Part 3)
+
+- [ ] **SEC-16: Quarantine Layer 4 — LLM Advisory (Additive Rejection Only)**
+  - **Description:** Implement Layer 4 of the 5-layer quarantine pipeline. Layer 4 is invoked ONLY on content that passes Layers 1-3. It uses an LLM classifier with a fixed, hardcoded prompt template — no dynamic generation, no variable interpolation beyond the content being inspected. Critical constraint: Layer 4 can only REJECT, never APPROVE. A compromised Layer 4 can only fail to reject; it cannot approve what Layer 3 rejected. Logic: Layer 3 passes + Layer 4 rejects = rejected. Layer 3 passes + Layer 4 passes = content proceeds. Layer 3 rejects = Layer 4 never consulted. This asymmetric design ensures that even if the LLM is compromised via prompt injection, it cannot weaken the pipeline — it can only fail to strengthen it.
+  - **Done when:** Layer 4 runs only on content that passed Layers 1-3. Uses hardcoded prompt template with no dynamic interpolation. Can reject but cannot approve. Layer 3 rejection bypasses Layer 4 entirely. Tests verify asymmetric rejection behavior and that Layer 4 compromise cannot approve previously-rejected content.
+  - **Files:** `admiral/monitor/quarantine/layer4_llm_advisory.sh` (new), `admiral/monitor/quarantine/tests/test_layer4.sh` (new)
+  - **Size:** M
+  - **Spec ref:** Part 3, External Intelligence Quarantine — Layer 4 (LLM Advisory)
+  - **Depends on:** SEC-02, SEC-03
+
+- [ ] **SEC-17: Quarantine Layer 5 — Antibody**
+  - **Description:** Implement Layer 5 of the 5-layer quarantine pipeline. Layer 5 converts detected attacks into Brain FAILURE entries for future defense learning. No LLM involvement — deterministic write only. Attack patterns are preserved in "defanged form" as antibody entries, teaching future agents to recognize similar threats. Additionally, all monitor findings arrive as seed candidates with `"approved": False`, requiring Admiral review before Brain activation — a sixth gate on top of the five quarantine layers.
+  - **Done when:** Detected attacks are recorded as Brain FAILURE entries in defanged form. No LLM involved in Layer 5 processing. Antibody entries are queryable for future threat recognition. Admiral approval gate prevents auto-activation. Tests verify antibody creation and defanging.
+  - **Files:** `admiral/monitor/quarantine/layer5_antibody.sh` (new), `admiral/monitor/quarantine/tests/test_layer5.sh` (new)
+  - **Size:** S
+  - **Spec ref:** Part 3, External Intelligence Quarantine — Layer 5 (Antibody)
+  - **Depends on:** SEC-16
+
+---
+
+## 24.7 MCP/A2A Security (from MCP-SECURITY-ANALYSIS.md)
 
 - [ ] **SEC-13: Extend `zero_trust_validator.sh` to scan ALL tool responses**
   - **Description:** The current `zero_trust_validator.sh` restricts injection detection to `WebFetch` and `WebSearch` tool responses (lines 24-35). MCP tool responses bypass injection scanning entirely. This is the #1 priority fix from `admiral/MCP-SECURITY-ANALYSIS.md`. Remove the tool name filter so injection marker scanning applies to all tool responses from all tools. Additionally, escalate severity for MCP-sourced injection — a vetted server delivering injection payloads indicates compromise or rug pull, warranting CRITICAL severity vs. the expected-and-handled web injection.
@@ -154,9 +174,24 @@
 | 24.4 Audit and Integrity | SEC-06, SEC-07 | 2M |
 | 24.5 Supply Chain and Infrastructure | SEC-08, SEC-09, SEC-11 | 1S + 2M |
 | 24.6 MCP/A2A Security | SEC-13, SEC-14 | 1S + 1L |
-| **Totals** | **14 items** | **3L + 9M + 2S** |
+| 24.7 Leash Integration | SEC-15 | 1M |
+| **Totals** | **15 items** | **3L + 10M + 2S** |
 
 **Critical path:** SEC-13 (zero_trust_validator extension) is the highest-priority security fix — smallest code change, highest impact (MCP-SECURITY-ANALYSIS Rec 1). SEC-01 (attack corpus automation) is the testing foundation — now covers 30 ATK entries including 12 new MCP/A2A/temporal scenarios. SEC-14 (circuit breakers) depends on SEC-01 and Stream 16 M-10 (behavioral baselining).
+
+### 24.7 Competitive Context: Leash Integration Opportunity (from research/competitive-threat-strongdm-perplexity-comet-2026.md)
+
+StrongDM Leash provides kernel-level enforcement with Cedar policies — a layer Admiral does not and should not replicate. The competitive strategy is **integration, not competition**: Admiral's decision authority tiers should generate Cedar policies for Leash enforcement. This turns Leash from a competitor into an enforcement backend.
+
+- [ ] **SEC-15: Leash Cedar policy generation spec**
+  - **Description:** Design the mapping from Admiral's Decision Authority Tiers (Autonomous, Propose, Escalate, Blocked) to Cedar policy language. Each authority tier maps to a set of Cedar allow/deny statements. When an agent is assigned to a tier, Admiral generates the corresponding Cedar policy that Leash can enforce at the kernel level. This creates a two-layer enforcement model: Admiral governs behavioral intent (Standing Orders, governance rules), Leash enforces resource access (filesystem, network, process). The spec should cover: tier-to-Cedar mapping rules, policy generation triggers (agent session start, tier change), policy format compatibility with Leash's Cedar engine, and fallback behavior when Leash is not present (Admiral-only enforcement continues to work).
+  - **Done when:** Mapping spec exists covering all 4 authority tiers. At least 3 example Cedar policies are generated from real agent tier assignments. Spec addresses both Leash-present and Leash-absent deployment scenarios. Review by security-focused contributor.
+  - **Files:** `admiral/docs/leash-integration-spec.md` (new), `admiral/security/cedar-generator/examples/` (new)
+  - **Size:** M (1-3 hours)
+  - **Spec ref:** `aiStrat/admiral/extensions/governance-platform.md` — integrate, don't compete; `research/competitive-threat-strongdm-perplexity-comet-2026.md`
+  - **Depends on:** SEC-04 (privilege escalation hardening — authority tier enforcement must be solid before generating Cedar policies from it)
+
+---
 
 **Recommended execution order:**
 1. **Immediate:** SEC-13 (zero_trust_validator extension) — smallest change, highest impact.

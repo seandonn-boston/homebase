@@ -6,6 +6,8 @@
 
 **Why this matters:** Admiral's governance capabilities (policy enforcement, fleet visibility, audit trails, trust calibration) are currently embedded in local configuration files and hooks. This works for a single developer, but teams need shared governance — consistent policies across agents, centralized audit trails, real-time fleet visibility for all operators, and integration with existing operational tooling (Slack, Jira, PagerDuty). The governance platform makes Admiral the air traffic control tower, not just a flight manual.
 
+**Competitive context:** The governance platform extension (`aiStrat/admiral/extensions/governance-platform.md`) defines four pillars: **Visibility** (fleet status, task progress, resource consumption, decision history, failure patterns), **Control** (emergency halt to authority override), **Policy** (hard limits to Standing Orders), and **Recovery** (self-healing to escalation). The "good enough" stack risk (StrongDM Leash + Perplexity Computer + Comet Enterprise) covers enforcement, orchestration, and browser governance as point solutions — but none offer the unified governance platform that this stream builds. Admiral's progression from Useful → Operational → Essential → **Indispensable** depends on this stream making governance the operational environment teams build workflows around, not an optional utility alongside their tools. The chaos-first architecture principle applies: real fleets are messy; infrastructure must handle this, not enforce elegance.
+
 **Prerequisite awareness:** This stream depends heavily on core governance capabilities being stable (Streams 16-19). The API server (GP-01) can begin early, but multi-tenant support (GP-03) and policy language (GP-04) require the governance rule engine (MG-06) and intent schema (IE-01) to be in place.
 
 ---
@@ -19,6 +21,14 @@
   - **Size:** L (3+ hours)
   - **Spec ref:** Governance Platform extension — The Four Pillars (Visibility, Control); Part 9 — Fleet Observability
   - **Depends on:** —
+
+- [ ] **GP-01b: Visibility pillar API endpoints**
+  - **Description:** Implement the Visibility pillar (pillar 1 of 4) as concrete API endpoints on the governance server. The governance-platform extension defines Visibility as: fleet status, task progress, resource consumption, decision history, and failure patterns. These are currently spread across the Fleet Control Plane (Part 9), Cost Management (Part 8), Brain audit trail, and Failure Mode Catalog (Part 7). This item unifies them behind a single governance API surface: `GET /api/v1/visibility/fleet-status` (aggregated fleet view), `GET /api/v1/visibility/task-progress` (active task board with progress), `GET /api/v1/visibility/resources` (token/budget consumption), `GET /api/v1/visibility/decisions` (decision history from Brain), `GET /api/v1/visibility/failures` (failure pattern summary). This is what makes the governance platform a single pane of glass rather than a collection of separate queries.
+  - **Done when:** All 5 visibility endpoints return structured data. Endpoints aggregate from underlying systems (fleet registry, Brain, event log, cost tracker). Response format is consistent across endpoints. Tests verify each endpoint with synthetic data.
+  - **Files:** `control-plane/src/visibility-api.ts` (new), `control-plane/src/visibility-api.test.ts` (new)
+  - **Size:** M
+  - **Spec ref:** Governance Platform extension — The Four Pillars / 1. Visibility
+  - **Depends on:** GP-01
 
 - [ ] **GP-02: Policy management API**
   - **Description:** Implement CRUD operations for governance policies through the API. A governance policy is a named, versioned rule that the governance layer enforces. Operations: (1) **Create** — define a new policy with name, description, rule definition (from governance rule engine MG-06), enforcement level (enforce/monitor/disabled), and scope (fleet-wide, per-agent-role, per-project); (2) **Read** — retrieve a policy by ID or list all policies with filtering by status, scope, and enforcement level; (3) **Update** — modify a policy's rule definition or enforcement level, creating a new version (policies are append-only — updates create new versions, old versions are preserved for audit); (4) **Deactivate** — disable a policy without deleting it (deactivated policies remain in the audit trail). All policy changes require authentication and are logged with the change author, timestamp, and rationale.
