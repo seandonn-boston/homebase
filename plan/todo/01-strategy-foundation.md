@@ -21,7 +21,7 @@ The Strategy Triangle (Mission, Boundaries, Success Criteria) is the foundation 
 
 - [ ] **ST-06: Strategy Triangle validation hook** — Create a SessionStart hook that loads and validates the Ground Truth document against the schema on every session start; block on missing Ground Truth, warn on incomplete fields, log results for audit, and complete in under 2 seconds.
 - [ ] **ST-07: LLM-Last boundary enforcement** — Add an LLM-Last check to the Ground Truth validator ensuring each project's Boundaries document includes an explicit LLM-Last section; provide a reference template with common deterministic-first and LLM-judgment patterns.
-- [ ] **ST-08: Boundaries checklist** — Build `validate_boundaries.sh` that reads the Boundaries section and reports which categories (Non-Goals, Hard Constraints, Resource Budgets) are present, intentionally N/A, or missing; integrate into readiness assessment (ST-02) so missing categories prevent Ready status.
+- [x] **ST-08: Boundaries checklist** — Build `validate_boundaries.sh` that reads the Boundaries section and reports which categories (Non-Goals, Hard Constraints, Resource Budgets) are present, intentionally N/A, or missing; integrate into readiness assessment (ST-02) so missing categories prevent Ready status.
 
 ---
 
