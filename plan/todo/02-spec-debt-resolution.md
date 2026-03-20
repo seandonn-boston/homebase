@@ -29,7 +29,7 @@ All deliverables in this stream are specification proposals written to `docs/spe
 
 ## Spec Gap Proposals — Underspecified Areas
 
-- [ ] **SD-10: Spec gap proposal — Fleet orchestration protocol details** — Propose concrete protocol definitions for agent selection, unavailability handling, task assignment format, dependency tracking, and Orchestrator context management.
+- [x] **SD-10: Spec gap proposal — Fleet orchestration protocol details** — Propose concrete protocol definitions for agent selection, unavailability handling, task assignment format, dependency tracking, and Orchestrator context management.
 - [ ] **SD-11: Spec gap proposal — Brain graduation automation** — Propose answers for graduation initiation authority, reversibility, migration process, Brain availability during migration, and dry-run/shadow mode.
 - [ ] **SD-12: Spec gap proposal — Cross-platform hook normalization** — Define a canonical hook interface, handling of platform-limited lifecycle events, payload normalization, a platform compatibility matrix template, and management of platform-specific hooks.
 
