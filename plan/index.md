@@ -94,13 +94,13 @@
 
 | # | Stream | File | Items | Focus |
 |---|---|---|---|---|
-| 12 | [Strategic Positioning](stream-12-strategic-positioning.md) | `stream-12-strategic-positioning.md` | R-01 to R-11 | OWASP, AEGIS, NIST, McKinsey, IMDA, ISO, EU AI Act (R-12, R-13 relocated) |
+| 12 | [Strategic Positioning](stream-12-strategic-positioning.md) | `stream-12-strategic-positioning.md` | R-01 to R-11 | OWASP, AEGIS, NIST, McKinsey, IMDA, ISO, EU AI Act |
 | 13 | [Exemplary Codebase](stream-13-exemplary-codebase.md) | `stream-13-exemplary-codebase.md` | X-01 to X-18 | Simulation testing, chaos, profiling, contract testing |
 | 29 | [Standing Orders Implementation](stream-29-standing-orders-implementation.md) | `stream-29-standing-orders-implementation.md` | SO-01 to SO-17 | All 16 SOs enforced with automated mechanisms |
 | 30 | [Context Engineering](stream-30-context-engineering.md) | `stream-30-context-engineering.md` | CE-01 to CE-10 | Context profiles, budgets, compression, relevance scoring |
 | 31 | [Quality Assurance System](stream-31-quality-assurance-system.md) | `stream-31-quality-assurance-system.md` | QA-01 to QA-10 | Code review automation, quality gates, tech debt tracking |
 | 32 | [Rating System](stream-32-rating-system.md) | `stream-32-rating-system.md` | RT-01 to RT-10 | Rating dimensions, automated calculation, badges, dashboards |
-| 33 | [Thesis Validation](stream-33-thesis-validation.md) | `stream-33-thesis-validation.md` | TV-01 to TV-09 | Metrics, case studies, ROI, academic paper (TV-10 relocated) |
+| 33 | [Thesis Validation](stream-33-thesis-validation.md) | `stream-33-thesis-validation.md` | TV-01 to TV-09 | Metrics, case studies, ROI, academic paper |
 
 ---
 
@@ -115,8 +115,7 @@
 | Part IV: Governance & Data | 19-23 | ~56 items | Meta-governance, data ecosystem, spec debt, intent, platform |
 | Part V: Hardening & Observability | 24-28 | ~64 items | Security (incl. MCP/A2A), observability, DX, monitoring, future features |
 | Part VI: Strategic & Excellence | 12-13, 29-33 | ~86 items | Positioning, excellence, SOs, context, QA, rating, thesis |
-| **Total** | **34 streams** | **~482 items** | **Complete roadmap** |
-| *Non-engineering* | [strategy-and-community.md](strategy-and-community.md) | 3 items | R-12, R-13, TV-10 (relocated from streams 12, 33) |
+| **Total** | **34 streams** | **~479 items** | **Complete roadmap** |
 
 ---
 
