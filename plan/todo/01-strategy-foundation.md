@@ -9,7 +9,7 @@ The Strategy Triangle (Mission, Boundaries, Success Criteria) is the foundation 
 ## Ground Truth Tooling
 
 - [x] **ST-01: Ground Truth document template and tooling** — Create machine-readable YAML templates for Mission, Boundaries, and Success Criteria with all spec-defined fields; define `ground-truth.schema.json`; build `generate_ground_truth.sh` CLI to scaffold blank documents; build a validator that confirms filled-in documents have no empty required fields.
-- [ ] **ST-02: Project readiness assessment tool** — Build `readiness_assess.sh` that accepts a project root and Ground Truth path, checks Ground Truth completeness, CI config, test suite, linter config, and documented conventions, and outputs Ready/Partially Ready/Not Ready with a detailed breakdown and preparation path.
+- [x] **ST-02: Project readiness assessment tool** — Build `readiness_assess.sh` that accepts a project root and Ground Truth path, checks Ground Truth completeness, CI config, test suite, linter config, and documented conventions, and outputs Ready/Partially Ready/Not Ready with a detailed breakdown and preparation path. *Completed: `admiral/bin/readiness_assess` with 5 checks (GT validation, boundaries, CI, tests, linting, conventions), --json mode, preparation path output, 23 test assertions.*
 - [ ] **ST-03: Go/No-Go deployment gate** — Build `go_no_go_gate.sh` that invokes the readiness assessment (ST-02), exits non-zero for Not Ready projects, restricts Partially Ready to Starter profile, and supports Admiral override with justification logged to `override_log.jsonl`.
 
 ## Task-Level Strategy
