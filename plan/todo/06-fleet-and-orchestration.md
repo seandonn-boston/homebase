@@ -39,6 +39,10 @@ Source streams: **Stream 14 (Fleet Agent Definitions, F-01 to F-14)** | **Stream
 - [ ] **F-10** — Domain specialization agent definitions (extended): Auth & Identity, Payment & Billing, Search & Relevance, Real-time Systems, Media Processing, Notification Orchestrator, Internationalization, SDK & Dev Experience, Monorepo Coordinator
 - [ ] **F-11** — Ecosystem agent definitions: Copywriter, Contract Test Writer, remaining agents; 100% coverage report across 71 core + 34 extended agents
 
+## ASP Alignment
+
+- [ ] **F-15** — Align agent definitions with Agent Spec Protocol (ASP) format: update F-12a schema to validate ASP-compliant definitions, convert Orchestrator/QA/Security Auditor to full ASP format, integrate ASP validation schemas, enforce negative tool lists. ASP introduces authority relationships, `extends` inheritance, and per-agent Decision Authority tiers. Depends on F-12a.
+
 ## Capability Registry
 
 - [ ] **F-13** — Machine-readable agent capability registry: generation script producing consolidated JSON from all agent definitions, queryable by Orchestrator, auto-regenerates on definition changes
@@ -75,6 +79,7 @@ Source streams: **Stream 14 (Fleet Agent Definitions, F-01 to F-14)** | **Stream
 | F-12b (validator) | F-12a (schema) |
 | F-13 (capability registry) | F-12a, F-12b |
 | F-14 (template generator) | F-12a |
+| F-15 (ASP alignment) | F-12a (schema) |
 | F-01 through F-11 (all agent definitions) | F-12a (schema to validate against) |
 | O-01c (capability-match routing) | F-13 (capability registry) |
 | O-03b (context checklists) | O-03a (context assembly) |

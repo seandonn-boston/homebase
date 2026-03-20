@@ -77,6 +77,10 @@ MCP is the protocol bridge between agents and the Admiral framework. Platform ad
 
 ## Observability Stack
 
+### Competitive Urgency
+
+Ship causality tracing (OB-02 + OB-09) within **90 days** — before Perplexity Computer exposes subagent trace trees. Admiral's cross-platform tracing (CLI + API + browser + backend) is the defensible differentiator vs. single-surface competitors. Tracing data feeds the Brain, creating compounding value.
+
 ### Logging & Tracing Foundation
 
 - [ ] **OB-01: Structured logging standard** — JSON logging across all components; required fields: timestamp, level, component, correlation ID, message, context; `log_structured` for hooks, structured logger for control plane.

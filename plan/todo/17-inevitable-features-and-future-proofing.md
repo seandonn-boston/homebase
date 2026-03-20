@@ -6,6 +6,14 @@ Capabilities that will inevitably be needed as Admiral matures from single-repo 
 
 ---
 
+## Competitive Urgency
+
+The three inevitable features (causality tracing, living memory, predictive health) are Admiral's defensible moat. Competitive timelines: **Causality Tracing within 90 days** (before Perplexity Computer exposes subagent traces), **Brain B2 within 120 days** (before Comet persists interaction patterns), **Predictive Health within 180 days** (before Leash adds trend analysis). The compounding effect — each feature feeds the next — means early deployment creates a self-improving system competitors cannot replicate retroactively.
+
+Consider promoting IF-05 (performance profiling) and IF-08 (session replay) from Phase 8 to Phase 5–6 to feed the causality tracing and predictive health data pipelines earlier.
+
+---
+
 ## Agent Lifecycle & Marketplace
 
 - [ ] **IF-01: Agent versioning** — Semantic versioning for agent definitions so updates do not break running sessions. Maintain a version registry with changelogs and support rollback without disrupting active sessions.

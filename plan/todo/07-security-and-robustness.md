@@ -40,6 +40,10 @@ Defense in depth for the Admiral Framework: adversarial testing, injection defen
 - [ ] **S-44: A2A payload content inspection** — Run all incoming A2A messages through quarantine Layers 1-2 before execution. Detect injection patterns in A2A payloads. Flag behavioral anomalies (statistically unusual outputs). Implement taint tracking recording agent contribution chains for cascade containment.
 - [ ] **SEC-14: Cascade containment circuit breakers** — On MCP server compromise: (1) quarantine all Brain entries written by agents that used the flagged server (exclude from queries, do not delete), (2) suspend A2A connections for affected agents, (3) compute contamination graph tracing data lineage through agents and Brain entries. Analogous to epoch-based trust revocation applied to data integrity.
 
+## Leash Integration
+
+- [ ] **SEC-15: Leash Cedar policy generation spec** — Design mapping from Admiral's Decision Authority Tiers (Autonomous/Propose/Escalate/Blocked) to Cedar policy language. Generate Cedar policies from agent tier assignments for StrongDM Leash kernel-level enforcement. Cover tier-to-Cedar mapping, policy generation triggers, Leash-present and Leash-absent deployment. Turns Leash from competitor into enforcement backend. Depends on SEC-04.
+
 ## CI Security
 
 - [ ] **SEC-08: Dependency vulnerability scanning** — Automate `npm audit` or equivalent in CI on every PR and daily for main branch. Block merges on critical/high severity vulnerabilities. Produce structured JSON report including affected packages, severity, available fixes, and reachability from Admiral code paths.
@@ -66,6 +70,7 @@ Defense in depth for the Admiral Framework: adversarial testing, injection defen
 | SEC-12 | — | — |
 | SEC-13 | — | — |
 | SEC-14 | SEC-01, Stream 16 M-10 (behavioral baselining) | — |
+| SEC-15 | SEC-04 (privilege escalation hardening) | — |
 | S-20 | — | S-21 |
 | S-21 | S-20 | — |
 | S-22 | — | SEC-06 |

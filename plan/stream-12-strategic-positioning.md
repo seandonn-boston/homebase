@@ -126,6 +126,31 @@ R-12 (community strategy) can be done independently — organizational planning 
 R-13 (academic positioning) can be done independently — research and writing task
 ```
 
+## Competitive Intelligence Integration (from research/)
+
+Recent competitive analysis (`research/competitive-threat-strongdm-perplexity-comet-2026.md`, `research/perplexity-strongdm-ai-mastery-analysis.md`) has reshaped the strategic positioning landscape:
+
+**Positioning shift:** Admiral must position as **"Governance for AI workforces"** — not "security for AI agents" (Leash's territory) or "AI-powered enterprise" (Perplexity's territory). The governance category doesn't exist elsewhere; Admiral defines it.
+
+**R-10 (Competitive Differentiation Matrix) expansion:** The original competitor set (LangGraph, CrewAI, AutoGen, Semantic Kernel) is now insufficient. Must also include:
+- **StrongDM Leash** — kernel-level enforcement, Cedar policies, Record data. Competes on enforcement layer.
+- **Perplexity Computer** — multi-model orchestration, subagent tracing. Competes on fleet coordination.
+- **Perplexity Comet Enterprise** — AI-native browser with domain-level governance. Competes on user-facing governance.
+- The **assembled "good enough" stack** (Leash + Computer + Comet) as a composite competitor.
+
+**Key differentiators to emphasize in all positioning documents:**
+1. **Cross-platform scope** — No competitor governs beyond their surface (Leash→containers, Comet→browser, Perplexity→Perplexity agents). Admiral governs CLI + API + browser + backend unified.
+2. **Persistent memory (Brain)** — No competitor has institutional memory that compounds across sessions, projects, and agents.
+3. **Graduated trust** — No competitor has a trust model where agents earn autonomy through demonstrated performance. Comet has binary domain-level controls; Leash has static Cedar policies.
+4. **Behavioral governance** — Standing Orders and intent engineering are categories that don't exist in competitor products.
+5. **Fleet coordination** — Point solutions cannot coordinate agents across surfaces. Admiral's Orchestrator + routing + handoff protocol is unique.
+
+**Lessons from StrongDM's "dark factory" model** (from `research/perplexity-strongdm-ai-mastery-analysis.md`):
+- Specifications are the bottleneck, not code. Admiral's Standing Orders, Intent Engineering, and Decision Authority Tiers are specification-first — this is the right architecture for the agentic era.
+- Validation should be probabilistic (scenario-based satisfaction), not boolean (pass/fail tests). This insight should inform Stream 31 (Quality Assurance System) and Stream 33 (Thesis Validation).
+
+---
+
 ## Execution Notes
 
 The original 7 items (R-01 through R-07) focus on mapping Admiral to existing industry frameworks and standards. The 6 new items (R-08 through R-13) expand the strategic surface area: R-08 and R-09 add critical regulatory compliance mappings (ISO and EU), R-10 and R-11 address market positioning and adoption, and R-12 and R-13 target community growth and academic credibility. Together, these 13 items make Admiral legible to every audience that matters: security teams, compliance officers, analysts, regulators, enterprise buyers, open-source contributors, and academic researchers.

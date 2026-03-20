@@ -2,7 +2,7 @@
 
 > Source: stream-12-strategic-positioning.md (R-01 to R-13), stream-13-exemplary-codebase.md (X-01 to X-18)
 
-Strategic positioning makes Admiral legible to enterprises, regulators, analysts, and academics. Exemplary codebase transforms homebase from "well-built" into a reference implementation others study and emulate. All R-items are deferred to Phase 3+; X-items are a mix of active and deferred work.
+Strategic positioning makes Admiral legible to enterprises, regulators, analysts, and academics. Exemplary codebase transforms Helm from "well-built" into a reference implementation others study and emulate. All R-items are deferred to Phase 3+; X-items are a mix of active and deferred work.
 
 ---
 
@@ -23,8 +23,8 @@ Strategic positioning makes Admiral legible to enterprises, regulators, analysts
 
 ## Market & Community
 
-- [ ] **R-07: AI Work OS Positioning Document** *(DEFERRED Phase 3+)* — Reframe Admiral from "governance tool" to "operating system for AI work" with complete OS-to-Admiral concept mapping; produce executive summary for pitch decks and technical depth for engineering leadership.
-- [ ] **R-10: Competitive Differentiation Matrix** *(DEFERRED Phase 3+)* — Feature-by-feature comparison against LangGraph, CrewAI, AutoGen, and Semantic Kernel across 10+ dimensions; include honest trade-off assessment and quarterly update cadence.
+- [ ] **R-07: AI Work OS Positioning Document** *(DEFERRED Phase 3+)* — Reframe Admiral from "governance tool" to "operating system for AI work" with complete OS-to-Admiral concept mapping; produce executive summary for pitch decks and technical depth for engineering leadership. Updated positioning: **"Governance for AI workforces"** — distinct from "security for AI agents" (Leash) or "AI-powered enterprise" (Perplexity).
+- [ ] **R-10: Competitive Differentiation Matrix** *(DEFERRED Phase 3+)* — Feature-by-feature comparison against LangGraph, CrewAI, AutoGen, Semantic Kernel, **StrongDM Leash** (kernel enforcement), **Perplexity Computer** (multi-model orchestration), **Perplexity Comet Enterprise** (browser governance), and the **assembled "good enough" stack** (Leash + Computer + Comet). Compare across 10+ dimensions including cross-platform scope, persistent memory, graduated trust, behavioral governance, and fleet coordination. Include honest trade-off assessment and quarterly update cadence.
 - [ ] **R-11: Enterprise Adoption Playbook** *(DEFERRED Phase 3+)* — Step-by-step guide covering discovery, evaluation, pilot, rollout, and operationalization; include decision frameworks, persona-specific content, and top-10 objection FAQ.
 - [ ] **R-12: Open-Source Community Strategy** *(DEFERRED Phase 3+)* — Define governance model, contribution workflow, release cadence, community channels, and recognition programs; document first-contributor experience (clone to merged PR in under 30 minutes).
 

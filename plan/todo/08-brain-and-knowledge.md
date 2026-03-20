@@ -4,6 +4,12 @@ Source streams: Stream 11 (Brain B1-B3), Stream 20 (Data Ecosystem)
 
 ---
 
+## Competitive Urgency
+
+Brain is Admiral's primary competitive moat. Ship B2 within **120 days** before Perplexity Comet persists user-AI interaction patterns. Build B-21 (graduation metrics) concurrently with B1 completion to accelerate the B1→B2 graduation decision. Compounding value means each day of operation strengthens the moat.
+
+---
+
 ## B1 Completion
 
 - [ ] **B-01** Automatic brain entry creation from hooks — `brain_writer.sh` library called by `prohibitions_enforcer.sh`, `loop_detector.sh`, `scope_boundary_guard.sh`

@@ -1,6 +1,6 @@
 # Admiral Framework — Comprehensive Roadmap Index
 
-**Last updated:** 2026-03-19
+**Last updated:** 2026-03-20
 
 **Target:** Transform Helm from a strong prototype into a showcase-quality, fully-governed, spec-complete AI agent orchestration platform — a codebase that earns a 10/10 on every dimension.
 
@@ -64,7 +64,7 @@
 
 | # | Stream | File | Items | Focus |
 |---|---|---|---|---|
-| 14 | [Fleet Agent Definitions](stream-14-fleet-agent-definitions.md) | `stream-14-fleet-agent-definitions.md` | F-01 to F-14 | All 71 agent roles, schema, registry, templates |
+| 14 | [Fleet Agent Definitions](stream-14-fleet-agent-definitions.md) | `stream-14-fleet-agent-definitions.md` | F-01 to F-15 | All 71 agent roles, schema, registry, templates, ASP alignment |
 | 15 | [Fleet Routing & Orchestration](stream-15-fleet-routing-and-orchestration.md) | `stream-15-fleet-routing-and-orchestration.md` | O-01 to O-10 | Routing rules, model tiers, context injection, handoff |
 | 16 | [MCP Integration](stream-16-mcp-integration.md) | `stream-16-mcp-integration.md` | M-01 to M-14 | MCP server, brain/fleet/governance tools, auth, MCP server security |
 | 17 | [Platform Adapters](stream-17-platform-adapters.md) | `stream-17-platform-adapters.md` | PA-01 to PA-09 | Adapter interface, Claude Code, Cursor, Windsurf, API-direct |
@@ -84,7 +84,7 @@
 
 | # | Stream | File | Items | Focus |
 |---|---|---|---|---|
-| 24 | [Security Hardening](stream-24-security-hardening.md) | `stream-24-security-hardening.md` | SEC-01 to SEC-14 | Attack corpus (30 ATK), injection layers, SBOM, MCP/A2A security, circuit breakers |
+| 24 | [Security Hardening](stream-24-security-hardening.md) | `stream-24-security-hardening.md` | SEC-01 to SEC-15 | Attack corpus (30 ATK), injection layers, SBOM, MCP/A2A security, circuit breakers, Leash Cedar integration |
 | 25 | [Observability](stream-25-observability.md) | `stream-25-observability.md` | OB-01 to OB-10 | Structured logging, distributed tracing, metrics, SLOs |
 | 26 | [Developer Experience](stream-26-developer-experience.md) | `stream-26-developer-experience.md` | DX-01 to DX-12 | Dev containers, one-command setup, debugging guides |
 | 27 | [Monitoring & Scanner](stream-27-monitoring-and-scanner.md) | `stream-27-monitoring-and-scanner.md` | MON-01 to MON-10 | Scanner, daily digests, handoff validation |

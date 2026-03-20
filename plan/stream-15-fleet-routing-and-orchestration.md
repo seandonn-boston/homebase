@@ -6,6 +6,8 @@
 
 **Current state:** Routing rules exist as a markdown table in `fleet/routing-rules.md`. Model tiers are documented in `fleet/model-tiers.md`. Context injection patterns are described in `fleet/context-injection.md`. Interface contracts are specified in `fleet/interface-contracts.md`. None of these have executable implementations. The Orchestrator cannot actually route a task, enforce a model tier, inject context, or validate a handoff.
 
+**Competitive context:** The governance platform extension (`aiStrat/admiral/extensions/governance-platform.md`) reframes Admiral as **air traffic control, not a flight plan generator**. The routing engine is a core pillar of that metaphor — it provides real-time Control (one of the four pillars: Visibility, Control, Policy, Recovery). No competitor offers structured fleet routing with capability matching, file ownership, and conflict resolution. Perplexity Computer has subagent orchestration but no governance-aware routing. StrongDM has no multi-agent coordination at all. This stream's deliverables are defensible differentiators.
+
 **Why this matters:** Agent definitions without routing are a phone book without a switchboard. The routing engine is the mechanism that translates "this task needs a database expert" into "route to Database Agent with schema context and backward-compatibility constraint." Without it, multi-agent orchestration is manual coordination — the Admiral must personally assign every task to every agent.
 
 ---

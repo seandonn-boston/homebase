@@ -25,6 +25,8 @@ Intent engineering moves beyond prompts to structured intent capture, decomposit
 
 ## Governance API
 
+The governance platform must embody the four pillars (Visibility, Control, Policy, Recovery) from `aiStrat/admiral/extensions/governance-platform.md`. The progression from Useful → Operational → Essential → Indispensable depends on making governance the operational environment teams build workflows around. The "good enough" stack (Leash + Computer + Comet) covers enforcement, orchestration, and browser governance as point solutions — but none offer unified governance-as-a-service. This stream is what makes Admiral categorically different.
+
 - [ ] **GP-01: Governance API server** — Implement REST API server exposing governance capabilities (policy management, agent management, audit trail, fleet health, Brain access); extend control plane server architecture; enforce authentication on all endpoints; use API versioning (`/api/v1/...`).
 - [ ] **GP-02: Policy management API** — Implement CRUD for governance policies through the API; policies are named, versioned, and append-only (updates create new versions); support enforcement levels (enforce/monitor/disabled) and scopes (fleet-wide, per-role, per-project); log all changes with author and rationale.
 - [ ] **GP-03: Multi-tenant support** _(deferred Phase 3+)_ — Implement tenant isolation for policies, audit trails, and Brain namespaces at the data layer; support shared global policies that cannot be overridden; enforce tenant-scoped authentication with elevated privileges for cross-tenant access.

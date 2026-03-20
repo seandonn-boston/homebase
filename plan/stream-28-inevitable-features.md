@@ -154,6 +154,24 @@
 5. **Collaboration:** IF-11 (collaboration patterns), IF-12 (real-time dashboard) — fleet-scale operations.
 6. **Marketplace:** IF-02 (marketplace, after IF-01) — ecosystem building, build last.
 
+### 28.7 Competitive Urgency (from research/competitive-threat-strongdm-perplexity-comet-2026.md)
+
+The three inevitable features are Admiral's defensible moat against point-solution convergence. Competitive timelines demand specific ship dates:
+
+| Feature | Competitor Threat | Admiral Ship Target | Why |
+|---|---|---|---|
+| **Causality Tracing** | Perplexity Computer exposing subagent traces (6–12 mo) | 90 days | First-mover advantage; unique cross-platform scope |
+| **Living Memory (Brain B2)** | Comet persistent user-AI interaction patterns (12–18 mo) | 120 days | Compounding value; cannot catch up retroactively |
+| **Predictive Health** | Leash trend analysis on enforcement data (12–18 mo) | 180 days | Requires 30+ days of trace/memory operational data |
+
+**The compounding effect is the moat:** Each feature feeds the next. Causality Tracing produces data for Living Memory. Living Memory produces patterns for Predictive Health. By 90 days of operation, the three features form a self-improving system competitors cannot replicate retroactively — they would need to also replicate the accumulated operational data.
+
+**"Good enough" stack risk:** Enterprises may assemble StrongDM Leash (enforcement) + Perplexity Computer (orchestration) + Comet Enterprise (browser governance) as a point-solution stack. This stack covers enforcement, orchestration, and browser governance — but misses persistent memory, graduated trust, behavioral governance, fleet coordination, and cross-platform scope. The inevitable features are what make Admiral categorically different from an assembled stack.
+
+**Implication for this stream:** IF-05 (performance profiling), IF-08 (session replay), and IF-12 (real-time dashboard) are not Phase 8 luxuries — they are the building blocks for the three inevitable features. Consider promoting IF-05 and IF-08 to Phase 5–6 to feed causality tracing and predictive health data pipelines earlier.
+
+---
+
 **Alignment with Inevitable Features:** This stream's items create the building blocks for the three inevitable features identified in the extension document:
 - **Causality Tracing** is enabled by IF-05 (profiling), IF-08 (replay), and IF-12 (real-time dashboard).
 - **Living Operational Memory** is enabled by IF-01 (versioned agents), IF-04 (cross-repo knowledge), and IF-09 (natural language policies that compile to the memory layer).

@@ -29,7 +29,7 @@ The Rating System makes governance measurable — a five-tier scale (ADM-1 throu
 
 - [ ] **TV-01: Thesis metrics definition** — Define measurable metrics for both thesis claims (enforcement beats advisory; agents can be governed as workforce). Specify evidence-for and evidence-against thresholds. State null hypotheses for scientific rigor.
 - [ ] **TV-02: Advisory vs enforcement comparison** — Implement A/B framework running identical tasks under advisory-only and hard-blocking modes. Measure violation rate, violation severity, first-pass quality, completion time, and escalation rate. Minimum 10 task pairs with statistical significance methodology.
-- [ ] **TV-03: Before/after case studies** — Document real instances where enforcement caught problems advisory guidance would have missed. Each case study includes counterfactual analysis and true positive / false positive classification. At least 5 case studies from actual homebase development.
+- [ ] **TV-03: Before/after case studies** — Document real instances where enforcement caught problems advisory guidance would have missed. Each case study includes counterfactual analysis and true positive / false positive classification. At least 5 case studies from actual Helm development.
 - [ ] **TV-04: Agent quality improvement tracking** — Track agent output quality longitudinally correlated with governance maturity. Correlate first-pass quality, defect density, and escalation rate with specific governance additions. At least 3 governance milestones with before/after data.
 
 ## Thesis Evidence & Cost
