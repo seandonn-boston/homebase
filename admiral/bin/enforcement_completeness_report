@@ -1,0 +1,264 @@
+#!/bin/bash
+# Admiral Framework — Standing Orders Enforcement Completeness Report (SO-17)
+# Automated script mapping each SO to enforcement mechanism(s).
+# Reports enforcement type, calculates coverage percentage, identifies gaps.
+# Produces human-readable summary and JSON output.
+#
+# Usage: enforcement_completeness_report [--json] [--ci]
+#   --json   Output JSON only (for CI integration)
+#   --ci     Exit non-zero if coverage below threshold (default: 50%)
+set -euo pipefail
+
+PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
+HOOKS_DIR="${PROJECT_DIR}/.hooks"
+SO_DIR="${PROJECT_DIR}/admiral/standing-orders"
+
+# Parse arguments
+OUTPUT_JSON=false
+CI_MODE=false
+CI_THRESHOLD=50
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --json) OUTPUT_JSON=true; shift ;;
+    --ci) CI_MODE=true; shift ;;
+    --threshold) CI_THRESHOLD="$2"; shift 2 ;;
+    *) shift ;;
+  esac
+done
+
+# Define enforcement mapping: SO number -> hook file(s), type, mechanism
+# Type: hard-block | advisory | none
+# Mechanism: mechanical | judgment-assisted | advisory-only
+declare -A SO_HOOKS
+declare -A SO_TYPES
+declare -A SO_MECHANISMS
+
+SO_HOOKS[1]="identity_validation.sh,tier_validation.sh"
+SO_TYPES[1]="hard-block"
+SO_MECHANISMS[1]="mechanical"
+
+SO_HOOKS[2]=""
+SO_TYPES[2]="none"
+SO_MECHANISMS[2]="advisory-only"
+
+SO_HOOKS[3]="scope_boundary_guard.sh"
+SO_TYPES[3]="hard-block"
+SO_MECHANISMS[3]="mechanical"
+
+SO_HOOKS[4]=""
+SO_TYPES[4]="none"
+SO_MECHANISMS[4]="advisory-only"
+
+SO_HOOKS[5]="brain_context_router.sh"
+SO_TYPES[5]="advisory"
+SO_MECHANISMS[5]="judgment-assisted"
+
+SO_HOOKS[6]="loop_detector.sh"
+SO_TYPES[6]="advisory"
+SO_MECHANISMS[6]="mechanical"
+
+SO_HOOKS[7]=""
+SO_TYPES[7]="none"
+SO_MECHANISMS[7]="judgment-assisted"
+
+SO_HOOKS[8]="pre_work_validator.sh"
+SO_TYPES[8]="advisory"
+SO_MECHANISMS[8]="mechanical"
+
+SO_HOOKS[9]=""
+SO_TYPES[9]="none"
+SO_MECHANISMS[9]="judgment-assisted"
+
+SO_HOOKS[10]="prohibitions_enforcer.sh,token_budget_tracker.sh"
+SO_TYPES[10]="hard-block"
+SO_MECHANISMS[10]="mechanical"
+
+SO_HOOKS[11]="context_baseline.sh,context_health_check.sh"
+SO_TYPES[11]="advisory"
+SO_MECHANISMS[11]="judgment-assisted"
+
+SO_HOOKS[12]="zero_trust_validator.sh"
+SO_TYPES[12]="advisory"
+SO_MECHANISMS[12]="judgment-assisted"
+
+SO_HOOKS[13]=""
+SO_TYPES[13]="none"
+SO_MECHANISMS[13]="advisory-only"
+
+SO_HOOKS[14]="compliance_ethics_advisor.sh"
+SO_TYPES[14]="advisory"
+SO_MECHANISMS[14]="judgment-assisted"
+
+SO_HOOKS[15]="pre_work_validator.sh"
+SO_TYPES[15]="advisory"
+SO_MECHANISMS[15]="mechanical"
+
+SO_HOOKS[16]="protocol_registry_guard.sh"
+SO_TYPES[16]="hard-block"
+SO_MECHANISMS[16]="judgment-assisted"
+
+# Count standing orders from source files
+SO_COUNT=0
+if [ -d "$SO_DIR" ]; then
+  SO_COUNT=$(find "$SO_DIR" -name 'so*.json' -type f | wc -l | tr -d ' ')
+fi
+
+# Validate hooks exist and build report
+ENFORCED=0
+HARD_BLOCK=0
+ADVISORY=0
+NONE=0
+GAPS=""
+JSON_ENTRIES=""
+
+for so_num in $(seq 1 16); do
+  HOOK_LIST="${SO_HOOKS[$so_num]:-}"
+  TYPE="${SO_TYPES[$so_num]:-none}"
+  MECHANISM="${SO_MECHANISMS[$so_num]:-unknown}"
+
+  # Get SO title from source file
+  SO_FILE="${SO_DIR}/so$(printf '%02d' "$so_num")-"*.json
+  SO_TITLE="Unknown"
+  for f in $SO_FILE; do
+    if [ -f "$f" ]; then
+      SO_TITLE=$(jq -r '.title // "Unknown"' "$f" 2>/dev/null) || SO_TITLE="Unknown"
+    fi
+    break
+  done
+
+  # Verify hooks exist
+  HOOKS_PRESENT=true
+  MISSING_HOOKS=""
+  if [ -n "$HOOK_LIST" ]; then
+    IFS=',' read -ra HOOKS <<< "$HOOK_LIST"
+    for hook in "${HOOKS[@]}"; do
+      if [ ! -f "${HOOKS_DIR}/${hook}" ]; then
+        HOOKS_PRESENT=false
+        MISSING_HOOKS="${MISSING_HOOKS}${hook} "
+      fi
+    done
+  fi
+
+  # Determine effective enforcement status
+  EFFECTIVE_TYPE="$TYPE"
+  if [ "$TYPE" != "none" ] && [ "$HOOKS_PRESENT" = false ]; then
+    EFFECTIVE_TYPE="degraded"
+  fi
+
+  # Count by type
+  case "$EFFECTIVE_TYPE" in
+    hard-block) HARD_BLOCK=$((HARD_BLOCK + 1)); ENFORCED=$((ENFORCED + 1)) ;;
+    advisory)   ADVISORY=$((ADVISORY + 1)); ENFORCED=$((ENFORCED + 1)) ;;
+    none)       NONE=$((NONE + 1)); GAPS="${GAPS}  SO-$(printf '%02d' "$so_num") ${SO_TITLE} (${MECHANISM})\n" ;;
+    degraded)   NONE=$((NONE + 1)); GAPS="${GAPS}  SO-$(printf '%02d' "$so_num") ${SO_TITLE} — DEGRADED: missing ${MISSING_HOOKS}\n" ;;
+  esac
+
+  # Build JSON entry
+  JSON_ENTRY=$(jq -n \
+    --argjson num "$so_num" \
+    --arg title "$SO_TITLE" \
+    --arg type "$EFFECTIVE_TYPE" \
+    --arg mechanism "$MECHANISM" \
+    --arg hooks "$HOOK_LIST" \
+    --argjson present "$( [ "$HOOKS_PRESENT" = true ] && echo true || echo false)" \
+    '{so: $num, title: $title, enforcement_type: $type, mechanism: $mechanism, hooks: ($hooks | split(",")), hooks_present: $present}')
+  if [ -n "$JSON_ENTRIES" ]; then
+    JSON_ENTRIES="${JSON_ENTRIES},${JSON_ENTRY}"
+  else
+    JSON_ENTRIES="$JSON_ENTRY"
+  fi
+done
+
+# Calculate coverage
+TOTAL=16
+COVERAGE_PCT=$((ENFORCED * 100 / TOTAL))
+
+# Build JSON output
+REPORT_JSON=$(jq -n \
+  --argjson total "$TOTAL" \
+  --argjson enforced "$ENFORCED" \
+  --argjson hard_block "$HARD_BLOCK" \
+  --argjson advisory "$ADVISORY" \
+  --argjson none "$NONE" \
+  --argjson coverage "$COVERAGE_PCT" \
+  --argjson so_files "$SO_COUNT" \
+  --arg timestamp "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+  --argjson entries "[$JSON_ENTRIES]" \
+  '{
+    timestamp: $timestamp,
+    summary: {
+      total_standing_orders: $total,
+      enforced: $enforced,
+      hard_block: $hard_block,
+      advisory_hook: $advisory,
+      no_hook: $none,
+      coverage_pct: $coverage,
+      so_source_files: $so_files
+    },
+    standing_orders: $entries
+  }')
+
+if [ "$OUTPUT_JSON" = true ]; then
+  echo "$REPORT_JSON"
+else
+  # Human-readable output
+  echo "═══════════════════════════════════════════════════════"
+  echo "  Standing Orders Enforcement Completeness Report"
+  echo "═══════════════════════════════════════════════════════"
+  echo ""
+  echo "  Coverage: ${ENFORCED}/${TOTAL} (${COVERAGE_PCT}%)"
+  echo "  Hard-block: ${HARD_BLOCK}  |  Advisory: ${ADVISORY}  |  No hook: ${NONE}"
+  echo "  SO source files found: ${SO_COUNT}"
+  echo ""
+  echo "───────────────────────────────────────────────────────"
+  echo "  Enforcement Detail"
+  echo "───────────────────────────────────────────────────────"
+
+  for so_num in $(seq 1 16); do
+    TYPE="${SO_TYPES[$so_num]:-none}"
+    HOOK_LIST="${SO_HOOKS[$so_num]:-}"
+
+    SO_FILE="${SO_DIR}/so$(printf '%02d' "$so_num")-"*.json
+    SO_TITLE="Unknown"
+    for f in $SO_FILE; do
+      if [ -f "$f" ]; then
+        SO_TITLE=$(jq -r '.title // "Unknown"' "$f" 2>/dev/null) || SO_TITLE="Unknown"
+      fi
+      break
+    done
+
+    ICON="  "
+    case "$TYPE" in
+      hard-block) ICON="[B]" ;;
+      advisory)   ICON="[A]" ;;
+      none)       ICON="[ ]" ;;
+    esac
+
+    HOOKS_DISPLAY="none"
+    if [ -n "$HOOK_LIST" ]; then
+      HOOKS_DISPLAY="$HOOK_LIST"
+    fi
+
+    printf "  %s SO-%02d %-30s %s\n" "$ICON" "$so_num" "$SO_TITLE" "$HOOKS_DISPLAY"
+  done
+
+  echo ""
+  if [ -n "$GAPS" ]; then
+    echo "───────────────────────────────────────────────────────"
+    echo "  Gaps (no hook enforcement)"
+    echo "───────────────────────────────────────────────────────"
+    echo -e "$GAPS"
+  fi
+  echo "═══════════════════════════════════════════════════════"
+  echo "  Generated: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  echo "═══════════════════════════════════════════════════════"
+fi
+
+# CI mode: exit non-zero if below threshold
+if [ "$CI_MODE" = true ] && [ "$COVERAGE_PCT" -lt "$CI_THRESHOLD" ]; then
+  echo "FAIL: Enforcement coverage ${COVERAGE_PCT}% is below CI threshold of ${CI_THRESHOLD}%" >&2
+  exit 1
+fi
+
+exit 0

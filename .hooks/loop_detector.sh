@@ -21,6 +21,11 @@ export CLAUDE_PROJECT_DIR="$PROJECT_DIR"
 
 source "$PROJECT_DIR/admiral/lib/state.sh"
 
+# Source brain_writer for auto-recording loop events (B-01)
+if [ -f "$PROJECT_DIR/admiral/lib/brain_writer.sh" ]; then
+  source "$PROJECT_DIR/admiral/lib/brain_writer.sh"
+fi
+
 # Load thresholds from central config, falling back to hardcoded defaults
 CONFIG_FILE="$PROJECT_DIR/admiral/config.json"
 if [ -f "$CONFIG_FILE" ]; then
@@ -96,6 +101,10 @@ LOOP_STATE=$(echo "$LOOP_STATE" | jq \
 # Check thresholds — emit advisory alerts, NEVER block
 if [ "$NEW_COUNT" -ge "$MAX_SAME_ERROR" ]; then
   ALERT+="LOOP WARNING: Error signature '${SIG}' repeated ${NEW_COUNT} times. Consider recovery ladder (SO-06). Try a different approach. "
+  # Auto-record to Brain (B-01: brain_writer integration)
+  if command -v brain_record_loop &>/dev/null; then
+    brain_record_loop "$SIG" "$NEW_COUNT" 2>/dev/null || true
+  fi
 fi
 
 if [ "$NEW_TOTAL" -ge "$MAX_TOTAL_ERRORS" ]; then

@@ -1,0 +1,183 @@
+{
+  "$schema": "fleet_registry.schema.json",
+  "version": "1.0.0",
+  "description": "Fleet agent registry — maps agent IDs to roles, capabilities, tiers, and permissions",
+  "agents": [
+    {
+      "id": "claude-code",
+      "name": "Claude Code Agent",
+      "role": "generalist",
+      "tier": 2,
+      "status": "active",
+      "capabilities": ["code_generation", "code_review", "file_operations", "testing", "documentation"],
+      "tool_permissions": {
+        "allowed": ["Read", "Write", "Edit", "Bash", "Glob", "Grep", "Agent", "WebFetch", "WebSearch", "NotebookEdit"],
+        "denied": []
+      },
+      "routing_rules": {
+        "primary_tasks": ["implementation", "refactoring", "testing", "documentation"],
+        "file_ownership": ["**/*"]
+      }
+    },
+    {
+      "id": "orchestrator",
+      "name": "Orchestrator",
+      "role": "orchestrator",
+      "tier": 1,
+      "status": "active",
+      "capabilities": ["task_decomposition", "routing", "coordination", "conflict_resolution"],
+      "tool_permissions": {
+        "allowed": ["Read", "Glob", "Grep", "Agent", "Bash"],
+        "denied": ["Write", "Edit"]
+      },
+      "routing_rules": {
+        "primary_tasks": ["task_decomposition", "routing", "coordination"],
+        "file_ownership": []
+      }
+    },
+    {
+      "id": "sentinel",
+      "name": "Sentinel Agent",
+      "role": "sentinel",
+      "tier": 1,
+      "status": "active",
+      "capabilities": ["monitoring", "enforcement", "drift_detection", "health_checks"],
+      "tool_permissions": {
+        "allowed": ["Read", "Glob", "Grep", "Bash"],
+        "denied": ["Write", "Edit"]
+      },
+      "routing_rules": {
+        "primary_tasks": ["monitoring", "enforcement", "audit"],
+        "file_ownership": [".admiral/**", ".hooks/**"]
+      }
+    },
+    {
+      "id": "arbiter",
+      "name": "Arbiter Agent",
+      "role": "arbiter",
+      "tier": 1,
+      "status": "active",
+      "capabilities": ["conflict_resolution", "decision_making", "escalation_handling"],
+      "tool_permissions": {
+        "allowed": ["Read", "Glob", "Grep", "Bash"],
+        "denied": []
+      },
+      "routing_rules": {
+        "primary_tasks": ["conflict_resolution", "escalation"],
+        "file_ownership": []
+      }
+    },
+    {
+      "id": "compliance-monitor",
+      "name": "Compliance Monitor",
+      "role": "compliance-monitor",
+      "tier": 2,
+      "status": "active",
+      "capabilities": ["compliance_checking", "ethics_review", "pii_detection"],
+      "tool_permissions": {
+        "allowed": ["Read", "Glob", "Grep"],
+        "denied": ["Write", "Edit", "Bash"]
+      },
+      "routing_rules": {
+        "primary_tasks": ["compliance_review", "ethics_check"],
+        "file_ownership": []
+      }
+    },
+    {
+      "id": "frontend-implementer",
+      "name": "Frontend Implementer",
+      "role": "frontend-implementer",
+      "tier": 2,
+      "status": "active",
+      "capabilities": ["ui_implementation", "component_development", "styling", "responsive_layout"],
+      "tool_permissions": {
+        "allowed": ["Read", "Write", "Edit", "Bash", "Glob", "Grep"],
+        "denied": []
+      },
+      "routing_rules": {
+        "primary_tasks": ["ui_component", "frontend_implementation", "styling"],
+        "file_ownership": ["src/components/**", "src/pages/**", "src/styles/**"]
+      }
+    },
+    {
+      "id": "backend-implementer",
+      "name": "Backend Implementer",
+      "role": "backend-implementer",
+      "tier": 2,
+      "status": "active",
+      "capabilities": ["api_implementation", "database_operations", "server_logic"],
+      "tool_permissions": {
+        "allowed": ["Read", "Write", "Edit", "Bash", "Glob", "Grep"],
+        "denied": []
+      },
+      "routing_rules": {
+        "primary_tasks": ["api_implementation", "server_logic", "database"],
+        "file_ownership": ["src/api/**", "src/server/**", "src/models/**"]
+      }
+    },
+    {
+      "id": "qa-agent",
+      "name": "QA Agent",
+      "role": "qa-agent",
+      "tier": 2,
+      "status": "active",
+      "capabilities": ["testing", "code_review", "quality_assurance"],
+      "tool_permissions": {
+        "allowed": ["Read", "Write", "Edit", "Bash", "Glob", "Grep"],
+        "denied": []
+      },
+      "routing_rules": {
+        "primary_tasks": ["code_review", "testing", "quality_check"],
+        "file_ownership": ["tests/**", "**/*.test.*", "**/*.spec.*"]
+      }
+    },
+    {
+      "id": "security-auditor",
+      "name": "Security Auditor",
+      "role": "security-auditor",
+      "tier": 1,
+      "status": "active",
+      "capabilities": ["security_audit", "vulnerability_detection", "threat_modeling"],
+      "tool_permissions": {
+        "allowed": ["Read", "Glob", "Grep", "Bash"],
+        "denied": ["Write", "Edit"]
+      },
+      "routing_rules": {
+        "primary_tasks": ["security_audit", "vulnerability_scan", "threat_model"],
+        "file_ownership": []
+      }
+    },
+    {
+      "id": "devops-agent",
+      "name": "DevOps Agent",
+      "role": "devops-agent",
+      "tier": 2,
+      "status": "active",
+      "capabilities": ["ci_cd", "infrastructure", "deployment", "monitoring"],
+      "tool_permissions": {
+        "allowed": ["Read", "Write", "Edit", "Bash", "Glob", "Grep"],
+        "denied": []
+      },
+      "routing_rules": {
+        "primary_tasks": ["ci_cd", "deployment", "infrastructure"],
+        "file_ownership": [".github/**", "Dockerfile*", "docker-compose*", "*.yml"]
+      }
+    },
+    {
+      "id": "technical-writer",
+      "name": "Technical Writer",
+      "role": "technical-writer",
+      "tier": 3,
+      "status": "active",
+      "capabilities": ["documentation", "api_docs", "guides"],
+      "tool_permissions": {
+        "allowed": ["Read", "Write", "Edit", "Glob", "Grep"],
+        "denied": ["Bash"]
+      },
+      "routing_rules": {
+        "primary_tasks": ["documentation", "api_docs", "guides"],
+        "file_ownership": ["docs/**", "*.md"]
+      }
+    }
+  ]
+}

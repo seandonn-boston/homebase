@@ -83,7 +83,25 @@ if [ -x "$SCRIPT_DIR/prohibitions_enforcer.sh" ]; then
   fi
 fi
 
-# --- Sub-hook 4: Pre-Work Validator (SO-15, isolated) ---
+# --- Sub-hook 4: Protocol Registry Guard (SO-16/MCP09, can hard-block) ---
+if [ -f "$SCRIPT_DIR/protocol_registry_guard.sh" ]; then
+  PROTO_OUTPUT=""
+  PROTO_EXIT=0
+  PROTO_OUTPUT=$(echo "$PAYLOAD" | bash "$SCRIPT_DIR/protocol_registry_guard.sh" 2>>"$PROJECT_DIR/.admiral/hook_errors.log") || PROTO_EXIT=$?
+  if [ -n "$PROTO_OUTPUT" ]; then
+    PROTO_CTX=$(echo "$PROTO_OUTPUT" | jq -r '.hookSpecificOutput.additionalContext // empty' 2>/dev/null) || true
+    if [ -n "$PROTO_CTX" ]; then
+      ALL_CONTEXT+="$PROTO_CTX "
+    fi
+    # Propagate hard-block: if protocol_registry_guard exits 2, block the tool
+    if [ "$PROTO_EXIT" -eq 2 ]; then
+      echo "$PROTO_OUTPUT"
+      exit 2
+    fi
+  fi
+fi
+
+# --- Sub-hook 5: Pre-Work Validator (SO-15, isolated) ---
 # Receives enriched payload with session_state; returns hook_state + advisory
 if [ -x "$SCRIPT_DIR/pre_work_validator.sh" ]; then
   PREWORK_OUTPUT=""

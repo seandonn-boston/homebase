@@ -1,0 +1,273 @@
+#!/bin/bash
+# Admiral Framework — Escalation Pipeline (S-11)
+# 5-step escalation process:
+#   1. Intake classification (severity, category)
+#   2. Brain precedent query (search for similar past escalations)
+#   3. Resolution path generation (propose options)
+#   4. Admiral decision (record decision and authority)
+#   5. Outcome persistence (record to Brain, event log)
+#
+# Usage:
+#   escalate create <agent_id> <severity> <subject> <detail>
+#   escalate resolve <escalation_id> <resolution> <decision_by>
+#   escalate list [--status <status>]
+#   escalate precedent <keyword>
+set -euo pipefail
+
+PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
+ESCALATION_DIR="${PROJECT_DIR}/.admiral/escalations"
+EVENT_LOG="${PROJECT_DIR}/.admiral/event_log.jsonl"
+BRAIN_DIR="${PROJECT_DIR}/.brain"
+
+mkdir -p "$ESCALATION_DIR"
+
+# Source brain_writer for auto-recording escalation events
+if [ -f "$PROJECT_DIR/admiral/lib/brain_writer.sh" ]; then
+  source "$PROJECT_DIR/admiral/lib/brain_writer.sh"
+fi
+
+usage() {
+  echo "Usage: escalate <command> [args]"
+  echo "  create <agent_id> <severity> <subject> <detail>"
+  echo "    severity: critical|high|medium|low"
+  echo "  resolve <escalation_id> <resolution> <decision_by>"
+  echo "  list [--status <status>]"
+  echo "  precedent <keyword>"
+  exit 1
+}
+
+[ $# -lt 1 ] && usage
+
+COMMAND="$1"
+shift
+
+case "$COMMAND" in
+  create)
+    [ $# -lt 4 ] && { echo "Error: create requires agent_id, severity, subject, detail" >&2; exit 1; }
+    AGENT_ID="$1"
+    SEVERITY="$2"
+    SUBJECT="$3"
+    DETAIL="$4"
+
+    # Validate severity
+    case "$SEVERITY" in
+      critical|high|medium|low) ;;
+      *) echo "Error: Invalid severity '$SEVERITY'. Use: critical|high|medium|low" >&2; exit 1 ;;
+    esac
+
+    # Step 1: Intake classification
+    ESC_ID=$(uuidgen 2>/dev/null || python3 -c "import uuid; print(uuid.uuid4())" 2>/dev/null || echo "esc-$(date +%s)")
+    TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+
+    # Determine routing based on severity
+    ROUTE_TO="orchestrator"
+    case "$SEVERITY" in
+      critical) ROUTE_TO="admiral" ;;
+      high)     ROUTE_TO="admiral" ;;
+      medium)   ROUTE_TO="orchestrator" ;;
+      low)      ROUTE_TO="orchestrator" ;;
+    esac
+
+    # Step 2: Brain precedent query
+    PRECEDENTS=""
+    PRECEDENT_COUNT=0
+    if [ -d "$BRAIN_DIR" ]; then
+      # Search Brain for similar past escalations/decisions
+      MATCHING_FILES=$(grep -rlFi "$SUBJECT" "$BRAIN_DIR" 2>/dev/null | head -5 || true)
+      for pfile in $MATCHING_FILES; do
+        [ -f "$pfile" ] || continue
+        case "$pfile" in *.json) ;; *) continue ;; esac
+        PTITLE=$(jq -r '.title // ""' "$pfile" 2>/dev/null) || continue
+        PCAT=$(jq -r '.category // ""' "$pfile" 2>/dev/null) || true
+        if [ -n "$PTITLE" ]; then
+          PRECEDENTS="${PRECEDENTS}    {\"title\": $(echo "$PTITLE" | jq -Rs '.'), \"category\": \"$PCAT\", \"file\": \"$pfile\"},"
+          PRECEDENT_COUNT=$((PRECEDENT_COUNT + 1))
+        fi
+      done
+    fi
+    # Clean trailing comma
+    PRECEDENTS="${PRECEDENTS%,}"
+
+    # Step 3: Resolution path generation
+    # Generate suggested resolution paths based on severity and category
+    RESOLUTION_PATHS="[\"Investigate root cause and fix\", \"Apply workaround and document\", \"Escalate to human operator\"]"
+    case "$SEVERITY" in
+      critical) RESOLUTION_PATHS="[\"Immediate rollback\", \"Emergency fix with expedited review\", \"Escalate to human operator immediately\"]" ;;
+      high) RESOLUTION_PATHS="[\"Investigate and fix within current session\", \"Escalate to specialized agent\", \"Defer with documented justification\"]" ;;
+    esac
+
+    # Create escalation record
+    FILENAME="${ESCALATION_DIR}/${ESC_ID}.json"
+    jq -n \
+      --arg eid "$ESC_ID" \
+      --arg agent "$AGENT_ID" \
+      --arg severity "$SEVERITY" \
+      --arg subject "$SUBJECT" \
+      --arg detail "$DETAIL" \
+      --arg route "$ROUTE_TO" \
+      --argjson precedent_count "$PRECEDENT_COUNT" \
+      --argjson resolution_paths "$RESOLUTION_PATHS" \
+      --arg ts "$TIMESTAMP" \
+      '{
+        escalation_id: $eid,
+        status: "open",
+        intake: {
+          agent_id: $agent,
+          severity: $severity,
+          subject: $subject,
+          detail: $detail,
+          created_at: $ts
+        },
+        precedent_query: {
+          searched: true,
+          matches_found: $precedent_count
+        },
+        resolution_paths: $resolution_paths,
+        routing: {
+          routed_to: $route,
+          reason: ("Severity " + $severity + " routes to " + $route)
+        },
+        decision: null,
+        outcome: null
+      }' > "$FILENAME"
+
+    # Log event
+    jq -n --arg ts "$TIMESTAMP" --arg eid "$ESC_ID" --arg agent "$AGENT_ID" \
+      --arg severity "$SEVERITY" --arg subject "$SUBJECT" --arg route "$ROUTE_TO" \
+      '{event: "escalation_created", timestamp: $ts, escalation_id: $eid, agent: $agent, severity: $severity, subject: $subject, routed_to: $route}' \
+      >> "$EVENT_LOG" 2>/dev/null || true
+
+    echo "Escalation created: $ESC_ID"
+    echo "  Severity: $SEVERITY | Routed to: $ROUTE_TO"
+    echo "  Subject: $SUBJECT"
+    echo "  Brain precedents found: $PRECEDENT_COUNT"
+    echo "  Resolution paths suggested: $(echo "$RESOLUTION_PATHS" | jq -r 'length')"
+    echo "  File: $FILENAME"
+    ;;
+
+  resolve)
+    [ $# -lt 3 ] && { echo "Error: resolve requires escalation_id, resolution, decision_by" >&2; exit 1; }
+    ESC_ID="$1"
+    RESOLUTION="$2"
+    DECISION_BY="$3"
+    ESC_FILE="${ESCALATION_DIR}/${ESC_ID}.json"
+    [ ! -f "$ESC_FILE" ] && { echo "Error: Escalation not found: $ESC_ID" >&2; exit 1; }
+
+    TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+
+    # Step 4: Record Admiral decision
+    # Step 5: Outcome persistence
+    TMPFILE=$(mktemp)
+    jq --arg resolution "$RESOLUTION" --arg by "$DECISION_BY" --arg ts "$TIMESTAMP" '
+      .status = "resolved" |
+      .decision = {
+        resolution: $resolution,
+        decided_by: $by,
+        decided_at: $ts
+      } |
+      .outcome = {
+        persisted_at: $ts,
+        brain_recorded: true
+      }
+    ' "$ESC_FILE" > "$TMPFILE" && mv "$TMPFILE" "$ESC_FILE"
+
+    # Record outcome to Brain
+    SUBJECT=$(jq -r '.intake.subject // "unknown"' "$ESC_FILE" 2>/dev/null)
+    SEVERITY=$(jq -r '.intake.severity // "unknown"' "$ESC_FILE" 2>/dev/null)
+    if command -v brain_record_escalation &>/dev/null; then
+      brain_record_escalation "$SUBJECT" "$SEVERITY" "Resolution: ${RESOLUTION}. Decided by: ${DECISION_BY}." 2>/dev/null || true
+    fi
+
+    # Log event
+    jq -n --arg ts "$TIMESTAMP" --arg eid "$ESC_ID" --arg by "$DECISION_BY" --arg resolution "$RESOLUTION" \
+      '{event: "escalation_resolved", timestamp: $ts, escalation_id: $eid, decided_by: $by, resolution: $resolution}' \
+      >> "$EVENT_LOG" 2>/dev/null || true
+
+    echo "Escalation $ESC_ID resolved"
+    echo "  Resolution: $RESOLUTION"
+    echo "  Decided by: $DECISION_BY"
+    ;;
+
+  list)
+    STATUS_FILTER=""
+    while [ $# -gt 0 ]; do
+      case "$1" in
+        --status) STATUS_FILTER="$2"; shift 2 ;;
+        *) shift ;;
+      esac
+    done
+
+    echo "Escalation Registry"
+    echo "==================="
+    COUNT=0
+    for f in "$ESCALATION_DIR"/*.json; do
+      [ -f "$f" ] || continue
+      EID=$(jq -r '.escalation_id // "?"' "$f" 2>/dev/null)
+      ESTATUS=$(jq -r '.status // "?"' "$f" 2>/dev/null)
+      ESEVERITY=$(jq -r '.intake.severity // "?"' "$f" 2>/dev/null)
+      ESUBJECT=$(jq -r '.intake.subject // "?"' "$f" 2>/dev/null)
+      EAGENT=$(jq -r '.intake.agent_id // "?"' "$f" 2>/dev/null)
+      ECREATED=$(jq -r '.intake.created_at // "?"' "$f" 2>/dev/null)
+
+      if [ -n "$STATUS_FILTER" ] && [ "$ESTATUS" != "$STATUS_FILTER" ]; then
+        continue
+      fi
+
+      COUNT=$((COUNT + 1))
+      printf "  [%s] %s (%s): %s — agent: %s, %s\n" "$ESTATUS" "$EID" "$ESEVERITY" "$ESUBJECT" "$EAGENT" "$ECREATED"
+    done
+    echo "==================="
+    echo "Total: $COUNT escalations"
+    ;;
+
+  precedent)
+    [ $# -lt 1 ] && { echo "Error: precedent requires a search keyword" >&2; exit 1; }
+    KEYWORD="$1"
+
+    echo "Escalation Precedent Search: \"$KEYWORD\""
+    echo "========================================"
+
+    # Search past resolved escalations
+    ESC_COUNT=0
+    for f in "$ESCALATION_DIR"/*.json; do
+      [ -f "$f" ] || continue
+      ESTATUS=$(jq -r '.status // ""' "$f" 2>/dev/null)
+      [ "$ESTATUS" != "resolved" ] && continue
+
+      if grep -qFi "$KEYWORD" "$f" 2>/dev/null; then
+        ESC_COUNT=$((ESC_COUNT + 1))
+        ESUBJECT=$(jq -r '.intake.subject // "?"' "$f" 2>/dev/null)
+        ERESOLUTION=$(jq -r '.decision.resolution // "?"' "$f" 2>/dev/null)
+        echo "  [$ESC_COUNT] $ESUBJECT"
+        echo "    Resolution: $ERESOLUTION"
+        echo ""
+      fi
+    done
+
+    # Also search Brain for related entries
+    echo "Brain precedents:"
+    if [ -d "$BRAIN_DIR" ]; then
+      BRAIN_COUNT=0
+      MATCHING_FILES=$(grep -rlFi "$KEYWORD" "$BRAIN_DIR" 2>/dev/null | head -5 || true)
+      for pfile in $MATCHING_FILES; do
+        [ -f "$pfile" ] || continue
+        case "$pfile" in *.json) ;; *) continue ;; esac
+        PTITLE=$(jq -r '.title // ""' "$pfile" 2>/dev/null) || continue
+        PCAT=$(jq -r '.category // ""' "$pfile" 2>/dev/null) || true
+        if [ -n "$PTITLE" ]; then
+          BRAIN_COUNT=$((BRAIN_COUNT + 1))
+          echo "  [$PCAT] $PTITLE"
+          echo "    File: $pfile"
+        fi
+      done
+      [ "$BRAIN_COUNT" -eq 0 ] && echo "  No Brain entries found."
+    fi
+
+    echo "========================================"
+    echo "Escalation precedents: $ESC_COUNT | Brain matches found"
+    ;;
+
+  *)
+    usage
+    ;;
+esac

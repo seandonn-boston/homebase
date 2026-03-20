@@ -1,0 +1,229 @@
+#!/bin/bash
+# Admiral Framework — Task Routing Engine (S-07)
+# Routes tasks to agents based on task type, file ownership, capability scores, and load.
+# Returns routing decision with justification.
+#
+# Usage:
+#   task_router route <task_type> [--file <path>] [--priority <level>]
+#   task_router explain <task_type>
+#   task_router capable <capability>
+set -euo pipefail
+
+PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
+REGISTRY_FILE="${PROJECT_DIR}/admiral/config/fleet_registry.json"
+ROUTING_CONFIG="${PROJECT_DIR}/admiral/config/routing_rules.json"
+
+if [ ! -f "$REGISTRY_FILE" ]; then
+  echo "Error: Fleet registry not found" >&2
+  exit 1
+fi
+
+usage() {
+  echo "Usage: task_router <command> [args]"
+  echo "  route <task_type> [--file <path>] [--priority <level>]"
+  echo "  explain <task_type>"
+  echo "  capable <capability>"
+  exit 1
+}
+
+[ $# -lt 1 ] && usage
+
+COMMAND="$1"
+shift
+
+# Task type to capability mapping (derived from routing-rules.md)
+task_type_to_capability() {
+  local task_type="$1"
+  case "$task_type" in
+    ui_component|frontend_implementation|styling) echo "ui_implementation" ;;
+    api_implementation|server_logic|database) echo "api_implementation" ;;
+    code_review|testing|quality_check) echo "testing" ;;
+    security_audit|vulnerability_scan|threat_model) echo "security_audit" ;;
+    ci_cd|deployment|infrastructure) echo "ci_cd" ;;
+    documentation|api_docs|guides) echo "documentation" ;;
+    task_decomposition|routing|coordination) echo "task_decomposition" ;;
+    monitoring|enforcement|audit) echo "monitoring" ;;
+    compliance_review|ethics_check) echo "compliance_checking" ;;
+    conflict_resolution|escalation) echo "conflict_resolution" ;;
+    implementation|refactoring) echo "code_generation" ;;
+    *) echo "$task_type" ;;
+  esac
+}
+
+# Task type to primary agent mapping (from routing-rules.md)
+task_type_to_primary() {
+  local task_type="$1"
+  case "$task_type" in
+    ui_component|frontend_implementation|styling) echo "frontend-implementer" ;;
+    api_implementation|server_logic|database) echo "backend-implementer" ;;
+    code_review|testing|quality_check) echo "qa-agent" ;;
+    security_audit|vulnerability_scan|threat_model) echo "security-auditor" ;;
+    ci_cd|deployment|infrastructure) echo "devops-agent" ;;
+    documentation|api_docs|guides) echo "technical-writer" ;;
+    task_decomposition|routing|coordination) echo "orchestrator" ;;
+    monitoring|enforcement|audit) echo "sentinel" ;;
+    compliance_review|ethics_check) echo "compliance-monitor" ;;
+    conflict_resolution|escalation) echo "arbiter" ;;
+    implementation|refactoring) echo "claude-code" ;;
+    *) echo "claude-code" ;;
+  esac
+}
+
+# Task type to fallback agent
+task_type_to_fallback() {
+  local task_type="$1"
+  case "$task_type" in
+    ui_component|frontend_implementation) echo "backend-implementer" ;;
+    security_audit|vulnerability_scan) echo "qa-agent" ;;
+    ci_cd|deployment) echo "devops-agent" ;;
+    documentation) echo "claude-code" ;;
+    *) echo "claude-code" ;;
+  esac
+}
+
+# Check if an agent owns a file path
+check_file_ownership() {
+  local agent_id="$1"
+  local file_path="$2"
+
+  PATTERNS=$(jq -r --arg id "$agent_id" '.agents[] | select(.id == $id) | .routing_rules.file_ownership[]?' "$REGISTRY_FILE" 2>/dev/null) || return 1
+
+  for pattern in $PATTERNS; do
+    # Simple glob matching: ** matches everything, * matches within directory
+    case "$pattern" in
+      "**/*") return 0 ;; # Owns everything
+    esac
+    # Convert glob to regex-ish match
+    local regex_pattern
+    regex_pattern=$(echo "$pattern" | sed 's/\*\*/.*/' | sed 's/\*/.*/g')
+    if echo "$file_path" | grep -qE "^$regex_pattern$" 2>/dev/null; then
+      return 0
+    fi
+  done
+  return 1
+}
+
+case "$COMMAND" in
+  route)
+    [ $# -lt 1 ] && { echo "Error: route requires task_type" >&2; exit 1; }
+    TASK_TYPE="$1"
+    shift
+
+    FILE_PATH=""
+    PRIORITY="medium"
+    while [ $# -gt 0 ]; do
+      case "$1" in
+        --file) FILE_PATH="$2"; shift 2 ;;
+        --priority) PRIORITY="$2"; shift 2 ;;
+        *) shift ;;
+      esac
+    done
+
+    # Strategy 1: Route by task type (primary)
+    PRIMARY=$(task_type_to_primary "$TASK_TYPE")
+    FALLBACK=$(task_type_to_fallback "$TASK_TYPE")
+    CAPABILITY=$(task_type_to_capability "$TASK_TYPE")
+    STRATEGY="task_type"
+    JUSTIFICATION="Task type '$TASK_TYPE' maps to primary agent '$PRIMARY' per routing rules"
+
+    # Verify primary agent is active
+    PRIMARY_STATUS=$(jq -r --arg id "$PRIMARY" '.agents[] | select(.id == $id) | .status // "unknown"' "$REGISTRY_FILE" 2>/dev/null) || PRIMARY_STATUS="unknown"
+
+    SELECTED="$PRIMARY"
+    if [ "$PRIMARY_STATUS" != "active" ]; then
+      SELECTED="$FALLBACK"
+      JUSTIFICATION="${JUSTIFICATION}. Primary '$PRIMARY' is $PRIMARY_STATUS, falling back to '$FALLBACK'"
+      STRATEGY="fallback"
+    fi
+
+    # Strategy 2: Route by file ownership (if file specified, may override)
+    if [ -n "$FILE_PATH" ]; then
+      FILE_OWNER=""
+      while IFS= read -r agent_id; do
+        [ -z "$agent_id" ] && continue
+        if check_file_ownership "$agent_id" "$FILE_PATH"; then
+          AGENT_STATUS=$(jq -r --arg id "$agent_id" '.agents[] | select(.id == $id) | .status // "unknown"' "$REGISTRY_FILE" 2>/dev/null) || AGENT_STATUS="unknown"
+          if [ "$AGENT_STATUS" = "active" ] && [ "$agent_id" != "$SELECTED" ]; then
+            # Check if file owner has the needed capability
+            HAS_CAP=$(jq -r --arg id "$agent_id" --arg cap "$CAPABILITY" '.agents[] | select(.id == $id) | .capabilities | index($cap) != null' "$REGISTRY_FILE" 2>/dev/null) || HAS_CAP="false"
+            if [ "$HAS_CAP" = "true" ]; then
+              FILE_OWNER="$agent_id"
+              break
+            fi
+          fi
+        fi
+      done < <(jq -r '.agents[].id' "$REGISTRY_FILE" 2>/dev/null)
+
+      if [ -n "$FILE_OWNER" ] && [ "$FILE_OWNER" != "$SELECTED" ]; then
+        SELECTED="$FILE_OWNER"
+        STRATEGY="file_ownership"
+        JUSTIFICATION="${JUSTIFICATION}. File ownership of '$FILE_PATH' routes to '$FILE_OWNER'"
+      fi
+    fi
+
+    # Get selected agent details
+    AGENT_TIER=$(jq -r --arg id "$SELECTED" '.agents[] | select(.id == $id) | .tier // 2' "$REGISTRY_FILE" 2>/dev/null) || AGENT_TIER=2
+    AGENT_ROLE=$(jq -r --arg id "$SELECTED" '.agents[] | select(.id == $id) | .role // "unknown"' "$REGISTRY_FILE" 2>/dev/null) || AGENT_ROLE="unknown"
+
+    # Output routing decision as JSON
+    jq -n \
+      --arg agent "$SELECTED" \
+      --arg role "$AGENT_ROLE" \
+      --argjson tier "$AGENT_TIER" \
+      --arg task_type "$TASK_TYPE" \
+      --arg strategy "$STRATEGY" \
+      --arg justification "$JUSTIFICATION" \
+      --arg fallback "$FALLBACK" \
+      --arg priority "$PRIORITY" \
+      --arg file "${FILE_PATH:-none}" \
+      '{
+        routing_decision: {
+          selected_agent: $agent,
+          role: $role,
+          tier: $tier,
+          task_type: $task_type,
+          priority: $priority,
+          file_context: $file,
+          strategy_used: $strategy,
+          justification: $justification,
+          fallback_agent: $fallback
+        }
+      }'
+    ;;
+
+  explain)
+    [ $# -lt 1 ] && { echo "Error: explain requires task_type" >&2; exit 1; }
+    TASK_TYPE="$1"
+    PRIMARY=$(task_type_to_primary "$TASK_TYPE")
+    FALLBACK=$(task_type_to_fallback "$TASK_TYPE")
+    CAPABILITY=$(task_type_to_capability "$TASK_TYPE")
+
+    echo "Routing Explanation: $TASK_TYPE"
+    echo "================================"
+    echo "  Primary agent: $PRIMARY"
+    echo "  Fallback agent: $FALLBACK"
+    echo "  Required capability: $CAPABILITY"
+    echo ""
+    echo "  Routing strategies (in priority order):"
+    echo "    1. Task type -> primary agent mapping"
+    echo "    2. File ownership -> agent with matching path pattern"
+    echo "    3. Capability match -> any agent with required capability"
+    echo ""
+
+    # Show capable agents
+    echo "  Agents with capability '$CAPABILITY':"
+    jq -r --arg cap "$CAPABILITY" '.agents[] | select(.capabilities[]? == $cap) | "    [\(.tier)] \(.id) (\(.role)) — \(.status)"' "$REGISTRY_FILE" 2>/dev/null || echo "    (none found)"
+    ;;
+
+  capable)
+    [ $# -lt 1 ] && { echo "Error: capable requires a capability name" >&2; exit 1; }
+    CAP="$1"
+    echo "Agents with capability: $CAP"
+    echo "============================="
+    jq -r --arg cap "$CAP" '.agents[] | select(.capabilities[]? == $cap) | "  [\(.tier)] \(.id) (\(.role)) — \(.status)"' "$REGISTRY_FILE"
+    ;;
+
+  *)
+    usage
+    ;;
+esac

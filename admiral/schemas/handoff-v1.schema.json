@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "handoff/v1.schema.json",
+  "title": "Admiral Handoff Protocol v1",
+  "description": "Schema for agent-to-agent handoffs. All handoffs must validate against this schema before acceptance.",
+  "type": "object",
+  "required": ["handoff_id", "version", "sender", "receiver", "task", "context", "created_at"],
+  "properties": {
+    "handoff_id": {
+      "type": "string",
+      "description": "Unique identifier for this handoff (UUID v4)"
+    },
+    "version": {
+      "type": "string",
+      "const": "v1",
+      "description": "Handoff protocol version"
+    },
+    "sender": {
+      "type": "object",
+      "required": ["agent_id", "role"],
+      "properties": {
+        "agent_id": { "type": "string" },
+        "role": { "type": "string" },
+        "session_id": { "type": "string" }
+      }
+    },
+    "receiver": {
+      "type": "object",
+      "required": ["agent_id", "role"],
+      "properties": {
+        "agent_id": { "type": "string" },
+        "role": { "type": "string" }
+      }
+    },
+    "task": {
+      "type": "object",
+      "required": ["description", "type", "priority"],
+      "properties": {
+        "description": {
+          "type": "string",
+          "minLength": 10,
+          "description": "Clear description of what needs to be done"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["implementation", "review", "testing", "documentation", "security_audit", "deployment", "investigation", "resolution", "other"]
+        },
+        "priority": {
+          "type": "string",
+          "enum": ["critical", "high", "medium", "low"]
+        },
+        "acceptance_criteria": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "description": "What constitutes successful completion"
+        },
+        "constraints": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Boundaries the receiver must respect"
+        },
+        "files_in_scope": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Files relevant to this task"
+        }
+      }
+    },
+    "context": {
+      "type": "object",
+      "required": ["summary"],
+      "properties": {
+        "summary": {
+          "type": "string",
+          "minLength": 20,
+          "description": "Summary of what the sender has done and current state"
+        },
+        "decisions_made": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "decision": { "type": "string" },
+              "rationale": { "type": "string" },
+              "authority_tier": { "type": "string", "enum": ["enforced", "autonomous", "propose", "escalate"] }
+            }
+          }
+        },
+        "assumptions": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Assumptions the sender made that the receiver should validate"
+        },
+        "blockers": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Known blockers or issues"
+        },
+        "brain_entries_consulted": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Brain entry IDs consulted during this work"
+        }
+      }
+    },
+    "routing_suggestions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Suggested next agents after receiver completes"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "trace_id": {
+      "type": "string",
+      "description": "Trace ID for distributed tracing"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["pending", "accepted", "rejected", "completed"],
+      "default": "pending"
+    }
+  },
+  "additionalProperties": false
+}

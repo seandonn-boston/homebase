@@ -26,7 +26,45 @@ init_session_state "$SESSION_ID"
 TRACE_ID=$(uuidgen 2>/dev/null || python3 -c "import uuid; print(uuid.uuid4())" 2>/dev/null || echo "trace-${SESSION_ID}-$(date +%s)")
 set_state_field '.trace_id' "\"$TRACE_ID\""
 
-# 3. Validate Strategy Triangle (advisory — warns but does not block)
+# 3. Validate agent identity (SO-01 — can hard-block invalid identities)
+IDENTITY_WARNING=""
+if [ -f "$SCRIPT_DIR/identity_validation.sh" ]; then
+  IDENTITY_OUTPUT=""
+  IDENTITY_EXIT=0
+  IDENTITY_OUTPUT=$(echo "$PAYLOAD" | bash "$SCRIPT_DIR/identity_validation.sh" 2>>"$PROJECT_DIR/.admiral/hook_errors.log") || IDENTITY_EXIT=$?
+  if [ "$IDENTITY_EXIT" -eq 2 ]; then
+    # Hard-block: invalid identity
+    echo "$IDENTITY_OUTPUT"
+    exit 2
+  fi
+  if [ -n "$IDENTITY_OUTPUT" ]; then
+    IDENTITY_CTX=$(echo "$IDENTITY_OUTPUT" | jq -r '.hookSpecificOutput.additionalContext // empty' 2>/dev/null) || true
+    if [ -n "$IDENTITY_CTX" ]; then
+      IDENTITY_WARNING="$IDENTITY_CTX"
+    fi
+  fi
+fi
+
+# 4. Validate model tier (SO-01 + model-tiers — can hard-block critical mismatches)
+TIER_WARNING=""
+if [ -f "$SCRIPT_DIR/tier_validation.sh" ]; then
+  TIER_OUTPUT=""
+  TIER_EXIT=0
+  TIER_OUTPUT=$(echo "$PAYLOAD" | bash "$SCRIPT_DIR/tier_validation.sh" 2>>"$PROJECT_DIR/.admiral/hook_errors.log") || TIER_EXIT=$?
+  if [ "$TIER_EXIT" -eq 2 ]; then
+    # Hard-block: critical tier mismatch
+    echo "$TIER_OUTPUT"
+    exit 2
+  fi
+  if [ -n "$TIER_OUTPUT" ]; then
+    TIER_CTX=$(echo "$TIER_OUTPUT" | jq -r '.hookSpecificOutput.additionalContext // empty' 2>/dev/null) || true
+    if [ -n "$TIER_CTX" ]; then
+      TIER_WARNING="$TIER_CTX"
+    fi
+  fi
+fi
+
+# 5. Validate Strategy Triangle (advisory — warns but does not block)
 STRATEGY_WARNING=""
 if [ -f "$SCRIPT_DIR/strategy_triangle_validate.sh" ]; then
   STRATEGY_OUTPUT=$(bash "$SCRIPT_DIR/strategy_triangle_validate.sh" 2>&1) || true
@@ -35,7 +73,7 @@ if [ -f "$SCRIPT_DIR/strategy_triangle_validate.sh" ]; then
   fi
 fi
 
-# 4. Fire context_baseline hook (surface failures as warnings, don't suppress)
+# 6. Fire context_baseline hook (surface failures as warnings, don't suppress)
 BASELINE_WARNING=""
 if [ -x "$SCRIPT_DIR/context_baseline.sh" ]; then
   # shellcheck disable=SC2034  # Output captured to suppress stdout; only exit code matters
@@ -44,11 +82,11 @@ if [ -x "$SCRIPT_DIR/context_baseline.sh" ]; then
   }
 fi
 
-# 5. Render Standing Orders for context injection
+# 7. Render Standing Orders for context injection
 SO_TEXT=$(render_standing_orders)
 SO_COUNT=$(count_standing_orders)
 
-# 6. Log session start event
+# 8. Log session start event
 EVENT_LOG="$PROJECT_DIR/.admiral/event_log.jsonl"
 jq -n --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
       --arg trace "$TRACE_ID" \
@@ -58,10 +96,16 @@ jq -n --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
       '{event: "session_start", timestamp: $ts, trace_id: $trace, session_id: $sid, model: $model, standing_orders_loaded: $so_count}' \
       >> "$EVENT_LOG" 2>/dev/null || true
 
-# 7. Output for Claude Code — inject Standing Orders as system message
+# 9. Output for Claude Code — inject Standing Orders as system message
 # Include any initialization warnings so they're visible
 FULL_MSG="$SO_TEXT"
 INIT_WARNINGS=""
+if [ -n "$IDENTITY_WARNING" ]; then
+  INIT_WARNINGS="${INIT_WARNINGS}${IDENTITY_WARNING} "
+fi
+if [ -n "$TIER_WARNING" ]; then
+  INIT_WARNINGS="${INIT_WARNINGS}${TIER_WARNING} "
+fi
 if [ -n "$STRATEGY_WARNING" ]; then
   INIT_WARNINGS="${INIT_WARNINGS}${STRATEGY_WARNING} "
 fi

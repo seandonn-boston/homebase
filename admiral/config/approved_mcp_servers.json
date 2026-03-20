@@ -1,0 +1,41 @@
+{
+  "$schema": "approved_mcp_servers.schema.json",
+  "version": "1.0.0",
+  "description": "Approved MCP server registry — servers not on this list are blocked by protocol_registry_guard (SO-16/MCP09)",
+  "last_reviewed": "2026-03-20",
+  "approved_servers": [
+    {
+      "name": "brain-mcp-server",
+      "aliases": ["brain-mcp", "admiral-brain"],
+      "trust_classification": "internal",
+      "version": "1.0.0",
+      "description": "Admiral Brain B3 MCP server — knowledge management tools",
+      "tools": ["brain_record", "brain_query", "brain_retrieve", "brain_strengthen", "brain_supersede", "brain_status", "brain_audit", "brain_purge"],
+      "approved_by": "admiral",
+      "approved_at": "2026-03-20",
+      "review_notes": "Internal tool — full trust"
+    },
+    {
+      "name": "fleet-mcp-server",
+      "aliases": ["fleet-mcp", "admiral-fleet"],
+      "trust_classification": "internal",
+      "version": "1.0.0",
+      "description": "Admiral Fleet MCP server — agent routing and orchestration tools",
+      "tools": ["fleet_route", "fleet_status", "fleet_health", "agent_lookup"],
+      "approved_by": "admiral",
+      "approved_at": "2026-03-20",
+      "review_notes": "Internal tool — full trust"
+    },
+    {
+      "name": "governance-mcp-server",
+      "aliases": ["governance-mcp", "admiral-governance"],
+      "trust_classification": "internal",
+      "version": "1.0.0",
+      "description": "Admiral Governance MCP server — policy and enforcement tools",
+      "tools": ["policy_check", "escalate", "audit_log", "trust_score"],
+      "approved_by": "admiral",
+      "approved_at": "2026-03-20",
+      "review_notes": "Internal tool — full trust"
+    }
+  ]
+}

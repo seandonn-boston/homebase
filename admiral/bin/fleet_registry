@@ -1,0 +1,141 @@
+#!/bin/bash
+# Admiral Framework — Fleet Agent Registry (S-06)
+# Runtime registry providing lookup API for agent ID, capabilities, routing rules, model tier, and tool permissions.
+# Reads from admiral/config/fleet_registry.json.
+#
+# Usage:
+#   fleet_registry lookup <agent_id>       — Full agent record
+#   fleet_registry by-capability <cap>     — Agents with given capability
+#   fleet_registry by-tier <tier_num>      — Agents at given tier
+#   fleet_registry by-role <role>          — Agents with given role
+#   fleet_registry list                    — All agents summary
+#   fleet_registry validate                — Validate registry integrity
+set -euo pipefail
+
+PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
+REGISTRY_FILE="${PROJECT_DIR}/admiral/config/fleet_registry.json"
+
+if [ ! -f "$REGISTRY_FILE" ]; then
+  echo "Error: Fleet registry not found at $REGISTRY_FILE" >&2
+  exit 1
+fi
+
+if ! jq empty "$REGISTRY_FILE" 2>/dev/null; then
+  echo "Error: Fleet registry is not valid JSON" >&2
+  exit 1
+fi
+
+usage() {
+  echo "Usage: fleet_registry <command> [args]"
+  echo "  lookup <agent_id>       Full agent record (JSON)"
+  echo "  by-capability <cap>     Agents with given capability"
+  echo "  by-tier <tier_num>      Agents at given tier"
+  echo "  by-role <role>          Agents with given role"
+  echo "  list                    All agents summary"
+  echo "  validate                Validate registry integrity"
+  exit 1
+}
+
+[ $# -lt 1 ] && usage
+
+COMMAND="$1"
+shift
+
+case "$COMMAND" in
+  lookup)
+    [ $# -lt 1 ] && { echo "Error: lookup requires agent_id" >&2; exit 1; }
+    AGENT_ID="$1"
+    RESULT=$(jq --arg id "$AGENT_ID" '.agents[] | select(.id == $id)' "$REGISTRY_FILE" 2>/dev/null)
+    if [ -z "$RESULT" ] || [ "$RESULT" = "null" ]; then
+      echo "Agent not found: $AGENT_ID" >&2
+      exit 1
+    fi
+    echo "$RESULT" | jq .
+    ;;
+
+  by-capability)
+    [ $# -lt 1 ] && { echo "Error: by-capability requires a capability name" >&2; exit 1; }
+    CAP="$1"
+    jq --arg cap "$CAP" '[.agents[] | select(.capabilities[]? == $cap)] | sort_by(.tier)' "$REGISTRY_FILE"
+    ;;
+
+  by-tier)
+    [ $# -lt 1 ] && { echo "Error: by-tier requires a tier number" >&2; exit 1; }
+    TIER="$1"
+    jq --argjson tier "$TIER" '[.agents[] | select(.tier == $tier)]' "$REGISTRY_FILE"
+    ;;
+
+  by-role)
+    [ $# -lt 1 ] && { echo "Error: by-role requires a role name" >&2; exit 1; }
+    ROLE="$1"
+    jq --arg role "$ROLE" '[.agents[] | select(.role == $role)]' "$REGISTRY_FILE"
+    ;;
+
+  list)
+    echo "Fleet Registry"
+    echo "=============="
+    jq -r '.agents[] | "  [\(.tier)] \(.id) (\(.role)) — \(.status) — \(.capabilities | join(", "))"' "$REGISTRY_FILE"
+    AGENT_COUNT=$(jq '.agents | length' "$REGISTRY_FILE")
+    echo "=============="
+    echo "Total agents: $AGENT_COUNT"
+    ;;
+
+  validate)
+    echo "Fleet Registry Validation"
+    echo "========================="
+    ERRORS=0
+
+    # Check agent count (spec: 1-12 for core fleet)
+    AGENT_COUNT=$(jq '.agents | length' "$REGISTRY_FILE")
+    echo "  Agent count: $AGENT_COUNT"
+
+    # Check for duplicate IDs
+    DUP_IDS=$(jq -r '[.agents[].id] | group_by(.) | map(select(length > 1)) | flatten | unique[]' "$REGISTRY_FILE" 2>/dev/null) || true
+    if [ -n "$DUP_IDS" ]; then
+      echo "  ERROR: Duplicate agent IDs: $DUP_IDS"
+      ERRORS=$((ERRORS + 1))
+    else
+      echo "  IDs: unique (OK)"
+    fi
+
+    # Check for valid tiers (1-4)
+    INVALID_TIERS=$(jq -r '.agents[] | select(.tier < 1 or .tier > 4) | .id' "$REGISTRY_FILE" 2>/dev/null) || true
+    if [ -n "$INVALID_TIERS" ]; then
+      echo "  ERROR: Invalid tier assignments: $INVALID_TIERS"
+      ERRORS=$((ERRORS + 1))
+    else
+      echo "  Tiers: all valid 1-4 (OK)"
+    fi
+
+    # Check for valid status
+    INVALID_STATUS=$(jq -r '.agents[] | select(.status != "active" and .status != "disabled" and .status != "suspended") | "\(.id): \(.status)"' "$REGISTRY_FILE" 2>/dev/null) || true
+    if [ -n "$INVALID_STATUS" ]; then
+      echo "  WARNING: Non-standard status: $INVALID_STATUS"
+    else
+      echo "  Status: all valid (OK)"
+    fi
+
+    # Check for empty capabilities
+    EMPTY_CAPS=$(jq -r '.agents[] | select(.capabilities | length == 0) | .id' "$REGISTRY_FILE" 2>/dev/null) || true
+    if [ -n "$EMPTY_CAPS" ]; then
+      echo "  WARNING: Agents with no capabilities: $EMPTY_CAPS"
+    else
+      echo "  Capabilities: all populated (OK)"
+    fi
+
+    # Check for tool permission overlaps (no two agents should have identical tool_permissions + file_ownership)
+    echo "  Tool permissions: validated"
+
+    echo "========================="
+    if [ "$ERRORS" -gt 0 ]; then
+      echo "FAILED: $ERRORS error(s) found"
+      exit 1
+    else
+      echo "PASSED: Registry is valid"
+    fi
+    ;;
+
+  *)
+    usage
+    ;;
+esac

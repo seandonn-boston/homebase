@@ -12,9 +12,12 @@ Brain is Admiral's primary competitive moat. Ship B2 within **120 days** before 
 
 ## B1 Completion
 
-- [ ] **B-01** Automatic brain entry creation from hooks — `brain_writer.sh` library called by `prohibitions_enforcer.sh`, `loop_detector.sh`, `scope_boundary_guard.sh`
-- [ ] **B-02** Brain retrieval in hooks — `brain_context_router.sh` actively queries Brain, injects matching entries as structured context on Propose/Escalate-tier calls
-- [ ] **B-03** Demand signal tracking — record zero-result queries to `.brain/_demand/`, expose via `brain_audit --demand`
+- [x] **B-01** Automatic brain entry creation from hooks — `brain_writer.sh` library called by `prohibitions_enforcer.sh`, `loop_detector.sh`, `scope_boundary_guard.sh`
+  - **DONE-HOW:** Created `admiral/lib/brain_writer.sh` — shared library with `brain_write_entry()` core function and convenience wrappers: `brain_record_prohibition()`, `brain_record_scope_block()`, `brain_record_loop()`, `brain_record_identity_event()`, `brain_record_escalation()`, `brain_record_observation()`. Non-blocking by design (failures silently ignored). Recursion prevention: writes directly to .brain/ filesystem, not via brain_record CLI. Integrated into `prohibitions_enforcer.sh` (records hard-blocks), `scope_boundary_guard.sh` (records scope violations), `loop_detector.sh` (records error loops). Auto-tags entries with "auto-recorded" and "hook-generated".
+- [x] **B-02** Brain retrieval in hooks — `brain_context_router.sh` actively queries Brain, injects matching entries as structured context on Propose/Escalate-tier calls
+  - **DONE-HOW:** Enhanced `.hooks/brain_context_router.sh` with active Brain retrieval. On Propose/Escalate-tier detection: extracts keywords from content, searches .brain/ via grep (matching brain_query pattern), returns up to 3 matching entries with category and title. Context injected on all three paths: BRAIN BYPASS (no query), BRAIN STALE (query >20 calls ago), and normal (query recent but context still useful). Keyword extraction filters common stop words and short terms.
+- [x] **B-03** Demand signal tracking — record zero-result queries to `.brain/_demand/`, expose via `brain_audit --demand`
+  - **DONE-HOW:** Updated `admiral/bin/brain_query` to record zero-result queries as JSON files in `.brain/_demand/` with fields: query, agent, project, category, results_found, timestamp. Updated `admiral/bin/brain_audit` with `--demand` flag that lists all demand signals, counts unique queries, and reports graduation readiness context (advance to B2 when missed retrieval rate >30%). Tested: query for nonexistent topic correctly creates demand signal file and audit report shows it.
 - [ ] **B-04** Contradiction scan on write — keyword overlap detection, warning with conflicting entry paths, non-blocking (entry still written with `contradicts` metadata)
 - [ ] **B-05** Brain entry consolidation — `brain_consolidate` utility merges overlapping entries with provenance, archives originals to `.brain/_archived/`
 - [ ] **B-06** Brain B1 comprehensive tests — 20+ tests covering all utilities, edge cases (empty brain, special chars, long content), concurrent access

@@ -60,6 +60,46 @@ if [ "$TOOL_NAME" = "Write" ] || [ "$TOOL_NAME" = "Edit" ]; then
   fi
 fi
 
+# --- B-02: Active Brain retrieval for Propose/Escalate decisions ---
+# When a decision-tier action is detected, proactively query Brain for relevant context
+BRAIN_DIR="${CLAUDE_PROJECT_DIR:-.}/.brain"
+BRAIN_CONTEXT=""
+
+if [ -n "$DETECTED_TIER" ] && [ -d "$BRAIN_DIR" ]; then
+  # Extract keywords from content for Brain search
+  SEARCH_TERMS=""
+  if [ -n "$CONTENT" ]; then
+    # Extract meaningful words (skip common words, take first 5 significant terms)
+    SEARCH_TERMS=$(echo "$CONTENT" | tr '[:upper:]' '[:lower:]' | \
+      sed 's/[^a-z0-9 ]/ /g' | tr ' ' '\n' | \
+      grep -vE '^(the|a|an|is|are|was|were|be|been|being|have|has|had|do|does|did|will|would|could|should|may|might|shall|can|need|dare|ought|used|to|of|in|for|on|with|at|by|from|as|into|through|during|before|after|above|below|between|out|off|over|under|again|further|then|once|here|there|when|where|why|how|all|each|every|both|few|more|most|other|some|such|no|nor|not|only|own|same|so|than|too|very|just|because|but|and|or|if|while|that|this|which|what|who|whom|these|those|it|its|my|your|his|her|we|they|me|him|us|them|i|you|he|she)$' | \
+      head -5 | tr '\n' ' ')
+  fi
+
+  if [ -n "$SEARCH_TERMS" ]; then
+    # Search Brain for relevant entries (grep-based, matching brain_query pattern)
+    BRAIN_MATCHES=""
+    MATCH_COUNT=0
+    for term in $SEARCH_TERMS; do
+      [ ${#term} -lt 3 ] && continue
+      while IFS= read -r match_file; do
+        [ -f "$match_file" ] || continue
+        case "$match_file" in *.json) ;; *) continue ;; esac
+        MATCH_TITLE=$(jq -r '.title // ""' "$match_file" 2>/dev/null) || continue
+        MATCH_CAT=$(jq -r '.category // ""' "$match_file" 2>/dev/null) || true
+        if [ -n "$MATCH_TITLE" ] && [ "$MATCH_COUNT" -lt 3 ]; then
+          BRAIN_MATCHES="${BRAIN_MATCHES}  - [${MATCH_CAT}] ${MATCH_TITLE}\n"
+          MATCH_COUNT=$((MATCH_COUNT + 1))
+        fi
+      done < <(grep -rlFi "$term" "$BRAIN_DIR" 2>/dev/null | head -5)
+    done
+
+    if [ "$MATCH_COUNT" -gt 0 ]; then
+      BRAIN_CONTEXT="BRAIN CONTEXT (B-02): Found ${MATCH_COUNT} relevant Brain entries for this ${DETECTED_TIER}-tier decision:\n${BRAIN_MATCHES}Run brain_query or brain_retrieve for full details."
+    fi
+  fi
+fi
+
 # --- Evaluate routing compliance ---
 STALENESS_THRESHOLD=20
 
@@ -73,9 +113,19 @@ if [ -n "$DETECTED_TIER" ]; then
       PROPOSE_BYPASS=$((PROPOSE_BYPASS + 1))
       ALERT="BRAIN BYPASS: Propose-tier decision detected with no brain_query in this session. SO-11 requires checking the Brain before high-tier decisions."
     fi
+    # Append proactive Brain context even on bypass
+    if [ -n "$BRAIN_CONTEXT" ]; then
+      ALERT="${ALERT}\n${BRAIN_CONTEXT}"
+    fi
   elif [ $((TOOL_CALL_COUNT - LAST_QUERY_AT)) -gt $STALENESS_THRESHOLD ]; then
     # brain_query happened but is stale
     ALERT="BRAIN STALE: ${DETECTED_TIER^}-tier decision detected but last brain_query was $((TOOL_CALL_COUNT - LAST_QUERY_AT)) tool calls ago. Consider refreshing with a new query."
+    if [ -n "$BRAIN_CONTEXT" ]; then
+      ALERT="${ALERT}\n${BRAIN_CONTEXT}"
+    fi
+  elif [ -n "$BRAIN_CONTEXT" ]; then
+    # Brain was queried recently — still surface relevant context
+    ALERT="$BRAIN_CONTEXT"
   fi
 fi
 

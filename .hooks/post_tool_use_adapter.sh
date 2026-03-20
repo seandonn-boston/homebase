@@ -133,7 +133,23 @@ if [ -x "$SCRIPT_DIR/compliance_ethics_advisor.sh" ]; then
   fi
 fi
 
-# --- Hook 6: brain_context_router (isolated, advisory only) ---
+# --- Hook 6: governance_heartbeat_monitor (S-03, isolated, advisory only) ---
+if [ -f "$SCRIPT_DIR/governance_heartbeat_monitor.sh" ]; then
+  GHM_OUTPUT=""
+  GHM_OUTPUT=$(echo "$PAYLOAD" | jq --argjson state "$STATE" '. + {session_state: $state}' | bash "$SCRIPT_DIR/governance_heartbeat_monitor.sh" 2>>"$HOOK_ERROR_LOG") || true
+  if [ -n "$GHM_OUTPUT" ]; then
+    GHM_STATE=$(echo "$GHM_OUTPUT" | jq '.hook_state.heartbeat_monitor // empty' 2>/dev/null) || true
+    if [ -n "$GHM_STATE" ] && [ "$GHM_STATE" != "null" ]; then
+      STATE=$(echo "$STATE" | jq --argjson hs "$GHM_STATE" '.hook_state.heartbeat_monitor = $hs')
+    fi
+    GHM_ALERT=$(echo "$GHM_OUTPUT" | jq -r '.alert // empty' 2>/dev/null) || true
+    if [ -n "$GHM_ALERT" ]; then
+      MESSAGES+="[Heartbeat] $GHM_ALERT\n"
+    fi
+  fi
+fi
+
+# --- Hook 7: brain_context_router (isolated, advisory only) ---
 if [ -x "$SCRIPT_DIR/brain_context_router.sh" ]; then
   BRAIN_OUTPUT=""
   BRAIN_OUTPUT=$(echo "$PAYLOAD" | jq --argjson state "$STATE" '. + {session_state: $state}' | "$SCRIPT_DIR/brain_context_router.sh" 2>>"$HOOK_ERROR_LOG") || true

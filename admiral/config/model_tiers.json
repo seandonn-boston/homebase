@@ -1,0 +1,32 @@
+{
+  "$schema": "model_tiers.schema.json",
+  "version": "1.0.0",
+  "description": "Model tier requirements per agent role — maps roles to minimum acceptable model tiers",
+  "tier_definitions": {
+    "1": {"name": "Flagship", "profile": "Deepest reasoning, largest context"},
+    "2": {"name": "Workhorse", "profile": "Strong general capability, solid code generation"},
+    "3": {"name": "Utility", "profile": "Fast, cheap, reliable for well-defined tasks"},
+    "4": {"name": "Economy", "profile": "Near-frontier at fraction of cost"}
+  },
+  "role_tiers": {
+    "orchestrator": 1,
+    "architect": 1,
+    "sentinel": 1,
+    "arbiter": 1,
+    "security-auditor": 1,
+    "generalist": 2,
+    "frontend-implementer": 2,
+    "backend-implementer": 2,
+    "qa-agent": 2,
+    "devops-agent": 2,
+    "compliance-monitor": 2,
+    "technical-writer": 3,
+    "default": 2
+  },
+  "safety_critical_roles": [
+    "sentinel",
+    "arbiter",
+    "security-auditor",
+    "orchestrator"
+  ]
+}

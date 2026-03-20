@@ -8,15 +8,53 @@ BRAIN_DIR="${BRAIN_DIR:-${CLAUDE_PROJECT_DIR:-.}/.brain}"
 
 DECAY_DAYS=90
 PROJECT=""
+SHOW_DEMAND=false
 
 # Parse flags
 while [ $# -gt 0 ]; do
   case "$1" in
     --project) PROJECT="$2"; shift 2 ;;
     --days) DECAY_DAYS="$2"; shift 2 ;;
+    --demand) SHOW_DEMAND=true; shift ;;
     *) shift ;;
   esac
 done
+
+# B-03: Demand signal report
+if [ "$SHOW_DEMAND" = true ]; then
+  DEMAND_DIR="${BRAIN_DIR}/_demand"
+  echo "Brain Demand Signal Report"
+  echo "=========================="
+  if [ ! -d "$DEMAND_DIR" ] || [ -z "$(ls -A "$DEMAND_DIR" 2>/dev/null)" ]; then
+    echo "No demand signals recorded."
+    echo ""
+    echo "Demand signals are recorded when brain_query returns 0 results."
+    echo "This indicates knowledge gaps that may inform Brain B2 graduation."
+    exit 0
+  fi
+
+  DEMAND_COUNT=0
+  UNIQUE_QUERIES=""
+  for df in "$DEMAND_DIR"/*.json; do
+    [ -f "$df" ] || continue
+    DEMAND_COUNT=$((DEMAND_COUNT + 1))
+    QUERY=$(jq -r '.query // "unknown"' "$df" 2>/dev/null)
+    AGENT=$(jq -r '.agent // "unknown"' "$df" 2>/dev/null)
+    TS=$(jq -r '.timestamp // "unknown"' "$df" 2>/dev/null)
+    echo "  [$TS] Query: \"$QUERY\" (agent: $AGENT)"
+    UNIQUE_QUERIES="${UNIQUE_QUERIES}${QUERY}\n"
+  done
+
+  UNIQUE_COUNT=$(echo -e "$UNIQUE_QUERIES" | sort -u | grep -c '[^ ]' || echo 0)
+  echo ""
+  echo "=========================="
+  echo "Total demand signals: $DEMAND_COUNT"
+  echo "Unique queries: $UNIQUE_COUNT"
+  echo ""
+  echo "High-demand queries indicate knowledge gaps worth filling."
+  echo "Graduation criteria: advance to B2 when missed retrieval rate >30%."
+  exit 0
+fi
 
 SEARCH_PATH="$BRAIN_DIR"
 if [ -n "$PROJECT" ]; then

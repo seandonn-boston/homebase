@@ -1,6 +1,6 @@
 # Admiral Framework — Comprehensive Roadmap Index
 
-**Last updated:** 2026-03-20
+**Last updated:** 2026-03-20 (Phase 3 complete)
 
 **Target:** Transform Helm from a strong prototype into a showcase-quality, fully-governed, spec-complete AI agent orchestration platform — a codebase that earns a 10/10 on every dimension.
 
@@ -14,20 +14,20 @@
 |---|---|---|---|
 | Testing | 5/10 | 10/10 | No trace/ingest/instrumentation unit tests, no fuzz/property tests, no coverage gates |
 | Code Quality Tooling | 7/10 | 10/10 | Missing coverage gates, security scanning, typed error hierarchy |
-| Architecture | 5/10 | 10/10 | No hook/control-plane integration, no schema validation, no fleet orchestration |
-| Spec Implementation | 3/10 | 10/10 | 8/15 hooks (53%), fleet 0%, brain B2/B3 0%, execution patterns 0%, meta-governance 0% |
+| Architecture | 6/10 | 10/10 | Handoff schema + fleet registry in place; no schema validation for hook payloads, no fleet orchestration at scale |
+| Spec Implementation | 5/10 | 10/10 | 12/15 hooks (80%), fleet registry + routing done, brain B1 complete, B2/B3 0%, meta-governance 0% |
 | Documentation | 6/10 | 10/10 | Missing ADMIRAL_STYLE.md, LICENSE, CoC, runbook, troubleshooting guide |
 | CI/CD | 7/10 | 10/10 | Missing coverage gates, matrix builds, security scanning, benchmarks |
 | Consistency | 6/10 | 10/10 | Bash hook jq pattern variance, naming inconsistencies, scattered config |
 | Contributor Experience | 7/10 | 10/10 | Missing CoC, LICENSE, "good first issue" labels, troubleshooting guide |
 | Error Handling | 5/10 | 10/10 | No typed error hierarchy, silent failures possible, hook errors invisible |
 | Performance | 2/10 | 10/10 | No benchmarks of any kind |
-| Brain & Knowledge | 2/10 | 10/10 | B1 file-based only, manual, no auto-recording, no semantic search |
-| Fleet & Orchestration | 1/10 | 10/10 | 71 roles defined, only Claude Code governed, no routing/handoff/parallel |
+| Brain & Knowledge | 4/10 | 10/10 | B1 complete (auto-recording, retrieval, demand signals); B2/B3 not started, no semantic search |
+| Fleet & Orchestration | 3/10 | 10/10 | 11-agent registry, task routing, handoff protocol, escalation pipeline; no parallel coordination, no fleet health |
 | Strategy Foundation | 5/10 | 10/10 | Ground Truth tooling complete (ST-01–ST-08), spec debt inventoried (SD-01–SD-15); needs real-world validation |
-| Security & Compliance | 4/10 | 10/10 | Missing data sensitivity L1-L2, audit trail, privilege escalation hardening |
+| Security & Compliance | 5/10 | 10/10 | Protocol registry guard (MCP09) added; missing data sensitivity L1-L2, full audit trail |
 | Strategic Positioning | 2/10 | 10/10 | Missing OWASP/AEGIS/NIST/McKinsey/IMDA crosswalks |
-| **Overall** | **4/10** | **10/10** | Phase 0 complete (strategy + spec debt); critical gaps remain in spec implementation |
+| **Overall** | **5/10** | **10/10** | Phase 0-3 complete; hooks at 80%, Brain B1 done, fleet foundation in place; major gaps in B2/B3, platform adapters, meta-governance |
 
 ---
 
@@ -125,26 +125,26 @@
 0. ~~ST-01, ST-02, ST-03 — Strategy Triangle foundation (Ground Truth template, readiness assessment, Go/No-Go gate)~~ DONE
 1. ~~SD-01, SD-02 — Spec debt inventory and prioritization (identifies gaps that inform all other work)~~ DONE
 2. ~~SD-04, SD-05 — Standing Orders enforcement map completion, hook manifest audit~~ DONE
-3. SEC-13 — Extend zero_trust_validator.sh to all tool responses (highest-impact quick fix)
-4. T-01 to T-04 — Unit tests for untested modules
-5. Q-01, Q-02 — Standardize hooks
-6. T-09, C-01 — Coverage enforcement
-7. D-01, D-02, D-03 — Documentation quick wins (ADMIRAL_STYLE, CoC, LICENSE)
+3. ~~SEC-13 — Extend zero_trust_validator.sh to all tool responses (highest-impact quick fix)~~ DONE
+4. ~~T-01 to T-04 — Unit tests for untested modules~~ DONE
+5. ~~Q-01, Q-02 — Standardize hooks~~ DONE
+6. ~~T-09, C-01 — Coverage enforcement~~ DONE
+7. ~~D-01, D-02, D-03 — Documentation quick wins (ADMIRAL_STYLE, CoC, LICENSE)~~ DONE
 
 ### Phase 2: Spec Debt Resolution & Self-Enforcement (Sessions 11-18) — Close the Gaps on Paper
 8. ~~SD-03 — Spec amendment proposals for all identified gaps~~ DONE
 9. ~~SD-06 to SD-09 — Reference constants, version tracking, compliance testing, changelog~~ DONE
 10. ~~SD-10 to SD-12 — Spec gap proposals (fleet orchestration, Brain graduation, cross-platform hooks)~~ DONE
-11. Q-05, Q-06, Q-08 — TypeScript quality
-12. A-01, A-04, A-06 — Schema validation
-13. P-01, P-02, P-05 — Self-enforcement hooks
+11. ~~Q-05, Q-06, Q-08 — TypeScript quality~~ DONE
+12. ~~A-01, A-04, A-06 — Schema validation~~ DONE
+13. ~~P-01, P-02, P-05 — Self-enforcement hooks~~ DONE
 
 ### Phase 3: Spec Gaps — Critical (Sessions 19-28) — Close the Gap in Code
-14. S-01 to S-04 — Missing hooks (incl. expanded protocol_registry_guard with MCP server enforcement)
-15. S-05, SO-17 — Standing Orders enforcement map
-16. B-01 to B-03 — Brain B1 completion
-17. S-10, S-11 — Handoff + escalation
-18. S-06, S-07 — Agent registry + task routing
+14. ~~S-01 to S-04 — Missing hooks (incl. expanded protocol_registry_guard with MCP server enforcement)~~ DONE
+15. ~~S-05, SO-17 — Standing Orders enforcement map~~ DONE
+16. ~~B-01 to B-03 — Brain B1 completion~~ DONE
+17. ~~S-10, S-11 — Handoff + escalation~~ DONE
+18. ~~S-06, S-07 — Agent registry + task routing~~ DONE
 
 ### Phase 4: Fleet & Orchestration (Sessions 29-40) — Multi-Agent Reality
 19. F-01 to F-04 — Core agent definitions

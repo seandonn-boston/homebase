@@ -1,0 +1,258 @@
+#!/bin/bash
+# Admiral Framework — Handoff Protocol (S-10)
+# Agent-to-agent handoff with JSON schema validation.
+# Validates completeness before acceptance; rejects incomplete handoffs with field-level errors.
+# Logs handoff history for audit.
+#
+# Usage:
+#   handoff create <sender_id> <receiver_id> <task_type> <description> <context_summary>
+#   handoff validate <handoff_file>
+#   handoff accept <handoff_file>
+#   handoff reject <handoff_file> <reason>
+#   handoff list [--status <status>]
+set -euo pipefail
+
+PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
+HANDOFF_DIR="${PROJECT_DIR}/.admiral/handoffs"
+SCHEMA_FILE="${PROJECT_DIR}/admiral/schemas/handoff-v1.schema.json"
+EVENT_LOG="${PROJECT_DIR}/.admiral/event_log.jsonl"
+
+mkdir -p "$HANDOFF_DIR"
+
+# Source brain_writer for auto-recording handoff events
+if [ -f "$PROJECT_DIR/admiral/lib/brain_writer.sh" ]; then
+  source "$PROJECT_DIR/admiral/lib/brain_writer.sh"
+fi
+
+usage() {
+  echo "Usage: handoff <command> [args]"
+  echo "  create <sender_id> <receiver_id> <task_type> <description> <context_summary>"
+  echo "  validate <handoff_file>"
+  echo "  accept <handoff_id>"
+  echo "  reject <handoff_id> <reason>"
+  echo "  list [--status <status>]"
+  exit 1
+}
+
+[ $# -lt 1 ] && usage
+
+COMMAND="$1"
+shift
+
+case "$COMMAND" in
+  create)
+    [ $# -lt 5 ] && { echo "Error: create requires sender_id, receiver_id, task_type, description, context_summary" >&2; exit 1; }
+    SENDER_ID="$1"
+    RECEIVER_ID="$2"
+    TASK_TYPE="$3"
+    DESCRIPTION="$4"
+    CONTEXT_SUMMARY="$5"
+
+    # Validate task type
+    case "$TASK_TYPE" in
+      implementation|review|testing|documentation|security_audit|deployment|investigation|resolution|other) ;;
+      *) echo "Error: Invalid task_type '$TASK_TYPE'" >&2; exit 1 ;;
+    esac
+
+    # Look up sender/receiver roles from fleet registry
+    REGISTRY="${PROJECT_DIR}/admiral/config/fleet_registry.json"
+    SENDER_ROLE="unknown"
+    RECEIVER_ROLE="unknown"
+    if [ -f "$REGISTRY" ]; then
+      SENDER_ROLE=$(jq -r --arg id "$SENDER_ID" '.agents[] | select(.id == $id) | .role // "unknown"' "$REGISTRY" 2>/dev/null) || SENDER_ROLE="unknown"
+      RECEIVER_ROLE=$(jq -r --arg id "$RECEIVER_ID" '.agents[] | select(.id == $id) | .role // "unknown"' "$REGISTRY" 2>/dev/null) || RECEIVER_ROLE="unknown"
+    fi
+
+    # Generate handoff
+    HANDOFF_ID=$(uuidgen 2>/dev/null || python3 -c "import uuid; print(uuid.uuid4())" 2>/dev/null || echo "hoff-$(date +%s)")
+    TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+    FILENAME="${HANDOFF_DIR}/${HANDOFF_ID}.json"
+
+    jq -n \
+      --arg hid "$HANDOFF_ID" \
+      --arg sid "$SENDER_ID" \
+      --arg srole "$SENDER_ROLE" \
+      --arg rid "$RECEIVER_ID" \
+      --arg rrole "$RECEIVER_ROLE" \
+      --arg ttype "$TASK_TYPE" \
+      --arg desc "$DESCRIPTION" \
+      --arg ctx "$CONTEXT_SUMMARY" \
+      --arg ts "$TIMESTAMP" \
+      '{
+        handoff_id: $hid,
+        version: "v1",
+        sender: { agent_id: $sid, role: $srole },
+        receiver: { agent_id: $rid, role: $rrole },
+        task: {
+          description: $desc,
+          type: $ttype,
+          priority: "medium",
+          acceptance_criteria: [],
+          constraints: [],
+          files_in_scope: []
+        },
+        context: {
+          summary: $ctx,
+          decisions_made: [],
+          assumptions: [],
+          blockers: [],
+          brain_entries_consulted: []
+        },
+        routing_suggestions: [],
+        created_at: $ts,
+        status: "pending"
+      }' > "$FILENAME"
+
+    # Log event
+    jq -n --arg ts "$TIMESTAMP" --arg hid "$HANDOFF_ID" --arg from "$SENDER_ID" --arg to "$RECEIVER_ID" --arg ttype "$TASK_TYPE" \
+      '{event: "handoff_created", timestamp: $ts, handoff_id: $hid, sender: $from, receiver: $to, task_type: $ttype}' \
+      >> "$EVENT_LOG" 2>/dev/null || true
+
+    echo "Handoff created: $FILENAME"
+    echo "ID: $HANDOFF_ID"
+    echo "From: $SENDER_ID ($SENDER_ROLE) -> To: $RECEIVER_ID ($RECEIVER_ROLE)"
+    echo "Type: $TASK_TYPE | Status: pending"
+    ;;
+
+  validate)
+    [ $# -lt 1 ] && { echo "Error: validate requires a handoff file path" >&2; exit 1; }
+    HANDOFF_FILE="$1"
+    [ ! -f "$HANDOFF_FILE" ] && { echo "Error: File not found: $HANDOFF_FILE" >&2; exit 1; }
+
+    # Validate JSON structure
+    if ! jq empty "$HANDOFF_FILE" 2>/dev/null; then
+      echo "INVALID: Not valid JSON"
+      exit 1
+    fi
+
+    ERRORS=""
+
+    # Check required fields
+    for field in handoff_id version sender receiver task context created_at; do
+      VAL=$(jq -r --arg f "$field" '.[$f] // empty' "$HANDOFF_FILE" 2>/dev/null)
+      if [ -z "$VAL" ] || [ "$VAL" = "null" ]; then
+        ERRORS="${ERRORS}  Missing required field: ${field}\n"
+      fi
+    done
+
+    # Check nested required fields
+    for field in sender.agent_id sender.role; do
+      VAL=$(jq -r ".$field // empty" "$HANDOFF_FILE" 2>/dev/null)
+      if [ -z "$VAL" ]; then
+        ERRORS="${ERRORS}  Missing required field: ${field}\n"
+      fi
+    done
+
+    for field in receiver.agent_id receiver.role; do
+      VAL=$(jq -r ".$field // empty" "$HANDOFF_FILE" 2>/dev/null)
+      if [ -z "$VAL" ]; then
+        ERRORS="${ERRORS}  Missing required field: ${field}\n"
+      fi
+    done
+
+    # Check task fields
+    DESC=$(jq -r '.task.description // ""' "$HANDOFF_FILE" 2>/dev/null)
+    if [ ${#DESC} -lt 10 ]; then
+      ERRORS="${ERRORS}  task.description too short (min 10 chars, got ${#DESC})\n"
+    fi
+
+    TTYPE=$(jq -r '.task.type // ""' "$HANDOFF_FILE" 2>/dev/null)
+    case "$TTYPE" in
+      implementation|review|testing|documentation|security_audit|deployment|investigation|resolution|other) ;;
+      *) ERRORS="${ERRORS}  task.type invalid: '${TTYPE}'\n" ;;
+    esac
+
+    CTX_SUMMARY=$(jq -r '.context.summary // ""' "$HANDOFF_FILE" 2>/dev/null)
+    if [ ${#CTX_SUMMARY} -lt 20 ]; then
+      ERRORS="${ERRORS}  context.summary too short (min 20 chars, got ${#CTX_SUMMARY})\n"
+    fi
+
+    # Check version
+    VERSION=$(jq -r '.version // ""' "$HANDOFF_FILE" 2>/dev/null)
+    if [ "$VERSION" != "v1" ]; then
+      ERRORS="${ERRORS}  version must be 'v1', got '${VERSION}'\n"
+    fi
+
+    if [ -n "$ERRORS" ]; then
+      echo "INVALID: Handoff validation failed"
+      echo -e "$ERRORS"
+      exit 1
+    fi
+
+    echo "VALID: Handoff passes all validation checks"
+    exit 0
+    ;;
+
+  accept)
+    [ $# -lt 1 ] && { echo "Error: accept requires a handoff_id" >&2; exit 1; }
+    HANDOFF_ID="$1"
+    HANDOFF_FILE="${HANDOFF_DIR}/${HANDOFF_ID}.json"
+    [ ! -f "$HANDOFF_FILE" ] && { echo "Error: Handoff not found: $HANDOFF_ID" >&2; exit 1; }
+
+    # Update status
+    TMPFILE=$(mktemp)
+    jq '.status = "accepted"' "$HANDOFF_FILE" > "$TMPFILE" && mv "$TMPFILE" "$HANDOFF_FILE"
+
+    TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+    jq -n --arg ts "$TIMESTAMP" --arg hid "$HANDOFF_ID" \
+      '{event: "handoff_accepted", timestamp: $ts, handoff_id: $hid}' \
+      >> "$EVENT_LOG" 2>/dev/null || true
+
+    echo "Handoff $HANDOFF_ID accepted"
+    ;;
+
+  reject)
+    [ $# -lt 2 ] && { echo "Error: reject requires handoff_id and reason" >&2; exit 1; }
+    HANDOFF_ID="$1"
+    REASON="$2"
+    HANDOFF_FILE="${HANDOFF_DIR}/${HANDOFF_ID}.json"
+    [ ! -f "$HANDOFF_FILE" ] && { echo "Error: Handoff not found: $HANDOFF_ID" >&2; exit 1; }
+
+    # Update status with rejection reason
+    TMPFILE=$(mktemp)
+    jq --arg reason "$REASON" '.status = "rejected" | .rejection_reason = $reason' "$HANDOFF_FILE" > "$TMPFILE" && mv "$TMPFILE" "$HANDOFF_FILE"
+
+    TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+    jq -n --arg ts "$TIMESTAMP" --arg hid "$HANDOFF_ID" --arg reason "$REASON" \
+      '{event: "handoff_rejected", timestamp: $ts, handoff_id: $hid, reason: $reason}' \
+      >> "$EVENT_LOG" 2>/dev/null || true
+
+    echo "Handoff $HANDOFF_ID rejected: $REASON"
+    ;;
+
+  list)
+    STATUS_FILTER=""
+    while [ $# -gt 0 ]; do
+      case "$1" in
+        --status) STATUS_FILTER="$2"; shift 2 ;;
+        *) shift ;;
+      esac
+    done
+
+    echo "Handoff Registry"
+    echo "================"
+    COUNT=0
+    for f in "$HANDOFF_DIR"/*.json; do
+      [ -f "$f" ] || continue
+      HID=$(jq -r '.handoff_id // "?"' "$f" 2>/dev/null)
+      HSTATUS=$(jq -r '.status // "?"' "$f" 2>/dev/null)
+      SENDER=$(jq -r '.sender.agent_id // "?"' "$f" 2>/dev/null)
+      RECEIVER=$(jq -r '.receiver.agent_id // "?"' "$f" 2>/dev/null)
+      TTYPE=$(jq -r '.task.type // "?"' "$f" 2>/dev/null)
+      CREATED=$(jq -r '.created_at // "?"' "$f" 2>/dev/null)
+
+      if [ -n "$STATUS_FILTER" ] && [ "$HSTATUS" != "$STATUS_FILTER" ]; then
+        continue
+      fi
+
+      COUNT=$((COUNT + 1))
+      printf "  [%s] %s: %s -> %s (%s) %s\n" "$HSTATUS" "$HID" "$SENDER" "$RECEIVER" "$TTYPE" "$CREATED"
+    done
+    echo "================"
+    echo "Total: $COUNT handoffs"
+    ;;
+
+  *)
+    usage
+    ;;
+esac

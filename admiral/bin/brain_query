@@ -71,5 +71,28 @@ done
 
 if [ "$FOUND" -eq 0 ]; then
   echo "No entries found matching: $KEYWORD"
+
+  # B-03: Demand signal tracking — record zero-result queries to .brain/_demand/
+  DEMAND_DIR="${BRAIN_DIR}/_demand"
+  mkdir -p "$DEMAND_DIR" 2>/dev/null || true
+  DEMAND_TS=$(date -u +%Y%m%d-%H%M%S)
+  DEMAND_ISO=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+  DEMAND_SLUG=$(echo "$KEYWORD" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9 ]//g' | tr ' ' '-' | sed 's/--*/-/g' | cut -c1-40 | sed 's/-$//')
+  DEMAND_FILE="${DEMAND_DIR}/${DEMAND_TS}-query-${DEMAND_SLUG}.json"
+  jq -n \
+    --arg query "$KEYWORD" \
+    --arg agent "${ADMIRAL_AGENT_ID:-manual}" \
+    --arg project "${PROJECT:-all}" \
+    --arg category "${CATEGORY:-any}" \
+    --argjson results_found 0 \
+    --arg timestamp "$DEMAND_ISO" \
+    '{
+      query: $query,
+      agent: $agent,
+      project: $project,
+      category: $category,
+      results_found: $results_found,
+      timestamp: $timestamp
+    }' > "$DEMAND_FILE" 2>/dev/null || true
 fi
 echo "Found: $FOUND entries"

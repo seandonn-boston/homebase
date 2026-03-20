@@ -13,6 +13,11 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$SCRIPT_DIR/.." && pwd)}"
 export CLAUDE_PROJECT_DIR="$PROJECT_DIR"
 
+# Source brain_writer for auto-recording enforcement events (B-01)
+if [ -f "$PROJECT_DIR/admiral/lib/brain_writer.sh" ]; then
+  source "$PROJECT_DIR/admiral/lib/brain_writer.sh"
+fi
+
 # Read payload from stdin
 PAYLOAD=$(cat)
 
@@ -144,6 +149,10 @@ if [ "$OVERRIDE_MATCH" = true ]; then
 fi
 
 # No override — hard-block the write
+# Auto-record to Brain (B-01: brain_writer integration)
+if command -v brain_record_scope_block &>/dev/null; then
+  brain_record_scope_block "$MATCHED_DIR" "Tool: $TOOL_NAME, Path: $REL_PATH" 2>/dev/null || true
+fi
 BLOCK_MSG="SCOPE BOUNDARY (SO-03): Write to protected path '${MATCHED_DIR}' is BLOCKED. This path requires Admiral approval. Options: (1) Ask the Admiral to set ADMIRAL_SCOPE_OVERRIDE=${MATCHED_DIR%/} for this session, (2) Escalate with justification, (3) Work on non-protected paths instead."
 jq -n --arg ctx "$BLOCK_MSG" '{
   "hookSpecificOutput": {

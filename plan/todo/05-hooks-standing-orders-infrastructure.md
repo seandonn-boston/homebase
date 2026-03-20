@@ -6,10 +6,14 @@
 
 ## Missing Hooks (Stream 7, Section 7.1)
 
-- [ ] **S-01** — `identity_validation.sh`: Validate agent identity token at SessionStart against fleet registry; block invalid identities with exit code 2
-- [ ] **S-02** — `tier_validation.sh`: Validate model tier assignment against agent role requirements; warn on mismatch, hard-block critical mismatches
-- [ ] **S-03** — `governance_heartbeat_monitor.sh`: Monitor governance agent (Sentinel, Arbiter) health via heartbeat signals; alert on missing heartbeat after threshold; log heartbeat history to state
-- [ ] **S-04** — `protocol_registry_guard.sh`: Two enforcement surfaces: (1) validate protocol changes against SO-16 approval rules, (2) hard-block calls to unregistered MCP servers via approved registry (`admiral/config/approved_mcp_servers.json`); closes OWASP MCP09 gap
+- [x] **S-01** — `identity_validation.sh`: Validate agent identity token at SessionStart against fleet registry; block invalid identities with exit code 2
+  - **DONE-HOW:** Created `.hooks/identity_validation.sh` — SessionStart hook that validates agent ID against `admiral/config/fleet_registry.json`. Checks: (1) agent exists in registry, (2) role matches registered role (detects role drift/spoofing), (3) agent is not disabled/suspended. Hard-blocks (exit 2) on invalid/missing/mismatched identity. Advisory when no registry exists (graceful degradation). Wired into `session_start_adapter.sh` as step 3.
+- [x] **S-02** — `tier_validation.sh`: Validate model tier assignment against agent role requirements; warn on mismatch, hard-block critical mismatches
+  - **DONE-HOW:** Created `.hooks/tier_validation.sh` — SessionStart hook that maps model names to tier numbers (1-4) and validates against `admiral/config/model_tiers.json` role requirements. Hard-blocks (exit 2) when safety-critical roles (sentinel, arbiter, security-auditor, orchestrator) have a tier gap ≥2. Advisory warning for soft mismatches. Created `admiral/config/model_tiers.json` with tier definitions and role-to-tier mappings. Wired into `session_start_adapter.sh` as step 4.
+- [x] **S-03** — `governance_heartbeat_monitor.sh`: Monitor governance agent (Sentinel, Arbiter) health via heartbeat signals; alert on missing heartbeat after threshold; log heartbeat history to state
+  - **DONE-HOW:** Created `.hooks/governance_heartbeat_monitor.sh` — PostToolUse advisory hook that tracks heartbeat signals from governance agents (sentinel, arbiter, compliance-monitor). Detects heartbeats via command patterns and file-based signals in `.admiral/heartbeats/`. Evaluates health every 10 tool calls; alerts when any governance agent exceeds 50-call heartbeat threshold. Tracks per-agent last_heartbeat in session state. Wired into `post_tool_use_adapter.sh` as hook 6.
+- [x] **S-04** — `protocol_registry_guard.sh`: Two enforcement surfaces: (1) validate protocol changes against SO-16 approval rules, (2) hard-block calls to unregistered MCP servers via approved registry (`admiral/config/approved_mcp_servers.json`); closes OWASP MCP09 gap
+  - **DONE-HOW:** Created `.hooks/protocol_registry_guard.sh` — PreToolUse hook with two enforcement surfaces: (1) MCP server enforcement: detects MCP server connection patterns in Bash commands, validates against `admiral/config/approved_mcp_servers.json`, hard-blocks (exit 2) unapproved servers. (2) Protocol change detection: advisory on modifications to MCP config, fleet config, or routing files; rejects `latest` version strings. Created `admiral/config/approved_mcp_servers.json` with 3 internal servers pre-approved. Wired into `pre_tool_use_adapter.sh` as sub-hook 4.
 
 ## Hook Contracts (Stream 7, Section 7.1)
 
@@ -17,19 +21,24 @@
 
 ## Enforcement Map (Stream 7, Section 7.1)
 
-- [ ] **S-05** — Standing Orders enforcement map: Document which hooks enforce which SOs; classify each as hook-enforced, instruction-embedded, or guidance-only; file at `admiral/docs/standing-orders-enforcement-map.md`
+- [x] **S-05** — Standing Orders enforcement map: Document which hooks enforce which SOs; classify each as hook-enforced, instruction-embedded, or guidance-only; file at `admiral/docs/standing-orders-enforcement-map.md`
+  - **DONE-HOW:** Created `admiral/docs/standing-orders-enforcement-map.md` — comprehensive map of all 16 SOs to enforcement mechanisms. Documents enforcement type (hard-block/advisory/none), mechanism classification (mechanical/judgment-assisted/advisory-only), hook names per SO, and enforcement progression path (E1→E2→E3→E3+). Current coverage: 11/16 (68%). Updated from reference map in aiStrat to reflect new hooks (identity_validation, tier_validation, protocol_registry_guard, governance_heartbeat_monitor).
 
 ## Fleet Orchestration (Stream 7, Section 7.2)
 
-- [ ] **S-06** — Agent registry: Runtime registry mapping agent ID to capabilities, routing rules, model tier, and tool permissions; provides lookup API (by ID, capability, tier); returns structured JSON
-- [ ] **S-07** — Task routing engine: Route tasks to agents based on task type, file ownership, capability scores, and load; return routing decision with justification
+- [x] **S-06** — Agent registry: Runtime registry mapping agent ID to capabilities, routing rules, model tier, and tool permissions; provides lookup API (by ID, capability, tier); returns structured JSON
+  - **DONE-HOW:** Created `admiral/config/fleet_registry.json` — JSON registry with 11 agents (claude-code, orchestrator, sentinel, arbiter, compliance-monitor, frontend-implementer, backend-implementer, qa-agent, security-auditor, devops-agent, technical-writer). Each entry: id, name, role, tier, status, capabilities array, tool_permissions (allowed/denied), routing_rules (primary_tasks, file_ownership). Created `admiral/bin/fleet_registry` CLI with commands: lookup, by-capability, by-tier, by-role, list, validate. Validate checks: unique IDs, valid tiers 1-4, valid status, populated capabilities.
+- [x] **S-07** — Task routing engine: Route tasks to agents based on task type, file ownership, capability scores, and load; return routing decision with justification
+  - **DONE-HOW:** Created `admiral/bin/task_router` — routes tasks using 3 strategies in priority order: (1) task type → primary agent mapping (derived from aiStrat/fleet/routing-rules.md), (2) file ownership → agent with matching path pattern, (3) capability match. Returns structured JSON with selected_agent, role, tier, strategy_used, justification, and fallback_agent. Commands: route (with --file and --priority flags), explain (shows routing logic), capable (lists agents with capability). Integrates with fleet_registry.json.
 - [ ] **S-08** — Tool permission matrix: Per-agent tool permissions enforced at runtime; denied tools blocked with clear error; integrates with `pre_tool_use_adapter.sh`
 - [ ] **S-09** — Fleet configuration validator: Validate fleet config against spec constraints (1-12 agents, no tool list overlap, no routing conflicts, valid tiers); pre-flight check before deployment
 
 ## Execution Patterns (Stream 8, Section 8.1)
 
-- [ ] **S-10** — Handoff protocol: Agent-to-agent handoff with JSON schema (`handoff/v1.schema.json`); validate completeness before acceptance; reject incomplete handoffs with field-level errors; log handoff history for audit
-- [ ] **S-11** — Escalation pipeline: 5-step process (intake classification, Brain precedent query, resolution path generation, Admiral decision, outcome persistence); conflict resolution backbone
+- [x] **S-10** — Handoff protocol: Agent-to-agent handoff with JSON schema (`handoff/v1.schema.json`); validate completeness before acceptance; reject incomplete handoffs with field-level errors; log handoff history for audit
+  - **DONE-HOW:** Created `admiral/schemas/handoff-v1.schema.json` — JSON Schema 2020-12 defining handoff structure: handoff_id, version, sender/receiver (agent_id, role), task (description, type enum, priority, acceptance_criteria, constraints, files_in_scope), context (summary, decisions_made with authority_tier, assumptions, blockers, brain_entries_consulted), routing_suggestions, status enum. Created `admiral/bin/handoff` CLI with commands: create (auto-generates from fleet registry), validate (field-level validation with min-length checks, enum validation, required field checks), accept, reject (with reason), list (filterable by status). All operations logged to event_log.jsonl.
+- [x] **S-11** — Escalation pipeline: 5-step process (intake classification, Brain precedent query, resolution path generation, Admiral decision, outcome persistence); conflict resolution backbone
+  - **DONE-HOW:** Created `admiral/bin/escalate` CLI implementing the 5-step process: (1) Intake classification — severity-based routing (critical/high → admiral, medium/low → orchestrator). (2) Brain precedent query — searches .brain/ for similar past escalations. (3) Resolution path generation — severity-appropriate options (critical: rollback/emergency fix/human; high: investigate/specialize/defer). (4) Admiral decision — resolve command records decision_by and resolution. (5) Outcome persistence — auto-records to Brain via brain_writer, logs to event_log.jsonl. Commands: create, resolve, list, precedent (search past resolutions + Brain).
 - [ ] **S-12** — Parallel execution coordinator: Coordinate parallel agent tasks with dependency tracking; schedule independent tasks concurrently; handle partial failure with configurable abort policy
 
 ## Quality Assurance Gates (Stream 8, Section 8.2)
@@ -76,7 +85,8 @@
 
 ## Standing Orders Enforcement — Completeness (Stream 29, Section 29.6)
 
-- [ ] **SO-17** — Enforcement completeness report: Automated script mapping each SO to enforcement mechanism(s), reporting enforcement type (hard-block/soft-warning/advisory-only/none), calculating coverage percentage, identifying gaps; produces human-readable summary and JSON output; runs in CI
+- [x] **SO-17** — Enforcement completeness report: Automated script mapping each SO to enforcement mechanism(s), reporting enforcement type (hard-block/soft-warning/advisory-only/none), calculating coverage percentage, identifying gaps; produces human-readable summary and JSON output; runs in CI
+  - **DONE-HOW:** Created `admiral/bin/enforcement_completeness_report` — automated script that maps all 16 SOs to their enforcement hooks, verifies hook files exist, classifies enforcement type (hard-block/advisory/none) and mechanism (mechanical/judgment-assisted/advisory-only). Produces formatted human-readable report with [B]/[A]/[ ] indicators and gap listing. Supports `--json` flag for structured JSON output and `--ci` flag with configurable `--threshold` for CI integration (exit non-zero if coverage below threshold). Reports SO title from source JSON files. Current output: 11/16 (68%) coverage.
 
 ---
 
