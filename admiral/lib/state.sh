@@ -98,7 +98,7 @@ with_state_lock() {
 # Read a specific field from session state
 get_state_field() {
   local field="$1"
-  load_state | jq -r "$field"
+  load_state | jq -r --arg f "$field" 'getpath($f | split(".") | map(select(. != "")))'
 }
 
 # Update a specific field in session state (locked read-modify-write)
@@ -108,7 +108,7 @@ set_state_field() {
   _set_state_field_inner() {
     local state
     state=$(load_state)
-    echo "$state" | jq "$field = $value" | save_state
+    echo "$state" | jq --argjson v "$value" "($field) = \$v" | save_state
   }
   with_state_lock _set_state_field_inner
 }
@@ -120,7 +120,7 @@ increment_state_field() {
   _increment_state_field_inner() {
     local state
     state=$(load_state)
-    echo "$state" | jq "$field = ($field + $amount)" | save_state
+    echo "$state" | jq --argjson amt "$amount" "($field) = (($field) + \$amt)" | save_state
   }
   with_state_lock _increment_state_field_inner
 }
@@ -137,7 +137,7 @@ estimate_tokens() {
   # Try central config first
   if [ -f "$config_file" ]; then
     local estimate
-    estimate=$(jq -r ".tokenEstimates[\"$tool_name\"] // .tokenEstimates.default // 500" "$config_file" 2>/dev/null)
+    estimate=$(jq -r --arg t "$tool_name" '.tokenEstimates[$t] // .tokenEstimates.default // 500' "$config_file" 2>/dev/null)
     if [ -n "$estimate" ] && [ "$estimate" != "null" ]; then
       echo "$estimate"
       return
@@ -165,6 +165,6 @@ compute_loop_sig() {
   local agent_id="$1"
   local error_msg="$2"
   local input
-  input="${agent_id}:$(echo "$error_msg" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' | tr '[:upper:]' '[:lower:]')"
-  echo -n "$input" | sha256sum | cut -c1-16
+  input="${agent_id}:$(printf '%s' "$error_msg" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' | tr '[:upper:]' '[:lower:]')"
+  printf '%s' "$input" | sha256sum | cut -c1-16
 }

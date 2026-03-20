@@ -17,7 +17,11 @@ export function parseArgs(args: string[]): { projectDir: string; port: number } 
     if (args[i] === "--project-dir" && args[i + 1]) {
       projectDir = args[++i];
     } else if (args[i] === "--port" && args[i + 1]) {
-      port = Number.parseInt(args[++i], 10);
+      const parsed = Number.parseInt(args[++i], 10);
+      if (Number.isNaN(parsed) || parsed < 1 || parsed > 65535) {
+        throw new Error(`Invalid port: must be between 1 and 65535`);
+      }
+      port = parsed;
     }
   }
 

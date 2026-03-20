@@ -9,6 +9,7 @@ cd "$REPO_ROOT"
 
 OUTPUT="$REPO_ROOT/research/invention-dates.md"
 TMPDIR_WORK="$(mktemp -d)"
+chmod 700 "$TMPDIR_WORK"
 trap 'rm -rf "$TMPDIR_WORK"' EXIT
 
 # --- Opportunity definitions ---
