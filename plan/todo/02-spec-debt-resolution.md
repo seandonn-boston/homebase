@@ -18,7 +18,7 @@ All deliverables in this stream are specification proposals written to `docs/spe
 ## Enforcement and Compliance Completeness
 
 - [x] **SD-04: Standing Orders enforcement map completion** — For each of the 8 advisory-only SOs, propose a hook or document why it is inherently advisory with alternative monitoring; address the SO-14 (Compliance, Ethics, Legal) safety-tier gap specifically.
-- [ ] **SD-05: Hook manifest completeness audit** — Cross-reference all spec-referenced hooks against actual manifests in `aiStrat/hooks/` and implementations in `.hooks/`; identify missing manifests, orphan manifests, and propose new manifest content.
+- [x] **SD-05: Hook manifest completeness audit** — Cross-reference all spec-referenced hooks against actual manifests in `aiStrat/hooks/` and implementations in `.hooks/`; identify missing manifests, orphan manifests, and propose new manifest content.
 - [ ] **SD-06: Reference constants implementation audit** — Audit `reference-constants.md` against the codebase; verify every constant is implemented and matches spec values; create a constants registry at `admiral/config/reference_constants.sh`.
 
 ## Spec Versioning and Compliance
