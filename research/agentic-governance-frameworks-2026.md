@@ -326,7 +326,7 @@ AI Safety Levels (ASL-1 through ASL-4+), Frontier Safety Roadmaps with transpare
 | No enforcement class distinction | Hooks vs. instructions — mechanical enforcement that fires 100% of the time vs. advisory guidance that degrades under context pressure |
 | No ready-to-deploy role catalog | 71 pre-defined agents with routing rules, interface contracts, and capability declarations |
 | No institutional memory spec | Brain architecture with vector embeddings, retrieval confidence, quarantine immune system |
-| No invariant behavioral rules | 15 Standing Orders with explicit priority hierarchy (Safety > Authority > Process > Communication > Scope) |
+| No invariant behavioral rules | 16 Standing Orders with explicit priority hierarchy (Safety > Authority > Process > Communication > Scope) |
 | No agent-specific failure taxonomy | 20 documented failure modes with operational responses (governance agents, recovery ladders) |
 | No formalized instruction methodology | Intent engineering: Goal, Priority, Constraints, Failure Modes, Judgment Boundaries, Values |
 

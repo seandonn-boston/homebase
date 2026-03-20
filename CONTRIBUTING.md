@@ -35,9 +35,12 @@ git config core.hooksPath .githooks
 | `aiStrat/` | Framework specification (frozen — do not modify without approval) |
 | `admiral/` | Admiral runtime: config, lib, standing orders, tests |
 | `control-plane/` | TypeScript control plane: event stream, runaway detection, trace, HTTP server |
+| `plan/` | 34-stream roadmap with ~482 work items ([index](plan/index.md), [phasing](plan/ROADMAP.md)) |
+| `research/` | Market intelligence and competitive analysis |
+| `thesis/` | Strategic thesis documents |
+| `docs/` | Architecture decision records and documentation |
 | `.hooks/` | Claude Code hook scripts implementing Standing Orders |
 | `.brain/` | Brain B1 filesystem entries |
-| `docs/` | Architecture decision records and documentation |
 | `.githooks/` | Git hooks for the project itself |
 
 ## Development Workflow

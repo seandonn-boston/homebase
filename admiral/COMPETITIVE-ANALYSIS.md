@@ -106,7 +106,7 @@ No other framework models this continuum. Competitors put everything in either "
 ### 5. Operational Doctrine
 
 Admiral ships a complete operational playbook:
-- **15 Standing Orders** loaded into every agent's context
+- **16 Standing Orders** loaded into every agent's context
 - **Fleet composition model** (5-12 agents with explicit "Does NOT Do" boundaries)
 - **Progressive Control Plane** (CP1-CP5, from CLI dashboard to federation)
 - **RunawayDetector** using Statistical Process Control (not fixed thresholds)

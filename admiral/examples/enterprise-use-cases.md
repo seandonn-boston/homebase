@@ -68,7 +68,7 @@ Admiral integrates into the existing stack without replacing any component:
 | **Appeal Prep Agent** | GPT-4o | When a claim is denied, pre-generates the member explanation letter with appeal rights per state regulations | Output reviewed by QA Agent before send |
 | **QA Agent** | Claude Sonnet 4.6 | Reviews all agent outputs for accuracy, completeness, and regulatory compliance | Never routes to itself, conflict-of-interest guardrail |
 | **Compliance Logger** | GPT-4o-mini | Generates immutable audit records for every claim decision, mapping to HIPAA §164.530 requirements | Write-only to append-only audit log |
-| **Orchestrator** | Claude Opus 4.6 | Routes claims through the pipeline, manages handoffs, escalates edge cases | All 15 Standing Orders loaded via `pre_work_validator` (SO-15), `token_budget_checkpoint`, `loop_detector` |
+| **Orchestrator** | Claude Opus 4.6 | Routes claims through the pipeline, manages handoffs, escalates edge cases | All 16 Standing Orders loaded via `pre_work_validator` (SO-15), `token_budget_checkpoint`, `loop_detector` |
 | **Hallucination Auditor** | Claude Sonnet 4.6 | Validates that extracted medical codes and policy citations are real, not fabricated | Cross-references all codes against CMS and plan databases |
 
 ### Why B3 (Brain Level 3)
@@ -184,8 +184,8 @@ Admiral integrates into the existing stack without replacing any component:
 | **Execution Agent** | Llama 3.3 70B (vLLM, self-hosted) | Routes validated trades to execution venues (DMA, dark pools, algo wheels) | AUTONOMOUS only after both gates pass. `token_budget_checkpoint` enforces per-trade size limits |
 | **Post-Trade Reconciliation Agent** | GPT-4o-mini | Matches executed trades against intended positions, flags breaks | Read + report. Cannot modify positions |
 | **Regulatory Reporting Agent** | Claude Sonnet 4.6 | Generates MiFID II best execution reports, SEC 13F filings, CFTC position reports | Write-only to regulatory systems. Human sign-off required |
-| **Orchestrator (Alpha)** | Claude Opus 4.6 | Manages signal -> portfolio -> execution pipeline for equity + FI | All 15 Standing Orders via `pre_work_validator` (SO-15). `token_budget_checkpoint`: $5K/day |
-| **Orchestrator (Beta)** | Claude Opus 4.6 | Manages FX + derivatives pipeline | All 15 Standing Orders. Independent budget, shared VaR limit via cross-fleet protocol (F3) |
+| **Orchestrator (Alpha)** | Claude Opus 4.6 | Manages signal -> portfolio -> execution pipeline for equity + FI | All 16 Standing Orders via `pre_work_validator` (SO-15). `token_budget_checkpoint`: $5K/day |
+| **Orchestrator (Beta)** | Claude Opus 4.6 | Manages FX + derivatives pipeline | All 16 Standing Orders. Independent budget, shared VaR limit via cross-fleet protocol (F3) |
 
 ### Why B3 (Brain Level 3)
 

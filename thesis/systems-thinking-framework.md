@@ -40,7 +40,7 @@ AI agents are "relentlessly helpful" — they will expand scope, add features, r
 **Where Admiral embeds this:**
 - **The Enforcement Spectrum** (Section 08) — The insight that constraints exist on a reliability continuum (hooks → firm guidance → soft guidance). Hooks are *structural incentives* — they make the wrong behavior impossible, not just discouraged
 - **Decision Authority Tiers** (Section 09) — Enforced / Autonomous / Propose / Escalate. Each tier is an incentive structure: "You may decide this" incentivizes speed; "You must escalate this" incentivizes caution
-- **Standing Orders** (Section 36) — 15 non-negotiable rules. These aren't suggestions — they're the behavioral floor. They shape what agents *never do*, which is more powerful than shaping what they try to do
+- **Standing Orders** (Section 36) — 16 non-negotiable rules. These aren't suggestions — they're the behavioral floor. They shape what agents *never do*, which is more powerful than shaping what they try to do
 - **Trust Calibration** (Section 33) — Trust is earned per category, not globally. Withdrawn precisely after failures. The incentive: consistent quality in your domain expands your autonomy
 
 **The systems question:** *What behavior does this design reward? What behavior does it accidentally punish?*

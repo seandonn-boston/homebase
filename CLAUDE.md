@@ -12,3 +12,12 @@
 ## Why Both Files Exist
 
 Claude Code does not natively read `AGENTS.md`. This file is the Claude Code entry point. When Claude Code adds native AGENTS.md support, this file can be reduced to tool-specific overrides only.
+
+## Session Quick Start
+
+When starting a new session, orient with:
+
+1. **What to work on:** [`plan/index.md`](plan/index.md) — current scores and all 34 streams
+2. **Execution order:** [`plan/ROADMAP.md`](plan/ROADMAP.md) — 9-phase dependency map
+3. **Current phase:** Phase 0 — Strategy Foundation & Spec Debt Resolution
+4. **Boundaries:** See `AGENTS.md` § Boundaries before making changes
