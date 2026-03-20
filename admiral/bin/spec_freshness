@@ -1,0 +1,85 @@
+#!/bin/bash
+# Admiral Framework — Spec Freshness Reporter
+# Reads the changelog bridge and outputs a freshness summary.
+# Usage: spec_freshness [--json]
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
+BRIDGE="${1:-$PROJECT_DIR/admiral/config/spec_changelog_bridge.json}"
+
+# Allow --json flag as first arg, bridge as second
+JSON_MODE=false
+if [ "$BRIDGE" = "--json" ]; then
+  JSON_MODE=true
+  BRIDGE="${2:-$PROJECT_DIR/admiral/config/spec_changelog_bridge.json}"
+fi
+
+if [ ! -f "$BRIDGE" ]; then
+  echo "ERROR: Changelog bridge not found at $BRIDGE" >&2
+  exit 1
+fi
+
+if ! jq empty "$BRIDGE" 2>/dev/null; then
+  echo "ERROR: Invalid JSON in changelog bridge" >&2
+  exit 1
+fi
+
+SPEC_VER=$(jq -r '.current_spec_version' "$BRIDGE")
+IMPL_VER=$(jq -r '.implementation_target_version' "$BRIDGE")
+SCORE=$(jq -r '.freshness.score_pct' "$BRIDGE")
+RATING=$(jq -r '.freshness.rating' "$BRIDGE")
+LAST_AUDIT=$(jq -r '.last_audited' "$BRIDGE")
+
+HIGH_DRIFT=$(jq '[.drift_flags[] | select(.severity == "high")] | length' "$BRIDGE")
+MED_DRIFT=$(jq '[.drift_flags[] | select(.severity == "medium")] | length' "$BRIDGE")
+LOW_DRIFT=$(jq '[.drift_flags[] | select(.severity == "low")] | length' "$BRIDGE")
+TOTAL_DRIFT=$(jq '.drift_flags | length' "$BRIDGE")
+
+VERSIONS_MAPPED=$(jq '.version_map | length' "$BRIDGE")
+FULL_IMPL=$(jq '[.version_map[] | select(.implementation_status == "full")] | length' "$BRIDGE")
+PARTIAL_IMPL=$(jq '[.version_map[] | select(.implementation_status == "partial")] | length' "$BRIDGE")
+NOT_IMPL=$(jq '[.version_map[] | select(.implementation_status == "none")] | length' "$BRIDGE")
+
+if [ "$JSON_MODE" = "true" ]; then
+  jq -n \
+    --arg spec "$SPEC_VER" \
+    --arg impl "$IMPL_VER" \
+    --argjson score "$SCORE" \
+    --arg rating "$RATING" \
+    --arg audit "$LAST_AUDIT" \
+    --argjson high "$HIGH_DRIFT" \
+    --argjson med "$MED_DRIFT" \
+    --argjson low "$LOW_DRIFT" \
+    --argjson versions "$VERSIONS_MAPPED" \
+    --argjson full "$FULL_IMPL" \
+    --argjson partial "$PARTIAL_IMPL" \
+    '{spec_version: $spec, impl_version: $impl, freshness_score: $score, rating: $rating, last_audited: $audit, drift: {high: $high, medium: $med, low: $low}, versions: {mapped: $versions, full: $full, partial: $partial}}'
+  exit 0
+fi
+
+echo "=== Spec Freshness Report ==="
+echo ""
+echo "  Spec version:    $SPEC_VER"
+echo "  Impl targets:    $IMPL_VER"
+echo "  Freshness score: ${SCORE}% ($RATING)"
+echo "  Last audited:    $LAST_AUDIT"
+echo ""
+echo "  Version coverage: $VERSIONS_MAPPED versions mapped"
+echo "    Full:    $FULL_IMPL"
+echo "    Partial: $PARTIAL_IMPL"
+echo "    None:    $NOT_IMPL"
+echo ""
+echo "  Drift flags: $TOTAL_DRIFT total"
+echo "    High:   $HIGH_DRIFT"
+echo "    Medium: $MED_DRIFT"
+echo "    Low:    $LOW_DRIFT"
+
+if [ "$HIGH_DRIFT" -gt 0 ]; then
+  echo ""
+  echo "  High-severity drift:"
+  jq -r '.drift_flags[] | select(.severity == "high") | "    - \(.area): \(.description)"' "$BRIDGE"
+fi
+
+echo ""
+exit 0
