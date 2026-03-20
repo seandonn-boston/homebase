@@ -27,7 +27,7 @@ Admiral is built on a core insight: *AI agents are not employees and they are no
 - **Enforcement Spectrum** — Deterministic hooks over advisory instructions. Hooks fire every time regardless of context pressure.
 - **Decision Authority Tiers** — Enforced / Autonomous / Propose / Escalate. Agents earn trust per category, not globally.
 - **Intent Engineering** — Communicating *what you want to achieve*, not *what you think the system needs to hear*.
-- **Standing Orders** — 15 non-negotiable rules forming the behavioral floor for all agents.
+- **Standing Orders** — 16 non-negotiable rules forming the behavioral floor for all agents.
 - **Per-Component Scaling** — Seven independently-scaling components (Brain, Fleet, Enforcement, Control Plane, Security, Protocols, Data Ecosystem) with five Quick-Start Profiles: Starter → Team → Governed → Production → Enterprise.
 
 #### Entry Points
@@ -97,6 +97,18 @@ The intellectual foundation underlying everything else:
 
 ---
 
+### 🗺️ [`plan/`](plan/) — Comprehensive Roadmap
+
+The 34-stream implementation roadmap with ~482 work items, organized in 9 dependency-ordered phases. Covers everything from spec debt resolution through fleet orchestration, security hardening, and strategic positioning.
+
+| I need to... | Start here |
+|---|---|
+| See the full roadmap and current scores | [`plan/index.md`](plan/index.md) |
+| Understand execution phasing and dependencies | [`plan/ROADMAP.md`](plan/ROADMAP.md) |
+| See detailed work items for a stream | Individual stream files (e.g., `stream-01-testing.md`) |
+
+---
+
 ## CI/CD & Automation
 
 | Workflow | Trigger | Purpose |
@@ -107,9 +119,31 @@ The intellectual foundation underlying everything else:
 
 ---
 
+## Repository Structure
+
+| Directory | Purpose |
+|---|---|
+| `aiStrat/` | Admiral Framework specification (frozen — do not modify without approval) |
+| `admiral/` | Runtime implementation: standing orders, libraries, config, tests |
+| `control-plane/` | TypeScript control plane MVP |
+| `plan/` | 34-stream roadmap with ~482 work items |
+| `research/` | Market intelligence and competitive analysis |
+| `thesis/` | Strategic thesis documents |
+| `docs/adr/` | Architecture decision records |
+| `.hooks/` | Claude Code hook scripts implementing Standing Orders |
+| `.brain/` | Brain B1 filesystem entries (semantic memory) |
+| `.admiral/` | Runtime session state (ephemeral, not committed) |
+| `.claude/` | Claude Code configuration |
+| `.github/` | CI/CD workflows and templates |
+| `.githooks/` | Git pre-commit hooks (enable with `git config core.hooksPath .githooks`) |
+
+---
+
 ## Project Status
 
 **Phase:** Specification + Early Implementation (Alpha)
+
+**Current Focus:** Phase 0 — Strategy Foundation & Spec Debt Resolution. See [`plan/ROADMAP.md`](plan/ROADMAP.md) for phasing and [`plan/index.md`](plan/index.md) for scores.
 
 The Admiral Framework specification is comprehensive (114 files, 15,000+ lines) and actively evolving. The control plane MVP is the first step toward runnable software. The project is positioned at the intersection of the **autonomous AI agent market** ($8.5B by 2026, projected $35–45B by 2030) and the **AI governance market** ($940M in 2025, projected $7.4B by 2030).
 

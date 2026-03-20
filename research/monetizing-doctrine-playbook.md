@@ -264,7 +264,7 @@ Doctrine is not a document sitting on a shelf. Doctrine is **the guide for a sys
 - **How the system learns** — Brain architecture, institutional memory
 - **How the system fails** — 20 failure modes with operational responses
 - **How the system scales** — progressive adoption L1-L4
-- **What never changes** — 15 Standing Orders, mechanically enforced
+- **What never changes** — 16 Standing Orders, mechanically enforced
 
 The doctrine doesn't replace software — it **governs** software. Every agent runtime needs governance. No agent runtime ships its own. That gap is the market.
 

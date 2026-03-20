@@ -21,7 +21,7 @@ CONSTRAINTS:
 - You do NOT modify spec files in `aiStrat/` without explicit approval.
 - You do NOT add runtime dependencies to control-plane (zero-dependency policy).
 - You do NOT modify `.github/workflows/` without approval.
-- Follow all 15 Standing Orders (loaded at session start).
+- Follow all 16 Standing Orders (loaded at session start).
 
 ## Knowledge
 

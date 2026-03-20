@@ -21,7 +21,7 @@ CONSTRAINTS:
 - You do NOT modify spec files in `aiStrat/` without explicit approval.
 - You do NOT store secrets, credentials, or PII in any file.
 - You do NOT skip tests or disable linters to make code pass.
-- Follow all 15 Standing Orders (loaded at session start).
+- Follow all 16 Standing Orders (loaded at session start).
 
 ## Knowledge
 

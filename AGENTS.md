@@ -21,16 +21,29 @@ Helm is the implementation repository for the **Admiral Framework** — an AI ag
 - Hook names: `snake_case` matching `^[a-z][a-z0-9_]*$`
 - Brain entries: `{YYYYMMDD-HHmmss}-{category}-{slug}.json`
 - Commit messages: [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `docs:`, etc.)
-- File structure: implementation in `admiral/`, `control-plane/`, `.hooks/`; specs in `aiStrat/`
+- File structure: implementation in `admiral/`, `control-plane/`, `.hooks/`; specs in `aiStrat/`; roadmap in `plan/`; research in `research/`; thesis in `thesis/`; ADRs in `docs/adr/`; Brain B1 in `.brain/`
 - All JSON must be valid and parseable by `jq`
 - Hook exit codes: 0=pass, 1=soft-fail, 2=hard-block
 
 ## Standing Orders
 
-This project follows the Admiral Framework Standing Orders (all 15).
+This project follows the Admiral Framework Standing Orders (all 16).
 Standing Orders are loaded into agent context at session start via the `session_start_adapter.sh` hook.
 Source data: `admiral/standing-orders/`
 Spec reference: `aiStrat/admiral/spec/part11-protocols.md`
+
+## Current Focus
+
+**Phase 0 — Strategy Foundation & Spec Debt Resolution**
+
+The project follows a [9-phase roadmap](plan/ROADMAP.md). Phase 0 must substantially complete before implementation begins. Current priorities:
+
+1. Strategy Triangle foundation (Stream 00: ST-01 through ST-08)
+2. Spec debt inventory and resolution (Stream 21: SD-01 through SD-15)
+
+Full roadmap: [`plan/index.md`](plan/index.md) | Execution phasing: [`plan/ROADMAP.md`](plan/ROADMAP.md)
+
+When starting a session, check these files for current scores and active phase.
 
 ## Boundaries
 
@@ -64,3 +77,5 @@ Spec reference: `aiStrat/admiral/spec/part11-protocols.md`
 - Brain entry format: `aiStrat/brain/level1-spec.md`
 - Standing Orders text: `aiStrat/admiral/spec/part11-protocols.md`
 - Specification debt: `aiStrat/admiral/reference/spec-debt.md`
+- Strategic roadmap: `plan/index.md`
+- Execution phasing: `plan/ROADMAP.md`
