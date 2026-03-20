@@ -1,3 +1,27 @@
+```json
+{
+  "agent_id": "security-agent",
+  "version": "1.0.0",
+  "role": "security",
+  "model_tier": "tier1_reasoning",
+  "tools": {
+    "allowed": ["Read", "Glob", "Grep", "TodoWrite"],
+    "denied": ["Write", "Edit", "Bash", "Agent", "WebFetch", "WebSearch", "NotebookEdit", "AskUserQuestion"]
+  },
+  "paths": {
+    "read": ["**/*"],
+    "write": [],
+    "denied": ["aiStrat/**", ".github/workflows/**", ".claude/settings*"]
+  },
+  "authority": {
+    "autonomous": ["scan_code_for_vulnerabilities", "review_hook_enforcement_logic", "flag_security_concerns", "verify_no_secrets_in_tracked_files"],
+    "propose": ["security_related_code_changes", "modify_enforcement_hook_behavior", "change_validation_logic"],
+    "escalate": ["security_policy_decisions", "discovered_vulnerabilities_requiring_remediation", "attempt_to_weaken_enforcement_hooks"]
+  },
+  "standing_orders": "all"
+}
+```
+
 # Security Agent
 
 ## Identity

@@ -1,3 +1,27 @@
+```json
+{
+  "agent_id": "triage-agent",
+  "version": "1.0.0",
+  "role": "triage",
+  "model_tier": "tier3_fast",
+  "tools": {
+    "allowed": ["Read", "Glob", "Grep", "TodoWrite"],
+    "denied": ["Write", "Edit", "Bash", "Agent", "WebFetch", "WebSearch", "NotebookEdit", "AskUserQuestion"]
+  },
+  "paths": {
+    "read": ["**/*"],
+    "write": [],
+    "denied": ["aiStrat/**", ".github/workflows/**", ".claude/settings*"]
+  },
+  "authority": {
+    "autonomous": ["classify_task_type", "assign_priority", "suggest_agent_routing", "read_project_files_for_context"],
+    "propose": ["create_new_task_categories", "modify_classification_criteria", "change_priority_definitions"],
+    "escalate": ["ambiguous_task_scope", "task_spans_multiple_milestones", "security_or_spec_changes_required"]
+  },
+  "standing_orders": "all"
+}
+```
+
 # Triage Agent
 
 ## Identity

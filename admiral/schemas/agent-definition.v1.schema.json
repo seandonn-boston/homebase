@@ -1,0 +1,131 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "admiral/schemas/agent-definition.v1.schema.json",
+  "title": "Admiral Agent Definition Contract v1",
+  "description": "Machine-readable contract for Admiral agent definitions. Validated at session start. Used by tool_grant_enforcer to enforce capability grants at execution time.",
+  "type": "object",
+  "required": ["agent_id", "version", "role", "tools", "paths", "authority", "standing_orders"],
+  "additionalProperties": false,
+  "properties": {
+    "agent_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "Unique identifier. Must match the agent filename without .md extension."
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version of this contract. Increment on any change."
+    },
+    "role": {
+      "type": "string",
+      "enum": ["orchestrator", "architect", "implementer", "qa", "security", "triage", "curator", "custom"],
+      "description": "Functional role category. Controls which role-specific defaults apply."
+    },
+    "model_tier": {
+      "type": "string",
+      "enum": ["tier1_reasoning", "tier2_workhorse", "tier3_fast"],
+      "description": "Preferred model tier. tier1_reasoning for design/security, tier2_workhorse for implementation, tier3_fast for triage/routing."
+    },
+    "tools": {
+      "type": "object",
+      "required": ["allowed"],
+      "additionalProperties": false,
+      "description": "Explicit tool capability grants. Deny-by-default: if a tool is not in allowed, it is implicitly denied.",
+      "properties": {
+        "allowed": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "Read", "Edit", "Write", "Bash", "Glob", "Grep",
+              "Agent", "WebFetch", "WebSearch",
+              "TodoWrite", "NotebookEdit", "ExitPlanMode",
+              "AskUserQuestion", "Skill"
+            ]
+          },
+          "uniqueItems": true,
+          "description": "Explicit whitelist of tools this agent may invoke."
+        },
+        "denied": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "Read", "Edit", "Write", "Bash", "Glob", "Grep",
+              "Agent", "WebFetch", "WebSearch",
+              "TodoWrite", "NotebookEdit", "ExitPlanMode",
+              "AskUserQuestion", "Skill"
+            ]
+          },
+          "uniqueItems": true,
+          "description": "Explicit deny list (documentation aid). Any tool not in allowed is already implicitly denied. Listing here makes intent explicit."
+        }
+      }
+    },
+    "paths": {
+      "type": "object",
+      "required": ["read", "write", "denied"],
+      "additionalProperties": false,
+      "description": "Path scope. denied overrides write. Patterns are glob-style relative to project root.",
+      "properties": {
+        "read": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Readable path patterns. Use [\"**/*\"] for full read access."
+        },
+        "write": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Writable path patterns. Empty array means no write access."
+        },
+        "denied": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Hard-denied path patterns. Takes precedence over write grants."
+        }
+      }
+    },
+    "authority": {
+      "type": "object",
+      "required": ["autonomous", "propose", "escalate"],
+      "additionalProperties": false,
+      "description": "Decision authority tier mapping. Every action category must belong to exactly one tier.",
+      "properties": {
+        "autonomous": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Action categories the agent may execute without approval. Log the decision."
+        },
+        "propose": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Action categories requiring a written proposal before proceeding."
+        },
+        "escalate": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Action categories requiring immediate halt and escalation to Admiral."
+        }
+      }
+    },
+    "standing_orders": {
+      "description": "Which Standing Orders apply to this agent. 'all' is standard; custom subsets only for specialized agents.",
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": ["all"]
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^SO-\\d{2}$"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      ]
+    }
+  }
+}

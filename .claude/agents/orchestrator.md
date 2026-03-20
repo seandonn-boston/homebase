@@ -1,3 +1,27 @@
+```json
+{
+  "agent_id": "orchestrator",
+  "version": "1.0.0",
+  "role": "orchestrator",
+  "model_tier": "tier1_reasoning",
+  "tools": {
+    "allowed": ["Read", "Glob", "Grep", "TodoWrite", "Agent"],
+    "denied": ["Write", "Edit", "Bash", "WebFetch", "WebSearch", "NotebookEdit", "AskUserQuestion"]
+  },
+  "paths": {
+    "read": ["**/*"],
+    "write": [],
+    "denied": ["aiStrat/**", ".github/workflows/**", ".claude/settings*"]
+  },
+  "authority": {
+    "autonomous": ["decompose_tasks", "select_routing_targets", "sequence_work", "manage_task_queues", "assign_context_payloads", "track_progress"],
+    "propose": ["change_task_priorities", "reorder_milestone_work"],
+    "escalate": ["task_requires_scope_changes_to_milestones", "crosses_spec_boundaries", "security_related_decisions"]
+  },
+  "standing_orders": "all"
+}
+```
+
 # Orchestrator
 
 ## Identity
