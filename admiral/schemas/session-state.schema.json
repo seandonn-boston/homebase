@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "session-state.schema.json",
+  "title": "Admiral Session State",
+  "description": "Validates the session state structure managed by admiral/lib/state.sh.",
+  "type": "object",
+  "properties": {
+    "session_id": { "type": "string" },
+    "started_at": { "type": "number" },
+    "tokens_used": { "type": "number" },
+    "token_budget": { "type": "number" },
+    "tool_call_count": { "type": "number" },
+    "hook_state": {
+      "type": "object",
+      "properties": {
+        "loop_detector": {
+          "type": "object",
+          "properties": {
+            "error_counts": { "type": "object" },
+            "total_errors": { "type": "number" }
+          }
+        },
+        "brain_context_router": {
+          "type": "object",
+          "properties": {
+            "brain_queries_count": { "type": "number" },
+            "last_brain_query_tool_call": { "type": "number" },
+            "propose_without_brain": { "type": "number" },
+            "escalate_without_brain": { "type": "number" }
+          }
+        },
+        "zero_trust": {
+          "type": "object",
+          "properties": {
+            "external_data_count": { "type": "number" }
+          }
+        },
+        "compliance": {
+          "type": "object",
+          "properties": {
+            "flags_count": { "type": "number" }
+          }
+        },
+        "pre_work_validator": {
+          "type": "object",
+          "properties": {
+            "validated": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "context": {
+      "type": "object",
+      "properties": {
+        "standing_context_tokens": { "type": "number" },
+        "standing_context_present": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  },
+  "required": ["session_id", "started_at"]
+}

@@ -1,0 +1,161 @@
+#!/bin/bash
+# Admiral Framework — Dependency Checker
+# Checks that all required (and optional) dependencies are available.
+#
+# Exit codes:
+#   0 — all required dependencies present
+#   1 — one or more required dependencies missing
+#
+# Output: structured report to stdout
+
+set -euo pipefail
+
+# Track overall status
+ALL_OK=0
+
+# Structured report accumulator (JSON array)
+REPORT="[]"
+
+# Helper: compare semver "X.Y" style — returns 0 if $1 >= $2
+version_gte() {
+  local have="$1"
+  local need="$2"
+  # Use sort -V if available, otherwise simple numeric compare
+  if printf '%s\n%s\n' "$need" "$have" | sort -V 2>/dev/null | head -n1 | grep -qx "$need"; then
+    return 0
+  fi
+  return 1
+}
+
+# Helper: add entry to report
+add_report() {
+  local name="$1"
+  local status="$2"       # ok | missing | version_mismatch
+  local required="$3"     # true | false
+  local min_version="$4"  # minimum version or "any"
+  local found_version="$5" # found version or "n/a"
+  local note="${6:-}"
+
+  REPORT="$(echo "$REPORT" | jq \
+    --arg n "$name" \
+    --arg s "$status" \
+    --arg r "$required" \
+    --arg mv "$min_version" \
+    --arg fv "$found_version" \
+    --arg nt "$note" \
+    '. + [{
+      name: $n,
+      status: $s,
+      required: ($r == "true"),
+      min_version: $mv,
+      found_version: $fv,
+      note: $nt
+    }]')"
+}
+
+# --- jq >= 1.6 (required) ---
+check_jq() {
+  if ! command -v jq &>/dev/null; then
+    add_report "jq" "missing" "true" "1.6" "n/a" "jq is required for all Admiral operations"
+    ALL_OK=1
+    return
+  fi
+  local ver
+  ver="$(jq --version 2>/dev/null | sed 's/^jq-//')" || ver="unknown"
+  if [ "$ver" = "unknown" ]; then
+    add_report "jq" "ok" "true" "1.6" "unknown" "version could not be determined"
+    return
+  fi
+  if version_gte "$ver" "1.6"; then
+    add_report "jq" "ok" "true" "1.6" "$ver"
+  else
+    add_report "jq" "version_mismatch" "true" "1.6" "$ver" "upgrade required"
+    ALL_OK=1
+  fi
+}
+
+# --- sha256sum or shasum (required) ---
+check_sha256() {
+  if command -v sha256sum &>/dev/null; then
+    local ver
+    ver="$(sha256sum --version 2>/dev/null | head -1)" || ver="available"
+    add_report "sha256sum" "ok" "true" "any" "$ver"
+  elif command -v shasum &>/dev/null; then
+    local ver
+    ver="$(shasum --version 2>/dev/null | head -1)" || ver="available"
+    add_report "sha256sum" "ok" "true" "any" "$ver" "using shasum fallback (macOS)"
+  else
+    add_report "sha256sum" "missing" "true" "any" "n/a" "neither sha256sum nor shasum found"
+    ALL_OK=1
+  fi
+}
+
+# --- uuidgen or fallback (required) ---
+check_uuidgen() {
+  if command -v uuidgen &>/dev/null; then
+    add_report "uuidgen" "ok" "true" "any" "available"
+  elif command -v python3 &>/dev/null; then
+    add_report "uuidgen" "ok" "true" "any" "n/a" "using python3 uuid fallback"
+  elif [ -f /proc/sys/kernel/random/uuid ]; then
+    add_report "uuidgen" "ok" "true" "any" "n/a" "using /proc/sys/kernel/random/uuid fallback"
+  else
+    add_report "uuidgen" "missing" "true" "any" "n/a" "no uuid generation method found"
+    ALL_OK=1
+  fi
+}
+
+# --- flock or fallback (required) ---
+check_flock() {
+  if command -v flock &>/dev/null; then
+    add_report "flock" "ok" "true" "any" "available"
+  else
+    # On macOS flock is typically unavailable; Admiral falls back to unlocked ops
+    add_report "flock" "ok" "true" "any" "n/a" "not found; Admiral will operate without file locking (acceptable on macOS)"
+  fi
+}
+
+# --- shellcheck (optional) ---
+check_shellcheck() {
+  if command -v shellcheck &>/dev/null; then
+    local ver
+    ver="$(shellcheck --version 2>/dev/null | grep '^version:' | awk '{print $2}')" || ver="available"
+    add_report "shellcheck" "ok" "false" "any" "$ver"
+  else
+    add_report "shellcheck" "missing" "false" "any" "n/a" "optional; recommended for development"
+  fi
+}
+
+# --- node (required for control plane) ---
+check_node() {
+  if ! command -v node &>/dev/null; then
+    add_report "node" "missing" "true" "any" "n/a" "required for control plane"
+    ALL_OK=1
+    return
+  fi
+  local ver
+  ver="$(node --version 2>/dev/null | sed 's/^v//')" || ver="unknown"
+  add_report "node" "ok" "true" "any" "$ver"
+}
+
+# Run all checks
+check_jq
+check_sha256
+check_uuidgen
+check_flock
+check_shellcheck
+check_node
+
+# Output report
+echo "$REPORT" | jq '.'
+
+# Summary line to stderr
+total="$(echo "$REPORT" | jq 'length')"
+ok_count="$(echo "$REPORT" | jq '[.[] | select(.status == "ok")] | length')"
+missing_count="$(echo "$REPORT" | jq '[.[] | select(.status == "missing" and .required == true)] | length')"
+warn_count="$(echo "$REPORT" | jq '[.[] | select(.status == "missing" and .required == false)] | length')"
+mismatch_count="$(echo "$REPORT" | jq '[.[] | select(.status == "version_mismatch")] | length')"
+
+echo "" >&2
+echo "Dependency check: $ok_count/$total ok, $missing_count missing (required), $warn_count missing (optional), $mismatch_count version mismatch" >&2
+
+exit $ALL_OK

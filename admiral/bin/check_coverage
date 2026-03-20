@@ -1,0 +1,49 @@
+#!/bin/bash
+# check_coverage — Enforce minimum test coverage for the control-plane package.
+#
+# Usage:
+#   admiral/bin/check_coverage [THRESHOLD]
+#
+# THRESHOLD defaults to 60 (percent). Override by passing a number:
+#   admiral/bin/check_coverage 75
+#
+# Exit codes:
+#   0  Coverage meets or exceeds threshold
+#   1  Coverage below threshold, or could not be parsed
+
+set -euo pipefail
+
+THRESHOLD="${1:-60}"
+REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+CONTROL_PLANE="$REPO_ROOT/control-plane"
+
+if [ ! -d "$CONTROL_PLANE" ]; then
+  echo "Error: control-plane directory not found at $CONTROL_PLANE" >&2
+  exit 1
+fi
+
+echo "Running tests with coverage in $CONTROL_PLANE ..."
+OUTPUT=$(cd "$CONTROL_PLANE" && npm run test:coverage 2>&1) || true
+echo "$OUTPUT"
+
+# Node.js built-in test runner outputs coverage in this format:
+# # all files | <line%> | <branch%> | <funcs%> | <uncovered lines>
+COVERAGE=$(echo "$OUTPUT" | grep '# all files' | head -1 | awk -F'|' '{gsub(/[[:space:]]/, "", $2); print $2}')
+
+if [ -z "$COVERAGE" ]; then
+  echo "Error: Could not parse coverage percentage from test output." >&2
+  exit 1
+fi
+
+echo ""
+echo "Line coverage: ${COVERAGE}%"
+echo "Threshold:     ${THRESHOLD}%"
+
+# Compare using bc for floating-point comparison
+if (( $(echo "$COVERAGE < $THRESHOLD" | bc -l) )); then
+  echo "FAIL: Coverage ${COVERAGE}% is below threshold ${THRESHOLD}%"
+  exit 1
+fi
+
+echo "PASS: Coverage meets threshold."
+exit 0

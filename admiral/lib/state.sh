@@ -6,9 +6,41 @@ ADMIRAL_DIR="${ADMIRAL_DIR:-$CLAUDE_PROJECT_DIR/.admiral}"
 STATE_FILE="${ADMIRAL_DIR}/session_state.json"
 TEMPLATE_FILE="${ADMIRAL_DIR}/session_state.json.template"
 
+# Resolve path to schema validator and session-state schema
+_ADMIRAL_LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+_SCHEMA_VALIDATE="${_ADMIRAL_LIB_DIR}/schema_validate.sh"
+_SESSION_STATE_SCHEMA="$(cd "${_ADMIRAL_LIB_DIR}/.." && pwd)/schemas/session-state.schema.json"
+
 # Ensure .admiral directory exists
 ensure_admiral_dir() {
   mkdir -p "$ADMIRAL_DIR"
+}
+
+# Validate session state JSON against the session-state schema.
+# Fail-open: if validation fails or validator is unavailable, log warning but return 0.
+# Returns 0 always (fail-open). Writes warnings to stderr on schema violations.
+validate_session_state() {
+  local state_json="$1"
+
+  # Fail-open: if validator or schema not available, skip validation
+  if [ ! -x "$_SCHEMA_VALIDATE" ] || [ ! -f "$_SESSION_STATE_SCHEMA" ]; then
+    return 0
+  fi
+
+  local result
+  result="$(echo "$state_json" | "$_SCHEMA_VALIDATE" "$_SESSION_STATE_SCHEMA" 2>/dev/null)" || {
+    echo "Warning: session state schema validation failed:" >&2
+    echo "$result" >&2
+    return 0
+  }
+
+  # Log if invalid but still return 0 (fail-open)
+  if echo "$result" | grep -q "^INVALID"; then
+    echo "Warning: session state schema validation failed:" >&2
+    echo "$result" >&2
+  fi
+
+  return 0
 }
 
 # Initialize fresh session state from template
@@ -76,9 +108,11 @@ save_state() {
   content=$(cat)
   # Validate before writing — never save corrupt state
   if echo "$content" | jq empty 2>/dev/null; then
+    # Schema validation (fail-open: warns but does not block save)
+    validate_session_state "$content"
     echo "$content" > "${STATE_FILE}.tmp" && mv "${STATE_FILE}.tmp" "$STATE_FILE"
   fi
-  # If validation fails, silently keep the existing state file (fail-open)
+  # If JSON validation fails, silently keep the existing state file (fail-open)
 }
 
 # Run a read-modify-write operation under advisory file lock.

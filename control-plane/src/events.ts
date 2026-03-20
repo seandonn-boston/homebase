@@ -5,6 +5,7 @@
  * Admiral collects these events into a unified stream.
  */
 
+import * as crypto from "node:crypto";
 import { RingBuffer } from "./ring-buffer";
 
 export type EventType =
@@ -50,15 +51,13 @@ export class EventStream {
   private events: RingBuffer<AgentEvent>;
   private listeners: EventListener[] = [];
   private config: EventStreamConfig;
-  private eventCounter = 0;
-
   constructor(config: Partial<EventStreamConfig> = {}) {
     this.config = { ...DEFAULT_STREAM_CONFIG, ...config };
     this.events = new RingBuffer(this.config.maxEvents);
   }
 
   private generateId(): string {
-    return `evt_${Date.now()}_${++this.eventCounter}`;
+    return `evt_${crypto.randomUUID()}`;
   }
 
   emit(

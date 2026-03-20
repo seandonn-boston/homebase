@@ -1,0 +1,36 @@
+--- a/.github/workflows/control-plane-ci.yml
++++ b/.github/workflows/control-plane-ci.yml
+@@ -36,6 +36,30 @@
+       - name: Test with coverage
+         working-directory: control-plane
+         run: npm run test:coverage
+
++      - name: Enforce coverage threshold
++        working-directory: control-plane
++        run: |
++          # Run tests with coverage, capture output
++          OUTPUT=$(npm run test:coverage 2>&1) || true
++          echo "$OUTPUT"
++
++          # Extract line coverage from Node.js test runner output
++          # Format: "# all files | <line%> | <branch%> | <funcs%> | ..."
++          COVERAGE=$(echo "$OUTPUT" | grep '# all files' | head -1 | awk -F'|' '{gsub(/[[:space:]]/, "", $2); print $2}')
++
++          if [ -z "$COVERAGE" ]; then
++            echo "::error::Could not parse coverage from test output"
++            exit 1
++          fi
++
++          THRESHOLD=60
++          echo "Line coverage: ${COVERAGE}% (threshold: ${THRESHOLD}%)"
++
++          if (( $(echo "$COVERAGE < $THRESHOLD" | bc -l) )); then
++            echo "::error::Coverage ${COVERAGE}% is below threshold ${THRESHOLD}%"
++            exit 1
++          fi
++
++          echo "Coverage check passed."
++
+       - name: Lint
+         working-directory: control-plane
+         run: npm run lint

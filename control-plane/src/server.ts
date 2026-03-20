@@ -13,6 +13,12 @@ import type { JournalIngester } from "./ingest";
 import type { RunawayDetector } from "./runaway-detector";
 import type { ExecutionTrace } from "./trace";
 
+interface Route {
+  method: string;
+  pattern: string | RegExp;
+  handler: (req: http.IncomingMessage, res: http.ServerResponse, match?: RegExpExecArray) => void;
+}
+
 export class AdmiralServer {
   private server: http.Server | null = null;
   private stream: EventStream;
@@ -21,6 +27,7 @@ export class AdmiralServer {
   private projectDir: string;
   private ingester: JournalIngester | null = null;
   private startedAt: number = Date.now();
+  private routes: Route[];
 
   constructor(
     stream: EventStream,
@@ -32,6 +39,39 @@ export class AdmiralServer {
     this.detector = detector;
     this.trace = trace;
     this.projectDir = projectDir || process.cwd();
+
+    this.routes = [
+      { method: "GET", pattern: "/health", handler: (_req, res) => this.serveHealth(res) },
+      { method: "GET", pattern: "/api/config", handler: (_req, res) => this.json(res, this.detector.getConfig()) },
+      { method: "GET", pattern: "/api/events", handler: (_req, res) => this.json(res, this.stream.getEvents()) },
+      { method: "GET", pattern: "/api/alerts/active", handler: (_req, res) => this.json(res, this.detector.getActiveAlerts()) },
+      { method: "GET", pattern: "/api/alerts", handler: (_req, res) => this.json(res, this.detector.getAlerts()) },
+      { method: "GET", pattern: "/api/trace/ascii", handler: (_req, res) => {
+        res.writeHead(200, { "Content-Type": "text/plain" });
+        res.end(this.trace.renderAscii());
+      }},
+      { method: "GET", pattern: "/api/trace", handler: (_req, res) => this.json(res, this.trace.buildTrace()) },
+      { method: "GET", pattern: "/api/session", handler: (_req, res) => this.serveSessionState(res) },
+      { method: "GET", pattern: "/api/stats", handler: (_req, res) => {
+        const stats: Record<string, unknown> = { trace: this.trace.getStats() };
+        if (this.ingester) {
+          stats.ingester = this.ingester.getStats();
+        }
+        this.json(res, stats);
+      }},
+      { method: "GET", pattern: /^\/api\/agents\/([a-zA-Z0-9_-]+)\/resume$/, handler: (_req, res, match) => {
+        const agentId = match![1];
+        this.detector.resumeAgent(agentId);
+        this.json(res, { resumed: agentId });
+      }},
+      { method: "GET", pattern: /^\/api\/alerts\/([a-zA-Z0-9_-]+)\/resolve$/, handler: (_req, res, match) => {
+        const alertId = match![1];
+        this.detector.resolveAlert(alertId);
+        this.json(res, { resolved: alertId });
+      }},
+      { method: "GET", pattern: "/", handler: (_req, res) => this.serveDashboard(res) },
+      { method: "GET", pattern: "/index.html", handler: (_req, res) => this.serveDashboard(res) },
+    ];
   }
 
   /** Set the ingester reference for health reporting */
@@ -59,65 +99,37 @@ export class AdmiralServer {
   private handleRequest(req: http.IncomingMessage, res: http.ServerResponse): void {
     try {
       const url = req.url || "/";
+      const method = req.method || "GET";
 
       // CORS headers
       res.setHeader("Access-Control-Allow-Origin", "*");
       res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
       res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-      if (req.method === "OPTIONS") {
+      if (method === "OPTIONS") {
         res.writeHead(204);
         res.end();
         return;
       }
 
-      // API routes
-      if (url === "/health") {
-        this.serveHealth(res);
-      } else if (url === "/api/config") {
-        this.json(res, this.detector.getConfig());
-      } else if (url === "/api/events") {
-        this.json(res, this.stream.getEvents());
-      } else if (url === "/api/alerts") {
-        this.json(res, this.detector.getAlerts());
-      } else if (url === "/api/alerts/active") {
-        this.json(res, this.detector.getActiveAlerts());
-      } else if (url === "/api/trace") {
-        this.json(res, this.trace.buildTrace());
-      } else if (url === "/api/trace/ascii") {
-        res.writeHead(200, { "Content-Type": "text/plain" });
-        res.end(this.trace.renderAscii());
-      } else if (url === "/api/session") {
-        this.serveSessionState(res);
-      } else if (url === "/api/stats") {
-        const stats: Record<string, unknown> = { trace: this.trace.getStats() };
-        if (this.ingester) {
-          stats.ingester = this.ingester.getStats();
-        }
-        this.json(res, stats);
-      } else if (url.startsWith("/api/agents/") && url.endsWith("/resume")) {
-        const parts = url.split("/").filter(Boolean);
-        const agentId = parts[2];
-        if (agentId && agentId !== "resume" && /^[a-zA-Z0-9_-]+$/.test(agentId)) {
-          this.detector.resumeAgent(agentId);
-          this.json(res, { resumed: agentId });
+      for (const route of this.routes) {
+        if (route.method !== method) continue;
+
+        if (typeof route.pattern === "string") {
+          if (url === route.pattern) {
+            route.handler(req, res);
+            return;
+          }
         } else {
-          this.errorJson(res, 400, "Missing or invalid agent ID");
+          const match = route.pattern.exec(url);
+          if (match) {
+            route.handler(req, res, match);
+            return;
+          }
         }
-      } else if (url.startsWith("/api/alerts/") && url.endsWith("/resolve")) {
-        const parts = url.split("/").filter(Boolean);
-        const alertId = parts[2];
-        if (alertId && alertId !== "resolve" && /^[a-zA-Z0-9_-]+$/.test(alertId)) {
-          this.detector.resolveAlert(alertId);
-          this.json(res, { resolved: alertId });
-        } else {
-          this.errorJson(res, 400, "Missing or invalid alert ID");
-        }
-      } else if (url === "/" || url === "/index.html") {
-        this.serveDashboard(res);
-      } else {
-        this.errorJson(res, 404, "Not found");
       }
+
+      this.errorJson(res, 404, "Not found");
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
       console.error(`[admiral-server] Unhandled error: ${message}`);

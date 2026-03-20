@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "hook-payload.schema.json",
+  "title": "Admiral Hook Payload",
+  "description": "Validates the common hook payload structure passed between Claude Code hooks and Admiral adapters.",
+  "type": "object",
+  "properties": {
+    "tool_name": { "type": "string" },
+    "tool_input": { "type": "object" },
+    "tool_response": { "type": "string" },
+    "session_state": { "type": "object" }
+  },
+  "required": ["tool_name"]
+}
