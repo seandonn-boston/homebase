@@ -1,0 +1,31 @@
+# Admiral Ground Truth — Success Criteria Template
+# Part 1: "Every task needs a machine-verifiable definition of done."
+#
+# Fill in every section. For sections that do not apply, set the value to
+# an array with a single "N/A: <justification>" entry.
+
+# What must the output DO? Testable behaviors.
+functional:
+  - ""
+
+# Measurable gates: linting passes, tests pass, coverage above threshold.
+quality:
+  - ""
+
+# What must exist beyond the core deliverable. Docs updated, error states handled.
+completeness:
+  - ""
+
+# What the output must NOT do. No new dependencies, no files outside scope.
+negative:
+  - ""
+
+# What happens when criteria cannot be met.
+# Specify: "If [criterion] cannot be met, [escalate | deliver partial | block]."
+failure_guidance:
+  - ""
+
+# Where criteria are ambiguous. Name the ambiguity and assign a decision
+# authority tier (autonomous | propose | escalate).
+judgment_boundaries:
+  - ""

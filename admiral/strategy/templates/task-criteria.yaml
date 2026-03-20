@@ -1,0 +1,39 @@
+# Admiral Task Acceptance Criteria Template
+# Part 1: "Every task needs a machine-verifiable definition of done."
+#
+# Every task delegated to an agent must include these criteria.
+# Tasks submitted without required fields are rejected.
+
+# Task identifier
+task: ""
+
+# What must the output DO? Testable behaviors.
+# Not "the form should work" but "submitting the form with valid data
+# creates a record and redirects to confirmation."
+functional:
+  - ""
+
+# Measurable gates: linting passes, tests pass, coverage above threshold.
+quality:
+  - ""
+
+# What must exist beyond the core deliverable. Docs updated, error states handled.
+completeness:
+  - ""
+
+# What the output must NOT do. No new dependencies, no files outside scope.
+negative:
+  - ""
+
+# Self-Check | Peer Review | Admiral Review
+verification: ""
+
+# What happens when criteria cannot be met.
+# "If [criterion] cannot be met, [escalate | deliver partial with explanation | block and report]."
+failure_guidance:
+  - ""
+
+# Where criteria are ambiguous. Name the ambiguity and assign a decision
+# authority tier (autonomous | propose | escalate).
+judgment_boundaries:
+  - ""
