@@ -1,0 +1,8 @@
+{
+  "query": "nonexistent_topic_xyz",
+  "agent": "manual",
+  "project": "all",
+  "category": "any",
+  "results_found": 0,
+  "timestamp": "2026-03-20T06:23:11Z"
+}

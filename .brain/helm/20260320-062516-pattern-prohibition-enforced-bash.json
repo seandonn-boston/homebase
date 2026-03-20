@@ -1,0 +1,15 @@
+{
+  "id": "0b0bf6dd-f402-4dd1-9955-4cbeedce82bd",
+  "project": "helm",
+  "category": "pattern",
+  "title": "Prohibition enforced: Bash",
+  "content": "Hook blocked: Bash. Detail: PROHIBITION (SO-10): Command matches bypass pattern 'disable.*hook'. Never bypass or disable enforcement mechanisms. . This pattern was detected and blocked by prohibitions_enforcer (SO-10).",
+  "metadata": {
+    "tags": [
+      "auto-recorded",
+      "hook-generated"
+    ]
+  },
+  "source_agent": "prohibitions_enforcer",
+  "created_at": "2026-03-20T06:25:16Z"
+}

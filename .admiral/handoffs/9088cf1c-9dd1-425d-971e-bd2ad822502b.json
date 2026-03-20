@@ -1,0 +1,30 @@
+{
+  "handoff_id": "9088cf1c-9dd1-425d-971e-bd2ad822502b",
+  "version": "v1",
+  "sender": {
+    "agent_id": "claude-code",
+    "role": "generalist"
+  },
+  "receiver": {
+    "agent_id": "qa-agent",
+    "role": "qa-agent"
+  },
+  "task": {
+    "description": "Write unit tests for identity_validation hook",
+    "type": "testing",
+    "priority": "medium",
+    "acceptance_criteria": [],
+    "constraints": [],
+    "files_in_scope": []
+  },
+  "context": {
+    "summary": "Created identity_validation.sh hook that validates agent identity against fleet registry. Needs test coverage for valid identity, invalid identity, missing registry, and inactive agent.",
+    "decisions_made": [],
+    "assumptions": [],
+    "blockers": [],
+    "brain_entries_consulted": []
+  },
+  "routing_suggestions": [],
+  "created_at": "2026-03-20T06:25:21Z",
+  "status": "pending"
+}
