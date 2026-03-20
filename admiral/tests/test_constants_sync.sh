@@ -60,6 +60,7 @@ assert_true "Has brain_query" "$(jq -e '.constants.brain_query' "$JSON_REG" >/de
 
 # --- Cross-check JSON vs SH values directly ---
 echo "--- Cross-Check JSON vs SH ---"
+# shellcheck source=/dev/null
 source "$PROJECT_DIR/admiral/config/reference_constants.sh"
 
 JSON_BASH=$(jq -r '.constants.tool_token_estimates.Bash' "$JSON_REG")
