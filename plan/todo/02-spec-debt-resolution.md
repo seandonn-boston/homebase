@@ -13,7 +13,7 @@ All deliverables in this stream are specification proposals written to `docs/spe
 
 ## Amendment Proposals
 
-- [ ] **SD-03: Create spec amendment proposals for each active gap** — Write a formal proposal per gap in standard format (Gap ID, affected section, current text, proposed text, rationale, impact assessment) under `docs/spec-proposals/amendments/`.
+- [x] **SD-03: Create spec amendment proposals for each active gap** — Write a formal proposal per gap in standard format (Gap ID, affected section, current text, proposed text, rationale, impact assessment) under `docs/spec-proposals/amendments/`.
 
 ## Enforcement and Compliance Completeness
 
