@@ -1,4 +1,4 @@
-# Competitive Threat Analysis: StrongDM, Perplexity, and Comet (Opik)
+# Competitive Threat Analysis: StrongDM, Perplexity, and Comet
 
 **Date:** 2026-03-20
 **Status:** Active Intelligence
@@ -8,15 +8,13 @@
 
 ## Executive Summary
 
-Three companies — StrongDM, Perplexity, and Comet — each challenge Admiral from different angles. None is a direct, full-spectrum competitor, but together they represent convergent pressure on Admiral's positioning as the governance layer for AI workforces.
+StrongDM, Perplexity, and Perplexity's Comet browser each challenge Admiral from different angles. None is a direct, full-spectrum competitor, but together they represent convergent pressure on Admiral's positioning as the governance layer for AI workforces.
 
 | Company | Primary Threat Vector | Overlap with Admiral | Severity |
 |---------|----------------------|---------------------|----------|
 | **StrongDM (Leash)** | Runtime enforcement for AI agents | Deterministic enforcement, policy-as-code, containment | **High** |
-| **Perplexity (Computer + Comet Enterprise)** | Enterprise agent orchestration with admin controls | Fleet orchestration, enterprise governance, audit | **Medium** |
-| **Comet ML (Opik)** | AI observability, evaluation, and optimization | Observability, failure detection, quality assurance | **Medium** |
-
-> **Naming note:** "Comet" appears twice in this analysis with different meanings. **Perplexity Comet** is Perplexity's AI-native browser. **Comet ML** is a separate company whose product **Opik** provides LLM observability. They are unrelated.
+| **Perplexity (Computer for Enterprise)** | Enterprise agent orchestration with admin controls | Fleet orchestration, enterprise governance, audit | **Medium** |
+| **Perplexity (Comet Enterprise)** | AI-native browser with agent governance built in | Agent action controls, audit trails, enterprise deployment | **Medium-High** |
 
 **The critical insight:** Each competitor owns one slice of what Admiral unifies. The danger is not that any one replaces Admiral — it's that enterprises assemble a "good enough" stack from these point solutions and never feel the need for a unified governance layer.
 
@@ -126,57 +124,59 @@ Perplexity has evolved from a search engine into an enterprise AI platform with 
 
 ---
 
-## 3. Comet ML (Opik) — The Observability Competitor
+## 3. Perplexity Comet — The Trojan Horse
 
 ### What It Is
 
-Opik is an open-source (Apache 2.0) LLM observability, evaluation, and optimization platform. It provides tracing, evaluation metrics, agent optimization, and production monitoring for AI applications. Recognized in Gartner's 2026 Market Guide for AI Evaluation and Observability Platforms.
+Comet is Perplexity's AI-native browser — a Chromium-based desktop application with a built-in AI assistant and autonomous agent ("Comet Agent") that can execute multi-step workflows across websites. Comet Enterprise extends this with admin controls, MDM deployment, CrowdStrike integration, and organizational governance features. Launched March 2026, it is already deployed at Fortune, AWS, AlixPartners, and Bessemer Venture Partners.
 
 ### How It Challenges Admiral
 
-**Opik directly competes with Admiral's quality assurance and observability layers:**
+**Comet is the most insidious threat because it embeds agent governance into the browser itself — the surface where most knowledge work happens:**
 
-| Admiral Capability | Opik Equivalent | Assessment |
-|-------------------|----------------|------------|
-| Control Plane (event stream, traces, alerts) | Traces, custom dashboards, alerting | Opik is production-ready; Admiral's control plane is MVP |
-| Runaway detection (SPC + pattern matching) | Online evaluations with automated scoring | Different approach, similar outcome — catch degradation in real time |
-| Quality verification levels | Hallucination detection, context precision, relevance metrics | Opik has mature, proven evaluation metrics |
-| Failure mode catalog | Span-level eval metrics for individual agent steps | Opik can pinpoint *which step* failed in a multi-step agent flow |
-| Brain (institutional memory) | No equivalent | — |
-| Enforcement spectrum | No equivalent | — |
+| Admiral Capability | Comet Enterprise Equivalent | Assessment |
+|-------------------|-----------------------------|------------|
+| Decision authority tiers | Admin controls: allow Q&A only, or permit actions on approved domains | Coarser (domain-level vs. per-category), but shipped and enterprise-ready |
+| Prohibitions enforcer | Domain allowlists/blocklists for agent actions | Different granularity, same intent — restrict what the agent can do |
+| Standing Orders (behavioral floor) | "Always checks with you before performing important or sensitive actions" | Hardcoded behavior, not configurable per-organization |
+| Audit trail / observability | Telemetry, audit logs, per-user AI usage visibility | Production-grade; Admiral's control plane is MVP |
+| Zero-trust / security | CrowdStrike Falcon integration, extension risk assessment, data exposure prevention | Enterprise security stack that Admiral doesn't have |
+| Fleet composition | No equivalent | — |
+| Persistent memory (The Brain) | No equivalent | — |
+| Intent engineering | No equivalent | — |
 
-**Opik's key strengths relative to Admiral:**
+**Comet's key strengths relative to Admiral:**
 
-1. **40+ framework integrations.** OpenAI Agents, Google ADK, AutoGen, CrewAI, LlamaIndex, n8n, Dify, Flowise. Admiral currently integrates only with Claude Code.
+1. **Governance at the interaction surface.** Most enterprise AI usage happens through a browser. Comet governs agent behavior *where the work happens* rather than requiring a separate governance layer. This is the "governance built in, not bolted on" narrative — and it's compelling.
 
-2. **Production scale.** 40 million traces daily. Admiral's control plane is a TypeScript MVP with no production deployment.
+2. **Silent enterprise deployment.** MDM-compatible silent installer means IT can deploy Comet across thousands of devices without user action. Admiral requires per-repository configuration and hook setup.
 
-3. **Agent Optimizer.** Opik automatically generates and tests prompts, recommending top performers. This is automated *improvement*, not just *monitoring* — a capability Admiral doesn't have.
+3. **CrowdStrike partnership.** Comet Enterprise ships with CrowdStrike Falcon integration — phishing detection, malware blocking, screenshot/download interception, extension risk assessment. This gives Comet a security story that Admiral cannot match without similar partnerships.
 
-4. **Cost and latency optimization.** Opik can auto-optimize for cost and latency across model providers. Admiral tracks token budgets but doesn't optimize them.
+4. **Admin control over agent autonomy.** Admins can configure whether Comet's AI can only answer questions (no actions) or can take actions on specific approved domains. This is a simplified version of Admiral's decision authority tiers — but it ships today.
 
-5. **MCP server.** Opik's March 2026 release includes a revamped MCP server aligned with current standards, enabling remote observability integration.
+5. **User-level audit visibility.** Admins see how each individual user interacts with AI, including query patterns and agent actions. Admiral's control plane monitors agents, not the humans directing them.
 
-6. **Open source with enterprise tier.** Free tier → $39/mo Pro → Enterprise custom. Clear monetization path that Admiral lacks.
-
-7. **Gartner recognition.** Included in the 2026 Market Guide gives Opik enterprise credibility that a specification project doesn't have.
+6. **The distribution advantage.** Comet is a *browser* — it replaces Chrome/Edge, not a governance config file. Once adopted, it becomes the default surface for all web-based work. Switching costs are enormous.
 
 ### Where Admiral Still Wins
 
-| Admiral Advantage | Why Opik Can't Match It |
-|------------------|------------------------|
-| **Deterministic enforcement** | Opik *observes* — it doesn't *enforce*. It can detect a hallucination but can't prevent the next one. |
-| **Decision authority tiers** | Opik has no concept of what an agent is *allowed* to do — only what it *did* do. |
-| **Standing Orders / behavioral governance** | Opik evaluates outputs, not agent behavior patterns. No scope boundaries, identity discipline, or recovery protocols. |
-| **Fleet composition** | Opik monitors individual agents. No concept of fleet orchestration, handoff contracts, or role-based agent specialization. |
-| **Persistent semantic memory** | Opik stores traces, not learnings. No Brain with decay, strengthening, or semantic retrieval. |
-| **Intent engineering** | Opik optimizes prompts. Admiral structures *intent* — goals, priorities, constraints, failure modes, judgment boundaries, values. |
+| Admiral Advantage | Why Comet Can't Match It |
+|------------------|-------------------------|
+| **Platform-agnostic governance** | Comet governs browser-based agent actions only. It cannot govern CLI agents (Claude Code), API-driven agents, or backend autonomous workflows. |
+| **Per-category decision authority** | Comet's controls are binary per-domain (allow/deny actions). Admiral provides four tiers (Enforced/Autonomous/Propose/Escalate) calibrated per *decision category*. |
+| **Persistent semantic memory** | Comet has no cross-session memory. Every browser session starts fresh. No Brain with decay, strengthening, or institutional learning. |
+| **Fleet coordination** | Comet governs a single user's single agent. No concept of multi-agent fleets, orchestrator routing, handoff contracts, or role specialization. |
+| **Standing Orders** | Comet's "check before acting" is a single hardcoded behavior. Admiral has 16 configurable Standing Orders covering identity discipline, context honesty, recovery protocols, scope boundaries, and more. |
+| **Compound failure detection** | Comet catches individual unauthorized actions. It cannot detect hallucination drift, sycophantic behavior, scope creep, or cross-session degradation. |
+| **Intent engineering** | Comet passes user queries to models. Admiral structures communication around goals, priorities, constraints, failure modes, judgment boundaries, and values. |
+| **Deterministic enforcement** | Comet's controls are admin-configured UI settings. Admiral's hooks are code that fires at deterministic lifecycle points regardless of context pressure. |
 
 ### Strategic Assessment
 
-**Threat level: MEDIUM.** Opik competes directly with Admiral's control plane and quality assurance layers — and is years ahead in maturity. The danger: if an enterprise deploys Opik for observability and Leash for enforcement, they've covered two of Admiral's three pillars without Admiral.
+**Threat level: MEDIUM-HIGH.** Comet is a Trojan horse — enterprises adopt it as a browser, and governance comes bundled. The risk: organizations that deploy Comet Enterprise may believe their AI agent governance problem is "solved" because their browser controls what the agent can do on which websites. They've addressed the browser-based slice while leaving CLI agents, API agents, and backend fleets completely ungoverned.
 
-**Mitigation:** Admiral should consider Opik integration rather than competition. Use Opik as the observability backend for Admiral's control plane, rather than building a competing dashboard from scratch. Admiral's unique value is the *governance logic* (decision authority, standing orders, fleet coordination, the Brain) — not the visualization layer.
+**Mitigation:** Admiral should explicitly address the "browser governance is not fleet governance" gap. Comet governs one user's one agent in one browser. Admiral governs fleets of agents across platforms, sessions, and organizational boundaries. The two are complementary — Comet is a governed *endpoint*, Admiral is the governance *system*.
 
 ---
 
@@ -190,9 +190,9 @@ The most dangerous scenario is not any single competitor — it's the assembled 
 ├──────────────────────────────────────────────────────┤
 │  Orchestration:    Perplexity Computer / LangGraph    │
 │  Enforcement:      StrongDM Leash (Cedar policies)    │
-│  Observability:    Comet ML Opik (traces + evals)     │
-│  Browser Control:  Perplexity Comet Enterprise        │
+│  Browser Gov:      Perplexity Comet Enterprise        │
 │  Identity/Access:  Delinea + StrongDM PAM             │
+│  Security:         CrowdStrike (via Comet)            │
 ├──────────────────────────────────────────────────────┤
 │  MISSING (Admiral's unique territory):                │
 │  ✗ Persistent semantic memory (The Brain)             │
@@ -201,15 +201,16 @@ The most dangerous scenario is not any single competitor — it's the assembled 
 │  ✗ Intent engineering                                 │
 │  ✗ Fleet composition with role specialization         │
 │  ✗ Compound failure detection across sessions         │
+│  ✗ Cross-platform governance (CLI, API, backend)      │
 │  ✗ Unified governance specification                   │
 └──────────────────────────────────────────────────────┘
 ```
 
 **What the "good enough" stack covers:**
 - Runtime security and containment (Leash)
-- Observability and quality metrics (Comet ML Opik)
-- Enterprise admin controls and audit (Perplexity Comet Enterprise)
+- Browser-level agent governance and audit (Comet Enterprise)
 - Multi-model orchestration (Perplexity Computer)
+- Enterprise identity and access management (Delinea + StrongDM)
 
 **What only Admiral provides:**
 - **Memory that compounds.** No competitor has persistent semantic memory with decay, strengthening, and cross-session learning.
@@ -224,11 +225,11 @@ The most dangerous scenario is not any single competitor — it's the assembled 
 
 ### 1. Integrate, Don't Compete
 
-Admiral should position as the **governance brain** that sits above enforcement (Leash), observability (Opik), and orchestration (Perplexity/LangGraph) tools — not as a replacement for them.
+Admiral should position as the **governance brain** that sits above enforcement (Leash), browser governance (Comet), and orchestration (Perplexity Computer) — not as a replacement for them.
 
 **Concrete actions:**
 - Define a Leash integration spec: Admiral's decision authority tiers → Cedar policy generation
-- Define an Opik integration spec: Opik traces → Admiral control plane ingestion
+- Position Admiral as the cross-platform layer that governs what Comet cannot: CLI agents, API agents, backend fleets
 - Ensure Admiral's fleet composition model works with Perplexity Computer agents, not just Claude Code
 
 ### 2. Accelerate Unique Differentiators
@@ -248,11 +249,11 @@ Every competitor analyzed is a shipped product. Admiral is a specification. The 
 
 ### 4. Own the Narrative
 
-StrongDM says "security for AI agents." Perplexity says "AI-powered enterprise." Comet says "AI observability."
+StrongDM says "security for AI agents." Perplexity says "AI-powered enterprise." Comet says "your AI browser."
 
 Admiral should own: **"Governance for AI workforces."**
 
-Not security (that's Leash). Not observability (that's Opik). Not orchestration (that's Perplexity). *Governance* — the combination of trust, memory, behavioral rules, and fleet coordination that turns autonomous agents into a reliable operational workforce.
+Not security (that's Leash). Not a browser (that's Comet). Not orchestration (that's Perplexity Computer). *Governance* — the combination of trust, memory, behavioral rules, and fleet coordination that turns autonomous agents into a reliable operational workforce.
 
 ---
 
@@ -266,9 +267,10 @@ Not security (that's Leash). Not observability (that's Opik). Not orchestration 
 - [Perplexity Computer for Enterprise (VentureBeat)](https://venturebeat.com/technology/perplexity-takes-its-computer-ai-agent-into-the-enterprise-taking-aim-at-microsoft-and-salesforce/)
 - [Perplexity Comet Enterprise](https://www.perplexity.ai/enterprise/comet)
 - [Perplexity Enterprise AI Agent System (The AI Insider)](https://theaiinsider.tech/2026/02/28/perplexity-unveils-enterprise-focused-ai-agent-system-powered-by-multi-model-architecture/)
-- [Comet Opik Platform](https://www.comet.com/site/)
-- [Comet in Gartner Market Guide 2026](https://www.comet.com/site/blog/gartner-market-guide-february2026/)
-- [Opik Changelog](https://www.comet.com/docs/opik/changelog)
-- [Opik December 2025 Releases](https://www.comet.com/site/blog/opik-product-releases-december2025/)
+- [Perplexity Comet Browser](https://www.perplexity.ai/comet)
+- [Comet Enterprise Product Page](https://www.perplexity.ai/enterprise/comet)
+- [Comet Enterprise Help Center](https://www.perplexity.ai/help-center/en/articles/12781449-comet-for-enterprise)
+- [Perplexity Launches Comet Enterprise (CIO Dive)](https://www.ciodive.com/news/perplexity-enterprise-ai-browser-tools/814609/)
+- [Comet Enterprise Announcement Blog](https://www.perplexity.ai/hub/blog/comet-enterprise-is-here)
 - [StrongDM Reviews (G2)](https://www.g2.com/products/strongdm/reviews)
 - [Perplexity AI Features 2026](https://www.index.dev/blog/perplexity-statistics)
