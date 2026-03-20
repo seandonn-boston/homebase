@@ -28,6 +28,12 @@ Developer experience treats contributors as users of the development workflow. M
 - [ ] **DX-10: Example-driven documentation** — Create working, copy-paste-executable code examples for every API endpoint and tool. Cover event stream, trace, health, agent status, brain query, and all hook input/output formats. Smoke-test examples in CI.
 - [ ] **DX-12: Good first issues catalog** — Identify and maintain at least 15 well-scoped, self-contained issues for new contributors. Categorize by component and difficulty. Include a contributing guide covering the end-to-end contribution workflow.
 
+## Local Testing & Simulation
+
+- [ ] **DX-14: Local agent session simulator** — CLI tool simulating multi-agent Admiral sessions without LLM API calls. Generates realistic hook payloads, triggers hooks, displays results. Scenario files define tool use sequences; supports multiple agent identities, brain interactions, and state progression visualization. `admiral session simulate <scenario>` with 3+ built-in scenarios.
+
+---
+
 ## Scanner Core
 
 - [ ] **MON-04: Scanner state management** — Track scanner state per `aiStrat/monitor/state-schema.json`. State includes last scan timestamps, known entity versions, watchlist configuration, and scan history. Atomic updates prevent corruption on mid-run failures. Provide query functions: `get_last_scan`, `is_known_version`, `get_scan_history`.

@@ -4,7 +4,7 @@
 
 **Current Score:** 2/10
 **Target Score:** 7/10
-**Items:** R-01 to R-13 (13 items)
+**Items:** R-01 to R-11 (11 items; R-12, R-13 relocated to `plan/strategy-and-community.md`)
 **Size Distribution:** 0S, 8M, 5L
 
 ---
@@ -96,19 +96,8 @@ The Admiral Framework needs industry alignment to be recognized by enterprises a
   - **Files:** `docs/strategy/enterprise-adoption-playbook.md` (new)
   - **Size:** L
 
-- [ ] **R-12: Open-Source Community Strategy** ⏳ DEFERRED (Phase 3+)
-  - **Description:** Define a comprehensive plan for building a contributor community around Admiral. Cover governance model (benevolent dictator, steering committee, or foundation model), contribution workflow (fork-and-PR, issue triage process, review SLAs), release cadence (semantic versioning policy, LTS strategy, breaking change policy), community channels (discussions, Discord/Slack, office hours), recognition programs (contributor levels, maintainer path), and documentation requirements for contributions. Address the bootstrapping problem — how to attract the first 10, 100, and 1000 contributors. Include a licensing strategy review ensuring chosen license supports both open-source community and potential commercial offerings.
-  > **Deferred rationale:** Marketing/compliance documents, not implementation. Valuable for positioning but not needed to build Admiral. Defer to Phase 3+ after core implementation exists.
-  - **Done when:** Community strategy document covering governance, contribution workflow, release cadence, and channels. First-contributor experience documented and tested (clone to merged PR in under 30 minutes). Maintainer onboarding guide. License compatibility analysis. Roadmap for first 12 months of community building with quarterly milestones.
-  - **Files:** `docs/strategy/community-strategy.md` (new)
-  - **Size:** M
-
-- [ ] **R-13: Academic Research Positioning** ⏳ DEFERRED (Phase 3+)
-  - **Description:** Position Admiral in the context of multi-agent systems (MAS) research and publish a framework description paper outline. Survey the academic landscape: BDI agent architectures, organizational models (AGR, MOISE+), normative multi-agent systems, electronic institutions, and recent LLM-based agent frameworks. Identify Admiral's novel contributions: governance-as-code for LLM agents, shell-native zero-dependency implementation, brain layer architecture for persistent agent memory, and standing orders as normative specifications. Draft an outline for a workshop or conference paper (suitable for AAMAS, AAAI, or a NeurIPS workshop) that positions Admiral as a practical contribution to the normative MAS literature.
-  > **Deferred rationale:** Marketing/compliance documents, not implementation. Valuable for positioning but not needed to build Admiral. Defer to Phase 3+ after core implementation exists.
-  - **Done when:** Literature survey covering 20+ relevant papers across MAS governance, normative systems, and LLM agent frameworks. Clear articulation of Admiral's novel contributions vs. prior work. Paper outline with abstract, introduction, related work, system description, evaluation plan, and conclusion sections. Target venue identified with submission timeline. BibTeX file with all referenced works.
-  - **Files:** `docs/strategy/academic-positioning.md` (new), `docs/strategy/paper-outline.md` (new)
-  - **Size:** M
+- **R-12: Open-Source Community Strategy** — *Relocated to `plan/strategy-and-community.md`* (non-engineering item)
+- **R-13: Academic Research Positioning** — *Relocated to `plan/strategy-and-community.md`* (non-engineering item)
 
 ---
 

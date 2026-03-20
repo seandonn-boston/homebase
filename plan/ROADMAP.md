@@ -296,20 +296,97 @@ Phase 8  ║ [Stream 13: Exemplary] [Stream 33: Thesis] [Stream 28: Inevitable] 
 
 > Source: `research/competitive-threat-strongdm-perplexity-comet-2026.md`, `aiStrat/admiral/extensions/inevitable-features.md`
 
-Three competitors are converging on adjacent capabilities. The following competitive deadlines overlay the phased roadmap:
+Three competitors are converging on adjacent capabilities. The following internal targets overlay the phased roadmap, based on estimated competitor timelines from `research/competitive-threat-strongdm-perplexity-comet-2026.md` (March 2026 analysis — estimates, not confirmed roadmaps):
 
-| Feature | Phase | Ship Target | Competitor Threat | Defensible Differentiator |
+| Feature | Phase | Internal Target | Competitor Context | Designed-for Differentiator |
 |---|---|---|---|---|
-| **Causality Tracing** (OB-02 + OB-09) | 4–5 | 90 days | Perplexity Computer exposing subagent traces (6–12 mo) | Cross-platform tracing (CLI + API + browser + backend) |
-| **Brain B2** (B-07 to B-11) | 6 | 120 days | Comet Enterprise persistent interaction patterns (12–18 mo) | Institutional memory compounding across sessions, projects, agents |
-| **Predictive Health** (IF-05 + fleet health) | 8 | 180 days | Leash trend analysis on Record data (12–18 mo) | Requires Brain + tracing operational data; self-improving |
-| **Decision Authority Tiers** (enforcement) | 3 | Now | Comet binary domain-level controls (shipped) | Graduated trust — 4 tiers, not on/off |
-| **Standing Orders** (Stream 29) | 3 | Now | None | Category doesn't exist in competitor products |
+| **Causality Tracing** (OB-02 + OB-09) | 4 | 90-day internal target | Perplexity Computer exposing subagent traces (est. 6–12 mo) | Designed for cross-platform tracing (CLI + API + browser + backend) |
+| **Brain B2** (B-07 to B-11) | 6 | 120-day internal target | Comet Enterprise persistent interaction patterns (est. 12–18 mo) | Designed for institutional memory compounding across sessions, projects, agents |
+| **Predictive Health** (IF-05 + fleet health) | 8 | 180-day internal target | Leash trend analysis on Record data (est. 12–18 mo) | Requires Brain + tracing operational data; designed to be self-improving |
+| **Decision Authority Tiers** (enforcement) | 3 | Current priority | Comet binary domain-level controls (shipped) | Graduated trust — 4 tiers, not on/off |
+| **Standing Orders** (Stream 29) | 3 | Current priority | None | Category doesn't exist in competitor products |
 | **Leash Cedar integration** (SEC-15) | 4–5 | After SEC-04 | Leash as standalone enforcement | Turns competitor into enforcement backend |
 
-**The compounding effect:** Each feature feeds the next — Causality Tracing → Living Memory → Predictive Health. By 90 days of operation, these form a self-improving system competitors cannot replicate retroactively.
+**The compounding effect:** Each feature is designed to feed the next — Causality Tracing → Living Memory → Predictive Health. By 90 days of operation, these would form a self-improving system that is difficult to replicate retroactively.
 
-**Implication for phasing:** Consider promoting IF-05 (performance profiling) and IF-08 (session replay) from Phase 8 to Phase 5–6. These produce the data that causality tracing and predictive health consume. The "good enough" stack risk (Leash + Computer + Comet) closes the window — enterprises that assemble point solutions may never need unified governance.
+**Implication for phasing:** Consider promoting IF-05 (performance profiling) and IF-08 (session replay) from Phase 8 to Phase 5–6. These produce the data that causality tracing and predictive health consume.
+
+---
+
+## Part Completion Sprint — Drive 2-3 Spec Parts to 100%
+
+> The current code-to-spec ratio is spread thin: Hooks 53%, Fleet 0%, Brain 17%, Control Plane 100%, Quarantine 100%. Rather than advancing all ~482 items incrementally, this sprint concentrates effort on driving 2-3 spec parts to 100% completion, creating reference-quality sections that demonstrate what "done" looks like.
+
+### Why Part Completion Over Broad Progress
+
+Broad progress across all streams creates the illusion of advancement while nothing is actually finished. A half-implemented hook system is worse than no hook system — it creates false confidence. Completing a part end-to-end (spec → implementation → tests → docs → enforcement) produces compounding value: each completed part reduces the cognitive load for all subsequent work.
+
+### Sprint Targets
+
+**Target 1: Part 3 — Deterministic Enforcement (Hooks) → 100%**
+
+Current: 53% (8/15 hooks wired). Closest to completion and highest-impact.
+
+| Task | Stream | Status | Effort |
+|------|--------|--------|--------|
+| S-01 identity_validation.sh | 7 | Not started | M |
+| S-02 tier_validation.sh | 7 | Not started | M |
+| S-03 governance_heartbeat_monitor.sh | 7 | Not started | M |
+| S-04 protocol_registry_guard.sh | 7 | Not started | L |
+| S-04b Hook input/output contracts | 7 | Not started | M |
+| S-05 Standing Orders enforcement map | 7 | Not started | M |
+| A-01 JSON schema validation for payloads | 3 | Not started | L |
+| T-05, T-06 Hook edge case tests | 1 | Not started | M each |
+
+**Completion criteria:** All 15 spec-defined hooks implemented, tested, schema-validated, and documented. Standing Orders enforcement map is 100% complete. Hook contracts are formally specified.
+
+**Target 2: Part 5 — Brain Architecture (B1) → 100%**
+
+Current: 17% (B1 partial — brain_query, brain_record exist but no auto-creation, no retrieval in hooks, no demand tracking).
+
+| Task | Stream | Status | Effort |
+|------|--------|--------|--------|
+| B-01 Automatic brain entry creation | 11 | Not started | L |
+| B-02 Brain retrieval in hooks | 11 | Not started | L |
+| B-03 Demand signal tracking | 11 | Not started | M |
+| B-04 Contradiction scan on write | 11 | Not started | M |
+| B-05 Brain entry consolidation | 11 | Not started | M |
+| B-06 Brain B1 comprehensive tests | 11 | Not started | L |
+| B-21 Graduation measurement system | 11 | Not started | M |
+
+**Completion criteria:** Brain B1 is fully operational — entries are created automatically from hooks, retrieved contextually, demand signals tracked, contradictions detected. 20+ tests cover all utilities. Graduation metrics are measuring B1 readiness for B2.
+
+**Target 3: Part 11 — Standing Orders (Enforcement) → 50%+**
+
+Current: ~25% (prohibitions_enforcer, scope_boundary_guard, loop_detector, pre_work_validator exist but most are advisory-only).
+
+| Task | Stream | Status | Effort |
+|------|--------|--------|--------|
+| SO-03 Scope Boundaries (hard-blocking) | 29 | Partial | M |
+| SO-05 Decision Authority enforcement | 29 | Not started | L |
+| SO-10 Prohibitions (edge case hardening) | 29 | Partial | M |
+| SO-11 Context Discovery enforcement | 29 | Not started | M |
+| SO-15 Pre-Work Validation enhancement | 29 | Partial | M |
+| SO-17 Enforcement completeness report | 29 | Not started | M |
+
+**Completion criteria:** At least 8/16 Standing Orders have deterministic enforcement (up from 4). Enforcement completeness report runs in CI and produces a coverage percentage.
+
+### Sprint Sequencing
+
+```
+Week 1-2:  A-01 (schemas) — foundation for all hook work
+Week 2-4:  S-01, S-02, S-03, S-04 (missing hooks) — close the hook gap
+Week 3-5:  B-01, B-02 (brain auto-creation + retrieval) — highest-impact brain items
+Week 4-6:  SO-03, SO-05, SO-10 (enforcement upgrades) — advisory → blocking
+Week 5-7:  B-03, B-04, B-05 (brain completeness) — finish B1
+Week 6-8:  S-04b, S-05, SO-17 (contracts + enforcement map) — documentation
+Week 7-9:  B-06, T-05, T-06 (comprehensive tests) — verification
+Week 8-10: B-21 (graduation metrics) — measurement
+```
+
+### Success Metric
+
+At sprint completion: Part 3 at 100%, Part 5 (B1) at 100%, Part 11 at 50%+. These three completions would shift the overall code-to-spec ratio from ~30% to ~45% and establish the pattern for completing remaining parts.
 
 ---
 

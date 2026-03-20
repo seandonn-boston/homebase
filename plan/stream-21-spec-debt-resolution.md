@@ -123,3 +123,31 @@
   - **Size:** M (1-3 hours)
   - **Spec ref:** Part 3 — Deterministic Enforcement; Part 2 — Context Engineering (Configuration File Strategy)
   - **Depends on:** SD-01
+
+---
+
+## 21.6 Operational Resilience & Evolution
+
+- [ ] **SD-13: Reference constants synchronization enforcement**
+  - **Description:** Establish a CI-enforced synchronization mechanism between `reference-constants.md` and the codebase. Currently SD-06 audits constants once, but constants can drift again after any spec update or code change. This item creates a machine-readable constants registry (`admiral/config/reference_constants.json`) that is the single source of truth, a validation script that compares the registry against both the spec's `reference-constants.md` and all code references, and a CI check that fails on any divergence. Constants include: standing context ceiling (50K tokens), Brain advancement thresholds, supersession rate boundaries, hook timeout defaults (30s), governance overhead cap (25%), and all other spec-defined numeric values.
+  - **Done when:** Machine-readable constants registry exists. CI check validates registry matches spec and code references. Any constant change requires updating the registry first. Drift detection runs on every PR. Documentation shows how to add new constants.
+  - **Files:** `admiral/config/reference_constants.json` (new), `admiral/scripts/validate_constants.sh` (new), `.github/workflows/control-plane-ci.yml` (modify)
+  - **Size:** M (1-3 hours)
+  - **Spec ref:** `reference-constants.md`
+  - **Depends on:** SD-06
+
+- [ ] **SD-14: Spec evolution backwards compatibility assessment**
+  - **Description:** Create a formal process for assessing the impact of spec changes on existing implementations. When the spec evolves (version increments, new sections, changed requirements), existing implementations may silently become non-compliant. This item establishes: (1) a spec change impact template documenting which implementations are affected by each spec change; (2) a backwards compatibility classification (breaking, additive, cosmetic) for each change; (3) a migration guide template for breaking changes; (4) an automated diff tool that compares spec versions and flags sections with implementation references. This prevents the failure mode where the spec grows but implementations silently fall behind.
+  - **Done when:** Impact assessment template exists. At least one spec version transition has a completed impact assessment. Automated spec diff tool identifies changed sections. Breaking changes have migration guides. Process is documented for future spec authors.
+  - **Files:** `docs/spec-proposals/evolution/impact-template.md` (new), `admiral/scripts/spec_diff.sh` (new)
+  - **Size:** M (1-3 hours)
+  - **Spec ref:** All spec parts (process concern)
+  - **Depends on:** SD-07, SD-09
+
+- [ ] **SD-15: Admiral self-upgrade and migration path**
+  - **Description:** Define how an operator upgrades between Admiral versions without losing state, brain entries, configuration, or governance continuity. Currently there is no plan for what happens when Admiral itself is updated — hooks may change signatures, brain schemas may evolve, standing order enforcement may shift, and configuration formats may be incompatible. This item defines: (1) a version manifest tracking the current Admiral version and its component versions (hooks, brain schema, config format, control plane API); (2) a migration framework that runs version-specific migration scripts on upgrade; (3) a rollback mechanism if migration fails; (4) a pre-upgrade compatibility check that warns about breaking changes before they happen; (5) documentation of the upgrade process.
+  - **Done when:** Version manifest exists tracking Admiral component versions. Migration framework can run versioned migration scripts. Pre-upgrade compatibility check warns about breaking changes. Rollback mechanism reverts a failed migration. Upgrade process is documented with step-by-step instructions.
+  - **Files:** `admiral/config/version_manifest.json` (new), `admiral/scripts/upgrade.sh` (new), `admiral/migrations/` (new directory), `docs/upgrade-guide.md` (new)
+  - **Size:** L (3+ hours)
+  - **Spec ref:** — (operational gap)
+  - **Depends on:** SD-07

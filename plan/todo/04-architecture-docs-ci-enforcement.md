@@ -30,6 +30,10 @@
 - [ ] **A-11:** Event schema registry — versioned JSON schemas for all event types, CI-enforced registration `[L]`
 - [ ] **A-12:** Configuration schema validation at startup — validate config at session start, report all errors, fail-closed `[M]`
 
+### 3.5 Graceful Degradation
+
+- [ ] **A-13:** Graceful degradation testing for optional components — verify Admiral degrades gracefully when Brain MCP, pgvector, control plane, or scanner are absent; component availability registry, degradation behavior specs, automated tests for individual and combined absence, clear user-facing messages `[L]`
+
 ---
 
 ## Stream 4: Documentation (D-01 to D-19)
@@ -140,6 +144,7 @@
 | A-10 | A-06 |
 | A-11 | A-01, A-07 |
 | A-12 | A-05, A-01 |
+| A-13 | A-05 |
 
 ### Documentation (Stream 4)
 | Item | Depends on |

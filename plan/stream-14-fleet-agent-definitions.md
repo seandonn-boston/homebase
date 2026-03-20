@@ -206,8 +206,6 @@
 
 ---
 
-## F-14: Agent Template Generator
-
 ## F-15: Agent Spec Protocol (ASP) Alignment
 
 - [ ] **F-15: Align agent definitions with ASP format**
@@ -229,3 +227,25 @@
   - **Size:** S
   - **Spec ref:** Part 4
   - **Depends on:** F-12a
+
+---
+
+## F-15b: ASP Template Creation
+
+- [ ] **F-15b: ASP template creation (minimal, standard, production)**
+  - **Description:** Create the three ASP templates defined in the Agent Spec Protocol: (1) **Minimal** (`minimal.asp.md`) — Sections 1-5 only, for lightweight specialists where full specification is unnecessary overhead. (2) **Standard** (`standard.asp.md`) — Sections 1-8, 10-11, for most production agents. (3) **Production** (`production.asp.md`) — All 12 sections, for command agents and critical infrastructure agents (Orchestrator, Incident Response, Security Auditor). Each template includes YAML frontmatter, section headers with guidance comments, and example content. Templates are the input for F-14 (template generator) and F-15 (ASP alignment).
+  - **Done when:** Three templates exist matching ASP spec. Each template passes ASP schema validation with placeholder content filled. Templates include guidance comments explaining each section. F-14 generator updated to use ASP templates.
+  - **Files:** `fleet/agents/templates/minimal.asp.md` (new), `fleet/agents/templates/standard.asp.md` (new), `fleet/agents/templates/production.asp.md` (new)
+  - **Size:** M
+  - **Spec ref:** `aiStrat/admiral/spec/agent-spec-protocol/templates/`, ASP README.md
+  - **Depends on:** F-12a
+
+## F-16: ASP Migration Path
+
+- [ ] **F-16: Legacy-to-ASP migration path**
+  - **Description:** Define and implement the migration path from existing agent definitions to ASP format. Per the ASP README, existing agent definitions (`agent-example.md` format) are valid ASP with minimal changes: add YAML frontmatter, formalize optional sections, and map `agent-identity.json` fields to the ASP Header's `asp_spec_ref` field. Create a migration script that: (1) scans existing agent definition files, (2) identifies what needs to change (missing frontmatter, unformalized sections), (3) generates an ASP-compliant version preserving all existing content, (4) validates the migrated definition against ASP schemas. The migration is non-destructive — original files are preserved alongside ASP versions until manually removed.
+  - **Done when:** Migration script converts existing agent definitions to ASP format. At least 3 agent definitions are successfully migrated. Migrated definitions pass ASP validation. Original files preserved. Migration report shows what was changed.
+  - **Files:** `fleet/agents/schema/migrate-to-asp.sh` (new), `admiral/docs/asp-migration-guide.md` (new)
+  - **Size:** M
+  - **Spec ref:** `aiStrat/admiral/spec/agent-spec-protocol/README.md` — Relationship to Existing Artifacts
+  - **Depends on:** F-12a, F-15

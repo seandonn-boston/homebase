@@ -104,7 +104,27 @@
 
 ---
 
-## 25.5 Control Plane Progressive Implementation
+## 25.5 Fleet Control Plane Authorization and Tracing
+
+- [ ] **OB-16: Intervention authorization model**
+  - **Description:** Implement the authorization model for fleet control plane interventions defined in the Fleet Control Plane Extension. Each intervention type requires a specific operator authorization level: any operator can pause an agent or trigger emergency halt; operator-level can pause fleet, kill tasks, adjust budgets, override Propose-tier decisions, reroute tasks, promote/demote model tiers, inject context; owner-level required for modifying policies (Standing Orders). Emergency halt is special: any operator at any tier can trigger immediately, but resuming after emergency halt requires Owner authorization. Implement authorization checks at the API layer that enforce these tiers before executing interventions.
+  - **Done when:** All 10 intervention types have authorization checks. Authorization tiers match the Fleet Control Plane Extension catalog. Emergency halt is callable by any tier. Resume-after-halt requires Owner. Authorization failures return 403 with required tier. All authorization decisions are audit logged. Tests verify each authorization level.
+  - **Files:** `control-plane/src/intervention-auth.ts` (new), `control-plane/src/intervention-auth.test.ts` (new)
+  - **Size:** M
+  - **Spec ref:** Fleet Control Plane Extension — Full Intervention Catalog (CP3)
+  - **Depends on:** OB-14
+
+- [ ] **OB-17: Canonical trace format specification**
+  - **Description:** Define the canonical trace format for fleet-wide causality tracing. The inevitable-features extension describes the narrative structure (reverse causal chains with ← arrows showing which agent, what inputs/outputs, costs, outcomes) and cross-task causality chains, but does not specify a concrete JSON schema. This item defines that schema: trace ID, spans (with parent-child relationships, start/end times, status, key attributes), causal links between spans across tasks, agent identity per span, and cost attribution per span. The format must be compatible with OpenTelemetry export while capturing Admiral-specific fields (authority tier, governance decisions, Brain queries). This is the foundation that OB-02 (distributed tracing) and OB-09 (timeline reconstruction) implement.
+  - **Done when:** Canonical trace format JSON schema exists. Schema captures spans, causal links, agent identity, cost, and governance metadata. Format is exportable to OpenTelemetry. At least 3 example traces demonstrate the format for single-agent, multi-agent pipeline, and cross-task scenarios. Schema is validated by OB-02 implementation.
+  - **Files:** `admiral/observability/trace-format.schema.json` (new), `admiral/observability/trace-examples/` (new directory), `admiral/docs/trace-format.md` (new)
+  - **Size:** M
+  - **Spec ref:** `aiStrat/admiral/extensions/inevitable-features.md` — Feature 1 (Fleet-Wide Causality Tracing); Part 9 — Fleet Observability
+  - **Depends on:** —
+
+---
+
+## 25.6 Control Plane Progressive Implementation
 
 - [ ] **OB-11: CP1 — CLI Dashboard baseline**
   - **Description:** Structured JSON-lines event logging with fields (ts, event, agent, tool, duration_ms, tokens). Terminal status display showing agent state, task progress, token budget bar, error/retry counts, last 3 events. Runaway detection: loop at 3+ errors, token budget advisory at 90%+, idle detection.
@@ -157,7 +177,7 @@ Fleet-wide causality tracing is one of three "inevitable features" that create o
 - **Perplexity Computer** is exposing subagent trace trees — within 6–12 months, Perplexity may offer causality tracing for its own orchestrated agents.
 - **StrongDM Leash** has enforcement-layer Record data that could evolve into trend analysis (12–18 months).
 
-**Competitive timeline:** Ship causality tracing (OB-02 + OB-09) within **90 days**. Admiral's advantage is cross-platform tracing — Perplexity can only trace Perplexity agents, Leash can only trace containerized agents. Admiral traces across CLI, API, browser, and backend.
+**Internal target:** Ship causality tracing (OB-02 + OB-09) within **90 days** (internal target). Admiral is designed for cross-platform tracing — Perplexity can only trace Perplexity agents, Leash can only trace containerized agents. Admiral is designed to trace across CLI, API, browser, and backend.
 
 **Implication:** OB-02 (distributed tracing) and OB-09 (incident timeline reconstruction) together form the foundation for the Causality Tracing inevitable feature. Prioritize these above dashboard polish (OB-07) and SLO tracking (OB-08). Tracing data feeds the Brain (Stream 11) — each traced session produces knowledge entries that compound over time.
 

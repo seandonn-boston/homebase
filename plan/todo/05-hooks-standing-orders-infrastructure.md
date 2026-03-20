@@ -11,6 +11,10 @@
 - [ ] **S-03** — `governance_heartbeat_monitor.sh`: Monitor governance agent (Sentinel, Arbiter) health via heartbeat signals; alert on missing heartbeat after threshold; log heartbeat history to state
 - [ ] **S-04** — `protocol_registry_guard.sh`: Two enforcement surfaces: (1) validate protocol changes against SO-16 approval rules, (2) hard-block calls to unregistered MCP servers via approved registry (`admiral/config/approved_mcp_servers.json`); closes OWASP MCP09 gap
 
+## Hook Contracts (Stream 7, Section 7.1)
+
+- [ ] **S-04b** — Hook input/output contract specification: Document formal JSON schemas for all hook inputs (`{ "event", "tool", "params", "agent_identity", "trace_id" }`), output contracts (exit codes, stdout context feedback, stderr logging), per-hook payload shapes, and 30s default timeout semantics
+
 ## Enforcement Map (Stream 7, Section 7.1)
 
 - [ ] **S-05** — Standing Orders enforcement map: Document which hooks enforce which SOs; classify each as hook-enforced, instruction-embedded, or guidance-only; file at `admiral/docs/standing-orders-enforcement-map.md`

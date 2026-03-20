@@ -118,3 +118,15 @@
   - **Size:** M (1-3 hours)
   - **Spec ref:** —
   - **Depends on:** A-05, A-01
+
+---
+
+## 3.5 Graceful Degradation
+
+- [ ] **A-13: Graceful degradation testing for optional components**
+  - **Description:** Admiral's architecture includes optional components that may not be available in all deployments: Brain MCP server, pgvector extension, external model APIs, control plane server, and ecosystem scanner. Currently there is no systematic verification that Admiral degrades gracefully when these components are absent. This item creates: (1) a component availability registry that tracks which optional components are present; (2) degradation behavior specifications for each optional component (e.g., "when Brain MCP is absent, brain_query falls back to local file search"); (3) automated tests that disable each optional component individually and in combination, verifying hooks still fire, sessions still start, and core governance still operates; (4) clear user-facing messages when degraded mode is active ("Brain MCP unavailable — using local file-based Brain").
+  - **Done when:** Component availability registry lists all optional components with their degradation behavior. Tests verify graceful degradation for each optional component (at least 5 components tested). No hook crashes when optional components are missing. User-facing messages clearly indicate degraded mode. Combined absence scenarios tested (e.g., no Brain MCP + no control plane).
+  - **Files:** `admiral/lib/component_registry.sh` (new), `admiral/tests/test_graceful_degradation.sh` (new), `admiral/docs/degradation-modes.md` (new)
+  - **Size:** L (3+ hours)
+  - **Spec ref:** —
+  - **Depends on:** A-05 (config consolidation)

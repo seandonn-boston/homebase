@@ -19,19 +19,19 @@ Strategic positioning makes Admiral legible to enterprises, regulators, analysts
 
 - [ ] **R-05: McKinsey Agentic Organization Mapping** *(DEFERRED Phase 3+)* — Map Admiral's 11 spec parts to McKinsey's 5 pillars of the Agentic Organization; position governance agents as realization of McKinsey's embedded control agents concept.
 - [ ] **R-06: Singapore IMDA Regulatory Alignment** *(DEFERRED Phase 3+)* — Document Admiral-to-IMDA equivalences: Tool & Capability Registry as "action-space," Decision Authority Tiers as "autonomy levels"; produce document suitable for APAC procurement compliance review.
-- [ ] **R-13: Academic Research Positioning** *(DEFERRED Phase 3+)* — Survey 20+ papers across MAS governance, normative systems, and LLM agent frameworks; articulate Admiral's novel contributions; draft conference paper outline for AAMAS/AAAI/NeurIPS workshop.
 
 ## Market & Community
 
 - [ ] **R-07: AI Work OS Positioning Document** *(DEFERRED Phase 3+)* — Reframe Admiral from "governance tool" to "operating system for AI work" with complete OS-to-Admiral concept mapping; produce executive summary for pitch decks and technical depth for engineering leadership. Updated positioning: **"Governance for AI workforces"** — distinct from "security for AI agents" (Leash) or "AI-powered enterprise" (Perplexity).
 - [ ] **R-10: Competitive Differentiation Matrix** *(DEFERRED Phase 3+)* — Feature-by-feature comparison against LangGraph, CrewAI, AutoGen, Semantic Kernel, **StrongDM Leash** (kernel enforcement), **Perplexity Computer** (multi-model orchestration), **Perplexity Comet Enterprise** (browser governance), and the **assembled "good enough" stack** (Leash + Computer + Comet). Compare across 10+ dimensions including cross-platform scope, persistent memory, graduated trust, behavioral governance, and fleet coordination. Include honest trade-off assessment and quarterly update cadence.
 - [ ] **R-11: Enterprise Adoption Playbook** *(DEFERRED Phase 3+)* — Step-by-step guide covering discovery, evaluation, pilot, rollout, and operationalization; include decision frameworks, persona-specific content, and top-10 objection FAQ.
-- [ ] **R-12: Open-Source Community Strategy** *(DEFERRED Phase 3+)* — Define governance model, contribution workflow, release cadence, community channels, and recognition programs; document first-contributor experience (clone to merged PR in under 30 minutes).
+- **R-12: Open-Source Community Strategy** — *Relocated to `plan/strategy-and-community.md`* (non-engineering item)
+- **R-13: Academic Research Positioning** — *Relocated to `plan/strategy-and-community.md`* (non-engineering item)
 
 ## Simulation & Chaos Testing
 
 - [ ] **X-01: Deterministic Simulation Testing** — Create simulation harness that replays recorded hook sequences and verifies byte-identical outcomes across runs; normalize non-determinism (timestamps, random values); produce clear diffs on divergence.
-- [ ] **X-02: Chaos Testing for Hooks** — Inject 20+ failure scenarios (missing `jq`, corrupted state, huge payloads, slow disk, concurrent execution, read-only FS, missing env vars, malformed JSON); verify all hooks fail open per ADR-004.
+- [ ] **X-02: Chaos Testing for Hooks** — Inject 25+ failure scenarios including mid-execution crashes (SIGKILL/SIGTERM during hook processing, partial state writes, interrupted file locks) plus standard failures (missing `jq`, corrupted state, huge payloads, slow disk, concurrent execution, read-only FS, missing env vars, malformed JSON); verify all hooks fail open per ADR-004 and state files are never corrupted.
 - [ ] **X-03: End-to-End Claude Code Session Simulation** — Simulate full session lifecycle with 50+ PreToolUse/PostToolUse cycles; verify state progression, token tracking, loop detection thresholds, and brain entry persistence.
 - [ ] **X-05: Implement Sentinel Governance Agent** — Build first non-Claude-Code governed agent; Sentinel monitors for loops, budget violations, and scope drift via unified event log; reference implementation of Part 10 (Meta-Agent Governance).
 - [ ] **X-06: Implement Triage Router Agent** — Build routing agent that assigns tasks based on type, capabilities, load, and availability; log routing decisions with rationale; reference implementation of Part 3 (Fleet Composition).
