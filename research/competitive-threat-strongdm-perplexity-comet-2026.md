@@ -14,7 +14,9 @@ Three companies — StrongDM, Perplexity, and Comet — each challenge Admiral f
 |---------|----------------------|---------------------|----------|
 | **StrongDM (Leash)** | Runtime enforcement for AI agents | Deterministic enforcement, policy-as-code, containment | **High** |
 | **Perplexity (Computer + Comet Enterprise)** | Enterprise agent orchestration with admin controls | Fleet orchestration, enterprise governance, audit | **Medium** |
-| **Comet (Opik)** | AI observability, evaluation, and optimization | Observability, failure detection, quality assurance | **Medium** |
+| **Comet ML (Opik)** | AI observability, evaluation, and optimization | Observability, failure detection, quality assurance | **Medium** |
+
+> **Naming note:** "Comet" appears twice in this analysis with different meanings. **Perplexity Comet** is Perplexity's AI-native browser. **Comet ML** is a separate company whose product **Opik** provides LLM observability. They are unrelated.
 
 **The critical insight:** Each competitor owns one slice of what Admiral unifies. The danger is not that any one replaces Admiral — it's that enterprises assemble a "good enough" stack from these point solutions and never feel the need for a unified governance layer.
 
@@ -124,7 +126,7 @@ Perplexity has evolved from a search engine into an enterprise AI platform with 
 
 ---
 
-## 3. Comet (Opik) — The Observability Competitor
+## 3. Comet ML (Opik) — The Observability Competitor
 
 ### What It Is
 
@@ -183,30 +185,30 @@ Opik is an open-source (Apache 2.0) LLM observability, evaluation, and optimizat
 The most dangerous scenario is not any single competitor — it's the assembled stack:
 
 ```
-┌─────────────────────────────────────────────────┐
-│              Enterprise "Good Enough" Stack       │
-├─────────────────────────────────────────────────┤
-│  Orchestration:    Perplexity Computer / LangGraph │
-│  Enforcement:      StrongDM Leash (Cedar policies) │
-│  Observability:    Comet Opik (traces + evals)     │
-│  Browser Control:  Perplexity Comet Enterprise     │
-│  Identity/Access:  Delinea + StrongDM PAM          │
-├─────────────────────────────────────────────────┤
-│  MISSING (Admiral's unique territory):            │
-│  ✗ Persistent semantic memory (The Brain)         │
-│  ✗ Per-category decision authority tiers          │
-│  ✗ Standing Orders / behavioral governance        │
-│  ✗ Intent engineering                             │
-│  ✗ Fleet composition with role specialization     │
-│  ✗ Compound failure detection across sessions     │
-│  ✗ Unified governance specification               │
-└─────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────┐
+│            Enterprise "Good Enough" Stack             │
+├──────────────────────────────────────────────────────┤
+│  Orchestration:    Perplexity Computer / LangGraph    │
+│  Enforcement:      StrongDM Leash (Cedar policies)    │
+│  Observability:    Comet ML Opik (traces + evals)     │
+│  Browser Control:  Perplexity Comet Enterprise        │
+│  Identity/Access:  Delinea + StrongDM PAM             │
+├──────────────────────────────────────────────────────┤
+│  MISSING (Admiral's unique territory):                │
+│  ✗ Persistent semantic memory (The Brain)             │
+│  ✗ Per-category decision authority tiers              │
+│  ✗ Standing Orders / behavioral governance            │
+│  ✗ Intent engineering                                 │
+│  ✗ Fleet composition with role specialization         │
+│  ✗ Compound failure detection across sessions         │
+│  ✗ Unified governance specification                   │
+└──────────────────────────────────────────────────────┘
 ```
 
 **What the "good enough" stack covers:**
 - Runtime security and containment (Leash)
-- Observability and quality metrics (Opik)
-- Enterprise admin controls and audit (Comet Enterprise)
+- Observability and quality metrics (Comet ML Opik)
+- Enterprise admin controls and audit (Perplexity Comet Enterprise)
 - Multi-model orchestration (Perplexity Computer)
 
 **What only Admiral provides:**
