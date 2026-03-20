@@ -31,12 +31,13 @@ ALERT=""
 if [ "$TOKEN_BUDGET" -gt 0 ]; then
   UTIL_PCT=$((NEW_TOTAL * 100 / TOKEN_BUDGET))
 
-  if [ "$UTIL_PCT" -ge 100 ]; then
-    OVER_BY=$((NEW_TOTAL - TOKEN_BUDGET))
-    ALERT="BUDGET EXCEEDED: Token usage at ${UTIL_PCT}% (${NEW_TOTAL}/${TOKEN_BUDGET}, ${OVER_BY} over). Inform the user and ask if they wish to continue."
-  elif [ "$UTIL_PCT" -ge 90 ]; then
+  if [ "$UTIL_PCT" -ge 90 ]; then
     REMAINING=$((TOKEN_BUDGET - NEW_TOTAL))
-    ALERT="BUDGET WARNING: Token usage at ${UTIL_PCT}% (${NEW_TOTAL}/${TOKEN_BUDGET}). ~${REMAINING} tokens remaining."
+    [ "$REMAINING" -lt 0 ] && REMAINING=0
+    ALERT="ESCALATION: Token usage at ${UTIL_PCT}% (${NEW_TOTAL}/${TOKEN_BUDGET}). ~${REMAINING} tokens remaining. Agent should escalate remaining work."
+  elif [ "$UTIL_PCT" -ge 80 ]; then
+    REMAINING=$((TOKEN_BUDGET - NEW_TOTAL))
+    ALERT="WARNING: Token usage at ${UTIL_PCT}% (${NEW_TOTAL}/${TOKEN_BUDGET}). ~${REMAINING} tokens remaining. Agent should conserve tokens."
   fi
 fi
 
