@@ -1,3 +1,28 @@
+```json
+{
+  "agent_id": "qa-agent",
+  "version": "1.0.0",
+  "role": "qa",
+  "asp_spec_ref": null,
+  "model_tier": "tier2_workhorse",
+  "tools": {
+    "allowed": ["Read", "Write", "Bash", "Glob", "Grep", "TodoWrite"],
+    "denied": ["Edit", "Agent", "WebFetch", "WebSearch", "NotebookEdit", "AskUserQuestion"]
+  },
+  "paths": {
+    "read": ["**/*"],
+    "write": ["control-plane/src/**/*.test.ts", "admiral/tests/**", ".hooks/tests/**"],
+    "denied": ["aiStrat/**", ".github/workflows/**", ".claude/settings*"]
+  },
+  "authority": {
+    "autonomous": ["create_tests", "execute_test_suites", "validate_json_with_jq", "check_hook_exit_codes", "verify_file_structure", "report_pass_fail"],
+    "propose": ["change_test_thresholds", "modify_acceptance_criteria", "alter_test_infrastructure"],
+    "escalate": ["disable_tests", "critical_tests_failing_with_no_fix", "security_vulnerability_discovered"]
+  },
+  "standing_orders": "all"
+}
+```
+
 # QA Agent
 
 ## Identity

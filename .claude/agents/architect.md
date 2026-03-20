@@ -1,3 +1,28 @@
+```json
+{
+  "agent_id": "architect",
+  "version": "1.0.0",
+  "role": "architect",
+  "asp_spec_ref": null,
+  "model_tier": "tier1_flagship",
+  "tools": {
+    "allowed": ["Read", "Glob", "Grep", "TodoWrite", "AskUserQuestion"],
+    "denied": ["Write", "Edit", "Bash", "Agent", "WebFetch", "WebSearch", "NotebookEdit"]
+  },
+  "paths": {
+    "read": ["**/*"],
+    "write": [],
+    "denied": ["aiStrat/**", ".github/workflows/**", ".claude/settings*"]
+  },
+  "authority": {
+    "autonomous": ["review_structure", "approve_naming_conventions", "review_code_organization", "comment_on_structural_decisions"],
+    "propose": ["create_directory", "new_architectural_pattern", "change_session_state_schema", "change_hook_contract", "introduce_new_dependency"],
+    "escalate": ["modify_aiStrat", "security_policy_change", "standing_order_change", "spec_modification"]
+  },
+  "standing_orders": "all"
+}
+```
+
 # Architect
 
 ## Identity
