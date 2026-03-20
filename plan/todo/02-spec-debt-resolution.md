@@ -35,6 +35,14 @@ All deliverables in this stream are specification proposals written to `docs/spe
 
 ---
 
+## Operational Resilience & Evolution
+
+- [ ] **SD-13: Reference constants synchronization enforcement** — CI-enforced sync between `reference-constants.md` and codebase via machine-readable registry (`admiral/config/reference_constants.json`), validation script, and CI check that fails on any divergence.
+- [ ] **SD-14: Spec evolution backwards compatibility assessment** — Formal process for assessing spec change impact on implementations: impact template, backwards compatibility classification (breaking/additive/cosmetic), migration guide template, automated spec diff tool.
+- [ ] **SD-15: Admiral self-upgrade and migration path** — Version manifest tracking Admiral component versions, migration framework with versioned scripts, rollback mechanism, pre-upgrade compatibility check, documented upgrade process.
+
+---
+
 ## Dependencies
 
 | Task | Depends on |
@@ -50,3 +58,6 @@ All deliverables in this stream are specification proposals written to `docs/spe
 | SD-10 | SD-01 |
 | SD-11 | SD-01 |
 | SD-12 | SD-01 |
+| SD-13 | SD-06 |
+| SD-14 | SD-07, SD-09 |
+| SD-15 | SD-07 |

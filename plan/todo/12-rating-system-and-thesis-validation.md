@@ -39,7 +39,7 @@ The Rating System makes governance measurable — a five-tier scale (ADM-1 throu
 - [ ] **TV-07: Governance overhead measurement** — Measure hook execution latency (p50/p95/p99), governance token ratio, governance-induced delays, context window overhead, and developer interruption cost. Compare against the 25% governance overhead hard cap.
 - [ ] **TV-08: ROI calculation model** — Quantify costs (implementation, maintenance, runtime, friction) and benefits (bugs prevented, incidents avoided, rework reduction, knowledge preservation, onboarding acceleration). Produce breakeven analysis with sensitivity analysis on key assumptions.
 - [ ] **TV-09: Academic paper outline** — Outline for research paper covering thesis, methodology, and evidence across 8 sections. Conference paper length (8000-12000 words). Detailed enough for independent section drafting. ⏳ DEFERRED (Phase 3+)
-- [ ] **TV-10: Community feedback collection** — Define feedback channels, taxonomy (enforcement, documentation, developer experience, thesis challenge), triage process, and feedback-to-improvement pipeline. Make it easy for users to challenge the thesis — disagreement is evidence too.
+- **TV-10: Community feedback collection** — *Relocated to `plan/strategy-and-community.md`* (community infrastructure, not measurement code)
 
 ---
 

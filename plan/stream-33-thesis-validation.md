@@ -95,10 +95,4 @@
   - **Spec ref:** Admiral Thesis; Rating System reference — The Third Category Problem
   - **Depends on:** TV-01, TV-02, TV-03
 
-- [ ] **TV-10: Community feedback collection — Framework for collecting user feedback on governance**
-  - **Description:** Create a framework for systematically collecting and acting on community feedback about Admiral's governance effectiveness. The framework includes: (1) feedback channels (GitHub Discussions categories, issue templates for governance feedback, structured feedback forms), (2) feedback taxonomy (enforcement feedback, documentation feedback, developer experience feedback, thesis challenge feedback), (3) feedback triage process (how feedback is categorized, prioritized, and routed to action), (4) feedback-to-improvement pipeline (how feedback becomes thesis evidence, spec changes, or implementation improvements), (5) public feedback summary (periodic summary of feedback received and actions taken, building trust through transparency). The framework should make it easy for users to challenge the thesis — disagreement is evidence too.
-  - **Done when:** Feedback channels are defined with templates. Taxonomy covers all 4 feedback categories. Triage process is documented. Feedback-to-improvement pipeline is defined. Public summary template is created. GitHub issue templates for governance feedback are ready to deploy.
-  - **Files:** `admiral/thesis/feedback/framework.md` (new), `admiral/thesis/feedback/templates/` (new directory), `admiral/thesis/feedback/triage_process.md` (new)
-  - **Size:** S (< 1 hour)
-  - **Spec ref:** Admiral Thesis — governance must be validated by evidence, including dissent
-  - **Depends on:** —
+- **TV-10: Community feedback collection** — *Relocated to `plan/strategy-and-community.md`* (community infrastructure, not measurement code)
