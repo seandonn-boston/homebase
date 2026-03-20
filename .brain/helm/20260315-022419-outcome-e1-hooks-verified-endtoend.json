@@ -1,6 +1,6 @@
 {
   "id": "ebc17cac-8a52-44bb-9dc1-c5aac79df847",
-  "project": "homebase",
+  "project": "helm",
   "category": "outcome",
   "title": "E1 hooks verified end-to-end",
   "content": "All five E1 hooks (token_budget_gate, token_budget_tracker, loop_detector, context_baseline, context_health_check) plus three adapters (session_start, pre_tool_use, post_tool_use) tested and verified. Budget gate blocks at 100%, tracker warns at 80% and escalates at 90%, context health detects missing sections and high utilization.",

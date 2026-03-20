@@ -2,7 +2,7 @@
   "agent_id": "",
   "role": "implementer",
   "authority_tier": "starter",
-  "project": "homebase",
+  "project": "helm",
   "model_tier": "tier2_workhorse",
   "scope_boundaries": {
     "allowed_paths": [],
