@@ -57,7 +57,14 @@ case "$TOOL_NAME" in
     TARGET_PATH=$(echo "$PAYLOAD" | jq -r '.tool_input.notebook_path // ""')
     ;;
   Bash)
-    TARGET_PATH="$COMMAND"
+    # Strip heredoc/here-string content before matching — heredoc bodies contain
+    # documentation text, PR descriptions, etc. that may reference protected paths
+    # without actually writing to them. Only the command line itself matters.
+    if printf '%s\n' "$COMMAND" | grep -qE '<<[-~]?\s*\\?['"'"'"]?[A-Za-z_]'; then
+      TARGET_PATH=$(printf '%s\n' "$COMMAND" | head -n1)
+    else
+      TARGET_PATH="$COMMAND"
+    fi
     ;;
 esac
 
@@ -76,23 +83,16 @@ for PROTECTED in "${PROTECTED_DIRS[@]}"; do
   esac
 done
 
-# For Bash commands, check for dangerous patterns against protected paths.
-# Strip heredoc content before checking — heredoc bodies contain data (documentation,
-# plan text), not commands. Scanning them causes false positives when content references
-# protected paths like aiStrat/ or .hooks/. See part3-enforcement.md § Command Content
-# Scanning for the full design rationale.
+# For Bash commands, check for dangerous write patterns against protected paths.
+# TARGET_PATH already has heredoc content stripped (done above), so we use it directly.
 if [ "$TOOL_NAME" = "Bash" ] && [ -z "$MATCHED_DIR" ]; then
-  COMMAND_TO_CHECK="$COMMAND"
-  if printf '%s\n' "$COMMAND" | grep -qE '<<[-~]?\s*\\?['"'"'"]?[A-Za-z_]'; then
-    COMMAND_TO_CHECK=$(printf '%s\n' "$COMMAND" | head -n1)
-  fi
   for PROTECTED in "${PROTECTED_DIRS[@]}"; do
-    if echo "$COMMAND_TO_CHECK" | grep -q "$PROTECTED"; then
+    if echo "$TARGET_PATH" | grep -q "$PROTECTED"; then
       # Detect write operations in Bash commands. Trailing spaces prevent substring
       # false positives (e.g., "rmdir" won't match "rm "). Covers: file deletion (rm),
       # moves (mv), copies (cp), in-place edits (sed -i), permission changes (chmod/chown),
       # and output redirection (>, >>, tee).
-      if echo "$COMMAND_TO_CHECK" | grep -qE '(rm |mv |cp |sed -i|chmod |chown |>|>>|tee )'; then
+      if echo "$TARGET_PATH" | grep -qE '(rm |mv |cp |sed -i|chmod |chown |>|>>|tee )'; then
         MATCHED_DIR="$PROTECTED"
         break
       fi
