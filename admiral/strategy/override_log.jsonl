@@ -1,7 +1,0 @@
-{
-  "timestamp": "2026-03-20T05:11:52Z",
-  "event": "go_no_go_override",
-  "project": "/home/user/helm",
-  "justification": "Testing override mechanism during ST-03 implementation",
-  "user": "root"
-}
