@@ -24,10 +24,10 @@
 | Performance | 2/10 | 10/10 | No benchmarks of any kind |
 | Brain & Knowledge | 2/10 | 10/10 | B1 file-based only, manual, no auto-recording, no semantic search |
 | Fleet & Orchestration | 1/10 | 10/10 | 71 roles defined, only Claude Code governed, no routing/handoff/parallel |
-| Strategy Foundation | 5/10 | 10/10 | Ground Truth tooling complete (ST-01–ST-08), spec debt inventoried (SD-01–SD-15); needs real-world validation |
+| Strategy Foundation | 1/10 | 10/10 | No Ground Truth tooling, no readiness assessment, no Go/No-Go gate |
 | Security & Compliance | 4/10 | 10/10 | Missing data sensitivity L1-L2, audit trail, privilege escalation hardening |
 | Strategic Positioning | 2/10 | 10/10 | Missing OWASP/AEGIS/NIST/McKinsey/IMDA crosswalks |
-| **Overall** | **4/10** | **10/10** | Phase 0 complete (strategy + spec debt); critical gaps remain in spec implementation |
+| **Overall** | **4/10** | **10/10** | Strong foundation, critical gaps in spec implementation |
 
 ---
 
@@ -122,9 +122,9 @@
 ## Execution Guide
 
 ### Phase 1: Spec Debt & Foundation (Sessions 1-10) — Know What We're Building
-0. ~~ST-01, ST-02, ST-03 — Strategy Triangle foundation (Ground Truth template, readiness assessment, Go/No-Go gate)~~ DONE
-1. ~~SD-01, SD-02 — Spec debt inventory and prioritization (identifies gaps that inform all other work)~~ DONE
-2. ~~SD-04, SD-05 — Standing Orders enforcement map completion, hook manifest audit~~ DONE
+0. ST-01, ST-02, ST-03 — Strategy Triangle foundation (Ground Truth template, readiness assessment, Go/No-Go gate)
+1. SD-01, SD-02 — Spec debt inventory and prioritization (identifies gaps that inform all other work)
+2. SD-04, SD-05 — Standing Orders enforcement map completion, hook manifest audit
 3. SEC-13 — Extend zero_trust_validator.sh to all tool responses (highest-impact quick fix)
 4. T-01 to T-04 — Unit tests for untested modules
 5. Q-01, Q-02 — Standardize hooks
@@ -132,9 +132,9 @@
 7. D-01, D-02, D-03 — Documentation quick wins (ADMIRAL_STYLE, CoC, LICENSE)
 
 ### Phase 2: Spec Debt Resolution & Self-Enforcement (Sessions 11-18) — Close the Gaps on Paper
-8. ~~SD-03 — Spec amendment proposals for all identified gaps~~ DONE
-9. ~~SD-06 to SD-09 — Reference constants, version tracking, compliance testing, changelog~~ DONE
-10. ~~SD-10 to SD-12 — Spec gap proposals (fleet orchestration, Brain graduation, cross-platform hooks)~~ DONE
+8. SD-03 — Spec amendment proposals for all identified gaps
+9. SD-06 to SD-09 — Reference constants, version tracking, compliance testing, changelog
+10. SD-10 to SD-12 — Spec gap proposals (fleet orchestration, Brain graduation, cross-platform hooks)
 11. Q-05, Q-06, Q-08 — TypeScript quality
 12. A-01, A-04, A-06 — Schema validation
 13. P-01, P-02, P-05 — Self-enforcement hooks
