@@ -154,9 +154,24 @@
 | 24.4 Audit and Integrity | SEC-06, SEC-07 | 2M |
 | 24.5 Supply Chain and Infrastructure | SEC-08, SEC-09, SEC-11 | 1S + 2M |
 | 24.6 MCP/A2A Security | SEC-13, SEC-14 | 1S + 1L |
-| **Totals** | **14 items** | **3L + 9M + 2S** |
+| 24.7 Leash Integration | SEC-15 | 1M |
+| **Totals** | **15 items** | **3L + 10M + 2S** |
 
 **Critical path:** SEC-13 (zero_trust_validator extension) is the highest-priority security fix — smallest code change, highest impact (MCP-SECURITY-ANALYSIS Rec 1). SEC-01 (attack corpus automation) is the testing foundation — now covers 30 ATK entries including 12 new MCP/A2A/temporal scenarios. SEC-14 (circuit breakers) depends on SEC-01 and Stream 16 M-10 (behavioral baselining).
+
+### 24.7 Competitive Context: Leash Integration Opportunity (from research/competitive-threat-strongdm-perplexity-comet-2026.md)
+
+StrongDM Leash provides kernel-level enforcement with Cedar policies — a layer Admiral does not and should not replicate. The competitive strategy is **integration, not competition**: Admiral's decision authority tiers should generate Cedar policies for Leash enforcement. This turns Leash from a competitor into an enforcement backend.
+
+- [ ] **SEC-15: Leash Cedar policy generation spec**
+  - **Description:** Design the mapping from Admiral's Decision Authority Tiers (Autonomous, Propose, Escalate, Blocked) to Cedar policy language. Each authority tier maps to a set of Cedar allow/deny statements. When an agent is assigned to a tier, Admiral generates the corresponding Cedar policy that Leash can enforce at the kernel level. This creates a two-layer enforcement model: Admiral governs behavioral intent (Standing Orders, governance rules), Leash enforces resource access (filesystem, network, process). The spec should cover: tier-to-Cedar mapping rules, policy generation triggers (agent session start, tier change), policy format compatibility with Leash's Cedar engine, and fallback behavior when Leash is not present (Admiral-only enforcement continues to work).
+  - **Done when:** Mapping spec exists covering all 4 authority tiers. At least 3 example Cedar policies are generated from real agent tier assignments. Spec addresses both Leash-present and Leash-absent deployment scenarios. Review by security-focused contributor.
+  - **Files:** `admiral/docs/leash-integration-spec.md` (new), `admiral/security/cedar-generator/examples/` (new)
+  - **Size:** M (1-3 hours)
+  - **Spec ref:** `aiStrat/admiral/extensions/governance-platform.md` — integrate, don't compete; `research/competitive-threat-strongdm-perplexity-comet-2026.md`
+  - **Depends on:** SEC-04 (privilege escalation hardening — authority tier enforcement must be solid before generating Cedar policies from it)
+
+---
 
 **Recommended execution order:**
 1. **Immediate:** SEC-13 (zero_trust_validator extension) — smallest change, highest impact.

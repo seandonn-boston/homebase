@@ -150,6 +150,19 @@
 | 25.5 Control Plane Progressive Implementation | OB-11, OB-12, OB-13, OB-14, OB-15 | 4L + 1M |
 | **Totals** | **15 items** | **9L + 6M** |
 
+### 25.6 Competitive Urgency (from research/competitive-threat-strongdm-perplexity-comet-2026.md)
+
+Fleet-wide causality tracing is one of three "inevitable features" that create operational lock-in. Competitors are converging:
+
+- **Perplexity Computer** is exposing subagent trace trees — within 6–12 months, Perplexity may offer causality tracing for its own orchestrated agents.
+- **StrongDM Leash** has enforcement-layer Record data that could evolve into trend analysis (12–18 months).
+
+**Competitive timeline:** Ship causality tracing (OB-02 + OB-09) within **90 days**. Admiral's advantage is cross-platform tracing — Perplexity can only trace Perplexity agents, Leash can only trace containerized agents. Admiral traces across CLI, API, browser, and backend.
+
+**Implication:** OB-02 (distributed tracing) and OB-09 (incident timeline reconstruction) together form the foundation for the Causality Tracing inevitable feature. Prioritize these above dashboard polish (OB-07) and SLO tracking (OB-08). Tracing data feeds the Brain (Stream 11) — each traced session produces knowledge entries that compound over time.
+
+---
+
 **Critical path:** OB-01 (structured logging) is the foundation — everything else depends on consistent, structured log output. OB-02 (tracing) depends on OB-01 and enables OB-09 (timeline reconstruction). OB-03 (metrics) enables OB-05 (alerting), OB-08 (SLOs), OB-10 (regression detection), and OB-07 (dashboard).
 
 **Recommended execution order:**

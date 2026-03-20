@@ -1,0 +1,64 @@
+# TODO: Inevitable Features & Future-Proofing
+
+> Source: stream-28-inevitable-features.md (IF-01 to IF-12)
+
+Capabilities that will inevitably be needed as Admiral matures from single-repo governance into operational infrastructure for AI workforces. Each item is a stepping stone toward three inevitable features: fleet-wide causality tracing, living operational memory, and predictive fleet health.
+
+---
+
+## Competitive Urgency
+
+The three inevitable features (causality tracing, living memory, predictive health) are Admiral's defensible moat. Competitive timelines: **Causality Tracing within 90 days** (before Perplexity Computer exposes subagent traces), **Brain B2 within 120 days** (before Comet persists interaction patterns), **Predictive Health within 180 days** (before Leash adds trend analysis). The compounding effect — each feature feeds the next — means early deployment creates a self-improving system competitors cannot replicate retroactively.
+
+Consider promoting IF-05 (performance profiling) and IF-08 (session replay) from Phase 8 to Phase 5–6 to feed the causality tracing and predictive health data pipelines earlier.
+
+---
+
+## Agent Lifecycle & Marketplace
+
+- [ ] **IF-01: Agent versioning** — Semantic versioning for agent definitions so updates do not break running sessions. Maintain a version registry with changelogs and support rollback without disrupting active sessions.
+- [ ] **IF-02: Agent marketplace concept** *(deferred Phase 3+)* — Design a package format and registry protocol for sharing agent definitions across teams and organizations. Covers trust boundaries, sandboxing, and distribution for imported agents.
+
+## Plugin & Multi-Repo
+
+- [ ] **IF-03: Plugin system architecture** — Extensibility model with plugin interfaces for three extension points: hook plugins, agent plugins, and integration plugins. Each plugin is sandboxed with declared permissions and a manifest schema.
+- [ ] **IF-04: Multi-repository support** — Govern agents across multiple repositories with shared policies via a hub-and-spoke model. Supports shared Standing Orders, per-repo overrides, cross-repo brain access, and unified fleet health metrics.
+
+## Performance & Cost
+
+- [ ] **IF-05: Agent performance profiling** — Per-agent profiling tracking token usage, first-pass quality rate, revision depth, context utilization efficiency, and brain query effectiveness. Generates trend reports for dashboard integration.
+- [ ] **IF-06: Cost optimization engine** — Decision engine that recommends optimal model tiers per task based on complexity, quality requirements, budget, and historical performance. Supports minimize-cost, maximize-quality, and balanced strategies.
+- [ ] **IF-07: A/B testing framework for agents** *(deferred Phase 3+)* — Test different agent configurations against each other by routing tasks, tracking per-configuration metrics, and computing statistical significance to declare a winner.
+
+## Testing & Debugging
+
+- [ ] **IF-08: Agent replay and debugging** — Record and replay agent sessions capturing every tool invocation, hook execution, brain query, handoff, and model API call. Supports replay comparison, configurable retention, and anonymization.
+
+## Governance Evolution
+
+- [ ] **IF-09: Natural language policy authoring** *(deferred Phase 3+)* — Compile human-readable policy statements into executable hooks, Standing Order entries, and alert rules. Operates in suggest mode (human review) and apply mode (after approval).
+- [ ] **IF-10: Governance compliance certification** *(deferred Phase 3+)* — Generate certifiable compliance reports aligned with the Admiral Rating System, covering automated metrics collection, Human Judgment Gate templates, and rating determination.
+
+## Collaboration & Dashboard
+
+- [ ] **IF-11: Agent collaboration patterns** — Reusable multi-agent coordination primitives: Pipeline (sequential), Broadcast (one-to-many), Consensus (voting with quorum), and Delegation (orchestrator assigns subtasks). Patterns are composable and governance-integrated.
+- [ ] **IF-12: Real-time collaboration dashboard** — Live fleet view showing agent status, task board with dependencies, filtered event stream, resource meters, and governance overlay. Real-time updates via SSE, targeting sub-2-second latency.
+
+---
+
+## Dependencies
+
+| Task | Depends on | Downstream |
+|------|-----------|------------|
+| IF-01 | — | IF-02, IF-04 |
+| IF-02 | IF-01 | — |
+| IF-03 | — | — |
+| IF-04 | IF-01 | — |
+| IF-05 | — | IF-06, IF-07 |
+| IF-06 | IF-05 | — |
+| IF-07 | IF-05 | — |
+| IF-08 | — | — |
+| IF-09 | — | — |
+| IF-10 | — | — |
+| IF-11 | — | — |
+| IF-12 | — | — |

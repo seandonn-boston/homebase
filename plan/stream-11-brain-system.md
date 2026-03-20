@@ -225,6 +225,20 @@
 
 ---
 
+### 11.7 Competitive Urgency (from research/competitive-threat-strongdm-perplexity-comet-2026.md)
+
+The Brain is Admiral's primary competitive moat. Three competitors are converging on adjacent capabilities:
+
+- **Perplexity Comet Enterprise** is building persistent user-AI interaction patterns (browser-scoped). If Comet ships persistent interaction logs before Admiral ships Brain B2, enterprises may adopt Comet's "good enough" session memory and never need Admiral's deeper institutional memory.
+- **StrongDM Leash** is adding trend analysis to enforcement data (Record layer). Leash's enforcement data could evolve into a lightweight operational memory — not semantic, but sufficient for pattern detection.
+- **Perplexity Computer** is exposing subagent trace trees. Trace data that flows into persistent storage becomes a form of operational memory.
+
+**Competitive timeline:** Brain B2 (SQLite + embeddings) must ship within **120 days** — before Comet persists user-AI interaction patterns (estimated 12–18 months from March 2026). Compounding value means early deployment creates a moat that cannot be replicated retroactively. Each day of Brain operation produces knowledge that strengthens future queries.
+
+**Implication for execution order:** B-21 (graduation metrics) should be built concurrently with B1 completion, not after. Measuring B1 early accelerates the B1→B2 graduation decision. The spec-defined graduation criteria (hit rate ≥85%, precision ≥90%, entry count ≥50) are the gates — don't wait to build the gate measurement system.
+
+---
+
 ### Updated Stream 11 Summary
 
 | Phase | Tasks | Sizes |
