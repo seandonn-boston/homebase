@@ -73,4 +73,4 @@ Admiral is what makes it safe to run AI agents as a workforce instead of using t
 
 ---
 
-*Full analysis: `research/future-operations.md` (external reference — lives outside the spec boundary in the homebase repo root)*
+*Full analysis: `research/future-operations.md` (external reference — lives outside the spec boundary in the Helm repo root)*
