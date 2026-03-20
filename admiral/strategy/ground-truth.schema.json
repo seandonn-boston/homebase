@@ -1,0 +1,210 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://admiral-framework.dev/schemas/ground-truth.v1.schema.json",
+  "title": "Admiral Ground Truth Document",
+  "description": "Machine-readable Strategy Triangle: Mission, Boundaries, and Success Criteria. The single source of strategic truth for a project under Admiral governance.",
+  "type": "object",
+  "required": ["version", "project", "mission", "boundaries", "success_criteria"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "1.0",
+      "description": "Schema version for forwards compatibility."
+    },
+    "project": {
+      "type": "object",
+      "description": "Project metadata.",
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Project name."
+        },
+        "repository": {
+          "type": "string",
+          "description": "Repository URL or path."
+        },
+        "created": {
+          "type": "string",
+          "format": "date",
+          "description": "Date this Ground Truth document was created."
+        },
+        "last_reviewed": {
+          "type": "string",
+          "format": "date",
+          "description": "Date this document was last reviewed by a human."
+        }
+      }
+    },
+    "mission": {
+      "type": "object",
+      "description": "Part 1 Mission vertex: what are we building and why.",
+      "required": ["identity", "success_state", "current_phase"],
+      "properties": {
+        "identity": {
+          "type": "string",
+          "minLength": 1,
+          "description": "One sentence: what is this project? If you cannot express it in a single sentence, the fleet will not stay aligned."
+        },
+        "success_state": {
+          "type": "string",
+          "minLength": 1,
+          "description": "What must be true for this project to be considered successful? Concrete, observable terms."
+        },
+        "stakeholders": {
+          "type": "string",
+          "description": "Who is this for and what core need does it serve?"
+        },
+        "current_phase": {
+          "type": "string",
+          "enum": ["greenfield", "feature-add", "refactor", "migration", "maintenance"],
+          "description": "Project phase. Changes how agents approach ambiguity, risk, and scope."
+        },
+        "pipeline_entry": {
+          "type": "string",
+          "enum": ["requirements", "design", "tasks", "implementation"],
+          "description": "At which Spec-First Pipeline stage the fleet takes over."
+        }
+      }
+    },
+    "boundaries": {
+      "type": "object",
+      "description": "Part 1 Boundaries vertex: what the project is NOT, resource limits, and the LLM-Last line.",
+      "required": ["non_goals", "hard_constraints", "resource_budgets"],
+      "properties": {
+        "non_goals": {
+          "type": "object",
+          "description": "Explicitly state what the project is NOT.",
+          "properties": {
+            "functional": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Features, capabilities, or user flows explicitly out of scope."
+            },
+            "quality": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Levels of polish, optimization, or completeness not required at this phase."
+            },
+            "architectural": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Patterns, technologies, or approaches that must not be used."
+            }
+          }
+        },
+        "hard_constraints": {
+          "type": "object",
+          "description": "Constraints that prevent catastrophic misalignment.",
+          "properties": {
+            "tech_stack": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Exact languages, frameworks, and tools with version numbers."
+            },
+            "deadlines": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Ship dates, demo dates, review dates."
+            },
+            "compatibility": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Browser support, API backward compatibility, platform requirements."
+            },
+            "regulatory": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Anything legally or organizationally mandated."
+            },
+            "protocol_scope": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "MCP servers approved for use, A2A requirements, trust classification policy."
+            }
+          }
+        },
+        "resource_budgets": {
+          "type": "object",
+          "description": "Resource limits that prevent unbounded exploration.",
+          "properties": {
+            "token_budget": {
+              "type": "string",
+              "description": "Max tokens per task before the agent must deliver or escalate."
+            },
+            "time_budget": {
+              "type": "string",
+              "description": "Wall-clock time limit per task."
+            },
+            "tool_call_limits": {
+              "type": "string",
+              "description": "Max API calls or tool invocations per task."
+            },
+            "scope_boundary": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "File paths, repos, and services each agent may touch."
+            },
+            "quality_floor": {
+              "type": "string",
+              "description": "Minimum acceptable quality bar, defined concretely."
+            }
+          }
+        },
+        "llm_last": {
+          "type": "object",
+          "description": "The LLM-Last boundary: what deterministic tools handle vs. what requires LLM judgment.",
+          "properties": {
+            "deterministic": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Tasks handled by static analysis, linters, shell commands, type checkers."
+            },
+            "llm_judgment": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Tasks requiring understanding of intent, tradeoffs, novel design."
+            }
+          }
+        }
+      }
+    },
+    "success_criteria": {
+      "type": "object",
+      "description": "Part 1 Success Criteria vertex: machine-verifiable definition of done.",
+      "properties": {
+        "functional": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "What must the output DO? Testable behaviors."
+        },
+        "quality": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Measurable gates: linting, tests, coverage."
+        },
+        "completeness": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "What must exist beyond the core deliverable."
+        },
+        "negative": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "What the output must NOT do."
+        },
+        "failure_guidance": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "What happens when criteria cannot be met. Specify: escalate, deliver partial, or block."
+        },
+        "judgment_boundaries": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Where criteria are ambiguous. Name the ambiguity and assign a decision authority tier."
+        }
+      }
+    }
+  }
+}
