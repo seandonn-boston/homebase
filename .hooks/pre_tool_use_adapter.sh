@@ -30,14 +30,13 @@ ESTIMATED=$(estimate_tokens "$TOOL_NAME")
 
 if [ "$TOKEN_BUDGET" -gt 0 ]; then
   UTIL_PCT=$((TOKENS_USED * 100 / TOKEN_BUDGET))
-  PROJECTED=$((TOKENS_USED + ESTIMATED))
-  OVER_BY=$((PROJECTED - TOKEN_BUDGET))
-
-  if [ "$PROJECTED" -ge "$TOKEN_BUDGET" ]; then
-    ALL_CONTEXT+="BUDGET CHECKPOINT: Token budget exceeded. Current: ${TOKENS_USED} tokens used of ${TOKEN_BUDGET} budget (${UTIL_PCT}%). This ${TOOL_NAME} call is estimated at ~${ESTIMATED} tokens, bringing projected total to ${PROJECTED} (${OVER_BY} over budget). You may continue, but please inform the user that the session has exceeded its token budget and ask if they wish to proceed. "
-  elif [ "$UTIL_PCT" -ge 90 ]; then
+  if [ "$UTIL_PCT" -ge 90 ]; then
     REMAINING=$((TOKEN_BUDGET - TOKENS_USED))
-    ALL_CONTEXT+="BUDGET ADVISORY: Session at ${UTIL_PCT}% of token budget (${TOKENS_USED}/${TOKEN_BUDGET}). ~${REMAINING} tokens remaining. Consider wrapping up or informing the user. "
+    [ "$REMAINING" -lt 0 ] && REMAINING=0
+    ALL_CONTEXT+="ESCALATION: Session at ${UTIL_PCT}% of token budget (${TOKENS_USED}/${TOKEN_BUDGET}). ~${REMAINING} tokens remaining. Escalate remaining work to Admiral or inform user. "
+  elif [ "$UTIL_PCT" -ge 80 ]; then
+    REMAINING=$((TOKEN_BUDGET - TOKENS_USED))
+    ALL_CONTEXT+="WARNING: Session at ${UTIL_PCT}% of token budget (${TOKENS_USED}/${TOKEN_BUDGET}). ~${REMAINING} tokens remaining. Conserve tokens — defer non-critical work. "
   fi
 fi
 
