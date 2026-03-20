@@ -77,7 +77,7 @@ fi
 
 # Check LLM-Last boundary
 if [[ -x "${VALIDATE_LLM_LAST}" ]]; then
-  LLM_OUTPUT=$("${VALIDATE_LLM_LAST}" "${GT_PATH}" 2>&1) || {
+  "${VALIDATE_LLM_LAST}" "${GT_PATH}" >/dev/null 2>&1 || {
     WARNINGS="${WARNINGS}LLM-Last boundary not fully defined. "
   }
 fi
