@@ -5,6 +5,9 @@
 ## Claude Code Specific
 
 - **Configuration directory:** `.claude/` contains `settings.local.json`
+- **Commands:** `.claude/commands/` contains reusable slash command prompts.
+- **Primary TODO executor command:** `/next-todo` (defined in `.claude/commands/next-todo.md`) executes the next item from `plan/todo/` using phase/task/subtask branching, DoD, test/lint/CI, and Admiral escalation rules.
+- **Phase completion command:** `/phase-closeout` (defined in `.claude/commands/phase-closeout.md`) executes end-of-phase whole-set validation, spellcheck/lint/security hardening, CI verification, and merge-readiness checks before merging to `main`.
 - **Hooks:** `.hooks/` contains executable hook scripts. Adapters translate between Claude Code hook payloads and Admiral hook contracts.
 - **Agent definitions:** See `AGENTS.md` for identity, authority, and constraints.
 - **Standing Orders:** Loaded at session start via `session_start_adapter.sh`. Source data in `admiral/standing-orders/`.
