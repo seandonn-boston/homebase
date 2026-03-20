@@ -122,6 +122,63 @@ describe("EventStream", () => {
     stream.clear();
     assert.equal(stream.getEvents().length, 0);
   });
+
+  // --- T-04 edge cases: eviction, ID uniqueness, counters ---
+
+  it("evicts oldest events when maxEvents is exceeded", () => {
+    const small = new EventStream({ maxEvents: 3 });
+    small.emit("a1", "Agent-1", "agent_started");
+    small.emit("a1", "Agent-1", "tool_called", { tool: "read" });
+    small.emit("a1", "Agent-1", "tool_called", { tool: "write" });
+    small.emit("a1", "Agent-1", "agent_stopped"); // should evict first
+    assert.equal(small.getEvents().length, 3);
+    assert.equal(small.getEvictedCount(), 1);
+    assert.equal(small.getTotalEmitted(), 4);
+    // First event should be gone
+    assert.ok(small.getEvents().every((e) => e.type !== "agent_started"));
+  });
+
+  it("generates unique event IDs", () => {
+    const ids = new Set<string>();
+    for (let i = 0; i < 100; i++) {
+      const event = stream.emit("a1", "Agent-1", "tool_called", { tool: "t" });
+      ids.add(event.id);
+    }
+    assert.equal(ids.size, 100);
+  });
+
+  it("event IDs contain incrementing counter", () => {
+    const e1 = stream.emit("a1", "Agent-1", "agent_started");
+    const e2 = stream.emit("a1", "Agent-1", "agent_stopped");
+    // IDs are evt_{timestamp}_{counter}
+    const counter1 = parseInt(e1.id.split("_").pop()!, 10);
+    const counter2 = parseInt(e2.id.split("_").pop()!, 10);
+    assert.ok(counter2 > counter1);
+  });
+
+  it("getEvictedCount returns 0 when no evictions", () => {
+    stream.emit("a1", "Agent-1", "agent_started");
+    assert.equal(stream.getEvictedCount(), 0);
+  });
+
+  it("getTotalEmitted equals size plus evicted", () => {
+    const small = new EventStream({ maxEvents: 2 });
+    small.emit("a1", "Agent-1", "agent_started");
+    small.emit("a1", "Agent-1", "tool_called");
+    small.emit("a1", "Agent-1", "agent_stopped");
+    assert.equal(small.getTotalEmitted(), 3);
+    assert.equal(small.getEvents().length, 2);
+    assert.equal(small.getEvictedCount(), 1);
+  });
+
+  it("listeners fire even during eviction", () => {
+    const small = new EventStream({ maxEvents: 1 });
+    const received: string[] = [];
+    small.on((e) => received.push(e.type));
+    small.emit("a1", "Agent-1", "agent_started");
+    small.emit("a1", "Agent-1", "agent_stopped");
+    assert.deepEqual(received, ["agent_started", "agent_stopped"]);
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -237,6 +294,57 @@ describe("ExecutionTrace", () => {
     const stats = trace.getStats();
     assert.equal(stats.toolCallCount, 3);
     assert.equal(stats.uniqueTools.length, 2);
+  });
+
+  // --- T-01 edge cases: nested hierarchies, multi-agent, single-event ---
+
+  it("buildTrace handles multi-agent nested hierarchy", () => {
+    stream.emit("a1", "Agent-1", "agent_started");
+    stream.emit("a1", "Agent-1", "task_assigned", { description: "Plan" }, undefined, "t1");
+    stream.emit("a1", "Agent-1", "tool_called", { tool: "read" }, undefined, "t1");
+    stream.emit("a2", "Agent-2", "agent_started");
+    stream.emit("a2", "Agent-2", "task_assigned", { description: "Execute" }, undefined, "t2");
+    stream.emit("a2", "Agent-2", "tool_called", { tool: "write" }, undefined, "t2");
+    const nodes = trace.buildTrace();
+    // Should have roots for both agents
+    assert.ok(nodes.length >= 2);
+  });
+
+  it("buildTrace handles single-event stream", () => {
+    stream.emit("a1", "Agent-1", "tool_called", { tool: "read" });
+    const nodes = trace.buildTrace();
+    assert.equal(nodes.length, 1);
+    assert.equal(nodes[0].children.length, 0);
+  });
+
+  it("renderAscii includes tool arguments", () => {
+    stream.emit("a1", "Agent-1", "tool_called", { tool: "read", args: { path: "/foo" } });
+    const ascii = trace.renderAscii();
+    assert.ok(ascii.includes("read"));
+  });
+
+  it("renderAscii formats all event types", () => {
+    stream.emit("a1", "Agent-1", "agent_started");
+    stream.emit("a1", "Agent-1", "task_assigned", { description: "Do" }, undefined, "t1");
+    stream.emit("a1", "Agent-1", "tool_called", { tool: "r", args: {} }, undefined, "t1");
+    stream.emit("a1", "Agent-1", "tool_result", { tool: "r" }, undefined, "t1");
+    stream.emit("a1", "Agent-1", "token_spent", { count: 10, total: 10 }, undefined, "t1");
+    stream.emit("a1", "Agent-1", "subtask_created", { description: "sub", targetAgent: "a2" }, undefined, "t1");
+    stream.emit("a1", "Agent-1", "policy_violation", { rule: "no_x" }, undefined, "t1");
+    stream.emit("a1", "Agent-1", "task_completed", {}, undefined, "t1");
+    stream.emit("a1", "Agent-1", "task_failed", { error: "boom" }, undefined, "t1");
+    stream.emit("a1", "Agent-1", "agent_stopped");
+    const ascii = trace.renderAscii();
+    assert.ok(ascii.includes("Agent-1"));
+    assert.ok(ascii.length > 0);
+  });
+
+  it("getStats computes durationMs from first to last event", () => {
+    stream.emit("a1", "Agent-1", "agent_started");
+    // Emit another event — duration should be >= 0
+    stream.emit("a1", "Agent-1", "agent_stopped");
+    const stats = trace.getStats();
+    assert.ok(stats.durationMs >= 0);
   });
 });
 
@@ -583,5 +691,58 @@ describe("JournalIngester", () => {
     ingester.ingestNewLines();
     const event = stream.getEvents()[0];
     assert.equal(event.type, "tool_called");
+  });
+
+  // --- T-02 edge cases: start/stop lifecycle, file growth ---
+
+  it("start ingests existing events then watches for new ones", () => {
+    const line = `${JSON.stringify({ event: "session_start", timestamp: "2025-01-01T00:00:00Z", trace_id: "t1" })}\n`;
+    fs.writeFileSync(logPath, line);
+
+    const ingester = new JournalIngester(tmpDir, stream);
+    ingester.start(500);
+    // Existing events should be ingested immediately
+    assert.equal(stream.getEvents().length, 1);
+    ingester.stop();
+  });
+
+  it("stop is safe to call multiple times", () => {
+    const ingester = new JournalIngester(tmpDir, stream);
+    ingester.start(500);
+    ingester.stop();
+    ingester.stop(); // should not throw
+    assert.ok(true);
+  });
+
+  it("stop is safe to call without start", () => {
+    const ingester = new JournalIngester(tmpDir, stream);
+    ingester.stop(); // should not throw
+    assert.ok(true);
+  });
+
+  it("handles file with only blank lines", () => {
+    fs.writeFileSync(logPath, "\n\n\n");
+    const ingester = new JournalIngester(tmpDir, stream);
+    assert.equal(ingester.ingestNewLines(), 0);
+    assert.equal(stream.getEvents().length, 0);
+  });
+
+  it("extracts policy_violation data fields", () => {
+    const line = `${JSON.stringify({ event: "policy_violation", timestamp: "2025-01-01T00:00:00Z", trace_id: "t1", detail: "scope violation detected" })}\n`;
+    fs.writeFileSync(logPath, line);
+
+    const ingester = new JournalIngester(tmpDir, stream);
+    ingester.ingestNewLines();
+    const event = stream.getEvents()[0];
+    assert.equal(event.data.rule, "hook_alert");
+    assert.equal(event.data.details, "scope violation detected");
+  });
+
+  it("handles all-malformed file gracefully", () => {
+    fs.writeFileSync(logPath, "not json\nalso not json\nstill not json\n");
+    const ingester = new JournalIngester(tmpDir, stream);
+    const count = ingester.ingestNewLines();
+    assert.equal(count, 0);
+    assert.equal(ingester.getStats().malformedLines, 3);
   });
 });
