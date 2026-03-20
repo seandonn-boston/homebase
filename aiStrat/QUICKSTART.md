@@ -353,7 +353,7 @@ Once the budget gate is working, add the remaining E1 hooks via the **PostToolUs
 2. **`loop_detector.sh`** — tracks `(agent_id, error_signature)` tuples. Triggers after 3 identical errors or 10 total errors.
 3. **`context_health_check.sh`** — fires every 10th tool call. Checks utilization >85%, validates critical context sections (Identity/Authority/Constraints) are present.
 
-See the homebase reference implementation in `.hooks/` for working examples of all E1 hooks.
+See the Helm reference implementation in `.hooks/` for working examples of all E1 hooks.
 
 ---
 

@@ -3,7 +3,7 @@
 **Prepared for:** Patent & Trademark Counsel
 **Prepared by:** Sean Donn
 **Date:** March 16, 2026
-**Repository:** `seandonn-boston/homebase` (GitHub, private)
+**Repository:** `seandonn-boston/helm` (GitHub, private)
 
 ---
 
@@ -64,7 +64,9 @@ This memo accompanies **three provisional patent application drafts** and **two 
 
 ## Priority Date Evidence
 
-All invention dates are documented via git history analysis (see Appendix A). Each patent opportunity maps to a specific git commit hash with timestamp, providing verifiable priority date evidence. The git repository is hosted on GitHub at `seandonn-boston/homebase` with continuous commit history from March 13, 2026 onward.
+All invention dates are documented via git history analysis (see Appendix A). Each patent opportunity maps to a specific git commit hash with timestamp, providing verifiable priority date evidence. The git repository is hosted on GitHub at `seandonn-boston/helm` with continuous commit history from March 13, 2026 onward.
+
+**Note:** The repository was renamed from `seandonn-boston/homebase` to `seandonn-boston/helm` on March 20, 2026. All git commit hashes referenced in this document remain valid and unchanged — only the repository name changed. GitHub maintains URL redirects from the prior name.
 
 ---
 
@@ -153,7 +155,7 @@ Context-Pressure-Aware Enforcement Spectrum for Autonomous AI Agent Systems
 
 **Inventor:** Sean Donn
 **Priority Date:** March 13, 2026
-**Priority Evidence:** Git commit `50ffb14`, repository `seandonn-boston/homebase`
+**Priority Evidence:** Git commit `50ffb14`, repository `seandonn-boston/helm`
 
 ---
 
@@ -431,7 +433,7 @@ Progressive Institutional Memory Architecture for Autonomous AI Agent Fleets
 
 **Inventor:** Sean Donn
 **Priority Date:** March 14, 2026
-**Priority Evidence:** Git commit `49bd0db`, repository `seandonn-boston/homebase`
+**Priority Evidence:** Git commit `49bd0db`, repository `seandonn-boston/helm`
 
 ---
 
@@ -596,7 +598,7 @@ Intent Engineering: Structured Methodology for Human-to-AI Agent Instruction Dec
 
 **Inventor:** Sean Donn
 **Priority Date:** March 14, 2026
-**Priority Evidence:** Git commit `701258d`, repository `seandonn-boston/homebase`
+**Priority Evidence:** Git commit `701258d`, repository `seandonn-boston/helm`
 
 ---
 
@@ -881,4 +883,4 @@ Priority dates for all 23 patentable innovations documented via git history anal
 *End of Counsel Review Package*
 *Source files: `research/ip/` — Individual drafts available for separate review*
 *Complete specification: `aiStrat/admiral/spec/` — 114 files across 22 groups*
-*Repository: `seandonn-boston/homebase` (GitHub, private)*
+*Repository: `seandonn-boston/helm` (GitHub, private)*

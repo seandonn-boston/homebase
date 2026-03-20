@@ -1,6 +1,6 @@
 {
   "id": "37ea679a-048b-4413-a774-3f87247cd24d",
-  "project": "homebase",
+  "project": "helm",
   "category": "decision",
   "title": "Adapter pattern for hooks",
   "content": "Chose three-adapter pattern (session_start, pre_tool_use, post_tool_use) to translate between Claude Code hook payloads and Admiral hook contracts. This isolates platform-specific code in adapters while keeping individual hooks platform-agnostic.",

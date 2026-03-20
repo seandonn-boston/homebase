@@ -2,7 +2,7 @@
 
 **Last updated:** 2026-03-19
 
-**Target:** Transform homebase from a strong prototype into a showcase-quality, fully-governed, spec-complete AI agent orchestration platform — a codebase that earns a 10/10 on every dimension.
+**Target:** Transform Helm from a strong prototype into a showcase-quality, fully-governed, spec-complete AI agent orchestration platform — a codebase that earns a 10/10 on every dimension.
 
 **Thesis:** A pristine codebase is not about perfection — it is about predictability, discoverability, and confidence. Every file should justify its existence. Every behavior should be tested. Every decision should be documented. A stranger should be able to clone this repo and ship a contribution within 30 minutes.
 

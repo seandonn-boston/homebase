@@ -35,7 +35,9 @@ This memo accompanies **three provisional patent application drafts** and **two 
 
 ## Priority Date Evidence
 
-All invention dates are documented via git history analysis in `research/invention-dates.md`. Each patent opportunity maps to a specific git commit hash with timestamp, providing verifiable priority date evidence. The git repository is hosted on GitHub at `seandonn-boston/homebase` with continuous commit history from March 13, 2026 onward.
+All invention dates are documented via git history analysis in `research/invention-dates.md`. Each patent opportunity maps to a specific git commit hash with timestamp, providing verifiable priority date evidence. The git repository is hosted on GitHub at `seandonn-boston/helm` with continuous commit history from March 13, 2026 onward.
+
+**Note:** The repository was renamed from `seandonn-boston/homebase` to `seandonn-boston/helm` on March 20, 2026. All git commit hashes referenced in this document remain valid and unchanged — only the repository name changed. GitHub maintains URL redirects from the prior name.
 
 Full invention date extraction methodology: `research/extract-invention-dates.sh`.
 

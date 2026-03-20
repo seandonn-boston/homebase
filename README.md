@@ -1,8 +1,8 @@
-# Homebase
+# Helm
 
 **The operational headquarters for the Admiral Framework and supporting research, thesis documents, and early-stage implementation.**
 
-Homebase is a monorepo containing four major workstreams — all converging on a single question: *How should organizations govern, coordinate, and operate fleets of autonomous AI agents?*
+Helm is a monorepo containing four major workstreams — all converging on a single question: *How should organizations govern, coordinate, and operate fleets of autonomous AI agents?*
 
 ---
 
