@@ -55,11 +55,20 @@ git config core.hooksPath .githooks
 
 ### TypeScript
 
-- Strict mode (`"strict": true` in tsconfig)
-- Zero runtime dependencies — only Node.js built-in modules
+- Strict mode (`"strict": true` in tsconfig, includes `strictNullChecks`, `noUnusedLocals`, `noUnusedParameters`)
+- Zero runtime dependencies — only Node.js built-in modules (dev dependencies like `fast-check` are fine)
 - Biome for formatting and linting: `npm run lint`
-- File naming: `camelCase` for source, `*.test.ts` for tests
+- File naming: `camelCase` for source, `*.test.ts` for tests, `*.benchmark.ts` for benchmarks
 - Tests use `node:test` + `node:assert/strict`
+
+### TypeScript Exports
+
+- **Named exports only** — no default exports. Every exported symbol must have an explicit name.
+- **Barrel file:** `src/index.ts` re-exports the public API surface. All consumer-facing types, classes, and functions must appear here.
+- **Internal modules:** Files not re-exported from `index.ts` are internal implementation details.
+- **Type exports:** Use `export type` for type-only exports (interfaces, type aliases) when the value is not needed at runtime.
+- **Import style:** Use `import type { ... }` when importing only types. This enables better tree-shaking and makes the dependency clear.
+- **Public API contract:** Adding a new export to `index.ts` is a public API change. Removing one is a breaking change.
 
 ### Bash
 
