@@ -52,7 +52,7 @@
 ## TypeScript Quality
 
 - [x] **Q-05: Replace `Date.now()` event IDs with `crypto.randomUUID()`** — Current event IDs are collision-prone under concurrent writes. New format: `evt_<uuid>`. Update all existing tests. *Completed: replaced Date.now()+counter with crypto.randomUUID(), removed unused eventCounter field, updated test assertions.*
-- [ ] **Q-06: Add typed error hierarchy** — Create `AdmiralError` base class plus `NotFoundError`, `ValidationError`, `StateCorruptionError`, `IngestionError`. Replace all `err instanceof Error ? err.message : String(err)` patterns with typed catches.
+- [x] **Q-06: Add typed error hierarchy** — Create `AdmiralError` base class plus `NotFoundError`, `ValidationError`, `StateCorruptionError`, `IngestionError`. Replace all `err instanceof Error ? err.message : String(err)` patterns with typed catches. *Completed: 5 error classes + errorMessage() utility in errors.ts, exported from index.ts, replaced 3 instanceof patterns in server.ts and ingest.ts, 14 test assertions.*
 - [ ] **Q-07: Document TypeScript export conventions** — Add "TypeScript Exports" section to CONTRIBUTING.md defining named vs default exports, index.ts conventions, public API surface contract.
 - [ ] **Q-08: Improve `server.ts` URL routing** — Replace manual `url.split("/")` with declarative route table. Eliminate `agentId !== "resume"` guard. Done when all server tests pass with no manual URL parsing.
 - [ ] **Q-11: Dead code elimination audit** — Find and remove unused functions, variables, and unreachable code in both TypeScript and bash. Enable `noUnusedLocals` and `noUnusedParameters` in tsconfig. Grep bash for orphaned functions.

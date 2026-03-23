@@ -213,7 +213,7 @@ describe("AdmiralServer", () => {
     });
 
     it("very long URL returns 404 without crashing", async () => {
-      const longPath = "/api/" + "a".repeat(2000);
+      const longPath = `/api/${"a".repeat(2000)}`;
       const res = await httpGet(`${baseUrl}${longPath}`);
       assert.equal(res.status, 404);
     });
