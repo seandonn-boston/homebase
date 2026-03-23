@@ -73,6 +73,11 @@ fi
 readiness_rc=0
 readiness_output=$("$READINESS" --json "$PROJECT_ROOT" "$GT_PATH" 2>&1) || readiness_rc=$?
 
+# Validate readiness output is valid JSON; fall back to empty object if not
+if ! echo "$readiness_output" | jq empty 2>/dev/null; then
+  readiness_output="{}"
+fi
+
 readiness_status="unknown"
 case $readiness_rc in
   0) readiness_status="Ready" ;;
