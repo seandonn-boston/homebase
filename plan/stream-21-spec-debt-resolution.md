@@ -35,7 +35,7 @@
 - [x] **SD-03: Create spec amendment proposals for each gap**
   - **Description:** For each active spec gap identified in SD-01 and SD-02, write a formal amendment proposal. Each proposal follows a standard format: (1) **Gap ID and title** — reference to the original spec-debt or spec-gaps entry; (2) **Affected spec section** — exact file and line range; (3) **Current text** — the existing spec language (or absence thereof); (4) **Proposed text** — the amended language with concrete thresholds, definitions, or missing content; (5) **Rationale** — why this change is needed and what implementation it unblocks; (6) **Impact assessment** — what existing implementations (if any) would need updating. Proposals are written to `docs/spec-proposals/` and require Admiral review before any spec modification.
   - **Done when:** Every active spec gap has a corresponding amendment proposal in the standard format. Proposals are self-contained and reviewable independently. Each proposal clearly identifies the spec file and section to be amended.
-  - **Files:** `docs/spec-proposals/amendments/` (new directory with one file per proposal)
+  - **Files:** Consolidated into `docs/spec-proposals/sd-01-spec-debt-inventory.md` (DEBT-01, DEBT-02, DEBT-03 entries)
   - **Size:** L (3+ hours)
   - **Spec ref:** All active items in `spec-debt.md`
   - **Depends on:** SD-01, SD-02
@@ -139,7 +139,7 @@
 - [x] **SD-14: Spec evolution backwards compatibility assessment**
   - **Description:** Create a formal process for assessing the impact of spec changes on existing implementations. When the spec evolves (version increments, new sections, changed requirements), existing implementations may silently become non-compliant. This item establishes: (1) a spec change impact template documenting which implementations are affected by each spec change; (2) a backwards compatibility classification (breaking, additive, cosmetic) for each change; (3) a migration guide template for breaking changes; (4) an automated diff tool that compares spec versions and flags sections with implementation references. This prevents the failure mode where the spec grows but implementations silently fall behind.
   - **Done when:** Impact assessment template exists. At least one spec version transition has a completed impact assessment. Automated spec diff tool identifies changed sections. Breaking changes have migration guides. Process is documented for future spec authors.
-  - **Files:** `docs/spec-proposals/evolution/impact-template.md` (new), `admiral/scripts/spec_diff.sh` (new)
+  - **Files:** `admiral/bin/spec_diff` (tool), `admiral/tests/test_spec_compat.sh` (25 assertions)
   - **Size:** M (1-3 hours)
   - **Spec ref:** All spec parts (process concern)
   - **Depends on:** SD-07, SD-09
