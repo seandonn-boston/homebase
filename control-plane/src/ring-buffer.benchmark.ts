@@ -46,7 +46,9 @@ console.log("  -----------|-----------|------------");
 for (const size of sizes) {
   const ms = benchPush(size, size);
   const nsPerOp = (ms * 1_000_000) / size;
-  console.log(`  ${size.toLocaleString().padStart(10)} | ${ms.toFixed(2).padStart(9)} | ${nsPerOp.toFixed(1).padStart(10)}`);
+  console.log(
+    `  ${size.toLocaleString().padStart(10)} | ${ms.toFixed(2).padStart(9)} | ${nsPerOp.toFixed(1).padStart(10)}`,
+  );
 }
 
 console.log("");
