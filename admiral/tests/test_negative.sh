@@ -14,8 +14,7 @@ mkdir -p "$TMPDIR/.admiral"
 echo '{"session_id":"neg-test","tool_call_count":0,"tokens_used":0}' > "$TMPDIR/.admiral/session_state.json"
 export CLAUDE_PROJECT_DIR="$TMPDIR"
 
-PASS=0
-FAIL=0
+source "$SCRIPT_DIR/test_helpers.sh"
 
 # Hook should not crash (exit > 128 = signal)
 test_no_crash() {
@@ -26,6 +25,7 @@ test_no_crash() {
     PASS=$((PASS + 1))
   else
     FAIL=$((FAIL + 1))
+    ERRORS+="  FAIL: $desc — crashed with signal (exit $rc)\n"
     echo "FAIL: $desc — crashed with signal (exit $rc)"
   fi
 }
@@ -73,9 +73,4 @@ done
 # Cleanup
 rm -rf "$TMPDIR"
 
-echo ""
-total=$((PASS + FAIL))
-echo "negative tests: $PASS/$total passed, $FAIL failed"
-if [ "$FAIL" -gt 0 ]; then
-  exit 1
-fi
+report_results "negative tests"

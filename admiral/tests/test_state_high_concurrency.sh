@@ -6,20 +6,10 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-PASS=0
-FAIL=0
+source "$SCRIPT_DIR/test_helpers.sh"
+
 CONCURRENT=20
 RUNS=3
-
-assert_eq() {
-  local desc="$1" expected="$2" actual="$3"
-  if [ "$expected" = "$actual" ]; then
-    PASS=$((PASS + 1))
-  else
-    FAIL=$((FAIL + 1))
-    echo "FAIL: $desc (expected=$expected, actual=$actual)"
-  fi
-}
 
 echo "State.sh High Concurrency Tests"
 echo "================================"
@@ -78,6 +68,4 @@ for run in $(seq 1 $RUNS); do
   rm -rf "$TMPDIR"
 done
 
-echo ""
-echo "high concurrency tests: $PASS/$((PASS + FAIL)) passed, $FAIL failed"
-if [ "$FAIL" -gt 0 ]; then exit 1; fi
+report_results "high concurrency tests"

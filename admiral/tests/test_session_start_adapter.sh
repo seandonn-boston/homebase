@@ -11,40 +11,7 @@ cp -r "$(cd "$SCRIPT_DIR/../.." && pwd)/admiral" "$TMPDIR/admiral"
 cp -r "$(cd "$SCRIPT_DIR/../.." && pwd)/.hooks" "$TMPDIR/.hooks"
 mkdir -p "$TMPDIR/.admiral"
 
-PASS=0
-FAIL=0
-
-assert_eq() {
-  local desc="$1" expected="$2" actual="$3"
-  if [ "$expected" = "$actual" ]; then
-    PASS=$((PASS + 1))
-  else
-    FAIL=$((FAIL + 1))
-    echo "FAIL: $desc"
-    echo "  expected: $expected"
-    echo "  actual:   $actual"
-  fi
-}
-
-assert_contains() {
-  local desc="$1" needle="$2" haystack="$3"
-  if echo "$haystack" | grep -qF "$needle"; then
-    PASS=$((PASS + 1))
-  else
-    FAIL=$((FAIL + 1))
-    echo "FAIL: $desc — expected to contain: $needle"
-  fi
-}
-
-assert_file_exists() {
-  local desc="$1" path="$2"
-  if [ -f "$path" ]; then
-    PASS=$((PASS + 1))
-  else
-    FAIL=$((FAIL + 1))
-    echo "FAIL: $desc — file not found: $path"
-  fi
-}
+source "$SCRIPT_DIR/test_helpers.sh"
 
 # --- Fresh start ---
 export CLAUDE_PROJECT_DIR="$TMPDIR"
@@ -82,8 +49,4 @@ assert_eq "second session: session_id updated" "test-session-002" "$sid2"
 # Cleanup
 rm -rf "$TMPDIR"
 
-echo ""
-echo "session_start_adapter tests: $PASS passed, $FAIL failed"
-if [ "$FAIL" -gt 0 ]; then
-  exit 1
-fi
+report_results "session_start_adapter tests"

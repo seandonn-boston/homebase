@@ -6,41 +6,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export CLAUDE_PROJECT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 source "$SCRIPT_DIR/../lib/standing_orders.sh"
 
-PASS=0
-FAIL=0
-
-assert_eq() {
-  local desc="$1" expected="$2" actual="$3"
-  if [ "$expected" = "$actual" ]; then
-    PASS=$((PASS + 1))
-  else
-    FAIL=$((FAIL + 1))
-    echo "FAIL: $desc"
-    echo "  expected: $expected"
-    echo "  actual:   $actual"
-  fi
-}
-
-assert_contains() {
-  local desc="$1" needle="$2" haystack="$3"
-  if echo "$haystack" | grep -qF "$needle"; then
-    PASS=$((PASS + 1))
-  else
-    FAIL=$((FAIL + 1))
-    echo "FAIL: $desc"
-    echo "  expected to contain: $needle"
-  fi
-}
-
-assert_not_empty() {
-  local desc="$1" value="$2"
-  if [ -n "$value" ]; then
-    PASS=$((PASS + 1))
-  else
-    FAIL=$((FAIL + 1))
-    echo "FAIL: $desc — output was empty"
-  fi
-}
+source "$SCRIPT_DIR/test_helpers.sh"
 
 # --- render_standing_orders ---
 output=$(render_standing_orders 2>/dev/null)
@@ -77,8 +43,4 @@ count_missing=$(SO_DIR="/nonexistent" count_standing_orders)
 assert_eq "count_standing_orders: returns 0 for missing dir" "0" "$count_missing"
 
 # --- Summary ---
-echo ""
-echo "standing_orders tests: $PASS passed, $FAIL failed"
-if [ "$FAIL" -gt 0 ]; then
-  exit 1
-fi
+report_results "standing_orders tests"

@@ -5,33 +5,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/../lib/jq_helpers.sh"
 
-PASS=0
-FAIL=0
-
-assert_eq() {
-  local desc="$1" expected="$2" actual="$3"
-  if [ "$expected" = "$actual" ]; then
-    PASS=$((PASS + 1))
-  else
-    FAIL=$((FAIL + 1))
-    echo "FAIL: $desc"
-    echo "  expected: $expected"
-    echo "  actual:   $actual"
-  fi
-}
-
-assert_exit() {
-  local desc="$1" expected_code="$2"
-  shift 2
-  local actual_code=0
-  "$@" || actual_code=$?
-  if [ "$expected_code" = "$actual_code" ]; then
-    PASS=$((PASS + 1))
-  else
-    FAIL=$((FAIL + 1))
-    echo "FAIL: $desc (expected exit $expected_code, got $actual_code)"
-  fi
-}
+source "$SCRIPT_DIR/test_helpers.sh"
 
 # --- jq_get_field ---
 result=$(echo '{"name":"Admiral","version":2}' | jq_get_field '.name' '')
@@ -136,8 +110,4 @@ assert_eq "jq_read_config: returns default for missing file" "fallback" "$result
 rm -f "$TMPCONFIG"
 
 # --- Summary ---
-echo ""
-echo "jq_helpers tests: $PASS passed, $FAIL failed"
-if [ "$FAIL" -gt 0 ]; then
-  exit 1
-fi
+report_results "jq_helpers tests"

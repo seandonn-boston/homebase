@@ -6,9 +6,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 HOOKS_DIR="$SCRIPT_DIR/../../.hooks"
 
-PASS=0
-FAIL=0
-TOTAL=0
+source "$SCRIPT_DIR/test_helpers.sh"
 
 PAYLOAD='{"session_id":"idem-test","tool_name":"Read","tool_input":{"file_path":"/tmp/test.txt"},"tool_output":"hello"}'
 
@@ -31,7 +29,6 @@ IDEMPOTENT_HOOKS=(
 for hook in "${IDEMPOTENT_HOOKS[@]}"; do
   [ -f "$hook" ] || continue
   name=$(basename "$hook" .sh)
-  TOTAL=$((TOTAL + 1))
 
   # Fresh state for each test
   TMPDIR=$(mktemp -d)
@@ -55,6 +52,7 @@ for hook in "${IDEMPOTENT_HOOKS[@]}"; do
     PASS=$((PASS + 1))
   else
     FAIL=$((FAIL + 1))
+    ERRORS+="  FAIL: $name — not idempotent (Run 1: exit=$rc1, Run 2: exit=$rc2)\n"
     echo "FAIL: $name — not idempotent"
     echo "  Run 1: exit=$rc1 output='${out1:0:80}'"
     echo "  Run 2: exit=$rc2 output='${out2:0:80}'"
@@ -63,8 +61,4 @@ for hook in "${IDEMPOTENT_HOOKS[@]}"; do
   rm -rf "$TMPDIR"
 done
 
-echo ""
-echo "idempotency tests: $PASS/$TOTAL passed, $FAIL failed"
-if [ "$FAIL" -gt 0 ]; then
-  exit 1
-fi
+report_results "idempotency tests"

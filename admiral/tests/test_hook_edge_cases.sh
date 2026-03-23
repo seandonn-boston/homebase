@@ -14,16 +14,13 @@ mkdir -p "$TMPDIR/.admiral"
 echo '{"session_id":"edge-test","tool_call_count":0,"tokens_used":0}' > "$TMPDIR/.admiral/session_state.json"
 export CLAUDE_PROJECT_DIR="$TMPDIR"
 
-PASS=0
-FAIL=0
-TOTAL=0
+source "$SCRIPT_DIR/test_helpers.sh"
 
 # Test that a hook exits 0 (fail-open) on bad input
 test_fail_open() {
   local desc="$1"
   local hook="$2"
   local input="$3"
-  TOTAL=$((TOTAL + 1))
 
   local rc=0
   echo "$input" | timeout 10 bash "$hook" >/dev/null 2>/dev/null || rc=$?
@@ -34,6 +31,7 @@ test_fail_open() {
     PASS=$((PASS + 1))
   else
     FAIL=$((FAIL + 1))
+    ERRORS+="  FAIL: $desc — exit code $rc (expected 0 or 1)\n"
     echo "FAIL: $desc — exit code $rc (expected 0 or 1)"
   fi
 }
@@ -87,8 +85,4 @@ done
 # Cleanup
 rm -rf "$TMPDIR"
 
-echo ""
-echo "hook edge case tests: $PASS/$TOTAL passed, $FAIL failed"
-if [ "$FAIL" -gt 0 ]; then
-  exit 1
-fi
+report_results "hook edge case tests"

@@ -80,10 +80,7 @@ export class AdmiralServer {
       { pattern: "/api/trace", handler: (res) => this.json(res, this.trace.buildTrace()) },
       {
         pattern: "/api/trace/ascii",
-        handler: (res) => {
-          res.writeHead(200, { "Content-Type": "text/plain" });
-          res.end(this.trace.renderAscii());
-        },
+        handler: (res) => this.text(res, this.trace.renderAscii()),
       },
       { pattern: "/api/session", handler: (res) => this.serveSessionState(res) },
       {
@@ -174,9 +171,7 @@ export class AdmiralServer {
       ingester: this.ingester ? this.ingester.getStats() : null,
     };
 
-    const statusCode = isStale ? 503 : 200;
-    res.writeHead(statusCode, { "Content-Type": "application/json" });
-    res.end(JSON.stringify(health, null, 2));
+    this.jsonWithStatus(res, isStale ? 503 : 200, health);
   }
 
   private serveSessionState(res: http.ServerResponse): void {
@@ -187,41 +182,44 @@ export class AdmiralServer {
         const data = JSON.parse(content);
         this.json(res, data);
       } else {
-        res.writeHead(404, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ error: "No session state file found" }));
+        this.errorJson(res, 404, "No session state file found");
       }
     } catch (err) {
       const message = errorMessage(err);
       console.error(`[admiral-server] Failed to read session state: ${message}`);
-      res.writeHead(500, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ error: "Failed to read session state", detail: message }));
+      this.errorJson(res, 500, "Failed to read session state");
     }
   }
 
   private json(res: http.ServerResponse, data: unknown): void {
-    res.writeHead(200, { "Content-Type": "application/json" });
+    this.jsonWithStatus(res, 200, data);
+  }
+
+  private jsonWithStatus(res: http.ServerResponse, status: number, data: unknown): void {
+    res.writeHead(status, { "Content-Type": "application/json" });
     res.end(JSON.stringify(data, null, 2));
   }
 
+  private text(res: http.ServerResponse, content: string): void {
+    res.writeHead(200, { "Content-Type": "text/plain" });
+    res.end(content);
+  }
+
   private errorJson(res: http.ServerResponse, status: number, message: string): void {
-    res.writeHead(status, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ error: message, status }));
+    this.jsonWithStatus(res, status, { error: message, status });
   }
 
   private serveDashboard(res: http.ServerResponse): void {
     const dashboardPath = path.join(__dirname, "dashboard", "index.html");
-
-    // Try compiled location first, then source location
     const sourcePath = path.join(__dirname, "..", "src", "dashboard", "index.html");
     const filePath = fs.existsSync(dashboardPath) ? dashboardPath : sourcePath;
 
-    if (fs.existsSync(filePath)) {
-      res.writeHead(200, { "Content-Type": "text/html" });
-      res.end(fs.readFileSync(filePath, "utf-8"));
-    } else {
-      res.writeHead(200, { "Content-Type": "text/html" });
-      res.end(this.fallbackDashboard());
-    }
+    const html = fs.existsSync(filePath)
+      ? fs.readFileSync(filePath, "utf-8")
+      : this.fallbackDashboard();
+
+    res.writeHead(200, { "Content-Type": "text/html" });
+    res.end(html);
   }
 
   private fallbackDashboard(): string {

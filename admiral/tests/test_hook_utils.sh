@@ -5,20 +5,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LIB_DIR="$SCRIPT_DIR/../lib"
 
-PASS=0
-FAIL=0
-
-assert_eq() {
-  local desc="$1" expected="$2" actual="$3"
-  if [ "$expected" = "$actual" ]; then
-    PASS=$((PASS + 1))
-  else
-    FAIL=$((FAIL + 1))
-    echo "FAIL: $desc"
-    echo "  expected: $expected"
-    echo "  actual:   $actual"
-  fi
-}
+source "$SCRIPT_DIR/test_helpers.sh"
 
 # --- hook_log ---
 stderr_output=$(HOOK_NAME="test_hook" bash -c "source $LIB_DIR/hook_utils.sh; hook_log info 'test message' '{\"key\":\"val\"}'" 2>&1 >/dev/null)
@@ -88,8 +75,4 @@ HOOK_NAME="test" bash -c "source $LIB_DIR/hook_utils.sh; hook_require_dep nonexi
 assert_eq "hook_require_dep: missing dep, exit 4" "4" "$rc"
 
 # --- Summary ---
-echo ""
-echo "hook_utils tests: $PASS passed, $FAIL failed"
-if [ "$FAIL" -gt 0 ]; then
-  exit 1
-fi
+report_results "hook_utils tests"

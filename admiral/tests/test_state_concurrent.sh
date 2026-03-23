@@ -8,20 +8,7 @@ export CLAUDE_PROJECT_DIR="$TMPDIR"
 
 source "$SCRIPT_DIR/../lib/state.sh"
 
-PASS=0
-FAIL=0
-
-assert_eq() {
-  local desc="$1" expected="$2" actual="$3"
-  if [ "$expected" = "$actual" ]; then
-    PASS=$((PASS + 1))
-  else
-    FAIL=$((FAIL + 1))
-    echo "FAIL: $desc"
-    echo "  expected: $expected"
-    echo "  actual:   $actual"
-  fi
-}
+source "$SCRIPT_DIR/test_helpers.sh"
 
 # --- Basic state operations ---
 init_session_state "test-session"
@@ -107,8 +94,4 @@ assert_eq "corrupted state: load_state reinitializes" "1" "$has_sid"
 # Cleanup
 rm -rf "$TMPDIR"
 
-echo ""
-echo "state concurrent tests: $PASS passed, $FAIL failed"
-if [ "$FAIL" -gt 0 ]; then
-  exit 1
-fi
+report_results "state concurrent tests"
