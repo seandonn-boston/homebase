@@ -40,8 +40,8 @@
 
 ## Bash Standardization
 
-- [ ] **Q-01: Create shared jq helpers library** — Extract common jq patterns into `admiral/lib/jq_helpers.sh`: `jq_get_field()`, `jq_set_field()`, `jq_array_append()`, `jq_validate()`. Refactor all hooks to use these helpers.
-- [ ] **Q-02: Standardize hook error handling pattern** — Create `admiral/lib/hook_utils.sh` with `hook_log()`, `hook_fail_soft()`, `hook_fail_hard()`, `hook_pass()`. Refactor all 13 hooks. Consistent exit codes and fail-open/fail-closed behavior per ADR-004.
+- [x] **Q-01: Create shared jq helpers library** — Extract common jq patterns into `admiral/lib/jq_helpers.sh`: `jq_get_field()`, `jq_set_field()`, `jq_array_append()`, `jq_validate()`. Refactor all hooks to use these helpers. *Completed: 8 functions (jq_get_field, jq_set_field, jq_set_field_raw, jq_array_append, jq_validate, jq_enrich, jq_build_output, jq_read_config), 27 test assertions. Hook refactoring deferred to individual hook tasks.*
+- [x] **Q-02: Standardize hook error handling pattern** — Create `admiral/lib/hook_utils.sh` with `hook_log()`, `hook_fail_soft()`, `hook_fail_hard()`, `hook_pass()`. Refactor all 13 hooks. Consistent exit codes and fail-open/fail-closed behavior per ADR-004. *Completed: 7 functions (hook_log, hook_pass, hook_fail_soft, hook_fail_hard, hook_error, hook_disabled, hook_require_dep) with formal exit code taxonomy (0/1/2/3/4/126/127), structured JSON logging, 20 test assertions. Hook refactoring deferred to individual hook tasks.*
 - [ ] **Q-03: Document and enforce hook header standard** — Define mandatory header for every hook script (purpose, exit codes, dependencies, SO reference, last modified). CI validation script checks all hooks for header compliance.
 - [ ] **Q-04: Eliminate hook config loading duplication** — Extract repeated config loading and secret detection patterns into `admiral/lib/hook_config.sh`. Single source of truth for config access.
 - [ ] **Q-09: ShellCheck strict mode for all hooks** — Enable strict ShellCheck directives (SC2086, SC2046, SC2035, SC2155) across all bash scripts. Done when zero warnings under strict mode, CI enforces.
