@@ -21,7 +21,7 @@ Tracks the gap between what the spec defines and what is implemented as runnable
 | 1 | Strategy & Context Engineering | Partial | `admiral/standing-orders/`, `.hooks/brain_context_router.sh` | Standing orders loaded at session start; Brain context routing implemented as hook |
 | 2 | Deterministic Enforcement | Partial | `.hooks/prohibitions_enforcer.sh`, `.hooks/scope_boundary_guard.sh`, `.hooks/pre_tool_use_adapter.sh` | Bypass/irreversible patterns hard-block (exit 2); secrets advisory-only; scope boundary advisory |
 | 3 | Fleet Composition | Not started | — | 71 agent roles defined in spec; no fleet orchestration code |
-| 4 | Brain Knowledge System | Partial | `admiral/brain/`, `.hooks/brain_context_router.sh` | B1 schema defined; brain context router suggests queries; B2/B3 not started |
+| 4 | Brain Knowledge System | Partial | `.brain/`, `.hooks/brain_context_router.sh` | B1 schema defined; brain context router suggests queries; B2/B3 not started |
 | 5 | Execution Patterns | Not started | — | Spec defines parallelism, handoff, escalation patterns; no runtime |
 | 6 | Quality Assurance | Partial | `control-plane/src/runaway-detector.ts` | SPC-based anomaly detection, loop/spike/recursive detection; no SDLC gates |
 | 7 | Operations | Partial | `control-plane/src/server.ts`, `control-plane/src/ingest.ts` | HTTP API, event ingestion, /health endpoint; no alerting pipeline |
