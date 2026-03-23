@@ -83,8 +83,9 @@ cp "$JSON_REG" "$TEMP_DIR/reference_constants.json"
 # Introduce a divergence in the temp copy
 jq '.constants.tool_token_estimates.Bash = 999' "$TEMP_DIR/reference_constants.json" > "$TEMP_DIR/diverged.json"
 
-# Temporarily swap the file to test detection
+# Temporarily swap the file to test detection — trap ensures restore on failure
 cp "$JSON_REG" "$TEMP_DIR/backup.json"
+trap 'cp "$TEMP_DIR/backup.json" "$JSON_REG" 2>/dev/null; rm -rf "$TEMP_DIR"' EXIT
 cp "$TEMP_DIR/diverged.json" "$JSON_REG"
 
 DIV_EXIT=0
@@ -93,6 +94,7 @@ assert_true "Validator detects divergence" "$([ "$DIV_EXIT" -ne 0 ] && echo true
 
 # Restore original
 cp "$TEMP_DIR/backup.json" "$JSON_REG"
+trap - EXIT
 rm -rf "$TEMP_DIR"
 
 # Verify restore worked
