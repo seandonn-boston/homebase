@@ -347,6 +347,21 @@ teardown
 echo ""
 
 # ============================================================
+# Invalid JSON input test
+# ============================================================
+echo "--- Invalid JSON Input ---"
+
+TMPBAD=$(mktemp)
+echo "this is not json at all" > "$TMPBAD"
+rc=0
+output=$("$VALIDATE" "$TMPBAD" 2>&1) || rc=$?
+assert_exit_code "Invalid JSON file exits 2" 2 "$rc"
+assert_contains "Reports invalid JSON" "$output" "Not valid JSON"
+rm -f "$TMPBAD"
+
+echo ""
+
+# ============================================================
 echo "========================================="
 echo "Boundaries Validator Tests: $PASS passed, $FAIL failed"
 echo "========================================="

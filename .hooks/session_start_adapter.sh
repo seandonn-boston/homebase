@@ -40,12 +40,12 @@ if [ -x "$GT_VALIDATOR" ] && [ -f "$GT_PATH" ]; then
     GT_WARNING="Ground Truth validation passed with warnings: $gt_out "
   fi
   # Log validation result
-  jq -n --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
-        --arg trace "$TRACE_ID" \
-        --arg sid "$SESSION_ID" \
-        --argjson rc "$gt_rc" \
-        '{event: "ground_truth_validation", timestamp: $ts, trace_id: $trace, session_id: $sid, exit_code: $rc}' \
-        >> "$PROJECT_DIR/.admiral/event_log.jsonl" 2>/dev/null || true
+  jq -cn --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+         --arg trace "$TRACE_ID" \
+         --arg sid "$SESSION_ID" \
+         --argjson rc "$gt_rc" \
+         '{event: "ground_truth_validation", timestamp: $ts, trace_id: $trace, session_id: $sid, exit_code: $rc}' \
+         >> "$PROJECT_DIR/.admiral/event_log.jsonl" 2>/dev/null || true
 elif [ -x "$GT_VALIDATOR" ] && [ ! -f "$GT_PATH" ]; then
   GT_WARNING="Ground Truth document not found at $GT_PATH — create one with: generate_ground_truth $PROJECT_DIR "
 fi
@@ -65,13 +65,13 @@ SO_COUNT=$(count_standing_orders)
 
 # 6. Log session start event
 EVENT_LOG="$PROJECT_DIR/.admiral/event_log.jsonl"
-jq -n --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
-      --arg trace "$TRACE_ID" \
-      --arg sid "$SESSION_ID" \
-      --arg model "$MODEL" \
-      --argjson so_count "$SO_COUNT" \
-      '{event: "session_start", timestamp: $ts, trace_id: $trace, session_id: $sid, model: $model, standing_orders_loaded: $so_count}' \
-      >> "$EVENT_LOG" 2>/dev/null || true
+jq -cn --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+       --arg trace "$TRACE_ID" \
+       --arg sid "$SESSION_ID" \
+       --arg model "$MODEL" \
+       --argjson so_count "$SO_COUNT" \
+       '{event: "session_start", timestamp: $ts, trace_id: $trace, session_id: $sid, model: $model, standing_orders_loaded: $so_count}' \
+       >> "$EVENT_LOG" 2>/dev/null || true
 
 # 7. Output for Claude Code — inject Standing Orders as system message
 # Include any initialization warnings so they're visible
