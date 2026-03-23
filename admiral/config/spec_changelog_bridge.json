@@ -1,0 +1,190 @@
+{
+  "$schema": "spec-changelog-bridge.v1",
+  "description": "Maps spec versions to implementation status, computes spec freshness, and flags unimplemented spec changes. Generated for SD-09.",
+  "current_spec_version": "v0.23.1-alpha",
+  "implementation_target_version": "v0.17.1-alpha",
+  "last_audited": "2026-03-20",
+  "freshness": {
+    "score_pct": 44,
+    "rating": "stale",
+    "ratings_scale": {
+      "fresh": ">=80% — implementation tracks spec closely",
+      "aging": "60-79% — some spec changes not yet reflected",
+      "stale": "40-59% — significant spec drift",
+      "outdated": "<40% — implementation far behind spec"
+    },
+    "explanation": "Implementation targets v0.17.1-alpha but spec is at v0.23.1-alpha. Multiple major versions behind with unimplemented changes in fleet, brain, and operations areas."
+  },
+  "version_map": [
+    {
+      "spec_version": "v0.10.0-alpha",
+      "implementation_status": "partial",
+      "changes_implemented": [
+        "Version consolidation format adopted",
+        "Enforcement vs monitoring distinction (Part 3) — fully implemented in hooks",
+        "Standing orders classified by mechanism"
+      ],
+      "changes_not_implemented": [
+        "CI version propagation to 4 display locations",
+        "Fortune 500 adoption simulation (research, not implementation)"
+      ]
+    },
+    {
+      "spec_version": "v0.9.0-alpha",
+      "implementation_status": "partial",
+      "changes_implemented": [
+        "Hook enforcement coverage improved (8/15 SOs have hooks)",
+        "Hook test suite created"
+      ],
+      "changes_not_implemented": [
+        "Fleet maturity language changes (no fleet runtime)",
+        "Monitor quarantine Layers 3-5"
+      ]
+    },
+    {
+      "spec_version": "v0.8.0-alpha",
+      "implementation_status": "partial",
+      "changes_implemented": [
+        "SPC-based anomaly detection in runaway detector",
+        "Control plane MVP (HTTP server, event ingestion, dashboard)",
+        "24 passing control plane tests"
+      ],
+      "changes_not_implemented": [
+        "Event-driven Brain operations with SPC health metrics"
+      ]
+    },
+    {
+      "spec_version": "v0.7.0-alpha",
+      "implementation_status": "partial",
+      "changes_implemented": [
+        "Brain context router hook (brain consultation integration)",
+        "Token budget gate converted to advisory checkpoint",
+        "Hook deadlock elimination"
+      ],
+      "changes_not_implemented": [
+        "Context source routing logic (long context vs RAG vs escalate) — partial",
+        "Session Thermal Model"
+      ]
+    },
+    {
+      "spec_version": "v0.6.0-alpha",
+      "implementation_status": "partial",
+      "changes_implemented": [
+        "QUICKSTART gap closure"
+      ],
+      "changes_not_implemented": [
+        "Remaining Phase 4.4 implementation gaps"
+      ]
+    },
+    {
+      "spec_version": "v0.5.3-alpha",
+      "implementation_status": "full",
+      "changes_implemented": [
+        "All 14 spec-gaps resolved with concrete thresholds",
+        "Reference constants registry mirrors spec-gap thresholds",
+        "Unified Trust Model with promotion/demotion thresholds"
+      ],
+      "changes_not_implemented": []
+    },
+    {
+      "spec_version": "v0.5.0-alpha",
+      "implementation_status": "partial",
+      "changes_implemented": [
+        "Reference constants registry created",
+        "Progressive adoption model defined in spec"
+      ],
+      "changes_not_implemented": [
+        "Part 12 Data Ecosystem — partially implemented (events/traces yes, analytics no)"
+      ]
+    },
+    {
+      "spec_version": "v0.4.0-alpha",
+      "implementation_status": "partial",
+      "changes_implemented": [
+        "Fleet Control Plane progressive profiles defined",
+        "Control plane TypeScript reference with XSS fixes"
+      ],
+      "changes_not_implemented": [
+        "Multi-profile Control Plane UI (only CP1 CLI dashboard exists)"
+      ]
+    },
+    {
+      "spec_version": "v0.3.0-alpha",
+      "implementation_status": "partial",
+      "changes_implemented": [
+        "Brain B1 file-based level implemented",
+        "4 hook manifests created",
+        "Agent definition schema created"
+      ],
+      "changes_not_implemented": [
+        "Brain B2/B3 (vector store, HNSW)",
+        "Monitor scanner spec implementation",
+        "Fleet orchestration runtime"
+      ]
+    },
+    {
+      "spec_version": "v0.2.0-alpha",
+      "implementation_status": "partial",
+      "changes_implemented": [
+        "8 hook implementations (of 8 manifests)",
+        "Brain B1 tools (query, record, retrieve, audit)",
+        "Session state management"
+      ],
+      "changes_not_implemented": [
+        "71 core + 34 extended agent definitions (schemas only, no runtime)",
+        "18 attack corpus scenarios (not automated)"
+      ]
+    }
+  ],
+  "drift_flags": [
+    {
+      "severity": "high",
+      "area": "Fleet Orchestration",
+      "spec_parts": ["part4-fleet", "part6-execution"],
+      "description": "71 agent roles defined since v0.2.0; no fleet orchestration runtime exists. Blocks multi-agent coordination.",
+      "spec_version_introduced": "v0.2.0-alpha"
+    },
+    {
+      "severity": "high",
+      "area": "Brain B2/B3",
+      "spec_parts": ["part5-brain"],
+      "description": "Vector store (B2) and HNSW index (B3) specified since v0.3.0; only B1 file-based implemented.",
+      "spec_version_introduced": "v0.3.0-alpha"
+    },
+    {
+      "severity": "medium",
+      "area": "Control Plane Profiles",
+      "spec_parts": ["part8-operations"],
+      "description": "5 progressive CP profiles defined since v0.4.0; only CP1 CLI dashboard exists.",
+      "spec_version_introduced": "v0.4.0-alpha"
+    },
+    {
+      "severity": "medium",
+      "area": "SDLC Quality Gates",
+      "spec_parts": ["part7-quality"],
+      "description": "Automated review, test generation, coverage tracking specified; only SPC anomaly detection implemented.",
+      "spec_version_introduced": "v0.5.0-alpha"
+    },
+    {
+      "severity": "medium",
+      "area": "Cross-Platform Adapters",
+      "spec_parts": ["part9-platform"],
+      "description": "Multi-platform adapter pattern specified; only Claude Code adapter exists.",
+      "spec_version_introduced": "v0.3.0-alpha"
+    },
+    {
+      "severity": "low",
+      "area": "MCP Integration",
+      "spec_parts": ["part13-mcp-integration"],
+      "description": "MCP protocol integration specified as optional; not yet implemented.",
+      "spec_version_introduced": "v0.5.0-alpha"
+    },
+    {
+      "severity": "low",
+      "area": "Data Ecosystem Analytics",
+      "spec_parts": ["part12-data-ecosystem"],
+      "description": "Enrichment pipeline and analytics layer specified; only raw event/trace ingestion exists.",
+      "spec_version_introduced": "v0.5.0-alpha"
+    }
+  ]
+}

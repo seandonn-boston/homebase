@@ -1,13 +1,22 @@
 {
   "agent_id": "",
+  "version": "1.0.0",
   "role": "implementer",
-  "authority_tier": "starter",
-  "project": "helm",
-  "model_tier": "tier2_workhorse",
   "asp_spec_ref": null,
-  "scope_boundaries": {
-    "allowed_paths": [],
-    "denied_paths": ["aiStrat/", ".github/"],
-    "tool_permissions": []
-  }
+  "model_tier": "tier2_workhorse",
+  "tools": {
+    "allowed": ["Read", "Edit", "Write", "Bash", "Glob", "Grep"],
+    "denied": ["Agent", "WebFetch", "WebSearch"]
+  },
+  "paths": {
+    "read": ["**/*"],
+    "write": [],
+    "denied": ["aiStrat/", ".github/"]
+  },
+  "authority": {
+    "autonomous": [],
+    "propose": [],
+    "escalate": []
+  },
+  "standing_orders": "all"
 }

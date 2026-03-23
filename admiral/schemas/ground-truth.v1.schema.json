@@ -1,0 +1,353 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ground-truth.v1.schema.json",
+  "title": "Admiral Framework Ground Truth Document",
+  "description": "Machine-readable Ground Truth template defining Mission, Boundaries, Success Criteria, and environmental context per Admiral Spec Part 1 (Strategy) and Part 2 (Context).",
+  "type": "object",
+  "required": ["schema_version", "project", "mission", "boundaries", "success_criteria", "ground_truth"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version of this schema."
+    },
+    "project": {
+      "type": "object",
+      "required": ["name", "last_updated", "phase"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Project name."
+        },
+        "last_updated": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "ISO 8601 date of last update."
+        },
+        "phase": {
+          "type": "string",
+          "enum": ["greenfield", "feature-add", "refactor", "migration", "maintenance"],
+          "description": "Current project phase."
+        }
+      }
+    },
+    "mission": {
+      "type": "object",
+      "required": ["identity", "success_state", "stakeholders", "phase", "pipeline_entry"],
+      "additionalProperties": false,
+      "description": "Strategy Triangle vertex 1: what are we building and what does success look like.",
+      "properties": {
+        "identity": {
+          "type": "string",
+          "minLength": 1,
+          "description": "One-sentence project identity: 'This project is [identity].'"
+        },
+        "success_state": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Concrete, observable success state: 'It is successful when [state].'"
+        },
+        "stakeholders": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Who this is for and their core need: 'Built for [who] who need [what].'"
+        },
+        "phase": {
+          "type": "string",
+          "enum": ["greenfield", "feature-add", "refactor", "migration", "maintenance"],
+          "description": "Current phase (must match project.phase)."
+        },
+        "pipeline_entry": {
+          "type": "string",
+          "enum": ["Requirements", "Design", "Tasks", "Implementation"],
+          "description": "Where the fleet takes over in the pipeline."
+        }
+      }
+    },
+    "boundaries": {
+      "type": "object",
+      "required": ["non_goals", "hard_constraints", "resource_budgets", "llm_last"],
+      "additionalProperties": false,
+      "description": "Strategy Triangle vertex 2: what the project is NOT, resource limits, deterministic-vs-LLM line.",
+      "properties": {
+        "non_goals": {
+          "type": "object",
+          "required": ["functional", "quality", "architectural"],
+          "additionalProperties": false,
+          "properties": {
+            "functional": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Features or capabilities explicitly out of scope."
+            },
+            "quality": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Levels of polish not required at this phase."
+            },
+            "architectural": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Patterns or technologies that must NOT be used."
+            }
+          }
+        },
+        "hard_constraints": {
+          "type": "object",
+          "required": ["tech_stack", "external_deadlines", "compatibility", "regulatory", "protocol_scope"],
+          "additionalProperties": false,
+          "properties": {
+            "tech_stack": {
+              "type": "array",
+              "items": { "type": "string", "minLength": 1 },
+              "minItems": 1,
+              "description": "Exact languages/frameworks/tools WITH version numbers. Reject vague versions (latest, stable, current, newest, recent, lts)."
+            },
+            "external_deadlines": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Ship dates, demo dates, review dates."
+            },
+            "compatibility": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Browser support, API backward compat, platform requirements."
+            },
+            "regulatory": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Legal or organizational mandates."
+            },
+            "protocol_scope": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Approved MCP servers, A2A requirements, trust classification policy."
+            }
+          }
+        },
+        "resource_budgets": {
+          "type": "object",
+          "required": ["token_budget", "time_budget", "tool_call_limits", "scope_boundary", "quality_floor"],
+          "additionalProperties": false,
+          "properties": {
+            "token_budget": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Max tokens per task before deliver or escalate."
+            },
+            "time_budget": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Wall-clock time limit per task."
+            },
+            "tool_call_limits": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Max API/tool invocations per task."
+            },
+            "scope_boundary": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1,
+              "description": "File paths, repos, services each agent may touch."
+            },
+            "quality_floor": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Minimum acceptable quality bar (concrete definition)."
+            }
+          }
+        },
+        "llm_last": {
+          "type": "object",
+          "required": ["deterministic", "llm_judgment"],
+          "additionalProperties": false,
+          "properties": {
+            "deterministic": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1,
+              "description": "Tasks handled by static analysis, linters, shell commands, type checkers."
+            },
+            "llm_judgment": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1,
+              "description": "Tasks requiring understanding of intent, tradeoffs, novel design."
+            }
+          }
+        }
+      }
+    },
+    "success_criteria": {
+      "type": "object",
+      "required": ["functional", "quality", "completeness", "negative", "failure_handling"],
+      "additionalProperties": false,
+      "description": "Strategy Triangle vertex 3: machine-verifiable definition of done.",
+      "properties": {
+        "functional": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1,
+          "description": "What must the output DO? Testable behaviors."
+        },
+        "quality": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1,
+          "description": "Measurable gates: linting, tests, coverage thresholds."
+        },
+        "completeness": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1,
+          "description": "What must exist beyond core deliverable."
+        },
+        "negative": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1,
+          "description": "What output must NOT do."
+        },
+        "failure_handling": {
+          "type": "string",
+          "enum": ["escalate", "deliver_partial_with_explanation", "block_and_report"],
+          "description": "What happens if criteria cannot be met."
+        },
+        "judgment_boundaries": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Where criteria are ambiguous — name explicitly with decision authority tier."
+        }
+      }
+    },
+    "ground_truth": {
+      "type": "object",
+      "required": ["domain_ontology", "environment", "configuration"],
+      "additionalProperties": false,
+      "description": "The single source of reality per Part 2 Section 2.",
+      "properties": {
+        "domain_ontology": {
+          "type": "object",
+          "required": ["glossary", "naming_conventions", "status_definitions", "architecture_vocabulary"],
+          "additionalProperties": false,
+          "properties": {
+            "glossary": {
+              "type": "object",
+              "additionalProperties": { "type": "string" },
+              "description": "Project-specific terms with precise definitions."
+            },
+            "naming_conventions": {
+              "type": "string",
+              "minLength": 1,
+              "description": "File, branch, variable, component naming conventions."
+            },
+            "status_definitions": {
+              "type": "object",
+              "additionalProperties": { "type": "string" },
+              "description": "What in_progress, blocked, done, etc. mean concretely."
+            },
+            "architecture_vocabulary": {
+              "type": "object",
+              "additionalProperties": { "type": "string" },
+              "description": "What service, layer, module, feature mean in this project."
+            }
+          }
+        },
+        "environment": {
+          "type": "object",
+          "required": ["tech_stack", "infrastructure", "access_permissions", "known_issues", "external_dependencies"],
+          "additionalProperties": false,
+          "properties": {
+            "tech_stack": {
+              "type": "array",
+              "items": { "type": "string", "minLength": 1 },
+              "minItems": 1,
+              "description": "Exact versions. NEVER vague (latest, stable, current, newest, recent, lts)."
+            },
+            "infrastructure": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Where things run, how they connect, deployment targets."
+            },
+            "access_permissions": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "description": "Per-role enumeration of what APIs, services, files, tools each role has access to."
+            },
+            "known_issues": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Bugs, limitations, workarounds, do-not-touch areas."
+            },
+            "external_dependencies": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Third-party services, rate limits, SLAs, known instabilities."
+            }
+          }
+        },
+        "configuration": {
+          "type": "object",
+          "required": ["agents_md", "tool_pointers", "hooks_count", "hooks_last_audit", "skills", "mcp_servers"],
+          "additionalProperties": false,
+          "properties": {
+            "agents_md": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Location of canonical AGENTS.md."
+            },
+            "tool_pointers": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Tool-specific config files (CLAUDE.md, .cursorrules, etc.)."
+            },
+            "hooks_count": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Number of active hooks."
+            },
+            "hooks_last_audit": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+              "description": "Date of last hooks audit."
+            },
+            "skills": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "On-demand knowledge skill files."
+            },
+            "mcp_servers": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["name", "version", "trust_classification"],
+                "additionalProperties": false,
+                "properties": {
+                  "name": { "type": "string", "minLength": 1 },
+                  "version": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Pinned version. NEVER 'latest'."
+                  },
+                  "trust_classification": {
+                    "type": "string",
+                    "enum": ["official", "community", "internal"],
+                    "description": "Per Part 13 Section 2 Server Addition Checklist."
+                  }
+                }
+              },
+              "description": "MCP servers with pinned versions and trust classification."
+            }
+          }
+        }
+      }
+    }
+  }
+}

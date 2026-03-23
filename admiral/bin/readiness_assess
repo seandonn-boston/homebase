@@ -1,0 +1,307 @@
+#!/bin/bash
+# Admiral Framework — Project Readiness Assessment Tool
+# Accepts a project root and Ground Truth path, checks Ground Truth completeness,
+# CI config, test suite, linter config, and documented conventions.
+# Outputs Ready/Partially Ready/Not Ready with detailed breakdown and preparation path.
+# Usage: readiness_assess [--json] <project-root> <ground-truth-path>
+# Exit codes: 0=Ready, 1=Partially Ready, 2=Not Ready
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ADMIRAL_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+VALIDATE_GT="$ADMIRAL_DIR/bin/validate_ground_truth"
+VALIDATE_BOUNDS="$ADMIRAL_DIR/bin/validate_boundaries"
+
+JSON_MODE=false
+PROJECT_ROOT=""
+GT_PATH=""
+
+for arg in "$@"; do
+  case "$arg" in
+    --json) JSON_MODE=true ;;
+    *)
+      if [ -z "$PROJECT_ROOT" ]; then
+        PROJECT_ROOT="$arg"
+      elif [ -z "$GT_PATH" ]; then
+        GT_PATH="$arg"
+      fi
+      ;;
+  esac
+done
+
+if [ -z "$PROJECT_ROOT" ] || [ -z "$GT_PATH" ]; then
+  echo "Usage: readiness_assess [--json] <project-root> <ground-truth-path>"
+  echo ""
+  echo "Assesses project readiness by checking:"
+  echo "  1. Ground Truth document completeness (via validate_ground_truth)"
+  echo "  2. CI configuration (GitHub Actions, etc.)"
+  echo "  3. Test suite presence"
+  echo "  4. Linter configuration"
+  echo "  5. Documented conventions (CONTRIBUTING, README, style guide)"
+  echo ""
+  echo "Options:"
+  echo "  --json    Output results as JSON (for programmatic consumption)"
+  echo ""
+  echo "Status levels:"
+  echo "  Ready            All checks pass (exit 0)"
+  echo "  Partially Ready  Ground Truth valid but infrastructure gaps (exit 1)"
+  echo "  Not Ready        Ground Truth invalid or missing (exit 2)"
+  exit 1
+fi
+
+if [ ! -d "$PROJECT_ROOT" ]; then
+  echo "ERROR: Project root directory not found: $PROJECT_ROOT"
+  exit 2
+fi
+
+# --- Check results ---
+CHECKS_PASS=()
+CHECKS_WARN=()
+CHECKS_FAIL=()
+PREP_STEPS=()
+
+# ============================================================
+# Check 1: Ground Truth Document
+# ============================================================
+gt_status="fail"
+gt_detail=""
+
+if [ ! -f "$GT_PATH" ]; then
+  gt_detail="Ground Truth file not found: $GT_PATH"
+  CHECKS_FAIL+=("Ground Truth: $gt_detail")
+  PREP_STEPS+=("Create a Ground Truth document: generate_ground_truth $PROJECT_ROOT")
+else
+  gt_rc=0
+  "$VALIDATE_GT" "$GT_PATH" >/dev/null 2>&1 || gt_rc=$?
+
+  if [ "$gt_rc" -eq 0 ]; then
+    gt_status="pass"
+    gt_detail="Ground Truth document is valid"
+    CHECKS_PASS+=("Ground Truth: valid")
+  elif [ "$gt_rc" -eq 1 ]; then
+    gt_status="warn"
+    gt_detail="Ground Truth document has warnings"
+    CHECKS_WARN+=("Ground Truth: valid with warnings")
+  else
+    gt_status="fail"
+    gt_detail="Ground Truth document validation failed"
+    CHECKS_FAIL+=("Ground Truth: validation failed — run validate_ground_truth $GT_PATH for details")
+    PREP_STEPS+=("Fix Ground Truth document errors: validate_ground_truth $GT_PATH")
+  fi
+
+  # Also run boundaries check if GT exists
+  if [ -f "$VALIDATE_BOUNDS" ]; then
+    bounds_rc=0
+    "$VALIDATE_BOUNDS" "$GT_PATH" >/dev/null 2>&1 || bounds_rc=$?
+    if [ "$bounds_rc" -eq 2 ]; then
+      CHECKS_FAIL+=("Boundaries: missing required categories — run validate_boundaries $GT_PATH")
+      PREP_STEPS+=("Complete boundaries section: validate_boundaries $GT_PATH")
+      gt_status="fail"
+    elif [ "$bounds_rc" -eq 1 ]; then
+      CHECKS_WARN+=("Boundaries: present with warnings")
+    else
+      CHECKS_PASS+=("Boundaries: all categories present")
+    fi
+  fi
+fi
+
+# ============================================================
+# Check 2: CI Configuration
+# ============================================================
+ci_found=false
+
+if [ -d "$PROJECT_ROOT/.github/workflows" ] && ls "$PROJECT_ROOT/.github/workflows/"*.yml >/dev/null 2>&1; then
+  ci_found=true
+  CHECKS_PASS+=("CI config: GitHub Actions workflows found")
+elif [ -d "$PROJECT_ROOT/.github/workflows" ] && ls "$PROJECT_ROOT/.github/workflows/"*.yaml >/dev/null 2>&1; then
+  ci_found=true
+  CHECKS_PASS+=("CI config: GitHub Actions workflows found")
+elif [ -f "$PROJECT_ROOT/.gitlab-ci.yml" ]; then
+  ci_found=true
+  CHECKS_PASS+=("CI config: GitLab CI found")
+elif [ -f "$PROJECT_ROOT/Jenkinsfile" ]; then
+  ci_found=true
+  CHECKS_PASS+=("CI config: Jenkinsfile found")
+elif [ -f "$PROJECT_ROOT/.circleci/config.yml" ]; then
+  ci_found=true
+  CHECKS_PASS+=("CI config: CircleCI found")
+fi
+
+if [ "$ci_found" = false ]; then
+  CHECKS_WARN+=("CI config: no CI configuration found")
+  PREP_STEPS+=("Add CI configuration (e.g., .github/workflows/ci.yml)")
+fi
+
+# ============================================================
+# Check 3: Test Suite
+# ============================================================
+tests_found=false
+
+# Check common test directories
+for test_dir in tests test spec admiral/tests; do
+  if [ -d "$PROJECT_ROOT/$test_dir" ]; then
+    # Check for actual test files
+    test_count=$(find "$PROJECT_ROOT/$test_dir" -type f \( -name "test_*" -o -name "*_test.*" -o -name "*.test.*" -o -name "*.spec.*" \) 2>/dev/null | wc -l)
+    if [ "$test_count" -gt 0 ]; then
+      tests_found=true
+      CHECKS_PASS+=("Test suite: $test_count test file(s) found in $test_dir/")
+      break
+    fi
+  fi
+done
+
+# Also check for package.json test scripts
+if [ "$tests_found" = false ] && [ -f "$PROJECT_ROOT/package.json" ]; then
+  if jq -e '.scripts.test' "$PROJECT_ROOT/package.json" >/dev/null 2>&1; then
+    tests_found=true
+    CHECKS_PASS+=("Test suite: npm test script found in package.json")
+  fi
+fi
+
+if [ "$tests_found" = false ]; then
+  CHECKS_WARN+=("Test suite: no test files or test directories found")
+  PREP_STEPS+=("Add test suite (e.g., tests/ directory with test_*.sh files)")
+fi
+
+# ============================================================
+# Check 4: Linter Configuration
+# ============================================================
+linter_found=false
+
+for linter_file in .shellcheckrc .eslintrc .eslintrc.json .eslintrc.js .eslintrc.yml \
+                   .prettierrc .prettierrc.json .prettierrc.yml \
+                   .flake8 .pylintrc pyproject.toml \
+                   .rubocop.yml .golangci.yml; do
+  if [ -f "$PROJECT_ROOT/$linter_file" ]; then
+    linter_found=true
+    CHECKS_PASS+=("Linter config: $linter_file found")
+    break
+  fi
+done
+
+# Check for editorconfig as supplementary
+if [ -f "$PROJECT_ROOT/.editorconfig" ]; then
+  if [ "$linter_found" = false ]; then
+    linter_found=true
+    CHECKS_PASS+=("Linter config: .editorconfig found")
+  fi
+fi
+
+if [ "$linter_found" = false ]; then
+  CHECKS_WARN+=("Linter config: no linter configuration found")
+  PREP_STEPS+=("Add linter configuration (e.g., .shellcheckrc, .eslintrc)")
+fi
+
+# ============================================================
+# Check 5: Documented Conventions
+# ============================================================
+conventions_found=false
+
+for doc_file in CONTRIBUTING.md CONTRIBUTING.txt CONTRIBUTING \
+                docs/CONTRIBUTING.md docs/style-guide.md \
+                STYLE_GUIDE.md CONVENTIONS.md; do
+  if [ -f "$PROJECT_ROOT/$doc_file" ]; then
+    conventions_found=true
+    CHECKS_PASS+=("Documented conventions: $doc_file found")
+    break
+  fi
+done
+
+if [ "$conventions_found" = false ]; then
+  CHECKS_WARN+=("Documented conventions: no CONTRIBUTING or style guide found")
+  PREP_STEPS+=("Add documented conventions (e.g., CONTRIBUTING.md)")
+fi
+
+# ============================================================
+# Determine Overall Status
+# ============================================================
+
+if [ "$gt_status" = "fail" ]; then
+  OVERALL="Not Ready"
+  EXIT_CODE=2
+elif [ ${#CHECKS_FAIL[@]} -gt 0 ]; then
+  OVERALL="Not Ready"
+  EXIT_CODE=2
+elif [ ${#CHECKS_WARN[@]} -gt 0 ]; then
+  OVERALL="Partially Ready"
+  EXIT_CODE=1
+else
+  OVERALL="Ready"
+  EXIT_CODE=0
+fi
+
+# ============================================================
+# Output
+# ============================================================
+
+if [ "$JSON_MODE" = true ]; then
+  if [ ${#CHECKS_PASS[@]} -gt 0 ]; then
+    pass_json=$(printf '%s\n' "${CHECKS_PASS[@]}" | jq -R . | jq -s .)
+  else
+    pass_json="[]"
+  fi
+  if [ ${#CHECKS_WARN[@]} -gt 0 ]; then
+    warn_json=$(printf '%s\n' "${CHECKS_WARN[@]}" | jq -R . | jq -s .)
+  else
+    warn_json="[]"
+  fi
+  if [ ${#CHECKS_FAIL[@]} -gt 0 ]; then
+    fail_json=$(printf '%s\n' "${CHECKS_FAIL[@]}" | jq -R . | jq -s .)
+  else
+    fail_json="[]"
+  fi
+  if [ ${#PREP_STEPS[@]} -gt 0 ]; then
+    prep_json=$(printf '%s\n' "${PREP_STEPS[@]}" | jq -R . | jq -s .)
+  else
+    prep_json="[]"
+  fi
+
+  jq -n \
+    --arg status "$OVERALL" \
+    --argjson pass "$pass_json" \
+    --argjson warnings "$warn_json" \
+    --argjson failures "$fail_json" \
+    --argjson preparation "$prep_json" \
+    '{status: $status, pass: $pass, warnings: $warnings, failures: $failures, preparation: $preparation}'
+
+  exit "$EXIT_CODE"
+fi
+
+# Human-readable output
+echo "=== Project Readiness Assessment ==="
+echo ""
+echo "Project root: $PROJECT_ROOT"
+echo "Ground Truth: $GT_PATH"
+echo ""
+
+echo "--- Detailed Breakdown ---"
+echo ""
+
+for item in "${CHECKS_PASS[@]+"${CHECKS_PASS[@]}"}"; do
+  [ -n "$item" ] && echo "  [PASS] $item"
+done
+
+for item in "${CHECKS_WARN[@]+"${CHECKS_WARN[@]}"}"; do
+  [ -n "$item" ] && echo "  [WARN] $item"
+done
+
+for item in "${CHECKS_FAIL[@]+"${CHECKS_FAIL[@]}"}"; do
+  [ -n "$item" ] && echo "  [FAIL] $item"
+done
+
+echo ""
+echo "=== RESULT: $OVERALL ==="
+
+if [ ${#PREP_STEPS[@]} -gt 0 ]; then
+  echo ""
+  echo "--- Preparation Path ---"
+  local_idx=1
+  for step in "${PREP_STEPS[@]}"; do
+    echo "  $local_idx. $step"
+    local_idx=$((local_idx + 1))
+  done
+fi
+
+echo ""
+
+exit "$EXIT_CODE"

@@ -471,6 +471,104 @@ ADMIRAL_SCOPE_OVERRIDE="aiStrat" assert_exit_zero "Adapter exits 0 on aiStrat ed
 echo ""
 
 # ============================================================
+# Section 7: session_start_adapter — Ground Truth validation (ST-06)
+# ============================================================
+echo "--- Section 7: SessionStart GT Validation (ST-06) ---"
+
+# The session_start_adapter requires state.sh and standing_orders.sh
+# We test the GT validation logic by running the full adapter with a synthetic payload
+
+SESSION_PAYLOAD='{"session_id":"test-st06","model":"test-model"}'
+
+# 7a: With no ground-truth.json, adapter should still succeed (warning only)
+OUTPUT=$(run_hook "session_start_adapter.sh" "$SESSION_PAYLOAD")
+assert_contains "SessionStart succeeds without GT file" "$OUTPUT" '"continue"'
+
+# 7b: Check that the output includes systemMessage (Standing Orders injected)
+assert_contains "SessionStart injects systemMessage" "$OUTPUT" '"systemMessage"'
+
+# 7c: If GT file is missing, event log should still record the session start
+if [ -f "$PROJECT_DIR/.admiral/event_log.jsonl" ]; then
+  last_event=$(tail -1 "$PROJECT_DIR/.admiral/event_log.jsonl")
+  if echo "$last_event" | jq -e '.event == "session_start"' >/dev/null 2>&1; then
+    PASS=$((PASS + 1))
+    echo "  PASS: SessionStart logs session_start event"
+  else
+    FAIL=$((FAIL + 1))
+    ERRORS+="  FAIL: SessionStart event log missing session_start event\n"
+    echo "  FAIL: SessionStart event log missing session_start event"
+  fi
+else
+  FAIL=$((FAIL + 1))
+  ERRORS+="  FAIL: event_log.jsonl not created by SessionStart\n"
+  echo "  FAIL: event_log.jsonl not created by SessionStart"
+fi
+
+# 7d: Create a valid GT file and verify no warning is included
+TMPGT="$PROJECT_DIR/admiral/ground-truth.json"
+cat > "$TMPGT" <<'GTEOF'
+{
+  "schema_version": "1.0.0",
+  "project": {"name": "Admiral Framework", "last_updated": "2026-03-23", "phase": "greenfield"},
+  "mission": {"identity": "AI governance framework", "success_state": "Spec compliance", "stakeholders": "Engineering team", "phase": "greenfield", "pipeline_entry": "Implementation"},
+  "boundaries": {
+    "non_goals": {"functional": ["Not a chat app"], "quality": ["Not pursuing 100% coverage"], "architectural": ["No microservices"]},
+    "hard_constraints": {"tech_stack": ["bash 5.2", "jq 1.7", "node 20.11"]},
+    "resource_budgets": {"token_budget": "200k", "time_budget": "2h", "tool_call_limits": "100", "scope_boundary": ["admiral/", ".hooks/"], "quality_floor": "80%"},
+    "llm_last": {"deterministic": ["Linting via shellcheck", "Schema validation via jq"], "llm_judgment": ["Architecture decisions", "Code review"]}
+  },
+  "success_criteria": {"functional": ["All hooks work"], "quality": ["ShellCheck clean"], "completeness": ["All tasks done"], "negative": ["No security holes"], "failure_handling": "escalate"},
+  "ground_truth": {
+    "domain_ontology": {"naming_conventions": "snake_case"},
+    "environment": {"tech_stack": ["bash 5.2", "jq 1.7"], "infrastructure": "local development"},
+    "configuration": {"agents_md": "AGENTS.md"}
+  }
+}
+GTEOF
+
+OUTPUT=$(run_hook "session_start_adapter.sh" "$SESSION_PAYLOAD")
+# With valid GT, should not contain "FAILED" or "not found"
+if echo "$OUTPUT" | grep -q "FAILED\|not found"; then
+  FAIL=$((FAIL + 1))
+  ERRORS+="  FAIL: SessionStart warns on valid GT file\n"
+  echo "  FAIL: SessionStart warns on valid GT file"
+else
+  PASS=$((PASS + 1))
+  echo "  PASS: SessionStart does not warn with valid GT"
+fi
+
+# 7e: Check that GT validation event was logged
+if [ -f "$PROJECT_DIR/.admiral/event_log.jsonl" ]; then
+  gt_event=$(grep "ground_truth_validation" "$PROJECT_DIR/.admiral/event_log.jsonl" | tail -1)
+  if echo "$gt_event" | jq -e '.exit_code == 0' >/dev/null 2>&1; then
+    PASS=$((PASS + 1))
+    echo "  PASS: GT validation logged with exit_code 0"
+  else
+    FAIL=$((FAIL + 1))
+    ERRORS+="  FAIL: GT validation event not logged correctly\n"
+    echo "  FAIL: GT validation event not logged correctly"
+  fi
+else
+  FAIL=$((FAIL + 1))
+  ERRORS+="  FAIL: event_log.jsonl missing after GT validation\n"
+  echo "  FAIL: event_log.jsonl missing after GT validation"
+fi
+
+# 7f: Create an invalid GT and verify warning IS included
+cat > "$TMPGT" <<'GTEOF'
+{
+  "schema_version": "1.0.0",
+  "project": {"name": "", "last_updated": "2026-03-23", "phase": "greenfield"}
+}
+GTEOF
+
+OUTPUT=$(run_hook "session_start_adapter.sh" "$SESSION_PAYLOAD")
+assert_contains "SessionStart warns on invalid GT" "$OUTPUT" "Session Init Warning"
+
+# Cleanup
+rm -f "$TMPGT"
+
+# ============================================================
 # Summary
 # ============================================================
 echo "========================================"

@@ -1,0 +1,220 @@
+#!/bin/bash
+# Admiral Framework — Boundaries Checklist Validator
+# Reads the Boundaries section of a Ground Truth document and reports
+# which categories are present, empty, or missing.
+# Usage: validate_boundaries [--json] <path-to-ground-truth.json>
+# Exit codes: 0=all present, 1=warnings, 2=missing required categories
+set -euo pipefail
+
+JSON_MODE=false
+DOC=""
+
+for arg in "$@"; do
+  case "$arg" in
+    --json) JSON_MODE=true ;;
+    *) DOC="$arg" ;;
+  esac
+done
+
+if [ -z "$DOC" ]; then
+  echo "Usage: validate_boundaries [--json] <path-to-ground-truth.json>"
+  echo ""
+  echo "Reads the Boundaries section and reports category completeness."
+  echo "Designed for integration into readiness_assess.sh (ST-02)."
+  echo ""
+  echo "Options:"
+  echo "  --json    Output results as JSON (for programmatic consumption)"
+  echo ""
+  echo "Categories checked:"
+  echo "  non_goals        (functional, quality, architectural)"
+  echo "  hard_constraints (tech_stack, external_deadlines, compatibility, regulatory, protocol_scope)"
+  echo "  resource_budgets (token_budget, time_budget, tool_call_limits, scope_boundary, quality_floor)"
+  echo "  llm_last         (deterministic, llm_judgment)"
+  echo ""
+  echo "Exit codes:"
+  echo "  0  All required categories present and populated"
+  echo "  1  Warnings (present but partially empty)"
+  echo "  2  Errors (required categories missing or critically empty)"
+  exit 1
+fi
+
+if [ ! -f "$DOC" ]; then
+  echo "ERROR: File not found: $DOC"
+  exit 2
+fi
+
+if ! jq empty "$DOC" 2>/dev/null; then
+  echo "ERROR: Not valid JSON: $DOC"
+  exit 2
+fi
+
+ERRORS=()
+WARNINGS=()
+PRESENT=()
+MISSING=()
+
+VAGUE_PATTERN='(^|\s)(latest|stable|current|newest|recent|lts)(\s|$)'
+
+# Check if .boundaries exists at all
+if [ "$(jq 'has("boundaries")' "$DOC")" != "true" ]; then
+  ERRORS+=("Missing required section: boundaries")
+  MISSING+=("non_goals" "hard_constraints" "resource_budgets" "llm_last")
+else
+
+  # --- non_goals ---
+  if [ "$(jq '.boundaries | has("non_goals")' "$DOC")" != "true" ]; then
+    ERRORS+=("MISSING: non_goals — must define functional, quality, and architectural non-goals")
+    MISSING+=("non_goals")
+  else
+    PRESENT+=("non_goals")
+    for sub in functional quality architectural; do
+      if [ "$(jq ".boundaries.non_goals | has(\"$sub\")" "$DOC")" != "true" ]; then
+        WARNINGS+=("non_goals.$sub not defined")
+      fi
+    done
+  fi
+
+  # --- hard_constraints ---
+  if [ "$(jq '.boundaries | has("hard_constraints")' "$DOC")" != "true" ]; then
+    ERRORS+=("MISSING: hard_constraints — must define tech_stack, deadlines, compatibility, regulatory, protocol_scope")
+    MISSING+=("hard_constraints")
+  else
+    PRESENT+=("hard_constraints")
+    # tech_stack is critical — must be non-empty with exact versions
+    ts_len=$(jq '.boundaries.hard_constraints.tech_stack | length' "$DOC" 2>/dev/null || echo "0")
+    if [ "$ts_len" -eq 0 ]; then
+      ERRORS+=("EMPTY: hard_constraints.tech_stack — must list exact tech stack versions")
+    else
+      # Check for vague versions
+      for ((i=0; i<ts_len; i++)); do
+        item=$(jq -r ".boundaries.hard_constraints.tech_stack[$i]" "$DOC")
+        if echo "$item" | grep -iEq "$VAGUE_PATTERN"; then
+          ERRORS+=("VAGUE VERSION: hard_constraints.tech_stack contains '$item' — use exact version numbers (reject latest/stable/current/newest/recent/lts)")
+        fi
+      done
+    fi
+  fi
+
+  # --- resource_budgets ---
+  if [ "$(jq '.boundaries | has("resource_budgets")' "$DOC")" != "true" ]; then
+    ERRORS+=("MISSING: resource_budgets — must define token_budget, time_budget, tool_call_limits, scope_boundary, quality_floor")
+    MISSING+=("resource_budgets")
+  else
+    PRESENT+=("resource_budgets")
+    for field in token_budget time_budget tool_call_limits quality_floor; do
+      val=$(jq -r ".boundaries.resource_budgets.$field // empty" "$DOC")
+      if [ -z "$val" ]; then
+        ERRORS+=("EMPTY: resource_budgets.$field — required")
+      fi
+    done
+    sb_len=$(jq '.boundaries.resource_budgets.scope_boundary | length' "$DOC" 2>/dev/null || echo "0")
+    if [ "$sb_len" -eq 0 ]; then
+      ERRORS+=("EMPTY: resource_budgets.scope_boundary — must define at least one scope path")
+    fi
+  fi
+
+  # --- llm_last ---
+  if [ "$(jq '.boundaries | has("llm_last")' "$DOC")" != "true" ]; then
+    ERRORS+=("MISSING: llm_last — must define deterministic and llm_judgment lists")
+    MISSING+=("llm_last")
+  else
+    PRESENT+=("llm_last")
+    for field in deterministic llm_judgment; do
+      fl=$(jq ".boundaries.llm_last.$field | length" "$DOC" 2>/dev/null || echo "0")
+      if [ "$fl" -eq 0 ]; then
+        ERRORS+=("EMPTY: llm_last.$field — must list at least one item")
+      fi
+    done
+  fi
+
+fi
+
+# --- Output ---
+
+if [ "$JSON_MODE" = true ]; then
+  # Build JSON output — use conditional to avoid empty-array encoding as [""]
+  if [ ${#PRESENT[@]} -gt 0 ]; then
+    present_json=$(printf '%s\n' "${PRESENT[@]}" | jq -R . | jq -s .)
+  else
+    present_json="[]"
+  fi
+  if [ ${#MISSING[@]} -gt 0 ]; then
+    missing_json=$(printf '%s\n' "${MISSING[@]}" | jq -R . | jq -s .)
+  else
+    missing_json="[]"
+  fi
+  if [ ${#ERRORS[@]} -gt 0 ]; then
+    errors_json=$(printf '%s\n' "${ERRORS[@]}" | jq -R . | jq -s .)
+  else
+    errors_json="[]"
+  fi
+  if [ ${#WARNINGS[@]} -gt 0 ]; then
+    warnings_json=$(printf '%s\n' "${WARNINGS[@]}" | jq -R . | jq -s .)
+  else
+    warnings_json="[]"
+  fi
+
+  if [ ${#ERRORS[@]} -gt 0 ]; then
+    status="fail"
+  elif [ ${#WARNINGS[@]} -gt 0 ]; then
+    status="warn"
+  else
+    status="pass"
+  fi
+
+  jq -n \
+    --arg status "$status" \
+    --argjson present "$present_json" \
+    --argjson missing "$missing_json" \
+    --argjson errors "$errors_json" \
+    --argjson warnings "$warnings_json" \
+    '{status: $status, present: $present, missing: $missing, errors: $errors, warnings: $warnings}'
+
+  if [ ${#ERRORS[@]} -gt 0 ]; then exit 2; fi
+  if [ ${#WARNINGS[@]} -gt 0 ]; then exit 1; fi
+  exit 0
+fi
+
+# Human-readable output
+echo "=== Boundaries Checklist ==="
+echo ""
+
+for cat in non_goals hard_constraints resource_budgets llm_last; do
+  found=false
+  for p in "${PRESENT[@]}"; do
+    if [ "$p" = "$cat" ]; then found=true; break; fi
+  done
+  if [ "$found" = true ]; then
+    echo "  [PRESENT] $cat"
+  else
+    echo "  [MISSING] $cat"
+  fi
+done
+
+echo ""
+
+if [ ${#ERRORS[@]} -gt 0 ]; then
+  echo "RESULT: FAIL — ${#ERRORS[@]} error(s)"
+  for err in "${ERRORS[@]}"; do
+    echo "  ERROR: $err"
+  done
+  if [ ${#WARNINGS[@]} -gt 0 ]; then
+    echo ""
+    echo "Warnings (${#WARNINGS[@]}):"
+    for w in "${WARNINGS[@]}"; do
+      echo "  WARN: $w"
+    done
+  fi
+  exit 2
+fi
+
+if [ ${#WARNINGS[@]} -gt 0 ]; then
+  echo "RESULT: PASS with ${#WARNINGS[@]} warning(s)"
+  for w in "${WARNINGS[@]}"; do
+    echo "  WARN: $w"
+  done
+  exit 1
+fi
+
+echo "RESULT: PASS — All boundary categories present and populated."
+exit 0

@@ -1,0 +1,13 @@
+{
+  "task_id": "",
+  "title": "",
+  "functional": [],
+  "quality": [],
+  "completeness": [],
+  "negative": [],
+  "verification_level": "",
+  "failure_guidance": "",
+  "judgment_boundaries": [],
+  "dependencies": [],
+  "timeout": ""
+}

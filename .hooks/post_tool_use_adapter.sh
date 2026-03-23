@@ -158,43 +158,43 @@ TRACE_ID=$(echo "$STATE" | jq -r '.trace_id // "unknown"')
 EVENT_TS=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 
 # Primary event: tool_called
-jq -n --arg ts "$EVENT_TS" \
-      --arg trace "$TRACE_ID" \
-      --arg sid "$SESSION_ID" \
-      --arg aid "$AGENT_ID" \
-      --arg aname "$AGENT_NAME" \
-      --arg tool "$TOOL_NAME" \
-      --argjson count "$TOOL_CALL_COUNT" \
-      --argjson tokens "$TOKENS_USED" \
-      '{event: "tool_called", timestamp: $ts, trace_id: $trace, session_id: $sid, agent_id: $aid, agent_name: $aname, tool: $tool, tool_call_count: $count, tokens_used: $tokens}' \
-      >> "$EVENT_LOG" 2>/dev/null || true
+jq -cn --arg ts "$EVENT_TS" \
+       --arg trace "$TRACE_ID" \
+       --arg sid "$SESSION_ID" \
+       --arg aid "$AGENT_ID" \
+       --arg aname "$AGENT_NAME" \
+       --arg tool "$TOOL_NAME" \
+       --argjson count "$TOOL_CALL_COUNT" \
+       --argjson tokens "$TOKENS_USED" \
+       '{event: "tool_called", timestamp: $ts, trace_id: $trace, session_id: $sid, agent_id: $aid, agent_name: $aname, tool: $tool, tool_call_count: $count, tokens_used: $tokens}' \
+       >> "$EVENT_LOG" 2>/dev/null || true
 
 # Token spent event (if tokens changed)
 if [ "$TOKENS_USED" -gt 0 ]; then
   ESTIMATED=$(estimate_tokens "$TOOL_NAME")
-  jq -n --arg ts "$EVENT_TS" \
-        --arg trace "$TRACE_ID" \
-        --arg sid "$SESSION_ID" \
-        --arg aid "$AGENT_ID" \
-        --arg aname "$AGENT_NAME" \
-        --argjson count "$ESTIMATED" \
-        --argjson total "$TOKENS_USED" \
-        '{event: "token_spent", timestamp: $ts, trace_id: $trace, session_id: $sid, agent_id: $aid, agent_name: $aname, token_count: $count, token_total: $total}' \
-        >> "$EVENT_LOG" 2>/dev/null || true
+  jq -cn --arg ts "$EVENT_TS" \
+         --arg trace "$TRACE_ID" \
+         --arg sid "$SESSION_ID" \
+         --arg aid "$AGENT_ID" \
+         --arg aname "$AGENT_NAME" \
+         --argjson count "$ESTIMATED" \
+         --argjson total "$TOKENS_USED" \
+         '{event: "token_spent", timestamp: $ts, trace_id: $trace, session_id: $sid, agent_id: $aid, agent_name: $aname, token_count: $count, token_total: $total}' \
+         >> "$EVENT_LOG" 2>/dev/null || true
 fi
 
 # Policy violation events (one per alert)
 if [ -n "$MESSAGES" ]; then
   echo "$MESSAGES" | while IFS= read -r line; do
     [ -z "$line" ] && continue
-    jq -n --arg ts "$EVENT_TS" \
-          --arg trace "$TRACE_ID" \
-          --arg sid "$SESSION_ID" \
-          --arg aid "$AGENT_ID" \
-          --arg aname "$AGENT_NAME" \
-          --arg detail "$line" \
-          '{event: "policy_violation", timestamp: $ts, trace_id: $trace, session_id: $sid, agent_id: $aid, agent_name: $aname, detail: $detail}' \
-          >> "$EVENT_LOG" 2>/dev/null || true
+    jq -cn --arg ts "$EVENT_TS" \
+           --arg trace "$TRACE_ID" \
+           --arg sid "$SESSION_ID" \
+           --arg aid "$AGENT_ID" \
+           --arg aname "$AGENT_NAME" \
+           --arg detail "$line" \
+           '{event: "policy_violation", timestamp: $ts, trace_id: $trace, session_id: $sid, agent_id: $aid, agent_name: $aname, detail: $detail}' \
+           >> "$EVENT_LOG" 2>/dev/null || true
   done
 fi
 
