@@ -271,7 +271,7 @@
       "id": "standing-orders",
       "file": "admiral/standing-orders/",
       "spec_parts": ["part2-context", "part3-enforcement"],
-      "spec_sections": ["All 15 Standing Orders"],
+      "spec_sections": ["All 16 Standing Orders"],
       "compliance": "full",
       "gap_notes": null
     }

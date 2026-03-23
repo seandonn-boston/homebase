@@ -235,10 +235,26 @@ fi
 # ============================================================
 
 if [ "$JSON_MODE" = true ]; then
-  pass_json=$(printf '%s\n' "${CHECKS_PASS[@]}" 2>/dev/null | jq -R . | jq -s . 2>/dev/null || echo "[]")
-  warn_json=$(printf '%s\n' "${CHECKS_WARN[@]}" 2>/dev/null | jq -R . | jq -s . 2>/dev/null || echo "[]")
-  fail_json=$(printf '%s\n' "${CHECKS_FAIL[@]}" 2>/dev/null | jq -R . | jq -s . 2>/dev/null || echo "[]")
-  prep_json=$(printf '%s\n' "${PREP_STEPS[@]}" 2>/dev/null | jq -R . | jq -s . 2>/dev/null || echo "[]")
+  if [ ${#CHECKS_PASS[@]} -gt 0 ]; then
+    pass_json=$(printf '%s\n' "${CHECKS_PASS[@]}" | jq -R . | jq -s .)
+  else
+    pass_json="[]"
+  fi
+  if [ ${#CHECKS_WARN[@]} -gt 0 ]; then
+    warn_json=$(printf '%s\n' "${CHECKS_WARN[@]}" | jq -R . | jq -s .)
+  else
+    warn_json="[]"
+  fi
+  if [ ${#CHECKS_FAIL[@]} -gt 0 ]; then
+    fail_json=$(printf '%s\n' "${CHECKS_FAIL[@]}" | jq -R . | jq -s .)
+  else
+    fail_json="[]"
+  fi
+  if [ ${#PREP_STEPS[@]} -gt 0 ]; then
+    prep_json=$(printf '%s\n' "${PREP_STEPS[@]}" | jq -R . | jq -s .)
+  else
+    prep_json="[]"
+  fi
 
   jq -n \
     --arg status "$OVERALL" \

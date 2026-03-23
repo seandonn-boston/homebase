@@ -1,0 +1,236 @@
+#!/bin/bash
+# Admiral Framework — Spec-First Pipeline Gate (ST-05)
+# Reads the Pipeline entry field from Ground Truth and verifies all upstream
+# pipeline stage documents exist.
+# Usage: spec_first_gate [--json] <project-root> <ground-truth-path>
+# Exit codes: 0=all upstream artifacts exist, 1=warnings, 2=missing artifacts
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# ADMIRAL_DIR available for future manifest lookups
+# shellcheck disable=SC2034
+ADMIRAL_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+JSON_MODE=false
+PROJECT_ROOT=""
+GT_PATH=""
+
+for arg in "$@"; do
+  case "$arg" in
+    --json) JSON_MODE=true ;;
+    *)
+      if [ -z "$PROJECT_ROOT" ]; then
+        PROJECT_ROOT="$arg"
+      elif [ -z "$GT_PATH" ]; then
+        GT_PATH="$arg"
+      fi
+      ;;
+  esac
+done
+
+if [ -z "$PROJECT_ROOT" ] || [ -z "$GT_PATH" ]; then
+  echo "Usage: spec_first_gate [--json] <project-root> <ground-truth-path>"
+  echo ""
+  echo "Validates that all upstream pipeline stage documents exist before"
+  echo "allowing work at the declared pipeline entry point."
+  echo ""
+  echo "Pipeline stages (ordered): Requirements → Design → Tasks → Implementation"
+  echo "If pipeline_entry is 'Tasks', then Requirements and Design artifacts must exist."
+  echo ""
+  echo "Artifact locations are read from pipeline_manifest.yaml if present,"
+  echo "otherwise default conventions are used."
+  echo ""
+  echo "Exit codes:"
+  echo "  0  All upstream artifacts present"
+  echo "  1  Warnings (optional artifacts missing)"
+  echo "  2  Required upstream artifacts missing"
+  exit 1
+fi
+
+if [ ! -f "$GT_PATH" ]; then
+  echo "ERROR: Ground Truth file not found: $GT_PATH"
+  exit 2
+fi
+
+if ! jq empty "$GT_PATH" 2>/dev/null; then
+  echo "ERROR: Ground Truth is not valid JSON: $GT_PATH"
+  exit 2
+fi
+
+# Read pipeline entry from Ground Truth
+PIPELINE_ENTRY=$(jq -r '.mission.pipeline_entry // empty' "$GT_PATH" 2>/dev/null)
+
+if [ -z "$PIPELINE_ENTRY" ]; then
+  echo "ERROR: mission.pipeline_entry not set in Ground Truth"
+  exit 2
+fi
+
+# Pipeline stages in order
+STAGES=("Requirements" "Design" "Tasks" "Implementation")
+
+# Find the index of the pipeline entry
+entry_idx=-1
+for i in "${!STAGES[@]}"; do
+  if [ "${STAGES[$i]}" = "$PIPELINE_ENTRY" ]; then
+    entry_idx=$i
+    break
+  fi
+done
+
+if [ "$entry_idx" -lt 0 ]; then
+  echo "ERROR: Invalid pipeline_entry '$PIPELINE_ENTRY' — allowed: ${STAGES[*]}"
+  exit 2
+fi
+
+# Load pipeline manifest if it exists, otherwise use defaults
+# YAML manifest support reserved for future use
+MANIFEST_JSON="$PROJECT_ROOT/admiral/pipeline_manifest.json"
+
+# Default artifact patterns per stage
+declare -A STAGE_ARTIFACTS
+STAGE_ARTIFACTS[Requirements]="docs/requirements.md specs/requirements.md requirements.md"
+STAGE_ARTIFACTS[Design]="docs/design.md specs/design.md docs/architecture.md design.md"
+STAGE_ARTIFACTS[Tasks]="plan/todo plan/tasks.md tasks.md"
+STAGE_ARTIFACTS[Implementation]="src lib admiral/bin"
+
+# Override with manifest if JSON manifest exists
+if [ -f "$MANIFEST_JSON" ]; then
+  for stage in "${STAGES[@]}"; do
+    stage_lower=$(echo "$stage" | tr '[:upper:]' '[:lower:]')
+    artifacts=$(jq -r ".stages.${stage_lower}.artifacts // [] | .[]" "$MANIFEST_JSON" 2>/dev/null)
+    if [ -n "$artifacts" ]; then
+      STAGE_ARTIFACTS[$stage]="$artifacts"
+    fi
+  done
+fi
+
+ERRORS=()
+WARNINGS=()
+PRESENT=()
+
+# Check all upstream stages (stages before the entry point)
+for ((i=0; i<entry_idx; i++)); do
+  stage="${STAGES[$i]}"
+  artifacts="${STAGE_ARTIFACTS[$stage]}"
+  found=false
+
+  for artifact in $artifacts; do
+    artifact_path="$PROJECT_ROOT/$artifact"
+    if [ -f "$artifact_path" ] || [ -d "$artifact_path" ]; then
+      found=true
+      PRESENT+=("$stage: $artifact")
+      break
+    fi
+  done
+
+  if [ "$found" = false ]; then
+    ERRORS+=("Missing upstream artifact for stage '$stage' — expected one of: $artifacts")
+  fi
+done
+
+# Check current stage artifacts (warning only)
+if [ "$entry_idx" -lt ${#STAGES[@]} ]; then
+  current_stage="${STAGES[$entry_idx]}"
+  current_artifacts="${STAGE_ARTIFACTS[$current_stage]}"
+  current_found=false
+
+  for artifact in $current_artifacts; do
+    artifact_path="$PROJECT_ROOT/$artifact"
+    if [ -f "$artifact_path" ] || [ -d "$artifact_path" ]; then
+      current_found=true
+      PRESENT+=("$current_stage (current): $artifact")
+      break
+    fi
+  done
+
+  if [ "$current_found" = false ]; then
+    WARNINGS+=("No artifacts yet for current stage '$current_stage' — expected one of: $current_artifacts")
+  fi
+fi
+
+# Output
+if [ "$JSON_MODE" = true ]; then
+  if [ ${#PRESENT[@]} -gt 0 ]; then
+    present_json=$(printf '%s\n' "${PRESENT[@]}" | jq -R . | jq -s .)
+  else
+    present_json="[]"
+  fi
+  if [ ${#ERRORS[@]} -gt 0 ]; then
+    errors_json=$(printf '%s\n' "${ERRORS[@]}" | jq -R . | jq -s .)
+  else
+    errors_json="[]"
+  fi
+  if [ ${#WARNINGS[@]} -gt 0 ]; then
+    warnings_json=$(printf '%s\n' "${WARNINGS[@]}" | jq -R . | jq -s .)
+  else
+    warnings_json="[]"
+  fi
+
+  if [ ${#ERRORS[@]} -gt 0 ]; then
+    status="fail"
+  elif [ ${#WARNINGS[@]} -gt 0 ]; then
+    status="warn"
+  else
+    status="pass"
+  fi
+
+  jq -n \
+    --arg status "$status" \
+    --arg pipeline_entry "$PIPELINE_ENTRY" \
+    --argjson present "$present_json" \
+    --argjson errors "$errors_json" \
+    --argjson warnings "$warnings_json" \
+    '{
+      status: $status,
+      pipeline_entry: $pipeline_entry,
+      upstream_present: $present,
+      errors: $errors,
+      warnings: $warnings
+    }'
+
+  if [ ${#ERRORS[@]} -gt 0 ]; then exit 2; fi
+  if [ ${#WARNINGS[@]} -gt 0 ]; then exit 1; fi
+  exit 0
+fi
+
+# Human-readable output
+echo "=== Spec-First Pipeline Gate ==="
+echo ""
+echo "Pipeline entry: $PIPELINE_ENTRY"
+echo ""
+
+if [ "$entry_idx" -eq 0 ]; then
+  echo "No upstream stages to check (entry point is first stage)."
+  echo ""
+  echo "RESULT: PASS"
+  exit 0
+fi
+
+echo "Upstream stage check:"
+for item in "${PRESENT[@]+"${PRESENT[@]}"}"; do
+  [ -n "$item" ] && echo "  [PRESENT] $item"
+done
+for err in "${ERRORS[@]+"${ERRORS[@]}"}"; do
+  [ -n "$err" ] && echo "  [MISSING] $err"
+done
+
+echo ""
+
+if [ ${#ERRORS[@]} -gt 0 ]; then
+  echo "RESULT: FAIL — ${#ERRORS[@]} missing upstream artifact(s)"
+  echo ""
+  echo "The Spec-First principle requires all upstream pipeline stages to have"
+  echo "documented artifacts before work begins at the '$PIPELINE_ENTRY' stage."
+  exit 2
+fi
+
+if [ ${#WARNINGS[@]} -gt 0 ]; then
+  echo "RESULT: PASS with ${#WARNINGS[@]} warning(s)"
+  for w in "${WARNINGS[@]}"; do
+    echo "  WARN: $w"
+  done
+  exit 1
+fi
+
+echo "RESULT: PASS — All upstream artifacts present."
+exit 0

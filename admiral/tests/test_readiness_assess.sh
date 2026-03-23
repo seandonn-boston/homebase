@@ -391,6 +391,23 @@ teardown
 echo ""
 
 # ============================================================
+# Invalid JSON Ground Truth
+# ============================================================
+echo "--- Invalid JSON Ground Truth ---"
+setup
+
+# Create a non-JSON GT file
+echo "this is not json" > "$TMPDIR_BASE/ground-truth-bad.json"
+
+rc=0
+output=$("$ASSESS" "$TMPDIR_BASE" "$TMPDIR_BASE/ground-truth-bad.json" 2>&1) || rc=$?
+assert_exit_code "Invalid JSON GT results in Not Ready" 2 "$rc"
+assert_contains "Reports Not Ready for invalid JSON" "$output" "Not Ready"
+
+teardown
+echo ""
+
+# ============================================================
 # Results
 # ============================================================
 echo "========================================="

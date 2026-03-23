@@ -105,13 +105,13 @@ fi
 EVENT_LOG="$PROJECT_DIR/.admiral/event_log.jsonl"
 TRACE_ID=$(echo "$STATE" | jq -r '.trace_id // "unknown"')
 TOOL_CALL_COUNT=$(echo "$STATE" | jq -r '.tool_call_count // 0')
-jq -n --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
-      --arg trace "$TRACE_ID" \
-      --arg tool "$TOOL_NAME" \
-      --argjson count "$TOOL_CALL_COUNT" \
-      --argjson tokens "$TOKENS_USED" \
-      '{event: "pre_tool_use", timestamp: $ts, trace_id: $trace, tool: $tool, tool_call_count: $count, tokens_used: $tokens}' \
-      >> "$EVENT_LOG" 2>/dev/null || true
+jq -cn --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+       --arg trace "$TRACE_ID" \
+       --arg tool "$TOOL_NAME" \
+       --argjson count "$TOOL_CALL_COUNT" \
+       --argjson tokens "$TOKENS_USED" \
+       '{event: "pre_tool_use", timestamp: $ts, trace_id: $trace, tool: $tool, tool_call_count: $count, tokens_used: $tokens}' \
+       >> "$EVENT_LOG" 2>/dev/null || true
 
 # Emit combined advisory context if any sub-hooks fired
 if [ -n "$ALL_CONTEXT" ]; then

@@ -1,6 +1,6 @@
 # Spec-Debt Resolution — Next Steps
 
-**Last updated:** 2026-03-16
+**Last updated:** 2026-03-23
 
 ## Completed
 
@@ -8,7 +8,7 @@
 - Increased enforcement from 4/15 (27%) to 8/15 (53%)
 - 4 new hooks: `scope_boundary_guard`, `prohibitions_enforcer`, `zero_trust_validator`, `pre_work_validator`
 - All wired into `pre_tool_use_adapter.sh` and `post_tool_use_adapter.sh`
-- Tests: `.hooks/tests/test_hooks.sh` (34/34 passing)
+- Tests: `.hooks/tests/test_hooks.sh` (81/81 passing) + 16 admiral test suites (431 total)
 - Enforcement map updated to E2 level
 
 ### SD-04: Monitor Layers 3-5 (Moderate) — RESOLVED
