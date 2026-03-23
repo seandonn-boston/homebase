@@ -41,8 +41,8 @@
 ### 4.1 Core Project Documents
 
 - [ ] **D-01:** Create ADMIRAL_STYLE.md — naming conventions, error handling, jq patterns, exit codes, comment standards, testing requirements `[L]`
-- [ ] **D-02:** Add CODE_OF_CONDUCT.md — Contributor Covenant v2.1 `[S]`
-- [ ] **D-03:** Add LICENSE file — MIT license at repo root `[S]`
+- [x] **D-02:** Add CODE_OF_CONDUCT.md — Contributor Covenant v2.1 `[S]` *Completed: reference-based approach linking to official Contributor Covenant v2.1 (full inline text triggers content filtering on enforcement language).*
+- [x] **D-03:** Add LICENSE file — MIT license at repo root `[S]` *Completed: standard MIT License at repo root.*
 
 ### 4.2 Inline Documentation
 
