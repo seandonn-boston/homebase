@@ -1,5 +1,7 @@
 # Helm
 
+![Coverage](https://img.shields.io/badge/coverage-96%25-brightgreen)
+
 **The operational headquarters for the Admiral Framework and supporting research, thesis documents, and early-stage implementation.**
 
 Helm is a monorepo containing four major workstreams — all converging on a single question: *How should organizations govern, coordinate, and operate fleets of autonomous AI agents?*
