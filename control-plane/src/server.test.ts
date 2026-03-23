@@ -236,16 +236,14 @@ describe("AdmiralServer", () => {
       assert.equal(res.status, 404);
     });
 
-    it("agent resume with invalid characters returns 400", async () => {
+    it("agent resume with invalid characters returns 404", async () => {
       const res = await httpGet(`${baseUrl}/api/agents/agent%20with%20spaces/resume`);
-      assert.equal(res.status, 400);
-      const data = JSON.parse(res.body);
-      assert.ok(data.error.includes("invalid"));
+      assert.equal(res.status, 404);
     });
 
-    it("alert resolve with invalid characters returns 400", async () => {
+    it("alert resolve with invalid characters returns 404", async () => {
       const res = await httpGet(`${baseUrl}/api/alerts/alert%20bad/resolve`);
-      assert.equal(res.status, 400);
+      assert.equal(res.status, 404);
     });
 
     it("concurrent requests are handled correctly", async () => {

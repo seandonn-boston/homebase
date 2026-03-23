@@ -14,6 +14,14 @@ import type { JournalIngester } from "./ingest";
 import type { RunawayDetector } from "./runaway-detector";
 import type { ExecutionTrace } from "./trace";
 
+type RouteHandler = (res: http.ServerResponse, params: Record<string, string>) => void;
+
+interface Route {
+  /** Exact path or regex pattern */
+  pattern: string | RegExp;
+  handler: RouteHandler;
+}
+
 export class AdmiralServer {
   private server: http.Server | null = null;
   private stream: EventStream;
@@ -22,6 +30,7 @@ export class AdmiralServer {
   private projectDir: string;
   private ingester: JournalIngester | null = null;
   private startedAt: number = Date.now();
+  private routes: Route[];
 
   constructor(
     stream: EventStream,
@@ -33,6 +42,7 @@ export class AdmiralServer {
     this.detector = detector;
     this.trace = trace;
     this.projectDir = projectDir || process.cwd();
+    this.routes = this.buildRoutes();
   }
 
   /** Set the ingester reference for health reporting */
@@ -57,6 +67,54 @@ export class AdmiralServer {
     });
   }
 
+  private buildRoutes(): Route[] {
+    return [
+      { pattern: "/health", handler: (res) => this.serveHealth(res) },
+      { pattern: "/api/config", handler: (res) => this.json(res, this.detector.getConfig()) },
+      { pattern: "/api/events", handler: (res) => this.json(res, this.stream.getEvents()) },
+      { pattern: "/api/alerts", handler: (res) => this.json(res, this.detector.getAlerts()) },
+      {
+        pattern: "/api/alerts/active",
+        handler: (res) => this.json(res, this.detector.getActiveAlerts()),
+      },
+      { pattern: "/api/trace", handler: (res) => this.json(res, this.trace.buildTrace()) },
+      {
+        pattern: "/api/trace/ascii",
+        handler: (res) => {
+          res.writeHead(200, { "Content-Type": "text/plain" });
+          res.end(this.trace.renderAscii());
+        },
+      },
+      { pattern: "/api/session", handler: (res) => this.serveSessionState(res) },
+      {
+        pattern: "/api/stats",
+        handler: (res) => {
+          const stats: Record<string, unknown> = { trace: this.trace.getStats() };
+          if (this.ingester) {
+            stats.ingester = this.ingester.getStats();
+          }
+          this.json(res, stats);
+        },
+      },
+      {
+        pattern: /^\/api\/agents\/([a-zA-Z0-9_-]+)\/resume$/,
+        handler: (res, params) => {
+          this.detector.resumeAgent(params.id);
+          this.json(res, { resumed: params.id });
+        },
+      },
+      {
+        pattern: /^\/api\/alerts\/([a-zA-Z0-9_-]+)\/resolve$/,
+        handler: (res, params) => {
+          this.detector.resolveAlert(params.id);
+          this.json(res, { resolved: params.id });
+        },
+      },
+      { pattern: "/", handler: (res) => this.serveDashboard(res) },
+      { pattern: "/index.html", handler: (res) => this.serveDashboard(res) },
+    ];
+  }
+
   private handleRequest(req: http.IncomingMessage, res: http.ServerResponse): void {
     try {
       const url = req.url || "/";
@@ -72,53 +130,22 @@ export class AdmiralServer {
         return;
       }
 
-      // API routes
-      if (url === "/health") {
-        this.serveHealth(res);
-      } else if (url === "/api/config") {
-        this.json(res, this.detector.getConfig());
-      } else if (url === "/api/events") {
-        this.json(res, this.stream.getEvents());
-      } else if (url === "/api/alerts") {
-        this.json(res, this.detector.getAlerts());
-      } else if (url === "/api/alerts/active") {
-        this.json(res, this.detector.getActiveAlerts());
-      } else if (url === "/api/trace") {
-        this.json(res, this.trace.buildTrace());
-      } else if (url === "/api/trace/ascii") {
-        res.writeHead(200, { "Content-Type": "text/plain" });
-        res.end(this.trace.renderAscii());
-      } else if (url === "/api/session") {
-        this.serveSessionState(res);
-      } else if (url === "/api/stats") {
-        const stats: Record<string, unknown> = { trace: this.trace.getStats() };
-        if (this.ingester) {
-          stats.ingester = this.ingester.getStats();
-        }
-        this.json(res, stats);
-      } else if (url.startsWith("/api/agents/") && url.endsWith("/resume")) {
-        const parts = url.split("/").filter(Boolean);
-        const agentId = parts[2];
-        if (agentId && agentId !== "resume" && /^[a-zA-Z0-9_-]+$/.test(agentId)) {
-          this.detector.resumeAgent(agentId);
-          this.json(res, { resumed: agentId });
+      for (const route of this.routes) {
+        if (typeof route.pattern === "string") {
+          if (url === route.pattern) {
+            route.handler(res, {});
+            return;
+          }
         } else {
-          this.errorJson(res, 400, "Missing or invalid agent ID");
+          const match = url.match(route.pattern);
+          if (match) {
+            route.handler(res, { id: match[1] });
+            return;
+          }
         }
-      } else if (url.startsWith("/api/alerts/") && url.endsWith("/resolve")) {
-        const parts = url.split("/").filter(Boolean);
-        const alertId = parts[2];
-        if (alertId && alertId !== "resolve" && /^[a-zA-Z0-9_-]+$/.test(alertId)) {
-          this.detector.resolveAlert(alertId);
-          this.json(res, { resolved: alertId });
-        } else {
-          this.errorJson(res, 400, "Missing or invalid alert ID");
-        }
-      } else if (url === "/" || url === "/index.html") {
-        this.serveDashboard(res);
-      } else {
-        this.errorJson(res, 404, "Not found");
       }
+
+      this.errorJson(res, 404, "Not found");
     } catch (err) {
       const message = errorMessage(err);
       console.error(`[admiral-server] Unhandled error: ${message}`);
