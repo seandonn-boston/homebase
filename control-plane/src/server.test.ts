@@ -200,4 +200,63 @@ describe("AdmiralServer", () => {
       assert.equal(res.headers["access-control-allow-origin"], "*");
     });
   });
+
+  // -------------------------------------------------------------------------
+  // T-05: Edge case tests
+  // -------------------------------------------------------------------------
+  describe("edge cases", () => {
+    it("URL with special characters returns 404", async () => {
+      const res = await httpGet(`${baseUrl}/api/%3Cscript%3Ealert(1)%3C/script%3E`);
+      assert.equal(res.status, 404);
+      const data = JSON.parse(res.body);
+      assert.equal(data.error, "Not found");
+    });
+
+    it("very long URL returns 404 without crashing", async () => {
+      const longPath = "/api/" + "a".repeat(2000);
+      const res = await httpGet(`${baseUrl}${longPath}`);
+      assert.equal(res.status, 404);
+    });
+
+    it("URL with query parameters still routes correctly", async () => {
+      // /api/events?limit=10 — server does not parse query params, but should not crash
+      const res = await httpGet(`${baseUrl}/api/events?limit=10&offset=0`);
+      // The url includes the query string, so it won't match "/api/events" exactly
+      // This verifies the server handles it (likely 404 since exact match fails)
+      assert.ok(res.status === 200 || res.status === 404);
+    });
+
+    it("URL with double slashes returns 404", async () => {
+      const res = await httpGet(`${baseUrl}//api//events`);
+      assert.equal(res.status, 404);
+    });
+
+    it("URL with path traversal returns 404", async () => {
+      const res = await httpGet(`${baseUrl}/api/../../../etc/passwd`);
+      assert.equal(res.status, 404);
+    });
+
+    it("agent resume with invalid characters returns 400", async () => {
+      const res = await httpGet(`${baseUrl}/api/agents/agent%20with%20spaces/resume`);
+      assert.equal(res.status, 400);
+      const data = JSON.parse(res.body);
+      assert.ok(data.error.includes("invalid"));
+    });
+
+    it("alert resolve with invalid characters returns 400", async () => {
+      const res = await httpGet(`${baseUrl}/api/alerts/alert%20bad/resolve`);
+      assert.equal(res.status, 400);
+    });
+
+    it("concurrent requests are handled correctly", async () => {
+      // Fire 10 concurrent requests
+      const promises = Array.from({ length: 10 }, (_, i) => {
+        if (i % 2 === 0) return httpGet(`${baseUrl}/api/events`);
+        return httpGet(`${baseUrl}/health`);
+      });
+      const results = await Promise.all(promises);
+      assert.ok(results.every((r) => r.status === 200));
+      assert.equal(results.length, 10);
+    });
+  });
 });

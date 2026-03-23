@@ -13,7 +13,7 @@
 
 ## Edge Case & Integration Tests
 
-- [ ] **T-05: Add malformed JSON edge case tests for server** — Test URLs with special chars, very long URLs, concurrent requests, missing headers. Done when >=5 new edge case tests in `server.test.ts`.
+- [x] **T-05: Add malformed JSON edge case tests for server** — Test URLs with special chars, very long URLs, concurrent requests, missing headers. Done when >=5 new edge case tests in `server.test.ts`. *Completed: 8 edge case tests added — special chars, long URLs, query params, double slashes, path traversal, invalid agent/alert IDs, concurrent requests.*
 - [ ] **T-06: Add hook edge case tests** — Extend `test_hooks.sh` with malformed JSON, missing jq, empty stdin, huge payloads, Unicode in tool names, concurrent execution. Done when >=10 new edge case tests, all hooks handle gracefully (fail-open per ADR-004).
 - [ ] **T-07: Add `state.sh` concurrent access tests** — Test `with_state_lock` under concurrent access. Spawn multiple subshells writing to shared state. Done when flock prevents data loss under concurrent writes.
 - [ ] **T-08: Add quarantine pipeline integration tests** — Test full 5-layer quarantine pipeline with known-good and known-bad inputs end-to-end. Done when pipeline correctly quarantines all attack corpus items and passes clean items.
@@ -51,7 +51,7 @@
 
 ## TypeScript Quality
 
-- [ ] **Q-05: Replace `Date.now()` event IDs with `crypto.randomUUID()`** — Current event IDs are collision-prone under concurrent writes. New format: `evt_<uuid>`. Update all existing tests.
+- [x] **Q-05: Replace `Date.now()` event IDs with `crypto.randomUUID()`** — Current event IDs are collision-prone under concurrent writes. New format: `evt_<uuid>`. Update all existing tests. *Completed: replaced Date.now()+counter with crypto.randomUUID(), removed unused eventCounter field, updated test assertions.*
 - [ ] **Q-06: Add typed error hierarchy** — Create `AdmiralError` base class plus `NotFoundError`, `ValidationError`, `StateCorruptionError`, `IngestionError`. Replace all `err instanceof Error ? err.message : String(err)` patterns with typed catches.
 - [ ] **Q-07: Document TypeScript export conventions** — Add "TypeScript Exports" section to CONTRIBUTING.md defining named vs default exports, index.ts conventions, public API surface contract.
 - [ ] **Q-08: Improve `server.ts` URL routing** — Replace manual `url.split("/")` with declarative route table. Eliminate `agentId !== "resume"` guard. Done when all server tests pass with no manual URL parsing.

@@ -42,12 +42,12 @@ describe("EventStream", () => {
       assert.equal(ids.size, 100);
     });
 
-    it("ID format includes timestamp and counter", () => {
+    it("ID format is evt_ followed by UUID", () => {
       const event = stream.emit("a1", "Agent-1", "agent_started");
-      const parts = event.id.split("_");
-      assert.equal(parts[0], "evt");
-      assert.ok(Number(parts[1]) > 0); // timestamp
-      assert.ok(Number(parts[2]) > 0); // counter
+      assert.ok(event.id.startsWith("evt_"));
+      // UUID v4 format: 8-4-4-4-12 hex chars
+      const uuid = event.id.slice(4);
+      assert.match(uuid, /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/);
     });
 
     it("defaults data to empty object", () => {
