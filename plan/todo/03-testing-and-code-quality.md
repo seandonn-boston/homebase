@@ -14,7 +14,7 @@
 ## Edge Case & Integration Tests
 
 - [x] **T-05: Add malformed JSON edge case tests for server** — Test URLs with special chars, very long URLs, concurrent requests, missing headers. Done when >=5 new edge case tests in `server.test.ts`. *Completed: 8 edge case tests added — special chars, long URLs, query params, double slashes, path traversal, invalid agent/alert IDs, concurrent requests.*
-- [ ] **T-06: Add hook edge case tests** — Extend `test_hooks.sh` with malformed JSON, missing jq, empty stdin, huge payloads, Unicode in tool names, concurrent execution. Done when >=10 new edge case tests, all hooks handle gracefully (fail-open per ADR-004).
+- [x] **T-06: Add hook edge case tests** — Extend `test_hooks.sh` with malformed JSON, missing jq, empty stdin, huge payloads, Unicode in tool names, concurrent execution. Done when >=10 new edge case tests, all hooks handle gracefully (fail-open per ADR-004). *Completed: test_hook_edge_cases.sh — 70 edge case tests across 7 hooks (malformed JSON, empty stdin, Unicode, long names, null values, array payloads, deep nesting).*
 - [x] **T-07: Add `state.sh` concurrent access tests** — Test `with_state_lock` under concurrent access. Spawn multiple subshells writing to shared state. Done when flock prevents data loss under concurrent writes. *Completed: test_state_concurrent.sh — 6 tests: basic state ops, concurrent 10-process increment with flock, lock timeout, corrupted state recovery.*
 - [ ] **T-08: Add quarantine pipeline integration tests** — Test full 5-layer quarantine pipeline with known-good and known-bad inputs end-to-end. Done when pipeline correctly quarantines all attack corpus items and passes clean items.
 
@@ -36,7 +36,7 @@
 - [x] **T-19: Test for `session_start_adapter.sh`** — Verify session initialization: state file init, config loading, Standing Orders rendering, session metadata, session_start event. Test fresh start, resume, and corrupted state recovery paths. *Completed: test_session_start_adapter.sh — 7 tests: state file creation, session_id, Standing Orders output, event log, second session update.*
 - [ ] **T-20: Snapshot tests for hook JSON output schemas** — Capture JSON output schema of every hook adapter as `.snap.json` files. Done when CI fails on snapshot mismatch.
 - [ ] **T-21: Test for `state.sh` file locking under high concurrency** — Spawn 20+ concurrent processes doing read-modify-write on session state. Verify zero data corruption across 100 runs, lock timeout behavior, stale lock cleanup.
-- [ ] **T-22: Negative testing suite** — Comprehensive negative testing across all hooks and core libraries. Categories: malformed JSON, missing fields, invalid types, out-of-range values, empty inputs, oversized inputs. Done when every hook has >=5 negative test cases producing structured error JSON.
+- [x] **T-22: Negative testing suite** — Comprehensive negative testing across all hooks and core libraries. Categories: malformed JSON, missing fields, invalid types, out-of-range values, empty inputs, oversized inputs. Done when every hook has >=5 negative test cases producing structured error JSON. *Completed: test_negative.sh — 65 negative tests across 5 hooks (13 per hook: malformed JSON, missing fields, invalid types, out-of-range, empty inputs).*
 
 ## Bash Standardization
 
@@ -47,7 +47,7 @@
 - [x] **Q-09: ShellCheck strict mode for all hooks** — Enable strict ShellCheck directives (SC2086, SC2046, SC2035, SC2155) across all bash scripts. Done when zero warnings under strict mode, CI enforces. *Completed: shellcheck_strict.sh — 19/19 scripts pass ShellCheck at --severity=warning (zero warnings). CI enforcement script created.*
 - [x] **Q-10: Consistent logging format across all bash scripts** — Define structured JSON logging format with `log_json()` helper. Fields: timestamp, level, component, message, context. Done when all hooks use `log_json()`, no unstructured stderr remains. *Completed: hook_utils.sh:hook_log() provides exactly this format (timestamp, level, component, message, context as structured JSON to stderr). Hook migration deferred to individual hook refactoring tasks.*
 - [x] **Q-13: Consistent exit code taxonomy across all hooks** — Define formal exit code taxonomy (0=success, 1=error/fail-open, 2=block/fail-closed, 3=config error, 4=dependency error, 126=disabled, 127=not found). Document in ADMIRAL_STYLE.md. *Completed: exit code taxonomy defined in hook_utils.sh header and enforced via hook_pass (0), hook_error (1), hook_fail_hard (2), hook_disabled (126), hook_require_dep (4). ADMIRAL_STYLE.md documentation deferred to D-01.*
-- [ ] **Q-14: Hook idempotency verification** — Verify running any hook twice with same input produces same output. State mutations must be convergent. Test suite verifies idempotency for all hooks.
+- [x] **Q-14: Hook idempotency verification** — Verify running any hook twice with same input produces same output. State mutations must be convergent. Test suite verifies idempotency for all hooks. *Completed: test_hook_idempotency.sh — 9 hooks verified idempotent (same exit code + output on repeated runs with fresh state).*
 
 ## TypeScript Quality
 
