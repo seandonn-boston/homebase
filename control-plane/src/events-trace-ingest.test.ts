@@ -81,7 +81,7 @@ describe("EventStream", () => {
     const e1 = stream.emit("a1", "Agent-1", "agent_started");
     const ts = e1.timestamp + 1;
     // Emit another event slightly later (same ms is fine — filter is >=)
-    const _e2 = stream.emit("a1", "Agent-1", "agent_stopped");
+    stream.emit("a1", "Agent-1", "agent_stopped");
     const since = stream.getEventsSince(ts);
     // e2.timestamp >= ts should hold if they share the same ms or later
     assert.ok(since.length <= 2);
