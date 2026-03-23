@@ -26,7 +26,7 @@ ALL_CONTEXT=""
 STATE=$(load_state)
 TOKENS_USED=$(echo "$STATE" | jq -r '.tokens_used // 0')
 TOKEN_BUDGET=$(echo "$STATE" | jq -r '.token_budget // 0')
-ESTIMATED=$(estimate_tokens "$TOOL_NAME")
+_ESTIMATED=$(estimate_tokens "$TOOL_NAME")
 
 if [ "$TOKEN_BUDGET" -gt 0 ]; then
   UTIL_PCT=$((TOKENS_USED * 100 / TOKEN_BUDGET))
