@@ -39,7 +39,14 @@ describe("ExecutionTrace", () => {
     });
 
     it("nests tool_called under task_assigned for same agent", () => {
-      stream.emit("a1", "Agent-1", "task_assigned", { description: "Build widget" }, undefined, "t1");
+      stream.emit(
+        "a1",
+        "Agent-1",
+        "task_assigned",
+        { description: "Build widget" },
+        undefined,
+        "t1",
+      );
       stream.emit("a1", "Agent-1", "tool_called", { tool: "read" }, undefined, "t1");
       stream.emit("a1", "Agent-1", "tool_called", { tool: "write" }, undefined, "t1");
       const nodes = trace.buildTrace();
@@ -53,9 +60,23 @@ describe("ExecutionTrace", () => {
     it("nests task_completed, task_failed, tool_result, token_spent, subtask_created, policy_violation under task_assigned", () => {
       stream.emit("a1", "Agent-1", "task_assigned", { description: "Work" }, undefined, "t1");
       stream.emit("a1", "Agent-1", "tool_called", { tool: "read" }, undefined, "t1");
-      stream.emit("a1", "Agent-1", "tool_result", { tool: "read", result: "data" }, undefined, "t1");
+      stream.emit(
+        "a1",
+        "Agent-1",
+        "tool_result",
+        { tool: "read", result: "data" },
+        undefined,
+        "t1",
+      );
       stream.emit("a1", "Agent-1", "token_spent", { count: 50 }, undefined, "t1");
-      stream.emit("a1", "Agent-1", "subtask_created", { description: "sub", subtaskId: "s1" }, undefined, "t1");
+      stream.emit(
+        "a1",
+        "Agent-1",
+        "subtask_created",
+        { description: "sub", subtaskId: "s1" },
+        undefined,
+        "t1",
+      );
       stream.emit("a1", "Agent-1", "task_completed", { summary: "done" }, undefined, "t1");
       const nodes = trace.buildTrace();
       const taskNode = nodes.find((n) => n.event.type === "task_assigned");
@@ -87,8 +108,12 @@ describe("ExecutionTrace", () => {
       stream.emit("a2", "Agent-2", "tool_called", { tool: "write" }, undefined, "t2");
       const nodes = trace.buildTrace();
       // Two task_assigned roots, each with one child
-      const a1Task = nodes.find((n) => n.event.agentId === "a1" && n.event.type === "task_assigned");
-      const a2Task = nodes.find((n) => n.event.agentId === "a2" && n.event.type === "task_assigned");
+      const a1Task = nodes.find(
+        (n) => n.event.agentId === "a1" && n.event.type === "task_assigned",
+      );
+      const a2Task = nodes.find(
+        (n) => n.event.agentId === "a2" && n.event.type === "task_assigned",
+      );
       assert.ok(a1Task);
       assert.ok(a2Task);
       assert.equal(a1Task!.children.length, 1);
@@ -242,7 +267,10 @@ describe("ExecutionTrace", () => {
     });
 
     it("formats tool_called event with tool name and args", () => {
-      stream.emit("a1", "Agent-1", "tool_called", { tool: "read_file", args: { path: "/tmp/foo" } });
+      stream.emit("a1", "Agent-1", "tool_called", {
+        tool: "read_file",
+        args: { path: "/tmp/foo" },
+      });
       const ascii = trace.renderAscii();
       assert.ok(ascii.includes('Agent-1.read_file(path: "/tmp/foo")'));
     });
@@ -300,7 +328,10 @@ describe("ExecutionTrace", () => {
     });
 
     it("formats policy_violation event", () => {
-      stream.emit("a1", "Agent-1", "policy_violation", { rule: "no_secrets", details: "exposed key" });
+      stream.emit("a1", "Agent-1", "policy_violation", {
+        rule: "no_secrets",
+        details: "exposed key",
+      });
       const ascii = trace.renderAscii();
       assert.ok(ascii.includes("\u26A0 Agent-1 violated: no_secrets"));
     });
@@ -413,7 +444,14 @@ describe("ExecutionTrace", () => {
       stream.emit("a2", "Agent-2", "tool_called", { tool: "write" }, undefined, "t2");
       stream.emit("a1", "Agent-1", "token_spent", { count: 200 }, undefined, "t1");
       stream.emit("a2", "Agent-2", "token_spent", { count: 300 }, undefined, "t2");
-      stream.emit("a1", "Agent-1", "subtask_created", { description: "sub", subtaskId: "s1" }, undefined, "t1");
+      stream.emit(
+        "a1",
+        "Agent-1",
+        "subtask_created",
+        { description: "sub", subtaskId: "s1" },
+        undefined,
+        "t1",
+      );
       stream.emit("a2", "Agent-2", "task_failed", { error: "oops" }, undefined, "t2");
       const stats = trace.getStats();
       assert.equal(stats.agentCount, 2);
