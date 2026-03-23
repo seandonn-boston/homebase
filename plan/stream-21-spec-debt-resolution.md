@@ -23,7 +23,7 @@
 - [x] **SD-02: Identify which spec gaps block implementation and prioritize accordingly**
   - **Description:** Cross-reference the spec debt inventory (SD-01) against all plan streams (Streams 1-20) to identify which spec gaps actively block implementation work. Classify each gap as: (1) **blocking** — implementation cannot proceed without spec clarification; (2) **constraining** — implementation can proceed but may need rework when spec is clarified; (3) **cosmetic** — spec language could be improved but implementation is unaffected. Produce a prioritized resolution queue where blocking gaps are resolved first.
   - **Done when:** Every spec gap is classified as blocking, constraining, or cosmetic with the specific stream/task it affects. A prioritized resolution queue exists. Blocking gaps have target resolution dates.
-  - **Files:** `docs/spec-proposals/priority-matrix.md` (new)
+  - **Files:** Consolidated into `docs/spec-proposals/sd-01-spec-debt-inventory.md` (priority classifications inline)
   - **Size:** S (< 1 hour)
   - **Spec ref:** `spec-debt.md`, all plan streams
   - **Depends on:** SD-01

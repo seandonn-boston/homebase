@@ -2,7 +2,7 @@
 
 > Comprehensive inventory of all spec debt and gap items with affected sections, nature, downstream impact, and resolution paths.
 >
-> Sources: `aiStrat/admiral/reference/spec-debt.md`, `aiStrat/admiral/reference/spec-gaps.md`, `admiral/IMPLEMENTATION_STATUS.md`, `admiral/SPEC-DEBT-NEXT-STEPS.md`
+> Sources: `aiStrat/admiral/reference/spec-debt.md`, `aiStrat/admiral/reference/spec-gaps.md`, `admiral/IMPLEMENTATION_STATUS.md`
 >
 > Date: 2026-03-20
 
@@ -18,7 +18,9 @@
 | **Affected Section** | `aiStrat/admiral/reference/benchmarks.md` |
 | **Nature** | All performance targets (First-pass quality >75%, Auto-recovery >80%, etc.) are informed estimates with no empirical validation from real Admiral-governed fleet operation. |
 | **Downstream Impact** | Blocks Stream 33 (Thesis Validation) — cannot validate "enforcement beats advisory" thesis without real measurements. Blocks Stream 32 (Rating System) — rating tiers have no calibrated baselines. |
-| **Resolution Path** | 1. Create measurement infrastructure (`admiral/benchmarks/`). 2. Instrument hooks to emit structured metrics. 3. Run real workloads and populate "Validated" column. |
+| **Resolution Path** | 1. Create measurement infrastructure (`admiral/benchmarks/`). 2. Instrument hooks to emit structured metrics (timing, pass/fail rates, recovery counts) via `.admiral/metrics.jsonl`. 3. Create `benchmarks_collector.sh` PostToolUse hook to aggregate per-session data. 4. Define metric schemas matching benchmark targets: first-pass quality, auto-recovery rate, context utilization. 5. Run real workloads and populate "Validated" column in `benchmarks.md`. |
+| **Key Files** | `aiStrat/admiral/reference/benchmarks.md` (targets), `.hooks/post_tool_use_adapter.sh` (metric emission point), `admiral/lib/state.sh` (shared state utilities) |
+| **Constraints** | Implementation code goes in `admiral/` — no spec approval needed. Updating `benchmarks.md` with validated numbers requires `aiStrat/` approval. |
 | **Blocking?** | Constraining — does not block implementation but blocks validation |
 
 ### DEBT-02: Data Ecosystem Is the Thinnest Doctrine Part (SD-05 in spec-debt.md)
@@ -29,7 +31,8 @@
 | **Affected Section** | `aiStrat/admiral/spec/part12-data-ecosystem.md` |
 | **Nature** | Well-specified conceptually (6 feedback loops, 7 datasets, 5 ecosystem agents) with dataset schemas and worked examples (v0.8.1), but no reference implementations for any feedback loop or ecosystem agent. |
 | **Downstream Impact** | Blocks Stream 20 (Data Ecosystem) — implementation has no reference to validate against. Constrains Stream 11 (Brain B2/B3) — Brain graduation depends on data ecosystem feedback loops. |
-| **Resolution Path** | 1. Pick one feedback loop for end-to-end reference implementation. 2. Create worked example in `admiral/data-ecosystem/`. 3. Validate at least one loop during real deployment. |
+| **Resolution Path** | 1. Read `aiStrat/admiral/spec/part12-data-ecosystem.md` — understand the 6 feedback loops and 5 ecosystem agents. 2. Pick the simplest feedback loop that connects to existing Brain infrastructure for end-to-end reference implementation. 3. Create worked example in `admiral/data-ecosystem/` showing concrete data flow. 4. Add additional worked examples to the spec if needed (requires `aiStrat/` approval). |
+| **Key Files** | `aiStrat/admiral/spec/part12-data-ecosystem.md` (full spec), `aiStrat/brain/schema/002_data_ecosystem.sql` (existing schema), `aiStrat/brain/level1-spec.md` (Brain entry format) |
 | **Blocking?** | Constraining — Phase 6 work can begin but cannot fully validate |
 
 ### DEBT-03: Protocol Governance SO-16 Lacks Hook Enforcement (SD-06 in spec-debt.md)
