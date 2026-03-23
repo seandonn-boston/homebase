@@ -15,7 +15,7 @@
 
 - [x] **T-05: Add malformed JSON edge case tests for server** — Test URLs with special chars, very long URLs, concurrent requests, missing headers. Done when >=5 new edge case tests in `server.test.ts`. *Completed: 8 edge case tests added — special chars, long URLs, query params, double slashes, path traversal, invalid agent/alert IDs, concurrent requests.*
 - [ ] **T-06: Add hook edge case tests** — Extend `test_hooks.sh` with malformed JSON, missing jq, empty stdin, huge payloads, Unicode in tool names, concurrent execution. Done when >=10 new edge case tests, all hooks handle gracefully (fail-open per ADR-004).
-- [ ] **T-07: Add `state.sh` concurrent access tests** — Test `with_state_lock` under concurrent access. Spawn multiple subshells writing to shared state. Done when flock prevents data loss under concurrent writes.
+- [x] **T-07: Add `state.sh` concurrent access tests** — Test `with_state_lock` under concurrent access. Spawn multiple subshells writing to shared state. Done when flock prevents data loss under concurrent writes. *Completed: test_state_concurrent.sh — 6 tests: basic state ops, concurrent 10-process increment with flock, lock timeout, corrupted state recovery.*
 - [ ] **T-08: Add quarantine pipeline integration tests** — Test full 5-layer quarantine pipeline with known-good and known-bad inputs end-to-end. Done when pipeline correctly quarantines all attack corpus items and passes clean items.
 
 ## Coverage & Benchmarks
@@ -31,7 +31,7 @@
 
 - [ ] **T-15: Property-based testing for RingBuffer** — Use fast-check to verify RingBuffer invariants: size never exceeds capacity, toArray returns insertion order, correct element count after N pushes, evicted elements are oldest. Done when property tests pass with 1000+ generated test cases.
 - [ ] **T-16: Mutation testing setup** — Configure Stryker for mutation testing. Start with RingBuffer and EventStream as pilot modules. Done when mutation score >=80% for pilot modules.
-- [ ] **T-17: Test for `standing_orders.sh` rendering** — Verify all 16 Standing Orders render correctly from source files. Test missing SO files for graceful degradation. Done when output format matches expected template.
+- [x] **T-17: Test for `standing_orders.sh` rendering** — Verify all 16 Standing Orders render correctly from source files. Test missing SO files for graceful degradation. Done when output format matches expected template. *Completed: test_standing_orders.sh — 15 tests: output structure, all 16 SOs rendered, rules present, enforcement hooks section, graceful degradation with missing dir.*
 - [ ] **T-18: Test for `injection_detect.sh`** — Verify all 5 quarantine layers with comprehensive attack corpus (>=10 attack vectors per layer). Done when false positive rate < 1% on benign corpus, all attack items correctly flagged.
 - [ ] **T-19: Test for `session_start_adapter.sh`** — Verify session initialization: state file init, config loading, Standing Orders rendering, session metadata, session_start event. Test fresh start, resume, and corrupted state recovery paths.
 - [ ] **T-20: Snapshot tests for hook JSON output schemas** — Capture JSON output schema of every hook adapter as `.snap.json` files. Done when CI fails on snapshot mismatch.
