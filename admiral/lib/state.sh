@@ -76,9 +76,30 @@ save_state() {
   content=$(cat)
   # Validate before writing — never save corrupt state
   if echo "$content" | jq empty 2>/dev/null; then
+    # Schema validation (advisory — warn but still save valid JSON)
+    _validate_state_schema "$content"
     echo "$content" > "${STATE_FILE}.tmp" && mv "${STATE_FILE}.tmp" "$STATE_FILE"
   fi
   # If validation fails, silently keep the existing state file (fail-open)
+}
+
+# Validate state content against session-state schema (advisory only)
+_validate_state_schema() {
+  local content="$1"
+  local schema="${CLAUDE_PROJECT_DIR:-}/admiral/schemas/session-state.v1.schema.json"
+  [ -f "$schema" ] || return 0
+
+  local required_fields
+  required_fields=$(jq -r '.required // [] | .[]' "$schema" 2>/dev/null) || return 0
+
+  for field in $required_fields; do
+    local has_field
+    has_field=$(echo "$content" | jq --arg f "$field" 'has($f)' 2>/dev/null) || return 0
+    if [ "$has_field" != "true" ]; then
+      echo "[state] WARNING: session state missing required field: $field" >&2
+      return 0
+    fi
+  done
 }
 
 # Run a read-modify-write operation under advisory file lock.

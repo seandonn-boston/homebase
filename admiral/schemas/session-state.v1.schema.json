@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "session-state.v1.schema.json",
+  "title": "Admiral Session State",
+  "description": "Schema for .admiral/session_state.json — persisted between hook invocations within a session.",
+  "type": "object",
+  "required": ["session_id", "started_at", "tokens_used", "token_budget", "tool_call_count"],
+  "properties": {
+    "session_id": {
+      "type": "string",
+      "description": "Unique session identifier."
+    },
+    "started_at": {
+      "type": "number",
+      "description": "Unix timestamp when session started."
+    },
+    "tokens_used": {
+      "type": "number",
+      "description": "Total tokens consumed in this session.",
+      "minimum": 0
+    },
+    "token_budget": {
+      "type": "number",
+      "description": "Token budget for this session (0 = unlimited).",
+      "minimum": 0
+    },
+    "tool_call_count": {
+      "type": "number",
+      "description": "Number of tool calls made in this session.",
+      "minimum": 0
+    },
+    "trace_id": {
+      "type": "string",
+      "description": "Trace ID for correlating events across the session."
+    },
+    "hook_state": {
+      "type": "object",
+      "description": "Per-hook persistent state.",
+      "additionalProperties": true
+    },
+    "context": {
+      "type": "object",
+      "description": "Context window state tracking.",
+      "properties": {
+        "standing_context_tokens": {
+          "type": "number",
+          "minimum": 0
+        },
+        "standing_context_present": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}
