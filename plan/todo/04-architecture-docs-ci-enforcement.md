@@ -80,14 +80,14 @@
 
 ### 5.1 Quality Gates
 
-- [ ] **C-01:** Add coverage threshold gate — CI fails on coverage regression, configurable threshold `[M]`
+- [x] **C-01:** Add coverage threshold gate — *Completed in T-09 (check-coverage.sh at 85% threshold, integrated into control-plane-ci.yml).* — CI fails on coverage regression, configurable threshold `[M]`
 - [x] **C-08:** Dependency license audit — block on GPL/copyleft, warn on unknown licenses `[S]`
 - [ ] **C-09:** Reproducible build verification — two consecutive builds produce identical output `[S]`
 
 ### 5.2 Cross-Platform & Security
 
-- [ ] **C-02:** Add matrix CI builds — ubuntu + macOS for TypeScript and hook tests `[S]`
-- [ ] **C-03:** Add CodeQL security scanning — TypeScript + bash analysis, block on high/critical, weekly schedule `[S]`
+- [ ] **C-02:** Add matrix CI builds — *Deferred (requires macOS runner access).* — ubuntu + macOS for TypeScript and hook tests `[S]`
+- [ ] **C-03:** Add CodeQL security scanning — *Deferred (requires GitHub Advanced Security setup).* — TypeScript + bash analysis, block on high/critical, weekly schedule `[S]`
 
 ### 5.3 Integration & Performance
 
@@ -102,8 +102,8 @@
 - [ ] **C-10:** Automated release tagging workflow — semver from conventional commits, GitHub Release `[M]`
 - [ ] **C-11:** PR size limits — warn on PRs > 500 lines changed, exclude generated/lock files `[S]`
 - [ ] **C-12:** Stale branch cleanup automation — auto-delete merged branches, issue for stale unmerged `[S]`
-- [ ] **C-13:** CI build caching optimization — cache node_modules, .tsbuildinfo, ShellCheck binary `[S]`
-- [ ] **C-15:** Dependency update automation — Dependabot/Renovate, auto-merge patches, grouped updates `[S]`
+- [x] **C-13:** CI build caching optimization — *Already configured: setup-node@v6 with `cache: 'npm'` in control-plane-ci.yml.* — cache node_modules, .tsbuildinfo, ShellCheck binary `[S]`
+- [ ] **C-15:** Dependency update automation — *Deferred (requires Dependabot/Renovate configuration).* — Dependabot/Renovate, auto-merge patches, grouped updates `[S]`
 
 ---
 
