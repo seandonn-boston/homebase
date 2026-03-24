@@ -50,7 +50,6 @@ export class EventStream {
   private events: RingBuffer<AgentEvent>;
   private listeners: EventListener[] = [];
   private config: EventStreamConfig;
-  private eventCounter = 0;
 
   constructor(config: Partial<EventStreamConfig> = {}) {
     this.config = { ...DEFAULT_STREAM_CONFIG, ...config };
@@ -58,7 +57,7 @@ export class EventStream {
   }
 
   private generateId(): string {
-    return `evt_${Date.now()}_${++this.eventCounter}`;
+    return `evt_${crypto.randomUUID()}`;
   }
 
   emit(

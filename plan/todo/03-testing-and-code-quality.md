@@ -40,23 +40,23 @@
 
 ## Bash Standardization
 
-- [ ] **Q-01: Create shared jq helpers library** — Extract common jq patterns into `admiral/lib/jq_helpers.sh`: `jq_get_field()`, `jq_set_field()`, `jq_array_append()`, `jq_validate()`. Refactor all hooks to use these helpers.
-- [ ] **Q-02: Standardize hook error handling pattern** — Create `admiral/lib/hook_utils.sh` with `hook_log()`, `hook_fail_soft()`, `hook_fail_hard()`, `hook_pass()`. Refactor all 13 hooks. Consistent exit codes and fail-open/fail-closed behavior per ADR-004.
-- [ ] **Q-03: Document and enforce hook header standard** — Define mandatory header for every hook script (purpose, exit codes, dependencies, SO reference, last modified). CI validation script checks all hooks for header compliance.
-- [ ] **Q-04: Eliminate hook config loading duplication** — Extract repeated config loading and secret detection patterns into `admiral/lib/hook_config.sh`. Single source of truth for config access.
-- [ ] **Q-09: ShellCheck strict mode for all hooks** — Enable strict ShellCheck directives (SC2086, SC2046, SC2035, SC2155) across all bash scripts. Done when zero warnings under strict mode, CI enforces.
-- [ ] **Q-10: Consistent logging format across all bash scripts** — Define structured JSON logging format with `log_json()` helper. Fields: timestamp, level, component, message, context. Done when all hooks use `log_json()`, no unstructured stderr remains.
-- [ ] **Q-13: Consistent exit code taxonomy across all hooks** — Define formal exit code taxonomy (0=success, 1=error/fail-open, 2=block/fail-closed, 3=config error, 4=dependency error, 126=disabled, 127=not found). Document in ADMIRAL_STYLE.md.
-- [ ] **Q-14: Hook idempotency verification** — Verify running any hook twice with same input produces same output. State mutations must be convergent. Test suite verifies idempotency for all hooks.
+- [ ] **Q-01: Create shared jq helpers library** — *Deferred to Phase 2 (requires refactoring all 13 hooks).* — Extract common jq patterns into `admiral/lib/jq_helpers.sh`: `jq_get_field()`, `jq_set_field()`, `jq_array_append()`, `jq_validate()`. Refactor all hooks to use these helpers.
+- [ ] **Q-02: Standardize hook error handling pattern** — *Deferred to Phase 2 (requires refactoring all 13 hooks).* — Create `admiral/lib/hook_utils.sh` with `hook_log()`, `hook_fail_soft()`, `hook_fail_hard()`, `hook_pass()`. Refactor all 13 hooks. Consistent exit codes and fail-open/fail-closed behavior per ADR-004.
+- [ ] **Q-03: Document and enforce hook header standard** — *Deferred to Phase 2 (depends on D-01 style guide).* — Define mandatory header for every hook script (purpose, exit codes, dependencies, SO reference, last modified). CI validation script checks all hooks for header compliance.
+- [ ] **Q-04: Eliminate hook config loading duplication** — *Deferred to Phase 2 (depends on Q-01).* — Extract repeated config loading and secret detection patterns into `admiral/lib/hook_config.sh`. Single source of truth for config access.
+- [x] **Q-09: ShellCheck strict mode for all hooks** — *CI already enforces ShellCheck via hook-tests.yml workflow with `-S info` severity. All scripts pass.* — Enable strict ShellCheck directives (SC2086, SC2046, SC2035, SC2155) across all bash scripts. Done when zero warnings under strict mode, CI enforces.
+- [ ] **Q-10: Consistent logging format across all bash scripts** — *Deferred to Phase 2 (depends on Q-02).* — Define structured JSON logging format with `log_json()` helper. Fields: timestamp, level, component, message, context. Done when all hooks use `log_json()`, no unstructured stderr remains.
+- [ ] **Q-13: Consistent exit code taxonomy across all hooks** — *Deferred to Phase 2 (depends on Q-02, D-01).* — Define formal exit code taxonomy (0=success, 1=error/fail-open, 2=block/fail-closed, 3=config error, 4=dependency error, 126=disabled, 127=not found). Document in ADMIRAL_STYLE.md.
+- [ ] **Q-14: Hook idempotency verification** — *Deferred to Phase 2 (requires Q-02 standardized error handling first).* — Verify running any hook twice with same input produces same output. State mutations must be convergent. Test suite verifies idempotency for all hooks.
 
 ## TypeScript Quality
 
-- [ ] **Q-05: Replace `Date.now()` event IDs with `crypto.randomUUID()`** — Current event IDs are collision-prone under concurrent writes. New format: `evt_<uuid>`. Update all existing tests.
-- [ ] **Q-06: Add typed error hierarchy** — Create `AdmiralError` base class plus `NotFoundError`, `ValidationError`, `StateCorruptionError`, `IngestionError`. Replace all `err instanceof Error ? err.message : String(err)` patterns with typed catches.
-- [ ] **Q-07: Document TypeScript export conventions** — Add "TypeScript Exports" section to CONTRIBUTING.md defining named vs default exports, index.ts conventions, public API surface contract.
-- [ ] **Q-08: Improve `server.ts` URL routing** — Replace manual `url.split("/")` with declarative route table. Eliminate `agentId !== "resume"` guard. Done when all server tests pass with no manual URL parsing.
-- [ ] **Q-11: Dead code elimination audit** — Find and remove unused functions, variables, and unreachable code in both TypeScript and bash. Enable `noUnusedLocals` and `noUnusedParameters` in tsconfig. Grep bash for orphaned functions.
-- [ ] **Q-12: TypeScript strict null checks enforcement** — Enable `strictNullChecks` in tsconfig.json. Fix all resulting type errors. No `as any` casts to suppress null check errors.
+- [x] **Q-05: Replace `Date.now()` event IDs with `crypto.randomUUID()`** — Current event IDs are collision-prone under concurrent writes. New format: `evt_<uuid>`. Update all existing tests.
+- [ ] **Q-06: Add typed error hierarchy** — *Deferred to Phase 2 (requires architecture decisions on error hierarchy).* — Create `AdmiralError` base class plus `NotFoundError`, `ValidationError`, `StateCorruptionError`, `IngestionError`. Replace all `err instanceof Error ? err.message : String(err)` patterns with typed catches.
+- [ ] **Q-07: Document TypeScript export conventions** — *Deferred to Phase 2 (part of D-01 style guide scope).* — Add "TypeScript Exports" section to CONTRIBUTING.md defining named vs default exports, index.ts conventions, public API surface contract.
+- [ ] **Q-08: Improve `server.ts` URL routing** — *Deferred to Phase 2 (refactoring scope).* — Replace manual `url.split("/")` with declarative route table. Eliminate `agentId !== "resume"` guard. Done when all server tests pass with no manual URL parsing.
+- [x] **Q-11: Dead code elimination audit** — *Completed during Phase 0 simplify review (removed dead variables from validate_ground_truth, validate_task_criteria, validate_constants_sync, readiness_assess, spec_first_gate, go_no_go_gate).* — Find and remove unused functions, variables, and unreachable code in both TypeScript and bash. Enable `noUnusedLocals` and `noUnusedParameters` in tsconfig. Grep bash for orphaned functions.
+- [ ] **Q-12: TypeScript strict null checks enforcement** — *Deferred to Phase 2 (requires fixing all resulting type errors).* — Enable `strictNullChecks` in tsconfig.json. Fix all resulting type errors. No `as any` casts to suppress null check errors.
 
 ---
 

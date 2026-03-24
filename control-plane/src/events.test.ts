@@ -30,14 +30,12 @@ describe("EventStream — ID generation", () => {
     assert.equal(ids.size, 100);
   });
 
-  it("generates IDs with timestamp component", () => {
-    const before = Date.now();
+  it("generates IDs with UUID format", () => {
     const event = stream.emit("a1", "A", "agent_started");
-    // ID format: evt_<timestamp>_<counter>
-    const parts = event.id.split("_");
-    assert.equal(parts.length, 3);
-    const ts = Number(parts[1]);
-    assert.ok(ts >= before);
+    // ID format: evt_<uuid>
+    assert.ok(event.id.startsWith("evt_"));
+    const uuid = event.id.slice(4);
+    assert.match(uuid, /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/);
   });
 });
 
