@@ -1,0 +1,313 @@
+#!/bin/bash
+# Admiral Framework — Project Readiness Assessment Tool
+# Accepts a project root and Ground Truth path, checks completeness of
+# Ground Truth, CI config, test suite, linter config, and documented conventions.
+# Outputs Ready / Partially Ready / Not Ready with detailed breakdown.
+# Usage: readiness_assess [--json] <project-root> <ground-truth-path>
+# Exit codes: 0=Ready, 1=Partially Ready, 2=Not Ready
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ADMIRAL_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+VALIDATE_GT="$ADMIRAL_DIR/bin/validate_ground_truth"
+VALIDATE_BOUNDARIES="$ADMIRAL_DIR/bin/validate_boundaries"
+
+JSON_MODE=false
+PROJECT_ROOT=""
+GT_PATH=""
+
+for arg in "$@"; do
+  case "$arg" in
+    --json) JSON_MODE=true ;;
+    *)
+      if [ -z "$PROJECT_ROOT" ]; then
+        PROJECT_ROOT="$arg"
+      elif [ -z "$GT_PATH" ]; then
+        GT_PATH="$arg"
+      fi
+      ;;
+  esac
+done
+
+if [ -z "$PROJECT_ROOT" ] || [ -z "$GT_PATH" ]; then
+  echo "Usage: readiness_assess [--json] <project-root> <ground-truth-path>"
+  echo ""
+  echo "Checks project readiness across five dimensions:"
+  echo "  1. Ground Truth document completeness (validates against schema)"
+  echo "  2. Boundaries checklist (non_goals, hard_constraints, resource_budgets, llm_last)"
+  echo "  3. CI configuration (GitHub Actions, GitLab CI, etc.)"
+  echo "  4. Test suite (test directory with test files)"
+  echo "  5. Linter configuration (.shellcheckrc, .eslintrc, .prettierrc, etc.)"
+  echo ""
+  echo "Options:"
+  echo "  --json    Output results as JSON (for programmatic consumption)"
+  echo ""
+  echo "Exit codes:"
+  echo "  0  Ready — all checks pass"
+  echo "  1  Partially Ready — Ground Truth valid but infrastructure gaps"
+  echo "  2  Not Ready — Ground Truth missing/invalid or boundaries incomplete"
+  exit 1
+fi
+
+if [ ! -d "$PROJECT_ROOT" ]; then
+  echo "ERROR: Project root directory not found: $PROJECT_ROOT"
+  exit 2
+fi
+
+# --- Check results ---
+CHECKS_PASS=()
+CHECKS_WARN=()
+CHECKS_FAIL=()
+PREPARATION=()
+
+# ============================================================
+# Check 1: Ground Truth Document
+# ============================================================
+gt_status="fail"
+gt_detail=""
+
+if [ ! -f "$GT_PATH" ]; then
+  gt_detail="Ground Truth file not found: $GT_PATH"
+  CHECKS_FAIL+=("Ground Truth: $gt_detail")
+  PREPARATION+=("Create a Ground Truth document: generate_ground_truth <project-root>")
+else
+  rc=0
+  gt_output=$("$VALIDATE_GT" "$GT_PATH" 2>&1) || rc=$?
+  if [ "$rc" -eq 0 ]; then
+    gt_status="pass"
+    gt_detail="Ground Truth document is valid"
+    CHECKS_PASS+=("Ground Truth: $gt_detail")
+  elif [ "$rc" -eq 1 ]; then
+    gt_status="warn"
+    gt_detail="Ground Truth has warnings"
+    CHECKS_WARN+=("Ground Truth: $gt_detail")
+    PREPARATION+=("Fix Ground Truth warnings: $gt_output")
+  else
+    gt_detail="Ground Truth validation failed"
+    CHECKS_FAIL+=("Ground Truth: $gt_detail")
+    PREPARATION+=("Fix Ground Truth errors: run validate_ground_truth $GT_PATH")
+  fi
+fi
+
+# ============================================================
+# Check 2: Boundaries Checklist
+# ============================================================
+boundaries_status="fail"
+boundaries_detail=""
+
+if [ ! -f "$GT_PATH" ]; then
+  boundaries_detail="Cannot check boundaries without Ground Truth"
+  CHECKS_FAIL+=("Boundaries: $boundaries_detail")
+elif [ ! -f "$VALIDATE_BOUNDARIES" ]; then
+  boundaries_status="warn"
+  boundaries_detail="Boundaries validator not found (validate_boundaries)"
+  CHECKS_WARN+=("Boundaries: $boundaries_detail")
+else
+  rc=0
+  boundaries_output=$("$VALIDATE_BOUNDARIES" "$GT_PATH" 2>&1) || rc=$?
+  if [ "$rc" -eq 0 ]; then
+    boundaries_status="pass"
+    boundaries_detail="All boundary categories present and populated"
+    CHECKS_PASS+=("Boundaries: $boundaries_detail")
+  elif [ "$rc" -eq 1 ]; then
+    boundaries_status="warn"
+    boundaries_detail="Boundaries have warnings"
+    CHECKS_WARN+=("Boundaries: $boundaries_detail")
+    PREPARATION+=("Complete boundary categories: run validate_boundaries $GT_PATH")
+  else
+    boundaries_detail="Missing required boundary categories"
+    CHECKS_FAIL+=("Boundaries: $boundaries_detail")
+    PREPARATION+=("Add missing boundary categories: run validate_boundaries $GT_PATH")
+  fi
+fi
+
+# ============================================================
+# Check 3: CI Configuration
+# ============================================================
+ci_status="fail"
+ci_detail=""
+
+ci_found=false
+for ci_path in \
+  "$PROJECT_ROOT/.github/workflows" \
+  "$PROJECT_ROOT/.gitlab-ci.yml" \
+  "$PROJECT_ROOT/.circleci" \
+  "$PROJECT_ROOT/Jenkinsfile" \
+  "$PROJECT_ROOT/.travis.yml" \
+  "$PROJECT_ROOT/azure-pipelines.yml"; do
+  if [ -e "$ci_path" ]; then
+    ci_found=true
+    break
+  fi
+done
+
+if [ "$ci_found" = true ]; then
+  ci_status="pass"
+  ci_detail="CI configuration found"
+  CHECKS_PASS+=("CI: $ci_detail")
+else
+  ci_detail="No CI configuration detected"
+  CHECKS_WARN+=("CI: $ci_detail")
+  PREPARATION+=("Add CI configuration (e.g., .github/workflows/ci.yml)")
+fi
+
+# ============================================================
+# Check 4: Test Suite
+# ============================================================
+test_status="fail"
+test_detail=""
+
+test_found=false
+for test_path in \
+  "$PROJECT_ROOT/tests" \
+  "$PROJECT_ROOT/test" \
+  "$PROJECT_ROOT/__tests__" \
+  "$PROJECT_ROOT/spec" \
+  "$PROJECT_ROOT/admiral/tests"; do
+  if [ -d "$test_path" ]; then
+    # Check there's at least one file in the test directory
+    file_count=$(find "$test_path" -type f -name "test_*" -o -name "*_test.*" -o -name "*.test.*" -o -name "*.spec.*" 2>/dev/null | head -1 | wc -l)
+    if [ "$file_count" -gt 0 ]; then
+      test_found=true
+      break
+    fi
+  fi
+done
+
+if [ "$test_found" = true ]; then
+  test_status="pass"
+  test_detail="Test suite found"
+  CHECKS_PASS+=("Test suite: $test_detail")
+else
+  test_detail="No test suite detected"
+  CHECKS_WARN+=("Test suite: $test_detail")
+  PREPARATION+=("Add a test directory with test files (e.g., tests/test_*.sh)")
+fi
+
+# ============================================================
+# Check 5: Linter Configuration
+# ============================================================
+lint_status="fail"
+lint_detail=""
+
+lint_found=false
+for lint_path in \
+  "$PROJECT_ROOT/.shellcheckrc" \
+  "$PROJECT_ROOT/.eslintrc" \
+  "$PROJECT_ROOT/.eslintrc.js" \
+  "$PROJECT_ROOT/.eslintrc.json" \
+  "$PROJECT_ROOT/.eslintrc.yml" \
+  "$PROJECT_ROOT/eslint.config.js" \
+  "$PROJECT_ROOT/eslint.config.mjs" \
+  "$PROJECT_ROOT/.prettierrc" \
+  "$PROJECT_ROOT/.prettierrc.json" \
+  "$PROJECT_ROOT/.pylintrc" \
+  "$PROJECT_ROOT/pyproject.toml" \
+  "$PROJECT_ROOT/.rubocop.yml" \
+  "$PROJECT_ROOT/.golangci.yml" \
+  "$PROJECT_ROOT/biome.json"; do
+  if [ -f "$lint_path" ]; then
+    lint_found=true
+    break
+  fi
+done
+
+if [ "$lint_found" = true ]; then
+  lint_status="pass"
+  lint_detail="Linter configuration found"
+  CHECKS_PASS+=("Linter: $lint_detail")
+else
+  lint_detail="No linter configuration detected"
+  CHECKS_WARN+=("Linter: $lint_detail")
+  PREPARATION+=("Add linter configuration (e.g., .shellcheckrc, .eslintrc)")
+fi
+
+# ============================================================
+# Determine overall status
+# ============================================================
+# Not Ready: Ground Truth missing/invalid OR boundaries fail
+# Partially Ready: Ground Truth valid but infrastructure gaps
+# Ready: all checks pass
+
+overall_status=""
+exit_code=0
+
+if [ "$gt_status" = "fail" ] || [ "$boundaries_status" = "fail" ]; then
+  overall_status="Not Ready"
+  exit_code=2
+elif [ ${#CHECKS_WARN[@]} -gt 0 ]; then
+  overall_status="Partially Ready"
+  exit_code=1
+else
+  overall_status="Ready"
+  exit_code=0
+fi
+
+# ============================================================
+# Output
+# ============================================================
+
+if [ "$JSON_MODE" = true ]; then
+  pass_json="[]"
+  warn_json="[]"
+  fail_json="[]"
+  prep_json="[]"
+
+  if [ ${#CHECKS_PASS[@]} -gt 0 ]; then
+    pass_json=$(printf '%s\n' "${CHECKS_PASS[@]}" | jq -R . | jq -s .)
+  fi
+  if [ ${#CHECKS_WARN[@]} -gt 0 ]; then
+    warn_json=$(printf '%s\n' "${CHECKS_WARN[@]}" | jq -R . | jq -s .)
+  fi
+  if [ ${#CHECKS_FAIL[@]} -gt 0 ]; then
+    fail_json=$(printf '%s\n' "${CHECKS_FAIL[@]}" | jq -R . | jq -s .)
+  fi
+  if [ ${#PREPARATION[@]} -gt 0 ]; then
+    prep_json=$(printf '%s\n' "${PREPARATION[@]}" | jq -R . | jq -s .)
+  fi
+
+  jq -n \
+    --arg status "$overall_status" \
+    --argjson checks "$(jq -n \
+      --argjson pass "$pass_json" \
+      --argjson warn "$warn_json" \
+      --argjson fail "$fail_json" \
+      '{pass: $pass, warn: $warn, fail: $fail}')" \
+    --argjson preparation "$prep_json" \
+    '{status: $status, checks: $checks, preparation: $preparation}'
+
+  exit "$exit_code"
+fi
+
+# Human-readable output
+echo "=== Project Readiness Assessment ==="
+echo ""
+
+if [ ${#CHECKS_PASS[@]} -gt 0 ]; then
+  for item in "${CHECKS_PASS[@]}"; do
+    echo "  [PASS] $item"
+  done
+fi
+if [ ${#CHECKS_WARN[@]} -gt 0 ]; then
+  for item in "${CHECKS_WARN[@]}"; do
+    echo "  [WARN] $item"
+  done
+fi
+if [ ${#CHECKS_FAIL[@]} -gt 0 ]; then
+  for item in "${CHECKS_FAIL[@]}"; do
+    echo "  [FAIL] $item"
+  done
+fi
+
+echo ""
+echo "STATUS: $overall_status"
+
+if [ ${#PREPARATION[@]} -gt 0 ]; then
+  echo ""
+  echo "Preparation Path:"
+  for step in "${PREPARATION[@]}"; do
+    echo "  - $step"
+  done
+fi
+
+exit "$exit_code"
