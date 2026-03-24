@@ -2,6 +2,7 @@
 # Admiral Framework — Injection Detection Tests (T-18)
 # Verifies all 5 quarantine layers with attack vectors and benign corpus.
 # Exit code: 0 = all pass, 1 = failures
+# shellcheck disable=SC2016  # Single-quoted attack vectors are intentional
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

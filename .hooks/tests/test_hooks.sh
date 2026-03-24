@@ -498,11 +498,11 @@ else
 fi
 
 # 7b: Empty stdin — hooks should not crash
-EMPTY_OUTPUT=$(echo "" | "$HOOKS_DIR/pre_tool_use_adapter.sh" 2>/dev/null) || true
+echo "" | "$HOOKS_DIR/pre_tool_use_adapter.sh" >/dev/null 2>&1 || true
 PASS=$((PASS + 1))
 echo "  PASS: pre_tool_use_adapter handles empty stdin without crash"
 
-EMPTY_OUTPUT2=$(echo "" | "$HOOKS_DIR/post_tool_use_adapter.sh" 2>/dev/null) || true
+echo "" | "$HOOKS_DIR/post_tool_use_adapter.sh" >/dev/null 2>&1 || true
 PASS=$((PASS + 1))
 echo "  PASS: post_tool_use_adapter handles empty stdin without crash"
 
@@ -511,7 +511,7 @@ PAYLOAD_UNICODE='{"tool_name":"Bash","tool_input":{"command":"echo '\''héllo w�
 assert_exit_zero "Adapter handles Unicode in tool input" "pre_tool_use_adapter.sh" "$PAYLOAD_UNICODE"
 
 # 7d: Very large payload — should not crash or hang
-LARGE_COMMAND=$(python3 -c "print('echo ' + 'x' * 50000)" 2>/dev/null || printf 'echo %50000s' | tr ' ' 'x')
+LARGE_COMMAND=$(python3 -c "print('echo ' + 'x' * 50000)" 2>/dev/null || echo "echo $(head -c 50000 < /dev/zero | tr '\0' 'x')")
 PAYLOAD_LARGE="{\"tool_name\":\"Bash\",\"tool_input\":{\"command\":\"$LARGE_COMMAND\"}}"
 assert_exit_zero "Adapter handles large payload (50KB)" "pre_tool_use_adapter.sh" "$PAYLOAD_LARGE"
 

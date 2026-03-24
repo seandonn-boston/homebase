@@ -88,9 +88,19 @@ describe("EventStream — listener lifecycle", () => {
 
   it("listener receives event with all fields populated", () => {
     let captured: unknown = null;
-    stream.on((e) => { captured = e; });
+    stream.on((e) => {
+      captured = e;
+    });
     stream.emit("a1", "Agent-1", "tool_called", { tool: "read" }, "parent-1", "task-1");
-    const e = captured as { id: string; agentId: string; agentName: string; type: string; parentEventId: string; taskId: string; data: Record<string, unknown> };
+    const e = captured as {
+      id: string;
+      agentId: string;
+      agentName: string;
+      type: string;
+      parentEventId: string;
+      taskId: string;
+      data: Record<string, unknown>;
+    };
     assert.equal(e.agentId, "a1");
     assert.equal(e.agentName, "Agent-1");
     assert.equal(e.type, "tool_called");
@@ -156,7 +166,7 @@ describe("EventStream — filters", () => {
   it("getEventsByAgent returns only matching agent events", () => {
     const events = stream.getEventsByAgent("a1");
     assert.equal(events.length, 2);
-    events.forEach((e) => assert.equal(e.agentId, "a1"));
+    for (const e of events) assert.equal(e.agentId, "a1");
   });
 
   it("getEventsByAgent returns empty for unknown agent", () => {
@@ -166,7 +176,7 @@ describe("EventStream — filters", () => {
   it("getEventsByTask returns only matching task events", () => {
     const events = stream.getEventsByTask("t1");
     assert.equal(events.length, 2);
-    events.forEach((e) => assert.equal(e.taskId, "t1"));
+    for (const e of events) assert.equal(e.taskId, "t1");
   });
 
   it("getEventsByTask returns empty for unknown task", () => {
