@@ -111,7 +111,7 @@
 
 ### 6.1 Self-Enforced Discipline
 
-- [ ] **P-01:** `fix:` commits require test changes — CI check warns on fix commits with no test file modifications `[M]`
+- [x] **P-01:** `fix:` commits require test changes — CI check warns on fix commits with no test file modifications `[M]`
 - [ ] **P-02:** Documentation discipline — CI validates module doc comments in `.ts`, header comments in `.hooks/*.sh`, ADR template compliance `[M]`
 
 ### 6.2 Meta-Governance
