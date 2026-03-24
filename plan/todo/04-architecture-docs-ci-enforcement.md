@@ -127,7 +127,7 @@
 ### 6.4 Automated Drift & Compliance
 
 - [ ] **P-07:** Spec-implementation drift detector — compare spec features vs implementation, report new drift per PR `[L]`
-- [ ] **P-08:** Plan auto-validation — verify `plan/index.md` counts match stream files, no orphaned refs, no duplicate IDs `[M]`
+- [x] **P-08:** Plan auto-validation — verify `plan/index.md` counts match stream files, no orphaned refs, no duplicate IDs `[M]`
 - [ ] **P-09:** Standing Order compliance audit — enforcement matrix (enforced/instructed/advisory/unenforced) for all 16 SOs `[M]`
 - [ ] **P-10:** Hook coverage report — spec-defined hooks vs implemented, hook-to-SO coverage, JSON + markdown output `[M]`
 
