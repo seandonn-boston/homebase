@@ -20,7 +20,7 @@ if [ -z "$DOC" ]; then
   echo "Usage: validate_boundaries [--json] <path-to-ground-truth.json>"
   echo ""
   echo "Reads the Boundaries section and reports category completeness."
-  echo "Designed for integration into readiness_assess.sh (ST-02)."
+  echo "Designed for integration into readiness_assess (ST-02)."
   echo ""
   echo "Options:"
   echo "  --json    Output results as JSON (for programmatic consumption)"
@@ -133,10 +133,14 @@ fi
 
 if [ "$JSON_MODE" = true ]; then
   # Build JSON output
-  present_json=$(printf '%s\n' "${PRESENT[@]}" 2>/dev/null | jq -R . | jq -s . 2>/dev/null || echo "[]")
-  missing_json=$(printf '%s\n' "${MISSING[@]}" 2>/dev/null | jq -R . | jq -s . 2>/dev/null || echo "[]")
-  errors_json=$(printf '%s\n' "${ERRORS[@]}" 2>/dev/null | jq -R . | jq -s . 2>/dev/null || echo "[]")
-  warnings_json=$(printf '%s\n' "${WARNINGS[@]}" 2>/dev/null | jq -R . | jq -s . 2>/dev/null || echo "[]")
+  present_json="[]"
+  missing_json="[]"
+  errors_json="[]"
+  warnings_json="[]"
+  [ ${#PRESENT[@]} -gt 0 ] && present_json=$(printf '%s\n' "${PRESENT[@]}" | jq -R . | jq -s .)
+  [ ${#MISSING[@]} -gt 0 ] && missing_json=$(printf '%s\n' "${MISSING[@]}" | jq -R . | jq -s .)
+  [ ${#ERRORS[@]} -gt 0 ] && errors_json=$(printf '%s\n' "${ERRORS[@]}" | jq -R . | jq -s .)
+  [ ${#WARNINGS[@]} -gt 0 ] && warnings_json=$(printf '%s\n' "${WARNINGS[@]}" | jq -R . | jq -s .)
 
   if [ ${#ERRORS[@]} -gt 0 ]; then
     status="fail"

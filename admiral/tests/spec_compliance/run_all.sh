@@ -26,8 +26,10 @@ run_part() {
 
   # Extract pass/fail counts from last line
   local pass fail
-  pass=$(echo "$output" | grep -oP '\d+ passed' | grep -oP '\d+' || echo "0")
-  fail=$(echo "$output" | grep -oP '\d+ failed' | grep -oP '\d+' || echo "0")
+  pass=$(echo "$output" | sed -n 's/.*\([0-9][0-9]*\) passed.*/\1/p' | tail -1)
+  fail=$(echo "$output" | sed -n 's/.*\([0-9][0-9]*\) failed.*/\1/p' | tail -1)
+  [ -z "$pass" ] && pass=0
+  [ -z "$fail" ] && fail=0
 
   if [ "$rc" -eq 0 ]; then
     TOTAL_PASS=$((TOTAL_PASS + pass))

@@ -59,10 +59,14 @@ if [ -z "$PROJECT_ROOT" ] || [ -z "$GT_PATH" ]; then
 fi
 
 # Run readiness assessment
-assess_rc=0
-assess_output=$("$ASSESS" --json "$PROJECT_ROOT" "$GT_PATH" 2>&1) || assess_rc=$?
+assess_output=$("$ASSESS" --json "$PROJECT_ROOT" "$GT_PATH" 2>&1) || true
 
 readiness_status=$(echo "$assess_output" | jq -r '.status' 2>/dev/null || echo "unknown")
+
+# Ensure assess_output is valid JSON for downstream --argjson usage
+if ! echo "$assess_output" | jq empty 2>/dev/null; then
+  assess_output='{"status":"unknown","checks":{"pass":[],"warn":[],"fail":[]},"preparation":[]}'
+fi
 
 # Determine gate decision
 decision=""

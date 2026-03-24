@@ -6,9 +6,6 @@
 # Exit codes: 0=valid, 1=warnings only, 2=hard failures
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ADMIRAL_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
-
 ERRORS=()
 WARNINGS=()
 
@@ -38,14 +35,6 @@ if ! jq empty "$DOC" 2>/dev/null; then
 fi
 
 # --- Helper functions ---
-
-check_required_key() {
-  local path="$1"
-  local label="$2"
-  if [ "$(jq "$path == null" "$DOC")" = "true" ]; then
-    ERRORS+=("Missing required field: $label ($path)")
-  fi
-}
 
 check_nonempty_string() {
   local path="$1"
