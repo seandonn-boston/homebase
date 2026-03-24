@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-03-20T07:45:24Z",
+  "last_updated": "2026-03-23T08:01:42Z",
   "sources": {
     "anthropic": {
       "type": "model_provider",
@@ -10,8 +10,8 @@
     },
     "openai": {
       "type": "model_provider",
-      "last_scanned": "2026-03-20T07:45:24Z",
-      "known_version": "v0.12.5",
+      "last_scanned": "2026-03-23T08:01:42Z",
+      "known_version": "v0.13.0",
       "enabled": true
     },
     "google-deepmind": {
@@ -22,19 +22,19 @@
     },
     "meta-llama": {
       "type": "model_provider",
-      "last_scanned": "2026-03-20T07:45:24Z",
+      "last_scanned": "2026-03-23T08:01:42Z",
       "known_version": "v0.2.0",
       "enabled": true
     },
     "mistralai": {
       "type": "model_provider",
-      "last_scanned": "2026-03-20T07:45:24Z",
+      "last_scanned": "2026-03-23T08:01:42Z",
       "known_version": "v1.10.0",
       "enabled": true
     },
     "deepseek-ai": {
       "type": "model_provider",
-      "last_scanned": "2026-03-20T07:45:24Z",
+      "last_scanned": "2026-03-23T08:01:42Z",
       "known_version": "v1.0.0",
       "enabled": true
     },
@@ -52,8 +52,8 @@
     },
     "cline": {
       "type": "framework",
-      "last_scanned": "2026-03-20T07:45:24Z",
-      "known_version": "v3.74.0",
+      "last_scanned": "2026-03-23T08:01:42Z",
+      "known_version": "v3.75.0",
       "enabled": true
     },
     "cursor": {
@@ -82,6 +82,38 @@
     }
   },
   "scan_history": [
+    {
+      "timestamp": "2026-03-23T08:01:42Z",
+      "scan_type": "full",
+      "status": "success",
+      "findings_count": 21,
+      "high_priority_count": 3,
+      "digest_file": "monitor/digests/2026-03-23.md"
+    },
+    {
+      "timestamp": "2026-03-23T07:10:45Z",
+      "scan_type": "discover",
+      "status": "success",
+      "findings_count": 21,
+      "high_priority_count": 3,
+      "digest_file": "monitor/digests/2026-03-23-weekly.md"
+    },
+    {
+      "timestamp": "2026-03-22T07:37:48Z",
+      "scan_type": "full",
+      "status": "success",
+      "findings_count": 19,
+      "high_priority_count": 3,
+      "digest_file": "monitor/digests/2026-03-22.md"
+    },
+    {
+      "timestamp": "2026-03-21T07:32:12Z",
+      "scan_type": "full",
+      "status": "success",
+      "findings_count": 19,
+      "high_priority_count": 3,
+      "digest_file": "monitor/digests/2026-03-21.md"
+    },
     {
       "timestamp": "2026-03-20T07:45:24Z",
       "scan_type": "full",
