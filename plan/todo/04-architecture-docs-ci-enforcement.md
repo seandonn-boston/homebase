@@ -81,7 +81,7 @@
 ### 5.1 Quality Gates
 
 - [ ] **C-01:** Add coverage threshold gate — CI fails on coverage regression, configurable threshold `[M]`
-- [ ] **C-08:** Dependency license audit — block on GPL/copyleft, warn on unknown licenses `[S]`
+- [x] **C-08:** Dependency license audit — block on GPL/copyleft, warn on unknown licenses `[S]`
 - [ ] **C-09:** Reproducible build verification — two consecutive builds produce identical output `[S]`
 
 ### 5.2 Cross-Platform & Security
