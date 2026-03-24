@@ -1,0 +1,124 @@
+#!/bin/bash
+# Admiral Framework — Spec Change Impact Assessment Validator
+# Validates a spec-change-impact.json document.
+# Usage: validate_spec_change <path-to-impact-assessment.json>
+# Exit codes: 0=valid, 1=warnings, 2=errors
+set -euo pipefail
+
+ERRORS=()
+WARNINGS=()
+
+if [ $# -lt 1 ]; then
+  echo "Usage: validate_spec_change <path-to-impact-assessment.json>"
+  echo ""
+  echo "Validates a Spec Change Impact Assessment document."
+  echo "Classifications: breaking (must change), additive (new features), cosmetic (docs only)"
+  echo ""
+  echo "Exit codes:"
+  echo "  0  Valid"
+  echo "  1  Warnings"
+  echo "  2  Errors"
+  exit 1
+fi
+
+DOC="$1"
+
+if [ ! -f "$DOC" ]; then
+  echo "ERROR: File not found: $DOC"
+  exit 2
+fi
+
+if ! jq empty "$DOC" 2>/dev/null; then
+  echo "ERROR: Not valid JSON: $DOC"
+  exit 2
+fi
+
+# Required fields
+for key in schema_version change_id spec_version_from spec_version_to summary affected_parts compatibility impact; do
+  if [ "$(jq "has(\"$key\")" "$DOC")" != "true" ]; then
+    ERRORS+=("Missing required field: $key")
+  fi
+done
+
+# Non-empty strings
+for path_label in \
+  ".change_id:change_id" \
+  ".spec_version_from:spec_version_from" \
+  ".spec_version_to:spec_version_to" \
+  ".summary:summary"; do
+  path="${path_label%%:*}"
+  label="${path_label#*:}"
+  val=$(jq -r "$path // empty" "$DOC" 2>/dev/null)
+  if [ -z "$val" ]; then
+    ERRORS+=("Empty required string: $label")
+  fi
+done
+
+# affected_parts non-empty array
+parts_len=$(jq '.affected_parts | length' "$DOC" 2>/dev/null || echo "0")
+if [ "$parts_len" -eq 0 ]; then
+  ERRORS+=("Empty required array: affected_parts")
+fi
+
+# compatibility classification enum
+classification=$(jq -r '.compatibility.classification // empty' "$DOC" 2>/dev/null)
+if [ -z "$classification" ]; then
+  ERRORS+=("Missing: compatibility.classification")
+elif [ "$classification" != "breaking" ] && [ "$classification" != "additive" ] && [ "$classification" != "cosmetic" ]; then
+  ERRORS+=("Invalid compatibility.classification: '$classification' — must be breaking, additive, or cosmetic")
+fi
+
+# compatibility justification
+justification=$(jq -r '.compatibility.justification // empty' "$DOC" 2>/dev/null)
+if [ -z "$justification" ]; then
+  ERRORS+=("Missing: compatibility.justification")
+fi
+
+# Breaking changes should have migration guide
+if [ "$classification" = "breaking" ]; then
+  migration_required=$(jq '.impact.migration_required // false' "$DOC" 2>/dev/null)
+  if [ "$migration_required" != "true" ]; then
+    WARNINGS+=("Breaking change but impact.migration_required is not true")
+  fi
+  steps_len=$(jq '.migration_guide.steps | length' "$DOC" 2>/dev/null || echo "0")
+  if [ "$steps_len" -eq 0 ]; then
+    WARNINGS+=("Breaking change but migration_guide.steps is empty")
+  fi
+fi
+
+# Risk assessment
+if [ "$(jq 'has("risk_assessment")' "$DOC")" = "true" ]; then
+  risk=$(jq -r '.risk_assessment.risk_level // empty' "$DOC" 2>/dev/null)
+  if [ -n "$risk" ]; then
+    if [ "$risk" != "low" ] && [ "$risk" != "medium" ] && [ "$risk" != "high" ] && [ "$risk" != "critical" ]; then
+      ERRORS+=("Invalid risk_assessment.risk_level: '$risk'")
+    fi
+  fi
+fi
+
+# Output
+if [ ${#ERRORS[@]} -gt 0 ]; then
+  echo "VALIDATION FAILED — ${#ERRORS[@]} error(s):"
+  for err in "${ERRORS[@]}"; do
+    echo "  ERROR: $err"
+  done
+  if [ ${#WARNINGS[@]} -gt 0 ]; then
+    echo ""
+    echo "Warnings (${#WARNINGS[@]}):"
+    for w in "${WARNINGS[@]}"; do
+      echo "  WARN: $w"
+    done
+  fi
+  exit 2
+fi
+
+if [ ${#WARNINGS[@]} -gt 0 ]; then
+  echo "VALIDATION PASSED with ${#WARNINGS[@]} warning(s):"
+  for w in "${WARNINGS[@]}"; do
+    echo "  WARN: $w"
+  done
+  exit 1
+fi
+
+echo "VALIDATION PASSED — Spec change impact assessment is valid."
+exit 0

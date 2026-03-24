@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "spec-change-impact.v1.schema.json",
+  "title": "Admiral Framework Spec Change Impact Assessment",
+  "description": "Formal assessment of spec change impact on implementations, with backwards compatibility classification, migration guide, and risk assessment.",
+  "type": "object",
+  "required": ["schema_version", "change_id", "spec_version_from", "spec_version_to", "summary", "affected_parts", "compatibility", "impact"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "change_id": {
+      "type": "string",
+      "description": "Unique identifier for this change assessment."
+    },
+    "spec_version_from": {
+      "type": "string",
+      "description": "Spec version before the change."
+    },
+    "spec_version_to": {
+      "type": "string",
+      "description": "Spec version after the change."
+    },
+    "date": {
+      "type": "string"
+    },
+    "author": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "string",
+      "description": "One-line summary of the spec change."
+    },
+    "affected_parts": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1,
+      "description": "Spec parts affected by this change."
+    },
+    "compatibility": {
+      "type": "object",
+      "required": ["classification", "justification"],
+      "additionalProperties": false,
+      "properties": {
+        "classification": {
+          "type": "string",
+          "enum": ["breaking", "additive", "cosmetic"],
+          "description": "Breaking: existing implementations must change. Additive: new features, existing behavior unchanged. Cosmetic: documentation/naming only."
+        },
+        "justification": {
+          "type": "string",
+          "description": "Why this classification was chosen."
+        }
+      }
+    },
+    "impact": {
+      "type": "object",
+      "required": ["components_affected"],
+      "additionalProperties": false,
+      "properties": {
+        "components_affected": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Implementation components that need changes."
+        },
+        "constants_changed": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Reference constants that changed value."
+        },
+        "schemas_changed": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "JSON schemas that need updating."
+        },
+        "hooks_changed": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Hook implementations that need updating."
+        },
+        "breaking_behaviors": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Specific behaviors that change in incompatible ways."
+        },
+        "migration_required": {
+          "type": "boolean",
+          "description": "Whether a migration script is needed."
+        }
+      }
+    },
+    "migration_guide": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "steps": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Ordered migration steps."
+        },
+        "rollback_steps": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Steps to rollback the migration."
+        },
+        "estimated_effort": {
+          "type": "string",
+          "description": "Estimated effort (e.g., 1 hour, 1 day)."
+        },
+        "automated": {
+          "type": "boolean",
+          "description": "Whether migration can be automated."
+        }
+      }
+    },
+    "risk_assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "risk_level": {
+          "type": "string",
+          "enum": ["low", "medium", "high", "critical"],
+          "description": "Risk level of applying this change."
+        },
+        "mitigations": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Risk mitigations in place."
+        }
+      }
+    }
+  }
+}
