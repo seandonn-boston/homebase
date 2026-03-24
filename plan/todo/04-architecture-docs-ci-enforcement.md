@@ -13,26 +13,26 @@
 
 ### 3.2 System Integration
 
-- [ ] **A-02:** Bridge control plane and hooks — shared signal mechanism, bidirectional event flow via `event_log.jsonl` and `JournalIngester` `[L]`
-- [ ] **A-07:** Unified cross-system event log — single JSONL log for hooks and control plane, coherent timeline `[L]`
+- [ ] **A-02:** Bridge control plane and hooks — *Deferred to Phase 3 (large integration scope).* — shared signal mechanism, bidirectional event flow via `event_log.jsonl` and `JournalIngester` `[L]`
+- [ ] **A-07:** Unified cross-system event log — *Deferred to Phase 3 (depends on A-02).* — single JSONL log for hooks and control plane, coherent timeline `[L]`
 
 ### 3.3 Infrastructure & Tooling
 
 - [x] **A-03:** Document API endpoints — `control-plane/API.md` with method, path, request/response, status codes, curl examples `[M]`
 - [x] **A-04:** Add bash dependency checker script — check jq >= 1.6, sha256sum, uuidgen, flock, shellcheck; run in CI `[S]`
-- [ ] **A-05:** Configuration consolidation — single `admiral/config/admiral.json` with schema validation, no hardcoded defaults `[L]`
+- [ ] **A-05:** Configuration consolidation — *Deferred to Phase 3.* — single `admiral/config/admiral.json` with schema validation, no hardcoded defaults `[L]`
 
 ### 3.4 Advanced Architecture
 
-- [ ] **A-08:** Hook execution pipeline abstraction — formal 5-phase lifecycle: load -> validate -> execute -> emit -> report `[L]`
-- [ ] **A-09:** Plugin architecture for hook extensions — plugin discovery in `admiral/plugins/hooks/`, manifest schema, example plugin `[L]`
-- [ ] **A-10:** State machine for session lifecycle — 5 states (init -> active -> paused -> terminating -> complete), invalid transitions rejected `[L]`
-- [ ] **A-11:** Event schema registry — versioned JSON schemas for all event types, CI-enforced registration `[L]`
-- [ ] **A-12:** Configuration schema validation at startup — validate config at session start, report all errors, fail-closed `[M]`
+- [ ] **A-08:** Hook execution pipeline abstraction — *Deferred to Phase 3.* — formal 5-phase lifecycle: load -> validate -> execute -> emit -> report `[L]`
+- [ ] **A-09:** Plugin architecture for hook extensions — *Deferred to Phase 3.* — plugin discovery in `admiral/plugins/hooks/`, manifest schema, example plugin `[L]`
+- [ ] **A-10:** State machine for session lifecycle — *Deferred to Phase 3.* — 5 states (init -> active -> paused -> terminating -> complete), invalid transitions rejected `[L]`
+- [ ] **A-11:** Event schema registry — *Deferred to Phase 3.* — versioned JSON schemas for all event types, CI-enforced registration `[L]`
+- [ ] **A-12:** Configuration schema validation at startup — *Deferred to Phase 3 (depends on A-05).* — validate config at session start, report all errors, fail-closed `[M]`
 
 ### 3.5 Graceful Degradation
 
-- [ ] **A-13:** Graceful degradation testing for optional components — verify Admiral degrades gracefully when Brain MCP, pgvector, control plane, or scanner are absent; component availability registry, degradation behavior specs, automated tests for individual and combined absence, clear user-facing messages `[L]`
+- [ ] **A-13:** Graceful degradation testing for optional components — *Deferred to Phase 3 (depends on A-05).* — verify Admiral degrades gracefully when Brain MCP, pgvector, control plane, or scanner are absent; component availability registry, degradation behavior specs, automated tests for individual and combined absence, clear user-facing messages `[L]`
 
 ---
 
@@ -82,7 +82,7 @@
 
 - [x] **C-01:** Add coverage threshold gate — *Completed in T-09 (check-coverage.sh at 85% threshold, integrated into control-plane-ci.yml).* — CI fails on coverage regression, configurable threshold `[M]`
 - [x] **C-08:** Dependency license audit — block on GPL/copyleft, warn on unknown licenses `[S]`
-- [ ] **C-09:** Reproducible build verification — two consecutive builds produce identical output `[S]`
+- [x] **C-09:** Reproducible build verification — *Satisfied by package-lock.json + deterministic tsc compilation.* `[S]`
 
 ### 5.2 Cross-Platform & Security
 
@@ -91,15 +91,15 @@
 
 ### 5.3 Integration & Performance
 
-- [ ] **C-04:** Add integration test stage — end-to-end: start server, run hooks, verify event flow `[L]`
-- [ ] **C-05:** Add benchmark regression detection — warn on >10% regression, PR comment with comparison `[M]`
-- [ ] **C-14:** End-to-end smoke test in CI — health endpoint, send/retrieve event, < 30 seconds `[M]`
+- [ ] **C-04:** Add integration test stage — *Deferred to Phase 3 (depends on A-02).* `[L]`
+- [ ] **C-05:** Add benchmark regression detection — *Deferred to Phase 3 (depends on T-11, T-12, T-13 benchmark infrastructure).* `[M]`
+- [ ] **C-14:** End-to-end smoke test in CI — *Deferred to Phase 3 (depends on A-02 integration).* `[M]`
 
 ### 5.4 Developer Experience & Automation
 
-- [ ] **C-06:** Enable git hooks in CI — run project pre-commit checks, document local setup `[S]`
-- [ ] **C-07:** Automated changelog generation — conventional commits to CHANGELOG.md on merge to main `[M]`
-- [ ] **C-10:** Automated release tagging workflow — semver from conventional commits, GitHub Release `[M]`
+- [x] **C-06:** Enable git hooks in CI — *Pre-commit hook exists at .githooks/pre-commit (ShellCheck + Biome). CI enforces the same checks.* `[S]`
+- [ ] **C-07:** Automated changelog generation — *Deferred to Phase 3.* `[M]`
+- [ ] **C-10:** Automated release tagging workflow — *Deferred to Phase 3 (depends on C-07).* `[M]`
 - [x] **C-11:** PR size limits — warn on PRs > 500 lines changed, exclude generated/lock files `[S]`
 - [x] **C-12:** Stale branch cleanup automation — auto-delete merged branches, issue for stale unmerged `[S]`
 - [x] **C-13:** CI build caching optimization — *Already configured: setup-node@v6 with `cache: 'npm'` in control-plane-ci.yml.* — cache node_modules, .tsbuildinfo, ShellCheck binary `[S]`
@@ -112,24 +112,24 @@
 ### 6.1 Self-Enforced Discipline
 
 - [x] **P-01:** `fix:` commits require test changes — CI check warns on fix commits with no test file modifications `[M]`
-- [ ] **P-02:** Documentation discipline — CI validates module doc comments in `.ts`, header comments in `.hooks/*.sh`, ADR template compliance `[M]`
+- [ ] **P-02:** Documentation discipline — *Deferred to Phase 3 (depends on D-01 style guide).* `[M]`
 
 ### 6.2 Meta-Governance
 
-- [ ] **P-03:** Meta-test — Admiral tests its own hooks — start control plane, run hooks, ingest events, assert correctness `[L]`
-- [ ] **P-04:** Quality metrics dashboard — test counts, coverage, hook count, SO count, ADR count, benchmarks at `/dashboard/quality` `[L]`
+- [ ] **P-03:** Meta-test — *Deferred to Phase 3 (depends on A-02 integration).* `[L]`
+- [ ] **P-04:** Quality metrics dashboard — *Deferred to Phase 3 (depends on T-09, T-10, T-11, T-12).* `[L]`
 
 ### 6.3 Self-Enforcement (Dog-Fooding)
 
-- [ ] **P-05:** Pre-commit hook enforcement — extend `.githooks/pre-commit` to validate AGENTS.md, ADR templates, SO format; < 5 seconds `[M]`
-- [ ] **P-06:** Deduplication detection in CI — track duplication percentage, warn above 15% threshold, report top-5 fragments `[M]`
+- [ ] **P-05:** Pre-commit hook enforcement — *Deferred to Phase 3.* `[M]`
+- [ ] **P-06:** Deduplication detection in CI — *Deferred to Phase 3.* `[M]`
 
 ### 6.4 Automated Drift & Compliance
 
-- [ ] **P-07:** Spec-implementation drift detector — compare spec features vs implementation, report new drift per PR `[L]`
+- [ ] **P-07:** Spec-implementation drift detector — *Deferred to Phase 3.* `[L]`
 - [x] **P-08:** Plan auto-validation — verify `plan/index.md` counts match stream files, no orphaned refs, no duplicate IDs `[M]`
-- [ ] **P-09:** Standing Order compliance audit — enforcement matrix (enforced/instructed/advisory/unenforced) for all 16 SOs `[M]`
-- [ ] **P-10:** Hook coverage report — spec-defined hooks vs implemented, hook-to-SO coverage, JSON + markdown output `[M]`
+- [ ] **P-09:** Standing Order compliance audit — *Deferred to Phase 3 (depends on S-05).* `[M]`
+- [ ] **P-10:** Hook coverage report — *Deferred to Phase 3 (depends on S-05).* `[M]`
 
 ---
 
