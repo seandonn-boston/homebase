@@ -4,7 +4,7 @@
 
 ## Claude Code Specific
 
-- **Configuration directory:** `.claude/` contains `agents/` and `commands/`
+- **Configuration directory:** `.claude/` contains `settings.local.json`
 - **Commands:** `.claude/commands/` contains reusable slash command prompts.
 - **Primary TODO executor command:** `/next-todo` (defined in `.claude/commands/next-todo.md`) executes the next item from `plan/todo/` using phase/task/subtask branching, DoD, test/lint/CI, and Admiral escalation rules.
 - **Phase completion command:** `/phase-closeout` (defined in `.claude/commands/phase-closeout.md`) executes end-of-phase whole-set validation, spellcheck/lint/security hardening, CI verification, and merge-readiness checks before merging to `main`.

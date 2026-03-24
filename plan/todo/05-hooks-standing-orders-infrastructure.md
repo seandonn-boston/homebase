@@ -120,9 +120,3 @@
 11. S-07 (task routing engine)
 12. SO-01 through SO-16 (per-SO enforcement hooks)
 13. SO-17 (enforcement completeness report)
-
----
-
-## Relocated from Phase 0
-
-- [ ] **SD-15: Admiral self-upgrade and migration path** — Version manifest tracking Admiral component versions, migration framework with versioned scripts, rollback mechanism, pre-upgrade compatibility check, documented upgrade process. *Relocated from Phase 0 (`plan/todo/02-spec-debt-resolution.md`) on 2026-03-23. Reason: premature in Phase 0 — no Admiral versions exist to migrate between. Migration framework requires versioned components from Phases 1-3 and design decisions about state backup, breaking change policy, and rollback safety. Dependencies: SD-07 (spec version manifest, done), versioned hooks/brain/config from Phases 1-3.*

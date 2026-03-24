@@ -14,8 +14,7 @@
     "maxSameError": 3,
     "maxTotalErrors": 10,
     "successDecay": 1,
-    "budgetWarningPct": 80,
-    "budgetEscalationPct": 90
+    "budgetWarningPct": 90
   },
   "tokenEstimates": {
     "Bash": 500,
