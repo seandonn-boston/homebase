@@ -54,6 +54,7 @@ echo ""
 echo "=== Registry Loads Without Errors ==="
 
 rc=0
+# shellcheck source=/dev/null
 source "$REGISTRY" 2>&1 || rc=$?
 assert_eq "Registry sources without error" "0" "$rc"
 echo ""

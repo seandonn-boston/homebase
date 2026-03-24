@@ -56,9 +56,9 @@ echo "=== Prerequisite Checks ==="
 for f in "$VALIDATE" "$SCHEMA" "$TEMPLATE"; do
   if [ -f "$f" ]; then
     PASS=$((PASS + 1))
-    echo "  [PASS] $(basename $f) found"
+    echo "  [PASS] $(basename "$f") found"
   else
-    echo "  [SKIP] $(basename $f) not found"
+    echo "  [SKIP] $(basename "$f") not found"
     exit 1
   fi
 done
