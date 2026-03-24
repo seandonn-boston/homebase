@@ -7,6 +7,20 @@ Revised: March 2026
 
 -----
 
+## The Axiom
+
+**AI is here.**
+
+Not as a tool. Not as an employee. As a participant. A new category of entity that does real work, makes real mistakes, and requires a form of governance that didn't exist before because nothing like it existed before.
+
+Its capabilities will change. Its architecture will change. Its role in the economy, in teams, in creative work — all of that will change, is changing, has already changed since this sentence was first written. But the fact of its presence is settled. AI is not coming. AI is not hypothetical. AI is the thing sitting across the table from you right now, helping you think, and that is not going to un-happen.
+
+Everything in this document — every principle, every premise, every claim about what's gone and what remains — is downstream of this single fact. If AI were merely a tool, none of this would matter; tools don't reshape the value of human judgment. If AI were an employee, existing governance would suffice. It is neither. It is something new, and the world is reorganizing around it.
+
+This axiom does not predict what AI becomes. It asserts what AI already is.
+
+-----
+
 ## Three First Principles
 
 These are the foundations this document reasons from. They are not empirical claims — they are the principles against which empirical claims are evaluated. Everything that follows — the operating premises, the claims about what's gone and what remains — is derived from these.
