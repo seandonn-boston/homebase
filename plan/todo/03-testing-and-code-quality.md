@@ -20,7 +20,7 @@
 
 ## Coverage & Benchmarks
 
-- [ ] **T-09: Add coverage threshold gate to CI** — Parse `--experimental-test-coverage` output, fail if coverage drops below threshold. Start with a realistic threshold and ratchet up over time. Done when CI fails on coverage regression.
+- [x] **T-09: Add coverage threshold gate to CI** — Parse `--experimental-test-coverage` output, fail if coverage drops below threshold. Start with a realistic threshold and ratchet up over time. Done when CI fails on coverage regression.
 - [ ] **T-10: Add coverage badge to README** — Generate coverage badge from CI output and display in README. Done when README shows current coverage %.
 - [ ] **T-11: Add hook latency benchmark** — Measure wall-clock time for each hook with typical payload (cold/warm). Output p50/p95/p99 table. Done when script produces latency table.
 - [ ] **T-12: Add server performance benchmark** — Benchmark server under load: `/api/events` with 100/1000/10000 events. Measure response time and memory. Done when benchmark produces report.
