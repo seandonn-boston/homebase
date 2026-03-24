@@ -101,7 +101,7 @@
 - [ ] **C-07:** Automated changelog generation — conventional commits to CHANGELOG.md on merge to main `[M]`
 - [ ] **C-10:** Automated release tagging workflow — semver from conventional commits, GitHub Release `[M]`
 - [x] **C-11:** PR size limits — warn on PRs > 500 lines changed, exclude generated/lock files `[S]`
-- [ ] **C-12:** Stale branch cleanup automation — auto-delete merged branches, issue for stale unmerged `[S]`
+- [x] **C-12:** Stale branch cleanup automation — auto-delete merged branches, issue for stale unmerged `[S]`
 - [x] **C-13:** CI build caching optimization — *Already configured: setup-node@v6 with `cache: 'npm'` in control-plane-ci.yml.* — cache node_modules, .tsbuildinfo, ShellCheck binary `[S]`
 - [ ] **C-15:** Dependency update automation — *Deferred (requires Dependabot/Renovate configuration).* — Dependabot/Renovate, auto-merge patches, grouped updates `[S]`
 

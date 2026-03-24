@@ -1,0 +1,66 @@
+name: Stale Branch Cleanup
+
+on:
+  schedule:
+    - cron: '17 3 * * 1'  # Weekly on Monday at 3:17 AM
+  workflow_dispatch:
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Delete merged branches
+        run: |
+          echo "=== Merged Branch Cleanup ==="
+
+          # Get all remote branches except main, HEAD, and slush branches
+          MERGED=$(git branch -r --merged origin/main | grep -v 'main$' | grep -v 'HEAD' | grep -v 'slush/' | sed 's|origin/||' | tr -d ' ')
+
+          if [ -z "$MERGED" ]; then
+            echo "No merged branches to clean up."
+            exit 0
+          fi
+
+          echo "Branches merged into main:"
+          echo "$MERGED"
+          echo ""
+
+          for branch in $MERGED; do
+            echo "Deleting: $branch"
+            git push origin --delete "$branch" 2>/dev/null || echo "  (already deleted or protected)"
+          done
+
+          echo ""
+          echo "Done."
+
+      - name: Report stale unmerged branches
+        run: |
+          echo "=== Stale Unmerged Branches ==="
+
+          # Find branches with no commits in last 30 days
+          STALE=""
+          for branch in $(git branch -r | grep -v 'main$' | grep -v 'HEAD' | grep -v 'slush/' | sed 's|origin/||' | tr -d ' '); do
+            LAST_COMMIT=$(git log -1 --format="%ci" "origin/$branch" 2>/dev/null || echo "")
+            if [ -z "$LAST_COMMIT" ]; then
+              continue
+            fi
+            DAYS_AGO=$(( ($(date +%s) - $(date -d "$LAST_COMMIT" +%s 2>/dev/null || echo $(date +%s))) / 86400 ))
+            if [ "$DAYS_AGO" -gt 30 ]; then
+              STALE="$STALE\n  $branch (${DAYS_AGO} days old)"
+            fi
+          done
+
+          if [ -z "$STALE" ]; then
+            echo "No stale unmerged branches found."
+          else
+            echo "Stale unmerged branches (>30 days):"
+            echo -e "$STALE"
+            echo ""
+            echo "Consider merging or deleting these branches."
+          fi
