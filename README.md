@@ -12,7 +12,7 @@ Helm is a monorepo containing four major workstreams — all converging on a sin
 
 ## What's Here
 
-### 🔷 [`aiStrat/`](aiStrat/) — The Admiral Framework `v0.23.3-alpha.1774323912015`
+### 🔷 [`aiStrat/`](aiStrat/) — The Admiral Framework `v0.23.4-alpha.1774355409673`
 
 The flagship project. **Admiral** is a comprehensive, model-agnostic specification for AI agent fleet orchestration — 114 files across 22 groups defining how autonomous AI agent systems should be structured, secured, coordinated, and governed.
 
