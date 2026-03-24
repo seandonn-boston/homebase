@@ -1,0 +1,206 @@
+#!/bin/bash
+# Admiral Framework — Migration Runner
+# Executes versioned migration scripts to upgrade Admiral components.
+# Usage: migrate [--dry-run] [--json] [--rollback <version>]
+# Exit codes: 0=success, 1=migration failed, 2=hard error
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ADMIRAL_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+MIGRATIONS_DIR="$ADMIRAL_DIR/migrations"
+VERSIONS_FILE="$ADMIRAL_DIR/config/component_versions.json"
+
+DRY_RUN=false
+JSON_MODE=false
+ROLLBACK=""
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --dry-run) DRY_RUN=true; shift ;;
+    --json) JSON_MODE=true; shift ;;
+    --rollback) shift; ROLLBACK="${1:-}"; shift ;;
+    *) shift ;;
+  esac
+done
+
+if [ ! -f "$VERSIONS_FILE" ]; then
+  echo "ERROR: Component versions file not found: $VERSIONS_FILE"
+  exit 2
+fi
+
+if [ ! -d "$MIGRATIONS_DIR" ]; then
+  echo "ERROR: Migrations directory not found: $MIGRATIONS_DIR"
+  exit 2
+fi
+
+# Get current framework version
+CURRENT_VERSION=$(jq -r '.framework_version' "$VERSIONS_FILE" 2>/dev/null)
+if [ -z "$CURRENT_VERSION" ] || [ "$CURRENT_VERSION" = "null" ]; then
+  echo "ERROR: Cannot read framework_version from $VERSIONS_FILE"
+  exit 2
+fi
+
+# Find pending migrations (files named NNN_description.sh, sorted)
+APPLIED=()
+PENDING=()
+FAILED=()
+
+# List all migration scripts sorted by name
+migration_scripts=()
+while IFS= read -r script; do
+  script="${script%$'\r'}"
+  [ -z "$script" ] && continue
+  migration_scripts+=("$script")
+done < <(find "$MIGRATIONS_DIR" -maxdepth 1 -name "*.sh" -type f 2>/dev/null | sort)
+
+if [ ${#migration_scripts[@]} -eq 0 ]; then
+  if [ "$JSON_MODE" = true ]; then
+    jq -n '{status: "up_to_date", current_version: "'"$CURRENT_VERSION"'", pending: 0, applied: 0}'
+  else
+    echo "=== Admiral Migration Runner ==="
+    echo ""
+    echo "Current version: $CURRENT_VERSION"
+    echo "No migrations found. System is up to date."
+  fi
+  exit 0
+fi
+
+# Check which migrations have already been applied
+APPLIED_LOG="$MIGRATIONS_DIR/.applied"
+declare -A applied_migrations
+if [ -f "$APPLIED_LOG" ]; then
+  while IFS= read -r line; do
+    line="${line%$'\r'}"
+    [ -z "$line" ] && continue
+    applied_migrations["$line"]=1
+  done < "$APPLIED_LOG"
+fi
+
+# Handle rollback
+if [ -n "$ROLLBACK" ]; then
+  if [ "$JSON_MODE" != true ]; then
+    echo "=== Admiral Migration Rollback ==="
+    echo ""
+    echo "Rolling back to: $ROLLBACK"
+    echo "NOTE: Rollback removes migration markers. Manual verification required."
+  fi
+
+  # Remove applied markers for migrations after the rollback target
+  if [ -f "$APPLIED_LOG" ]; then
+    rollback_target=$(echo "$ROLLBACK" | sed 's/[^0-9]//g')
+    temp_log=$(mktemp)
+    while IFS= read -r line; do
+      line="${line%$'\r'}"
+      migration_num=$(echo "$line" | sed 's/[^0-9].*//')
+      if [ "$migration_num" -le "$rollback_target" ] 2>/dev/null; then
+        echo "$line" >> "$temp_log"
+      else
+        if [ "$JSON_MODE" != true ]; then
+          echo "  Rolled back: $line"
+        fi
+      fi
+    done < "$APPLIED_LOG"
+    if [ "$DRY_RUN" = false ]; then
+      mv "$temp_log" "$APPLIED_LOG"
+    else
+      rm -f "$temp_log"
+      [ "$JSON_MODE" != true ] && echo "  (dry-run — no changes applied)"
+    fi
+  fi
+
+  if [ "$JSON_MODE" = true ]; then
+    jq -n '{status: "rolled_back", target: "'"$ROLLBACK"'", dry_run: '"$DRY_RUN"'}'
+  fi
+  exit 0
+fi
+
+# Run pending migrations
+if [ "$JSON_MODE" != true ]; then
+  echo "=== Admiral Migration Runner ==="
+  echo ""
+  echo "Current version: $CURRENT_VERSION"
+  echo "Found ${#migration_scripts[@]} migration(s)"
+  echo ""
+fi
+
+for script in "${migration_scripts[@]}"; do
+  script_name=$(basename "$script")
+
+  # Skip already applied
+  if [ -n "${applied_migrations[$script_name]+x}" ]; then
+    APPLIED+=("$script_name")
+    continue
+  fi
+
+  PENDING+=("$script_name")
+
+  if [ "$DRY_RUN" = true ]; then
+    [ "$JSON_MODE" != true ] && echo "  [PENDING] $script_name (dry-run, not applied)"
+    continue
+  fi
+
+  # Execute migration
+  if [ "$JSON_MODE" != true ]; then
+    echo "  [RUNNING] $script_name"
+  fi
+
+  rc=0
+  output=$(bash "$script" 2>&1) || rc=$?
+
+  if [ "$rc" -eq 0 ]; then
+    # Mark as applied
+    echo "$script_name" >> "$APPLIED_LOG"
+    APPLIED+=("$script_name")
+    # Remove from pending
+    unset 'PENDING[${#PENDING[@]}-1]'
+    [ "$JSON_MODE" != true ] && echo "  [APPLIED] $script_name"
+  else
+    FAILED+=("$script_name: exit $rc — $output")
+    [ "$JSON_MODE" != true ] && echo "  [FAILED]  $script_name (exit $rc)"
+    break  # Stop on first failure
+  fi
+done
+
+# Output summary
+exit_code=0
+if [ ${#FAILED[@]} -gt 0 ]; then
+  exit_code=1
+fi
+
+if [ "$JSON_MODE" = true ]; then
+  applied_json="[]"
+  pending_json="[]"
+  failed_json="[]"
+  [ ${#APPLIED[@]} -gt 0 ] && applied_json=$(printf '%s\n' "${APPLIED[@]}" | jq -R . | jq -s .)
+  [ ${#PENDING[@]} -gt 0 ] && pending_json=$(printf '%s\n' "${PENDING[@]}" | jq -R . | jq -s .)
+  [ ${#FAILED[@]} -gt 0 ] && failed_json=$(printf '%s\n' "${FAILED[@]}" | jq -R . | jq -s .)
+
+  status="up_to_date"
+  [ ${#PENDING[@]} -gt 0 ] && status="pending"
+  [ ${#FAILED[@]} -gt 0 ] && status="failed"
+  [ "$DRY_RUN" = true ] && [ ${#PENDING[@]} -gt 0 ] && status="dry_run"
+
+  jq -n \
+    --arg status "$status" \
+    --arg version "$CURRENT_VERSION" \
+    --argjson applied "$applied_json" \
+    --argjson pending "$pending_json" \
+    --argjson failed "$failed_json" \
+    --argjson dry_run "$DRY_RUN" \
+    '{status: $status, current_version: $version, applied: $applied, pending: $pending, failed: $failed, dry_run: $dry_run}'
+else
+  echo ""
+  echo "Applied: ${#APPLIED[@]}, Pending: ${#PENDING[@]}, Failed: ${#FAILED[@]}"
+  if [ "$DRY_RUN" = true ]; then
+    echo "(dry-run mode — no migrations were applied)"
+  fi
+  if [ ${#FAILED[@]} -gt 0 ]; then
+    echo ""
+    echo "MIGRATION FAILED. Fix the issue and re-run."
+    for f in "${FAILED[@]}"; do
+      echo "  $f"
+    done
+  fi
+fi
+
+exit "$exit_code"
