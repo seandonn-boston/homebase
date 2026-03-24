@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "task-criteria.v1.schema.json",
+  "title": "Admiral Framework Task Acceptance Criteria",
+  "description": "Machine-verifiable template for task-level success criteria per Admiral Spec Part 1 (Strategy). Defines functional, quality, completeness, and negative criteria with verification level, failure guidance, and judgment boundaries.",
+  "type": "object",
+  "required": ["schema_version", "task", "criteria", "verification", "failure_guidance"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version of this schema."
+    },
+    "task": {
+      "type": "object",
+      "required": ["id", "name", "description"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique task identifier (e.g., ST-04, SD-06)."
+        },
+        "name": {
+          "type": "string",
+          "description": "Human-readable task name."
+        },
+        "description": {
+          "type": "string",
+          "description": "Brief description of the task's purpose."
+        },
+        "stream": {
+          "type": "string",
+          "description": "Parent stream identifier (e.g., Stream 00)."
+        },
+        "phase": {
+          "type": "string",
+          "description": "Phase this task belongs to."
+        }
+      }
+    },
+    "criteria": {
+      "type": "object",
+      "required": ["functional", "quality", "completeness", "negative"],
+      "additionalProperties": false,
+      "properties": {
+        "functional": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "description": "What the deliverable must do (observable behaviors)."
+        },
+        "quality": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "description": "Quality attributes (performance, reliability, maintainability)."
+        },
+        "completeness": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "description": "What must be present for the task to be considered done."
+        },
+        "negative": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "description": "What the deliverable must NOT do (side effects, regressions)."
+        }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "required": ["level", "methods"],
+      "additionalProperties": false,
+      "properties": {
+        "level": {
+          "type": "string",
+          "enum": ["automated", "manual", "hybrid"],
+          "description": "How criteria are verified: automated (tests/CI), manual (review), or hybrid."
+        },
+        "methods": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "description": "Specific verification methods (e.g., unit tests, integration tests, code review)."
+        }
+      }
+    },
+    "failure_guidance": {
+      "type": "object",
+      "required": ["action"],
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "type": "string",
+          "enum": ["escalate", "retry", "deliver_partial", "block"],
+          "description": "What to do when criteria cannot be met."
+        },
+        "fallback": {
+          "type": "string",
+          "description": "Alternative approach if primary action fails."
+        },
+        "escalation_target": {
+          "type": "string",
+          "description": "Who to escalate to (e.g., Admiral, project lead)."
+        }
+      }
+    },
+    "judgment_boundaries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["area", "guideline"],
+        "additionalProperties": false,
+        "properties": {
+          "area": {
+            "type": "string",
+            "description": "Area requiring judgment (e.g., naming, architecture, trade-offs)."
+          },
+          "guideline": {
+            "type": "string",
+            "description": "Guidance for making judgment calls in this area."
+          }
+        }
+      },
+      "description": "Areas where agent judgment is expected, with guidelines."
+    }
+  }
+}

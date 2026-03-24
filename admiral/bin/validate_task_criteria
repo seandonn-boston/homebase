@@ -1,0 +1,182 @@
+#!/bin/bash
+# Admiral Framework — Task Acceptance Criteria Validator
+# Validates a task-criteria.json against the schema.
+# Checks: required fields, empty strings, empty arrays, enum values.
+# Usage: validate_task_criteria <path-to-task-criteria.json>
+# Exit codes: 0=valid, 1=warnings only, 2=hard failures
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ADMIRAL_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+ERRORS=()
+WARNINGS=()
+
+if [ $# -lt 1 ]; then
+  echo "Usage: validate_task_criteria <path-to-task-criteria.json>"
+  echo ""
+  echo "Validates a Task Acceptance Criteria document against the Admiral schema."
+  echo "Checks required fields, empty values, enum constraints, and array minimums."
+  echo ""
+  echo "Exit codes:"
+  echo "  0  Document is valid"
+  echo "  1  Warnings (document usable but incomplete)"
+  echo "  2  Errors (document invalid, must fix before use)"
+  exit 1
+fi
+
+DOC="$1"
+
+if [ ! -f "$DOC" ]; then
+  echo "ERROR: File not found: $DOC"
+  exit 2
+fi
+
+if ! jq empty "$DOC" 2>/dev/null; then
+  echo "ERROR: Not valid JSON: $DOC"
+  exit 2
+fi
+
+# --- Helper functions ---
+
+check_required_key() {
+  local path="$1"
+  local label="$2"
+  if [ "$(jq "$path == null" "$DOC")" = "true" ]; then
+    ERRORS+=("Missing required field: $label ($path)")
+  fi
+}
+
+check_nonempty_string() {
+  local path="$1"
+  local label="$2"
+  local val
+  val=$(jq -r "$path // empty" "$DOC" 2>/dev/null)
+  if [ -z "$val" ]; then
+    ERRORS+=("Empty required string: $label ($path)")
+  fi
+}
+
+check_nonempty_array() {
+  local path="$1"
+  local label="$2"
+  local count
+  count=$(jq "$path | length" "$DOC" 2>/dev/null || echo "0")
+  if [ "$count" -eq 0 ]; then
+    ERRORS+=("Empty required array: $label ($path) — must have at least one item")
+  fi
+}
+
+check_enum() {
+  local path="$1"
+  local label="$2"
+  shift 2
+  local allowed=("$@")
+  local val
+  val=$(jq -r "$path // empty" "$DOC" 2>/dev/null)
+  if [ -z "$val" ]; then
+    ERRORS+=("Missing required enum: $label ($path)")
+    return
+  fi
+  local found=false
+  for a in "${allowed[@]}"; do
+    if [ "$val" = "$a" ]; then
+      found=true
+      break
+    fi
+  done
+  if [ "$found" = false ]; then
+    ERRORS+=("Invalid value for $label ($path): '$val' — allowed: ${allowed[*]}")
+  fi
+}
+
+# --- Validate top-level required keys ---
+
+for key in schema_version task criteria verification failure_guidance; do
+  if [ "$(jq "has(\"$key\")" "$DOC" 2>/dev/null)" != "true" ]; then
+    ERRORS+=("Missing required top-level key: $key")
+  fi
+done
+
+# --- Task ---
+
+check_nonempty_string ".task.id" "task.id"
+check_nonempty_string ".task.name" "task.name"
+check_nonempty_string ".task.description" "task.description"
+
+# Optional fields — warn if empty
+for field in stream phase; do
+  val=$(jq -r ".task.$field // empty" "$DOC" 2>/dev/null)
+  if [ -z "$val" ]; then
+    WARNINGS+=("Optional field empty: task.$field")
+  fi
+done
+
+# --- Criteria ---
+
+check_nonempty_array ".criteria.functional" "criteria.functional"
+check_nonempty_array ".criteria.quality" "criteria.quality"
+check_nonempty_array ".criteria.completeness" "criteria.completeness"
+check_nonempty_array ".criteria.negative" "criteria.negative"
+
+# --- Verification ---
+
+check_enum ".verification.level" "verification.level" "automated" "manual" "hybrid"
+check_nonempty_array ".verification.methods" "verification.methods"
+
+# --- Failure Guidance ---
+
+check_enum ".failure_guidance.action" "failure_guidance.action" "escalate" "retry" "deliver_partial" "block"
+
+# If action is escalate, escalation_target should be set
+action=$(jq -r ".failure_guidance.action // empty" "$DOC" 2>/dev/null)
+if [ "$action" = "escalate" ]; then
+  target=$(jq -r ".failure_guidance.escalation_target // empty" "$DOC" 2>/dev/null)
+  if [ -z "$target" ]; then
+    WARNINGS+=("failure_guidance.action is 'escalate' but escalation_target is empty")
+  fi
+fi
+
+# --- Judgment Boundaries ---
+
+if [ "$(jq 'has("judgment_boundaries")' "$DOC" 2>/dev/null)" = "true" ]; then
+  jb_len=$(jq '.judgment_boundaries | length' "$DOC" 2>/dev/null || echo "0")
+  for ((i=0; i<jb_len; i++)); do
+    area=$(jq -r ".judgment_boundaries[$i].area // empty" "$DOC" 2>/dev/null)
+    guideline=$(jq -r ".judgment_boundaries[$i].guideline // empty" "$DOC" 2>/dev/null)
+    if [ -z "$area" ]; then
+      ERRORS+=("Empty judgment_boundaries[$i].area")
+    fi
+    if [ -z "$guideline" ]; then
+      ERRORS+=("Empty judgment_boundaries[$i].guideline")
+    fi
+  done
+fi
+
+# --- Output results ---
+
+if [ ${#ERRORS[@]} -gt 0 ]; then
+  echo "VALIDATION FAILED — ${#ERRORS[@]} error(s):"
+  for err in "${ERRORS[@]}"; do
+    echo "  ERROR: $err"
+  done
+  if [ ${#WARNINGS[@]} -gt 0 ]; then
+    echo ""
+    echo "Warnings (${#WARNINGS[@]}):"
+    for w in "${WARNINGS[@]}"; do
+      echo "  WARN: $w"
+    done
+  fi
+  exit 2
+fi
+
+if [ ${#WARNINGS[@]} -gt 0 ]; then
+  echo "VALIDATION PASSED with ${#WARNINGS[@]} warning(s):"
+  for w in "${WARNINGS[@]}"; do
+    echo "  WARN: $w"
+  done
+  exit 1
+fi
+
+echo "VALIDATION PASSED — Task acceptance criteria document is valid."
+exit 0
