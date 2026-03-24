@@ -511,7 +511,7 @@ PAYLOAD_UNICODE='{"tool_name":"Bash","tool_input":{"command":"echo '\''héllo w�
 assert_exit_zero "Adapter handles Unicode in tool input" "pre_tool_use_adapter.sh" "$PAYLOAD_UNICODE"
 
 # 7d: Very large payload — should not crash or hang
-LARGE_COMMAND=$(python3 -c "print('echo ' + 'x' * 50000)" 2>/dev/null || echo "echo $(head -c 50000 < /dev/zero | tr '\0' 'x')")
+LARGE_COMMAND=$(python3 -c "print('echo ' + 'x' * 50000)" 2>/dev/null || printf '%s' "echo $(head -c 50000 < /dev/zero | tr '\0' 'x')")
 PAYLOAD_LARGE="{\"tool_name\":\"Bash\",\"tool_input\":{\"command\":\"$LARGE_COMMAND\"}}"
 assert_exit_zero "Adapter handles large payload (50KB)" "pre_tool_use_adapter.sh" "$PAYLOAD_LARGE"
 

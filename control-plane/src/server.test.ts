@@ -4,24 +4,8 @@ import { afterEach, beforeEach, describe, it } from "node:test";
 import { EventStream } from "./events";
 import { RunawayDetector } from "./runaway-detector";
 import { AdmiralServer } from "./server";
+import { httpGet } from "./test-helpers";
 import { ExecutionTrace } from "./trace";
-
-/** Make a GET request and return { status, headers, body }. */
-function httpGet(
-  url: string,
-): Promise<{ status: number; headers: http.IncomingHttpHeaders; body: string }> {
-  return new Promise((resolve, reject) => {
-    http
-      .get(url, (res) => {
-        let body = "";
-        res.on("data", (chunk: string) => {
-          body += chunk;
-        });
-        res.on("end", () => resolve({ status: res.statusCode!, headers: res.headers, body }));
-      })
-      .on("error", reject);
-  });
-}
 
 /** Make an OPTIONS request. */
 function httpOptions(
