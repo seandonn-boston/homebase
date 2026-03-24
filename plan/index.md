@@ -1,6 +1,6 @@
 # Admiral Framework — Comprehensive Roadmap Index
 
-**Last updated:** 2026-03-23
+**Last updated:** 2026-03-20
 
 **Target:** Transform Helm from a strong prototype into a showcase-quality, fully-governed, spec-complete AI agent orchestration platform — a codebase that earns a 10/10 on every dimension.
 
@@ -12,7 +12,7 @@
 
 | Dimension | Score | Target | Key Gaps |
 |---|---|---|---|
-| Testing | 6/10 | 10/10 | 431 tests across 16 suites; no fuzz/property tests, no coverage gates |
+| Testing | 5/10 | 10/10 | No trace/ingest/instrumentation unit tests, no fuzz/property tests, no coverage gates |
 | Code Quality Tooling | 7/10 | 10/10 | Missing coverage gates, security scanning, typed error hierarchy |
 | Architecture | 5/10 | 10/10 | No hook/control-plane integration, no schema validation, no fleet orchestration |
 | Spec Implementation | 3/10 | 10/10 | 8/15 hooks (53%), fleet 0%, brain B2/B3 0%, execution patterns 0%, meta-governance 0% |
@@ -24,10 +24,10 @@
 | Performance | 2/10 | 10/10 | No benchmarks of any kind |
 | Brain & Knowledge | 2/10 | 10/10 | B1 file-based only, manual, no auto-recording, no semantic search |
 | Fleet & Orchestration | 1/10 | 10/10 | 71 roles defined, only Claude Code governed, no routing/handoff/parallel |
-| Strategy Foundation | 7/10 | 10/10 | Ground Truth, readiness, Go/No-Go, task criteria, spec-first, boundaries all implemented; hook integration partial |
+| Strategy Foundation | 1/10 | 10/10 | No Ground Truth tooling, no readiness assessment, no Go/No-Go gate |
 | Security & Compliance | 4/10 | 10/10 | Missing data sensitivity L1-L2, audit trail, privilege escalation hardening |
 | Strategic Positioning | 2/10 | 10/10 | Missing OWASP/AEGIS/NIST/McKinsey/IMDA crosswalks |
-| **Overall** | **5/10** | **10/10** | Strategy foundation landed; critical gaps remain in spec implementation, fleet, brain |
+| **Overall** | **4/10** | **10/10** | Strong foundation, critical gaps in spec implementation |
 
 ---
 

@@ -26,17 +26,18 @@ ALL_CONTEXT=""
 STATE=$(load_state)
 TOKENS_USED=$(echo "$STATE" | jq -r '.tokens_used // 0')
 TOKEN_BUDGET=$(echo "$STATE" | jq -r '.token_budget // 0')
-_ESTIMATED=$(estimate_tokens "$TOOL_NAME")
+ESTIMATED=$(estimate_tokens "$TOOL_NAME")
 
 if [ "$TOKEN_BUDGET" -gt 0 ]; then
   UTIL_PCT=$((TOKENS_USED * 100 / TOKEN_BUDGET))
-  if [ "$UTIL_PCT" -ge 90 ]; then
+  PROJECTED=$((TOKENS_USED + ESTIMATED))
+  OVER_BY=$((PROJECTED - TOKEN_BUDGET))
+
+  if [ "$PROJECTED" -ge "$TOKEN_BUDGET" ]; then
+    ALL_CONTEXT+="BUDGET CHECKPOINT: Token budget exceeded. Current: ${TOKENS_USED} tokens used of ${TOKEN_BUDGET} budget (${UTIL_PCT}%). This ${TOOL_NAME} call is estimated at ~${ESTIMATED} tokens, bringing projected total to ${PROJECTED} (${OVER_BY} over budget). You may continue, but please inform the user that the session has exceeded its token budget and ask if they wish to proceed. "
+  elif [ "$UTIL_PCT" -ge 90 ]; then
     REMAINING=$((TOKEN_BUDGET - TOKENS_USED))
-    [ "$REMAINING" -lt 0 ] && REMAINING=0
-    ALL_CONTEXT+="ESCALATION: Session at ${UTIL_PCT}% of token budget (${TOKENS_USED}/${TOKEN_BUDGET}). ~${REMAINING} tokens remaining. Escalate remaining work to Admiral or inform user. "
-  elif [ "$UTIL_PCT" -ge 80 ]; then
-    REMAINING=$((TOKEN_BUDGET - TOKENS_USED))
-    ALL_CONTEXT+="WARNING: Session at ${UTIL_PCT}% of token budget (${TOKENS_USED}/${TOKEN_BUDGET}). ~${REMAINING} tokens remaining. Conserve tokens — defer non-critical work. "
+    ALL_CONTEXT+="BUDGET ADVISORY: Session at ${UTIL_PCT}% of token budget (${TOKENS_USED}/${TOKEN_BUDGET}). ~${REMAINING} tokens remaining. Consider wrapping up or informing the user. "
   fi
 fi
 
@@ -105,13 +106,13 @@ fi
 EVENT_LOG="$PROJECT_DIR/.admiral/event_log.jsonl"
 TRACE_ID=$(echo "$STATE" | jq -r '.trace_id // "unknown"')
 TOOL_CALL_COUNT=$(echo "$STATE" | jq -r '.tool_call_count // 0')
-jq -cn --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
-       --arg trace "$TRACE_ID" \
-       --arg tool "$TOOL_NAME" \
-       --argjson count "$TOOL_CALL_COUNT" \
-       --argjson tokens "$TOKENS_USED" \
-       '{event: "pre_tool_use", timestamp: $ts, trace_id: $trace, tool: $tool, tool_call_count: $count, tokens_used: $tokens}' \
-       >> "$EVENT_LOG" 2>/dev/null || true
+jq -n --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+      --arg trace "$TRACE_ID" \
+      --arg tool "$TOOL_NAME" \
+      --argjson count "$TOOL_CALL_COUNT" \
+      --argjson tokens "$TOKENS_USED" \
+      '{event: "pre_tool_use", timestamp: $ts, trace_id: $trace, tool: $tool, tool_call_count: $count, tokens_used: $tokens}' \
+      >> "$EVENT_LOG" 2>/dev/null || true
 
 # Emit combined advisory context if any sub-hooks fired
 if [ -n "$ALL_CONTEXT" ]; then
