@@ -8,7 +8,7 @@
 
 ### 3.1 Schema & Validation
 
-- [ ] **A-01:** Add JSON schema validation for hook payloads — schemas in `admiral/schemas/`, validation in `admiral/lib/schema_validate.sh`, fail-open per ADR-004 `[L]`
+- [x] **A-01:** Add JSON schema validation for hook payloads — schemas in `admiral/schemas/`, validation in `admiral/lib/schema_validate.sh`, fail-open per ADR-004 `[L]`
 - [ ] **A-06:** Session state schema validation — validate `session_state.json` against schema at every write `[M]`
 
 ### 3.2 System Integration
