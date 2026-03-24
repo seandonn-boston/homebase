@@ -33,9 +33,9 @@ jobs:
         working-directory: control-plane
         run: npm run build
 
-      - name: Test with coverage
+      - name: Test with coverage gate
         working-directory: control-plane
-        run: npm run test:coverage
+        run: npm run test:coverage 2>&1 | bash scripts/check-coverage.sh 85
 
       - name: Lint
         working-directory: control-plane
