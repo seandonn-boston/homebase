@@ -1,0 +1,100 @@
+{
+  "$schema": "component-versions.v1",
+  "description": "Tracks Admiral component versions independently from the spec version. Used by the self-upgrade system to detect version mismatches and plan migrations.",
+  "last_updated": "2026-03-23",
+  "framework_version": "v0.7.0-alpha",
+  "components": {
+    "hooks": {
+      "version": "0.6.0",
+      "files": [
+        ".hooks/session_start_adapter.sh",
+        ".hooks/pre_tool_use_adapter.sh",
+        ".hooks/post_tool_use_adapter.sh",
+        ".hooks/token_budget_tracker.sh",
+        ".hooks/loop_detector.sh",
+        ".hooks/context_health_check.sh",
+        ".hooks/context_baseline.sh",
+        ".hooks/prohibitions_enforcer.sh",
+        ".hooks/scope_boundary_guard.sh",
+        ".hooks/zero_trust_validator.sh",
+        ".hooks/brain_context_router.sh",
+        ".hooks/pre_work_validator.sh",
+        ".hooks/compliance_ethics_advisor.sh"
+      ]
+    },
+    "state_management": {
+      "version": "0.6.0",
+      "files": [
+        "admiral/lib/state.sh"
+      ]
+    },
+    "standing_orders": {
+      "version": "0.6.0",
+      "files": [
+        "admiral/lib/standing_orders.sh",
+        "admiral/standing-orders/"
+      ]
+    },
+    "schemas": {
+      "version": "0.7.0",
+      "files": [
+        "admiral/schemas/ground-truth.v1.schema.json",
+        "admiral/schemas/agent-definition.v1.schema.json",
+        "admiral/schemas/task-criteria.v1.schema.json"
+      ]
+    },
+    "brain_b1": {
+      "version": "0.5.0",
+      "files": [
+        "admiral/bin/brain_query",
+        "admiral/bin/brain_record",
+        "admiral/bin/brain_retrieve",
+        "admiral/bin/brain_audit"
+      ]
+    },
+    "ground_truth": {
+      "version": "0.7.0",
+      "files": [
+        "admiral/bin/generate_ground_truth",
+        "admiral/bin/validate_ground_truth",
+        "admiral/bin/validate_boundaries",
+        "admiral/bin/readiness_assess",
+        "admiral/bin/go_no_go_gate",
+        "admiral/bin/validate_task_criteria",
+        "admiral/bin/spec_first_gate"
+      ]
+    },
+    "registries": {
+      "version": "0.7.0",
+      "files": [
+        "admiral/config/reference_constants.sh",
+        "admiral/config/reference_constants.json",
+        "admiral/config/spec_version_manifest.json",
+        "admiral/config/spec_changelog_bridge.json",
+        "admiral/config/pipeline_manifest.json",
+        "admiral/config/component_versions.json"
+      ]
+    },
+    "control_plane": {
+      "version": "0.6.0",
+      "files": [
+        "control-plane/src/"
+      ]
+    },
+    "validation_tools": {
+      "version": "0.7.0",
+      "files": [
+        "admiral/bin/validate_constants_sync",
+        "admiral/bin/version_audit",
+        "admiral/bin/upgrade_check"
+      ]
+    },
+    "migration": {
+      "version": "0.7.0",
+      "files": [
+        "admiral/bin/migrate",
+        "admiral/migrations/"
+      ]
+    }
+  }
+}
