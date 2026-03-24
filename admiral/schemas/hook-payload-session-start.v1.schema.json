@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "hook-payload-session-start.v1.schema.json",
+  "title": "SessionStart Hook Payload",
+  "description": "JSON payload received by SessionStart hooks from Claude Code.",
+  "type": "object",
+  "properties": {
+    "session_id": {
+      "type": "string",
+      "description": "Unique session identifier."
+    },
+    "model": {
+      "type": "string",
+      "description": "Model being used for this session."
+    }
+  },
+  "additionalProperties": true
+}

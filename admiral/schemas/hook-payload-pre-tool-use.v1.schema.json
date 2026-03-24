@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "hook-payload-pre-tool-use.v1.schema.json",
+  "title": "PreToolUse Hook Payload",
+  "description": "JSON payload received by PreToolUse hooks from Claude Code.",
+  "type": "object",
+  "required": ["tool_name"],
+  "properties": {
+    "tool_name": {
+      "type": "string",
+      "description": "Name of the tool being invoked (e.g., Bash, Read, Write, Edit)."
+    },
+    "tool_input": {
+      "type": "object",
+      "description": "Tool-specific input parameters.",
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}
