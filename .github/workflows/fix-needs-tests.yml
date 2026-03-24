@@ -1,0 +1,42 @@
+name: Fix Commits Need Tests
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  check-fix-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Check fix commits include test changes
+        run: |
+          BASE="${{ github.event.pull_request.base.sha }}"
+          HEAD="${{ github.event.pull_request.head.sha }}"
+
+          # Get commit messages in this PR
+          FIX_COMMITS=$(git log --oneline "$BASE..$HEAD" | grep -iE '^[a-f0-9]+ fix[:(]' || true)
+
+          if [ -z "$FIX_COMMITS" ]; then
+            echo "No fix: commits found. Skipping check."
+            exit 0
+          fi
+
+          echo "Found fix: commits:"
+          echo "$FIX_COMMITS"
+          echo ""
+
+          # Check if any test files were modified
+          TEST_FILES=$(git diff --name-only "$BASE..$HEAD" | grep -E '(test_|\.test\.|\.spec\.|_test\.)' || true)
+
+          if [ -z "$TEST_FILES" ]; then
+            echo "::warning::Fix commits detected but no test files were modified. Consider adding tests to verify the fix."
+          else
+            echo "Test files modified:"
+            echo "$TEST_FILES"
+            echo ""
+            echo "PASS: Fix commits include test changes."
+          fi
