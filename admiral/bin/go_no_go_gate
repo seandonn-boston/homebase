@@ -1,0 +1,177 @@
+#!/bin/bash
+# Admiral Framework — Go/No-Go Deployment Gate
+# Invokes readiness assessment and enforces deployment policy.
+# Ready projects pass. Partially Ready restricted to Starter profile.
+# Not Ready projects are blocked unless Admiral override is provided.
+# Usage: go_no_go_gate [--json] [--override --justification "reason"] <project-root> <ground-truth-path>
+# Exit codes: 0=allowed (pass or override), 1=blocked
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ADMIRAL_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+ASSESS="$ADMIRAL_DIR/bin/readiness_assess"
+
+JSON_MODE=false
+OVERRIDE=false
+JUSTIFICATION=""
+PROJECT_ROOT=""
+GT_PATH=""
+
+# Parse arguments
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --json) JSON_MODE=true; shift ;;
+    --override) OVERRIDE=true; shift ;;
+    --justification)
+      shift
+      if [ $# -gt 0 ]; then
+        JUSTIFICATION="$1"
+        shift
+      fi
+      ;;
+    *)
+      if [ -z "$PROJECT_ROOT" ]; then
+        PROJECT_ROOT="$1"
+      elif [ -z "$GT_PATH" ]; then
+        GT_PATH="$1"
+      fi
+      shift
+      ;;
+  esac
+done
+
+if [ -z "$PROJECT_ROOT" ] || [ -z "$GT_PATH" ]; then
+  echo "Usage: go_no_go_gate [--json] [--override --justification \"reason\"] <project-root> <ground-truth-path>"
+  echo ""
+  echo "Enforces deployment readiness policy:"
+  echo "  Ready          → PASS (full deployment allowed)"
+  echo "  Partially Ready → PASS with Starter profile restriction"
+  echo "  Not Ready       → BLOCKED (unless Admiral override with justification)"
+  echo ""
+  echo "Options:"
+  echo "  --json                          Output as JSON"
+  echo "  --override --justification \"…\"  Admiral override for Not Ready projects"
+  echo ""
+  echo "Exit codes:"
+  echo "  0  Allowed (pass, Starter restriction, or override)"
+  echo "  1  Blocked (Not Ready without override)"
+  exit 1
+fi
+
+# Run readiness assessment
+assess_rc=0
+assess_output=$("$ASSESS" --json "$PROJECT_ROOT" "$GT_PATH" 2>&1) || assess_rc=$?
+
+readiness_status=$(echo "$assess_output" | jq -r '.status' 2>/dev/null || echo "unknown")
+
+# Determine gate decision
+decision=""
+profile=""
+gate_exit=0
+
+case "$readiness_status" in
+  "Ready")
+    decision="PASS"
+    profile="Full"
+    gate_exit=0
+    ;;
+  "Partially Ready")
+    decision="PASS"
+    profile="Starter"
+    gate_exit=0
+    ;;
+  "Not Ready")
+    if [ "$OVERRIDE" = true ]; then
+      if [ -z "$JUSTIFICATION" ]; then
+        decision="BLOCKED"
+        profile="None"
+        gate_exit=1
+        # Will report justification required below
+      else
+        decision="OVERRIDE"
+        profile="Starter"
+        gate_exit=0
+
+        # Log override to override_log.jsonl in project root
+        log_file="$PROJECT_ROOT/override_log.jsonl"
+        timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+        jq -n \
+          --arg ts "$timestamp" \
+          --arg justification "$JUSTIFICATION" \
+          --arg readiness "$readiness_status" \
+          --arg overrider "Admiral" \
+          '{timestamp: $ts, event: "go_no_go_override", readiness: $readiness, justification: $justification, overrider: $overrider}' \
+          >> "$log_file"
+      fi
+    else
+      decision="BLOCKED"
+      profile="None"
+      gate_exit=1
+    fi
+    ;;
+  *)
+    decision="BLOCKED"
+    profile="None"
+    gate_exit=1
+    ;;
+esac
+
+# Output
+if [ "$JSON_MODE" = true ]; then
+  jq -n \
+    --arg decision "$decision" \
+    --arg profile "$profile" \
+    --arg readiness "$readiness_status" \
+    --argjson assessment "$assess_output" \
+    '{decision: $decision, profile: $profile, readiness: $readiness, assessment: $assessment}'
+  exit "$gate_exit"
+fi
+
+echo "=== Go/No-Go Deployment Gate ==="
+echo ""
+echo "Readiness: $readiness_status"
+
+case "$decision" in
+  "PASS")
+    if [ "$profile" = "Starter" ]; then
+      echo "Decision: PASS — Restricted to Starter profile"
+      echo ""
+      echo "This project is Partially Ready. Deployment is allowed with"
+      echo "Starter profile restrictions until all readiness checks pass."
+    else
+      echo "Decision: PASS — Full deployment allowed"
+    fi
+    ;;
+  "OVERRIDE")
+    echo "Decision: OVERRIDE — Admiral override applied"
+    echo "Profile: Starter (restricted)"
+    echo "Justification: $JUSTIFICATION"
+    echo "Override logged to: $PROJECT_ROOT/override_log.jsonl"
+    ;;
+  "BLOCKED")
+    echo "Decision: BLOCKED — Deployment not allowed"
+    if [ "$OVERRIDE" = true ] && [ -z "$JUSTIFICATION" ]; then
+      echo ""
+      echo "Override requested but no justification provided."
+      echo "Use: --override --justification \"reason for override\""
+    else
+      echo ""
+      echo "Project is Not Ready. Fix readiness issues or use Admiral override:"
+      echo "  go_no_go_gate --override --justification \"reason\" <project-root> <gt-path>"
+    fi
+    ;;
+esac
+
+# Show preparation path from assessment if not ready
+if [ "$decision" = "BLOCKED" ]; then
+  echo ""
+  prep=$(echo "$assess_output" | jq -r '.preparation[]?' 2>/dev/null)
+  if [ -n "$prep" ]; then
+    echo "Preparation Path:"
+    echo "$prep" | while IFS= read -r step; do
+      echo "  - $step"
+    done
+  fi
+fi
+
+exit "$gate_exit"
