@@ -151,8 +151,8 @@ for script in "${migration_scripts[@]}"; do
     # Mark as applied
     echo "$script_name" >> "$APPLIED_LOG"
     APPLIED+=("$script_name")
-    # Remove from pending
-    unset 'PENDING[${#PENDING[@]}-1]'
+    # Remove from pending — double quotes required for parameter expansion
+    unset "PENDING[${#PENDING[@]}-1]"
     [ "$JSON_MODE" != true ] && echo "  [APPLIED] $script_name"
   else
     FAILED+=("$script_name: exit $rc — $output")

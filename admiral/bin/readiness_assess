@@ -124,9 +124,6 @@ fi
 # ============================================================
 # Check 3: CI Configuration
 # ============================================================
-ci_status="fail"
-ci_detail=""
-
 ci_found=false
 for ci_path in \
   "$PROJECT_ROOT/.github/workflows" \
@@ -142,21 +139,15 @@ for ci_path in \
 done
 
 if [ "$ci_found" = true ]; then
-  ci_status="pass"
-  ci_detail="CI configuration found"
-  CHECKS_PASS+=("CI: $ci_detail")
+  CHECKS_PASS+=("CI: CI configuration found")
 else
-  ci_detail="No CI configuration detected"
-  CHECKS_WARN+=("CI: $ci_detail")
+  CHECKS_WARN+=("CI: No CI configuration detected")
   PREPARATION+=("Add CI configuration (e.g., .github/workflows/ci.yml)")
 fi
 
 # ============================================================
 # Check 4: Test Suite
 # ============================================================
-test_status="fail"
-test_detail=""
-
 test_found=false
 for test_path in \
   "$PROJECT_ROOT/tests" \
@@ -166,8 +157,7 @@ for test_path in \
   "$PROJECT_ROOT/admiral/tests"; do
   if [ -d "$test_path" ]; then
     # Check there's at least one file in the test directory
-    file_count=$(find "$test_path" -type f -name "test_*" -o -name "*_test.*" -o -name "*.test.*" -o -name "*.spec.*" 2>/dev/null | head -1 | wc -l)
-    if [ "$file_count" -gt 0 ]; then
+    if find "$test_path" -type f \( -name "test_*" -o -name "*_test.*" -o -name "*.test.*" -o -name "*.spec.*" \) -print -quit 2>/dev/null | grep -q .; then
       test_found=true
       break
     fi
@@ -175,21 +165,15 @@ for test_path in \
 done
 
 if [ "$test_found" = true ]; then
-  test_status="pass"
-  test_detail="Test suite found"
-  CHECKS_PASS+=("Test suite: $test_detail")
+  CHECKS_PASS+=("Test suite: Test suite found")
 else
-  test_detail="No test suite detected"
-  CHECKS_WARN+=("Test suite: $test_detail")
+  CHECKS_WARN+=("Test suite: No test suite detected")
   PREPARATION+=("Add a test directory with test files (e.g., tests/test_*.sh)")
 fi
 
 # ============================================================
 # Check 5: Linter Configuration
 # ============================================================
-lint_status="fail"
-lint_detail=""
-
 lint_found=false
 for lint_path in \
   "$PROJECT_ROOT/.shellcheckrc" \
@@ -213,12 +197,9 @@ for lint_path in \
 done
 
 if [ "$lint_found" = true ]; then
-  lint_status="pass"
-  lint_detail="Linter configuration found"
-  CHECKS_PASS+=("Linter: $lint_detail")
+  CHECKS_PASS+=("Linter: Linter configuration found")
 else
-  lint_detail="No linter configuration detected"
-  CHECKS_WARN+=("Linter: $lint_detail")
+  CHECKS_WARN+=("Linter: No linter configuration detected")
   PREPARATION+=("Add linter configuration (e.g., .shellcheckrc, .eslintrc)")
 fi
 
