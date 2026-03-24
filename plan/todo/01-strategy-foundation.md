@@ -14,7 +14,7 @@ The Strategy Triangle (Mission, Boundaries, Success Criteria) is the foundation 
 
 ## Task-Level Strategy
 
-- [ ] **ST-04: Task acceptance criteria template** — Create a machine-verifiable YAML/JSON template for task-level success criteria (functional, quality, completeness, negative criteria, verification level, failure guidance, judgment boundaries); build `validate_task_criteria.sh` that rejects tasks missing required fields.
+- [x] **ST-04: Task acceptance criteria template** — Create a machine-verifiable YAML/JSON template for task-level success criteria (functional, quality, completeness, negative criteria, verification level, failure guidance, judgment boundaries); build `validate_task_criteria.sh` that rejects tasks missing required fields.
 - [ ] **ST-05: Spec-First pipeline gate** — Build `spec_first_gate.sh` that reads the Pipeline entry field from Ground Truth and verifies all upstream pipeline stage documents exist; create `pipeline_manifest.yaml` mapping stages to required artifacts.
 
 ## Validation & Enforcement
