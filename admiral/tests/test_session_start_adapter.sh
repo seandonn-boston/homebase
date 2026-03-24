@@ -10,37 +10,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 ADAPTER="$PROJECT_DIR/.hooks/session_start_adapter.sh"
 
-PASS=0
-FAIL=0
-ERRORS=""
-
-assert_contains() {
-  local test_name="$1"
-  local output="$2"
-  local expected="$3"
-  if echo "$output" | grep -q "$expected"; then
-    PASS=$((PASS + 1))
-    echo "  [PASS] $test_name"
-  else
-    FAIL=$((FAIL + 1))
-    ERRORS+="  [FAIL] $test_name — expected '$expected' in output\n"
-    echo "  [FAIL] $test_name"
-  fi
-}
-
-assert_eq() {
-  local test_name="$1"
-  local expected="$2"
-  local actual="$3"
-  if [ "$actual" = "$expected" ]; then
-    PASS=$((PASS + 1))
-    echo "  [PASS] $test_name"
-  else
-    FAIL=$((FAIL + 1))
-    ERRORS+="  [FAIL] $test_name — expected '$expected', got '$actual'\n"
-    echo "  [FAIL] $test_name (expected '$expected', got '$actual')"
-  fi
-}
+# shellcheck source=/dev/null
+source "$PROJECT_DIR/admiral/lib/assert.sh"
 
 setup() {
   TEST_DIR=$(mktemp -d)
@@ -223,14 +194,4 @@ assert_eq "Default session ID is 'unknown'" "unknown" "$sid"
 
 teardown
 
-echo ""
-echo "========================================="
-echo "Session Start Adapter Tests: $PASS passed, $FAIL failed"
-echo "========================================="
-
-if [ "$FAIL" -gt 0 ]; then
-  echo ""
-  echo "Failures:"
-  echo -e "$ERRORS"
-  exit 1
-fi
+print_results "Session Start Adapter Tests"

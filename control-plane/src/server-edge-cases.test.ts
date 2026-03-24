@@ -6,26 +6,12 @@
  */
 
 import assert from "node:assert/strict";
-import * as http from "node:http";
 import { afterEach, beforeEach, describe, it } from "node:test";
 import { EventStream } from "./events";
 import { RunawayDetector } from "./runaway-detector";
 import { AdmiralServer } from "./server";
+import { httpGet } from "./test-helpers";
 import { ExecutionTrace } from "./trace";
-
-function httpGet(
-  url: string,
-): Promise<{ status: number; headers: http.IncomingHttpHeaders; body: string }> {
-  return new Promise((resolve, reject) => {
-    http
-      .get(url, (res) => {
-        let body = "";
-        res.on("data", (chunk: string) => { body += chunk; });
-        res.on("end", () => resolve({ status: res.statusCode!, headers: res.headers, body }));
-      })
-      .on("error", reject);
-  });
-}
 
 describe("AdmiralServer — edge cases", () => {
   let stream: EventStream;

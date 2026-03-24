@@ -7,24 +7,8 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ADMIRAL_LIB="$SCRIPT_DIR/../lib/state.sh"
 
-PASS=0
-FAIL=0
-ERRORS=""
-TMPDIR_BASE=""
-
-assert_eq() {
-  local test_name="$1"
-  local expected="$2"
-  local actual="$3"
-  if [ "$actual" = "$expected" ]; then
-    PASS=$((PASS + 1))
-    echo "  [PASS] $test_name"
-  else
-    FAIL=$((FAIL + 1))
-    ERRORS+="  [FAIL] $test_name — expected '$expected', got '$actual'\n"
-    echo "  [FAIL] $test_name (expected '$expected', got '$actual')"
-  fi
-}
+# shellcheck source=/dev/null
+source "$SCRIPT_DIR/../lib/assert.sh"
 
 setup() {
   TMPDIR_BASE="$(mktemp -d)"
@@ -255,14 +239,4 @@ fi
 
 teardown
 
-echo ""
-echo "========================================="
-echo "State Concurrent Tests: $PASS passed, $FAIL failed"
-echo "========================================="
-
-if [ "$FAIL" -gt 0 ]; then
-  echo ""
-  echo "Failures:"
-  echo -e "$ERRORS"
-  exit 1
-fi
+print_results "State Concurrent Tests"
