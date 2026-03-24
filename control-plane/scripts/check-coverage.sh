@@ -38,6 +38,17 @@ echo ""
 echo "========================================="
 echo "Coverage Gate: ${LINE_COV}% line coverage (threshold: ${THRESHOLD}%)"
 
+# Write coverage badge JSON for shields.io endpoint
+BADGE_DIR="$(dirname "$0")/../coverage"
+mkdir -p "$BADGE_DIR"
+COLOR="red"
+if [ "$LINE_COV_INT" -ge 90 ]; then COLOR="brightgreen"
+elif [ "$LINE_COV_INT" -ge 80 ]; then COLOR="green"
+elif [ "$LINE_COV_INT" -ge 70 ]; then COLOR="yellow"
+elif [ "$LINE_COV_INT" -ge 60 ]; then COLOR="orange"
+fi
+echo "{\"schemaVersion\":1,\"label\":\"coverage\",\"message\":\"${LINE_COV}%\",\"color\":\"${COLOR}\"}" > "$BADGE_DIR/badge.json"
+
 if [ "$LINE_COV_INT" -ge "$THRESHOLD" ]; then
   echo "PASS"
   echo "========================================="
