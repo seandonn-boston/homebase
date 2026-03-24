@@ -1,0 +1,215 @@
+#!/bin/bash
+# Admiral Framework — Spec-First Pipeline Gate
+# Reads the pipeline_entry field from a Ground Truth document and verifies
+# all upstream pipeline stage artifacts exist in the project root.
+# Usage: spec_first_gate [--json] <project-root> <ground-truth-path>
+# Exit codes: 0=all artifacts present, 1=missing artifacts, 2=hard error
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ADMIRAL_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+MANIFEST="$ADMIRAL_DIR/config/pipeline_manifest.json"
+
+JSON_MODE=false
+PROJECT_ROOT=""
+GT_PATH=""
+
+for arg in "$@"; do
+  case "$arg" in
+    --json) JSON_MODE=true ;;
+    *)
+      if [ -z "$PROJECT_ROOT" ]; then
+        PROJECT_ROOT="$arg"
+      elif [ -z "$GT_PATH" ]; then
+        GT_PATH="$arg"
+      fi
+      ;;
+  esac
+done
+
+if [ -z "$PROJECT_ROOT" ] || [ -z "$GT_PATH" ]; then
+  echo "Usage: spec_first_gate [--json] <project-root> <ground-truth-path>"
+  echo ""
+  echo "Verifies that all upstream pipeline stage artifacts exist before the"
+  echo "fleet takes over at the declared pipeline_entry stage."
+  echo ""
+  echo "Pipeline stages (in order):"
+  echo "  1. Requirements  — Ground Truth document"
+  echo "  2. Design        — Design documents"
+  echo "  3. Tasks         — Plan/task definitions"
+  echo "  4. Implementation — Code (entry point, minimal upstream requirements)"
+  echo ""
+  echo "Options:"
+  echo "  --json    Output results as JSON"
+  echo ""
+  echo "Exit codes:"
+  echo "  0  All required upstream artifacts present"
+  echo "  1  Missing artifacts (gate fails)"
+  echo "  2  Hard error (bad input, missing manifest)"
+  exit 1
+fi
+
+if [ ! -d "$PROJECT_ROOT" ]; then
+  echo "ERROR: Project root not found: $PROJECT_ROOT"
+  exit 2
+fi
+
+if [ ! -f "$GT_PATH" ]; then
+  echo "ERROR: Ground Truth file not found: $GT_PATH"
+  exit 2
+fi
+
+if ! jq empty "$GT_PATH" 2>/dev/null; then
+  echo "ERROR: Ground Truth is not valid JSON: $GT_PATH"
+  exit 2
+fi
+
+if [ ! -f "$MANIFEST" ]; then
+  echo "ERROR: Pipeline manifest not found: $MANIFEST"
+  exit 2
+fi
+
+# Read pipeline entry from Ground Truth
+PIPELINE_ENTRY=$(jq -r '.mission.pipeline_entry // empty' "$GT_PATH" 2>/dev/null)
+
+if [ -z "$PIPELINE_ENTRY" ]; then
+  echo "ERROR: mission.pipeline_entry not set in Ground Truth"
+  exit 2
+fi
+
+# Get the order of the entry stage
+ENTRY_ORDER=$(jq -r --arg entry "$PIPELINE_ENTRY" \
+  '.stages[] | select(.name == $entry) | .order' "$MANIFEST" 2>/dev/null)
+
+if [ -z "$ENTRY_ORDER" ]; then
+  echo "ERROR: Unknown pipeline entry stage: $PIPELINE_ENTRY"
+  echo "Valid stages: $(jq -r '[.stages[].name] | join(", ")' "$MANIFEST")"
+  exit 2
+fi
+
+# Check all artifacts for stages with order < entry_order
+PRESENT=()
+MISSING=()
+
+# Get upstream stages (order < entry_order)
+upstream_stages=$(jq -r --argjson order "$ENTRY_ORDER" \
+  '[.stages[] | select(.order < $order) | .name] | .[]' "$MANIFEST" 2>/dev/null)
+
+# Also include the entry stage itself — its artifacts must exist
+all_check_stages=$(jq -r --argjson order "$ENTRY_ORDER" \
+  '[.stages[] | select(.order <= $order) | .name] | .[]' "$MANIFEST" 2>/dev/null)
+
+while IFS= read -r stage; do
+  [ -z "$stage" ] && continue
+
+  # Get artifacts for this stage
+  artifact_count=$(jq -r --arg stage "$stage" \
+    '[.stages[] | select(.name == $stage) | .artifacts[]] | length' "$MANIFEST" 2>/dev/null)
+
+  for ((i=0; i<artifact_count; i++)); do
+    artifact_type=$(jq -r --arg stage "$stage" --argjson i "$i" \
+      '.stages[] | select(.name == $stage) | .artifacts[$i].type' "$MANIFEST" 2>/dev/null)
+    artifact_pattern=$(jq -r --arg stage "$stage" --argjson i "$i" \
+      '.stages[] | select(.name == $stage) | .artifacts[$i].pattern' "$MANIFEST" 2>/dev/null)
+    artifact_desc=$(jq -r --arg stage "$stage" --argjson i "$i" \
+      '.stages[] | select(.name == $stage) | .artifacts[$i].description' "$MANIFEST" 2>/dev/null)
+
+    full_path="$PROJECT_ROOT/$artifact_pattern"
+
+    found=false
+    if [ "$artifact_type" = "file" ] && [ -f "$full_path" ]; then
+      found=true
+    elif [ "$artifact_type" = "directory" ] && [ -d "$full_path" ]; then
+      found=true
+    fi
+
+    if [ "$found" = true ]; then
+      PRESENT+=("$stage: $artifact_pattern ($artifact_desc)")
+    else
+      MISSING+=("$stage: $artifact_pattern ($artifact_desc)")
+    fi
+  done
+done <<< "$all_check_stages"
+
+# Deduplicate (same artifact may appear in multiple stages)
+declare -A seen_present
+declare -A seen_missing
+DEDUP_PRESENT=()
+DEDUP_MISSING=()
+
+for item in "${PRESENT[@]+"${PRESENT[@]}"}"; do
+  pattern=$(echo "$item" | sed 's/^[^:]*: //' | sed 's/ (.*//')
+  if [ -z "${seen_present[$pattern]+x}" ]; then
+    seen_present[$pattern]=1
+    DEDUP_PRESENT+=("$item")
+  fi
+done
+
+for item in "${MISSING[@]+"${MISSING[@]}"}"; do
+  pattern=$(echo "$item" | sed 's/^[^:]*: //' | sed 's/ (.*//')
+  if [ -z "${seen_missing[$pattern]+x}" ] && [ -z "${seen_present[$pattern]+x}" ]; then
+    seen_missing[$pattern]=1
+    DEDUP_MISSING+=("$item")
+  fi
+done
+
+# Determine result
+gate_exit=0
+if [ ${#DEDUP_MISSING[@]} -gt 0 ]; then
+  gate_exit=1
+fi
+
+# Output
+if [ "$JSON_MODE" = true ]; then
+  present_json="[]"
+  missing_json="[]"
+  if [ ${#DEDUP_PRESENT[@]} -gt 0 ]; then
+    present_json=$(printf '%s\n' "${DEDUP_PRESENT[@]}" | jq -R . | jq -s .)
+  fi
+  if [ ${#DEDUP_MISSING[@]} -gt 0 ]; then
+    missing_json=$(printf '%s\n' "${DEDUP_MISSING[@]}" | jq -R . | jq -s .)
+  fi
+
+  status="PASS"
+  if [ "$gate_exit" -eq 1 ]; then
+    status="FAIL"
+  fi
+
+  jq -n \
+    --arg status "$status" \
+    --arg pipeline_entry "$PIPELINE_ENTRY" \
+    --argjson present "$present_json" \
+    --argjson missing "$missing_json" \
+    '{status: $status, pipeline_entry: $pipeline_entry, present: $present, missing: $missing}'
+
+  exit "$gate_exit"
+fi
+
+# Human-readable
+echo "=== Spec-First Pipeline Gate ==="
+echo ""
+echo "Pipeline Entry: $PIPELINE_ENTRY (stage $ENTRY_ORDER)"
+echo ""
+
+if [ ${#DEDUP_PRESENT[@]} -gt 0 ]; then
+  for item in "${DEDUP_PRESENT[@]}"; do
+    echo "  [PRESENT] $item"
+  done
+fi
+
+if [ ${#DEDUP_MISSING[@]} -gt 0 ]; then
+  for item in "${DEDUP_MISSING[@]}"; do
+    echo "  [MISSING] $item"
+  done
+fi
+
+echo ""
+
+if [ "$gate_exit" -eq 0 ]; then
+  echo "RESULT: PASS — All upstream pipeline artifacts present."
+else
+  echo "RESULT: FAIL — Missing ${#DEDUP_MISSING[@]} required artifact(s)."
+  echo "Create the missing artifacts before the fleet can take over at '$PIPELINE_ENTRY'."
+fi
+
+exit "$gate_exit"
