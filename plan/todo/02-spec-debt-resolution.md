@@ -24,7 +24,7 @@ All deliverables in this stream are specification proposals written to `docs/spe
 ## Spec Versioning and Compliance
 
 - [x] **SD-07: Spec version tracking manifest** — Create a manifest mapping each implementation component to the spec version it targets, with a "spec compliance gap" indicator showing where implementation lags behind the current spec.
-- [ ] **SD-08: Spec compliance testing** — Create automated tests under `admiral/tests/spec_compliance/` that verify implementation matches spec requirements, with at least one compliance test per spec part (Parts 1-12).
+- [x] **SD-08: Spec compliance testing** — Create automated tests under `admiral/tests/spec_compliance/` that verify implementation matches spec requirements, with at least one compliance test per spec part (Parts 1-12).
 - [x] **SD-09: Spec changelog bridge document** — Establish a changelog bridge mapping spec versions to implementation status, computing a "spec freshness" score and flagging spec changes not yet reflected in implementation.
 
 ## Spec Gap Proposals — Underspecified Areas
