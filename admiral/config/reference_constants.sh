@@ -225,13 +225,8 @@ YELLOW_FIRST_PASS_HIGH_PCT=75
 YELLOW_ASSUMPTION_LOW_PCT=70
 YELLOW_ASSUMPTION_HIGH_PCT=85
 
-# ============================================================
 # Spec-Gap Resolved — Orchestrator Overhead
-# ============================================================
-ORCH_OVERHEAD_NORMAL_PCT=20
-ORCH_OVERHEAD_MONITOR_PCT=25
-ORCH_OVERHEAD_CAUTION_PCT=35
-ORCH_OVERHEAD_ALERT_PCT=50
+# (Uses EFFICIENCY_ORCHESTRATOR_OVERHEAD_* constants defined above)
 
 # ============================================================
 # Spec-Gap Resolved — Context Loading Position

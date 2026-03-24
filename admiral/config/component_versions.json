@@ -1,5 +1,5 @@
 {
-  "$schema": "component-versions.v1",
+  "schema_version": "1.0.0",
   "description": "Tracks Admiral component versions independently from the spec version. Used by the self-upgrade system to detect version mismatches and plan migrations.",
   "last_updated": "2026-03-23",
   "framework_version": "v0.7.0-alpha",
@@ -40,7 +40,8 @@
       "files": [
         "admiral/schemas/ground-truth.v1.schema.json",
         "admiral/schemas/agent-definition.v1.schema.json",
-        "admiral/schemas/task-criteria.v1.schema.json"
+        "admiral/schemas/task-criteria.v1.schema.json",
+        "admiral/schemas/spec-change-impact.v1.schema.json"
       ]
     },
     "brain_b1": {
@@ -85,6 +86,7 @@
       "version": "0.7.0",
       "files": [
         "admiral/bin/validate_constants_sync",
+        "admiral/bin/validate_spec_change",
         "admiral/bin/version_audit",
         "admiral/bin/upgrade_check"
       ]

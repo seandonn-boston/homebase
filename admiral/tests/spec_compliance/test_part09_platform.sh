@@ -10,8 +10,9 @@ echo "=== Part 9 — Platform Compliance ==="
 assert "Hook adapter pattern implemented" "$([ -f "$REPO_ROOT/.hooks/pre_tool_use_adapter.sh" ] && [ -f "$REPO_ROOT/.hooks/post_tool_use_adapter.sh" ] && echo true || echo false)"
 
 # Gaps documented
-gap=$(jq '[.components[] | select(.spec_part == "Part 9 — Platform")] | length' "$REPO_ROOT/admiral/config/spec_version_manifest.json" 2>/dev/null || echo "0")
-assert "Platform gaps tracked in manifest" "$([ "$gap" != "" ] && echo true || echo false)"
+# Verify Part 9 gaps are documented in the spec parts summary
+gap_documented=$(jq '.spec_parts_summary[] | select(.part == "Part 9 — Platform") | .not_implemented' "$REPO_ROOT/admiral/config/spec_version_manifest.json" 2>/dev/null || echo "")
+assert "Platform gaps tracked in manifest" "$([ -n "$gap_documented" ] && [ "$gap_documented" -ge 1 ] 2>/dev/null && echo true || echo false)"
 
 echo ""
 echo "Part 9: $PASS passed, $FAIL failed"
