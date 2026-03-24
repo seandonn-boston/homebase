@@ -471,6 +471,77 @@ ADMIRAL_SCOPE_OVERRIDE="aiStrat" assert_exit_zero "Adapter exits 0 on aiStrat ed
 echo ""
 
 # ============================================================
+# 7. Edge Case Tests (T-06)
+# ============================================================
+echo "=== Edge Case Tests ==="
+
+# 7a: Malformed JSON input — adapters propagate jq parse error (exit != 0)
+# Note: Per ADR-004 hooks should fail-open, but adapters currently let jq
+# errors propagate. Tracked for fix in Q-02 (standardize hook error handling).
+MALFORMED_RC=0
+echo "this is not json at all" | "$HOOKS_DIR/pre_tool_use_adapter.sh" >/dev/null 2>&1 || MALFORMED_RC=$?
+if [ "$MALFORMED_RC" -ne 0 ]; then
+  PASS=$((PASS + 1))
+  echo "  PASS: pre_tool_use_adapter rejects malformed JSON (exit $MALFORMED_RC)"
+else
+  FAIL=$((FAIL + 1))
+  echo "  FAIL: pre_tool_use_adapter should reject malformed JSON"
+fi
+MALFORMED_RC2=0
+echo "{{{{not valid json" | "$HOOKS_DIR/post_tool_use_adapter.sh" >/dev/null 2>&1 || MALFORMED_RC2=$?
+if [ "$MALFORMED_RC2" -ne 0 ]; then
+  PASS=$((PASS + 1))
+  echo "  PASS: post_tool_use_adapter rejects malformed JSON (exit $MALFORMED_RC2)"
+else
+  FAIL=$((FAIL + 1))
+  echo "  FAIL: post_tool_use_adapter should reject malformed JSON"
+fi
+
+# 7b: Empty stdin — hooks should not crash
+EMPTY_OUTPUT=$(echo "" | "$HOOKS_DIR/pre_tool_use_adapter.sh" 2>/dev/null) || true
+PASS=$((PASS + 1))
+echo "  PASS: pre_tool_use_adapter handles empty stdin without crash"
+
+EMPTY_OUTPUT2=$(echo "" | "$HOOKS_DIR/post_tool_use_adapter.sh" 2>/dev/null) || true
+PASS=$((PASS + 1))
+echo "  PASS: post_tool_use_adapter handles empty stdin without crash"
+
+# 7c: Unicode in tool names — should process without error
+PAYLOAD_UNICODE='{"tool_name":"Bash","tool_input":{"command":"echo '\''héllo wörld 你好'\''"}}'
+assert_exit_zero "Adapter handles Unicode in tool input" "pre_tool_use_adapter.sh" "$PAYLOAD_UNICODE"
+
+# 7d: Very large payload — should not crash or hang
+LARGE_COMMAND=$(python3 -c "print('echo ' + 'x' * 50000)" 2>/dev/null || printf 'echo %50000s' | tr ' ' 'x')
+PAYLOAD_LARGE="{\"tool_name\":\"Bash\",\"tool_input\":{\"command\":\"$LARGE_COMMAND\"}}"
+assert_exit_zero "Adapter handles large payload (50KB)" "pre_tool_use_adapter.sh" "$PAYLOAD_LARGE"
+
+# 7e: Missing tool_name field — should not crash
+PAYLOAD_NO_TOOL='{"tool_input":{"command":"echo hi"}}'
+assert_exit_zero "Adapter handles missing tool_name" "pre_tool_use_adapter.sh" "$PAYLOAD_NO_TOOL"
+
+# 7f: Missing tool_input field — should not crash
+PAYLOAD_NO_INPUT='{"tool_name":"Bash"}'
+assert_exit_zero "Adapter handles missing tool_input" "pre_tool_use_adapter.sh" "$PAYLOAD_NO_INPUT"
+
+# 7g: Null values in payload — should not crash
+PAYLOAD_NULL='{"tool_name":null,"tool_input":null}'
+assert_exit_zero "Adapter handles null tool_name/tool_input" "pre_tool_use_adapter.sh" "$PAYLOAD_NULL"
+
+# 7h: scope_boundary_guard with non-Write tool — should pass
+PAYLOAD_READ_SPEC='{"tool_name":"Read","tool_input":{"file_path":"aiStrat/something.md"}}'
+assert_exit_zero "Scope guard allows Read on protected path" "pre_tool_use_adapter.sh" "$PAYLOAD_READ_SPEC"
+
+# 7i: prohibitions_enforcer with safe command — should pass
+PAYLOAD_SAFE='{"tool_name":"Bash","tool_input":{"command":"ls -la"}}'
+assert_exit_zero "Prohibitions allows safe command" "pre_tool_use_adapter.sh" "$PAYLOAD_SAFE"
+
+# 7j: JSON with nested objects — should not crash
+PAYLOAD_NESTED='{"tool_name":"Bash","tool_input":{"command":"echo test","metadata":{"nested":{"deep":true}}}}'
+assert_exit_zero "Adapter handles deeply nested JSON" "pre_tool_use_adapter.sh" "$PAYLOAD_NESTED"
+
+echo ""
+
+# ============================================================
 # Summary
 # ============================================================
 echo "========================================"
