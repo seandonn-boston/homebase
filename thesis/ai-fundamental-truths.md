@@ -7,7 +7,25 @@ Revised: March 2026
 
 -----
 
-## The Two Axioms
+## Three First Principles
+
+These are the foundations this document reasons from. They are not empirical claims — they are the principles against which empirical claims are evaluated. Everything that follows — the operating premises, the claims about what's gone and what remains — is derived from these.
+
+**Capability that exists will be deployed.**
+
+Once a technology demonstrably solves a problem cheaper, faster, or better, adoption follows. The speed is debatable. The completeness is debatable. The direction is not. History does not contain a case where a clearly superior, economically viable capability was permanently ignored. You can argue about when AI will transform a given industry. You cannot argue that it won't, without arguing that rational actors will choose not to use tools that make them more effective.
+
+**Value tracks scarcity, not effort.**
+
+Economic value is determined by scarcity relative to demand, not by the difficulty or quality of the work. A skill that took ten years to develop commands a premium only as long as it remains scarce. The moment that skill becomes abundant — whether through automation, commoditization, or any other force — its market value declines regardless of how hard it was to acquire. This is not a claim about fairness. It is how markets work.
+
+**Beliefs must yield to evidence.**
+
+When evidence contradicts a belief, the correct response is to update the belief, not dismiss the evidence. This cannot be argued against without using evidence, which presupposes it. It is the epistemological commitment that makes everything else in this document revisable — including the document itself.
+
+-----
+
+## The Two Operating Premises
 
 **AI capabilities keep improving and nobody knows when it stops.**
 
@@ -23,7 +41,7 @@ This sounds generic. It's not. It's specific to AI in a way it isn't specific to
 
 In January 2025, everyone agreed that training a frontier model required hundreds of millions of dollars. Three weeks later, [DeepSeek's R1](https://www.npr.org/2025/01/27/nx-s1-5276097/wall-street-stock-markets-tumble-deepseek-ai-tech-stock), whose base model's final training run reportedly cost [$5.6M](https://www.cnbc.com/2025/01/31/deepseeks-hardware-spend-could-be-as-high-as-500-million-report.html) (though experts estimate total development costs at $500M+, including hardware, prior experiments, and infrastructure), matched models costing far more and triggered a $1 trillion single-day market wipeout. In February 2026, the consensus was that enterprise SaaS would adapt gradually. Then Anthropic released enterprise plugins for [Claude Cowork](https://markets.financialcontent.com/stocks/article/marketminute-2026-2-6-anthropics-claude-cowork-release-triggers-285-billion-saaspocalypse-a-brutal-wake-up-call-for-legacy-tech-and-finance) — the product itself launched January 12–13, 2026; the February 3 enterprise plugin release triggered the selloff — and erased $285 billion in market cap in one session. In the first two weeks of March 2026, [12+ frontier models shipped in a single week](https://openai.com/blog), JetBrains launched an AI-native IDE, and the coding-agent landscape reshuffled entirely.
 
-This axiom applies to this document. Some of what's written here will be wrong within a year. The move isn't to avoid making claims. It's to hold them loosely and update faster than the people around you.
+This premise applies to this document. Some of what's written here will be wrong within a year. The move isn't to avoid making claims. It's to hold them loosely and update faster than the people around you.
 
 -----
 
