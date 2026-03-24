@@ -38,15 +38,17 @@
 
 ## Stream 4: Documentation (D-01 to D-19)
 
+> **Phase 1 status:** D-02 (CoC) and D-03 (LICENSE) completed. Remaining D-items (D-01, D-04 through D-19) deferred to Phase 2 — they are documentation tasks that don't block Phase 2 architecture/CI work from starting. D-01 (style guide) is the highest priority deferred item as it gates Q-03, Q-13, and D-17.
+
 ### 4.1 Core Project Documents
 
-- [ ] **D-01:** Create ADMIRAL_STYLE.md — naming conventions, error handling, jq patterns, exit codes, comment standards, testing requirements `[L]`
-- [ ] **D-02:** Add CODE_OF_CONDUCT.md — Contributor Covenant v2.1 `[S]`
-- [ ] **D-03:** Add LICENSE file — MIT license at repo root `[S]`
+- [ ] **D-01:** Create ADMIRAL_STYLE.md — naming conventions, error handling, jq patterns, exit codes, comment standards, testing requirements `[L]` — *Deferred to Phase 2 (large scope, gates Q-03/Q-13/D-17).*
+- [x] **D-02:** Add CODE_OF_CONDUCT.md — Contributor Covenant v2.1 `[S]`
+- [x] **D-03:** Add LICENSE file — MIT license at repo root `[S]`
 
 ### 4.2 Inline Documentation
 
-- [ ] **D-04:** Add inline "why" comments to hooks — audit all 13+ hooks, annotate regex patterns, thresholds, state mutations, magic numbers `[L]`
+- [ ] **D-04:** Add inline "why" comments to hooks — *Deferred to Phase 2.* — audit all 13+ hooks, annotate regex patterns, thresholds, state mutations, magic numbers `[L]`
 - [ ] **D-05:** Add usage examples to templates — purpose, when to use, example invocation, expected output `[S]`
 
 ### 4.3 Architecture Decision Records

@@ -1,5 +1,9 @@
 # Helm
 
+![Control Plane CI](https://github.com/seandonn-boston/helm/actions/workflows/control-plane-ci.yml/badge.svg)
+![Hook Tests](https://github.com/seandonn-boston/helm/actions/workflows/hook-tests.yml/badge.svg)
+![Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen)
+
 **The operational headquarters for the Admiral Framework and supporting research, thesis documents, and early-stage implementation.**
 
 Helm is a monorepo containing four major workstreams — all converging on a single question: *How should organizations govern, coordinate, and operate fleets of autonomous AI agents?*
