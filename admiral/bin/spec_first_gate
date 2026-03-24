@@ -87,15 +87,10 @@ if [ -z "$ENTRY_ORDER" ]; then
   exit 2
 fi
 
-# Check all artifacts for stages with order < entry_order
+# Check artifacts for the entry stage and all upstream stages
 PRESENT=()
 MISSING=()
 
-# Get upstream stages (order < entry_order)
-upstream_stages=$(jq -r --argjson order "$ENTRY_ORDER" \
-  '[.stages[] | select(.order < $order) | .name] | .[]' "$MANIFEST" 2>/dev/null)
-
-# Also include the entry stage itself — its artifacts must exist
 all_check_stages=$(jq -r --argjson order "$ENTRY_ORDER" \
   '[.stages[] | select(.order <= $order) | .name] | .[]' "$MANIFEST" 2>/dev/null)
 
