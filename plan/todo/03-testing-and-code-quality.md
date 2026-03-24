@@ -24,7 +24,7 @@
 - [x] **T-10: Add coverage badge to README** — Generate coverage badge from CI output and display in README. Done when README shows current coverage %.
 - [x] **T-11: Add hook latency benchmark** — Measure wall-clock time for each hook with typical payload (cold/warm). Output p50/p95/p99 table. Done when script produces latency table.
 - [x] **T-12: Add server performance benchmark** — Benchmark server under load: `/api/events` with 100/1000/10000 events. Measure response time and memory. Done when benchmark produces report.
-- [ ] **T-13: Add RingBuffer benchmark** — Benchmark push, toArray, filter at 10K/100K/1M elements. Done when push is O(1) amortized, memory bounded.
+- [x] **T-13: Add RingBuffer benchmark** — Benchmark push, toArray, filter at 10K/100K/1M elements. Done when push is O(1) amortized, memory bounded.
 - [ ] **T-14: Add Standing Orders rendering benchmark** — Measure time to render all 16 Standing Orders into text. Done when rendering latency < 100ms verified and documented.
 
 ## Advanced Testing Techniques
