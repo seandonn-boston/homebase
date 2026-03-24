@@ -57,7 +57,7 @@ TMPDIR_BASE=$(mktemp -d)
 mkdir -p "$TMPDIR_BASE/standing-orders"
 cp "$PROJECT_DIR/admiral/standing-orders/so01-identity-discipline.json" "$TMPDIR_BASE/standing-orders/"
 
-SO_DIR="$TMPDIR_BASE/standing-orders" OUTPUT_PARTIAL=$(render_standing_orders)
+OUTPUT_PARTIAL=$(SO_DIR="$TMPDIR_BASE/standing-orders" render_standing_orders)
 assert_contains "Partial render includes SO-01" "$OUTPUT_PARTIAL" "SO-01"
 
 # Count how many SOs appear — should be 1
@@ -79,7 +79,7 @@ echo "--- Empty SO directory ---"
 TMPDIR_BASE=$(mktemp -d)
 mkdir -p "$TMPDIR_BASE/standing-orders"
 
-SO_DIR="$TMPDIR_BASE/standing-orders" OUTPUT_EMPTY=$(render_standing_orders)
+OUTPUT_EMPTY=$(SO_DIR="$TMPDIR_BASE/standing-orders" render_standing_orders)
 assert_contains "Empty dir still produces header" "$OUTPUT_EMPTY" "STANDING ORDERS"
 
 rm -rf "$TMPDIR_BASE"

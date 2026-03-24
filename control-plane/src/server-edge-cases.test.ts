@@ -41,7 +41,7 @@ describe("AdmiralServer — edge cases", () => {
   });
 
   it("very long URL returns 404 without crashing", async () => {
-    const longPath = "/api/" + "x".repeat(5000);
+    const longPath = `/api/${"x".repeat(5000)}`;
     const res = await httpGet(`${baseUrl}${longPath}`);
     assert.equal(res.status, 404);
   });

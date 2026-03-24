@@ -2,6 +2,7 @@
 # Admiral Framework — state.sh Concurrent Access Tests (T-07)
 # Tests with_state_lock under concurrent access.
 # Exit code: 0 = all pass, 1 = failures
+# shellcheck disable=SC2030,SC2031 — subshell variable isolation is intentional
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

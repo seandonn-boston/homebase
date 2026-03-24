@@ -122,6 +122,7 @@ echo ""
 # ============================================================
 echo "--- Command Injection Attacks (>=10 vectors) ---"
 
+# shellcheck disable=SC2016 — attack payloads intentionally unexpanded
 assert_detected "Subshell injection" \
   'echo $(cat /etc/passwd)'
 
@@ -148,6 +149,7 @@ assert_detected "Wget injection" \
 assert_detected "Semicolon exec injection" \
   '; exec /bin/sh'
 
+# shellcheck disable=SC2016 — attack payloads intentionally unexpanded
 assert_detected "Nested subshell" \
   'file=$(cat /etc/shadow)'
 

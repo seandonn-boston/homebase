@@ -8,7 +8,6 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
-ADAPTER="$PROJECT_DIR/.hooks/session_start_adapter.sh"
 
 # shellcheck source=/dev/null
 source "$PROJECT_DIR/admiral/lib/assert.sh"
