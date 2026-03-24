@@ -58,6 +58,16 @@
 - [x] **Q-11: Dead code elimination audit** — *Completed during Phase 0 simplify review (removed dead variables from validate_ground_truth, validate_task_criteria, validate_constants_sync, readiness_assess, spec_first_gate, go_no_go_gate).* — Find and remove unused functions, variables, and unreachable code in both TypeScript and bash. Enable `noUnusedLocals` and `noUnusedParameters` in tsconfig. Grep bash for orphaned functions.
 - [ ] **Q-12: TypeScript strict null checks enforcement** — *Deferred to Phase 2 (requires fixing all resulting type errors).* — Enable `strictNullChecks` in tsconfig.json. Fix all resulting type errors. No `as any` casts to suppress null check errors.
 
+## Evaluation-Driven Design (EDD) Gate
+
+> Phase 3 implementation. The EDD gate replaces time-based `/loop` polling with event-driven task orchestration. A task cycle does not advance until it provably passes all gates. See also: S-13 (SDLC quality gate hooks) and SO-08 (Quality Standards enforcement) in `05-hooks-standing-orders-infrastructure.md`.
+
+- [ ] **EDD-01: Define evaluation spec format** — Machine-readable YAML/JSON format for per-task evaluation specifications. Each task declares its Definition of Done as a set of deterministic checks (test commands, lint commands, CI status) and probabilistic checks (output shape validation, expected behavior descriptions). Format: `{ deterministic: [{command, expected_exit}], probabilistic: [{description, verification_method}] }`.
+- [ ] **EDD-02: Build `edd_gate` validator** — `admiral/bin/edd_gate` that accepts a task ID, reads its evaluation spec, executes all deterministic checks, reports probabilistic check status, and returns a pass/fail verdict. Exit 0 only when all deterministic checks pass AND all probabilistic checks are confirmed. Integrates with CI pipeline status via `gh` CLI.
+- [ ] **EDD-03: Wire EDD gate into `/next-todo`** — Modify the `/next-todo` command to check `edd_gate` for the most recently completed task before advancing to the next one. If the gate fails, `/next-todo` reports what's missing instead of starting new work. This replaces cron-based `/loop` with event-driven progression.
+- [ ] **EDD-04: Proof-of-completion artifact** — Each completed task produces a `proof.json` artifact containing: task ID, timestamp, deterministic check results (command + exit code + output hash), probabilistic check confirmations, CI run URL, and DoD checklist status. Stored in `.admiral/proofs/` for audit trail.
+- [ ] **EDD-05: Visual confirmation protocol** — For probabilistic outcomes that require visual inspection (e.g., "dashboard renders correctly", "output format looks right"), define a structured confirmation flow: agent produces screenshot/output sample, human or reviewing agent confirms, confirmation is recorded in the proof artifact. Supports both human-in-the-loop and agent-to-agent review patterns.
+
 ---
 
 ## Dependencies
@@ -70,3 +80,8 @@
 | Q-04 | Q-01 |
 | Q-10 | Q-02 |
 | Q-13 | Q-02, D-01 (documentation stream) |
+| EDD-02 | EDD-01 |
+| EDD-03 | EDD-02 |
+| EDD-04 | EDD-02 |
+| EDD-05 | EDD-04 |
+| EDD-01 | S-13, SO-08 (Phase 3 quality gates — touchstones, not blockers) |

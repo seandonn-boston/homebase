@@ -11,39 +11,8 @@ export CLAUDE_PROJECT_DIR="$PROJECT_DIR"
 
 # shellcheck source=/dev/null
 source "$PROJECT_DIR/admiral/lib/standing_orders.sh"
-
-PASS=0
-FAIL=0
-ERRORS=""
-TMPDIR_BASE=""
-
-assert_contains() {
-  local test_name="$1"
-  local output="$2"
-  local expected="$3"
-  if echo "$output" | grep -q "$expected"; then
-    PASS=$((PASS + 1))
-    echo "  [PASS] $test_name"
-  else
-    FAIL=$((FAIL + 1))
-    ERRORS+="  [FAIL] $test_name — expected '$expected' in output\n"
-    echo "  [FAIL] $test_name"
-  fi
-}
-
-assert_eq() {
-  local test_name="$1"
-  local expected="$2"
-  local actual="$3"
-  if [ "$actual" = "$expected" ]; then
-    PASS=$((PASS + 1))
-    echo "  [PASS] $test_name"
-  else
-    FAIL=$((FAIL + 1))
-    ERRORS+="  [FAIL] $test_name — expected '$expected', got '$actual'\n"
-    echo "  [FAIL] $test_name (expected '$expected', got '$actual')"
-  fi
-}
+# shellcheck source=/dev/null
+source "$PROJECT_DIR/admiral/lib/assert.sh"
 
 echo "=== Standing Orders Rendering Tests ==="
 echo ""
@@ -88,7 +57,7 @@ TMPDIR_BASE=$(mktemp -d)
 mkdir -p "$TMPDIR_BASE/standing-orders"
 cp "$PROJECT_DIR/admiral/standing-orders/so01-identity-discipline.json" "$TMPDIR_BASE/standing-orders/"
 
-SO_DIR="$TMPDIR_BASE/standing-orders" OUTPUT_PARTIAL=$(render_standing_orders)
+OUTPUT_PARTIAL=$(SO_DIR="$TMPDIR_BASE/standing-orders" render_standing_orders)
 assert_contains "Partial render includes SO-01" "$OUTPUT_PARTIAL" "SO-01"
 
 # Count how many SOs appear — should be 1
@@ -110,19 +79,9 @@ echo "--- Empty SO directory ---"
 TMPDIR_BASE=$(mktemp -d)
 mkdir -p "$TMPDIR_BASE/standing-orders"
 
-SO_DIR="$TMPDIR_BASE/standing-orders" OUTPUT_EMPTY=$(render_standing_orders)
+OUTPUT_EMPTY=$(SO_DIR="$TMPDIR_BASE/standing-orders" render_standing_orders)
 assert_contains "Empty dir still produces header" "$OUTPUT_EMPTY" "STANDING ORDERS"
 
 rm -rf "$TMPDIR_BASE"
 
-echo ""
-echo "========================================="
-echo "Standing Orders Tests: $PASS passed, $FAIL failed"
-echo "========================================="
-
-if [ "$FAIL" -gt 0 ]; then
-  echo ""
-  echo "Failures:"
-  echo -e "$ERRORS"
-  exit 1
-fi
+print_results "Standing Orders Tests"

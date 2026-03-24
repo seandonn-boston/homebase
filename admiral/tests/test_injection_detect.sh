@@ -122,9 +122,11 @@ echo ""
 # ============================================================
 echo "--- Command Injection Attacks (>=10 vectors) ---"
 
+# shellcheck disable=SC2016
 assert_detected "Subshell injection" \
   'echo $(cat /etc/passwd)'
 
+# shellcheck disable=SC2016
 assert_detected "Backtick injection" \
   'echo `whoami`'
 
@@ -148,9 +150,11 @@ assert_detected "Wget injection" \
 assert_detected "Semicolon exec injection" \
   '; exec /bin/sh'
 
+# shellcheck disable=SC2016
 assert_detected "Nested subshell" \
   'file=$(cat /etc/shadow)'
 
+# shellcheck disable=SC2016
 assert_detected "Backtick command" \
   'name=`id -u`'
 
