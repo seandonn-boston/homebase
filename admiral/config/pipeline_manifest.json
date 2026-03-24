@@ -1,0 +1,65 @@
+{
+  "schema_version": "1.0.0",
+  "description": "Maps pipeline stages to required artifacts. When a project enters the fleet at a given stage, all upstream stages must have their artifacts present.",
+  "stages": [
+    {
+      "name": "Requirements",
+      "order": 1,
+      "artifacts": [
+        {
+          "type": "file",
+          "pattern": "ground-truth.json",
+          "description": "Ground Truth document with mission, boundaries, and success criteria"
+        }
+      ]
+    },
+    {
+      "name": "Design",
+      "order": 2,
+      "artifacts": [
+        {
+          "type": "file",
+          "pattern": "ground-truth.json",
+          "description": "Ground Truth document (inherited from Requirements)"
+        },
+        {
+          "type": "directory",
+          "pattern": "docs/design",
+          "description": "Design documents directory"
+        }
+      ]
+    },
+    {
+      "name": "Tasks",
+      "order": 3,
+      "artifacts": [
+        {
+          "type": "file",
+          "pattern": "ground-truth.json",
+          "description": "Ground Truth document (inherited from Requirements)"
+        },
+        {
+          "type": "directory",
+          "pattern": "docs/design",
+          "description": "Design documents directory (inherited from Design)"
+        },
+        {
+          "type": "directory",
+          "pattern": "plan",
+          "description": "Plan directory with task definitions"
+        }
+      ]
+    },
+    {
+      "name": "Implementation",
+      "order": 4,
+      "artifacts": [
+        {
+          "type": "file",
+          "pattern": "ground-truth.json",
+          "description": "Ground Truth document (inherited from Requirements)"
+        }
+      ]
+    }
+  ]
+}
