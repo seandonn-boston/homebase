@@ -1,0 +1,381 @@
+{
+  "schema_version": "1.0.0",
+  "spec_version": "v0.23.1-alpha",
+  "generated": "2026-03-23",
+  "description": "Maps each implementation component to the spec part it implements, tracking compliance status and gaps.",
+  "components": [
+    {
+      "component": "admiral/bin/generate_ground_truth",
+      "spec_part": "Part 1 — Strategy",
+      "spec_sections": ["Ground Truth Document", "Strategy Triangle"],
+      "status": "implemented",
+      "compliance": "full",
+      "notes": "Scaffolds blank Ground Truth documents from template"
+    },
+    {
+      "component": "admiral/bin/validate_ground_truth",
+      "spec_part": "Part 1 — Strategy",
+      "spec_sections": ["Ground Truth Document", "Strategy Triangle"],
+      "status": "implemented",
+      "compliance": "full",
+      "notes": "Validates Ground Truth against schema with enum/version checks"
+    },
+    {
+      "component": "admiral/bin/validate_boundaries",
+      "spec_part": "Part 1 — Strategy",
+      "spec_sections": ["Boundaries", "Non-Goals", "Hard Constraints", "Resource Budgets", "LLM-Last"],
+      "status": "implemented",
+      "compliance": "full",
+      "notes": "Validates all four boundary categories with JSON output mode"
+    },
+    {
+      "component": "admiral/bin/readiness_assess",
+      "spec_part": "Part 1 — Strategy",
+      "spec_sections": ["Project Readiness", "Go/No-Go"],
+      "status": "implemented",
+      "compliance": "full",
+      "notes": "Five-dimension readiness check: GT, boundaries, CI, tests, linter"
+    },
+    {
+      "component": "admiral/bin/go_no_go_gate",
+      "spec_part": "Part 1 — Strategy",
+      "spec_sections": ["Go/No-Go Gate", "Deployment Readiness"],
+      "status": "implemented",
+      "compliance": "full",
+      "notes": "Enforces Ready/Partially Ready/Not Ready with Admiral override"
+    },
+    {
+      "component": "admiral/bin/validate_task_criteria",
+      "spec_part": "Part 1 — Strategy",
+      "spec_sections": ["Task Acceptance Criteria"],
+      "status": "implemented",
+      "compliance": "full",
+      "notes": "Validates task criteria: functional, quality, completeness, negative, verification, failure guidance"
+    },
+    {
+      "component": "admiral/bin/spec_first_gate",
+      "spec_part": "Part 1 — Strategy",
+      "spec_sections": ["Pipeline Entry", "Spec-First"],
+      "status": "implemented",
+      "compliance": "full",
+      "notes": "Verifies upstream pipeline artifacts exist before fleet takeover"
+    },
+    {
+      "component": "admiral/schemas/ground-truth.v1.schema.json",
+      "spec_part": "Part 1 — Strategy",
+      "spec_sections": ["Ground Truth Document"],
+      "status": "implemented",
+      "compliance": "full",
+      "notes": "JSON Schema for Ground Truth documents"
+    },
+    {
+      "component": "admiral/schemas/task-criteria.v1.schema.json",
+      "spec_part": "Part 1 — Strategy",
+      "spec_sections": ["Task Acceptance Criteria"],
+      "status": "implemented",
+      "compliance": "full",
+      "notes": "JSON Schema for task-level success criteria"
+    },
+    {
+      "component": "admiral/config/pipeline_manifest.json",
+      "spec_part": "Part 1 — Strategy",
+      "spec_sections": ["Pipeline Entry"],
+      "status": "implemented",
+      "compliance": "full",
+      "notes": "Maps pipeline stages to required artifacts"
+    },
+    {
+      "component": ".hooks/session_start_adapter.sh",
+      "spec_part": "Part 2 — Context",
+      "spec_sections": ["Context Profiles", "Standing Orders Injection"],
+      "status": "implemented",
+      "compliance": "partial",
+      "gap": "Context profile budget allocation validation not yet enforced",
+      "notes": "Injects Standing Orders at session start, records baseline"
+    },
+    {
+      "component": ".hooks/context_baseline.sh",
+      "spec_part": "Part 2 — Context",
+      "spec_sections": ["Context Baseline", "Context Profiles"],
+      "status": "implemented",
+      "compliance": "partial",
+      "gap": "Does not enforce standing/session/working percentage allocation ranges",
+      "notes": "Records initial context state for drift detection"
+    },
+    {
+      "component": ".hooks/context_health_check.sh",
+      "spec_part": "Part 2 — Context",
+      "spec_sections": ["Context Health Check", "Critical Context Sections"],
+      "status": "implemented",
+      "compliance": "partial",
+      "gap": "Advisory only (always exit 0); does not enforce frequency-based invocation (every N tool calls)",
+      "notes": "Checks presence of Identity, Authority, Constraints sections"
+    },
+    {
+      "component": ".hooks/token_budget_tracker.sh",
+      "spec_part": "Part 3 — Deterministic Enforcement",
+      "spec_sections": ["Token Budget Tracking", "Token Budget Alert Thresholds"],
+      "status": "implemented",
+      "compliance": "full",
+      "notes": "Tracks token usage, emits 80%/90% alerts, advisory only"
+    },
+    {
+      "component": ".hooks/pre_tool_use_adapter.sh",
+      "spec_part": "Part 3 — Deterministic Enforcement",
+      "spec_sections": ["PreToolUse Hook Chain", "Hook Adapter Pattern"],
+      "status": "implemented",
+      "compliance": "partial",
+      "gap": "Missing identity_validation, tier_validation hooks",
+      "notes": "Adapts Claude Code PreToolUse payload to framework format"
+    },
+    {
+      "component": ".hooks/post_tool_use_adapter.sh",
+      "spec_part": "Part 3 — Deterministic Enforcement",
+      "spec_sections": ["PostToolUse Hook Chain", "Hook Adapter Pattern"],
+      "status": "implemented",
+      "compliance": "partial",
+      "gap": "Missing governance_heartbeat_monitor, protocol_registry_guard hooks",
+      "notes": "Adapts Claude Code PostToolUse payload to framework format"
+    },
+    {
+      "component": ".hooks/loop_detector.sh",
+      "spec_part": "Part 3 — Deterministic Enforcement",
+      "spec_sections": ["Loop Detection", "Loop Detection Thresholds"],
+      "status": "implemented",
+      "compliance": "full",
+      "notes": "Dual-threshold advisory: MAX_SAME_ERROR=3, MAX_TOTAL_ERRORS=10, SUCCESS_DECAY=1"
+    },
+    {
+      "component": ".hooks/scope_boundary_guard.sh",
+      "spec_part": "Part 3 — Deterministic Enforcement",
+      "spec_sections": ["Scope Boundaries (SO-03)"],
+      "status": "implemented",
+      "compliance": "partial",
+      "gap": "Heredoc content filtering improved but some edge cases remain",
+      "notes": "Blocks writes to protected paths"
+    },
+    {
+      "component": ".hooks/prohibitions_enforcer.sh",
+      "spec_part": "Part 3 — Deterministic Enforcement",
+      "spec_sections": ["Prohibitions (SO-10)"],
+      "status": "implemented",
+      "compliance": "partial",
+      "gap": "Edge case hardening needed per SD-04 enforcement map",
+      "notes": "Enforces prohibited actions deterministically"
+    },
+    {
+      "component": ".hooks/pre_work_validator.sh",
+      "spec_part": "Part 3 — Deterministic Enforcement",
+      "spec_sections": ["Pre-Work Validation (SO-15)"],
+      "status": "implemented",
+      "compliance": "partial",
+      "gap": "Enhancement needed per SD-04 enforcement map",
+      "notes": "Validates pre-conditions before work begins"
+    },
+    {
+      "component": ".hooks/zero_trust_validator.sh",
+      "spec_part": "Part 3 — Deterministic Enforcement",
+      "spec_sections": ["Zero Trust (SO-16)"],
+      "status": "implemented",
+      "compliance": "partial",
+      "gap": "Basic implementation, needs comprehensive trust validation",
+      "notes": "Validates zero-trust assumptions"
+    },
+    {
+      "component": ".hooks/compliance_ethics_advisor.sh",
+      "spec_part": "Part 3 — Deterministic Enforcement",
+      "spec_sections": ["Compliance, Ethics, Legal (SO-14)"],
+      "status": "implemented",
+      "compliance": "partial",
+      "gap": "Advisory only, no hard enforcement per SD-04 safety-tier gap",
+      "notes": "Advises on compliance and ethics concerns"
+    },
+    {
+      "component": ".hooks/brain_context_router.sh",
+      "spec_part": "Part 5 — Brain Architecture",
+      "spec_sections": ["Brain Retrieval"],
+      "status": "implemented",
+      "compliance": "partial",
+      "gap": "No automatic entry creation, no demand signal tracking",
+      "notes": "Routes context queries to brain"
+    },
+    {
+      "component": "admiral/bin/brain_query",
+      "spec_part": "Part 5 — Brain Architecture",
+      "spec_sections": ["Brain Query"],
+      "status": "implemented",
+      "compliance": "partial",
+      "gap": "B1 only — no vector search, no similarity scoring",
+      "notes": "Queries brain knowledge base"
+    },
+    {
+      "component": "admiral/bin/brain_record",
+      "spec_part": "Part 5 — Brain Architecture",
+      "spec_sections": ["Brain Record"],
+      "status": "implemented",
+      "compliance": "partial",
+      "gap": "No contradiction detection, no consolidation",
+      "notes": "Records entries to brain"
+    },
+    {
+      "component": "admiral/bin/brain_retrieve",
+      "spec_part": "Part 5 — Brain Architecture",
+      "spec_sections": ["Brain Retrieval"],
+      "status": "implemented",
+      "compliance": "partial",
+      "gap": "Basic retrieval only, no relevance scoring",
+      "notes": "Retrieves brain entries"
+    },
+    {
+      "component": "admiral/bin/brain_audit",
+      "spec_part": "Part 5 — Brain Architecture",
+      "spec_sections": ["Brain Audit"],
+      "status": "implemented",
+      "compliance": "partial",
+      "gap": "No decay awareness, no graduation measurement",
+      "notes": "Audits brain health"
+    },
+    {
+      "component": "admiral/bin/session_summary",
+      "spec_part": "Part 8 — Operations",
+      "spec_sections": ["Session Summary"],
+      "status": "implemented",
+      "compliance": "partial",
+      "gap": "No quality metrics, no cost attribution",
+      "notes": "Generates session summaries"
+    },
+    {
+      "component": "admiral/bin/version_audit",
+      "spec_part": "Part 8 — Operations",
+      "spec_sections": ["Version Tracking"],
+      "status": "implemented",
+      "compliance": "partial",
+      "gap": "Basic version check only",
+      "notes": "Audits component versions"
+    },
+    {
+      "component": "admiral/config/reference_constants.sh",
+      "spec_part": "Reference Constants",
+      "spec_sections": ["All 29 sections"],
+      "status": "implemented",
+      "compliance": "full",
+      "notes": "Machine-readable registry of all 131 spec constants"
+    },
+    {
+      "component": "admiral/schemas/agent-definition.v1.schema.json",
+      "spec_part": "Part 4 — Fleet Composition",
+      "spec_sections": ["Agent Definition"],
+      "status": "implemented",
+      "compliance": "partial",
+      "gap": "Schema exists but no agent definitions populated yet",
+      "notes": "JSON Schema for agent role definitions"
+    }
+  ],
+  "spec_parts_summary": [
+    {
+      "part": "Part 1 — Strategy",
+      "components_count": 10,
+      "full_compliance": 10,
+      "partial_compliance": 0,
+      "not_implemented": 0
+    },
+    {
+      "part": "Part 2 — Context",
+      "components_count": 3,
+      "full_compliance": 0,
+      "partial_compliance": 3,
+      "not_implemented": 0
+    },
+    {
+      "part": "Part 3 — Deterministic Enforcement",
+      "components_count": 8,
+      "full_compliance": 2,
+      "partial_compliance": 6,
+      "not_implemented": 0
+    },
+    {
+      "part": "Part 4 — Fleet Composition",
+      "components_count": 1,
+      "full_compliance": 0,
+      "partial_compliance": 1,
+      "not_implemented": 0
+    },
+    {
+      "part": "Part 5 — Brain Architecture",
+      "components_count": 5,
+      "full_compliance": 0,
+      "partial_compliance": 5,
+      "not_implemented": 0
+    },
+    {
+      "part": "Part 6 — Execution",
+      "components_count": 0,
+      "full_compliance": 0,
+      "partial_compliance": 0,
+      "not_implemented": 1,
+      "missing": ["Work decomposition engine, handoff protocol, parallel coordination"]
+    },
+    {
+      "part": "Part 7 — Quality",
+      "components_count": 0,
+      "full_compliance": 0,
+      "partial_compliance": 0,
+      "not_implemented": 1,
+      "missing": ["QA pipeline, quality gates, sycophantic drift detection"]
+    },
+    {
+      "part": "Part 8 — Operations",
+      "components_count": 2,
+      "full_compliance": 0,
+      "partial_compliance": 2,
+      "not_implemented": 0
+    },
+    {
+      "part": "Part 9 — Platform",
+      "components_count": 0,
+      "full_compliance": 0,
+      "partial_compliance": 0,
+      "not_implemented": 1,
+      "missing": ["Platform adapter architecture, cross-platform hooks"]
+    },
+    {
+      "part": "Part 10 — Admiral",
+      "components_count": 0,
+      "full_compliance": 0,
+      "partial_compliance": 0,
+      "not_implemented": 1,
+      "missing": ["Admiral orchestration, trust promotion, fallback decomposer"]
+    },
+    {
+      "part": "Part 11 — Protocols",
+      "components_count": 0,
+      "full_compliance": 0,
+      "partial_compliance": 0,
+      "not_implemented": 1,
+      "missing": ["Human referral, paid resource authorization, context honesty"]
+    },
+    {
+      "part": "Part 12 — Data Ecosystem",
+      "components_count": 0,
+      "full_compliance": 0,
+      "partial_compliance": 0,
+      "not_implemented": 1,
+      "missing": ["Knowledge graph, maintenance agents, feedback loops"]
+    },
+    {
+      "part": "Part 13 — MCP Integration",
+      "components_count": 0,
+      "full_compliance": 0,
+      "partial_compliance": 0,
+      "not_implemented": 1,
+      "missing": ["MCP server, Brain/Fleet/Governance tools, RBAC"]
+    },
+    {
+      "part": "Reference Constants",
+      "components_count": 1,
+      "full_compliance": 1,
+      "partial_compliance": 0,
+      "not_implemented": 0
+    }
+  ]
+}
