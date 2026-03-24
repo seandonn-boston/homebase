@@ -6,7 +6,7 @@
 
 ## Unit Tests
 
-- [x] **T-01: Add `trace.test.ts`** — Unit tests for `ExecutionTrace`: `buildTrace()`, `buildAgentTrace()`, `renderAscii()`, `getStats()`. Test tree building with nested agent/task hierarchies, empty streams, single-event streams. Done when >=80% branch coverage. *Completed: `control-plane/src/trace.test.ts` with 40 test cases covering all 4 public methods, all 10 event type formatters, summarizeArgs edge cases, multi-agent hierarchies. Coverage: 99.35% line, 98.33% branch.*
+- [ ] **T-01: Add `trace.test.ts`** — Unit tests for `ExecutionTrace`: `buildTrace()`, `buildAgentTrace()`, `renderAscii()`, `getStats()`. Test tree building with nested agent/task hierarchies, empty streams, single-event streams. Done when >=80% branch coverage.
 - [ ] **T-02: Add `ingest.test.ts`** — Unit tests for `JournalIngester`: `ingestNewLines()`, `start()`/`stop()`, `getStats()`. Test with valid JSONL, malformed lines, missing file, file growth, offset tracking. Done when >=80% branch coverage.
 - [ ] **T-03: Add `instrumentation.test.ts`** — Unit tests for all `AgentInstrumentation` public methods. Verify edge cases (null agents, missing fields). Done when >=90% branch coverage.
 - [ ] **T-04: Add `events.test.ts`** — Unit tests for EventStream: ID generation, listener lifecycle, eviction, filters, counters. Verify event ordering and listener cleanup. Done when >=90% branch coverage.
