@@ -1,0 +1,137 @@
+#!/bin/bash
+# Admiral Framework — Pre-Upgrade Compatibility Check
+# Validates that the current installation is healthy before upgrading.
+# Checks: file existence, test suite, constants sync, version consistency.
+# Usage: upgrade_check [--json]
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
+VERSIONS="$PROJECT_DIR/admiral/config/component_versions.json"
+
+JSON_MODE=false
+[ "${1:-}" = "--json" ] && JSON_MODE=true
+
+CHECKS_PASS=0
+CHECKS_FAIL=0
+CHECKS_WARN=0
+RESULTS="[]"
+
+record() {
+  local name="$1"
+  local status="$2"
+  local detail="$3"
+
+  case "$status" in
+    pass) CHECKS_PASS=$((CHECKS_PASS + 1)) ;;
+    fail) CHECKS_FAIL=$((CHECKS_FAIL + 1)) ;;
+    warn) CHECKS_WARN=$((CHECKS_WARN + 1)) ;;
+  esac
+
+  if [ "$JSON_MODE" = "true" ]; then
+    RESULTS=$(echo "$RESULTS" | jq --arg n "$name" --arg s "$status" --arg d "$detail" \
+      '. + [{check: $n, status: $s, detail: $d}]')
+  else
+    local ICON="PASS"
+    [ "$status" = "fail" ] && ICON="FAIL"
+    [ "$status" = "warn" ] && ICON="WARN"
+    echo "  $ICON: $name — $detail"
+  fi
+}
+
+[ "$JSON_MODE" != "true" ] && echo "=== Pre-Upgrade Compatibility Check ==="
+[ "$JSON_MODE" != "true" ] && echo ""
+
+# 1. Component versions manifest exists and is valid
+if [ -f "$VERSIONS" ] && jq empty "$VERSIONS" 2>/dev/null; then
+  record "component_versions" "pass" "Manifest exists and is valid JSON"
+else
+  record "component_versions" "fail" "Manifest missing or invalid"
+fi
+
+# 2. All component files exist
+if [ -f "$VERSIONS" ]; then
+  MISSING=0
+  TOTAL_FILES=0
+  for component in $(jq -r '.components | keys[]' "$VERSIONS" 2>/dev/null); do
+    for file in $(jq -r --arg c "$component" '.components[$c].files[]' "$VERSIONS" 2>/dev/null); do
+      TOTAL_FILES=$((TOTAL_FILES + 1))
+      if [ ! -e "$PROJECT_DIR/$file" ]; then
+        MISSING=$((MISSING + 1))
+      fi
+    done
+  done
+  if [ "$MISSING" -eq 0 ]; then
+    record "file_integrity" "pass" "All $TOTAL_FILES component files present"
+  else
+    record "file_integrity" "fail" "$MISSING of $TOTAL_FILES files missing"
+  fi
+fi
+
+# 3. Constants sync check
+if [ -x "$PROJECT_DIR/admiral/bin/validate_constants_sync" ]; then
+  if bash "$PROJECT_DIR/admiral/bin/validate_constants_sync" > /dev/null 2>&1; then
+    record "constants_sync" "pass" "JSON, SH, and config registries in sync"
+  else
+    record "constants_sync" "fail" "Constants registries are out of sync"
+  fi
+else
+  record "constants_sync" "warn" "Sync validator not found"
+fi
+
+# 4. Core test suite
+CORE_TESTS=(
+  "admiral/tests/test_state_persistence.sh"
+  "admiral/tests/test_reference_constants.sh"
+  "admiral/tests/test_constants_sync.sh"
+)
+TESTS_PASS=0
+TESTS_FAIL=0
+for test in "${CORE_TESTS[@]}"; do
+  if [ -f "$PROJECT_DIR/$test" ]; then
+    if bash "$PROJECT_DIR/$test" > /dev/null 2>&1; then
+      TESTS_PASS=$((TESTS_PASS + 1))
+    else
+      TESTS_FAIL=$((TESTS_FAIL + 1))
+    fi
+  fi
+done
+if [ "$TESTS_FAIL" -eq 0 ]; then
+  record "core_tests" "pass" "$TESTS_PASS core test suites passed"
+else
+  record "core_tests" "fail" "$TESTS_FAIL of $((TESTS_PASS + TESTS_FAIL)) core test suites failed"
+fi
+
+# 5. Git status clean (no uncommitted changes in admiral/)
+DIRTY=$(cd "$PROJECT_DIR" && git diff --name-only -- admiral/ .hooks/ 2>/dev/null | wc -l)
+if [ "$DIRTY" -eq 0 ]; then
+  record "git_clean" "pass" "No uncommitted changes in admiral/ or .hooks/"
+else
+  record "git_clean" "warn" "$DIRTY uncommitted changes in admiral/ or .hooks/"
+fi
+
+# Output
+if [ "$JSON_MODE" = "true" ]; then
+  READY="true"
+  [ "$CHECKS_FAIL" -gt 0 ] && READY="false"
+  jq -n \
+    --argjson checks "$RESULTS" \
+    --argjson pass "$CHECKS_PASS" \
+    --argjson fail "$CHECKS_FAIL" \
+    --argjson warn "$CHECKS_WARN" \
+    --argjson ready "$READY" \
+    '{checks: $checks, summary: {pass: $pass, fail: $fail, warn: $warn, upgrade_ready: $ready}}'
+else
+  echo ""
+  echo "=== Summary: $CHECKS_PASS pass, $CHECKS_FAIL fail, $CHECKS_WARN warn ==="
+  if [ "$CHECKS_FAIL" -gt 0 ]; then
+    echo "NOT READY for upgrade. Fix failures before proceeding."
+    exit 1
+  elif [ "$CHECKS_WARN" -gt 0 ]; then
+    echo "READY with warnings. Review warnings before proceeding."
+    exit 0
+  else
+    echo "READY for upgrade."
+    exit 0
+  fi
+fi

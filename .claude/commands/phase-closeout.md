@@ -54,8 +54,11 @@ If any check fails:
    - `git pull --ff-only`
 2. Checkout phase slush branch and rebase/merge latest main as policy requires.
 3. Resolve conflicts and re-run required closeout checks.
-4. Open and complete PR from phase slush branch to `main`.
-5. Ensure required CI checks are green before final merge.
+4. Locate the existing slush→main PR (opened when the slush branch was created per `/next-todo` policy). If it does not exist, open one now.
+5. Update the slush→main PR body with closeout results (checks run, fixes applied, CI status).
+6. Ensure required CI checks are green.
+7. **Do NOT merge the slush→main PR.** Mark it as ready for Admiral review and notify the Admiral.
+   - Only an Admiral may approve and merge slush branches into `main`.
 
 ## TODO Updates
 

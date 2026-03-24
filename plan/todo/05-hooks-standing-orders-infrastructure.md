@@ -11,6 +11,11 @@
 - [ ] **S-03** — `governance_heartbeat_monitor.sh`: Monitor governance agent (Sentinel, Arbiter) health via heartbeat signals; alert on missing heartbeat after threshold; log heartbeat history to state
 - [ ] **S-04** — `protocol_registry_guard.sh`: Two enforcement surfaces: (1) validate protocol changes against SO-16 approval rules, (2) hard-block calls to unregistered MCP servers via approved registry (`admiral/config/approved_mcp_servers.json`); closes OWASP MCP09 gap
 
+## Deferred from Phase 0 (Strategy Foundation)
+
+- [ ] **ST-06** — Strategy Triangle validation hook: Create a SessionStart hook that loads and validates the Ground Truth document against the schema on every session start; block on missing Ground Truth, warn on incomplete fields, log results for audit, and complete in under 2 seconds. *(Deferred from Phase 0 — depends on Stream 7 hook infrastructure.)*
+- [ ] **ST-07** — LLM-Last boundary enforcement: Add an LLM-Last check to the Ground Truth validator ensuring each project's Boundaries document includes an explicit LLM-Last section; provide a reference template with common deterministic-first and LLM-judgment patterns. *(Deferred from Phase 0 — depends on ST-06.)*
+
 ## Hook Contracts (Stream 7, Section 7.1)
 
 - [ ] **S-04b** — Hook input/output contract specification: Document formal JSON schemas for all hook inputs (`{ "event", "tool", "params", "agent_identity", "trace_id" }`), output contracts (exit codes, stdout context feedback, stderr logging), per-hook payload shapes, and 30s default timeout semantics
@@ -86,6 +91,8 @@
 
 | Item | Depends on | Reason |
 |------|-----------|--------|
+| ST-06 | S-01 or S-03 (any SessionStart hook) | Needs hook infrastructure to create a SessionStart validation hook |
+| ST-07 | ST-06 | LLM-Last check extends the Ground Truth validation hook |
 | S-03 | S-15 | Heartbeat monitor needs alerting pipeline for external delivery |
 | S-07 | S-06 | Task routing queries the agent registry |
 | S-08 | S-06 | Tool permissions reference agent definitions from registry |

@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0.0",
+  "change_id": "",
+  "spec_version_from": "",
+  "spec_version_to": "",
+  "date": "",
+  "author": "",
+  "summary": "",
+  "affected_parts": [],
+  "compatibility": {
+    "classification": "",
+    "justification": ""
+  },
+  "impact": {
+    "components_affected": [],
+    "constants_changed": [],
+    "schemas_changed": [],
+    "hooks_changed": [],
+    "breaking_behaviors": [],
+    "migration_required": false
+  },
+  "migration_guide": {
+    "steps": [],
+    "rollback_steps": [],
+    "estimated_effort": "",
+    "automated": false
+  },
+  "risk_assessment": {
+    "risk_level": "",
+    "mitigations": []
+  }
+}

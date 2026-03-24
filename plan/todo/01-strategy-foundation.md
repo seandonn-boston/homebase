@@ -8,20 +8,20 @@ The Strategy Triangle (Mission, Boundaries, Success Criteria) is the foundation 
 
 ## Ground Truth Tooling
 
-- [ ] **ST-01: Ground Truth document template and tooling** — Create machine-readable YAML templates for Mission, Boundaries, and Success Criteria with all spec-defined fields; define `ground-truth.schema.json`; build `generate_ground_truth.sh` CLI to scaffold blank documents; build a validator that confirms filled-in documents have no empty required fields.
-- [ ] **ST-02: Project readiness assessment tool** — Build `readiness_assess.sh` that accepts a project root and Ground Truth path, checks Ground Truth completeness, CI config, test suite, linter config, and documented conventions, and outputs Ready/Partially Ready/Not Ready with a detailed breakdown and preparation path.
-- [ ] **ST-03: Go/No-Go deployment gate** — Build `go_no_go_gate.sh` that invokes the readiness assessment (ST-02), exits non-zero for Not Ready projects, restricts Partially Ready to Starter profile, and supports Admiral override with justification logged to `override_log.jsonl`.
+- [x] **ST-01: Ground Truth document template and tooling** — Create machine-readable YAML templates for Mission, Boundaries, and Success Criteria with all spec-defined fields; define `ground-truth.schema.json`; build `generate_ground_truth.sh` CLI to scaffold blank documents; build a validator that confirms filled-in documents have no empty required fields.
+- [x] **ST-02: Project readiness assessment tool** — Build `readiness_assess.sh` that accepts a project root and Ground Truth path, checks Ground Truth completeness, CI config, test suite, linter config, and documented conventions, and outputs Ready/Partially Ready/Not Ready with a detailed breakdown and preparation path.
+- [x] **ST-03: Go/No-Go deployment gate** — Build `go_no_go_gate.sh` that invokes the readiness assessment (ST-02), exits non-zero for Not Ready projects, restricts Partially Ready to Starter profile, and supports Admiral override with justification logged to `override_log.jsonl`.
 
 ## Task-Level Strategy
 
-- [ ] **ST-04: Task acceptance criteria template** — Create a machine-verifiable YAML/JSON template for task-level success criteria (functional, quality, completeness, negative criteria, verification level, failure guidance, judgment boundaries); build `validate_task_criteria.sh` that rejects tasks missing required fields.
-- [ ] **ST-05: Spec-First pipeline gate** — Build `spec_first_gate.sh` that reads the Pipeline entry field from Ground Truth and verifies all upstream pipeline stage documents exist; create `pipeline_manifest.yaml` mapping stages to required artifacts.
+- [x] **ST-04: Task acceptance criteria template** — Create a machine-verifiable YAML/JSON template for task-level success criteria (functional, quality, completeness, negative criteria, verification level, failure guidance, judgment boundaries); build `validate_task_criteria.sh` that rejects tasks missing required fields.
+- [x] **ST-05: Spec-First pipeline gate** — Build `spec_first_gate.sh` that reads the Pipeline entry field from Ground Truth and verifies all upstream pipeline stage documents exist; create `pipeline_manifest.yaml` mapping stages to required artifacts.
 
 ## Validation & Enforcement
 
-- [ ] **ST-06: Strategy Triangle validation hook** — Create a SessionStart hook that loads and validates the Ground Truth document against the schema on every session start; block on missing Ground Truth, warn on incomplete fields, log results for audit, and complete in under 2 seconds.
-- [ ] **ST-07: LLM-Last boundary enforcement** — Add an LLM-Last check to the Ground Truth validator ensuring each project's Boundaries document includes an explicit LLM-Last section; provide a reference template with common deterministic-first and LLM-judgment patterns.
-- [ ] **ST-08: Boundaries checklist** — Build `validate_boundaries.sh` that reads the Boundaries section and reports which categories (Non-Goals, Hard Constraints, Resource Budgets) are present, intentionally N/A, or missing; integrate into readiness assessment (ST-02) so missing categories prevent Ready status.
+- [ ] **ST-06: Strategy Triangle validation hook** — *Deferred to Phase 3 (Stream 7 hook infrastructure dependency).* See `plan/todo/05-hooks-standing-orders-infrastructure.md`.
+- [ ] **ST-07: LLM-Last boundary enforcement** — *Deferred to Phase 3 (depends on ST-06).* See `plan/todo/05-hooks-standing-orders-infrastructure.md`.
+- [x] **ST-08: Boundaries checklist** — Build `validate_boundaries.sh` that reads the Boundaries section and reports which categories (Non-Goals, Hard Constraints, Resource Budgets) are present, intentionally N/A, or missing; integrate into readiness assessment (ST-02) so missing categories prevent Ready status.
 
 ---
 

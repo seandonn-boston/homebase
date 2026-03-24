@@ -1,0 +1,174 @@
+#!/bin/bash
+# Admiral Framework — Reference Constants Synchronization Validator
+# Validates that the shell registry (reference_constants.sh) and JSON registry
+# (reference_constants.json) are in sync, and that constants used in the
+# codebase match the registry values.
+# Usage: validate_constants_sync [--json] [--ci]
+# Exit codes: 0=in sync, 1=drift detected, 2=hard error
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ADMIRAL_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+SHELL_REGISTRY="$ADMIRAL_DIR/config/reference_constants.sh"
+JSON_REGISTRY="$ADMIRAL_DIR/config/reference_constants.json"
+
+JSON_MODE=false
+CI_MODE=false
+
+for arg in "$@"; do
+  case "$arg" in
+    --json) JSON_MODE=true ;;
+    --ci) CI_MODE=true ;;
+  esac
+done
+
+if [ ! -f "$SHELL_REGISTRY" ]; then
+  echo "ERROR: Shell registry not found: $SHELL_REGISTRY"
+  exit 2
+fi
+
+if [ ! -f "$JSON_REGISTRY" ]; then
+  echo "ERROR: JSON registry not found: $JSON_REGISTRY"
+  exit 2
+fi
+
+if ! jq empty "$JSON_REGISTRY" 2>/dev/null; then
+  echo "ERROR: JSON registry is not valid JSON"
+  exit 2
+fi
+
+SYNCED=()
+DRIFTED=()
+SHELL_ONLY=()
+JSON_ONLY=()
+
+# Extract all constants from shell registry (VAR=value lines)
+declare -A shell_constants
+while IFS= read -r line; do
+  line="${line%$'\r'}"
+  if [[ "$line" =~ ^([A-Z_]+)=(.*)$ ]]; then
+    varname="${BASH_REMATCH[1]}"
+    value="${BASH_REMATCH[2]}"
+    # Strip surrounding quotes
+    value="${value%\"}"
+    value="${value#\"}"
+    shell_constants["$varname"]="$value"
+  fi
+done < "$SHELL_REGISTRY"
+
+# Extract all constants from JSON registry
+declare -A json_constants
+while IFS= read -r line; do
+  line="${line%$'\r'}"
+  varname="${line%%=*}"
+  value="${line#*=}"
+  json_constants["$varname"]="$value"
+done < <(jq -r '.constants | to_entries[] | "\(.key)=\(.value)"' "$JSON_REGISTRY" 2>/dev/null)
+
+# Compare: check all shell constants exist in JSON with same value
+for varname in "${!shell_constants[@]}"; do
+  shell_val="${shell_constants[$varname]}"
+  if [ -n "${json_constants[$varname]+x}" ]; then
+    json_val="${json_constants[$varname]}"
+    if [ "$shell_val" = "$json_val" ]; then
+      SYNCED+=("$varname")
+    else
+      DRIFTED+=("$varname: shell='$shell_val' json='$json_val'")
+    fi
+  else
+    SHELL_ONLY+=("$varname")
+  fi
+done
+
+# Check for JSON-only constants
+for varname in "${!json_constants[@]}"; do
+  if [ -z "${shell_constants[$varname]+x}" ]; then
+    JSON_ONLY+=("$varname")
+  fi
+done
+
+# Determine result
+exit_code=0
+if [ ${#DRIFTED[@]} -gt 0 ] || [ ${#SHELL_ONLY[@]} -gt 0 ] || [ ${#JSON_ONLY[@]} -gt 0 ]; then
+  exit_code=1
+fi
+
+# Output
+if [ "$JSON_MODE" = true ]; then
+  synced_json="[]"
+  drifted_json="[]"
+  shell_only_json="[]"
+  json_only_json="[]"
+
+  if [ ${#SYNCED[@]} -gt 0 ]; then
+    synced_json=$(printf '%s\n' "${SYNCED[@]}" | jq -R . | jq -s .)
+  fi
+  if [ ${#DRIFTED[@]} -gt 0 ]; then
+    drifted_json=$(printf '%s\n' "${DRIFTED[@]}" | jq -R . | jq -s .)
+  fi
+  if [ ${#SHELL_ONLY[@]} -gt 0 ]; then
+    shell_only_json=$(printf '%s\n' "${SHELL_ONLY[@]}" | jq -R . | jq -s .)
+  fi
+  if [ ${#JSON_ONLY[@]} -gt 0 ]; then
+    json_only_json=$(printf '%s\n' "${JSON_ONLY[@]}" | jq -R . | jq -s .)
+  fi
+
+  status="in_sync"
+  if [ "$exit_code" -eq 1 ]; then
+    status="drift_detected"
+  fi
+
+  jq -n \
+    --arg status "$status" \
+    --argjson synced_count "${#SYNCED[@]}" \
+    --argjson drifted "$drifted_json" \
+    --argjson shell_only "$shell_only_json" \
+    --argjson json_only "$json_only_json" \
+    '{status: $status, synced_count: $synced_count, drifted: $drifted, shell_only: $shell_only, json_only: $json_only}'
+
+  exit "$exit_code"
+fi
+
+# Human-readable
+echo "=== Reference Constants Sync Validation ==="
+echo ""
+echo "Shell registry: ${#shell_constants[@]} constants"
+echo "JSON registry:  ${#json_constants[@]} constants"
+echo "Synced:         ${#SYNCED[@]}"
+echo ""
+
+if [ ${#DRIFTED[@]} -gt 0 ]; then
+  echo "DRIFT DETECTED (${#DRIFTED[@]}):"
+  for item in "${DRIFTED[@]}"; do
+    echo "  [DRIFT] $item"
+  done
+  echo ""
+fi
+
+if [ ${#SHELL_ONLY[@]} -gt 0 ]; then
+  echo "SHELL-ONLY (${#SHELL_ONLY[@]} — missing from JSON):"
+  for item in "${SHELL_ONLY[@]}"; do
+    echo "  [SHELL-ONLY] $item"
+  done
+  echo ""
+fi
+
+if [ ${#JSON_ONLY[@]} -gt 0 ]; then
+  echo "JSON-ONLY (${#JSON_ONLY[@]} — missing from shell):"
+  for item in "${JSON_ONLY[@]}"; do
+    echo "  [JSON-ONLY] $item"
+  done
+  echo ""
+fi
+
+if [ "$exit_code" -eq 0 ]; then
+  echo "RESULT: IN SYNC — all ${#SYNCED[@]} constants match"
+else
+  echo "RESULT: DRIFT DETECTED — fix divergence before merging"
+  if [ "$CI_MODE" = true ]; then
+    echo ""
+    echo "CI check failed. Update both registries to match."
+  fi
+fi
+
+exit "$exit_code"

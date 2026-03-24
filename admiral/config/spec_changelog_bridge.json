@@ -1,0 +1,233 @@
+{
+  "schema_version": "1.0.0",
+  "description": "Maps spec versions to implementation status, computing a spec freshness score and flagging spec changes not yet reflected in implementation.",
+  "current_spec_version": "v0.23.1-alpha",
+  "current_impl_version": "Phase 0 in progress",
+  "generated": "2026-03-23",
+  "versions": [
+    {
+      "version": "v0.10.0-alpha",
+      "date": "2026-03",
+      "changes": [
+        {
+          "description": "Version consolidation to vMAJOR.MINOR.PATCH-stage.dateInMS format",
+          "spec_parts_affected": ["All"],
+          "impl_status": "reflected",
+          "notes": "version_audit tool exists"
+        },
+        {
+          "description": "Enforcement language refinement (Part 3 enforcement vs monitoring distinction)",
+          "spec_parts_affected": ["Part 3"],
+          "impl_status": "reflected",
+          "notes": "Hook implementations follow enforcement vs advisory distinction"
+        },
+        {
+          "description": "Standing orders classified by mechanism",
+          "spec_parts_affected": ["Part 3"],
+          "impl_status": "reflected",
+          "notes": "SD-04 enforcement map completed"
+        }
+      ]
+    },
+    {
+      "version": "v0.9.0-alpha",
+      "date": "2026-03",
+      "changes": [
+        {
+          "description": "Hook enforcement expanded 4/15 to 8/15",
+          "spec_parts_affected": ["Part 3"],
+          "impl_status": "partial",
+          "gap": "Still at 8/15 hooks implemented; 7 missing hooks tracked in roadmap Stream 7"
+        },
+        {
+          "description": "Fleet maturity language updates",
+          "spec_parts_affected": ["Part 4"],
+          "impl_status": "not_started",
+          "gap": "Fleet implementation not yet started (Phase 4)"
+        }
+      ]
+    },
+    {
+      "version": "v0.8.0-alpha",
+      "date": "2026-03",
+      "changes": [
+        {
+          "description": "Event-driven Brain operations with SPC-based anomaly detection",
+          "spec_parts_affected": ["Part 5"],
+          "impl_status": "not_started",
+          "gap": "SPC integration not yet implemented; B1 basic operations only"
+        },
+        {
+          "description": "Control plane MVP with SPC integration and HTTP dashboard",
+          "spec_parts_affected": ["Part 8"],
+          "impl_status": "not_started",
+          "gap": "Control plane not yet implemented (Phase 2+)"
+        }
+      ]
+    },
+    {
+      "version": "v0.7.0-alpha",
+      "date": "2026-03",
+      "changes": [
+        {
+          "description": "Brain consultation integration for decision-making",
+          "spec_parts_affected": ["Part 5"],
+          "impl_status": "partial",
+          "gap": "brain_query exists but not wired into decision flows"
+        },
+        {
+          "description": "Hook deadlock elimination — token budget gate to advisory",
+          "spec_parts_affected": ["Part 3"],
+          "impl_status": "reflected",
+          "notes": "token_budget_tracker is advisory only (exit 0)"
+        },
+        {
+          "description": "Session Thermal Model for advisory budget dashboards",
+          "spec_parts_affected": ["Part 3", "Part 8"],
+          "impl_status": "not_started",
+          "gap": "Thermal model not yet implemented"
+        }
+      ]
+    },
+    {
+      "version": "v0.6.0-alpha",
+      "date": "2026-03",
+      "changes": [
+        {
+          "description": "Phase 4 completion — remaining implementation gaps closed",
+          "spec_parts_affected": ["Multiple"],
+          "impl_status": "partial",
+          "gap": "Spec gaps closed; implementation catching up"
+        }
+      ]
+    },
+    {
+      "version": "v0.5.3-alpha",
+      "date": "2026-03",
+      "changes": [
+        {
+          "description": "All 14 spec-gaps resolved with concrete thresholds",
+          "spec_parts_affected": ["Parts 2, 5, 6, 7, 8, 9, 10, 11"],
+          "impl_status": "reflected",
+          "notes": "All thresholds captured in reference_constants.sh"
+        },
+        {
+          "description": "Unified Trust Model with promotion/demotion thresholds",
+          "spec_parts_affected": ["Part 3", "Part 8", "Part 10"],
+          "impl_status": "not_started",
+          "gap": "Trust model not yet implemented (Phase 5 — Stream 18)"
+        },
+        {
+          "description": "Failure chain analysis added to Part 7",
+          "spec_parts_affected": ["Part 7"],
+          "impl_status": "not_started",
+          "gap": "Quality system not yet implemented (Phase 7 — Stream 31)"
+        },
+        {
+          "description": "Protocol coordination priority ordering",
+          "spec_parts_affected": ["Part 11"],
+          "impl_status": "not_started",
+          "gap": "Protocol implementation not yet started (Phase 6 — Stream 10)"
+        }
+      ]
+    },
+    {
+      "version": "v0.5.0-alpha",
+      "date": "2026-03",
+      "changes": [
+        {
+          "description": "Part 12 Data Ecosystem specification",
+          "spec_parts_affected": ["Part 12"],
+          "impl_status": "not_started",
+          "gap": "Data ecosystem not yet implemented (Phase 6 — Stream 20)"
+        },
+        {
+          "description": "Progressive adoption model with 5 profiles",
+          "spec_parts_affected": ["All"],
+          "impl_status": "partial",
+          "gap": "Starter profile partially implemented; Team+ not started"
+        },
+        {
+          "description": "Reference constants registry created",
+          "spec_parts_affected": ["Reference"],
+          "impl_status": "reflected",
+          "notes": "admiral/config/reference_constants.sh (SD-06)"
+        }
+      ]
+    },
+    {
+      "version": "v0.4.0-alpha",
+      "date": "2026-03",
+      "changes": [
+        {
+          "description": "Removed dual numbering system (Parts + global Sections)",
+          "spec_parts_affected": ["All"],
+          "impl_status": "reflected",
+          "notes": "Implementation uses Part-based references"
+        },
+        {
+          "description": "Fleet Control Plane elevated as core concept across profiles",
+          "spec_parts_affected": ["All"],
+          "impl_status": "not_started",
+          "gap": "Control plane not yet implemented"
+        }
+      ]
+    },
+    {
+      "version": "v0.3.0-alpha",
+      "date": "2026-03",
+      "changes": [
+        {
+          "description": "Brain restructured to B1-B3 + DE4-DE5 levels",
+          "spec_parts_affected": ["Part 5"],
+          "impl_status": "partial",
+          "gap": "B1 partially implemented; B2/B3/DE4/DE5 not started"
+        },
+        {
+          "description": "5 Quick-Start Profiles (Starter through Enterprise)",
+          "spec_parts_affected": ["All"],
+          "impl_status": "partial",
+          "gap": "Only Starter profile partially operational"
+        },
+        {
+          "description": "Part 13 MCP Integration specification",
+          "spec_parts_affected": ["Part 13"],
+          "impl_status": "not_started",
+          "gap": "MCP integration not yet implemented (Phase 5 — Stream 16)"
+        }
+      ]
+    },
+    {
+      "version": "v0.2.0-alpha",
+      "date": "2026-03",
+      "changes": [
+        {
+          "description": "Initial 11-part framework specification",
+          "spec_parts_affected": ["Parts 1-11"],
+          "impl_status": "partial",
+          "gap": "Parts 1, 2, 3 partially implemented; Parts 4-11 not started"
+        },
+        {
+          "description": "71 core + 34 extended agent definitions",
+          "spec_parts_affected": ["Part 4"],
+          "impl_status": "not_started",
+          "gap": "Agent definitions exist as spec; no machine-readable implementation"
+        },
+        {
+          "description": "8 hook manifests and Brain B1-B2 specs",
+          "spec_parts_affected": ["Part 3", "Part 5"],
+          "impl_status": "partial",
+          "gap": "8 hooks implemented; B1 partially implemented"
+        }
+      ]
+    }
+  ],
+  "freshness_summary": {
+    "total_changes": 26,
+    "reflected": 9,
+    "partial": 7,
+    "not_started": 10,
+    "freshness_score_pct": 48,
+    "calculation": "((reflected * 1.0 + partial * 0.5) / total_changes) * 100 = ((9 + 3.5) / 26) * 100 = 48.1 ≈ 48%"
+  }
+}

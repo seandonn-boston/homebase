@@ -1,0 +1,71 @@
+{
+  "schema_version": "1.0.0",
+  "project": {
+    "name": "",
+    "last_updated": "",
+    "phase": ""
+  },
+  "mission": {
+    "identity": "",
+    "success_state": "",
+    "stakeholders": "",
+    "phase": "",
+    "pipeline_entry": ""
+  },
+  "boundaries": {
+    "non_goals": {
+      "functional": [],
+      "quality": [],
+      "architectural": []
+    },
+    "hard_constraints": {
+      "tech_stack": [],
+      "external_deadlines": [],
+      "compatibility": [],
+      "regulatory": [],
+      "protocol_scope": []
+    },
+    "resource_budgets": {
+      "token_budget": "",
+      "time_budget": "",
+      "tool_call_limits": "",
+      "scope_boundary": [],
+      "quality_floor": ""
+    },
+    "llm_last": {
+      "deterministic": [],
+      "llm_judgment": []
+    }
+  },
+  "success_criteria": {
+    "functional": [],
+    "quality": [],
+    "completeness": [],
+    "negative": [],
+    "failure_handling": "",
+    "judgment_boundaries": []
+  },
+  "ground_truth": {
+    "domain_ontology": {
+      "glossary": {},
+      "naming_conventions": "",
+      "status_definitions": {},
+      "architecture_vocabulary": {}
+    },
+    "environment": {
+      "tech_stack": [],
+      "infrastructure": "",
+      "access_permissions": {},
+      "known_issues": [],
+      "external_dependencies": []
+    },
+    "configuration": {
+      "agents_md": "",
+      "tool_pointers": [],
+      "hooks_count": 0,
+      "hooks_last_audit": "",
+      "skills": [],
+      "mcp_servers": []
+    }
+  }
+}

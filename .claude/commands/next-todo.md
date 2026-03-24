@@ -36,7 +36,12 @@ Implement existing TODO items only. Do not invent new TODO items.
    - `git pull --ff-only`
 2. Ensure exactly one phase slush branch off main, named:
    - `slush/phase-<NN>-<slug>`
-3. If more than one slush branch is needed or detected for the phase, stop and alert Admiral.
+3. When creating a new phase slush branch, immediately push it and open a PR from the slush branch to `main`:
+   - Title: `Phase <NN>: <Phase Name>`
+   - Body: summary of the phase scope from `plan/ROADMAP.md`
+   - **Do NOT merge this PR.** It requires Admiral approval to merge.
+   - Include the slush→main PR URL in the Output Contract.
+4. If more than one slush branch is needed or detected for the phase, stop and alert Admiral.
 
 ### Task-level
 
@@ -74,26 +79,53 @@ If missing from TODO docs, add concise DoD notes to the phase/task execution not
    - ensure CI passes
 3. If any of these fail, fix before completion.
 
+## Session Continuity Protocol
+
+A prior session may have been interrupted mid-task. Before starting new work, detect and resume in-progress work:
+
+1. **Detect active phase slush branch:**
+   - `git branch -a | grep slush/`
+   - If a slush branch exists, this phase is in progress.
+
+2. **Detect in-progress task branch:**
+   - `git branch -a | grep task/`
+   - If an unmerged task branch exists for the active phase, work was interrupted mid-task.
+
+3. **Recover context from git history:**
+   - On the task branch: `git log --oneline slush/phase-<NN>-<slug>..HEAD` to see commits made so far.
+   - Check `git status` and `git diff` for any uncommitted work.
+   - Check `git stash list` for any stashed changes.
+   - Read the latest commit messages — they describe what was completed.
+   - Check `gh pr list --head <task-branch> --state all` — if a PR exists and is merged, the task is done; if open, it needs merging; if none, the task is still in progress.
+
+4. **Recover task identity:**
+   - The task branch name encodes phase and task ID: `task/phase-<NN>/<task-id>-<slug>`
+   - Cross-reference the task ID against `plan/todo/*.md` to see what remains.
+
+5. **Resume or advance:**
+   - If the task branch has uncommitted work → commit it, then continue.
+   - If the task branch has commits but no PR → finish remaining subtasks, open PR, merge.
+   - If the task branch has a merged PR → the task is done; advance to the next incomplete task.
+   - If no task branch exists → start the next incomplete task normally.
+
+6. **Report continuity status** at the top of the Output Contract:
+   - `RESUMING: task/phase-00/sd-10-fleet-protocol (3 commits found, PR not yet opened)`
+   - or `FRESH START: no in-progress work detected`
+
 ## Execution Algorithm
 
-1. Identify the active phase and next incomplete task in `plan/todo/`.
-2. Verify dependencies and preconditions.
-3. Create/checkout phase slush branch policy-compliantly.
-4. Create task branch from the phase slush branch.
-5. Execute subtasks as commit-sized increments (TDD-first where applicable).
-6. After each built item:
+1. **Run Session Continuity Protocol** (above) to detect and resume in-progress work.
+2. Identify the active phase and next incomplete task in `plan/todo/`.
+3. Verify dependencies and preconditions.
+4. Create/checkout phase slush branch policy-compliantly.
+5. Create task branch from the phase slush branch (or checkout existing one).
+6. Execute subtasks as commit-sized increments (TDD-first where applicable).
+7. After each built item:
    - check implementation quality
    - update TODO status in `plan/todo/*.md`
    - resolve merge conflicts with the appropriate target branch
-7. Open PR task -> phase slush, resolve issues, merge.
-8. At phase completion:
-   - validate completed work as a whole
-   - ensure all pipelines pass
-   - spellcheck
-   - linter check
-   - security gap check
-   - harden completed work
-   - then prepare merge to `main`
+8. Open PR task -> phase slush, resolve issues, merge.
+9. At phase completion, run `/phase-closeout` (do not merge slush to main directly).
 
 ## Output Contract (always include)
 

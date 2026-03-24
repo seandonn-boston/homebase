@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0.0",
+  "task": {
+    "id": "",
+    "name": "",
+    "description": "",
+    "stream": "",
+    "phase": ""
+  },
+  "criteria": {
+    "functional": [],
+    "quality": [],
+    "completeness": [],
+    "negative": []
+  },
+  "verification": {
+    "level": "",
+    "methods": []
+  },
+  "failure_guidance": {
+    "action": "",
+    "fallback": "",
+    "escalation_target": ""
+  },
+  "judgment_boundaries": []
+}
