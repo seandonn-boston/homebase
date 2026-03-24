@@ -142,6 +142,7 @@ echo "=== Spot-Check Key Constants ==="
 
 # Verify specific constants match between shell and JSON
 for const in TOOL_TOKENS_BASH LOOP_MAX_SAME_ERROR FLEET_MAX_AGENTS BRAIN_COSINE_MIN_SCORE; do
+  # shellcheck source=/dev/null
   source "$SHELL_REG"
   shell_val="${!const}"
   json_val=$(jq -r ".constants.$const" "$JSON_REG")

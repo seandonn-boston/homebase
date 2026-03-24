@@ -11,7 +11,6 @@ UPGRADE_CHECK="$ADMIRAL_DIR/bin/upgrade_check"
 PASS=0
 FAIL=0
 ERRORS=""
-TMPDIR_BASE=""
 
 assert_exit_code() {
   local test_name="$1"
