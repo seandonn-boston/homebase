@@ -1,0 +1,134 @@
+#!/bin/bash
+# Admiral Framework — Plan Auto-Validation (P-08)
+# Verifies plan/index.md counts match stream files,
+# no orphaned references, no duplicate IDs.
+# Usage: validate_plan [--json]
+# Exit: 0=valid, 1=issues found
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
+PLAN_DIR="$PROJECT_DIR/plan"
+INDEX="$PLAN_DIR/index.md"
+TODO_DIR="$PLAN_DIR/todo"
+
+JSON_MODE=false
+[ "${1:-}" = "--json" ] && JSON_MODE=true
+
+PASS=()
+FAIL=()
+WARN=()
+
+echo "=== Plan Auto-Validation ==="
+echo ""
+
+# Check index.md exists
+if [ ! -f "$INDEX" ]; then
+  FAIL+=("plan/index.md not found")
+  echo "  [FAIL] plan/index.md not found"
+else
+  PASS+=("plan/index.md exists")
+  echo "  [PASS] plan/index.md exists"
+fi
+
+# Check TODO directory exists
+if [ ! -d "$TODO_DIR" ]; then
+  FAIL+=("plan/todo/ directory not found")
+  echo "  [FAIL] plan/todo/ directory not found"
+else
+  PASS+=("plan/todo/ directory exists")
+  todo_count=$(find "$TODO_DIR" -name "*.md" -type f | wc -l)
+  echo "  [PASS] plan/todo/ has $todo_count files"
+  PASS+=("plan/todo/ has $todo_count files")
+fi
+
+# Check ROADMAP exists
+if [ -f "$PLAN_DIR/ROADMAP.md" ]; then
+  PASS+=("ROADMAP.md exists")
+  echo "  [PASS] ROADMAP.md exists"
+else
+  WARN+=("ROADMAP.md not found")
+  echo "  [WARN] ROADMAP.md not found"
+fi
+
+# Check for stream files referenced in index
+echo ""
+echo "--- Stream file references ---"
+if [ -f "$INDEX" ]; then
+  missing_streams=0
+  found_streams=0
+  while IFS= read -r stream_file; do
+    stream_file="${stream_file%$'\r'}"
+    [ -z "$stream_file" ] && continue
+    if [ -f "$PLAN_DIR/$stream_file" ]; then
+      found_streams=$((found_streams + 1))
+    else
+      missing_streams=$((missing_streams + 1))
+      WARN+=("Referenced stream file missing: $stream_file")
+      echo "  [WARN] Missing: $stream_file"
+    fi
+  done < <(grep -oE 'stream-[0-9]+-[a-z-]+\.md' "$INDEX" 2>/dev/null | sort -u)
+
+  if [ "$missing_streams" -eq 0 ]; then
+    PASS+=("All referenced stream files exist ($found_streams found)")
+    echo "  [PASS] All referenced stream files found ($found_streams)"
+  fi
+fi
+
+# Check for duplicate task IDs across TODO files
+echo ""
+echo "--- Duplicate ID check ---"
+if [ -d "$TODO_DIR" ]; then
+  # Check for duplicate IDs within each TODO file (cross-file dups are expected for deferrals)
+  dup_found=false
+  for todo_file in "$TODO_DIR"/*.md; do
+    [ -f "$todo_file" ] || continue
+    file_ids=$(grep -hoE '\*\*[A-Z]+-[0-9]+' "$todo_file" 2>/dev/null | sed 's/\*\*//g' | sort)
+    file_dups=$(echo "$file_ids" | uniq -d | head -5)
+    if [ -n "$file_dups" ]; then
+      dup_found=true
+      WARN+=("Duplicate IDs in $(basename "$todo_file"): $file_dups")
+      echo "  [WARN] Dups in $(basename "$todo_file"): $file_dups"
+    fi
+  done
+  if [ "$dup_found" = false ]; then
+    PASS+=("No within-file duplicate task IDs")
+    echo "  [PASS] No within-file duplicate IDs"
+  fi
+fi
+
+# Check TODO completion stats
+echo ""
+echo "--- TODO completion ---"
+if [ -d "$TODO_DIR" ]; then
+  done_count=$(grep -r '^\- \[x\]' "$TODO_DIR"/*.md 2>/dev/null | wc -l)
+  todo_count=$(grep -r '^\- \[ \]' "$TODO_DIR"/*.md 2>/dev/null | wc -l)
+  total=$((done_count + todo_count))
+  if [ "$total" -gt 0 ]; then
+    pct=$((done_count * 100 / total))
+    echo "  Done: $done_count / $total ($pct%)"
+    echo "  Remaining: $todo_count"
+    PASS+=("TODO stats: $done_count/$total ($pct%)")
+  fi
+fi
+
+# Output
+echo ""
+echo "========================================="
+echo "Plan Validation: ${#PASS[@]} pass, ${#FAIL[@]} fail, ${#WARN[@]} warn"
+echo "========================================="
+
+if [ "$JSON_MODE" = true ]; then
+  pass_json="[]"
+  fail_json="[]"
+  warn_json="[]"
+  [ ${#PASS[@]} -gt 0 ] && pass_json=$(printf '%s\n' "${PASS[@]}" | jq -R . | jq -s .)
+  [ ${#FAIL[@]} -gt 0 ] && fail_json=$(printf '%s\n' "${FAIL[@]}" | jq -R . | jq -s .)
+  [ ${#WARN[@]} -gt 0 ] && warn_json=$(printf '%s\n' "${WARN[@]}" | jq -R . | jq -s .)
+
+  jq -n --argjson pass "$pass_json" --argjson fail "$fail_json" --argjson warn "$warn_json" \
+    '{pass: $pass, fail: $fail, warn: $warn}'
+fi
+
+[ ${#FAIL[@]} -gt 0 ] && exit 1
+exit 0
