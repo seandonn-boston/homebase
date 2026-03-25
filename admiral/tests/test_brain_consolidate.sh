@@ -1,6 +1,7 @@
 #!/bin/bash
 # test_brain_consolidate.sh — Tests for B-05 brain entry consolidation
 set -euo pipefail
+# shellcheck disable=SC2034,SC2317
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"

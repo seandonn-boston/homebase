@@ -1,6 +1,7 @@
 #!/bin/bash
 # test_demand_signals.sh — Tests for B-03 demand signal tracking
 set -euo pipefail
+# shellcheck disable=SC2034,SC2317
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"

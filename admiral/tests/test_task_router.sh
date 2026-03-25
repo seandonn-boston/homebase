@@ -1,6 +1,7 @@
 #!/bin/bash
 # test_task_router.sh — Tests for S-07 task routing engine
 set -euo pipefail
+# shellcheck disable=SC2034,SC2317
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"

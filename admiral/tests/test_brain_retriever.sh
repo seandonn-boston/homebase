@@ -1,6 +1,7 @@
 #!/bin/bash
 # test_brain_retriever.sh — Tests for B-02 brain retrieval in hooks
 set -euo pipefail
+# shellcheck disable=SC2034,SC2317
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"

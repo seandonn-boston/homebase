@@ -1,5 +1,6 @@
 #!/bin/bash
 # test_agent_registry.sh — Tests for the agent registry (S-06)
+# shellcheck disable=SC2034,SC2317
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

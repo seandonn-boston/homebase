@@ -1,6 +1,7 @@
 #!/bin/bash
 # test_handoff_escalation.sh — Tests for S-10 (handoff) and S-11 (escalation)
 set -euo pipefail
+# shellcheck disable=SC2034,SC2317
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"

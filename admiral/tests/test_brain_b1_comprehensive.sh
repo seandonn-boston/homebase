@@ -1,5 +1,6 @@
 #!/bin/bash
 # test_brain_b1_comprehensive.sh — Comprehensive Brain B1 tests (B-06)
+# shellcheck disable=SC2034,SC2317
 # 20+ tests covering all brain utilities, edge cases, concurrent access
 set -euo pipefail
 
