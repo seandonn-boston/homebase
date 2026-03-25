@@ -18,7 +18,7 @@
 
 ## Hook Contracts (Stream 7, Section 7.1)
 
-- [ ] **S-04b** — Hook input/output contract specification: Document formal JSON schemas for all hook inputs (`{ "event", "tool", "params", "agent_identity", "trace_id" }`), output contracts (exit codes, stdout context feedback, stderr logging), per-hook payload shapes, and 30s default timeout semantics
+- [x] **S-04b** — Hook input/output contract specification: Document formal JSON schemas for all hook inputs (`{ "event", "tool", "params", "agent_identity", "trace_id" }`), output contracts (exit codes, stdout context feedback, stderr logging), per-hook payload shapes, and 30s default timeout semantics
 
 ## Enforcement Map (Stream 7, Section 7.1)
 
