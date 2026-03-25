@@ -34,12 +34,14 @@ Spec reference: `aiStrat/admiral/spec/part11-protocols.md`
 
 ## Current Focus
 
-**Phase 0 — Strategy Foundation & Spec Debt Resolution**
+**Phase 3 — Core Spec Implementation**
 
-The project follows a [9-phase roadmap](plan/ROADMAP.md). Phase 0 must substantially complete before implementation begins. Current priorities:
+The project follows a [9-phase roadmap](plan/ROADMAP.md). Phases 0-2 are complete. Current priorities:
 
-1. Strategy Triangle foundation (Stream 00: ST-01 through ST-08)
-2. Spec debt inventory and resolution (Stream 21: SD-01 through SD-15)
+1. Hooks & Fleet Foundation (Stream 07: S-01 to S-09, S-04b, S-05)
+2. Execution Patterns & Ops (Stream 08: S-10 to S-17)
+3. Standing Orders Implementation (Stream 29: SO-01 to SO-17)
+4. Brain B1 Completion (Stream 11: B-01 to B-06, B-21b to B-21e)
 
 Full roadmap: [`plan/index.md`](plan/index.md) | Execution phasing: [`plan/ROADMAP.md`](plan/ROADMAP.md)
 
