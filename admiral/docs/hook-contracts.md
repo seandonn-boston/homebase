@@ -176,6 +176,11 @@ PostToolUse hooks are always advisory (exit 0). They inject context via `systemM
 - **Output:** `{ validated, [blocked], [downgraded], [upgraded], agent_id, expected_tier, actual_tier, severity }`
 - **Exit codes:** 0 (pass/advisory), 2 (critical tier mismatch)
 
+#### `ground_truth_validator.sh` (ST-06, ST-07)
+- **Input:** SessionStart payload
+- **Output:** `{ validated, ground_truth_file, llm_last_check, [advisory], severity }`
+- **Exit codes:** 0 (always — advisory only)
+
 ### PreToolUse Hooks
 
 #### `pre_tool_use_adapter.sh`
@@ -195,6 +200,16 @@ PostToolUse hooks are always advisory (exit 0). They inject context via `systemM
 - **Exit codes:** 0 (pass/advisory), 2 (blocked — bypass/privilege/irreversible)
 - **Scans:** Command patterns (operations) and content patterns (data/secrets)
 
+#### `protocol_registry_guard.sh` (SO-16, S-04)
+- **Input:** `{ tool_name, tool_input.command, tool_input.file_path, tool_input.content }`
+- **Output:** `{ allowed, reason, [server], [advisory], [severity] }`
+- **Exit codes:** 0 (allowed), 2 (blocked — unapproved MCP server or `latest` version)
+
+#### `tool_permission_guard.sh` (S-08)
+- **Input:** `{ tool_name }` + session state `.agent_id`
+- **Output:** `{ allowed, reason, [agent_id], [role], [tool], [advisory], [severity] }`
+- **Exit codes:** 0 (allowed/warning), 2 (blocked — denied tool for agent role)
+
 #### `pre_work_validator.sh` (SO-15)
 - **Input:** `{ tool_name, tool_input }` + session state
 - **Output:** `{ validated, checks: { standing_orders, budget, prior_reads, project_readiness } }`
@@ -206,6 +221,12 @@ PostToolUse hooks are always advisory (exit 0). They inject context via `systemM
 - **Input:** PostToolUse payload
 - **Output:** `{ continue, suppressOutput, systemMessage }` aggregated from sub-hooks
 - **Dispatches to:** `token_budget_tracker.sh`, `loop_detector.sh`, `context_health_check.sh` (every 10th), `zero_trust_validator.sh`, `compliance_ethics_advisor.sh`, `brain_context_router.sh`
+
+#### `governance_heartbeat_monitor.sh` (S-03)
+- **Input:** `{ tool_name }` + session state heartbeat tracking
+- **Output:** `{ healthy, alerts, [advisory], severity }`
+- **Exit codes:** 0 (always — advisory only)
+- **Monitors:** Sentinel and Arbiter governance agent heartbeats
 
 #### `token_budget_tracker.sh` (SO-08)
 - **Input:** `{ tool_name }` + session state budget fields
