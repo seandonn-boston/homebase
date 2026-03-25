@@ -1,0 +1,101 @@
+#!/bin/bash
+# Admiral Framework — Benchmark Regression Detector (C-05)
+# Compares current benchmark results against a baseline.
+# Warns on >10% regression in any metric.
+# Usage: benchmark_compare [--json] [baseline_file] [current_file]
+# Exit: 0=no regression, 1=regression detected
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
+
+JSON_MODE=false
+[ "${1:-}" = "--json" ] && { JSON_MODE=true; shift; }
+
+BASELINE="${1:-$PROJECT_DIR/.admiral/benchmarks/baseline.json}"
+CURRENT="${2:-$PROJECT_DIR/.admiral/benchmarks/current.json}"
+
+THRESHOLD=10
+
+log() { [ "$JSON_MODE" = false ] && echo "$@" || true; }
+
+log "=== Benchmark Regression Detection ==="
+log "Threshold: ${THRESHOLD}% regression"
+log ""
+
+if [ ! -f "$BASELINE" ]; then
+  log "No baseline found at $BASELINE"
+  log "Run benchmarks and save as baseline first."
+  log "SKIP: No baseline to compare against."
+  exit 0
+fi
+
+if [ ! -f "$CURRENT" ]; then
+  log "No current results at $CURRENT"
+  log "Run benchmarks first."
+  exit 0
+fi
+
+REGRESSIONS=()
+IMPROVEMENTS=()
+STABLE=()
+
+# Compare each metric in current against baseline
+while IFS= read -r key; do
+  key="${key%$'\r'}"
+  [ -z "$key" ] && continue
+
+  baseline_val=$(jq -r --arg k "$key" '.[$k] // 0' "$BASELINE" 2>/dev/null)
+  current_val=$(jq -r --arg k "$key" '.[$k] // 0' "$CURRENT" 2>/dev/null)
+
+  if [ "$baseline_val" = "0" ]; then
+    STABLE+=("$key: $current_val (no baseline)")
+    continue
+  fi
+
+  # Calculate percentage change (higher = worse for latency metrics)
+  change_pct=$(python3 -c "
+b, c = float('$baseline_val'), float('$current_val')
+pct = ((c - b) / b) * 100
+print(f'{pct:.1f}')
+" 2>/dev/null || echo "0.0")
+
+  change_int="${change_pct%.*}"
+
+  if [ "$change_int" -gt "$THRESHOLD" ] 2>/dev/null; then
+    REGRESSIONS+=("$key: ${baseline_val} -> ${current_val} (+${change_pct}%)")
+    log "  [REGRESS] $key: ${baseline_val} -> ${current_val} (+${change_pct}%)"
+  elif [ "$change_int" -lt "-${THRESHOLD}" ] 2>/dev/null; then
+    IMPROVEMENTS+=("$key: ${baseline_val} -> ${current_val} (${change_pct}%)")
+    log "  [IMPROVE] $key: ${baseline_val} -> ${current_val} (${change_pct}%)"
+  else
+    STABLE+=("$key: ${baseline_val} -> ${current_val} (${change_pct}%)")
+    log "  [STABLE]  $key: ${baseline_val} -> ${current_val} (${change_pct}%)"
+  fi
+done < <(jq -r 'keys[]' "$CURRENT" 2>/dev/null)
+
+log ""
+log "Regressions: ${#REGRESSIONS[@]}, Improvements: ${#IMPROVEMENTS[@]}, Stable: ${#STABLE[@]}"
+
+if [ "$JSON_MODE" = true ]; then
+  reg_json="[]"
+  imp_json="[]"
+  [ ${#REGRESSIONS[@]} -gt 0 ] && reg_json=$(printf '%s\n' "${REGRESSIONS[@]}" | jq -R . | jq -s .)
+  [ ${#IMPROVEMENTS[@]} -gt 0 ] && imp_json=$(printf '%s\n' "${IMPROVEMENTS[@]}" | jq -R . | jq -s .)
+
+  jq -n \
+    --argjson regressions "$reg_json" \
+    --argjson improvements "$imp_json" \
+    --argjson threshold "$THRESHOLD" \
+    '{regressions: $regressions, improvements: $improvements, threshold_pct: $threshold}'
+fi
+
+if [ ${#REGRESSIONS[@]} -gt 0 ]; then
+  log ""
+  log "WARNING: ${#REGRESSIONS[@]} benchmark regression(s) detected (>${THRESHOLD}%)"
+  exit 1
+fi
+
+log ""
+log "PASS: No benchmark regressions."
+exit 0
