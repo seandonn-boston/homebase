@@ -27,7 +27,6 @@ fi
 PAYLOAD=$(cat)
 
 TOOL_NAME=$(echo "$PAYLOAD" | jq -r '.tool_name // ""' | tr -d '\r')
-TOOL_INPUT=$(echo "$PAYLOAD" | jq -r '.tool_input // {}' | tr -d '\r')
 
 # Get session state
 _state=$(load_state)

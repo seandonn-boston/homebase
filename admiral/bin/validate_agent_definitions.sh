@@ -191,6 +191,12 @@ elif [ -d "$TARGET" ]; then
     exit 0
   fi
   for f in "${FILES[@]}"; do
+    # Skip non-agent files
+    local fname
+    fname=$(basename "$f" .json)
+    case "$fname" in
+      validation-report|capability-registry) continue ;;
+    esac
     validate_file "$f"
   done
 else
