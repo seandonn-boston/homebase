@@ -50,38 +50,38 @@
 
 ## Standing Orders Enforcement — Identity & Scope (Stream 29, Section 29.1)
 
-- [ ] **SO-01** — Identity Discipline enforcement: PreToolUse hook validating agent identity consistency throughout session; detect role drift (capability claims outside scope); false positive rate < 1%
-- [ ] **SO-03** — Scope Boundaries enforcement: Upgrade `scope_boundary_guard.sh` from soft-warning to hard-blocking; detect "Does NOT Do" list violations; support `ADMIRAL_SCOPE_OVERRIDE` for Escalate-tier only
-- [ ] **SO-11** — Context Discovery enforcement: SessionStart hook verifying Ground Truth files loaded, context profile populated, three-step context source routing chain followed; block task execution until minimum viable context confirmed
+- [x] **SO-01** — Identity Discipline enforcement: PreToolUse hook validating agent identity consistency throughout session; detect role drift (capability claims outside scope); false positive rate < 1%
+- [x] **SO-03** — Scope Boundaries enforcement: Upgrade `scope_boundary_guard.sh` from soft-warning to hard-blocking; detect "Does NOT Do" list violations; support `ADMIRAL_SCOPE_OVERRIDE` for Escalate-tier only
+- [x] **SO-11** — Context Discovery enforcement: SessionStart hook verifying Ground Truth files loaded, context profile populated, three-step context source routing chain followed; block task execution until minimum viable context confirmed
 
 ## Standing Orders Enforcement — Communication & Honesty (Stream 29, Section 29.2)
 
-- [ ] **SO-02** — Output Routing enforcement: PostToolUse hook validating every agent output has a declared destination; hold-and-prompt on missing routing; flag invalid recipients for Orchestrator review
-- [ ] **SO-04** — Context Honesty enforcement: PostToolUse hook detecting fabricated file contents, unsupported confidence claims, phantom tool outputs; cross-reference tool use trace; false positive rate < 5%
-- [ ] **SO-09** — Communication Format enforcement: PostToolUse hook validating inter-agent communications follow structured format (AGENT, TASK, STATUS, OUTPUT, ASSUMPTIONS, ROUTING SUGGESTIONS, OUTPUT GOES TO); exempt direct tool outputs
+- [x] **SO-02** — Output Routing enforcement: PostToolUse hook validating every agent output has a declared destination; hold-and-prompt on missing routing; flag invalid recipients for Orchestrator review
+- [x] **SO-04** — Context Honesty enforcement: PostToolUse hook detecting fabricated file contents, unsupported confidence claims, phantom tool outputs; cross-reference tool use trace; false positive rate < 5%
+- [x] **SO-09** — Communication Format enforcement: PostToolUse hook validating inter-agent communications follow structured format (AGENT, TASK, STATUS, OUTPUT, ASSUMPTIONS, ROUTING SUGGESTIONS, OUTPUT GOES TO); exempt direct tool outputs
 
 ## Standing Orders Enforcement — Authority & Recovery (Stream 29, Section 29.3)
 
-- [ ] **SO-05** — Decision Authority enforcement: PreToolUse hook classifying action authority tiers; block Propose-tier actions without submitted proposals; block Escalate-tier actions without Admiral approval; configurable authority classification
-- [ ] **SO-06** — Recovery Protocol enforcement: Track recovery ladder progression per failure (retry with variation, fallback, backtrack, isolate, escalate); detect identical retries; prevent ladder step skipping; validate escalation reports for recovery evidence
-- [ ] **SO-07** — Checkpointing enforcement: Track tool uses and elapsed time since last checkpoint; pause agent when overdue; validate checkpoint content for required fields (completed, in progress, blocked, decisions, assumptions, resources)
+- [x] **SO-05** — Decision Authority enforcement: PreToolUse hook classifying action authority tiers; block Propose-tier actions without submitted proposals; block Escalate-tier actions without Admiral approval; configurable authority classification
+- [x] **SO-06** — Recovery Protocol enforcement: Track recovery ladder progression per failure (retry with variation, fallback, backtrack, isolate, escalate); detect identical retries; prevent ladder step skipping; validate escalation reports for recovery evidence
+- [x] **SO-07** — Checkpointing enforcement: Track tool uses and elapsed time since last checkpoint; pause agent when overdue; validate checkpoint content for required fields (completed, in progress, blocked, decisions, assumptions, resources)
 
 ## Standing Orders Enforcement — Quality & Safety (Stream 29, Section 29.4)
 
-- [ ] **SO-08** — Quality Standards enforcement: PostToolUse hook blocking task completion when quality gates not run or failing; cross-reference tool use trace for quality check execution evidence
-- [ ] **SO-10** — Prohibitions enforcement (edge case hardening): Harden existing hook against encoded secrets, split-across-lines patterns, indirect file modification, self-approval, budget continuation; regression tests from attack corpus
-- [ ] **SO-12** — Zero Trust enforcement: Enhance `zero_trust_validator.sh` with pre/post access risk assessment, minimum privilege verification, access release tracking, RAG provenance checking
+- [x] **SO-08** — Quality Standards enforcement: PostToolUse hook blocking task completion when quality gates not run or failing; cross-reference tool use trace for quality check execution evidence
+- [x] **SO-10** — Prohibitions enforcement (edge case hardening): Harden existing hook against encoded secrets, split-across-lines patterns, indirect file modification, self-approval, budget continuation; regression tests from attack corpus
+- [x] **SO-12** — Zero Trust enforcement: Enhance `zero_trust_validator.sh` with pre/post access risk assessment, minimum privilege verification, access release tracking, RAG provenance checking
 
 ## Standing Orders Enforcement — Bias, Compliance & Protocol Governance (Stream 29, Section 29.5)
 
-- [ ] **SO-13** — Bias Awareness enforcement: PostToolUse hook detecting sycophantic drift, confidence uniformity, missing disconfirming evidence, unattributed RAG blending, premature convergence; session-level tracking
-- [ ] **SO-14** — Compliance Ethics enforcement: PreToolUse hook for regulated domain detection, block autonomous compliance determinations, detect IP violations, flag harmful output patterns, enforce data minimization
-- [ ] **SO-15** — Pre-Work Validation enforcement: Enhance `pre_work_validator.sh` to reject vague success criteria, verify budget presence, confirm scope boundaries, enforce hard decision front-loading for Propose/Escalate-tier
-- [ ] **SO-16** — Protocol Governance enforcement: PreToolUse hook validating MCP server additions against Server Addition Checklist, require trust classification, reject `latest` version strings, verify A2A connection testing, detect conflicts with in-flight work
+- [x] **SO-13** — Bias Awareness enforcement: PostToolUse hook detecting sycophantic drift, confidence uniformity, missing disconfirming evidence, unattributed RAG blending, premature convergence; session-level tracking
+- [x] **SO-14** — Compliance Ethics enforcement: PreToolUse hook for regulated domain detection, block autonomous compliance determinations, detect IP violations, flag harmful output patterns, enforce data minimization
+- [x] **SO-15** — Pre-Work Validation enforcement: Enhance `pre_work_validator.sh` to reject vague success criteria, verify budget presence, confirm scope boundaries, enforce hard decision front-loading for Propose/Escalate-tier
+- [x] **SO-16** — Protocol Governance enforcement: PreToolUse hook validating MCP server additions against Server Addition Checklist, require trust classification, reject `latest` version strings, verify A2A connection testing, detect conflicts with in-flight work
 
 ## Standing Orders Enforcement — Completeness (Stream 29, Section 29.6)
 
-- [ ] **SO-17** — Enforcement completeness report: Automated script mapping each SO to enforcement mechanism(s), reporting enforcement type (hard-block/soft-warning/advisory-only/none), calculating coverage percentage, identifying gaps; produces human-readable summary and JSON output; runs in CI
+- [x] **SO-17** — Enforcement completeness report: Automated script mapping each SO to enforcement mechanism(s), reporting enforcement type (hard-block/soft-warning/advisory-only/none), calculating coverage percentage, identifying gaps; produces human-readable summary and JSON output; runs in CI
 
 ## Relocated from Phase 2
 
