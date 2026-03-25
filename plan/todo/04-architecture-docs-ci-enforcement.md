@@ -14,7 +14,7 @@
 ### 3.2 System Integration
 
 - [x] **A-02:** Bridge control plane and hooks — shared signal mechanism, bidirectional event flow via `event_log.jsonl` and `JournalIngester` `[L]`
-- [ ] **A-07:** Unified cross-system event log — *Deferred to Phase 3 (depends on A-02).* — single JSONL log for hooks and control plane, coherent timeline `[L]`
+- [x] **A-07:** Unified cross-system event log — single JSONL log for hooks and control plane, coherent timeline `[L]`
 
 ### 3.3 Infrastructure & Tooling
 
