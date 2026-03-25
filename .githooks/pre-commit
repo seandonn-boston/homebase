@@ -18,6 +18,29 @@ if [ -n "$STAGED_TS" ]; then
   (cd control-plane && npx @biomejs/biome check --no-errors-on-unmatched $STAGED_TS) || FAIL=1
 fi
 
+# Validate AGENTS.md exists if any agent-related files changed
+STAGED_AGENTS=$(git diff --cached --name-only --diff-filter=ACM | grep -E '(AGENTS\.md|\.claude/agents/)' || true)
+if [ -n "$STAGED_AGENTS" ]; then
+  if [ ! -f "AGENTS.md" ]; then
+    echo "ERROR: AGENTS.md is missing but agent-related files were modified."
+    FAIL=1
+  fi
+fi
+
+# Validate Standing Order JSON format if SO files changed
+STAGED_SO=$(git diff --cached --name-only --diff-filter=ACM | grep 'admiral/standing-orders/.*\.json$' || true)
+if [ -n "$STAGED_SO" ]; then
+  echo "Validating Standing Order JSON format..."
+  for so_file in $STAGED_SO; do
+    if [ -f "$so_file" ]; then
+      if ! jq -e 'has("title") and has("rules")' "$so_file" > /dev/null 2>&1; then
+        echo "ERROR: $so_file missing required 'title' or 'rules' fields"
+        FAIL=1
+      fi
+    fi
+  done
+fi
+
 if [ "$FAIL" -ne 0 ]; then
   echo "Pre-commit checks failed. Fix issues before committing."
   exit 1

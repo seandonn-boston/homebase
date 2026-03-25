@@ -121,8 +121,8 @@
 
 ### 6.3 Self-Enforcement (Dog-Fooding)
 
-- [ ] **P-05:** Pre-commit hook enforcement — *Deferred to Phase 3.* `[M]`
-- [ ] **P-06:** Deduplication detection in CI — *Deferred to Phase 3.* `[M]`
+- [x] **P-05:** Pre-commit hook enforcement `[M]`
+- [x] **P-06:** Deduplication detection in CI `[M]`
 
 ### 6.4 Automated Drift & Compliance
 
