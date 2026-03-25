@@ -91,7 +91,7 @@
 
 ### 5.3 Integration & Performance
 
-- [ ] **C-04:** Add integration test stage — *Deferred to Phase 3 (depends on A-02).* `[L]`
+- [x] **C-04:** Add integration test stage `[L]`
 - [x] **C-05:** Add benchmark regression detection `[M]`
 - [x] **C-14:** End-to-end smoke test in CI `[M]`
 

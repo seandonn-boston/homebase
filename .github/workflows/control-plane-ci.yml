@@ -40,3 +40,7 @@ jobs:
       - name: Lint
         working-directory: control-plane
         run: npm run lint
+
+      - name: E2E smoke test
+        working-directory: control-plane
+        run: bash scripts/smoke-test.sh
