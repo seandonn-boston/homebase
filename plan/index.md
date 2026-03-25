@@ -12,22 +12,22 @@
 
 | Dimension | Score | Target | Key Gaps |
 |---|---|---|---|
-| Testing | 5/10 | 10/10 | No trace/ingest/instrumentation unit tests, no fuzz/property tests, no coverage gates |
-| Code Quality Tooling | 7/10 | 10/10 | Missing coverage gates, security scanning, typed error hierarchy |
-| Architecture | 5/10 | 10/10 | No hook/control-plane integration, no schema validation, no fleet orchestration |
+| Testing | 8/10 | 10/10 | 372 TS + 37 bash suites, 90% coverage, coverage gate in CI. Missing: property tests, mutation testing |
+| Code Quality Tooling | 8/10 | 10/10 | Coverage gate, license audit, ShellCheck, Biome. Missing: typed error hierarchy, strict null checks |
+| Architecture | 7/10 | 10/10 | Schema validation, config consolidation, hook/CP bridge, session state machine, event registry. Missing: hook pipeline abstraction, plugin arch |
 | Spec Implementation | 3/10 | 10/10 | 8/15 hooks (53%), fleet 0%, brain B2/B3 0%, execution patterns 0%, meta-governance 0% |
-| Documentation | 6/10 | 10/10 | Missing ADMIRAL_STYLE.md, LICENSE, CoC, runbook, troubleshooting guide |
-| CI/CD | 7/10 | 10/10 | Missing coverage gates, matrix builds, security scanning, benchmarks |
-| Consistency | 6/10 | 10/10 | Bash hook jq pattern variance, naming inconsistencies, scattered config |
-| Contributor Experience | 7/10 | 10/10 | Missing CoC, LICENSE, "good first issue" labels, troubleshooting guide |
-| Error Handling | 5/10 | 10/10 | No typed error hierarchy, silent failures possible, hook errors invisible |
-| Performance | 2/10 | 10/10 | No benchmarks of any kind |
+| Documentation | 7/10 | 10/10 | LICENSE, CoC, API docs added. Missing: ADMIRAL_STYLE.md, runbook, troubleshooting guide, ADRs |
+| CI/CD | 9/10 | 10/10 | Coverage gate, benchmarks, PR size check, fix-needs-tests, stale branches, changelog, release workflow. Missing: matrix builds, CodeQL |
+| Consistency | 7/10 | 10/10 | Config consolidated with schema validation. Missing: hook jq helpers, standardized error handling |
+| Contributor Experience | 8/10 | 10/10 | CoC, LICENSE, badges, quality metrics dashboard. Missing: quick-start tutorial, good first issues |
+| Error Handling | 5/10 | 10/10 | Graceful degradation tested (A-13). Missing: typed error hierarchy, hook error standardization |
+| Performance | 5/10 | 10/10 | Hook latency, server, RingBuffer benchmarks + regression detector. Missing: CI integration |
 | Brain & Knowledge | 2/10 | 10/10 | B1 file-based only, manual, no auto-recording, no semantic search |
 | Fleet & Orchestration | 1/10 | 10/10 | 71 roles defined, only Claude Code governed, no routing/handoff/parallel |
-| Strategy Foundation | 1/10 | 10/10 | No Ground Truth tooling, no readiness assessment, no Go/No-Go gate |
-| Security & Compliance | 4/10 | 10/10 | Missing data sensitivity L1-L2, audit trail, privilege escalation hardening |
+| Strategy Foundation | 8/10 | 10/10 | Ground Truth tooling, readiness assessment, Go/No-Go gate, task criteria, pipeline gate. Missing: validation hooks (Phase 3) |
+| Security & Compliance | 5/10 | 10/10 | Security review process, injection detection, quarantine pipeline. Missing: data sensitivity, audit trail |
 | Strategic Positioning | 2/10 | 10/10 | Missing OWASP/AEGIS/NIST/McKinsey/IMDA crosswalks |
-| **Overall** | **4/10** | **10/10** | Strong foundation, critical gaps in spec implementation |
+| **Overall** | **6/10** | **10/10** | Strong tooling foundation, CI/CD mature. Critical gaps in spec implementation and fleet orchestration |
 
 ---
 

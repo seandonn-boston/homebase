@@ -83,6 +83,11 @@
 
 - [ ] **SO-17** — Enforcement completeness report: Automated script mapping each SO to enforcement mechanism(s), reporting enforcement type (hard-block/soft-warning/advisory-only/none), calculating coverage percentage, identifying gaps; produces human-readable summary and JSON output; runs in CI
 
+## Relocated from Phase 2
+
+- [ ] **P-09** — Standing Order compliance audit: enforcement matrix (enforced/instructed/advisory/unenforced) for all 16 SOs. *(Relocated from Phase 2 — depends on S-05 and SO-17.)*
+- [ ] **P-10** — Hook coverage report: spec-defined hooks vs implemented, hook-to-SO coverage, JSON + markdown output. *(Relocated from Phase 2 — depends on S-05.)*
+
 ---
 
 ## Dependencies
