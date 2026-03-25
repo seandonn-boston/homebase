@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "hook-output.v1.schema.json",
+  "title": "Admiral Hook Output",
+  "description": "Schema for hook output JSON that Claude Code consumes.",
+  "type": "object",
+  "properties": {
+    "continue": {
+      "type": "boolean",
+      "description": "true to allow the action, false to block it."
+    },
+    "suppressOutput": {
+      "type": "boolean",
+      "description": "true to suppress the system message from being displayed."
+    },
+    "systemMessage": {
+      "type": "string",
+      "description": "Message injected into agent context."
+    },
+    "advisory": {
+      "type": "string",
+      "description": "Advisory message for the agent."
+    },
+    "reason": {
+      "type": "string",
+      "description": "Machine-readable reason code for the decision."
+    }
+  },
+  "additionalProperties": true
+}
