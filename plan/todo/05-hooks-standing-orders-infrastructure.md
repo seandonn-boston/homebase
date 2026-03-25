@@ -13,8 +13,8 @@
 
 ## Deferred from Phase 0 (Strategy Foundation)
 
-- [ ] **ST-06** — Strategy Triangle validation hook: Create a SessionStart hook that loads and validates the Ground Truth document against the schema on every session start; block on missing Ground Truth, warn on incomplete fields, log results for audit, and complete in under 2 seconds. *(Deferred from Phase 0 — depends on Stream 7 hook infrastructure.)*
-- [ ] **ST-07** — LLM-Last boundary enforcement: Add an LLM-Last check to the Ground Truth validator ensuring each project's Boundaries document includes an explicit LLM-Last section; provide a reference template with common deterministic-first and LLM-judgment patterns. *(Deferred from Phase 0 — depends on ST-06.)*
+- [x] **ST-06** — Strategy Triangle validation hook: Create a SessionStart hook that loads and validates the Ground Truth document against the schema on every session start; block on missing Ground Truth, warn on incomplete fields, log results for audit, and complete in under 2 seconds. *(Deferred from Phase 0 — depends on Stream 7 hook infrastructure.)*
+- [x] **ST-07** — LLM-Last boundary enforcement: Add an LLM-Last check to the Ground Truth validator ensuring each project's Boundaries document includes an explicit LLM-Last section; provide a reference template with common deterministic-first and LLM-judgment patterns. *(Deferred from Phase 0 — depends on ST-06.)*
 
 ## Hook Contracts (Stream 7, Section 7.1)
 
@@ -85,8 +85,8 @@
 
 ## Relocated from Phase 2
 
-- [ ] **P-09** — Standing Order compliance audit: enforcement matrix (enforced/instructed/advisory/unenforced) for all 16 SOs. *(Relocated from Phase 2 — depends on S-05 and SO-17.)*
-- [ ] **P-10** — Hook coverage report: spec-defined hooks vs implemented, hook-to-SO coverage, JSON + markdown output. *(Relocated from Phase 2 — depends on S-05.)*
+- [x] **P-09** — Standing Order compliance audit: enforcement matrix (enforced/instructed/advisory/unenforced) for all 16 SOs. *(Relocated from Phase 2 — satisfied by `so_completeness_report` (SO-17) and `enforcement_coverage.sh` (S-05).)*
+- [x] **P-10** — Hook coverage report: spec-defined hooks vs implemented, hook-to-SO coverage, JSON + markdown output. *(Relocated from Phase 2 — satisfied by `enforcement_coverage.sh` (S-05) and `standing-orders-enforcement-map.json`.)*
 
 ---
 

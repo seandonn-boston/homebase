@@ -19,8 +19,8 @@ The Strategy Triangle (Mission, Boundaries, Success Criteria) is the foundation 
 
 ## Validation & Enforcement
 
-- [ ] **ST-06: Strategy Triangle validation hook** — *Deferred to Phase 3 (Stream 7 hook infrastructure dependency).* See `plan/todo/05-hooks-standing-orders-infrastructure.md`.
-- [ ] **ST-07: LLM-Last boundary enforcement** — *Deferred to Phase 3 (depends on ST-06).* See `plan/todo/05-hooks-standing-orders-infrastructure.md`.
+- [x] **ST-06: Strategy Triangle validation hook** — Implemented in Phase 3 as `ground_truth_validator.sh`. See `plan/todo/05-hooks-standing-orders-infrastructure.md`.
+- [x] **ST-07: LLM-Last boundary enforcement** — Implemented in Phase 3 as LLM-Last check within `ground_truth_validator.sh`. See `plan/todo/05-hooks-standing-orders-infrastructure.md`.
 - [x] **ST-08: Boundaries checklist** — Build `validate_boundaries.sh` that reads the Boundaries section and reports which categories (Non-Goals, Hard Constraints, Resource Budgets) are present, intentionally N/A, or missing; integrate into readiness assessment (ST-02) so missing categories prevent Ready status.
 
 ---
