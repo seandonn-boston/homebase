@@ -16,7 +16,8 @@ alert_send() {
 
   mkdir -p "$ALERT_DIR"
 
-  local alert_id="alert-$(date +%s)-$$"
+  local alert_id
+  alert_id="alert-$(date +%s)-$$"
   local timestamp
   timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 

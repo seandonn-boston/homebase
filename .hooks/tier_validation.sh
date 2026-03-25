@@ -16,7 +16,6 @@ PAYLOAD=$(cat)
 # Extract fields
 AGENT_ID=$(echo "$PAYLOAD" | jq -r '.agent_id // .agent_name // ""' | tr -d '\r')
 ACTUAL_MODEL=$(echo "$PAYLOAD" | jq -r '.model // ""' | tr -d '\r')
-SESSION_ID=$(echo "$PAYLOAD" | jq -r '.session_id // "unknown"' | tr -d '\r')
 
 # If no agent_id, skip validation (single-agent session)
 if [ -z "$AGENT_ID" ] || [ "$AGENT_ID" = "null" ]; then

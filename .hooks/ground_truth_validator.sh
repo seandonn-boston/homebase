@@ -9,7 +9,8 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$SCRIPT_DIR/.." && pwd)}"
 
-# Read payload from stdin
+# Read payload from stdin (consumed for protocol compliance, validation uses files not payload)
+# shellcheck disable=SC2034
 PAYLOAD=$(cat)
 
 # Look for Ground Truth document

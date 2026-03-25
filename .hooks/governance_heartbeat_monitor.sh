@@ -12,7 +12,8 @@ PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$SCRIPT_DIR/.." && pwd)}"
 # Source shared libraries
 source "$PROJECT_DIR/admiral/lib/state.sh"
 
-# Read payload from stdin
+# Read payload from stdin (consumed but not directly used — heartbeat checks state, not payload)
+# shellcheck disable=SC2034
 PAYLOAD=$(cat)
 
 # Configuration (from reference_constants.json defaults)

@@ -14,7 +14,8 @@ parallel_create_plan() {
 
   mkdir -p "$PARALLEL_DIR"
 
-  local plan_id="plan-$(date +%s)-$$"
+  local plan_id
+  plan_id="plan-$(date +%s)-$$"
   local filepath="$PARALLEL_DIR/${plan_id}.json"
 
   jq -n --arg id "$plan_id" \

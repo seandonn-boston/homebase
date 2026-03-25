@@ -93,6 +93,7 @@ check_version_blocked() {
 
   for pattern in $blocked_patterns; do
     case "$version" in
+      # shellcheck disable=SC2254 — intentional glob matching against blocked_patterns
       $pattern)
         echo "blocked"
         return 0

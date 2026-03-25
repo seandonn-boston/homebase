@@ -31,13 +31,13 @@ _task_type_to_capability() {
 _file_to_capability() {
   local file_path="$1"
   case "$file_path" in
+    admiral/tests/*|.hooks/tests/*)              echo "code_review" ;;
+    admiral/schemas/*|admiral/config/*)          echo "server_logic" ;;
     .hooks/*|admiral/lib/*|admiral/bin/*)         echo "server_logic" ;;
     control-plane/src/*|control-plane/test/*)     echo "server_logic" ;;
     src/components/*|src/pages/*|src/styles/*)    echo "ui_implementation" ;;
     .github/workflows/*|scripts/*|Dockerfile*)   echo "ci_cd_management" ;;
-    admiral/tests/*|.hooks/tests/*)              echo "code_review" ;;
     docs/*|*.md)                                  echo "architecture_design" ;;
-    admiral/schemas/*|admiral/config/*)          echo "server_logic" ;;
     *)                                           echo "" ;;
   esac
 }
