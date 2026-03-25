@@ -98,7 +98,7 @@
 ### 5.4 Developer Experience & Automation
 
 - [x] **C-06:** Enable git hooks in CI — *Pre-commit hook exists at .githooks/pre-commit (ShellCheck + Biome). CI enforces the same checks.* `[S]`
-- [ ] **C-07:** Automated changelog generation — *Deferred to Phase 3.* `[M]`
+- [x] **C-07:** Automated changelog generation `[M]`
 - [ ] **C-10:** Automated release tagging workflow — *Deferred to Phase 3 (depends on C-07).* `[M]`
 - [x] **C-11:** PR size limits — warn on PRs > 500 lines changed, exclude generated/lock files `[S]`
 - [x] **C-12:** Stale branch cleanup automation — auto-delete merged branches, issue for stale unmerged `[S]`

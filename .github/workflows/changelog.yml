@@ -1,0 +1,82 @@
+name: Changelog Generation
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  update-changelog:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate changelog from conventional commits
+        run: |
+          # Get the last changelog update commit (or first commit if none)
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || git rev-list --max-parents=0 HEAD)
+
+          echo "# Changelog" > CHANGELOG.new.md
+          echo "" >> CHANGELOG.new.md
+          echo "## Unreleased" >> CHANGELOG.new.md
+          echo "" >> CHANGELOG.new.md
+
+          # Extract conventional commits since last tag
+          FEATS=$(git log "$LAST_TAG..HEAD" --oneline --grep="^feat" --format="- %s" 2>/dev/null || true)
+          FIXES=$(git log "$LAST_TAG..HEAD" --oneline --grep="^fix" --format="- %s" 2>/dev/null || true)
+          DOCS=$(git log "$LAST_TAG..HEAD" --oneline --grep="^docs" --format="- %s" 2>/dev/null || true)
+          TESTS=$(git log "$LAST_TAG..HEAD" --oneline --grep="^test" --format="- %s" 2>/dev/null || true)
+          CHORES=$(git log "$LAST_TAG..HEAD" --oneline --grep="^chore" --format="- %s" 2>/dev/null || true)
+
+          if [ -n "$FEATS" ]; then
+            echo "### Features" >> CHANGELOG.new.md
+            echo "$FEATS" >> CHANGELOG.new.md
+            echo "" >> CHANGELOG.new.md
+          fi
+
+          if [ -n "$FIXES" ]; then
+            echo "### Bug Fixes" >> CHANGELOG.new.md
+            echo "$FIXES" >> CHANGELOG.new.md
+            echo "" >> CHANGELOG.new.md
+          fi
+
+          if [ -n "$DOCS" ]; then
+            echo "### Documentation" >> CHANGELOG.new.md
+            echo "$DOCS" >> CHANGELOG.new.md
+            echo "" >> CHANGELOG.new.md
+          fi
+
+          if [ -n "$TESTS" ]; then
+            echo "### Tests" >> CHANGELOG.new.md
+            echo "$TESTS" >> CHANGELOG.new.md
+            echo "" >> CHANGELOG.new.md
+          fi
+
+          if [ -n "$CHORES" ]; then
+            echo "### Maintenance" >> CHANGELOG.new.md
+            echo "$CHORES" >> CHANGELOG.new.md
+            echo "" >> CHANGELOG.new.md
+          fi
+
+          # Append existing changelog content (skip the header)
+          if [ -f CHANGELOG.md ]; then
+            tail -n +3 CHANGELOG.md >> CHANGELOG.new.md
+          fi
+
+          mv CHANGELOG.new.md CHANGELOG.md
+
+          # Check if anything changed
+          if git diff --quiet CHANGELOG.md 2>/dev/null; then
+            echo "No changelog updates needed."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add CHANGELOG.md
+          git commit -m "chore: update changelog [skip ci]"
+          git push
