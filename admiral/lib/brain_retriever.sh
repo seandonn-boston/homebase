@@ -3,6 +3,30 @@
 # Provides functions for hooks to query Brain and get structured context.
 # Used by brain_context_router.sh to inject matching entries on Propose/Escalate.
 
+# Record a demand signal when a query returns zero results (B-03)
+_record_demand_signal() {
+  local keyword="$1"
+  local project="${2:-}"
+  local demand_dir="${BRAIN_DIR:-${CLAUDE_PROJECT_DIR:-.}/.brain}/_demand"
+
+  mkdir -p "$demand_dir" 2>/dev/null || return 0
+
+  local ts
+  ts=$(date -u +%Y%m%d-%H%M%S 2>/dev/null || echo "unknown")
+  local iso_ts
+  iso_ts=$(date -u +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || echo "unknown")
+
+  local filename="${ts}-demand-${keyword}.json"
+  # Sanitize filename
+  filename=$(echo "$filename" | sed 's/[^a-zA-Z0-9._-]/-/g')
+
+  jq -n --arg kw "$keyword" \
+        --arg proj "$project" \
+        --arg ts "$iso_ts" \
+        '{keyword: $kw, project: $proj, timestamp: $ts, type: "demand_signal"}' \
+        > "$demand_dir/$filename" 2>/dev/null || true
+}
+
 # Query brain for entries matching a keyword. Returns JSON array of matches.
 # Usage: brain_retrieve_context <keyword> [project] [max_results]
 brain_retrieve_context() {
@@ -33,6 +57,8 @@ brain_retrieve_context() {
   matching_files=$(grep -rlFi "$keyword" "$search_path" 2>/dev/null | head -n "$max_results" || true)
 
   if [ -z "$matching_files" ]; then
+    # B-03: Record demand signal for zero-result queries
+    _record_demand_signal "$keyword" "$project"
     echo "[]"
     return 0
   fi
