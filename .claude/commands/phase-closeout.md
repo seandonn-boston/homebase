@@ -62,11 +62,44 @@ If any check fails:
 
 ## TODO Updates
 
-Before and after merge:
+Before stationary updates:
 
 1. Update phase/task statuses in `plan/todo/*.md`.
 2. Add concise closeout notes: checks run, outcomes, hardening performed, and merge result.
 3. If closeout blocked, record blocked state and Admiral escalation note.
+
+## Blocked Task Relocation
+
+After TODO updates, for any tasks that remain incomplete due to genuine blockers:
+
+1. Identify which blocker each task depends on and which phase resolves that blocker.
+2. If the blocker is resolved by work in a **later** phase (not the active or any previous phase), relocate the task:
+   - Add the task to the appropriate later phase's `plan/todo/*.md` file, near where its blocker is resolved.
+   - In the current phase's TODO, mark the task with a deferral note and cross-reference to the destination file.
+3. Do NOT relocate tasks whose blockers are from the active or previous phases — these are genuine incomplete work and should remain visible as such.
+
+## Gate Check
+
+**All of the following must pass before proceeding to stationary updates:**
+
+1. All tasks accounted for — every item is either complete, deferred with documented blocker, or relocated to a later phase.
+2. Linters pass on all changed files.
+3. Full test suite passes.
+4. CI pipeline is green.
+
+If any gate fails, fix and re-check before continuing.
+
+## Stationary Updates
+
+**Only after the gate check passes**, update standing documents ("stationaries") to reflect the current state of the project:
+
+1. **README.md** — update badges, feature highlights, project status, or any sections that reference capabilities added in this phase.
+2. **plan/index.md** — update scores, gap descriptions, or completion counts if they are stale relative to work completed.
+3. **ROADMAP.md** — add phase completion notes if applicable.
+4. **component_versions.json** — update component versions and file lists to include new artifacts.
+5. Any other standing documents that claim specific counts, percentages, or statuses that have changed.
+
+After stationary updates, push and request Admiral review of the slush→main PR one final time.
 
 ## Output Contract (always include)
 
@@ -75,8 +108,10 @@ Before and after merge:
 3. Closeout checks run and results (tests, lint, spellcheck, security, CI).
 4. Fixes applied during closeout.
 5. TODO updates made.
-6. PR/merge status into `main`.
-7. Any Admiral escalation details and recommended solutions.
+6. Blocked tasks relocated (which tasks, to which phase, why).
+7. Stationary updates applied (README, index, ROADMAP, component_versions, etc.).
+8. PR/merge status into `main`.
+9. Any Admiral escalation details and recommended solutions.
 
 ## Non-Goals
 
