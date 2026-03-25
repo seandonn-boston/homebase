@@ -19,41 +19,43 @@ PASS=()
 FAIL=()
 WARN=()
 
-echo "=== Plan Auto-Validation ==="
-echo ""
+log() { [ "$JSON_MODE" = false ] && echo "$@" || true; }
+
+log "=== Plan Auto-Validation ==="
+log ""
 
 # Check index.md exists
 if [ ! -f "$INDEX" ]; then
   FAIL+=("plan/index.md not found")
-  echo "  [FAIL] plan/index.md not found"
+  log "  [FAIL] plan/index.md not found"
 else
   PASS+=("plan/index.md exists")
-  echo "  [PASS] plan/index.md exists"
+  log "  [PASS] plan/index.md exists"
 fi
 
 # Check TODO directory exists
 if [ ! -d "$TODO_DIR" ]; then
   FAIL+=("plan/todo/ directory not found")
-  echo "  [FAIL] plan/todo/ directory not found"
+  log "  [FAIL] plan/todo/ directory not found"
 else
   PASS+=("plan/todo/ directory exists")
-  todo_count=$(find "$TODO_DIR" -name "*.md" -type f | wc -l)
-  echo "  [PASS] plan/todo/ has $todo_count files"
-  PASS+=("plan/todo/ has $todo_count files")
+  file_count=$(find "$TODO_DIR" -name "*.md" -type f | wc -l)
+  log "  [PASS] plan/todo/ has $file_count files"
+  PASS+=("plan/todo/ has $file_count files")
 fi
 
 # Check ROADMAP exists
 if [ -f "$PLAN_DIR/ROADMAP.md" ]; then
   PASS+=("ROADMAP.md exists")
-  echo "  [PASS] ROADMAP.md exists"
+  log "  [PASS] ROADMAP.md exists"
 else
   WARN+=("ROADMAP.md not found")
-  echo "  [WARN] ROADMAP.md not found"
+  log "  [WARN] ROADMAP.md not found"
 fi
 
 # Check for stream files referenced in index
-echo ""
-echo "--- Stream file references ---"
+log ""
+log "--- Stream file references ---"
 if [ -f "$INDEX" ]; then
   missing_streams=0
   found_streams=0
@@ -65,21 +67,20 @@ if [ -f "$INDEX" ]; then
     else
       missing_streams=$((missing_streams + 1))
       WARN+=("Referenced stream file missing: $stream_file")
-      echo "  [WARN] Missing: $stream_file"
+      log "  [WARN] Missing: $stream_file"
     fi
   done < <(grep -oE 'stream-[0-9]+-[a-z-]+\.md' "$INDEX" 2>/dev/null | sort -u)
 
   if [ "$missing_streams" -eq 0 ]; then
     PASS+=("All referenced stream files exist ($found_streams found)")
-    echo "  [PASS] All referenced stream files found ($found_streams)"
+    log "  [PASS] All referenced stream files found ($found_streams)"
   fi
 fi
 
-# Check for duplicate task IDs across TODO files
-echo ""
-echo "--- Duplicate ID check ---"
+# Check for duplicate task IDs within each TODO file
+log ""
+log "--- Duplicate ID check ---"
 if [ -d "$TODO_DIR" ]; then
-  # Check for duplicate IDs within each TODO file (cross-file dups are expected for deferrals)
   dup_found=false
   for todo_file in "$TODO_DIR"/*.md; do
     [ -f "$todo_file" ] || continue
@@ -88,36 +89,31 @@ if [ -d "$TODO_DIR" ]; then
     if [ -n "$file_dups" ]; then
       dup_found=true
       WARN+=("Duplicate IDs in $(basename "$todo_file"): $file_dups")
-      echo "  [WARN] Dups in $(basename "$todo_file"): $file_dups"
+      log "  [WARN] Dups in $(basename "$todo_file"): $file_dups"
     fi
   done
   if [ "$dup_found" = false ]; then
     PASS+=("No within-file duplicate task IDs")
-    echo "  [PASS] No within-file duplicate IDs"
+    log "  [PASS] No within-file duplicate IDs"
   fi
 fi
 
 # Check TODO completion stats
-echo ""
-echo "--- TODO completion ---"
+log ""
+log "--- TODO completion ---"
 if [ -d "$TODO_DIR" ]; then
   done_count=$(grep -r '^\- \[x\]' "$TODO_DIR"/*.md 2>/dev/null | wc -l)
-  todo_count=$(grep -r '^\- \[ \]' "$TODO_DIR"/*.md 2>/dev/null | wc -l)
-  total=$((done_count + todo_count))
+  remaining_count=$(grep -r '^\- \[ \]' "$TODO_DIR"/*.md 2>/dev/null | wc -l)
+  total=$((done_count + remaining_count))
   if [ "$total" -gt 0 ]; then
     pct=$((done_count * 100 / total))
-    echo "  Done: $done_count / $total ($pct%)"
-    echo "  Remaining: $todo_count"
+    log "  Done: $done_count / $total ($pct%)"
+    log "  Remaining: $remaining_count"
     PASS+=("TODO stats: $done_count/$total ($pct%)")
   fi
 fi
 
 # Output
-echo ""
-echo "========================================="
-echo "Plan Validation: ${#PASS[@]} pass, ${#FAIL[@]} fail, ${#WARN[@]} warn"
-echo "========================================="
-
 if [ "$JSON_MODE" = true ]; then
   pass_json="[]"
   fail_json="[]"
@@ -128,6 +124,11 @@ if [ "$JSON_MODE" = true ]; then
 
   jq -n --argjson pass "$pass_json" --argjson fail "$fail_json" --argjson warn "$warn_json" \
     '{pass: $pass, fail: $fail, warn: $warn}'
+else
+  log ""
+  log "========================================="
+  log "Plan Validation: ${#PASS[@]} pass, ${#FAIL[@]} fail, ${#WARN[@]} warn"
+  log "========================================="
 fi
 
 [ ${#FAIL[@]} -gt 0 ] && exit 1

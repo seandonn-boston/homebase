@@ -19,6 +19,19 @@ PASS=()
 FAIL=()
 WARN=()
 
+# Compare major.minor versions. Returns 0 if actual >= required.
+_version_gte() {
+  local actual_major="${1%%.*}"
+  local actual_minor="${1##*.}"
+  local req_major="${2%%.*}"
+  local req_minor="${2##*.}"
+  if [ "$actual_major" -gt "$req_major" ] 2>/dev/null; then return 0; fi
+  if [ "$actual_major" -eq "$req_major" ] 2>/dev/null; then
+    if [ "$actual_minor" -ge "$req_minor" ] 2>/dev/null; then return 0; fi
+  fi
+  return 1
+}
+
 check_command() {
   local cmd="$1"
   local min_version="${2:-}"
@@ -36,12 +49,6 @@ check_command() {
   if [ -n "$min_version" ]; then
     local actual_version=""
     case "$cmd" in
-      jq)
-        actual_version=$("$cmd" --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+' | head -1)
-        ;;
-      node)
-        actual_version=$("$cmd" --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+' | head -1)
-        ;;
       shellcheck)
         actual_version=$("$cmd" --version 2>/dev/null | grep -oE 'version: [0-9.]+' | grep -oE '[0-9]+\.[0-9]+' | head -1)
         ;;
@@ -50,10 +57,12 @@ check_command() {
         ;;
     esac
 
-    if [ -n "$actual_version" ]; then
+    if [ -z "$actual_version" ]; then
+      PASS+=("$cmd: found (version unknown, need >= $min_version)")
+    elif _version_gte "$actual_version" "$min_version"; then
       PASS+=("$cmd: $actual_version (>= $min_version)")
     else
-      PASS+=("$cmd: found (version unknown, need >= $min_version)")
+      FAIL+=("$cmd: $actual_version < $min_version required")
     fi
   else
     PASS+=("$cmd: found")
