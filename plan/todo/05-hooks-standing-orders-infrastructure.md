@@ -22,7 +22,7 @@
 
 ## Enforcement Map (Stream 7, Section 7.1)
 
-- [ ] **S-05** — Standing Orders enforcement map: Document which hooks enforce which SOs; classify each as hook-enforced, instruction-embedded, or guidance-only; file at `admiral/docs/standing-orders-enforcement-map.md`
+- [x] **S-05** — Standing Orders enforcement map: Document which hooks enforce which SOs; classify each as hook-enforced, instruction-embedded, or guidance-only; file at `admiral/docs/standing-orders-enforcement-map.md`
 
 ## Fleet Orchestration (Stream 7, Section 7.2)
 
