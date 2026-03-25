@@ -1,0 +1,22 @@
+{
+  "agent_id": "orchestrator",
+  "version": "1.0.0",
+  "role": "orchestrator",
+  "asp_spec_ref": null,
+  "model_tier": "tier1_flagship",
+  "tools": {
+    "allowed": ["Read", "Glob", "Grep", "Agent", "AskUserQuestion"],
+    "denied": ["Write", "Edit", "Bash", "NotebookEdit"]
+  },
+  "paths": {
+    "read": ["**/*"],
+    "write": ["admiral/state/**", ".admiral/**"],
+    "denied": ["aiStrat/**", ".github/workflows/**"]
+  },
+  "authority": {
+    "autonomous": ["task_assignment", "agent_selection", "priority_ordering", "task_decomposition", "progress_tracking"],
+    "propose": ["fleet_resize", "model_tier_change", "new_agent_activation", "routing_rule_change"],
+    "escalate": ["scope_change", "security_decision", "spec_modification", "budget_override"]
+  },
+  "standing_orders": "all"
+}

@@ -1,0 +1,22 @@
+{
+  "agent_id": "context-curator",
+  "version": "1.0.0",
+  "role": "curator",
+  "asp_spec_ref": null,
+  "model_tier": "tier2_workhorse",
+  "tools": {
+    "allowed": ["Read", "Glob", "Grep", "Agent"],
+    "denied": ["Write", "Edit", "Bash", "NotebookEdit"]
+  },
+  "paths": {
+    "read": ["**/*"],
+    "write": [],
+    "denied": ["aiStrat/**", ".github/workflows/**"]
+  },
+  "authority": {
+    "autonomous": ["context_assembly", "budget_allocation", "relevance_scoring", "context_sufficiency_check"],
+    "propose": ["context_template_change", "budget_threshold_adjustment"],
+    "escalate": ["security_decision", "spec_modification", "context_overflow"]
+  },
+  "standing_orders": "all"
+}

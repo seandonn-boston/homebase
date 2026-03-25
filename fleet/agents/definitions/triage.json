@@ -1,0 +1,22 @@
+{
+  "agent_id": "triage",
+  "version": "1.0.0",
+  "role": "triage",
+  "asp_spec_ref": null,
+  "model_tier": "tier3_utility",
+  "tools": {
+    "allowed": ["Read", "Glob", "Grep"],
+    "denied": ["Write", "Edit", "Bash", "Agent", "NotebookEdit", "WebFetch", "WebSearch"]
+  },
+  "paths": {
+    "read": ["**/*"],
+    "write": [],
+    "denied": ["aiStrat/**", ".github/workflows/**"]
+  },
+  "authority": {
+    "autonomous": ["task_classification", "priority_labeling", "complexity_estimation", "category_assignment"],
+    "propose": ["routing_override", "priority_escalation"],
+    "escalate": ["ambiguous_task", "multi_specialist_required", "security_decision"]
+  },
+  "standing_orders": "all"
+}
