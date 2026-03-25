@@ -22,6 +22,17 @@ MODEL=$(echo "$PAYLOAD" | jq -r '.model // "unknown"')
 # 1. Reset session state (fresh session)
 init_session_state "$SESSION_ID"
 
+# 1b. Validate configuration at startup (fail-closed: report errors but continue)
+CONFIG_WARNING=""
+if [ -x "$PROJECT_DIR/admiral/bin/validate_config" ]; then
+  CONFIG_RESULT=$("$PROJECT_DIR/admiral/bin/validate_config" --json 2>/dev/null) || true
+  CONFIG_STATUS=$(echo "$CONFIG_RESULT" | jq -r '.status // "unknown"' 2>/dev/null || echo "unknown")
+  if [ "$CONFIG_STATUS" = "invalid" ]; then
+    CONFIG_ERRORS=$(echo "$CONFIG_RESULT" | jq -r '.errors[]' 2>/dev/null || echo "unknown errors")
+    CONFIG_WARNING="Configuration validation failed: $CONFIG_ERRORS. "
+  fi
+fi
+
 # 2. Generate trace ID for this session
 TRACE_ID=$(uuidgen 2>/dev/null || python3 -c "import uuid; print(uuid.uuid4())" 2>/dev/null || echo "trace-${SESSION_ID}-$(date +%s)")
 set_state_field '.trace_id' "\"$TRACE_ID\""
@@ -52,8 +63,9 @@ jq -n --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
 # 6. Output for Claude Code — inject Standing Orders as system message
 # Include any initialization warnings so they're visible
 FULL_MSG="$SO_TEXT"
-if [ -n "$BASELINE_WARNING" ]; then
-  FULL_MSG="[Session Init Warning] ${BASELINE_WARNING}\n\n${SO_TEXT}"
+ALL_WARNINGS="${BASELINE_WARNING}${CONFIG_WARNING}"
+if [ -n "$ALL_WARNINGS" ]; then
+  FULL_MSG="[Session Init Warning] ${ALL_WARNINGS}\n\n${SO_TEXT}"
 fi
 jq -n --arg msg "$FULL_MSG" '{
   "continue": true,
