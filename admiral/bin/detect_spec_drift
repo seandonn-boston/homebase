@@ -1,0 +1,120 @@
+#!/bin/bash
+# Admiral Framework — Spec-Implementation Drift Detector (P-07)
+# Compares spec features vs implementation status, reports drift.
+# Uses spec_version_manifest.json as the source of truth.
+# Usage: detect_spec_drift [--json]
+# Exit: 0=report generated
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ADMIRAL_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+PROJECT_DIR="$(cd "$ADMIRAL_DIR/.." && pwd)"
+MANIFEST="$ADMIRAL_DIR/config/spec_version_manifest.json"
+
+JSON_MODE=false
+[ "${1:-}" = "--json" ] && JSON_MODE=true
+
+log() { [ "$JSON_MODE" = false ] && echo "$@" || true; }
+
+if [ ! -f "$MANIFEST" ]; then
+  echo "ERROR: spec_version_manifest.json not found"
+  exit 2
+fi
+
+log "=== Spec-Implementation Drift Report ==="
+log ""
+
+# Count components by compliance
+FULL=0
+PARTIAL=0
+MISSING_FILES=()
+
+total=$(jq '.components | length' "$MANIFEST")
+
+for ((i=0; i<total; i++)); do
+  component=$(jq -r ".components[$i].component" "$MANIFEST")
+  compliance=$(jq -r ".components[$i].compliance" "$MANIFEST")
+  gap=$(jq -r ".components[$i].gap // empty" "$MANIFEST")
+
+  # Strip CR
+  component="${component%$'\r'}"
+  compliance="${compliance%$'\r'}"
+
+  # Check if the component file still exists
+  if [ ! -e "$PROJECT_DIR/$component" ]; then
+    MISSING_FILES+=("$component")
+    log "  [MISSING] $component"
+    continue
+  fi
+
+  case "$compliance" in
+    full) FULL=$((FULL + 1)) ;;
+    partial) PARTIAL=$((PARTIAL + 1)) ;;
+  esac
+done
+
+# Spec parts summary
+log "--- Spec Parts Coverage ---"
+parts_count=$(jq '.spec_parts_summary | length' "$MANIFEST")
+FULL_PARTS=0
+PARTIAL_PARTS=0
+NOT_IMPL_PARTS=0
+
+for ((i=0; i<parts_count; i++)); do
+  part=$(jq -r ".spec_parts_summary[$i].part" "$MANIFEST")
+  full_c=$(jq -r ".spec_parts_summary[$i].full_compliance" "$MANIFEST")
+  partial_c=$(jq -r ".spec_parts_summary[$i].partial_compliance" "$MANIFEST")
+  not_impl=$(jq -r ".spec_parts_summary[$i].not_implemented // 0" "$MANIFEST")
+
+  part="${part%$'\r'}"
+
+  total_c=$((full_c + partial_c + not_impl))
+  if [ "$total_c" -eq 0 ]; then
+    log "  $part: no components tracked"
+    NOT_IMPL_PARTS=$((NOT_IMPL_PARTS + 1))
+  elif [ "$not_impl" -gt 0 ]; then
+    log "  $part: NOT IMPLEMENTED ($not_impl gaps)"
+    NOT_IMPL_PARTS=$((NOT_IMPL_PARTS + 1))
+  elif [ "$partial_c" -gt 0 ]; then
+    log "  $part: PARTIAL ($full_c full, $partial_c partial)"
+    PARTIAL_PARTS=$((PARTIAL_PARTS + 1))
+  else
+    log "  $part: COMPLETE ($full_c components)"
+    FULL_PARTS=$((FULL_PARTS + 1))
+  fi
+done
+
+# Drift score: percentage of components at full compliance
+if [ "$total" -gt 0 ]; then
+  drift_score=$((FULL * 100 / total))
+else
+  drift_score=0
+fi
+
+log ""
+log "--- Summary ---"
+log "Components: $total total, $FULL full, $PARTIAL partial, ${#MISSING_FILES[@]} missing"
+log "Spec Parts: $FULL_PARTS complete, $PARTIAL_PARTS partial, $NOT_IMPL_PARTS not implemented"
+log "Drift Score: ${drift_score}% at full compliance"
+
+if [ "$JSON_MODE" = true ]; then
+  missing_json="[]"
+  [ ${#MISSING_FILES[@]} -gt 0 ] && missing_json=$(printf '%s\n' "${MISSING_FILES[@]}" | jq -R . | jq -s .)
+
+  jq -n \
+    --argjson total "$total" \
+    --argjson full "$FULL" \
+    --argjson partial "$PARTIAL" \
+    --argjson missing "$missing_json" \
+    --argjson full_parts "$FULL_PARTS" \
+    --argjson partial_parts "$PARTIAL_PARTS" \
+    --argjson not_impl_parts "$NOT_IMPL_PARTS" \
+    --argjson drift_score "$drift_score" \
+    '{
+      components: {total: $total, full: $full, partial: $partial, missing: $missing},
+      spec_parts: {complete: $full_parts, partial: $partial_parts, not_implemented: $not_impl_parts},
+      drift_score_pct: $drift_score
+    }'
+fi
+
+exit 0

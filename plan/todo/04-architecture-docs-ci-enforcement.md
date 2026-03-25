@@ -126,7 +126,7 @@
 
 ### 6.4 Automated Drift & Compliance
 
-- [ ] **P-07:** Spec-implementation drift detector — *Deferred to Phase 3.* `[L]`
+- [x] **P-07:** Spec-implementation drift detector `[L]`
 - [x] **P-08:** Plan auto-validation — verify `plan/index.md` counts match stream files, no orphaned refs, no duplicate IDs `[M]`
 - [ ] **P-09:** Standing Order compliance audit — *Deferred to Phase 3 (depends on S-05).* `[M]`
 - [ ] **P-10:** Hook coverage report — *Deferred to Phase 3 (depends on S-05).* `[M]`
