@@ -1,0 +1,97 @@
+{
+  "schema_version": "1.0.0",
+  "description": "Registry of all event types emitted by hooks and control plane. Each entry defines the event type, source, and required data fields.",
+  "event_types": [
+    {
+      "event": "session_start",
+      "source": "hook",
+      "component": "session_start_adapter",
+      "data_fields": ["model", "standing_orders_loaded"],
+      "description": "Session initialized with model and standing orders"
+    },
+    {
+      "event": "tool_called",
+      "source": "hook",
+      "component": "post_tool_use_adapter",
+      "data_fields": ["tool", "tool_call_count", "tokens_used"],
+      "description": "Tool invocation recorded"
+    },
+    {
+      "event": "token_spent",
+      "source": "hook",
+      "component": "token_budget_tracker",
+      "data_fields": ["count", "total"],
+      "description": "Token consumption recorded"
+    },
+    {
+      "event": "policy_violation",
+      "source": "hook",
+      "component": "prohibitions_enforcer",
+      "data_fields": ["rule", "details"],
+      "description": "Policy violation detected"
+    },
+    {
+      "event": "agent_started",
+      "source": "control_plane",
+      "component": "instrumentation",
+      "data_fields": [],
+      "description": "Agent began execution"
+    },
+    {
+      "event": "agent_stopped",
+      "source": "control_plane",
+      "component": "instrumentation",
+      "data_fields": [],
+      "description": "Agent stopped execution"
+    },
+    {
+      "event": "task_assigned",
+      "source": "control_plane",
+      "component": "instrumentation",
+      "data_fields": ["taskId", "description"],
+      "description": "Task assigned to agent"
+    },
+    {
+      "event": "task_completed",
+      "source": "control_plane",
+      "component": "instrumentation",
+      "data_fields": ["taskId"],
+      "description": "Task completed successfully"
+    },
+    {
+      "event": "task_failed",
+      "source": "control_plane",
+      "component": "instrumentation",
+      "data_fields": ["taskId", "error"],
+      "description": "Task failed with error"
+    },
+    {
+      "event": "tool_result",
+      "source": "control_plane",
+      "component": "instrumentation",
+      "data_fields": ["tool", "result"],
+      "description": "Tool execution result"
+    },
+    {
+      "event": "subtask_created",
+      "source": "control_plane",
+      "component": "instrumentation",
+      "data_fields": ["parentTaskId", "subtaskId", "description"],
+      "description": "Subtask created and optionally assigned"
+    },
+    {
+      "event": "log_rotated",
+      "source": "admin",
+      "component": "event_log",
+      "data_fields": ["rotated_to", "size_bytes"],
+      "description": "Event log rotated due to size"
+    },
+    {
+      "event": "signal_sent",
+      "source": "control_plane",
+      "component": "bridge",
+      "data_fields": ["signal_type"],
+      "description": "Control plane signal sent to hooks"
+    }
+  ]
+}
