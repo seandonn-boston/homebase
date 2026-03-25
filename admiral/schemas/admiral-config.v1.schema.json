@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "admiral-config.v1.schema.json",
+  "title": "Admiral Framework Configuration",
+  "description": "Schema for admiral/config.json — centralized configuration for hooks, detector, and token estimates.",
+  "type": "object",
+  "properties": {
+    "detector": {
+      "type": "object",
+      "description": "RunawayDetector configuration.",
+      "properties": {
+        "maxRepeatedToolCalls": { "type": "integer", "minimum": 1 },
+        "repeatWindowMs": { "type": "integer", "minimum": 1000 },
+        "maxSubtasks": { "type": "integer", "minimum": 1 },
+        "subtaskWindowMs": { "type": "integer", "minimum": 1000 },
+        "tokenSpikePerMinute": { "type": "integer", "minimum": 1000 },
+        "spcEnabled": { "type": "boolean" },
+        "spcMinSamples": { "type": "integer", "minimum": 1 },
+        "spcIntervalMs": { "type": "integer", "minimum": 1000 },
+        "spcSigmaLimit": { "type": "number", "minimum": 1 }
+      },
+      "additionalProperties": false
+    },
+    "hooks": {
+      "type": "object",
+      "description": "Hook behavior configuration.",
+      "properties": {
+        "maxSameError": { "type": "integer", "minimum": 1 },
+        "maxTotalErrors": { "type": "integer", "minimum": 1 },
+        "successDecay": { "type": "integer", "minimum": 0 },
+        "budgetWarningPct": { "type": "integer", "minimum": 1, "maximum": 100 }
+      },
+      "additionalProperties": false
+    },
+    "tokenEstimates": {
+      "type": "object",
+      "description": "Per-tool token consumption estimates.",
+      "properties": {
+        "default": { "type": "integer", "minimum": 1 }
+      },
+      "additionalProperties": { "type": "integer", "minimum": 1 }
+    }
+  },
+  "additionalProperties": false
+}

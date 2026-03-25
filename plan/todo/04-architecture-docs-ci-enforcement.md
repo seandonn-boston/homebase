@@ -20,7 +20,7 @@
 
 - [x] **A-03:** Document API endpoints — `control-plane/API.md` with method, path, request/response, status codes, curl examples `[M]`
 - [x] **A-04:** Add bash dependency checker script — check jq >= 1.6, sha256sum, uuidgen, flock, shellcheck; run in CI `[S]`
-- [ ] **A-05:** Configuration consolidation — *Deferred to Phase 3.* — single `admiral/config/admiral.json` with schema validation, no hardcoded defaults `[L]`
+- [x] **A-05:** Configuration consolidation — single `admiral/config/admiral.json` with schema validation, no hardcoded defaults `[L]`
 
 ### 3.4 Advanced Architecture
 
