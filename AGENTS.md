@@ -34,14 +34,13 @@ Spec reference: `aiStrat/admiral/spec/part11-protocols.md`
 
 ## Current Focus
 
-**Phase 3 — Core Spec Implementation**
+**Phase 4 — Fleet Definition, Security & Observability**
 
-The project follows a [9-phase roadmap](plan/ROADMAP.md). Phases 0-2 are complete. Current priorities:
+The project follows a [9-phase roadmap](plan/ROADMAP.md). Phases 0-3 are complete. Current priorities:
 
-1. Hooks & Fleet Foundation (Stream 07: S-01 to S-09, S-04b, S-05)
-2. Execution Patterns & Ops (Stream 08: S-10 to S-17)
-3. Standing Orders Implementation (Stream 29: SO-01 to SO-17)
-4. Brain B1 Completion (Stream 11: B-01 to B-06, B-21b to B-21e)
+1. Fleet Agent Definitions (Stream 14: F-01 to F-16)
+2. Security Hardening (Stream 24: SEC-01 to SEC-17)
+3. Observability (Stream 25: OB-01 to OB-17)
 
 Full roadmap: [`plan/index.md`](plan/index.md) | Execution phasing: [`plan/ROADMAP.md`](plan/ROADMAP.md)
 
