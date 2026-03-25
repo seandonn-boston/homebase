@@ -35,18 +35,18 @@
 
 - [x] **S-10** — Handoff protocol: Agent-to-agent handoff with JSON schema (`handoff/v1.schema.json`); validate completeness before acceptance; reject incomplete handoffs with field-level errors; log handoff history for audit
 - [x] **S-11** — Escalation pipeline: 5-step process (intake classification, Brain precedent query, resolution path generation, Admiral decision, outcome persistence); conflict resolution backbone
-- [ ] **S-12** — Parallel execution coordinator: Coordinate parallel agent tasks with dependency tracking; schedule independent tasks concurrently; handle partial failure with configurable abort policy
+- [x] **S-12** — Parallel execution coordinator: Coordinate parallel agent tasks with dependency tracking; schedule independent tasks concurrently; handle partial failure with configurable abort policy
 
 ## Quality Assurance Gates (Stream 8, Section 8.2)
 
-- [ ] **S-13** — SDLC quality gate hooks: Pre-merge gates enforcing test coverage threshold, zero lint errors, complete review checklist; configurable per-project; integrates with CI
-- [ ] **S-14** — Structured code review checklist: Automated review validation covering security, performance, readability, correctness; CI validates all checklist items addressed
+- [x] **S-13** — SDLC quality gate hooks: Pre-merge gates enforcing test coverage threshold, zero lint errors, complete review checklist; configurable per-project; integrates with CI
+- [x] **S-14** — Structured code review checklist: Automated review validation covering security, performance, readability, correctness; CI validates all checklist items addressed
 
 ## Operations & Alerting (Stream 8, Section 8.3)
 
-- [ ] **S-15** — Alerting pipeline: Push alerts from control plane to external systems (webhook, file, structured log); severity/source/timestamp payload; retry with backoff on delivery failure
-- [ ] **S-16** — Persistent event store: JSONL event storage on disk beyond in-memory ring buffer; file rotation at configurable size; survive server restarts; historical query support
-- [ ] **S-17** — Health check endpoint enhancement: Expand `/api/health` with hook execution stats, state file age, event ingestion lag, alert rate; structured JSON with threshold status (healthy/degraded/critical); sub-100ms response
+- [x] **S-15** — Alerting pipeline: Push alerts from control plane to external systems (webhook, file, structured log); severity/source/timestamp payload; retry with backoff on delivery failure
+- [x] **S-16** — Persistent event store: JSONL event storage on disk beyond in-memory ring buffer; file rotation at configurable size; survive server restarts; historical query support
+- [x] **S-17** — Health check endpoint enhancement: Expand `/api/health` with hook execution stats, state file age, event ingestion lag, alert rate; structured JSON with threshold status (healthy/degraded/critical); sub-100ms response
 
 ## Standing Orders Enforcement — Identity & Scope (Stream 29, Section 29.1)
 
