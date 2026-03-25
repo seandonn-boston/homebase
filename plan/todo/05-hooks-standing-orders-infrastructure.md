@@ -6,8 +6,8 @@
 
 ## Missing Hooks (Stream 7, Section 7.1)
 
-- [ ] **S-01** — `identity_validation.sh`: Validate agent identity token at SessionStart against fleet registry; block invalid identities with exit code 2
-- [ ] **S-02** — `tier_validation.sh`: Validate model tier assignment against agent role requirements; warn on mismatch, hard-block critical mismatches
+- [x] **S-01** — `identity_validation.sh`: Validate agent identity token at SessionStart against fleet registry; block invalid identities with exit code 2
+- [x] **S-02** — `tier_validation.sh`: Validate model tier assignment against agent role requirements; warn on mismatch, hard-block critical mismatches
 - [ ] **S-03** — `governance_heartbeat_monitor.sh`: Monitor governance agent (Sentinel, Arbiter) health via heartbeat signals; alert on missing heartbeat after threshold; log heartbeat history to state
 - [ ] **S-04** — `protocol_registry_guard.sh`: Two enforcement surfaces: (1) validate protocol changes against SO-16 approval rules, (2) hard-block calls to unregistered MCP servers via approved registry (`admiral/config/approved_mcp_servers.json`); closes OWASP MCP09 gap
 
