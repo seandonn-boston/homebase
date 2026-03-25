@@ -19,6 +19,11 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$SCRIPT_DIR/.." && pwd)}"
 export CLAUDE_PROJECT_DIR="$PROJECT_DIR"
 
+# Source brain writer for automatic entry creation (B-01)
+if [ -f "$PROJECT_DIR/admiral/lib/brain_writer.sh" ]; then
+  source "$PROJECT_DIR/admiral/lib/brain_writer.sh"
+fi
+
 source "$PROJECT_DIR/admiral/lib/state.sh"
 
 # Load thresholds from central config, falling back to hardcoded defaults
@@ -96,6 +101,10 @@ LOOP_STATE=$(echo "$LOOP_STATE" | jq \
 # Check thresholds — emit advisory alerts, NEVER block
 if [ "$NEW_COUNT" -ge "$MAX_SAME_ERROR" ]; then
   ALERT+="LOOP WARNING: Error signature '${SIG}' repeated ${NEW_COUNT} times. Consider recovery ladder (SO-06). Try a different approach. "
+    # Record pattern to Brain (B-01)
+    if type brain_record_pattern &>/dev/null; then
+      brain_record_pattern "loop_detector" "error_loop" "Signature $SIG repeated $NEW_COUNT times"
+    fi
 fi
 
 if [ "$NEW_TOTAL" -ge "$MAX_TOTAL_ERRORS" ]; then

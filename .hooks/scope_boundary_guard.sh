@@ -13,6 +13,11 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$SCRIPT_DIR/.." && pwd)}"
 export CLAUDE_PROJECT_DIR="$PROJECT_DIR"
 
+# Source brain writer for automatic entry creation (B-01)
+if [ -f "$PROJECT_DIR/admiral/lib/brain_writer.sh" ]; then
+  source "$PROJECT_DIR/admiral/lib/brain_writer.sh"
+fi
+
 # Read payload from stdin
 PAYLOAD=$(cat)
 
@@ -145,6 +150,10 @@ fi
 
 # No override — hard-block the write
 BLOCK_MSG="SCOPE BOUNDARY (SO-03): Write to protected path '${MATCHED_DIR}' is BLOCKED. This path requires Admiral approval. Options: (1) Ask the Admiral to set ADMIRAL_SCOPE_OVERRIDE=${MATCHED_DIR%/} for this session, (2) Escalate with justification, (3) Work on non-protected paths instead."
+# Record violation to Brain (B-01)
+if type brain_record_violation &>/dev/null; then
+  brain_record_violation "scope_boundary_guard" "scope_violation" "Write to protected path: ${MATCHED_DIR}" "${TOOL_NAME:-unknown}"
+fi
 jq -n --arg ctx "$BLOCK_MSG" '{
   "hookSpecificOutput": {
     "hookEventName": "PreToolUse",
