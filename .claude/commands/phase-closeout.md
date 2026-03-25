@@ -25,6 +25,24 @@ Close a phase safely and completely before merging to `main`.
    - recommended resolutions
 4. Do not merge to `main` until all required checks in this command pass.
 
+## Completion Assessment
+
+Before any mechanical checks, honestly assess whether the phase delivered what it was designed to deliver. Answer each question and include the assessment in the Output Contract.
+
+1. **Was the task completed as designed?** Compare the ROADMAP's stated scope and exit criteria for this phase against what was actually built. Identify any gaps between intent and outcome.
+
+2. **Is the final product a useful manifestation of the specifications?** Does it solve real problems, or is it ceremony? Would a developer picking up this codebase find the deliverables genuinely helpful?
+
+3. **Is it capable?** Does each deliverable actually work — not just exist as a file, but function correctly under real conditions? Were the tests meaningful or perfunctory?
+
+4. **Is it robust?** How does it handle edge cases, missing inputs, corrupt state, absent dependencies? Were failure modes tested or assumed away?
+
+5. **Is it grounded?** Is the work anchored in the spec and the codebase's real needs, or did it drift into theoretical infrastructure that nothing consumes yet?
+
+6. **Is it simple?** Could the same outcomes have been achieved with less code, fewer files, or a more direct approach? Is there unnecessary abstraction?
+
+If any answer reveals a significant gap, note it as a finding and either fix it before proceeding or escalate to the Admiral with a recommendation.
+
 ## Preconditions
 
 1. Confirm all phase tasks are complete in `plan/todo/*.md`.
@@ -103,15 +121,17 @@ After stationary updates, push and request Admiral review of the slush→main PR
 
 ## Output Contract (always include)
 
-1. Phase and slush branch targeted.
-2. Preconditions status.
-3. Closeout checks run and results (tests, lint, spellcheck, security, CI).
-4. Fixes applied during closeout.
-5. TODO updates made.
-6. Blocked tasks relocated (which tasks, to which phase, why).
-7. Stationary updates applied (README, index, ROADMAP, component_versions, etc.).
-8. PR/merge status into `main`.
-9. Any Admiral escalation details and recommended solutions.
+1. **Completion assessment** — honest answers to all 6 questions (useful, capable, robust, grounded, simple, as-designed).
+2. Phase and slush branch targeted.
+3. Preconditions status.
+4. Closeout checks run and results (tests, lint, spellcheck, security, CI).
+5. Fixes applied during closeout.
+6. TODO updates made.
+7. Blocked tasks relocated (which tasks, to which phase, why).
+8. Gate check results (all tasks accounted for, linters, tests, CI).
+9. Stationary updates applied (README, index, ROADMAP, component_versions, etc.).
+10. PR/merge status into `main`.
+11. Any Admiral escalation details and recommended solutions.
 
 ## Non-Goals
 
