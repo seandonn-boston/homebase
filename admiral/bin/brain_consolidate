@@ -1,0 +1,117 @@
+#!/bin/bash
+# Admiral Framework — Brain Entry Consolidation (B-05)
+# Merges overlapping brain entries with provenance tracking.
+# Archives originals to .brain/_archived/.
+# Usage: brain_consolidate [--project <name>] [--dry-run]
+set -euo pipefail
+
+BRAIN_DIR="${BRAIN_DIR:-${CLAUDE_PROJECT_DIR:-.}/.brain}"
+
+PROJECT=""
+DRY_RUN=false
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --project) PROJECT="$2"; shift 2 ;;
+    --dry-run) DRY_RUN=true; shift ;;
+    *) shift ;;
+  esac
+done
+
+SEARCH_PATH="$BRAIN_DIR"
+if [ -n "$PROJECT" ]; then
+  SEARCH_PATH="${BRAIN_DIR}/${PROJECT}"
+fi
+
+if [ ! -d "$SEARCH_PATH" ]; then
+  echo "No brain directory found at: $SEARCH_PATH" >&2
+  jq -n '{"consolidated": 0, "archived": 0, "groups": []}'
+  exit 0
+fi
+
+ARCHIVE_DIR="${BRAIN_DIR}/_archived"
+
+# Find entries with contradicts metadata
+ENTRIES_WITH_CONTRADICTS=()
+ALL_JSON=$(find "$SEARCH_PATH" -name "*.json" -not -path "*/_archived/*" -not -path "*/_demand/*" -type f 2>/dev/null | sort)
+
+for file in $ALL_JSON; do
+  [ -f "$file" ] || continue
+  has_contradicts=$(jq '.metadata.contradicts // [] | length > 0' "$file" 2>/dev/null | tr -d '\r')
+  if [ "$has_contradicts" = "true" ]; then
+    ENTRIES_WITH_CONTRADICTS+=("$file")
+  fi
+done
+
+# Group entries by title similarity (same category + significant keyword overlap)
+CONSOLIDATED=0
+ARCHIVED=0
+GROUPS_JSON="[]"
+
+for entry_file in "${ENTRIES_WITH_CONTRADICTS[@]}"; do
+  [ -f "$entry_file" ] || continue
+
+  ENTRY_TITLE=$(jq -r '.title' "$entry_file" 2>/dev/null | tr -d '\r')
+  ENTRY_CATEGORY=$(jq -r '.category' "$entry_file" 2>/dev/null | tr -d '\r')
+  ENTRY_CONTENT=$(jq -r '.content' "$entry_file" 2>/dev/null | tr -d '\r')
+  CONTRADICTS=$(jq -c '.metadata.contradicts // []' "$entry_file" 2>/dev/null | tr -d '\r')
+
+  # Get conflicting files
+  CONFLICT_FILES=$(echo "$CONTRADICTS" | jq -r '.[].file' 2>/dev/null | tr -d '\r')
+
+  for conflict_file in $CONFLICT_FILES; do
+    [ -f "$conflict_file" ] || continue
+
+    CONFLICT_TITLE=$(jq -r '.title' "$conflict_file" 2>/dev/null | tr -d '\r')
+    CONFLICT_CONTENT=$(jq -r '.content' "$conflict_file" 2>/dev/null | tr -d '\r')
+    CONFLICT_CREATED=$(jq -r '.created_at' "$conflict_file" 2>/dev/null | tr -d '\r')
+
+    if [ "$DRY_RUN" = "true" ]; then
+      echo "[DRY RUN] Would consolidate:" >&2
+      echo "  Newer: $ENTRY_TITLE ($entry_file)" >&2
+      echo "  Older: $CONFLICT_TITLE ($conflict_file)" >&2
+      GROUPS_JSON=$(echo "$GROUPS_JSON" | jq \
+        --arg newer "$entry_file" \
+        --arg older "$conflict_file" \
+        --arg newer_title "$ENTRY_TITLE" \
+        --arg older_title "$CONFLICT_TITLE" \
+        '. + [{"newer": $newer, "older": $older, "newer_title": $newer_title, "older_title": $older_title}]')
+    else
+      # Archive the older (conflict) entry
+      mkdir -p "$ARCHIVE_DIR" 2>/dev/null || true
+      ARCHIVE_NAME="$(basename "$conflict_file")"
+      mv "$conflict_file" "$ARCHIVE_DIR/$ARCHIVE_NAME" 2>/dev/null || continue
+      ARCHIVED=$((ARCHIVED + 1))
+
+      # Update the newer entry with provenance
+      ENTRY_ID=$(jq -r '.id' "$entry_file" 2>/dev/null | tr -d '\r')
+      jq --arg supersedes "$conflict_file" \
+         --arg superseded_title "$CONFLICT_TITLE" \
+         --arg superseded_at "$CONFLICT_CREATED" \
+         '.metadata.supersedes = [{file: $supersedes, title: $superseded_title, created_at: $superseded_at}]' \
+         "$entry_file" > "${entry_file}.tmp" && mv "${entry_file}.tmp" "$entry_file"
+
+      CONSOLIDATED=$((CONSOLIDATED + 1))
+      GROUPS_JSON=$(echo "$GROUPS_JSON" | jq \
+        --arg newer "$entry_file" \
+        --arg older "$conflict_file" \
+        --arg newer_title "$ENTRY_TITLE" \
+        --arg older_title "$CONFLICT_TITLE" \
+        '. + [{"newer": $newer, "older": $older, "newer_title": $newer_title, "older_title": $older_title, "action": "archived"}]')
+
+      echo "Consolidated: $ENTRY_TITLE (supersedes: $CONFLICT_TITLE)" >&2
+    fi
+  done
+done
+
+# Output JSON report
+jq -n --argjson consolidated "$CONSOLIDATED" \
+      --argjson archived "$ARCHIVED" \
+      --argjson groups "$GROUPS_JSON" \
+      --arg mode "$([ "$DRY_RUN" = "true" ] && echo "dry_run" || echo "executed")" \
+      '{
+        consolidated: $consolidated,
+        archived: $archived,
+        mode: $mode,
+        groups: $groups
+      }'
