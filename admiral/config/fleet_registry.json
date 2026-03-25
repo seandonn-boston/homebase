@@ -1,0 +1,182 @@
+{
+  "$schema": "../schemas/fleet-registry.schema.json",
+  "version": "1.0.0",
+  "agents": [
+    {
+      "agent_id": "orchestrator",
+      "role": "orchestrator",
+      "model_tier": "tier1_flagship",
+      "description": "Coordinates fleet operations, decomposes tasks, routes to specialists",
+      "capabilities": ["task_routing", "task_decomposition", "fleet_coordination", "escalation_handling"],
+      "tools": {
+        "allowed": ["Read", "Glob", "Grep", "Agent", "AskUserQuestion"],
+        "denied": ["Write", "Edit", "Bash", "NotebookEdit"]
+      },
+      "paths": {
+        "read": ["**/*"],
+        "write": ["admiral/state/**", ".admiral/**"],
+        "denied": ["aiStrat/**", ".github/workflows/**"]
+      },
+      "authority": {
+        "autonomous": ["task_assignment", "agent_selection", "priority_ordering"],
+        "propose": ["fleet_resize", "model_tier_change", "new_agent_activation"],
+        "escalate": ["scope_change", "security_decision", "spec_modification"]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "backend-implementer",
+      "role": "implementer",
+      "model_tier": "tier2_workhorse",
+      "description": "Implements server-side logic, APIs, data models, and backend infrastructure",
+      "capabilities": ["server_logic", "api_implementation", "data_modeling", "backend_testing"],
+      "tools": {
+        "allowed": ["Read", "Write", "Edit", "Bash", "Glob", "Grep"],
+        "denied": ["Agent", "WebFetch", "WebSearch"]
+      },
+      "paths": {
+        "read": ["**/*"],
+        "write": ["admiral/**", "control-plane/**", ".hooks/**"],
+        "denied": ["aiStrat/**", ".github/workflows/**", ".claude/**"]
+      },
+      "authority": {
+        "autonomous": ["code_implementation", "test_creation", "refactoring"],
+        "propose": ["new_dependency", "architecture_change", "schema_change"],
+        "escalate": ["security_decision", "spec_modification"]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "qa-agent",
+      "role": "qa",
+      "model_tier": "tier2_workhorse",
+      "description": "Reviews code quality, runs tests, validates implementations against requirements",
+      "capabilities": ["code_review", "test_execution", "quality_assessment", "regression_detection"],
+      "tools": {
+        "allowed": ["Read", "Bash", "Glob", "Grep"],
+        "denied": ["Write", "Edit", "Agent", "NotebookEdit"]
+      },
+      "paths": {
+        "read": ["**/*"],
+        "write": [],
+        "denied": ["aiStrat/**", ".github/workflows/**"]
+      },
+      "authority": {
+        "autonomous": ["test_execution", "quality_reporting", "regression_flagging"],
+        "propose": ["test_coverage_change", "quality_gate_adjustment"],
+        "escalate": ["security_finding", "spec_violation"]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "security-auditor",
+      "role": "security",
+      "model_tier": "tier1_flagship",
+      "description": "Audits code for security vulnerabilities, reviews attack surfaces, validates defenses",
+      "capabilities": ["security_audit", "vulnerability_detection", "attack_surface_analysis", "compliance_review"],
+      "tools": {
+        "allowed": ["Read", "Bash", "Glob", "Grep", "WebSearch"],
+        "denied": ["Write", "Edit", "Agent", "NotebookEdit"]
+      },
+      "paths": {
+        "read": ["**/*"],
+        "write": [],
+        "denied": ["aiStrat/**"]
+      },
+      "authority": {
+        "autonomous": ["vulnerability_reporting", "security_assessment"],
+        "propose": ["security_fix", "dependency_update"],
+        "escalate": ["critical_vulnerability", "data_breach_risk", "compliance_violation"]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "triage-agent",
+      "role": "triage",
+      "model_tier": "tier3_utility",
+      "description": "Classifies incoming tasks, performs initial assessment, routes to appropriate specialists",
+      "capabilities": ["task_classification", "priority_assessment", "initial_routing"],
+      "tools": {
+        "allowed": ["Read", "Glob", "Grep"],
+        "denied": ["Write", "Edit", "Bash", "Agent", "NotebookEdit", "WebFetch", "WebSearch"]
+      },
+      "paths": {
+        "read": ["**/*"],
+        "write": [],
+        "denied": ["aiStrat/**", ".github/workflows/**"]
+      },
+      "authority": {
+        "autonomous": ["task_classification", "priority_labeling"],
+        "propose": ["routing_override"],
+        "escalate": ["ambiguous_task", "multi_specialist_required"]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "architect",
+      "role": "architect",
+      "model_tier": "tier1_flagship",
+      "description": "Designs system architecture, evaluates trade-offs, creates technical specifications",
+      "capabilities": ["architecture_design", "system_analysis", "technical_specification", "trade_off_evaluation"],
+      "tools": {
+        "allowed": ["Read", "Glob", "Grep", "Agent", "WebSearch"],
+        "denied": ["Write", "Edit", "Bash", "NotebookEdit"]
+      },
+      "paths": {
+        "read": ["**/*"],
+        "write": ["docs/adr/**"],
+        "denied": ["aiStrat/**", ".github/workflows/**"]
+      },
+      "authority": {
+        "autonomous": ["architecture_analysis", "adr_drafting"],
+        "propose": ["architecture_change", "new_pattern", "dependency_addition"],
+        "escalate": ["fundamental_redesign", "security_architecture"]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "frontend-implementer",
+      "role": "implementer",
+      "model_tier": "tier2_workhorse",
+      "description": "Implements UI components, client-side logic, and frontend infrastructure",
+      "capabilities": ["ui_implementation", "component_development", "frontend_testing", "accessibility"],
+      "tools": {
+        "allowed": ["Read", "Write", "Edit", "Bash", "Glob", "Grep"],
+        "denied": ["Agent", "WebFetch", "WebSearch"]
+      },
+      "paths": {
+        "read": ["**/*"],
+        "write": ["src/components/**", "src/pages/**", "src/styles/**"],
+        "denied": ["aiStrat/**", ".github/workflows/**", ".claude/**", "admiral/**"]
+      },
+      "authority": {
+        "autonomous": ["component_implementation", "style_changes", "test_creation"],
+        "propose": ["new_dependency", "pattern_change"],
+        "escalate": ["security_decision", "api_contract_change"]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "devops-agent",
+      "role": "implementer",
+      "model_tier": "tier2_workhorse",
+      "description": "Manages CI/CD pipelines, deployment configuration, and infrastructure automation",
+      "capabilities": ["ci_cd_management", "deployment_config", "infrastructure_automation", "monitoring_setup"],
+      "tools": {
+        "allowed": ["Read", "Write", "Edit", "Bash", "Glob", "Grep"],
+        "denied": ["Agent", "WebFetch", "WebSearch"]
+      },
+      "paths": {
+        "read": ["**/*"],
+        "write": [".github/workflows/**", "scripts/**", "Dockerfile*"],
+        "denied": ["aiStrat/**", ".claude/**"]
+      },
+      "authority": {
+        "autonomous": ["pipeline_config", "script_creation"],
+        "propose": ["infrastructure_change", "deployment_strategy"],
+        "escalate": ["production_deployment", "security_config"]
+      },
+      "standing_orders": "all"
+    }
+  ]
+}

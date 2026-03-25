@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "fleet-registry.schema.json",
+  "title": "Admiral Fleet Registry",
+  "description": "Schema for the fleet agent registry defining agent capabilities, tools, and routing rules",
+  "type": "object",
+  "required": ["version", "agents"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "agents": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/agent" }
+    }
+  },
+  "$defs": {
+    "agent": {
+      "type": "object",
+      "required": ["agent_id", "role", "model_tier", "capabilities", "tools"],
+      "properties": {
+        "agent_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$",
+          "description": "Unique identifier for the agent"
+        },
+        "role": {
+          "type": "string",
+          "enum": ["orchestrator", "architect", "implementer", "qa", "security", "triage", "curator", "custom"]
+        },
+        "model_tier": {
+          "type": "string",
+          "enum": ["tier1_flagship", "tier2_workhorse", "tier3_utility", "tier4_economy"]
+        },
+        "description": {
+          "type": "string"
+        },
+        "capabilities": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "tools": {
+          "type": "object",
+          "required": ["allowed", "denied"],
+          "properties": {
+            "allowed": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "denied": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "paths": {
+          "type": "object",
+          "properties": {
+            "read": { "type": "array", "items": { "type": "string" } },
+            "write": { "type": "array", "items": { "type": "string" } },
+            "denied": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "authority": {
+          "type": "object",
+          "properties": {
+            "autonomous": { "type": "array", "items": { "type": "string" } },
+            "propose": { "type": "array", "items": { "type": "string" } },
+            "escalate": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "standing_orders": {
+          "oneOf": [
+            { "const": "all" },
+            { "type": "array", "items": { "type": "string", "pattern": "^SO-\\d{2}$" } }
+          ]
+        }
+      }
+    }
+  }
+}
