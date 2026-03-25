@@ -17,7 +17,7 @@ Brain is Admiral's primary competitive moat. Ship B2 within **120 days** before 
 - [x] **B-03** Demand signal tracking — record zero-result queries to `.brain/_demand/`, expose via `brain_audit --demand`
 - [x] **B-04** Contradiction scan on write — keyword overlap detection, warning with conflicting entry paths, non-blocking (entry still written with `contradicts` metadata)
 - [x] **B-05** Brain entry consolidation — `brain_consolidate` utility merges overlapping entries with provenance, archives originals to `.brain/_archived/`
-- [ ] **B-06** Brain B1 comprehensive tests — 20+ tests covering all utilities, edge cases (empty brain, special chars, long content), concurrent access
+- [x] **B-06** Brain B1 comprehensive tests — 20+ tests covering all utilities, edge cases (empty brain, special chars, long content), concurrent access
 
 ## Brain Self-Instrumentation & Integrity
 
