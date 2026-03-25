@@ -32,7 +32,7 @@
 
 ### 3.5 Graceful Degradation
 
-- [ ] **A-13:** Graceful degradation testing for optional components — *Deferred to Phase 3 (depends on A-05).* — verify Admiral degrades gracefully when Brain MCP, pgvector, control plane, or scanner are absent; component availability registry, degradation behavior specs, automated tests for individual and combined absence, clear user-facing messages `[L]`
+- [x] **A-13:** Graceful degradation testing for optional components — verify Admiral degrades gracefully when Brain MCP, pgvector, control plane, or scanner are absent; component availability registry, degradation behavior specs, automated tests for individual and combined absence, clear user-facing messages `[L]`
 
 ---
 
