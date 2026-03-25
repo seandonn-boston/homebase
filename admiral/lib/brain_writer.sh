@@ -20,8 +20,8 @@ brain_write() {
     return 0
   fi
 
-  # Non-blocking: run in background, suppress errors
-  "$brain_record" "$BRAIN_WRITER_PROJECT" "$category" "$title" "$content" "$source_hook" 2>/dev/null || true
+  # Non-blocking: suppress all output to avoid polluting hook JSON responses
+  "$brain_record" "$BRAIN_WRITER_PROJECT" "$category" "$title" "$content" "$source_hook" >/dev/null 2>&1 || true
 }
 
 # Record a policy violation (from prohibitions_enforcer, scope_boundary_guard)
