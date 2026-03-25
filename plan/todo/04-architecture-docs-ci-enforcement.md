@@ -27,7 +27,7 @@
 - [ ] **A-08:** Hook execution pipeline abstraction — *Deferred to Phase 3.* — formal 5-phase lifecycle: load -> validate -> execute -> emit -> report `[L]`
 - [ ] **A-09:** Plugin architecture for hook extensions — *Deferred to Phase 3.* — plugin discovery in `admiral/plugins/hooks/`, manifest schema, example plugin `[L]`
 - [x] **A-10:** State machine for session lifecycle — 5 states (init -> active -> paused -> terminating -> complete), invalid transitions rejected `[L]`
-- [ ] **A-11:** Event schema registry — *Deferred to Phase 3.* — versioned JSON schemas for all event types, CI-enforced registration `[L]`
+- [x] **A-11:** Event schema registry — versioned JSON schemas for all event types, CI-enforced registration `[L]`
 - [x] **A-12:** Configuration schema validation at startup — validate config at session start, report all errors, fail-closed `[M]`
 
 ### 3.5 Graceful Degradation
