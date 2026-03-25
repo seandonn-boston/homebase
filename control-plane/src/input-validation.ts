@@ -81,7 +81,7 @@ export function validatePath(filePath: string): ValidationResult {
 /** Full boundary validation for API request bodies */
 export function validateRequestBody(
   body: string,
-  maxSize = LIMITS.MAX_REQUEST_BODY,
+  maxSize: number = LIMITS.MAX_REQUEST_BODY,
 ): ValidationResult {
   const errors: string[] = [];
 
@@ -105,7 +105,7 @@ export function validateRequestBody(
 /** Full boundary validation for JSON API request bodies */
 export function validateJsonRequestBody(
   body: string,
-  maxSize = LIMITS.MAX_REQUEST_BODY,
+  maxSize: number = LIMITS.MAX_REQUEST_BODY,
 ): ValidationResult {
   const baseResult = validateRequestBody(body, maxSize);
   if (!baseResult.valid) return baseResult;
