@@ -2,7 +2,7 @@
 
 > Comprehensive inventory of all spec debt and gap items with affected sections, nature, downstream impact, and resolution paths.
 >
-> Sources: `aiStrat/admiral/reference/spec-debt.md`, `aiStrat/admiral/reference/spec-gaps.md`, `admiral/IMPLEMENTATION_STATUS.md`, `admiral/SPEC-DEBT-NEXT-STEPS.md`
+> Sources: `aiStrat/admiral/reference/spec-debt.md`, `aiStrat/admiral/reference/spec-gaps.md`, `admiral/IMPLEMENTATION_STATUS.md`
 >
 > Date: 2026-03-20
 

@@ -285,7 +285,7 @@ The codebase is 10/10 when:
 
 - [AGENTS.md](../AGENTS.md) — Agent governance and decision authority
 - [admiral/IMPLEMENTATION_STATUS.md](../admiral/IMPLEMENTATION_STATUS.md) — Spec-to-implementation tracking
-- [admiral/SPEC-DEBT-NEXT-STEPS.md](../admiral/SPEC-DEBT-NEXT-STEPS.md) — Spec debt resolution
+- [docs/spec-proposals/sd-01-spec-debt-inventory.md](../docs/spec-proposals/sd-01-spec-debt-inventory.md) — Spec debt inventory and resolution
 - [aiStrat/admiral/spec/index.md](../aiStrat/admiral/spec/index.md) — Spec table of contents
 - [aiStrat/admiral/reference/spec-debt.md](../aiStrat/admiral/reference/spec-debt.md) — Specification debt
 - [aiStrat/admiral/reference/spec-gaps.md](../aiStrat/admiral/reference/spec-gaps.md) — Specification gaps
