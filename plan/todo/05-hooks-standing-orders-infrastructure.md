@@ -27,7 +27,7 @@
 ## Fleet Orchestration (Stream 7, Section 7.2)
 
 - [x] **S-06** — Agent registry: Runtime registry mapping agent ID to capabilities, routing rules, model tier, and tool permissions; provides lookup API (by ID, capability, tier); returns structured JSON
-- [ ] **S-07** — Task routing engine: Route tasks to agents based on task type, file ownership, capability scores, and load; return routing decision with justification
+- [x] **S-07** — Task routing engine: Route tasks to agents based on task type, file ownership, capability scores, and load; return routing decision with justification
 - [x] **S-08** — Tool permission matrix: Per-agent tool permissions enforced at runtime; denied tools blocked with clear error; integrates with `pre_tool_use_adapter.sh`
 - [x] **S-09** — Fleet configuration validator: Validate fleet config against spec constraints (1-12 agents, no tool list overlap, no routing conflicts, valid tiers); pre-flight check before deployment
 
