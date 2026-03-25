@@ -42,14 +42,15 @@ Everything downstream braces for the aftershock of getting the foundation right.
 ### U-02: Resolve the Premise 2 / "Not Going Anywhere" Tension
 
 **Priority:** Critical — logical inconsistency in the core argument
+**Status:** COMPLETE (2026-03-25)
 **Section:** "What's Not Going Anywhere" vs. Premise 2
 **Current state:** Premise 2 says "what we know today may not be true tomorrow" and claims this applies to AI in a way it doesn't apply to other fields. The "What's Not Going Anywhere" section then lists things that are durably, confidently human (taste, judgment, conviction).
 **Problem:** If you truly believe Premise 2, you cannot also confidently assert that taste, judgment, and conviction are permanent human advantages. The document half-acknowledges this in the FAQ (line 117-118) but doesn't resolve it in the main body.
-**Change:** Add explicit framing to "What's Not Going Anywhere" that acknowledges the tension. Options:
-  - Frame these as "current advantages with no visible expiration" rather than permanent truths
-  - Add falsifiability criteria inline (not just in the FAQ)
-  - Explicitly state that Premise 2 applies to this section too, and define what would change the assessment
-**Cascade:** FAQ section on "Won't AI eventually automate taste and judgment too?" may need to move closer to the main claims or be cross-referenced more directly.
+**Changes applied:**
+  - Added opening framing paragraph to "What's Not Going Anywhere" explicitly stating Premise 2 applies here, framing all claims as *current* advantages with no visible path to automation rather than permanent assertions, and cross-referencing the FAQ
+  - Added inline falsifiability condition ("*What would change this: ...*") at the end of each claimed advantage (Taste, Judgment under ambiguity, Knowing which question to ask, Relationships and trust, Conviction)
+  - Each falsifiability condition names the specific observable event that would require rewriting the claim: AI producing the last 10% without human standards; AI bearing social accountability under ambiguity; AI identifying problem spaces without human framing; AI with persistent accountable identity; social structures accepting AI liability
+**Cascade resolved:** The FAQ's "Won't AI eventually automate taste and judgment too?" now has its falsifiability standard mirrored in the main body — the inline conditions and the FAQ answer are consistent.
 
 ---
 
