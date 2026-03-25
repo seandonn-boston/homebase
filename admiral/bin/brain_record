@@ -47,28 +47,81 @@ ID=$(uuidgen 2>/dev/null || python3 -c "import uuid; print(uuid.uuid4())" 2>/dev
 DIR="${BRAIN_DIR}/${PROJECT}"
 mkdir -p "$DIR"
 
+# B-04: Contradiction scan — check for keyword overlap with existing entries
+CONTRADICTS_LIST="[]"
+# Extract significant words from title+content (4+ chars, deduplicated)
+KEYWORDS=$(echo "$TITLE $CONTENT" | tr '[:upper:]' '[:lower:]' | grep -oE '[a-z]{4,}' | sort -u | head -10)
+if [ -n "$KEYWORDS" ] && [ -d "$DIR" ]; then
+  for keyword in $KEYWORDS; do
+    # Search existing entries for this keyword
+    MATCHES=$(grep -rlFi "$keyword" "$DIR" 2>/dev/null | head -3 || true)
+    for match in $MATCHES; do
+      [ -f "$match" ] || continue
+      case "$match" in *.json) ;; *) continue ;; esac
+      MATCH_TITLE=$(jq -r '.title // ""' "$match" 2>/dev/null | tr -d '\r')
+      MATCH_CAT=$(jq -r '.category // ""' "$match" 2>/dev/null | tr -d '\r')
+      # Only flag same-category entries as potential contradictions
+      if [ "$MATCH_CAT" = "$CATEGORY" ] && [ "$MATCH_TITLE" != "$TITLE" ]; then
+        CONTRADICTS_LIST=$(echo "$CONTRADICTS_LIST" | jq \
+          --arg file "$match" \
+          --arg title "$MATCH_TITLE" \
+          --arg keyword "$keyword" \
+          '. + [{"file": $file, "title": $title, "overlap_keyword": $keyword}]' | tr -d '\r')
+      fi
+    done
+  done
+  # Deduplicate by file
+  CONTRADICTS_LIST=$(echo "$CONTRADICTS_LIST" | jq '[group_by(.file)[] | .[0]]' | tr -d '\r')
+fi
+
+CONTRADICTION_COUNT=$(echo "$CONTRADICTS_LIST" | jq 'length' | tr -d '\r')
+
 # Build filename
 FILENAME="${TIMESTAMP}-${CATEGORY}-${SLUG}.json"
 FILEPATH="${DIR}/${FILENAME}"
 
-# Write JSON entry
-jq -n \
-  --arg id "$ID" \
-  --arg project "$PROJECT" \
-  --arg category "$CATEGORY" \
-  --arg title "$TITLE" \
-  --arg content "$CONTENT" \
-  --arg agent "$SOURCE_AGENT" \
-  --arg created "$ISO_TIMESTAMP" \
-  '{
-    id: $id,
-    project: $project,
-    category: $category,
-    title: $title,
-    content: $content,
-    metadata: { tags: [] },
-    source_agent: $agent,
-    created_at: $created
-  }' > "$FILEPATH"
-
-echo "Recorded: ${FILEPATH}"
+# Write JSON entry (include contradicts metadata if any found)
+if [ "$CONTRADICTION_COUNT" -gt 0 ]; then
+  jq -n \
+    --arg id "$ID" \
+    --arg project "$PROJECT" \
+    --arg category "$CATEGORY" \
+    --arg title "$TITLE" \
+    --arg content "$CONTENT" \
+    --arg agent "$SOURCE_AGENT" \
+    --arg created "$ISO_TIMESTAMP" \
+    --argjson contradicts "$CONTRADICTS_LIST" \
+    '{
+      id: $id,
+      project: $project,
+      category: $category,
+      title: $title,
+      content: $content,
+      metadata: { tags: [], contradicts: $contradicts },
+      source_agent: $agent,
+      created_at: $created
+    }' > "$FILEPATH"
+  echo "Recorded: ${FILEPATH}"
+  echo "WARNING: ${CONTRADICTION_COUNT} potential contradiction(s) detected:" >&2
+  echo "$CONTRADICTS_LIST" | jq -r '.[] | "  - \(.title) (keyword: \(.overlap_keyword))"' >&2
+else
+  jq -n \
+    --arg id "$ID" \
+    --arg project "$PROJECT" \
+    --arg category "$CATEGORY" \
+    --arg title "$TITLE" \
+    --arg content "$CONTENT" \
+    --arg agent "$SOURCE_AGENT" \
+    --arg created "$ISO_TIMESTAMP" \
+    '{
+      id: $id,
+      project: $project,
+      category: $category,
+      title: $title,
+      content: $content,
+      metadata: { tags: [] },
+      source_agent: $agent,
+      created_at: $created
+    }' > "$FILEPATH"
+  echo "Recorded: ${FILEPATH}"
+fi
