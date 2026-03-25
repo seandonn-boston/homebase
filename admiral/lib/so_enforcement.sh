@@ -285,9 +285,7 @@ so_enforce_all() {
 
   # Run each SO check
   for so_num in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16; do
-    local func="so_${so_num}_*"
     local result
-    # Call the function dynamically
     case "$so_num" in
       01) result=$(so_01_identity_discipline "$payload" "$state" 2>/dev/null) ;;
       02) result=$(so_02_output_routing "$payload" "$state" 2>/dev/null) ;;

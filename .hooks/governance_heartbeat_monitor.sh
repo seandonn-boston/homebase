@@ -41,9 +41,7 @@ for agent in "${GOVERNANCE_AGENTS[@]}"; do
   last_heartbeat=$(echo "$HEARTBEAT_STATE" | jq -r ".${agent}_last_heartbeat // 0" 2>/dev/null | tr -d '\r')
   missed_count=$(echo "$HEARTBEAT_STATE" | jq -r ".${agent}_missed_count // 0" 2>/dev/null | tr -d '\r')
 
-  # If no heartbeat recorded yet, initialize (first run)
   if [ "$last_heartbeat" = "0" ] || [ "$last_heartbeat" = "null" ]; then
-    # First run — record current time as baseline, no alert
     HEARTBEAT_STATE=$(echo "$HEARTBEAT_STATE" | jq \
       --arg agent "${agent}_last_heartbeat" \
       --argjson ts "$NOW" \

@@ -71,13 +71,13 @@ brain_retrieve_context() {
     case "$file" in *.json) ;; *) continue ;; esac
 
     local entry
-    entry=$(jq -c '{
+    entry=$(jq -c --arg fn "$file" '{
       title: .title,
       category: .category,
       content: (.content | if length > 200 then .[:200] + "..." else . end),
       created_at: .created_at,
-      file: input_filename
-    }' --arg fn "$file" "$file" 2>/dev/null | tr -d '\r') || continue
+      file: $fn
+    }' "$file" 2>/dev/null | tr -d '\r') || continue
 
     if [ "$first" = "true" ]; then
       first=false
