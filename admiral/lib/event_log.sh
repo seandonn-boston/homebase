@@ -81,7 +81,8 @@ rotate_log() {
   size=$(wc -c < "$UNIFIED_LOG" | tr -d ' ')
 
   if [ "$size" -gt "$max_size" ]; then
-    local rotated="${UNIFIED_LOG}.$(date +%Y%m%d%H%M%S)"
+    local rotated
+    rotated="${UNIFIED_LOG}.$(date +%Y%m%d%H%M%S)"
     mv "$UNIFIED_LOG" "$rotated"
     emit_unified_event "log_rotated" "admin" "event_log" "{\"rotated_to\": \"$rotated\", \"size_bytes\": $size}"
   fi
