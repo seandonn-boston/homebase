@@ -1,0 +1,3167 @@
+{
+  "$schema": "capability-registry.v1",
+  "generated_at": "2026-03-25T13:26:19Z",
+  "agent_count": 71,
+  "agents": [
+    {
+      "agent_id": "accessibility-auditor",
+      "version": "1.0.0",
+      "role": "qa",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Write",
+          "Edit",
+          "Agent",
+          "NotebookEdit"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "analytics-implementer",
+      "version": "1.0.0",
+      "role": "implementer",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Write",
+          "Edit",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Agent",
+          "WebFetch",
+          "WebSearch"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [
+          "admiral/**",
+          "control-plane/**",
+          ".hooks/**"
+        ],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "api-designer",
+      "version": "1.0.0",
+      "role": "implementer",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Write",
+          "Edit",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Agent",
+          "WebFetch",
+          "WebSearch"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [
+          "admiral/**",
+          "control-plane/**",
+          ".hooks/**"
+        ],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "architect",
+      "version": "1.0.0",
+      "role": "architect",
+      "asp_spec_ref": null,
+      "model_tier": "tier1_flagship",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Glob",
+          "Grep",
+          "Agent",
+          "WebSearch"
+        ],
+        "denied": [
+          "Write",
+          "Edit",
+          "Bash",
+          "NotebookEdit"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [
+          "docs/adr/**"
+        ],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "auth-identity",
+      "version": "1.0.0",
+      "role": "implementer",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Write",
+          "Edit",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Agent",
+          "WebFetch",
+          "WebSearch"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [
+          "admiral/**",
+          "control-plane/**",
+          ".hooks/**"
+        ],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "backend-implementer",
+      "version": "1.0.0",
+      "role": "implementer",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Write",
+          "Edit",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Agent",
+          "WebFetch",
+          "WebSearch"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [
+          "admiral/**",
+          "control-plane/**",
+          ".hooks/**"
+        ],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "bias-sentinel",
+      "version": "1.0.0",
+      "role": "security",
+      "asp_spec_ref": null,
+      "model_tier": "tier1_flagship",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Bash",
+          "Glob",
+          "Grep",
+          "WebSearch"
+        ],
+        "denied": [
+          "Write",
+          "Edit",
+          "Agent",
+          "NotebookEdit"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "cache-strategist",
+      "version": "1.0.0",
+      "role": "implementer",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Write",
+          "Edit",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Agent",
+          "WebFetch",
+          "WebSearch"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [
+          "admiral/**",
+          "control-plane/**",
+          ".hooks/**"
+        ],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "chaos-agent",
+      "version": "1.0.0",
+      "role": "qa",
+      "asp_spec_ref": null,
+      "model_tier": "tier1_flagship",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Write",
+          "Edit",
+          "Agent",
+          "NotebookEdit"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "compliance-agent",
+      "version": "1.0.0",
+      "role": "security",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Bash",
+          "Glob",
+          "Grep",
+          "WebSearch"
+        ],
+        "denied": [
+          "Write",
+          "Edit",
+          "Agent",
+          "NotebookEdit"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "containerization-agent",
+      "version": "1.0.0",
+      "role": "implementer",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Write",
+          "Edit",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Agent",
+          "WebFetch",
+          "WebSearch"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [
+          "admiral/**",
+          "control-plane/**",
+          ".hooks/**"
+        ],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "context-curator",
+      "version": "1.0.0",
+      "role": "curator",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Glob",
+          "Grep",
+          "Agent"
+        ],
+        "denied": [
+          "Write",
+          "Edit",
+          "Bash",
+          "NotebookEdit"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [
+          "context_assembly",
+          "budget_allocation",
+          "relevance_scoring",
+          "context_sufficiency_check"
+        ],
+        "propose": [
+          "context_template_change",
+          "budget_threshold_adjustment"
+        ],
+        "escalate": [
+          "security_decision",
+          "spec_modification",
+          "context_overflow"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "context-health-monitor",
+      "version": "1.0.0",
+      "role": "custom",
+      "asp_spec_ref": null,
+      "model_tier": "tier3_utility",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Glob",
+          "Grep"
+        ],
+        "denied": []
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "contract-test-writer",
+      "version": "1.0.0",
+      "role": "qa",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Write",
+          "Edit",
+          "Agent",
+          "NotebookEdit"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "contradiction-detector",
+      "version": "1.0.0",
+      "role": "qa",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Write",
+          "Edit",
+          "Agent",
+          "NotebookEdit"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "copywriter",
+      "version": "1.0.0",
+      "role": "custom",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Glob",
+          "Grep"
+        ],
+        "denied": []
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "database-agent",
+      "version": "1.0.0",
+      "role": "implementer",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Write",
+          "Edit",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Agent",
+          "WebFetch",
+          "WebSearch"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [
+          "admiral/**",
+          "control-plane/**",
+          ".hooks/**"
+        ],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "data-engineer",
+      "version": "1.0.0",
+      "role": "implementer",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Write",
+          "Edit",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Agent",
+          "WebFetch",
+          "WebSearch"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [
+          "admiral/**",
+          "control-plane/**",
+          ".hooks/**"
+        ],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "data-validator",
+      "version": "1.0.0",
+      "role": "qa",
+      "asp_spec_ref": null,
+      "model_tier": "tier3_utility",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Write",
+          "Edit",
+          "Agent",
+          "NotebookEdit"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "dependency-manager",
+      "version": "1.0.0",
+      "role": "implementer",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Write",
+          "Edit",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Agent",
+          "WebFetch",
+          "WebSearch"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [
+          "admiral/**",
+          "control-plane/**",
+          ".hooks/**"
+        ],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "dependency-sentinel",
+      "version": "1.0.0",
+      "role": "custom",
+      "asp_spec_ref": null,
+      "model_tier": "tier3_utility",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Glob",
+          "Grep"
+        ],
+        "denied": []
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "design-systems",
+      "version": "1.0.0",
+      "role": "implementer",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Write",
+          "Edit",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Agent",
+          "WebFetch",
+          "WebSearch"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [
+          "admiral/**",
+          "control-plane/**",
+          ".hooks/**"
+        ],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "devils-advocate",
+      "version": "1.0.0",
+      "role": "custom",
+      "asp_spec_ref": null,
+      "model_tier": "tier1_flagship",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Glob",
+          "Grep"
+        ],
+        "denied": []
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "devops-agent",
+      "version": "1.0.0",
+      "role": "implementer",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Write",
+          "Edit",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Agent",
+          "WebFetch",
+          "WebSearch"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [
+          "admiral/**",
+          "control-plane/**",
+          ".hooks/**"
+        ],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "diagram-agent",
+      "version": "1.0.0",
+      "role": "custom",
+      "asp_spec_ref": null,
+      "model_tier": "tier3_utility",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Glob",
+          "Grep"
+        ],
+        "denied": []
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "drift-monitor",
+      "version": "1.0.0",
+      "role": "custom",
+      "asp_spec_ref": null,
+      "model_tier": "tier3_utility",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Glob",
+          "Grep"
+        ],
+        "denied": []
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "e2e-test-writer",
+      "version": "1.0.0",
+      "role": "qa",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Write",
+          "Edit",
+          "Agent",
+          "NotebookEdit"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "feature-flag-strategist",
+      "version": "1.0.0",
+      "role": "implementer",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Write",
+          "Edit",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Agent",
+          "WebFetch",
+          "WebSearch"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [
+          "admiral/**",
+          "control-plane/**",
+          ".hooks/**"
+        ],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "frontend-implementer",
+      "version": "1.0.0",
+      "role": "implementer",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Write",
+          "Edit",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Agent",
+          "WebFetch",
+          "WebSearch"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [
+          "admiral/**",
+          "control-plane/**",
+          ".hooks/**"
+        ],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "hallucination-auditor",
+      "version": "1.0.0",
+      "role": "qa",
+      "asp_spec_ref": null,
+      "model_tier": "tier1_flagship",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Write",
+          "Edit",
+          "Agent",
+          "NotebookEdit"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "incident-response",
+      "version": "1.0.0",
+      "role": "orchestrator",
+      "asp_spec_ref": null,
+      "model_tier": "tier1_flagship",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Glob",
+          "Grep",
+          "Agent",
+          "AskUserQuestion"
+        ],
+        "denied": [
+          "Write",
+          "Edit",
+          "Bash",
+          "NotebookEdit"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [
+          "admiral/state/**",
+          ".admiral/**"
+        ],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "infrastructure-agent",
+      "version": "1.0.0",
+      "role": "implementer",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Write",
+          "Edit",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Agent",
+          "WebFetch",
+          "WebSearch"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [
+          "admiral/**",
+          "control-plane/**",
+          ".hooks/**"
+        ],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "integration-agent",
+      "version": "1.0.0",
+      "role": "implementer",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Write",
+          "Edit",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Agent",
+          "WebFetch",
+          "WebSearch"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [
+          "admiral/**",
+          "control-plane/**",
+          ".hooks/**"
+        ],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "interaction-designer",
+      "version": "1.0.0",
+      "role": "implementer",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Write",
+          "Edit",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Agent",
+          "WebFetch",
+          "WebSearch"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [
+          "admiral/**",
+          "control-plane/**",
+          ".hooks/**"
+        ],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "internationalization",
+      "version": "1.0.0",
+      "role": "implementer",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Write",
+          "Edit",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Agent",
+          "WebFetch",
+          "WebSearch"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [
+          "admiral/**",
+          "control-plane/**",
+          ".hooks/**"
+        ],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "loop-breaker",
+      "version": "1.0.0",
+      "role": "custom",
+      "asp_spec_ref": null,
+      "model_tier": "tier3_utility",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Glob",
+          "Grep"
+        ],
+        "denied": []
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "media-processing",
+      "version": "1.0.0",
+      "role": "implementer",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Write",
+          "Edit",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Agent",
+          "WebFetch",
+          "WebSearch"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [
+          "admiral/**",
+          "control-plane/**",
+          ".hooks/**"
+        ],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "mediator",
+      "version": "1.0.0",
+      "role": "orchestrator",
+      "asp_spec_ref": null,
+      "model_tier": "tier1_flagship",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Glob",
+          "Grep",
+          "Agent",
+          "AskUserQuestion"
+        ],
+        "denied": [
+          "Write",
+          "Edit",
+          "Bash",
+          "NotebookEdit"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [
+          "admiral/state/**",
+          ".admiral/**"
+        ],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [
+          "conflict_detection",
+          "resolution_recommendation",
+          "scope_overlap_analysis"
+        ],
+        "propose": [
+          "conflict_resolution",
+          "agent_scope_adjustment",
+          "task_reassignment"
+        ],
+        "escalate": [
+          "unresolvable_conflict",
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "migration-agent",
+      "version": "1.0.0",
+      "role": "implementer",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Write",
+          "Edit",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Agent",
+          "WebFetch",
+          "WebSearch"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [
+          "admiral/**",
+          "control-plane/**",
+          ".hooks/**"
+        ],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "ml-engineer",
+      "version": "1.0.0",
+      "role": "implementer",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Write",
+          "Edit",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Agent",
+          "WebFetch",
+          "WebSearch"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [
+          "admiral/**",
+          "control-plane/**",
+          ".hooks/**"
+        ],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "monorepo-coordinator",
+      "version": "1.0.0",
+      "role": "orchestrator",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Glob",
+          "Grep",
+          "Agent",
+          "AskUserQuestion"
+        ],
+        "denied": [
+          "Write",
+          "Edit",
+          "Bash",
+          "NotebookEdit"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [
+          "admiral/state/**",
+          ".admiral/**"
+        ],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "notification-orchestrator",
+      "version": "1.0.0",
+      "role": "implementer",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Write",
+          "Edit",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Agent",
+          "WebFetch",
+          "WebSearch"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [
+          "admiral/**",
+          "control-plane/**",
+          ".hooks/**"
+        ],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "observability-agent",
+      "version": "1.0.0",
+      "role": "implementer",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Write",
+          "Edit",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Agent",
+          "WebFetch",
+          "WebSearch"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [
+          "admiral/**",
+          "control-plane/**",
+          ".hooks/**"
+        ],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "orchestrator",
+      "version": "1.0.0",
+      "role": "orchestrator",
+      "asp_spec_ref": null,
+      "model_tier": "tier1_flagship",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Glob",
+          "Grep",
+          "Agent",
+          "AskUserQuestion"
+        ],
+        "denied": [
+          "Write",
+          "Edit",
+          "Bash",
+          "NotebookEdit"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [
+          "admiral/state/**",
+          ".admiral/**"
+        ],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [
+          "task_assignment",
+          "agent_selection",
+          "priority_ordering",
+          "task_decomposition",
+          "progress_tracking"
+        ],
+        "propose": [
+          "fleet_resize",
+          "model_tier_change",
+          "new_agent_activation",
+          "routing_rule_change"
+        ],
+        "escalate": [
+          "scope_change",
+          "security_decision",
+          "spec_modification",
+          "budget_override"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "pattern-enforcer",
+      "version": "1.0.0",
+      "role": "custom",
+      "asp_spec_ref": null,
+      "model_tier": "tier3_utility",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Glob",
+          "Grep"
+        ],
+        "denied": []
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "payment-billing",
+      "version": "1.0.0",
+      "role": "implementer",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Write",
+          "Edit",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Agent",
+          "WebFetch",
+          "WebSearch"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [
+          "admiral/**",
+          "control-plane/**",
+          ".hooks/**"
+        ],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "penetration-tester",
+      "version": "1.0.0",
+      "role": "security",
+      "asp_spec_ref": null,
+      "model_tier": "tier1_flagship",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Bash",
+          "Glob",
+          "Grep",
+          "WebSearch"
+        ],
+        "denied": [
+          "Write",
+          "Edit",
+          "Agent",
+          "NotebookEdit"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "performance-tester",
+      "version": "1.0.0",
+      "role": "qa",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Write",
+          "Edit",
+          "Agent",
+          "NotebookEdit"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "persona-agent",
+      "version": "1.0.0",
+      "role": "custom",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Glob",
+          "Grep"
+        ],
+        "denied": []
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "privacy-agent",
+      "version": "1.0.0",
+      "role": "security",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Bash",
+          "Glob",
+          "Grep",
+          "WebSearch"
+        ],
+        "denied": [
+          "Write",
+          "Edit",
+          "Agent",
+          "NotebookEdit"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "qa-agent",
+      "version": "1.0.0",
+      "role": "qa",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Write",
+          "Edit",
+          "Agent",
+          "NotebookEdit"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "queue-messaging",
+      "version": "1.0.0",
+      "role": "implementer",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Write",
+          "Edit",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Agent",
+          "WebFetch",
+          "WebSearch"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [
+          "admiral/**",
+          "control-plane/**",
+          ".hooks/**"
+        ],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "realtime-systems",
+      "version": "1.0.0",
+      "role": "implementer",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Write",
+          "Edit",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Agent",
+          "WebFetch",
+          "WebSearch"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [
+          "admiral/**",
+          "control-plane/**",
+          ".hooks/**"
+        ],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "red-team",
+      "version": "1.0.0",
+      "role": "security",
+      "asp_spec_ref": null,
+      "model_tier": "tier1_flagship",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Bash",
+          "Glob",
+          "Grep",
+          "WebSearch"
+        ],
+        "denied": [
+          "Write",
+          "Edit",
+          "Agent",
+          "NotebookEdit"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "refactoring-agent",
+      "version": "1.0.0",
+      "role": "implementer",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Write",
+          "Edit",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Agent",
+          "WebFetch",
+          "WebSearch"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [
+          "admiral/**",
+          "control-plane/**",
+          ".hooks/**"
+        ],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "regression-guardian",
+      "version": "1.0.0",
+      "role": "qa",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Write",
+          "Edit",
+          "Agent",
+          "NotebookEdit"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "release-orchestrator",
+      "version": "1.0.0",
+      "role": "orchestrator",
+      "asp_spec_ref": null,
+      "model_tier": "tier1_flagship",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Glob",
+          "Grep",
+          "Agent",
+          "AskUserQuestion"
+        ],
+        "denied": [
+          "Write",
+          "Edit",
+          "Bash",
+          "NotebookEdit"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [
+          "admiral/state/**",
+          ".admiral/**"
+        ],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "responsive-layout",
+      "version": "1.0.0",
+      "role": "implementer",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Write",
+          "Edit",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Agent",
+          "WebFetch",
+          "WebSearch"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [
+          "admiral/**",
+          "control-plane/**",
+          ".hooks/**"
+        ],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "role-crystallizer",
+      "version": "1.0.0",
+      "role": "orchestrator",
+      "asp_spec_ref": null,
+      "model_tier": "tier1_flagship",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Glob",
+          "Grep",
+          "Agent",
+          "AskUserQuestion"
+        ],
+        "denied": [
+          "Write",
+          "Edit",
+          "Bash",
+          "NotebookEdit"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [
+          "admiral/state/**",
+          ".admiral/**"
+        ],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "sdk-dev-experience",
+      "version": "1.0.0",
+      "role": "implementer",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Write",
+          "Edit",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Agent",
+          "WebFetch",
+          "WebSearch"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [
+          "admiral/**",
+          "control-plane/**",
+          ".hooks/**"
+        ],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "search-relevance",
+      "version": "1.0.0",
+      "role": "implementer",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Write",
+          "Edit",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Agent",
+          "WebFetch",
+          "WebSearch"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [
+          "admiral/**",
+          "control-plane/**",
+          ".hooks/**"
+        ],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "security-auditor",
+      "version": "1.0.0",
+      "role": "security",
+      "asp_spec_ref": null,
+      "model_tier": "tier1_flagship",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Bash",
+          "Glob",
+          "Grep",
+          "WebSearch"
+        ],
+        "denied": [
+          "Write",
+          "Edit",
+          "Agent",
+          "NotebookEdit"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "seo-crawler",
+      "version": "1.0.0",
+      "role": "custom",
+      "asp_spec_ref": null,
+      "model_tier": "tier3_utility",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Glob",
+          "Grep"
+        ],
+        "denied": []
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "simulated-user",
+      "version": "1.0.0",
+      "role": "qa",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Write",
+          "Edit",
+          "Agent",
+          "NotebookEdit"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "state-management",
+      "version": "1.0.0",
+      "role": "implementer",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Write",
+          "Edit",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Agent",
+          "WebFetch",
+          "WebSearch"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [
+          "admiral/**",
+          "control-plane/**",
+          ".hooks/**"
+        ],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "technical-writer",
+      "version": "1.0.0",
+      "role": "custom",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Glob",
+          "Grep"
+        ],
+        "denied": []
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "token-budgeter",
+      "version": "1.0.0",
+      "role": "custom",
+      "asp_spec_ref": null,
+      "model_tier": "tier3_utility",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Glob",
+          "Grep"
+        ],
+        "denied": []
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "triage",
+      "version": "1.0.0",
+      "role": "triage",
+      "asp_spec_ref": null,
+      "model_tier": "tier3_utility",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Write",
+          "Edit",
+          "Bash",
+          "Agent",
+          "NotebookEdit",
+          "WebFetch",
+          "WebSearch"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [
+          "task_classification",
+          "priority_labeling",
+          "complexity_estimation",
+          "category_assignment"
+        ],
+        "propose": [
+          "routing_override",
+          "priority_escalation"
+        ],
+        "escalate": [
+          "ambiguous_task",
+          "multi_specialist_required",
+          "security_decision"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "unit-test-writer",
+      "version": "1.0.0",
+      "role": "qa",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Write",
+          "Edit",
+          "Agent",
+          "NotebookEdit"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "ux-researcher",
+      "version": "1.0.0",
+      "role": "custom",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Glob",
+          "Grep"
+        ],
+        "denied": []
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    },
+    {
+      "agent_id": "visualization-agent",
+      "version": "1.0.0",
+      "role": "implementer",
+      "asp_spec_ref": null,
+      "model_tier": "tier2_workhorse",
+      "tools": {
+        "allowed": [
+          "Read",
+          "Write",
+          "Edit",
+          "Bash",
+          "Glob",
+          "Grep"
+        ],
+        "denied": [
+          "Agent",
+          "WebFetch",
+          "WebSearch"
+        ]
+      },
+      "paths": {
+        "read": [
+          "**/*"
+        ],
+        "write": [
+          "admiral/**",
+          "control-plane/**",
+          ".hooks/**"
+        ],
+        "denied": [
+          "aiStrat/**",
+          ".github/workflows/**"
+        ]
+      },
+      "authority": {
+        "autonomous": [],
+        "propose": [],
+        "escalate": [
+          "security_decision",
+          "spec_modification"
+        ]
+      },
+      "standing_orders": "all"
+    }
+  ],
+  "by_role": {
+    "architect": [
+      "architect"
+    ],
+    "curator": [
+      "context-curator"
+    ],
+    "custom": [
+      "context-health-monitor",
+      "copywriter",
+      "dependency-sentinel",
+      "devils-advocate",
+      "diagram-agent",
+      "drift-monitor",
+      "loop-breaker",
+      "pattern-enforcer",
+      "persona-agent",
+      "seo-crawler",
+      "technical-writer",
+      "token-budgeter",
+      "ux-researcher"
+    ],
+    "implementer": [
+      "analytics-implementer",
+      "api-designer",
+      "auth-identity",
+      "backend-implementer",
+      "cache-strategist",
+      "containerization-agent",
+      "database-agent",
+      "data-engineer",
+      "dependency-manager",
+      "design-systems",
+      "devops-agent",
+      "feature-flag-strategist",
+      "frontend-implementer",
+      "infrastructure-agent",
+      "integration-agent",
+      "interaction-designer",
+      "internationalization",
+      "media-processing",
+      "migration-agent",
+      "ml-engineer",
+      "notification-orchestrator",
+      "observability-agent",
+      "payment-billing",
+      "queue-messaging",
+      "realtime-systems",
+      "refactoring-agent",
+      "responsive-layout",
+      "sdk-dev-experience",
+      "search-relevance",
+      "state-management",
+      "visualization-agent"
+    ],
+    "orchestrator": [
+      "incident-response",
+      "mediator",
+      "monorepo-coordinator",
+      "orchestrator",
+      "release-orchestrator",
+      "role-crystallizer"
+    ],
+    "qa": [
+      "accessibility-auditor",
+      "chaos-agent",
+      "contract-test-writer",
+      "contradiction-detector",
+      "data-validator",
+      "e2e-test-writer",
+      "hallucination-auditor",
+      "performance-tester",
+      "qa-agent",
+      "regression-guardian",
+      "simulated-user",
+      "unit-test-writer"
+    ],
+    "security": [
+      "bias-sentinel",
+      "compliance-agent",
+      "penetration-tester",
+      "privacy-agent",
+      "red-team",
+      "security-auditor"
+    ],
+    "triage": [
+      "triage"
+    ]
+  },
+  "by_tier": {
+    "tier1_flagship": [
+      "architect",
+      "bias-sentinel",
+      "chaos-agent",
+      "devils-advocate",
+      "hallucination-auditor",
+      "incident-response",
+      "mediator",
+      "orchestrator",
+      "penetration-tester",
+      "red-team",
+      "release-orchestrator",
+      "role-crystallizer",
+      "security-auditor"
+    ],
+    "tier2_workhorse": [
+      "accessibility-auditor",
+      "analytics-implementer",
+      "api-designer",
+      "auth-identity",
+      "backend-implementer",
+      "cache-strategist",
+      "compliance-agent",
+      "containerization-agent",
+      "context-curator",
+      "contract-test-writer",
+      "contradiction-detector",
+      "copywriter",
+      "database-agent",
+      "data-engineer",
+      "dependency-manager",
+      "design-systems",
+      "devops-agent",
+      "e2e-test-writer",
+      "feature-flag-strategist",
+      "frontend-implementer",
+      "infrastructure-agent",
+      "integration-agent",
+      "interaction-designer",
+      "internationalization",
+      "media-processing",
+      "migration-agent",
+      "ml-engineer",
+      "monorepo-coordinator",
+      "notification-orchestrator",
+      "observability-agent",
+      "payment-billing",
+      "performance-tester",
+      "persona-agent",
+      "privacy-agent",
+      "qa-agent",
+      "queue-messaging",
+      "realtime-systems",
+      "refactoring-agent",
+      "regression-guardian",
+      "responsive-layout",
+      "sdk-dev-experience",
+      "search-relevance",
+      "simulated-user",
+      "state-management",
+      "technical-writer",
+      "unit-test-writer",
+      "ux-researcher",
+      "visualization-agent"
+    ],
+    "tier3_utility": [
+      "context-health-monitor",
+      "data-validator",
+      "dependency-sentinel",
+      "diagram-agent",
+      "drift-monitor",
+      "loop-breaker",
+      "pattern-enforcer",
+      "seo-crawler",
+      "token-budgeter",
+      "triage"
+    ]
+  }
+}

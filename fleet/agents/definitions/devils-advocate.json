@@ -1,0 +1,34 @@
+{
+  "agent_id": "devils-advocate",
+  "version": "1.0.0",
+  "role": "custom",
+  "asp_spec_ref": null,
+  "model_tier": "tier1_flagship",
+  "tools": {
+    "allowed": [
+      "Read",
+      "Glob",
+      "Grep"
+    ],
+    "denied": []
+  },
+  "paths": {
+    "read": [
+      "**/*"
+    ],
+    "write": [],
+    "denied": [
+      "aiStrat/**",
+      ".github/workflows/**"
+    ]
+  },
+  "authority": {
+    "autonomous": [],
+    "propose": [],
+    "escalate": [
+      "security_decision",
+      "spec_modification"
+    ]
+  },
+  "standing_orders": "all"
+}

@@ -1,0 +1,45 @@
+{
+  "agent_id": "migration-agent",
+  "version": "1.0.0",
+  "role": "implementer",
+  "asp_spec_ref": null,
+  "model_tier": "tier2_workhorse",
+  "tools": {
+    "allowed": [
+      "Read",
+      "Write",
+      "Edit",
+      "Bash",
+      "Glob",
+      "Grep"
+    ],
+    "denied": [
+      "Agent",
+      "WebFetch",
+      "WebSearch"
+    ]
+  },
+  "paths": {
+    "read": [
+      "**/*"
+    ],
+    "write": [
+      "admiral/**",
+      "control-plane/**",
+      ".hooks/**"
+    ],
+    "denied": [
+      "aiStrat/**",
+      ".github/workflows/**"
+    ]
+  },
+  "authority": {
+    "autonomous": [],
+    "propose": [],
+    "escalate": [
+      "security_decision",
+      "spec_modification"
+    ]
+  },
+  "standing_orders": "all"
+}

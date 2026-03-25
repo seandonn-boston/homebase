@@ -1,0 +1,41 @@
+{
+  "agent_id": "penetration-tester",
+  "version": "1.0.0",
+  "role": "security",
+  "asp_spec_ref": null,
+  "model_tier": "tier1_flagship",
+  "tools": {
+    "allowed": [
+      "Read",
+      "Bash",
+      "Glob",
+      "Grep",
+      "WebSearch"
+    ],
+    "denied": [
+      "Write",
+      "Edit",
+      "Agent",
+      "NotebookEdit"
+    ]
+  },
+  "paths": {
+    "read": [
+      "**/*"
+    ],
+    "write": [],
+    "denied": [
+      "aiStrat/**",
+      ".github/workflows/**"
+    ]
+  },
+  "authority": {
+    "autonomous": [],
+    "propose": [],
+    "escalate": [
+      "security_decision",
+      "spec_modification"
+    ]
+  },
+  "standing_orders": "all"
+}
