@@ -1,0 +1,128 @@
+#!/bin/bash
+# Admiral Framework — Quality Metrics Dashboard (P-04)
+# Collects and reports quality metrics across the codebase.
+# Usage: quality_metrics [--json]
+# Exit: 0
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
+
+JSON_MODE=false
+[ "${1:-}" = "--json" ] && JSON_MODE=true
+
+log() { [ "$JSON_MODE" = false ] && echo "$@" || true; }
+
+log "=== Admiral Quality Metrics Dashboard ==="
+log ""
+
+# Test counts
+TS_TESTS=0
+if [ -d "$PROJECT_DIR/control-plane" ]; then
+  TS_TESTS=$(grep -r "it(" "$PROJECT_DIR/control-plane/src/"*.test.ts 2>/dev/null | wc -l || echo "0")
+  TS_TESTS=$(echo "$TS_TESTS" | tr -d ' ')
+fi
+
+BASH_TEST_FILES=$(find "$PROJECT_DIR/admiral/tests" -name "test_*.sh" -type f 2>/dev/null | wc -l || echo "0")
+BASH_TEST_FILES=$(echo "$BASH_TEST_FILES" | tr -d ' ')
+
+HOOK_TEST_FILES=0
+if [ -d "$PROJECT_DIR/.hooks/tests" ]; then
+  HOOK_TEST_FILES=$(find "$PROJECT_DIR/.hooks/tests" -name "test_*.sh" -type f 2>/dev/null | wc -l || echo "0")
+  HOOK_TEST_FILES=$(echo "$HOOK_TEST_FILES" | tr -d ' ')
+fi
+
+log "--- Tests ---"
+log "  TypeScript test cases: $TS_TESTS"
+log "  Bash test suites: $BASH_TEST_FILES"
+log "  Hook test suites: $HOOK_TEST_FILES"
+
+# Hook count
+HOOK_COUNT=$(find "$PROJECT_DIR/.hooks" -maxdepth 1 -name "*.sh" -type f 2>/dev/null | wc -l || echo "0")
+HOOK_COUNT=$(echo "$HOOK_COUNT" | tr -d ' ')
+
+ADAPTER_COUNT=$(find "$PROJECT_DIR/.hooks" -maxdepth 1 -name "*_adapter.sh" -type f 2>/dev/null | wc -l || echo "0")
+ADAPTER_COUNT=$(echo "$ADAPTER_COUNT" | tr -d ' ')
+
+log ""
+log "--- Hooks ---"
+log "  Total hook scripts: $HOOK_COUNT"
+log "  Adapters: $ADAPTER_COUNT"
+log "  Enforcement hooks: $((HOOK_COUNT - ADAPTER_COUNT))"
+
+# Standing Orders
+SO_COUNT=0
+if [ -d "$PROJECT_DIR/admiral/standing-orders" ]; then
+  SO_COUNT=$(find "$PROJECT_DIR/admiral/standing-orders" -name "so*.json" -type f 2>/dev/null | wc -l || echo "0")
+  SO_COUNT=$(echo "$SO_COUNT" | tr -d ' ')
+fi
+
+log ""
+log "--- Standing Orders ---"
+log "  Standing Orders: $SO_COUNT"
+
+# Schemas
+SCHEMA_COUNT=$(find "$PROJECT_DIR/admiral/schemas" -name "*.json" -type f 2>/dev/null | wc -l || echo "0")
+SCHEMA_COUNT=$(echo "$SCHEMA_COUNT" | tr -d ' ')
+
+log ""
+log "--- Schemas ---"
+log "  JSON Schemas: $SCHEMA_COUNT"
+
+# CLI tools
+TOOL_COUNT=$(find "$PROJECT_DIR/admiral/bin" -type f 2>/dev/null | wc -l || echo "0")
+TOOL_COUNT=$(echo "$TOOL_COUNT" | tr -d ' ')
+
+log ""
+log "--- CLI Tools ---"
+log "  Admiral bin tools: $TOOL_COUNT"
+
+# Libraries
+LIB_COUNT=$(find "$PROJECT_DIR/admiral/lib" -name "*.sh" -type f 2>/dev/null | wc -l || echo "0")
+LIB_COUNT=$(echo "$LIB_COUNT" | tr -d ' ')
+
+log ""
+log "--- Libraries ---"
+log "  Shared libraries: $LIB_COUNT"
+
+# TODO progress
+DONE_COUNT=$(grep -r '^\- \[x\]' "$PROJECT_DIR/plan/todo/"*.md 2>/dev/null | wc -l || echo "0")
+TODO_COUNT=$(grep -r '^\- \[ \]' "$PROJECT_DIR/plan/todo/"*.md 2>/dev/null | wc -l || echo "0")
+DONE_COUNT=$(echo "$DONE_COUNT" | tr -d ' ')
+TODO_COUNT=$(echo "$TODO_COUNT" | tr -d ' ')
+TOTAL=$((DONE_COUNT + TODO_COUNT))
+PCT=0
+if [ "$TOTAL" -gt 0 ]; then PCT=$((DONE_COUNT * 100 / TOTAL)); fi
+
+log ""
+log "--- Roadmap Progress ---"
+log "  Done: $DONE_COUNT / $TOTAL ($PCT%)"
+log "  Remaining: $TODO_COUNT"
+
+# JSON output
+if [ "$JSON_MODE" = true ]; then
+  jq -n \
+    --argjson ts_tests "$TS_TESTS" \
+    --argjson bash_test_suites "$BASH_TEST_FILES" \
+    --argjson hook_test_suites "$HOOK_TEST_FILES" \
+    --argjson hooks "$HOOK_COUNT" \
+    --argjson adapters "$ADAPTER_COUNT" \
+    --argjson standing_orders "$SO_COUNT" \
+    --argjson schemas "$SCHEMA_COUNT" \
+    --argjson tools "$TOOL_COUNT" \
+    --argjson libraries "$LIB_COUNT" \
+    --argjson done "$DONE_COUNT" \
+    --argjson remaining "$TODO_COUNT" \
+    --argjson progress_pct "$PCT" \
+    '{
+      tests: {typescript_cases: $ts_tests, bash_suites: $bash_test_suites, hook_suites: $hook_test_suites},
+      hooks: {total: $hooks, adapters: $adapters, enforcement: ($hooks - $adapters)},
+      standing_orders: $standing_orders,
+      schemas: $schemas,
+      tools: $tools,
+      libraries: $libraries,
+      roadmap: {done: $done, remaining: $remaining, progress_pct: $progress_pct}
+    }'
+fi
+
+exit 0
