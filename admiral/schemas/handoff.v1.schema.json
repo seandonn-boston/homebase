@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "handoff.v1.schema.json",
+  "title": "Agent Handoff Protocol",
+  "description": "Schema for agent-to-agent task handoff in the Admiral Framework",
+  "type": "object",
+  "required": ["handoff_id", "from_agent", "to_agent", "task", "deliverable", "status"],
+  "properties": {
+    "handoff_id": {
+      "type": "string",
+      "description": "Unique identifier for this handoff"
+    },
+    "from_agent": {
+      "type": "string",
+      "description": "Agent initiating the handoff"
+    },
+    "to_agent": {
+      "type": "string",
+      "description": "Agent receiving the handoff"
+    },
+    "task": {
+      "type": "string",
+      "description": "Description of the task being handed off"
+    },
+    "deliverable": {
+      "type": "string",
+      "description": "Expected deliverable from the receiving agent"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["pending", "accepted", "rejected", "completed", "failed"],
+      "description": "Current handoff status"
+    },
+    "context_files": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "File paths relevant to the task"
+    },
+    "acceptance_criteria": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Criteria for task completion"
+    },
+    "constraints": {
+      "type": "object",
+      "properties": {
+        "token_budget": { "type": "integer" },
+        "deadline": { "type": "string" },
+        "priority": { "type": "string", "enum": ["critical", "normal", "low"] }
+      }
+    },
+    "rejection_reason": {
+      "type": "string",
+      "description": "Reason for rejection (if rejected)"
+    },
+    "created_at": { "type": "string" },
+    "completed_at": { "type": "string" }
+  }
+}

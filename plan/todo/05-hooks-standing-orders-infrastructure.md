@@ -33,8 +33,8 @@
 
 ## Execution Patterns (Stream 8, Section 8.1)
 
-- [ ] **S-10** — Handoff protocol: Agent-to-agent handoff with JSON schema (`handoff/v1.schema.json`); validate completeness before acceptance; reject incomplete handoffs with field-level errors; log handoff history for audit
-- [ ] **S-11** — Escalation pipeline: 5-step process (intake classification, Brain precedent query, resolution path generation, Admiral decision, outcome persistence); conflict resolution backbone
+- [x] **S-10** — Handoff protocol: Agent-to-agent handoff with JSON schema (`handoff/v1.schema.json`); validate completeness before acceptance; reject incomplete handoffs with field-level errors; log handoff history for audit
+- [x] **S-11** — Escalation pipeline: 5-step process (intake classification, Brain precedent query, resolution path generation, Admiral decision, outcome persistence); conflict resolution backbone
 - [ ] **S-12** — Parallel execution coordinator: Coordinate parallel agent tasks with dependency tracking; schedule independent tasks concurrently; handle partial failure with configurable abort policy
 
 ## Quality Assurance Gates (Stream 8, Section 8.2)
