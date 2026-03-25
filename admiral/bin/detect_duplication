@@ -1,0 +1,90 @@
+#!/bin/bash
+# Admiral Framework — Code Duplication Detector (P-06)
+# Finds duplicate code blocks across bash scripts and reports percentage.
+# Warns above 15% threshold, reports top-5 duplicate fragments.
+# Usage: detect_duplication [--ci] [directory...]
+# Exit: 0=below threshold, 1=above threshold
+set -euo pipefail
+
+CI_MODE=false
+[ "${1:-}" = "--ci" ] && { CI_MODE=true; shift; }
+
+DIRS="${*:-admiral/bin admiral/lib .hooks}"
+THRESHOLD=15
+
+echo "=== Code Duplication Detection ==="
+echo "Scanning: $DIRS"
+echo ""
+
+# Extract all function-length blocks (3+ consecutive non-empty lines)
+# and find duplicates by content hash
+TOTAL_LINES=0
+DUP_LINES=0
+declare -A BLOCK_HASHES
+declare -A BLOCK_SOURCES
+DUPLICATES=()
+
+for dir in $DIRS; do
+  [ -d "$dir" ] || continue
+  while IFS= read -r file; do
+    [ -f "$file" ] || continue
+    file_lines=$(wc -l < "$file")
+    TOTAL_LINES=$((TOTAL_LINES + file_lines))
+
+    # Extract 3-line sliding window blocks
+    line_count=$(wc -l < "$file")
+    if [ "$line_count" -lt 3 ]; then continue; fi
+
+    for ((i=1; i<=line_count-2; i++)); do
+      block=$(sed -n "${i},$((i+2))p" "$file" | grep -v '^$' | grep -v '^#' | sed 's/^[[:space:]]*//')
+      # Skip blocks that are too short (less than 3 non-empty, non-comment lines)
+      block_len=$(echo "$block" | wc -l)
+      if [ "$block_len" -lt 3 ]; then continue; fi
+
+      hash=$(echo "$block" | sha256sum | cut -c1-16)
+
+      if [ -n "${BLOCK_HASHES[$hash]+x}" ]; then
+        # Duplicate found
+        if [ "${BLOCK_HASHES[$hash]}" != "$file:$i" ]; then
+          DUP_LINES=$((DUP_LINES + 3))
+          source_info="${BLOCK_SOURCES[$hash]}"
+          if [ ${#DUPLICATES[@]} -lt 5 ]; then
+            DUPLICATES+=("$file:$i dup of $source_info")
+          fi
+        fi
+      else
+        BLOCK_HASHES[$hash]="$file:$i"
+        BLOCK_SOURCES[$hash]="$file:$i"
+      fi
+    done
+  done < <(find "$dir" -type f \( -name "*.sh" -o ! -name "*.*" \) -not -path "*/tests/*" 2>/dev/null)
+done
+
+if [ "$TOTAL_LINES" -eq 0 ]; then
+  echo "No files found to scan."
+  exit 0
+fi
+
+DUP_PCT=$((DUP_LINES * 100 / TOTAL_LINES))
+
+echo "Total lines: $TOTAL_LINES"
+echo "Duplicate lines: $DUP_LINES"
+echo "Duplication: ${DUP_PCT}%"
+
+if [ ${#DUPLICATES[@]} -gt 0 ]; then
+  echo ""
+  echo "Top duplicate locations:"
+  for dup in "${DUPLICATES[@]}"; do
+    echo "  - $dup"
+  done
+fi
+
+echo ""
+if [ "$DUP_PCT" -gt "$THRESHOLD" ]; then
+  echo "WARNING: Duplication ${DUP_PCT}% exceeds ${THRESHOLD}% threshold."
+  [ "$CI_MODE" = true ] && echo "::warning::Code duplication at ${DUP_PCT}% exceeds ${THRESHOLD}% threshold"
+  exit 1
+else
+  echo "PASS: Duplication ${DUP_PCT}% is within ${THRESHOLD}% threshold."
+  exit 0
+fi
