@@ -7,13 +7,13 @@
 
 import * as fs from "node:fs";
 import * as path from "node:path";
-import type { LogEntry } from "./logger";
+import type { LogEntry, LogLevel } from "./logger";
 
 export interface LogQuery {
   startTime?: string;
   endTime?: string;
   component?: string;
-  level?: string;
+  level?: LogLevel;
   correlationId?: string;
   search?: string;
   limit?: number;
