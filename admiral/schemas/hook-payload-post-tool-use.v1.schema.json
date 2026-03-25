@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "hook-payload-post-tool-use.v1.schema.json",
+  "title": "PostToolUse Hook Payload",
+  "description": "JSON payload received by PostToolUse hooks from Claude Code.",
+  "type": "object",
+  "required": ["tool_name"],
+  "properties": {
+    "tool_name": {
+      "type": "string",
+      "description": "Name of the tool that was invoked."
+    },
+    "tool_input": {
+      "type": "object",
+      "description": "Tool-specific input parameters.",
+      "additionalProperties": true
+    },
+    "tool_response": {
+      "description": "Response/output from the tool execution.",
+      "type": ["string", "object", "null"]
+    }
+  },
+  "additionalProperties": true
+}

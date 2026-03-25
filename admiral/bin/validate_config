@@ -1,0 +1,114 @@
+#!/bin/bash
+# Admiral Framework — Configuration Validator (A-05)
+# Validates admiral/config.json against the schema.
+# Usage: validate_config [--json] [config_path]
+# Exit: 0=valid, 1=warnings, 2=errors
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ADMIRAL_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+SCHEMA="$ADMIRAL_DIR/schemas/admiral-config.v1.schema.json"
+
+JSON_MODE=false
+[ "${1:-}" = "--json" ] && { JSON_MODE=true; shift; }
+
+CONFIG="${1:-$ADMIRAL_DIR/config.json}"
+
+log() { [ "$JSON_MODE" = false ] && echo "$@" || true; }
+
+log "=== Admiral Configuration Validation ==="
+
+if [ ! -f "$CONFIG" ]; then
+  log "ERROR: Config file not found: $CONFIG"
+  exit 2
+fi
+
+if ! jq empty "$CONFIG" 2>/dev/null; then
+  log "ERROR: Config is not valid JSON"
+  exit 2
+fi
+
+if [ ! -f "$SCHEMA" ]; then
+  log "WARNING: Schema not found, skipping validation"
+  exit 0
+fi
+
+ERRORS=()
+WARNINGS=()
+
+# Check for unknown top-level keys
+allowed_keys=$(jq -r '.properties | keys[]' "$SCHEMA" 2>/dev/null)
+actual_keys=$(jq -r 'keys[]' "$CONFIG" 2>/dev/null)
+
+for key in $actual_keys; do
+  key="${key%$'\r'}"
+  if ! echo "$allowed_keys" | grep -qx "$key"; then
+    ERRORS+=("Unknown top-level key: $key")
+  fi
+done
+
+# Validate detector section
+if jq -e '.detector' "$CONFIG" > /dev/null 2>&1; then
+  for field in maxRepeatedToolCalls repeatWindowMs maxSubtasks subtaskWindowMs; do
+    val=$(jq -r ".detector.$field // empty" "$CONFIG" 2>/dev/null)
+    if [ -z "$val" ]; then
+      WARNINGS+=("detector.$field not set")
+    elif [ "$val" -le 0 ] 2>/dev/null; then
+      ERRORS+=("detector.$field must be positive: $val")
+    fi
+  done
+fi
+
+# Validate hooks section
+if jq -e '.hooks' "$CONFIG" > /dev/null 2>&1; then
+  budget_pct=$(jq -r '.hooks.budgetWarningPct // empty' "$CONFIG" 2>/dev/null)
+  if [ -n "$budget_pct" ]; then
+    if [ "$budget_pct" -lt 1 ] 2>/dev/null || [ "$budget_pct" -gt 100 ] 2>/dev/null; then
+      ERRORS+=("hooks.budgetWarningPct must be 1-100: $budget_pct")
+    fi
+  fi
+fi
+
+# Validate tokenEstimates
+if jq -e '.tokenEstimates' "$CONFIG" > /dev/null 2>&1; then
+  if [ "$(jq '.tokenEstimates.default // 0' "$CONFIG")" -eq 0 ]; then
+    WARNINGS+=("tokenEstimates.default not set")
+  fi
+fi
+
+# Output
+if [ "$JSON_MODE" = true ]; then
+  err_json="[]"
+  warn_json="[]"
+  [ ${#ERRORS[@]} -gt 0 ] && err_json=$(printf '%s\n' "${ERRORS[@]}" | jq -R . | jq -s .)
+  [ ${#WARNINGS[@]} -gt 0 ] && warn_json=$(printf '%s\n' "${WARNINGS[@]}" | jq -R . | jq -s .)
+
+  status="valid"
+  [ ${#WARNINGS[@]} -gt 0 ] && status="warnings"
+  [ ${#ERRORS[@]} -gt 0 ] && status="invalid"
+
+  jq -n --arg status "$status" --argjson errors "$err_json" --argjson warnings "$warn_json" \
+    '{status: $status, errors: $errors, warnings: $warnings}'
+
+  [ ${#ERRORS[@]} -gt 0 ] && exit 2
+  [ ${#WARNINGS[@]} -gt 0 ] && exit 1
+  exit 0
+fi
+
+if [ ${#ERRORS[@]} -gt 0 ]; then
+  for err in "${ERRORS[@]}"; do log "  [ERROR] $err"; done
+fi
+if [ ${#WARNINGS[@]} -gt 0 ]; then
+  for w in "${WARNINGS[@]}"; do log "  [WARN] $w"; done
+fi
+
+if [ ${#ERRORS[@]} -gt 0 ]; then
+  log "FAIL: ${#ERRORS[@]} error(s)"
+  exit 2
+elif [ ${#WARNINGS[@]} -gt 0 ]; then
+  log "PASS with ${#WARNINGS[@]} warning(s)"
+  exit 1
+else
+  log "PASS: Configuration is valid."
+  exit 0
+fi

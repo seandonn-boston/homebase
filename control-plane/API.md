@@ -107,3 +107,37 @@ See source files for full type definitions:
 - `DetectorConfig` — `control-plane/src/runaway-detector.ts`
 - `TraceNode`, `TraceStats` — `control-plane/src/trace.ts`
 - `IngesterStats` — `control-plane/src/ingest.ts`
+
+## curl Examples
+
+```bash
+# Health check
+curl http://localhost:4510/health
+
+# Get all events
+curl http://localhost:4510/api/events
+
+# Get active alerts only
+curl http://localhost:4510/api/alerts/active
+
+# Resume a paused agent
+curl http://localhost:4510/api/agents/agent-1/resume
+
+# Resolve an alert
+curl http://localhost:4510/api/alerts/alert-42/resolve
+
+# ASCII execution trace
+curl http://localhost:4510/api/trace/ascii
+
+# JSON execution trace
+curl http://localhost:4510/api/trace
+
+# Stats (trace + ingester)
+curl http://localhost:4510/api/stats
+
+# Session state
+curl http://localhost:4510/api/session
+
+# Detector configuration
+curl http://localhost:4510/api/config
+```

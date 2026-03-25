@@ -1,0 +1,144 @@
+#!/bin/bash
+# Admiral Framework — Bash Dependency Checker (A-04)
+# Verifies all required tools are available and meet minimum versions.
+# Usage: check_dependencies [--json] [--ci]
+# Exit codes: 0=all met, 1=missing dependencies, 2=hard error
+set -euo pipefail
+
+JSON_MODE=false
+CI_MODE=false
+
+for arg in "$@"; do
+  case "$arg" in
+    --json) JSON_MODE=true ;;
+    --ci) CI_MODE=true ;;
+  esac
+done
+
+PASS=()
+FAIL=()
+WARN=()
+
+# Compare major.minor versions. Returns 0 if actual >= required.
+_version_gte() {
+  local actual_major="${1%%.*}"
+  local actual_minor="${1##*.}"
+  local req_major="${2%%.*}"
+  local req_minor="${2##*.}"
+  if [ "$actual_major" -gt "$req_major" ] 2>/dev/null; then return 0; fi
+  if [ "$actual_major" -eq "$req_major" ] 2>/dev/null; then
+    if [ "$actual_minor" -ge "$req_minor" ] 2>/dev/null; then return 0; fi
+  fi
+  return 1
+}
+
+check_command() {
+  local cmd="$1"
+  local min_version="${2:-}"
+  local required="${3:-true}"
+
+  if ! command -v "$cmd" &>/dev/null; then
+    if [ "$required" = "true" ]; then
+      FAIL+=("$cmd: not found")
+    else
+      WARN+=("$cmd: not found (optional)")
+    fi
+    return
+  fi
+
+  if [ -n "$min_version" ]; then
+    local actual_version=""
+    case "$cmd" in
+      shellcheck)
+        actual_version=$("$cmd" --version 2>/dev/null | grep -oE 'version: [0-9.]+' | grep -oE '[0-9]+\.[0-9]+' | head -1)
+        ;;
+      *)
+        actual_version=$("$cmd" --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+' | head -1)
+        ;;
+    esac
+
+    if [ -z "$actual_version" ]; then
+      PASS+=("$cmd: found (version unknown, need >= $min_version)")
+    elif _version_gte "$actual_version" "$min_version"; then
+      PASS+=("$cmd: $actual_version (>= $min_version)")
+    else
+      FAIL+=("$cmd: $actual_version < $min_version required")
+    fi
+  else
+    PASS+=("$cmd: found")
+  fi
+}
+
+# Required dependencies
+check_command "jq" "1.6" "true"
+check_command "bash" "4.0" "true"
+check_command "git" "" "true"
+check_command "node" "20.0" "true"
+check_command "npm" "" "true"
+
+# Required utilities
+check_command "sha256sum" "" "true"
+check_command "grep" "" "true"
+check_command "sed" "" "true"
+check_command "awk" "" "true"
+check_command "mktemp" "" "true"
+check_command "date" "" "true"
+
+# Optional dependencies
+check_command "uuidgen" "" "false"
+check_command "flock" "" "false"
+check_command "shellcheck" "0.9" "false"
+check_command "python3" "3.11" "false"
+
+# Output
+if [ "$JSON_MODE" = true ]; then
+  pass_json="[]"
+  fail_json="[]"
+  warn_json="[]"
+  [ ${#PASS[@]} -gt 0 ] && pass_json=$(printf '%s\n' "${PASS[@]}" | jq -R . | jq -s .)
+  [ ${#FAIL[@]} -gt 0 ] && fail_json=$(printf '%s\n' "${FAIL[@]}" | jq -R . | jq -s .)
+  [ ${#WARN[@]} -gt 0 ] && warn_json=$(printf '%s\n' "${WARN[@]}" | jq -R . | jq -s .)
+
+  status="pass"
+  [ ${#FAIL[@]} -gt 0 ] && status="fail"
+
+  jq -n \
+    --arg status "$status" \
+    --argjson pass "$pass_json" \
+    --argjson fail "$fail_json" \
+    --argjson warn "$warn_json" \
+    '{status: $status, pass: $pass, fail: $fail, warn: $warn}'
+
+  [ ${#FAIL[@]} -gt 0 ] && exit 1
+  exit 0
+fi
+
+echo "=== Admiral Dependency Check ==="
+echo ""
+
+for item in "${PASS[@]}"; do
+  echo "  [PASS] $item"
+done
+for item in "${WARN[@]}"; do
+  echo "  [WARN] $item"
+done
+for item in "${FAIL[@]}"; do
+  echo "  [FAIL] $item"
+done
+
+echo ""
+echo "Required: ${#PASS[@]} found, ${#FAIL[@]} missing"
+echo "Optional: ${#WARN[@]} not found"
+
+if [ ${#FAIL[@]} -gt 0 ]; then
+  echo ""
+  echo "FAIL: Missing required dependencies. Install them before proceeding."
+  if [ "$CI_MODE" = true ]; then
+    echo "CI check failed."
+  fi
+  exit 1
+fi
+
+echo ""
+echo "PASS: All required dependencies met."
+exit 0

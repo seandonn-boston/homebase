@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0.0",
+  "description": "Component availability registry. Defines optional components and their degradation behavior when absent.",
+  "components": [
+    {
+      "name": "control_plane",
+      "type": "optional",
+      "check": "control-plane/dist/src/cli.js",
+      "degradation": "No dashboard, no runaway detection, no execution trace. Hooks still function independently.",
+      "impact": "low"
+    },
+    {
+      "name": "brain_b1",
+      "type": "optional",
+      "check": "admiral/bin/brain_query",
+      "degradation": "No institutional memory queries. brain_context_router hook becomes no-op.",
+      "impact": "medium"
+    },
+    {
+      "name": "quarantine_pipeline",
+      "type": "optional",
+      "check": "admiral/monitor/quarantine/quarantine_pipeline.sh",
+      "degradation": "No content quarantine scanning. Injection detection still available via injection_detect.sh.",
+      "impact": "medium"
+    },
+    {
+      "name": "monitor_scanner",
+      "type": "optional",
+      "check": "admiral/monitor/scanner.sh",
+      "degradation": "No ecosystem monitoring or digest generation.",
+      "impact": "low"
+    },
+    {
+      "name": "standing_orders",
+      "type": "required",
+      "check": "admiral/standing-orders/so01-identity-discipline.json",
+      "degradation": "Session start produces empty Standing Orders block. Hooks still enforce but agents lack context.",
+      "impact": "high"
+    },
+    {
+      "name": "state_management",
+      "type": "required",
+      "check": "admiral/lib/state.sh",
+      "degradation": "All hooks that depend on session state will fail-open. Token tracking, loop detection, and context health disabled.",
+      "impact": "critical"
+    },
+    {
+      "name": "config",
+      "type": "required",
+      "check": "admiral/config.json",
+      "degradation": "Hooks fall back to hardcoded defaults. Token estimates, detector thresholds use built-in values.",
+      "impact": "low"
+    }
+  ]
+}

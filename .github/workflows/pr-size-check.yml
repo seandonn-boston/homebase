@@ -1,0 +1,41 @@
+name: PR Size Check
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  check-size:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Check PR size
+        run: |
+          BASE="${{ github.event.pull_request.base.sha }}"
+          HEAD="${{ github.event.pull_request.head.sha }}"
+
+          # Count changed lines excluding generated/lock files
+          LINES=$(git diff --stat "$BASE..$HEAD" -- \
+            ':!package-lock.json' \
+            ':!*.lock' \
+            ':!dist/' \
+            ':!*.snap' \
+            | tail -1 | grep -oE '[0-9]+ insertion' | grep -oE '[0-9]+' || echo "0")
+
+          DELETIONS=$(git diff --stat "$BASE..$HEAD" -- \
+            ':!package-lock.json' \
+            ':!*.lock' \
+            ':!dist/' \
+            ':!*.snap' \
+            | tail -1 | grep -oE '[0-9]+ deletion' | grep -oE '[0-9]+' || echo "0")
+
+          TOTAL=$((LINES + DELETIONS))
+
+          echo "PR size: +$LINES -$DELETIONS = $TOTAL lines changed"
+
+          if [ "$TOTAL" -gt 500 ]; then
+            echo "::warning::Large PR: $TOTAL lines changed (threshold: 500). Consider splitting into smaller PRs."
+          fi
