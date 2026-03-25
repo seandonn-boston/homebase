@@ -1,5 +1,5 @@
 #!/bin/bash
-# shellcheck disable=SC2034,SC2317
+# shellcheck disable=SC1091,SC2012,SC2034,SC2317
 # test_agent_registry.sh — Tests for the agent registry (S-06)
 set -euo pipefail
 

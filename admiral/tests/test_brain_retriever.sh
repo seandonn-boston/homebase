@@ -1,5 +1,5 @@
 #!/bin/bash
-# shellcheck disable=SC2034,SC2317
+# shellcheck disable=SC1091,SC2012,SC2034,SC2317
 # test_brain_retriever.sh — Tests for B-02 brain retrieval in hooks
 set -euo pipefail
 

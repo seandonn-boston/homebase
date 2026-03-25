@@ -1,5 +1,5 @@
 #!/bin/bash
-# shellcheck disable=SC2034,SC2317
+# shellcheck disable=SC1091,SC2012,SC2034,SC2317
 # test_so_enforcement.sh — Tests for Standing Orders enforcement library and completeness report
 set -euo pipefail
 

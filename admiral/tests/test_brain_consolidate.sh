@@ -1,5 +1,5 @@
 #!/bin/bash
-# shellcheck disable=SC2034,SC2317
+# shellcheck disable=SC1091,SC2012,SC2034,SC2317
 # test_brain_consolidate.sh — Tests for B-05 brain entry consolidation
 set -euo pipefail
 

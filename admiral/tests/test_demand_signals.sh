@@ -1,5 +1,5 @@
 #!/bin/bash
-# shellcheck disable=SC2034,SC2317
+# shellcheck disable=SC1091,SC2012,SC2034,SC2317
 # test_demand_signals.sh — Tests for B-03 demand signal tracking
 set -euo pipefail
 

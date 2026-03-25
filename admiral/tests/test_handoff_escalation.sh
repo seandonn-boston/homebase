@@ -1,5 +1,5 @@
 #!/bin/bash
-# shellcheck disable=SC2034,SC2317
+# shellcheck disable=SC1091,SC2012,SC2034,SC2317
 # test_handoff_escalation.sh — Tests for S-10 (handoff) and S-11 (escalation)
 set -euo pipefail
 

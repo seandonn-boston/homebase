@@ -1,5 +1,5 @@
 #!/bin/bash
-# shellcheck disable=SC2034,SC2317
+# shellcheck disable=SC1091,SC2012,SC2034,SC2317
 # test_hook_contracts.sh — Validates that all hooks produce well-formed JSON output
 set -euo pipefail
 
