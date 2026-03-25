@@ -1,6 +1,6 @@
 #!/bin/bash
-# test_contradiction_scan.sh — Tests for B-04 contradiction scan on write
 # shellcheck disable=SC2034,SC2317
+# test_contradiction_scan.sh — Tests for B-04 contradiction scan on write
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

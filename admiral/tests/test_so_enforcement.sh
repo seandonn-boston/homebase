@@ -1,7 +1,7 @@
 #!/bin/bash
+# shellcheck disable=SC2034,SC2317
 # test_so_enforcement.sh — Tests for Standing Orders enforcement library and completeness report
 set -euo pipefail
-# shellcheck disable=SC2034,SC2317
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
