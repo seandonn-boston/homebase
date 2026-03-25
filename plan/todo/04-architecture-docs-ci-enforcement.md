@@ -116,7 +116,7 @@
 
 ### 6.2 Meta-Governance
 
-- [ ] **P-03:** Meta-test — *Deferred to Phase 3 (depends on A-02 integration).* `[L]`
+- [x] **P-03:** Meta-test — Admiral tests its own hooks `[L]`
 - [ ] **P-04:** Quality metrics dashboard — *Deferred to Phase 3 (depends on T-09, T-10, T-11, T-12).* `[L]`
 
 ### 6.3 Self-Enforcement (Dog-Fooding)
