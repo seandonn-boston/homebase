@@ -27,19 +27,37 @@ Close a phase safely and completely before merging to `main`.
 
 ## Completion Assessment
 
-Before any mechanical checks, honestly assess whether the phase delivered what it was designed to deliver. Answer each question and include the assessment in the Output Contract.
+Before any mechanical checks, honestly assess whether the phase delivered what it was designed to deliver. Evaluate across five verification dimensions and include the full assessment in the Output Contract.
 
-1. **Was the task completed as designed?** Compare the ROADMAP's stated scope and exit criteria for this phase against what was actually built. Identify any gaps between intent and outcome.
+### Evaluation Dimensions
 
-2. **Is the final product a useful manifestation of the specifications?** Does it solve real problems, or is it ceremony? Would a developer picking up this codebase find the deliverables genuinely helpful?
+**Deterministic** — provable, repeatable outcomes:
 
-3. **Is it capable?** Does each deliverable actually work — not just exist as a file, but function correctly under real conditions? Were the tests meaningful or perfunctory?
+1. **Was the task completed as designed?** Compare the ROADMAP's stated scope and exit criteria against what was actually built. Identify gaps between intent and outcome.
+2. **Do tests prove it works?** Are the tests meaningful assertions of behavior, or perfunctory checks that always pass? Could a test suite this green still hide broken functionality?
 
-4. **Is it robust?** How does it handle edge cases, missing inputs, corrupt state, absent dependencies? Were failure modes tested or assumed away?
+**Probabilistic** — likely outcomes under real conditions:
 
-5. **Is it grounded?** Is the work anchored in the spec and the codebase's real needs, or did it drift into theoretical infrastructure that nothing consumes yet?
+3. **Is it useful?** Does it solve real problems, or is it ceremony? Would a developer picking up this codebase find the deliverables genuinely helpful?
+4. **Is it capable?** Does each deliverable function correctly under real conditions — not just the happy path tested in CI, but the messy conditions of actual use?
+5. **Is it robust?** How does it handle edge cases, missing inputs, corrupt state, absent dependencies? Were failure modes tested or assumed away?
 
-6. **Is it simple?** Could the same outcomes have been achieved with less code, fewer files, or a more direct approach? Is there unnecessary abstraction?
+**Virtual** — behavior in development/simulated environments:
+
+6. **Is it grounded?** Is the work anchored in the spec and the codebase's real needs, or did it drift into theoretical infrastructure that nothing consumes yet?
+7. **Is it simple?** Could the same outcomes have been achieved with less code, fewer files, or a more direct approach? Is there unnecessary abstraction?
+
+**Visual** — observable confirmation of correct behavior:
+
+8. **Can you see it working?** For CLI tools: run them and include output. For CI workflows: link to passing runs. For schemas: show a validation pass and fail. Evidence over assertion.
+
+**Verifiable** — third-party confirmable:
+
+9. **Could someone else confirm this works?** Is the documentation sufficient for another developer or agent to verify the deliverables independently, without context from this session?
+
+### User-Driven QA (future)
+
+> The ultimate quality signal is ethical use of real user analytical data — actual usage patterns, failure rates, and outcomes observed in production. This requires Brain-level tracking infrastructure (B2+ with session telemetry, outcome recording, and feedback loops) which is not yet built. Until that infrastructure exists, the above assessment dimensions serve as the best available proxy. When Brain tracking is available, this section should evolve into a data-driven assessment referencing actual metrics rather than probabilistic self-evaluation. See EDD-01 through EDD-05 in `plan/todo/03-testing-and-code-quality.md` for the evaluation-driven design gate system that will formalize this.
 
 If any answer reveals a significant gap, note it as a finding and either fix it before proceeding or escalate to the Admiral with a recommendation.
 
