@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "commonjs",
+    "lib": ["ES2022"],
+    "outDir": "dist",
+    "rootDir": ".",
+    "strict": true,
+    "esModuleInterop": true,
+    "declaration": true,
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "types": ["node"],
+    "typeRoots": ["../control-plane/node_modules/@types"]
+  },
+  "include": ["routing/**/*", "autonomy/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

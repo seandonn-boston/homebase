@@ -1,0 +1,20 @@
+{
+  "name": "@admiral/mcp-server",
+  "version": "0.1.0-alpha",
+  "description": "Admiral MCP Server — Brain, Fleet, and Governance tools for AI agents",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/src/cli.js",
+    "start:stdio": "node dist/src/cli.js --transport stdio",
+    "start:http": "node dist/src/cli.js --transport http --port 3100",
+    "test": "node --test dist/src/**/*.test.js",
+    "dev": "tsc --watch"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "typescript": "^5.9.3"
+  }
+}
