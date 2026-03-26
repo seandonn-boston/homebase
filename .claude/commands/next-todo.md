@@ -1,87 +1,33 @@
 # /next-todo
 
-Execute the next actionable work item from `plan/todo/` using the Admiral workflow.
+Execute the next actionable work item from `plan/todo/`.
+
+> **Prerequisites:** See [`_primer.md`](_primer.md) for operational definitions (Admiral, Work Hierarchy, Decision Authority, Recovery Ladder, etc.)
 
 ## Mission
 
 Implement existing TODO items only. Do not invent new TODO items.
 
+## Entry State
+
+- `plan/todo/*.md` contains at least one incomplete task.
+- You may or may not be on the correct branch — Session Continuity Protocol detects this.
+
+## Exit State
+
+- One task is complete with passing tests (happy + unhappy path).
+- Task PR is merged into the phase slush branch.
+- `plan/todo/*.md` is updated to reflect completed work.
+- Working tree is clean on the phase slush branch.
+
 ## Inputs
 
-- Optional argument: specific phase/task hint (for example: `phase 02`, `SD-04`)
+- Optional argument: specific phase/task hint (e.g., `phase 02`, `SD-04`)
 - Source of truth: `plan/todo/*.md`
-
-## Hard Rules
-
-1. `aiStrat/` is read-only. Never modify files under `aiStrat/`.
-2. Every TODO item includes the imperative: **Clean as you go**.
-3. Do not get blocked. If blocked (including policy/tooling/permissions), alert the Admiral with:
-   - what is blocked
-   - why it is blocked
-   - recommended resolutions
-4. Do not create new TODO items. You may update status/checkmarks and execution notes for existing items.
-
-## Work Hierarchy
-
-- **Phase**: large body of work spanning multiple sessions/agents.
-- **Task**: meaningful chunk within a phase; usually one branch and one PR.
-- **Subtask**: one meaningful commit-sized unit; no PR.
-
-## Branch and PR Policy
-
-### Phase-level
-
-1. Sync main first:
-   - `git checkout main`
-   - `git pull --ff-only`
-2. Ensure exactly one phase slush branch off main, named:
-   - `slush/phase-<NN>-<slug>`
-3. When creating a new phase slush branch, immediately push it and open a PR from the slush branch to `main`:
-   - Title: `Phase <NN>: <Phase Name>`
-   - Body: summary of the phase scope from `plan/ROADMAP.md`
-   - **Do NOT merge this PR.** It requires Admiral approval to merge.
-   - Include the slush→main PR URL in the Output Contract.
-4. If more than one slush branch is needed or detected for the phase, stop and alert Admiral.
-
-### Task-level
-
-1. Create task branch from phase slush:
-   - `task/phase-<NN>/<task-id>-<slug>`
-2. Complete task work on that branch.
-3. Open PR from task branch to phase slush branch.
-4. Resolve merge conflicts.
-5. Merge PR into phase slush without human permission.
-6. If unable to open/merge the PR autonomously, alert Admiral.
-7. A task should not require multiple PRs. If it does, alert Admiral.
-
-### Subtask-level
-
-1. Subtask equals one meaningful commit.
-2. Subtask must not require a PR.
-3. If a subtask requires multiple commits or a PR, escalate it to a task and alert Admiral.
-
-## Definition of Done Requirements
-
-Each phase and each task must have a Definition of Done that includes:
-
-- happy path tests
-- not-happy-path tests
-
-If missing from TODO docs, add concise DoD notes to the phase/task execution notes in `plan/todo/*.md` before marking complete.
-
-## Required Subtask Ordering
-
-1. First subtask for each task: TDD-first (where applicable).
-2. Final subtask for each task and each phase:
-   - run tests
-   - run linters
-   - cleanup
-   - ensure CI passes
-3. If any of these fail, fix before completion.
 
 ## Session Continuity Protocol
 
-A prior session may have been interrupted mid-task. Before starting new work, detect and resume in-progress work:
+A prior session may have been interrupted mid-task. **Before starting new work**, detect and resume:
 
 1. **Detect active phase slush branch:**
    - `git branch -a | grep slush/`
@@ -93,53 +39,109 @@ A prior session may have been interrupted mid-task. Before starting new work, de
 
 3. **Recover context from git history:**
    - On the task branch: `git log --oneline slush/phase-<NN>-<slug>..HEAD` to see commits made so far.
-   - Check `git status` and `git diff` for any uncommitted work.
-   - Check `git stash list` for any stashed changes.
+   - Check `git status` and `git diff` for uncommitted work.
+   - Check `git stash list` for stashed changes.
    - Read the latest commit messages — they describe what was completed.
-   - Check `gh pr list --head <task-branch> --state all` — if a PR exists and is merged, the task is done; if open, it needs merging; if none, the task is still in progress.
+   - Check `gh pr list --head <task-branch> --state all` — merged PR = task done; open = needs merging; none = still in progress.
 
 4. **Recover task identity:**
    - The task branch name encodes phase and task ID: `task/phase-<NN>/<task-id>-<slug>`
-   - Cross-reference the task ID against `plan/todo/*.md` to see what remains.
+   - Cross-reference against `plan/todo/*.md` to see what remains.
 
 5. **Resume or advance:**
-   - If the task branch has uncommitted work → commit it, then continue.
-   - If the task branch has commits but no PR → finish remaining subtasks, open PR, merge.
-   - If the task branch has a merged PR → the task is done; advance to the next incomplete task.
-   - If no task branch exists → start the next incomplete task normally.
+   - Uncommitted work on task branch → commit it, then continue.
+   - Commits but no PR → finish remaining subtasks, open PR, merge.
+   - Merged PR → task is done; advance to the next incomplete task.
+   - No task branch exists → start the next incomplete task normally.
 
 6. **Report continuity status** at the top of the Output Contract:
    - `RESUMING: task/phase-00/sd-10-fleet-protocol (3 commits found, PR not yet opened)`
    - or `FRESH START: no in-progress work detected`
 
+## Work Hierarchy
+
+- **Phase**: large body of work spanning multiple sessions/agents. One slush branch, one slush→main PR (Admiral-approved).
+- **Task**: meaningful chunk within a phase. One task branch, one task→slush PR (self-merged).
+- **Subtask**: one meaningful commit. No branch, no PR.
+
+## Branch and PR Policy
+
+### Phase-level
+
+1. Sync main first: `git checkout main`, `git pull --ff-only`.
+2. Ensure exactly one phase slush branch off main: `slush/phase-<NN>-<slug>`.
+3. When creating a new slush branch, immediately push and open a PR to `main`:
+   - Title: `Phase <NN>: <Phase Name>`
+   - Body: scope summary from `plan/ROADMAP.md`
+   - **Do NOT merge this PR.** Admiral approval required.
+   - Include the slush→main PR URL in the Output Contract.
+4. If more than one slush branch exists for the phase → escalate.
+
+### Task-level
+
+1. Create task branch from phase slush: `task/phase-<NN>/<task-id>-<slug>`
+2. Complete task work on that branch.
+3. Open PR from task branch to phase slush.
+4. Resolve merge conflicts.
+5. Merge PR into phase slush (autonomous — no human approval needed).
+6. One task = one PR. If a task needs multiple PRs → escalate.
+
+### Subtask-level
+
+1. Subtask = one meaningful commit. No branch, no PR.
+2. If a subtask needs multiple commits or a PR → promote it to a task and escalate.
+
 ## Execution Algorithm
 
-1. **Run Session Continuity Protocol** (above) to detect and resume in-progress work.
+1. **Run Session Continuity Protocol** to detect and resume in-progress work.
 2. Identify the active phase and next incomplete task in `plan/todo/`.
-3. Verify dependencies and preconditions.
-4. Create/checkout phase slush branch policy-compliantly.
+3. Verify dependencies and preconditions. If a task is blocked, skip it and take the next unblocked task.
+4. Create/checkout phase slush branch per policy.
 5. Create task branch from the phase slush branch (or checkout existing one).
-6. Execute subtasks as commit-sized increments (TDD-first where applicable).
-7. After each built item:
-   - check implementation quality
-   - update TODO status in `plan/todo/*.md`
-   - resolve merge conflicts with the appropriate target branch
-8. Open PR task -> phase slush, resolve issues, merge.
-9. At phase completion, run `/phase-closeout` (do not merge slush to main directly).
+6. Execute subtasks as commit-sized increments:
+   - First subtask: TDD-first (where applicable).
+   - Each subtask: implement, commit, update TODO status.
+   - Final subtask: run tests, run linters, cleanup, ensure CI passes. Fix failures before completion.
+7. Open PR from task branch → phase slush. Resolve conflicts. Merge.
+8. At phase completion, run `/phase-closeout` (do not merge slush to main directly).
 
-## Output Contract (always include)
+## What goes wrong during task execution
 
-1. Selected phase/task/subtask and rationale.
-2. Branches created/used.
-3. Commits made (subtask mapping).
-4. Test/lint/CI results.
-5. TODO status updates applied.
-6. PR/merge status and conflict resolution notes.
-7. Any Admiral alerts (with recommended solutions).
+These are the command-specific failure modes — situations Standing Orders and enforcement hooks don't cover:
+
+- **Task is larger than expected.** A "task" turns out to need multiple PRs. Escalate immediately — don't split silently. The Work Hierarchy exists to keep phase→task→subtask mappings clean.
+- **Dependencies between tasks are wrong.** A task claims no dependencies but actually requires another task's output. Skip it, note the real dependency in `plan/todo/*.md`, take the next task.
+- **Merge conflicts with slush branch.** Another task landed on slush while you were working. Resolve on your task branch before opening the PR. If the conflict is architectural (not just textual), escalate.
+- **Tests pass on task branch but fail on slush after merge.** The task PR merged but broke something. Fix on slush directly with a follow-up commit. Do not revert the merge unless the fix is non-trivial.
+- **TODO item is ambiguous.** The task description doesn't clearly define done. Add concise DoD notes (happy path + unhappy path tests) to `plan/todo/*.md` before starting implementation.
+- **Scope creep during implementation.** You discover adjacent work that "should" be done. Don't do it. Note it as a routing suggestion in the Output Contract.
+
+## Definition of Done
+
+Each task must have:
+- Happy path tests
+- Unhappy path tests
+
+If missing from TODO docs, add concise DoD notes to `plan/todo/*.md` before marking complete.
+
+## Output Contract
+
+```
+CONTINUITY: [FRESH START | RESUMING: <details>]
+
+SELECTED: Phase <NN> / Task <ID> — [rationale for selection]
+BRANCHES: [created/used]
+COMMITS: [subtask → commit mapping]
+TEST/LINT/CI: [results]
+TODO UPDATES: [what was marked complete or annotated]
+PR STATUS: [opened/merged/conflicts resolved]
+ESCALATIONS: [if any — what, why, recommendation]
+ROUTING SUGGESTIONS: [adjacent work discovered but not acted on]
+```
 
 ## Non-Goals
 
+- Do not invent new TODO items.
 - Do not rewrite roadmap scope.
-- Do not modify `aiStrat/`.
 - Do not add extra slush branches for one phase.
 - Do not split one task across multiple PRs unless escalated.
