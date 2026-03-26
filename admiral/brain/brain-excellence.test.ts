@@ -2,18 +2,18 @@
  * Tests for Brain Excellence (B-22 to B-29)
  */
 
-import { describe, it } from "node:test";
 import assert from "node:assert/strict";
+import { describe, it } from "node:test";
+import type { ProvenanceMetadata } from "./brain-excellence.js";
 import {
-	BrainVersioning,
-	BrainExpiration,
-	BrainUsageAnalytics,
+	BRAIN_ENTRY_TEMPLATES,
 	BrainBackup,
 	BrainEntryTemplateManager,
+	BrainExpiration,
+	BrainUsageAnalytics,
+	BrainVersioning,
 	ProvenanceTracker,
-	BRAIN_ENTRY_TEMPLATES,
 } from "./brain-excellence.js";
-import type { ProvenanceMetadata } from "./brain-excellence.js";
 
 const DAY_MS = 86_400_000;
 const now = Date.now();
@@ -127,9 +127,7 @@ describe("BrainExpiration", () => {
 
 	it("should return warnings for entries near expiry", () => {
 		const expiration = new BrainExpiration(policy);
-		const entries = [
-			{ id: "e-1", updated_at: now - 345 * DAY_MS },
-		];
+		const entries = [{ id: "e-1", updated_at: now - 345 * DAY_MS }];
 		const warnings = expiration.getWarnings(entries, now);
 		assert.equal(warnings.length, 1);
 		assert.ok(warnings[0].daysRemaining > 0);
@@ -286,7 +284,10 @@ describe("BrainEntryTemplateManager", () => {
 
 	it("should create entry from decision template", () => {
 		const manager = new BrainEntryTemplateManager();
-		const result = manager.createFromTemplate("decision", "Use TypeScript over JavaScript");
+		const result = manager.createFromTemplate(
+			"decision",
+			"Use TypeScript over JavaScript",
+		);
 		assert.equal(result.title, "Use TypeScript over JavaScript");
 		assert.equal(result.category, "decision");
 		assert.ok(result.content.includes("## Decision"));
@@ -295,7 +296,10 @@ describe("BrainEntryTemplateManager", () => {
 
 	it("should create entry from lesson template", () => {
 		const manager = new BrainEntryTemplateManager();
-		const result = manager.createFromTemplate("lesson", "Always validate input");
+		const result = manager.createFromTemplate(
+			"lesson",
+			"Always validate input",
+		);
 		assert.equal(result.category, "lesson");
 		assert.ok(result.content.includes("## Root Cause"));
 	});
@@ -389,8 +393,24 @@ describe("ProvenanceTracker", () => {
 
 	it("should weight by provenance type", () => {
 		const entries = [
-			{ metadata: { provenance: { ...sampleProvenance, sourceType: "direct_observation", confidence: 1.0 } } },
-			{ metadata: { provenance: { ...sampleProvenance, sourceType: "handoff", confidence: 1.0 } } },
+			{
+				metadata: {
+					provenance: {
+						...sampleProvenance,
+						sourceType: "direct_observation",
+						confidence: 1.0,
+					},
+				},
+			},
+			{
+				metadata: {
+					provenance: {
+						...sampleProvenance,
+						sourceType: "handoff",
+						confidence: 1.0,
+					},
+				},
+			},
 		];
 		const weighted = tracker.weightByProvenance(entries);
 		assert.equal(weighted.length, 2);
@@ -406,7 +426,15 @@ describe("ProvenanceTracker", () => {
 
 	it("should weight mcp_derived at 0.8", () => {
 		const entries = [
-			{ metadata: { provenance: { ...sampleProvenance, sourceType: "mcp_derived", confidence: 1.0 } } },
+			{
+				metadata: {
+					provenance: {
+						...sampleProvenance,
+						sourceType: "mcp_derived",
+						confidence: 1.0,
+					},
+				},
+			},
 		];
 		const weighted = tracker.weightByProvenance(entries);
 		assert.ok(Math.abs(weighted[0].weight - 0.8) < 0.001);
@@ -414,7 +442,15 @@ describe("ProvenanceTracker", () => {
 
 	it("should weight a2a at 0.6", () => {
 		const entries = [
-			{ metadata: { provenance: { ...sampleProvenance, sourceType: "a2a", confidence: 1.0 } } },
+			{
+				metadata: {
+					provenance: {
+						...sampleProvenance,
+						sourceType: "a2a",
+						confidence: 1.0,
+					},
+				},
+			},
 		];
 		const weighted = tracker.weightByProvenance(entries);
 		assert.ok(Math.abs(weighted[0].weight - 0.6) < 0.001);
@@ -422,7 +458,15 @@ describe("ProvenanceTracker", () => {
 
 	it("should multiply type weight by confidence", () => {
 		const entries = [
-			{ metadata: { provenance: { ...sampleProvenance, sourceType: "direct_observation", confidence: 0.5 } } },
+			{
+				metadata: {
+					provenance: {
+						...sampleProvenance,
+						sourceType: "direct_observation",
+						confidence: 0.5,
+					},
+				},
+			},
 		];
 		const weighted = tracker.weightByProvenance(entries);
 		assert.ok(Math.abs(weighted[0].weight - 0.5) < 0.001);

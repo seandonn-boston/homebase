@@ -24,10 +24,6 @@ export interface EntryVersion {
 export class BrainVersioning {
 	private versions: Map<string, EntryVersion[]> = new Map();
 
-	constructor() {
-		// stateless init — versions accumulated in-memory
-	}
-
 	recordVersion(
 		entryId: string,
 		content: string,
@@ -85,7 +81,8 @@ export class BrainExpiration {
 		now?: number,
 	): { id: string; expiresAt: number; daysRemaining: number }[] {
 		const currentTime = now ?? Date.now();
-		const result: { id: string; expiresAt: number; daysRemaining: number }[] = [];
+		const result: { id: string; expiresAt: number; daysRemaining: number }[] =
+			[];
 
 		for (const entry of entries) {
 			const expiresAt = entry.updated_at + this.policy.ttlDays * DAY_MS;
@@ -138,12 +135,13 @@ export interface UsageAnalytics {
 }
 
 export class BrainUsageAnalytics {
-	constructor() {
-		// stateless
-	}
-
 	analyze(
-		entries: { id: string; access_count: number; usefulness_score: number; category: string }[],
+		entries: {
+			id: string;
+			access_count: number;
+			usefulness_score: number;
+			category: string;
+		}[],
 	): UsageAnalytics {
 		// Top queried: sorted by access_count
 		const topQueried = [...entries]
@@ -168,7 +166,9 @@ export class BrainUsageAnalytics {
 		}
 
 		// Unused entries: zero access_count
-		const unusedEntries = entries.filter((e) => e.access_count === 0).map((e) => e.id);
+		const unusedEntries = entries
+			.filter((e) => e.access_count === 0)
+			.map((e) => e.id);
 
 		// ROI
 		const entriesUsed = entries.filter((e) => e.access_count > 0).length;
@@ -190,10 +190,6 @@ export class BrainUsageAnalytics {
 // ---------------------------------------------------------------------------
 
 export class BrainBackup {
-	constructor() {
-		// stateless
-	}
-
 	createBackup(
 		entries: unknown[],
 		links: unknown[],
@@ -215,7 +211,10 @@ export class BrainBackup {
 	}
 
 	restore(backup: { data: string }): { entries: unknown[]; links: unknown[] } {
-		const parsed = JSON.parse(backup.data) as { entries: unknown[]; links: unknown[] };
+		const parsed = JSON.parse(backup.data) as {
+			entries: unknown[];
+			links: unknown[];
+		};
 		return {
 			entries: parsed.entries ?? [],
 			links: parsed.links ?? [],
@@ -241,7 +240,8 @@ export const BRAIN_ENTRY_TEMPLATES: BrainEntryTemplate[] = [
 		id: "decision",
 		name: "Decision Record",
 		category: "decision",
-		contentTemplate: "## Decision\n\n## Alternatives\n\n## Reasoning\n\n## Outcome",
+		contentTemplate:
+			"## Decision\n\n## Alternatives\n\n## Reasoning\n\n## Outcome",
 		requiredFields: ["title"],
 		tags: ["decision"],
 	},
@@ -249,7 +249,8 @@ export const BRAIN_ENTRY_TEMPLATES: BrainEntryTemplate[] = [
 		id: "lesson",
 		name: "Lesson Learned",
 		category: "lesson",
-		contentTemplate: "## What Happened\n\n## Root Cause\n\n## Lesson\n\n## Prevention",
+		contentTemplate:
+			"## What Happened\n\n## Root Cause\n\n## Lesson\n\n## Prevention",
 		requiredFields: ["title"],
 		tags: ["lesson"],
 	},
@@ -257,7 +258,8 @@ export const BRAIN_ENTRY_TEMPLATES: BrainEntryTemplate[] = [
 		id: "pattern",
 		name: "Code Pattern",
 		category: "pattern",
-		contentTemplate: "## Pattern\n\n## When to Use\n\n## Example\n\n## Anti-patterns",
+		contentTemplate:
+			"## Pattern\n\n## When to Use\n\n## Example\n\n## Anti-patterns",
 		requiredFields: ["title"],
 		tags: ["pattern"],
 	},
@@ -265,7 +267,8 @@ export const BRAIN_ENTRY_TEMPLATES: BrainEntryTemplate[] = [
 		id: "failure",
 		name: "Failure Record",
 		category: "failure",
-		contentTemplate: "## What Failed\n\n## Impact\n\n## Root Cause\n\n## Fix Applied",
+		contentTemplate:
+			"## What Failed\n\n## Impact\n\n## Root Cause\n\n## Fix Applied",
 		requiredFields: ["title"],
 		tags: ["failure"],
 	},
@@ -273,7 +276,8 @@ export const BRAIN_ENTRY_TEMPLATES: BrainEntryTemplate[] = [
 		id: "convention",
 		name: "Convention",
 		category: "convention",
-		contentTemplate: "## Convention\n\n## Rationale\n\n## Examples\n\n## Exceptions",
+		contentTemplate:
+			"## Convention\n\n## Rationale\n\n## Examples\n\n## Exceptions",
 		requiredFields: ["title"],
 		tags: ["convention"],
 	},
@@ -350,10 +354,6 @@ const PROVENANCE_WEIGHTS: Record<ProvenanceMetadata["sourceType"], number> = {
 };
 
 export class ProvenanceTracker {
-	constructor() {
-		// stateless
-	}
-
 	attachProvenance(
 		entryData: Record<string, unknown>,
 		provenance: ProvenanceMetadata,
@@ -361,13 +361,15 @@ export class ProvenanceTracker {
 		return {
 			...entryData,
 			metadata: {
-				...(entryData.metadata as Record<string, unknown> ?? {}),
+				...((entryData.metadata as Record<string, unknown>) ?? {}),
 				provenance,
 			},
 		};
 	}
 
-	getProvenance(entry: { metadata: Record<string, unknown> }): ProvenanceMetadata | null {
+	getProvenance(entry: {
+		metadata: Record<string, unknown>;
+	}): ProvenanceMetadata | null {
 		const provenance = entry.metadata?.provenance;
 		if (!provenance || typeof provenance !== "object") return null;
 		return provenance as ProvenanceMetadata;

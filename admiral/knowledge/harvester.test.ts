@@ -2,9 +2,9 @@
  * Tests for KnowledgeHarvester (DE-04)
  */
 
-import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { KnowledgeHarvester, type HarvestSource } from "./harvester.js";
+import { describe, it } from "node:test";
+import { type HarvestSource, KnowledgeHarvester } from "./harvester.js";
 
 const now = Date.now();
 

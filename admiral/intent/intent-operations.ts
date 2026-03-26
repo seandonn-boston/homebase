@@ -14,11 +14,24 @@ import type { Intent, IntentCapture, IntentPriority } from "./intent-schema.js";
 // ---------------------------------------------------------------------------
 
 export interface IntentDashboardData {
-	activeIntents: { id: string; goal: string; status: string; progress: number }[];
+	activeIntents: {
+		id: string;
+		goal: string;
+		status: string;
+		progress: number;
+	}[];
 	completionRate: number;
 	avgCompletionTime: number;
-	healthIndicators: { intentId: string; health: "healthy" | "at_risk" | "failing"; reason: string }[];
-	constraintViolations: { intentId: string; constraint: string; violation: string }[];
+	healthIndicators: {
+		intentId: string;
+		health: "healthy" | "at_risk" | "failing";
+		reason: string;
+	}[];
+	constraintViolations: {
+		intentId: string;
+		constraint: string;
+		violation: string;
+	}[];
 }
 
 export class IntentDashboard {
@@ -29,10 +42,9 @@ export class IntentDashboard {
 		const active = this.capture.getActive();
 
 		const completed = all.filter((i) => i.status === "completed");
-		const failed = all.filter((i) => i.status === "failed");
+		const _failed = all.filter((i) => i.status === "failed");
 
-		const completionRate =
-			all.length > 0 ? completed.length / all.length : 0;
+		const completionRate = all.length > 0 ? completed.length / all.length : 0;
 
 		// Avg completion time for completed intents
 		const completionTimes = completed
@@ -49,10 +61,14 @@ export class IntentDashboard {
 			reason: this.getHealthReason(intent),
 		}));
 
-		const constraintViolations: IntentDashboardData["constraintViolations"] = [];
+		const constraintViolations: IntentDashboardData["constraintViolations"] =
+			[];
 		for (const intent of active) {
 			if (intent.metadata?.violations) {
-				for (const v of intent.metadata.violations as { constraint: string; violation: string }[]) {
+				for (const v of intent.metadata.violations as {
+					constraint: string;
+					violation: string;
+				}[]) {
 					constraintViolations.push({
 						intentId: intent.id,
 						constraint: v.constraint,
@@ -104,7 +120,10 @@ export class IntentDashboard {
 
 	getHealthIndicator(intent: Intent): "healthy" | "at_risk" | "failing" {
 		// Failing: has constraint violations or explicit failure markers
-		if (intent.metadata?.violations && (intent.metadata.violations as unknown[]).length > 0) {
+		if (
+			intent.metadata?.violations &&
+			(intent.metadata.violations as unknown[]).length > 0
+		) {
 			return "failing";
 		}
 		if (intent.status === "failed") return "failing";
@@ -124,7 +143,10 @@ export class IntentDashboard {
 	private getHealthReason(intent: Intent): string {
 		const health = this.getHealthIndicator(intent);
 		if (health === "failing") {
-			if (intent.metadata?.violations && (intent.metadata.violations as unknown[]).length > 0) {
+			if (
+				intent.metadata?.violations &&
+				(intent.metadata.violations as unknown[]).length > 0
+			) {
 				return "Constraint violations detected";
 			}
 			return "Intent has failed status";
@@ -149,14 +171,12 @@ export interface IntentLifecycle {
 export class IntentHistoryTracker {
 	private lifecycles: Map<string, IntentLifecycle> = new Map();
 
-	constructor() {
-		// stateless init
-	}
-
 	startTracking(intentId: string): void {
 		this.lifecycles.set(intentId, {
 			intentId,
-			events: [{ type: "started", timestamp: Date.now(), details: "Tracking started" }],
+			events: [
+				{ type: "started", timestamp: Date.now(), details: "Tracking started" },
+			],
 			routingEffectiveness: 0,
 			duration: 0,
 			outcome: "partial",
@@ -171,7 +191,10 @@ export class IntentHistoryTracker {
 		lifecycle.events.push({ type, timestamp: Date.now(), details });
 	}
 
-	endTracking(intentId: string, outcome: IntentLifecycle["outcome"]): IntentLifecycle {
+	endTracking(
+		intentId: string,
+		outcome: IntentLifecycle["outcome"],
+	): IntentLifecycle {
 		const lifecycle = this.lifecycles.get(intentId);
 		if (!lifecycle) {
 			throw new Error(`No tracking for intent: ${intentId}`);
@@ -190,7 +213,13 @@ export class IntentHistoryTracker {
 
 		// Calculate routing effectiveness based on outcome
 		lifecycle.routingEffectiveness =
-			outcome === "success" ? 100 : outcome === "partial" ? 50 : outcome === "failure" ? 0 : 0;
+			outcome === "success"
+				? 100
+				: outcome === "partial"
+					? 50
+					: outcome === "failure"
+						? 0
+						: 0;
 
 		return lifecycle;
 	}
@@ -205,7 +234,10 @@ export class IntentHistoryTracker {
 		for (const lifecycle of this.lifecycles.values()) {
 			for (const event of lifecycle.events) {
 				if (event.type !== "started" && event.type !== "ended") {
-					eventTypeCounts.set(event.type, (eventTypeCounts.get(event.type) ?? 0) + 1);
+					eventTypeCounts.set(
+						event.type,
+						(eventTypeCounts.get(event.type) ?? 0) + 1,
+					);
 				}
 			}
 		}
@@ -228,7 +260,8 @@ export class IntentHistoryTracker {
 
 		if (relevant.length === 0) return 0;
 		return (
-			relevant.reduce((sum, l) => sum + l.routingEffectiveness, 0) / relevant.length
+			relevant.reduce((sum, l) => sum + l.routingEffectiveness, 0) /
+			relevant.length
 		);
 	}
 }
@@ -252,8 +285,15 @@ export const INTENT_TEMPLATES: IntentTemplate[] = [
 		description: "Fix a reported bug with regression test",
 		defaults: {
 			priority: "high",
-			constraints: ["Must include regression test", "Must not break existing tests"],
-			failureModes: ["Fix introduces new bugs", "Root cause not addressed", "Regression test insufficient"],
+			constraints: [
+				"Must include regression test",
+				"Must not break existing tests",
+			],
+			failureModes: [
+				"Fix introduces new bugs",
+				"Root cause not addressed",
+				"Regression test insufficient",
+			],
 			values: ["correctness", "safety"],
 		},
 		requiredOverrides: ["goal"],
@@ -264,8 +304,16 @@ export const INTENT_TEMPLATES: IntentTemplate[] = [
 		description: "Implement a new feature end-to-end",
 		defaults: {
 			priority: "medium",
-			constraints: ["Must follow existing patterns", "Must include tests", "Must update documentation"],
-			failureModes: ["Scope creep", "Incomplete implementation", "Poor test coverage"],
+			constraints: [
+				"Must follow existing patterns",
+				"Must include tests",
+				"Must update documentation",
+			],
+			failureModes: [
+				"Scope creep",
+				"Incomplete implementation",
+				"Poor test coverage",
+			],
 			values: ["completeness", "consistency"],
 		},
 		requiredOverrides: ["goal"],
@@ -276,8 +324,16 @@ export const INTENT_TEMPLATES: IntentTemplate[] = [
 		description: "Improve code structure without changing behavior",
 		defaults: {
 			priority: "medium",
-			constraints: ["No behavior change", "All existing tests must pass", "No new dependencies"],
-			failureModes: ["Behavior change introduced", "Performance degradation", "Incomplete refactor"],
+			constraints: [
+				"No behavior change",
+				"All existing tests must pass",
+				"No new dependencies",
+			],
+			failureModes: [
+				"Behavior change introduced",
+				"Performance degradation",
+				"Incomplete refactor",
+			],
 			values: ["simplicity", "maintainability"],
 		},
 		requiredOverrides: ["goal"],
@@ -288,8 +344,15 @@ export const INTENT_TEMPLATES: IntentTemplate[] = [
 		description: "Review code changes for quality and correctness",
 		defaults: {
 			priority: "medium",
-			constraints: ["Must check security implications", "Must verify test coverage"],
-			failureModes: ["False sense of security", "Missed vulnerability", "Rubber-stamp approval"],
+			constraints: [
+				"Must check security implications",
+				"Must verify test coverage",
+			],
+			failureModes: [
+				"False sense of security",
+				"Missed vulnerability",
+				"Rubber-stamp approval",
+			],
 			values: ["thoroughness", "security"],
 		},
 		requiredOverrides: ["goal"],
@@ -300,8 +363,16 @@ export const INTENT_TEMPLATES: IntentTemplate[] = [
 		description: "Comprehensive security review of a component",
 		defaults: {
 			priority: "critical",
-			constraints: ["Must check OWASP top 10", "Must verify auth/authz", "Must test injection vectors"],
-			failureModes: ["Missed vulnerability class", "False negative", "Incomplete coverage"],
+			constraints: [
+				"Must check OWASP top 10",
+				"Must verify auth/authz",
+				"Must test injection vectors",
+			],
+			failureModes: [
+				"Missed vulnerability class",
+				"False negative",
+				"Incomplete coverage",
+			],
 			values: ["security", "thoroughness"],
 		},
 		requiredOverrides: ["goal"],
@@ -334,7 +405,10 @@ export class IntentTemplateManager {
 
 		// Validate required overrides are present
 		for (const field of template.requiredOverrides) {
-			if (!(field in overrides) || !(overrides as Record<string, unknown>)[field]) {
+			if (
+				!(field in overrides) ||
+				!(overrides as Record<string, unknown>)[field]
+			) {
 				throw new Error(`Required override missing: ${field}`);
 			}
 		}
@@ -342,19 +416,29 @@ export class IntentTemplateManager {
 		const intent: Intent = {
 			id: randomUUID(),
 			goal: (overrides.goal ?? template.defaults.goal) as string,
-			priority: (overrides.priority ?? template.defaults.priority ?? "medium") as IntentPriority,
+			priority: (overrides.priority ??
+				template.defaults.priority ??
+				"medium") as IntentPriority,
 			constraints: overrides.constraints ?? template.defaults.constraints ?? [],
-			failureModes: overrides.failureModes ?? template.defaults.failureModes ?? [],
-			judgmentBoundaries: overrides.judgmentBoundaries ?? template.defaults.judgmentBoundaries ?? [],
+			failureModes:
+				overrides.failureModes ?? template.defaults.failureModes ?? [],
+			judgmentBoundaries:
+				overrides.judgmentBoundaries ??
+				template.defaults.judgmentBoundaries ??
+				[],
 			values: overrides.values ?? template.defaults.values ?? [],
 			status: "draft",
 			createdAt: Date.now(),
 			createdBy: (overrides.createdBy ?? "template") as string,
-			authorityTier: overrides.authorityTier ?? template.defaults.authorityTier ?? "autonomous",
+			authorityTier:
+				overrides.authorityTier ??
+				template.defaults.authorityTier ??
+				"autonomous",
 			metadata: overrides.metadata ?? {},
 		};
 
-		if (overrides.parentIntentId) intent.parentIntentId = overrides.parentIntentId;
+		if (overrides.parentIntentId)
+			intent.parentIntentId = overrides.parentIntentId;
 		if (overrides.subIntents) intent.subIntents = overrides.subIntents;
 
 		return intent;
@@ -370,7 +454,12 @@ export class IntentTemplateManager {
 // ---------------------------------------------------------------------------
 
 export interface IntentConflict {
-	type: "goal_contradiction" | "constraint_violation" | "resource_contention" | "scope_overlap" | "priority_inversion";
+	type:
+		| "goal_contradiction"
+		| "constraint_violation"
+		| "resource_contention"
+		| "scope_overlap"
+		| "priority_inversion";
 	intentA: string;
 	intentB: string;
 	description: string;
@@ -387,10 +476,6 @@ function tokenize(text: string): Set<string> {
 }
 
 export class IntentConflictDetector {
-	constructor() {
-		// stateless
-	}
-
 	detectConflicts(intents: Intent[]): IntentConflict[] {
 		const conflicts: IntentConflict[] = [];
 
@@ -528,19 +613,46 @@ export interface InflectionPoint {
 	context: string;
 }
 
-const TASTE_KEYWORDS = ["style", "aesthetic", "prefer", "look and feel", "tone", "voice", "branding"];
-const ETHICS_KEYWORDS = ["privacy", "bias", "fairness", "consent", "surveillance", "discrimination", "ethical"];
-const STRATEGY_KEYWORDS = ["roadmap", "pivot", "business model", "pricing", "market", "competitive", "vision"];
-const STAKEHOLDER_KEYWORDS = ["customer", "user feedback", "executive", "board", "stakeholder", "investor"];
+const TASTE_KEYWORDS = [
+	"style",
+	"aesthetic",
+	"prefer",
+	"look and feel",
+	"tone",
+	"voice",
+	"branding",
+];
+const ETHICS_KEYWORDS = [
+	"privacy",
+	"bias",
+	"fairness",
+	"consent",
+	"surveillance",
+	"discrimination",
+	"ethical",
+];
+const STRATEGY_KEYWORDS = [
+	"roadmap",
+	"pivot",
+	"business model",
+	"pricing",
+	"market",
+	"competitive",
+	"vision",
+];
+const STAKEHOLDER_KEYWORDS = [
+	"customer",
+	"user feedback",
+	"executive",
+	"board",
+	"stakeholder",
+	"investor",
+];
 
 export class InflectionPointDetector {
-	constructor() {
-		// stateless
-	}
-
 	detect(intent: Intent): InflectionPoint[] {
 		const points: InflectionPoint[] = [];
-		const goalLower = intent.goal.toLowerCase();
+		const _goalLower = intent.goal.toLowerCase();
 		const allText = [
 			intent.goal,
 			...intent.constraints,
@@ -609,7 +721,12 @@ export class InflectionPointDetector {
 		// Novel ambiguity: failure modes that suggest unknown territory
 		for (const fm of intent.failureModes) {
 			const fmLower = fm.toLowerCase();
-			if (fmLower.includes("unknown") || fmLower.includes("unclear") || fmLower.includes("ambiguous") || fmLower.includes("novel")) {
+			if (
+				fmLower.includes("unknown") ||
+				fmLower.includes("unclear") ||
+				fmLower.includes("ambiguous") ||
+				fmLower.includes("novel")
+			) {
 				points.push({
 					intentId: intent.id,
 					type: "novel_ambiguity",
@@ -634,10 +751,6 @@ export class InflectionPointDetector {
 // ---------------------------------------------------------------------------
 
 export class JudgmentBoundaryEnforcer {
-	constructor() {
-		// stateless
-	}
-
 	checkBoundaries(
 		intent: Intent,
 		currentAction: string,
@@ -648,7 +761,7 @@ export class JudgmentBoundaryEnforcer {
 
 		for (const boundary of intent.judgmentBoundaries) {
 			const thresholdLower = boundary.threshold.toLowerCase();
-			const descLower = boundary.description.toLowerCase();
+			const _descLower = boundary.description.toLowerCase();
 
 			// Direct threshold violation
 			if (actionLower.includes(thresholdLower)) {
@@ -659,7 +772,9 @@ export class JudgmentBoundaryEnforcer {
 
 			// Check proximity to boundary using keyword overlap
 			const actionTokens = tokenize(currentAction);
-			const thresholdTokens = tokenize(boundary.threshold + " " + boundary.description);
+			const thresholdTokens = tokenize(
+				`${boundary.threshold} ${boundary.description}`,
+			);
 			let overlap = 0;
 			for (const t of actionTokens) {
 				if (thresholdTokens.has(t)) overlap++;
@@ -674,7 +789,11 @@ export class JudgmentBoundaryEnforcer {
 		for (const constraint of intent.constraints) {
 			const constraintLower = constraint.toLowerCase();
 			// Detect negative constraints being violated
-			if (constraintLower.startsWith("must not") || constraintLower.startsWith("no ") || constraintLower.startsWith("never")) {
+			if (
+				constraintLower.startsWith("must not") ||
+				constraintLower.startsWith("no ") ||
+				constraintLower.startsWith("never")
+			) {
 				const forbidden = constraintLower
 					.replace(/^must not\s+/, "")
 					.replace(/^no\s+/, "")
@@ -687,10 +806,11 @@ export class JudgmentBoundaryEnforcer {
 					if (actionTokens.has(t)) matchCount++;
 				}
 
-				if (forbiddenTokens.size > 0 && matchCount / forbiddenTokens.size > 0.5) {
-					violations.push(
-						`Action may violate constraint: "${constraint}"`,
-					);
+				if (
+					forbiddenTokens.size > 0 &&
+					matchCount / forbiddenTokens.size > 0.5
+				) {
+					violations.push(`Action may violate constraint: "${constraint}"`);
 				}
 			}
 		}
@@ -707,7 +827,9 @@ export class JudgmentBoundaryEnforcer {
 		const actionTokens = tokenize(currentAction);
 
 		for (const boundary of intent.judgmentBoundaries) {
-			const boundaryTokens = tokenize(boundary.threshold + " " + boundary.description);
+			const boundaryTokens = tokenize(
+				`${boundary.threshold} ${boundary.description}`,
+			);
 			let overlap = 0;
 			for (const t of actionTokens) {
 				if (boundaryTokens.has(t)) overlap++;

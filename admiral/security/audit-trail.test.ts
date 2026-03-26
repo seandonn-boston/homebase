@@ -2,13 +2,13 @@
  * Tests for SecurityAuditTrail (S-22)
  */
 
-import { describe, it, beforeEach } from "node:test";
 import assert from "node:assert/strict";
-import { SecurityAuditTrail, type SecurityAuditEntry } from "./audit-trail.js";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
 import { randomUUID } from "node:crypto";
 import { unlink } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { beforeEach, describe, it } from "node:test";
+import { SecurityAuditTrail } from "./audit-trail.js";
 
 describe("SecurityAuditTrail", () => {
 	let trail: SecurityAuditTrail;
@@ -199,10 +199,10 @@ describe("SecurityAuditTrail", () => {
 			});
 			const stats = trail.getStats();
 			assert.equal(stats.total, 3);
-			assert.equal(stats.bySeverity["high"], 2);
-			assert.equal(stats.bySeverity["low"], 1);
-			assert.equal(stats.byType["blocked_tool"], 2);
-			assert.equal(stats.byType["injection_detected"], 1);
+			assert.equal(stats.bySeverity.high, 2);
+			assert.equal(stats.bySeverity.low, 1);
+			assert.equal(stats.byType.blocked_tool, 2);
+			assert.equal(stats.byType.injection_detected, 1);
 		});
 	});
 

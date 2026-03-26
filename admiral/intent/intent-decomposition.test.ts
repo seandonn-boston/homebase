@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { beforeEach, describe, it } from "node:test";
-import { IntentDecomposer, type SubIntent } from "./intent-decomposition";
+import { IntentDecomposer } from "./intent-decomposition";
 import { IntentCapture, type IntentInput } from "./intent-schema";
 
 // ---------------------------------------------------------------------------

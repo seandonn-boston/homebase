@@ -35,10 +35,6 @@ export class KnowledgeFeedbackLoop {
 	private stats: Map<string, EntryStats> = new Map();
 	private flagged: Set<string> = new Set();
 
-	constructor() {
-		// stateless except for running session stats
-	}
-
 	/**
 	 * DE-05: Process code review outcome.
 	 * Accepted patterns strengthen entries, rejected weaken.

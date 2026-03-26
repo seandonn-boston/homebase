@@ -2,8 +2,8 @@
  * Tests for PiiDetector (S-20)
  */
 
-import { describe, it } from "node:test";
 import assert from "node:assert/strict";
+import { describe, it } from "node:test";
 import { PiiDetector } from "./pii-detector.js";
 
 describe("PiiDetector", () => {
@@ -11,7 +11,9 @@ describe("PiiDetector", () => {
 
 	describe("detectEmails", () => {
 		it("should detect email addresses", () => {
-			const results = detector.detectEmails("Contact user@example.com for info");
+			const results = detector.detectEmails(
+				"Contact user@example.com for info",
+			);
 			assert.equal(results.length, 1);
 			assert.equal(results[0].type, "email");
 			assert.equal(results[0].match, "user@example.com");

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { beforeEach, describe, it } from "node:test";
-import { IntentRouter } from "./intent-routing";
 import { IntentDecomposer } from "./intent-decomposition";
+import { IntentRouter } from "./intent-routing";
 import { IntentCapture, type IntentInput } from "./intent-schema";
 
 // ---------------------------------------------------------------------------

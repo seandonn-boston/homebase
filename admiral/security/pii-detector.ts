@@ -35,10 +35,6 @@ export interface SanitizationReport {
 // ---------------------------------------------------------------------------
 
 export class PiiDetector {
-	constructor() {
-		// stateless
-	}
-
 	/** Scan content for all PII types. */
 	scan(content: string): PiiDetection[] {
 		return [
@@ -61,9 +57,7 @@ export class PiiDetector {
 		}
 
 		// Sort detections by position descending so we can replace from end
-		const sorted = [...detections].sort(
-			(a, b) => b.position - a.position,
-		);
+		const sorted = [...detections].sort((a, b) => b.position - a.position);
 		let sanitized = content;
 
 		for (const d of sorted) {
@@ -83,13 +77,13 @@ export class PiiDetector {
 	/** Detect email addresses. */
 	detectEmails(content: string): PiiDetection[] {
 		const pattern = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
-		return this.findAll(content, pattern, "email", (m) => "[EMAIL_REDACTED]");
+		return this.findAll(content, pattern, "email", (_m) => "[EMAIL_REDACTED]");
 	}
 
 	/** Detect SSN patterns (XXX-XX-XXXX). */
 	detectSSN(content: string): PiiDetection[] {
 		const pattern = /\b\d{3}-\d{2}-\d{4}\b/g;
-		return this.findAll(content, pattern, "ssn", (m) => "[SSN_REDACTED]");
+		return this.findAll(content, pattern, "ssn", (_m) => "[SSN_REDACTED]");
 	}
 
 	/** Detect credit card numbers. */
@@ -99,19 +93,18 @@ export class PiiDetector {
 			content,
 			pattern,
 			"credit_card",
-			(m) => "[CC_REDACTED]",
+			(_m) => "[CC_REDACTED]",
 		);
 	}
 
 	/** Detect API keys (sk-, ghp_, gho_, ghu_, ghs_, ghr_, AKIA). */
 	detectApiKeys(content: string): PiiDetection[] {
-		const pattern =
-			/(?:sk-|ghp_|gho_|ghu_|ghs_|ghr_|AKIA)[A-Za-z0-9]{10,}/g;
+		const pattern = /(?:sk-|ghp_|gho_|ghu_|ghs_|ghr_|AKIA)[A-Za-z0-9]{10,}/g;
 		return this.findAll(
 			content,
 			pattern,
 			"api_key",
-			(m) => "[API_KEY_REDACTED]",
+			(_m) => "[API_KEY_REDACTED]",
 		);
 	}
 
@@ -119,19 +112,13 @@ export class PiiDetector {
 	detectJWT(content: string): PiiDetection[] {
 		const pattern =
 			/eyJ[A-Za-z0-9_-]{10,}\.eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}/g;
-		return this.findAll(content, pattern, "jwt", (m) => "[JWT_REDACTED]");
+		return this.findAll(content, pattern, "jwt", (_m) => "[JWT_REDACTED]");
 	}
 
 	/** Detect phone numbers. */
 	detectPhones(content: string): PiiDetection[] {
-		const pattern =
-			/(?:\+1[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}\b/g;
-		return this.findAll(
-			content,
-			pattern,
-			"phone",
-			(m) => "[PHONE_REDACTED]",
-		);
+		const pattern = /(?:\+1[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}\b/g;
+		return this.findAll(content, pattern, "phone", (_m) => "[PHONE_REDACTED]");
 	}
 
 	/** Detect IP addresses (IPv4). */
@@ -141,7 +128,7 @@ export class PiiDetector {
 			content,
 			pattern,
 			"ip_address",
-			(m) => "[IP_REDACTED]",
+			(_m) => "[IP_REDACTED]",
 		).filter((d) => {
 			// Validate octets are 0-255
 			const octets = d.match.split(".").map(Number);
@@ -162,13 +149,15 @@ export class PiiDetector {
 		const detections: PiiDetection[] = [];
 		let match: RegExpExecArray | null;
 
-		while ((match = pattern.exec(content)) !== null) {
+		match = pattern.exec(content);
+		while (match !== null) {
 			detections.push({
 				type,
 				match: match[0],
 				position: match.index,
 				redacted: redactFn(match[0]),
 			});
+			match = pattern.exec(content);
 		}
 
 		return detections;

@@ -49,8 +49,7 @@ export function validateB1Entry(data: unknown): data is B1RawEntry {
 	const obj = data as Record<string, unknown>;
 	// Minimum: must have title and content
 	if (typeof obj.title !== "string" || obj.title.length === 0) return false;
-	if (typeof obj.content !== "string" || obj.content.length === 0)
-		return false;
+	if (typeof obj.content !== "string" || obj.content.length === 0) return false;
 	return true;
 }
 
@@ -105,8 +104,7 @@ export class BrainMigrator {
 					category: raw.category,
 				});
 				const exact = existing.find(
-					(e) =>
-						e.title.toLowerCase() === raw.title!.toLowerCase(),
+					(e) => e.title.toLowerCase() === raw.title?.toLowerCase(),
 				);
 				if (exact) {
 					titleToId.set(raw.title!, exact.id);
@@ -115,9 +113,7 @@ export class BrainMigrator {
 				}
 
 				const tags =
-					raw.tags ??
-					(raw.metadata as Record<string, unknown>)?.tags ??
-					[];
+					raw.tags ?? (raw.metadata as Record<string, unknown>)?.tags ?? [];
 
 				const input: InsertEntry = {
 					title: raw.title!,
@@ -139,10 +135,7 @@ export class BrainMigrator {
 			} catch (err) {
 				this.report.errors.push({
 					file,
-					error:
-						err instanceof Error
-							? err.message
-							: String(err),
+					error: err instanceof Error ? err.message : String(err),
 				});
 			}
 		}
@@ -162,13 +155,7 @@ export class BrainMigrator {
 					const toId = titleToId.get(target);
 					if (toId && fromId !== toId) {
 						try {
-							this.db.addLink(
-								fromId,
-								toId,
-								"contradicts",
-								0.8,
-								"b1-migration",
-							);
+							this.db.addLink(fromId, toId, "contradicts", 0.8, "b1-migration");
 							this.report.linksCreated++;
 						} catch {
 							// Link creation might fail if entry was skipped

@@ -2,12 +2,12 @@
  * Tests for KnowledgeGardener (DE-02)
  */
 
-import { describe, it } from "node:test";
 import assert from "node:assert/strict";
+import { describe, it } from "node:test";
 import {
-	KnowledgeGardener,
 	type BrainEntryLite,
 	type BrainLinkLite,
+	KnowledgeGardener,
 } from "./gardener.js";
 
 const DAY_MS = 86_400_000;
@@ -109,7 +109,8 @@ describe("KnowledgeGardener", () => {
 			const entries = [
 				makeEntry({
 					id: "x",
-					title: "configure database connection timeout retry settings behavior",
+					title:
+						"configure database connection timeout retry settings behavior",
 					category: "config",
 				}),
 				makeEntry({
@@ -235,9 +236,7 @@ describe("KnowledgeGardener", () => {
 			});
 			const findings = gardener.checkMetadataHygiene([entry]);
 			assert.ok(
-				findings.some((f) =>
-					f.description.includes("no source attribution"),
-				),
+				findings.some((f) => f.description.includes("no source attribution")),
 			);
 		});
 

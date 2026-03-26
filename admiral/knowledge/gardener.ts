@@ -38,12 +38,7 @@ export interface BrainLinkLite {
 // ---------------------------------------------------------------------------
 
 export interface GardenerFinding {
-	type:
-		| "stale"
-		| "contradiction"
-		| "duplicate"
-		| "orphan"
-		| "metadata_hygiene";
+	type: "stale" | "contradiction" | "duplicate" | "orphan" | "metadata_hygiene";
 	entryId: string;
 	description: string;
 	severity: "high" | "medium" | "low";
@@ -91,10 +86,6 @@ function jaccard(a: Set<string>, b: Set<string>): number {
 // ---------------------------------------------------------------------------
 
 export class KnowledgeGardener {
-	constructor() {
-		// stateless — all data passed per-call
-	}
-
 	analyze(
 		entries: BrainEntryLite[],
 		links: BrainLinkLite[],
@@ -175,8 +166,7 @@ export class KnowledgeGardener {
 						entryId: from.id,
 						description: `Entry "${from.title}" contradicts "${to.title}" (confidence: ${link.confidence})`,
 						severity: link.confidence > 0.8 ? "high" : "medium",
-						recommendation:
-							"Resolve contradiction — one entry may be outdated",
+						recommendation: "Resolve contradiction — one entry may be outdated",
 					});
 				}
 			}
@@ -203,8 +193,7 @@ export class KnowledgeGardener {
 							entryId: group[i].id,
 							description: `"${group[i].title}" and "${group[j].title}" may conflict (title similarity ${(sim * 100).toFixed(0)}%)`,
 							severity: "low",
-							recommendation:
-								"Review both entries for consistency",
+							recommendation: "Review both entries for consistency",
 						});
 					}
 				}
@@ -225,12 +214,8 @@ export class KnowledgeGardener {
 				if (seen.has(pairKey)) continue;
 				seen.add(pairKey);
 
-				const tokA = tokenize(
-					entries[i].title + " " + entries[i].content,
-				);
-				const tokB = tokenize(
-					entries[j].title + " " + entries[j].content,
-				);
+				const tokA = tokenize(`${entries[i].title} ${entries[i].content}`);
+				const tokB = tokenize(`${entries[j].title} ${entries[j].content}`);
 				const sim = jaccard(tokA, tokB);
 
 				if (sim > 0.95) {

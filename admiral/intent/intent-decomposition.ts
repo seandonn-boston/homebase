@@ -117,9 +117,7 @@ export class IntentDecomposer {
 		for (const sub of result.subIntents) {
 			for (const dep of sub.dependencies) {
 				if (!ids.has(dep)) {
-					errors.push(
-						`Sub-intent ${sub.id} depends on unknown ID: ${dep}`,
-					);
+					errors.push(`Sub-intent ${sub.id} depends on unknown ID: ${dep}`);
 				}
 			}
 		}
@@ -134,9 +132,7 @@ export class IntentDecomposer {
 			const parentConstraintCount = result.subIntents[0].constraints.length;
 			for (const sub of result.subIntents) {
 				if (sub.constraints.length < parentConstraintCount) {
-					errors.push(
-						`Sub-intent ${sub.id} lost parent constraints`,
-					);
+					errors.push(`Sub-intent ${sub.id} lost parent constraints`);
 				}
 			}
 		}
@@ -154,9 +150,7 @@ export class IntentDecomposer {
 			const batch: SubIntent[] = [];
 			for (const id of remaining) {
 				const sub = idMap.get(id)!;
-				const depsReady = sub.dependencies.every((d) =>
-					completed.has(d),
-				);
+				const depsReady = sub.dependencies.every((d) => completed.has(d));
 				if (depsReady) {
 					batch.push(sub);
 				}
@@ -192,8 +186,7 @@ export class IntentDecomposer {
 
 	private inferAgentCategory(description: string): string {
 		const lower = description.toLowerCase();
-		if (lower.includes("test") || lower.includes("verify"))
-			return "quality";
+		if (lower.includes("test") || lower.includes("verify")) return "quality";
 		if (lower.includes("deploy") || lower.includes("build")) return "ops";
 		if (lower.includes("security") || lower.includes("audit"))
 			return "security";

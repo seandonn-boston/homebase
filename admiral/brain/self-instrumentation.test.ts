@@ -1,17 +1,17 @@
 import assert from "node:assert/strict";
-import { afterEach, beforeEach, describe, it } from "node:test";
 import { mkdtempSync, rmSync } from "node:fs";
-import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { BrainDatabase } from "./schema";
+import { join } from "node:path";
+import { afterEach, beforeEach, describe, it } from "node:test";
 import type { InsertEntry } from "./schema";
+import { BrainDatabase } from "./schema";
+import type { DecisionEntry } from "./self-instrumentation";
 import {
 	BrainMetaNamespace,
 	BrainStaleDetector,
 	ContradictionResolver,
 	DecisionEntryValidator,
 } from "./self-instrumentation";
-import type { DecisionEntry } from "./self-instrumentation";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -186,9 +186,7 @@ describe("BrainMetaNamespace", () => {
 
 	it("includes top categories in snapshot", () => {
 		for (let i = 0; i < 5; i++) {
-			db.insertEntry(
-				makeEntry({ title: `D${i}`, category: "decision" }),
-			);
+			db.insertEntry(makeEntry({ title: `D${i}`, category: "decision" }));
 		}
 		db.insertEntry(makeEntry({ title: "O1", category: "outcome" }));
 
@@ -268,13 +266,7 @@ describe("ContradictionResolver", () => {
 		db.addLink(a.id, b.id, "contradicts");
 
 		const resolver = new ContradictionResolver(db);
-		resolver.resolve(
-			a.id,
-			b.id,
-			"diverge",
-			"human",
-			"Different contexts",
-		);
+		resolver.resolve(a.id, b.id, "diverge", "human", "Different contexts");
 
 		// Both should still exist
 		assert.ok(db.getEntry(a.id));

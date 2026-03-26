@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { beforeEach, describe, it } from "node:test";
+import { IntentCapture, type IntentInput } from "./intent-schema";
 import { IntentValidator } from "./intent-validation";
-import { IntentCapture, type Intent, type IntentInput } from "./intent-schema";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -51,9 +51,7 @@ describe("IntentValidator", () => {
 	});
 
 	it("reports missing fields correctly", () => {
-		const intent = capture.create(
-			makeInput({ constraints: [], values: [] }),
-		);
+		const intent = capture.create(makeInput({ constraints: [], values: [] }));
 		const result = validator.checkCompleteness(intent);
 		assert.ok(result.missing.includes("constraints"));
 		assert.ok(result.missing.includes("values"));
@@ -112,9 +110,7 @@ describe("IntentValidator", () => {
 			makeInput({ priority: "low", authorityTier: "escalate" }),
 		);
 		const result = validator.checkConsistency(intent);
-		assert.ok(
-			result.contradictions.some((c) => c.includes("Low-priority")),
-		);
+		assert.ok(result.contradictions.some((c) => c.includes("Low-priority")));
 	});
 
 	it("reports no contradictions for consistent intent", () => {
@@ -201,9 +197,7 @@ describe("IntentValidator", () => {
 	});
 
 	it("returns warn when ambiguity is present", () => {
-		const intent = capture.create(
-			makeInput({ goal: "Improve the system" }),
-		);
+		const intent = capture.create(makeInput({ goal: "Improve the system" }));
 		const result = validator.validate(intent);
 		assert.equal(result.status, "warn");
 	});

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { beforeEach, describe, it } from "node:test";
-import { IntentCapture, type Intent, type IntentInput } from "./intent-schema";
+import { IntentCapture, type IntentInput } from "./intent-schema";
 
 // ---------------------------------------------------------------------------
 // Helpers

@@ -44,13 +44,11 @@ const VAGUE_TERMS: { term: RegExp; suggestion: string }[] = [
 	},
 	{
 		term: /\bfast(er)?\b/i,
-		suggestion:
-			'Replace "fast/faster" with a latency or throughput target',
+		suggestion: 'Replace "fast/faster" with a latency or throughput target',
 	},
 	{
 		term: /\befficient(ly)?\b/i,
-		suggestion:
-			'Replace "efficient" with a measurable efficiency criterion',
+		suggestion: 'Replace "efficient" with a measurable efficiency criterion',
 	},
 	{
 		term: /\bsoon\b/i,
@@ -58,13 +56,11 @@ const VAGUE_TERMS: { term: RegExp; suggestion: string }[] = [
 	},
 	{
 		term: /\bnice\b/i,
-		suggestion:
-			'Replace "nice" with specific acceptance criteria',
+		suggestion: 'Replace "nice" with specific acceptance criteria',
 	},
 	{
 		term: /\bgood\b/i,
-		suggestion:
-			'Replace "good" with measurable quality criteria',
+		suggestion: 'Replace "good" with measurable quality criteria',
 	},
 ];
 
@@ -134,11 +130,9 @@ export class IntentValidator {
 	} {
 		const found: string[] = [];
 		const suggestions: string[] = [];
-		const text = [
-			intent.goal,
-			...intent.constraints,
-			...intent.values,
-		].join(" ");
+		const text = [intent.goal, ...intent.constraints, ...intent.values].join(
+			" ",
+		);
 
 		for (const { term, suggestion } of VAGUE_TERMS) {
 			if (term.test(text)) {
@@ -173,12 +167,9 @@ export class IntentValidator {
 		}
 
 		// Check if priority is low but authority is escalate
-		if (
-			intent.priority === "low" &&
-			intent.authorityTier === "escalate"
-		) {
+		if (intent.priority === "low" && intent.authorityTier === "escalate") {
 			contradictions.push(
-				'Low-priority intent should not require escalation authority',
+				"Low-priority intent should not require escalation authority",
 			);
 		}
 

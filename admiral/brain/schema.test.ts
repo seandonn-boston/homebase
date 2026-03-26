@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
-import { afterEach, beforeEach, describe, it } from "node:test";
 import { mkdtempSync, rmSync } from "node:fs";
-import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { BrainDatabase } from "./schema";
+import { join } from "node:path";
+import { afterEach, beforeEach, describe, it } from "node:test";
 import type { InsertEntry } from "./schema";
+import { BrainDatabase } from "./schema";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -212,9 +212,7 @@ describe("BrainDatabase — search", () => {
 		db.insertEntry(
 			makeEntry({ title: "Decision Alpha", category: "decision" }),
 		);
-		db.insertEntry(
-			makeEntry({ title: "Outcome Alpha", category: "outcome" }),
-		);
+		db.insertEntry(makeEntry({ title: "Outcome Alpha", category: "outcome" }));
 
 		const results = db.search("alpha", { category: "decision" });
 		assert.equal(results.length, 1);

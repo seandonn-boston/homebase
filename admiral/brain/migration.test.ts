@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
-import { afterEach, beforeEach, describe, it } from "node:test";
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { BrainDatabase } from "./schema";
+import { join } from "node:path";
+import { afterEach, beforeEach, describe, it } from "node:test";
 import { BrainMigrator, validateB1Entry } from "./migration";
+import { BrainDatabase } from "./schema";
 
 // ---------------------------------------------------------------------------
 // Helpers

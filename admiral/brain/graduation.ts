@@ -133,25 +133,19 @@ export class GraduationMeasurement {
 
 	getAssessmentHistory(tier?: string): GraduationAssessment[] {
 		if (!tier) return [...this.history];
-		return this.history.filter(
-			(a) => a.fromTier === tier || a.toTier === tier,
-		);
+		return this.history.filter((a) => a.fromTier === tier || a.toTier === tier);
 	}
 
 	getTrend(
 		days?: number,
 	): { date: number; criteria: Record<string, number> }[] {
-		const cutoff = days
-			? Date.now() - days * 24 * 60 * 60 * 1000
-			: 0;
+		const cutoff = days ? Date.now() - days * 24 * 60 * 60 * 1000 : 0;
 
 		return this.history
 			.filter((a) => a.assessedAt >= cutoff)
 			.map((a) => ({
 				date: a.assessedAt,
-				criteria: Object.fromEntries(
-					a.criteria.map((c) => [c.name, c.actual]),
-				),
+				criteria: Object.fromEntries(a.criteria.map((c) => [c.name, c.actual])),
 			}));
 	}
 }

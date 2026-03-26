@@ -167,7 +167,7 @@ export class BrainDatabase {
 	private db: InstanceType<typeof DatabaseSync>;
 	private readonly dbPath: string;
 
-	constructor(private dataDir: string) {
+	constructor(dataDir: string) {
 		mkdirSync(dataDir, { recursive: true });
 		this.dbPath = join(dataDir, "brain-b2.db");
 		this.db = new DatabaseSync(this.dbPath);
@@ -273,7 +273,10 @@ export class BrainDatabase {
 			)
 			.run(id);
 
-		return this.rowToEntry({ ...row, access_count: (row.access_count as number) + 1 });
+		return this.rowToEntry({
+			...row,
+			access_count: (row.access_count as number) + 1,
+		});
 	}
 
 	updateEntry(id: string, updates: Partial<BrainEntry>): BrainEntry {
@@ -306,11 +309,7 @@ export class BrainDatabase {
 			if (key in updates) {
 				const val = (updates as Record<string, unknown>)[key];
 				fields.push(`${key} = ?`);
-				if (
-					key === "tags" ||
-					key === "contradicts" ||
-					key === "metadata"
-				) {
+				if (key === "tags" || key === "contradicts" || key === "metadata") {
 					values.push(JSON.stringify(val));
 				} else {
 					values.push(val ?? null);
@@ -326,9 +325,7 @@ export class BrainDatabase {
 
 		values.push(id);
 		this.db
-			.prepare(
-				`UPDATE brain_entries SET ${fields.join(", ")} WHERE id = ?`,
-			)
+			.prepare(`UPDATE brain_entries SET ${fields.join(", ")} WHERE id = ?`)
 			.run(...values);
 
 		return merged;
@@ -337,9 +334,7 @@ export class BrainDatabase {
 	deleteEntry(id: string): boolean {
 		// Remove associated links first (FK constraint)
 		this.db
-			.prepare(
-				"DELETE FROM brain_links WHERE from_entry = ? OR to_entry = ?",
-			)
+			.prepare("DELETE FROM brain_links WHERE from_entry = ? OR to_entry = ?")
 			.run(id, id);
 		const info = this.db
 			.prepare("DELETE FROM brain_entries WHERE id = ?")
@@ -409,9 +404,7 @@ export class BrainDatabase {
 		// Post-filter tags (stored as JSON array, hard to filter in SQL)
 		if (filters?.tags && filters.tags.length > 0) {
 			const tagSet = new Set(filters.tags);
-			results = results.filter((e) =>
-				e.tags.some((t) => tagSet.has(t)),
-			);
+			results = results.filter((e) => e.tags.some((t) => tagSet.has(t)));
 		}
 
 		return results;
@@ -467,8 +460,7 @@ export class BrainDatabase {
 			sql = "SELECT * FROM brain_links WHERE to_entry = ?";
 			params = [entryId];
 		} else {
-			sql =
-				"SELECT * FROM brain_links WHERE from_entry = ? OR to_entry = ?";
+			sql = "SELECT * FROM brain_links WHERE from_entry = ? OR to_entry = ?";
 			params = [entryId, entryId];
 		}
 		const rows = this.db.prepare(sql).all(...params) as Record<
@@ -490,8 +482,7 @@ export class BrainDatabase {
 		maxDepth: number,
 		linkTypes?: BrainLink["link_type"][],
 	): { entry: BrainEntry; depth: number; path: string[] }[] {
-		const results: { entry: BrainEntry; depth: number; path: string[] }[] =
-			[];
+		const results: { entry: BrainEntry; depth: number; path: string[] }[] = [];
 		const visited = new Set<string>();
 
 		const queue: { id: string; depth: number; path: string[] }[] = [
@@ -517,8 +508,7 @@ export class BrainDatabase {
 			if (current.depth < maxDepth) {
 				const links = this.getLinks(current.id, "outgoing");
 				for (const link of links) {
-					if (linkTypes && !linkTypes.includes(link.link_type))
-						continue;
+					if (linkTypes && !linkTypes.includes(link.link_type)) continue;
 					if (!visited.has(link.to_entry)) {
 						queue.push({
 							id: link.to_entry,
@@ -604,9 +594,9 @@ export class BrainDatabase {
 			}
 		).c;
 		const demands = (
-			this.db
-				.prepare("SELECT COUNT(*) as c FROM demand_signals")
-				.get() as { c: number }
+			this.db.prepare("SELECT COUNT(*) as c FROM demand_signals").get() as {
+				c: number;
+			}
 		).c;
 		return { entries, links, demands, version: this.getVersion() };
 	}
@@ -646,9 +636,7 @@ export class BrainDatabase {
 			source_agent: (row.source_agent as string) ?? undefined,
 			source_type: (row.source_type as string) ?? undefined,
 			confidence:
-				row.confidence != null
-					? (row.confidence as number)
-					: undefined,
+				row.confidence != null ? (row.confidence as number) : undefined,
 			superseded_by: (row.superseded_by as string) ?? undefined,
 			contradicts: JSON.parse((row.contradicts as string) || "[]"),
 			metadata: JSON.parse((row.metadata as string) || "{}"),

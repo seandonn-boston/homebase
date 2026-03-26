@@ -2,19 +2,19 @@
  * Tests for Intent Operations (IE-04, IE-06, IE-07, IE-08, IE-09, IE-10)
  */
 
-import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { IntentCapture } from "./intent-schema.js";
-import type { Intent } from "./intent-schema.js";
+import { describe, it } from "node:test";
 import {
+	INTENT_TEMPLATES,
+	InflectionPointDetector,
+	IntentConflictDetector,
 	IntentDashboard,
 	IntentHistoryTracker,
 	IntentTemplateManager,
-	IntentConflictDetector,
-	InflectionPointDetector,
 	JudgmentBoundaryEnforcer,
-	INTENT_TEMPLATES,
 } from "./intent-operations.js";
+import type { Intent } from "./intent-schema.js";
+import { IntentCapture } from "./intent-schema.js";
 
 const now = Date.now();
 
@@ -289,7 +289,9 @@ describe("IntentTemplateManager", () => {
 
 	it("should throw when template not found", () => {
 		const manager = new IntentTemplateManager();
-		assert.throws(() => manager.createFromTemplate("nonexistent", { goal: "test" }));
+		assert.throws(() =>
+			manager.createFromTemplate("nonexistent", { goal: "test" }),
+		);
 	});
 
 	it("should add custom template", () => {
@@ -343,7 +345,10 @@ describe("IntentConflictDetector", () => {
 
 	it("should detect goal contradiction (add vs remove)", () => {
 		const a = makeIntent({ id: "i-1", goal: "Add caching to the API layer" });
-		const b = makeIntent({ id: "i-2", goal: "Remove caching from the API layer" });
+		const b = makeIntent({
+			id: "i-2",
+			goal: "Remove caching from the API layer",
+		});
 		const conflict = detector.detectGoalContradiction(a, b);
 		assert.ok(conflict);
 		assert.equal(conflict.type, "goal_contradiction");
@@ -357,8 +362,14 @@ describe("IntentConflictDetector", () => {
 	});
 
 	it("should detect scope overlap", () => {
-		const a = makeIntent({ id: "i-1", goal: "Refactor the authentication module" });
-		const b = makeIntent({ id: "i-2", goal: "Update the authentication module validation" });
+		const a = makeIntent({
+			id: "i-1",
+			goal: "Refactor the authentication module",
+		});
+		const b = makeIntent({
+			id: "i-2",
+			goal: "Update the authentication module validation",
+		});
 		const conflict = detector.detectScopeOverlap(a, b);
 		assert.ok(conflict);
 		assert.equal(conflict.type, "scope_overlap");
@@ -366,14 +377,26 @@ describe("IntentConflictDetector", () => {
 
 	it("should not detect scope overlap for different domains", () => {
 		const a = makeIntent({ id: "i-1", goal: "Refactor the payment system" });
-		const b = makeIntent({ id: "i-2", goal: "Update the email notification service" });
+		const b = makeIntent({
+			id: "i-2",
+			goal: "Update the email notification service",
+		});
 		const conflict = detector.detectScopeOverlap(a, b);
 		assert.equal(conflict, null);
 	});
 
 	it("should detect priority inversion", () => {
-		const a = makeIntent({ id: "i-1", goal: "Critical fix", priority: "critical", parentIntentId: "i-2" });
-		const b = makeIntent({ id: "i-2", goal: "Low priority task", priority: "low" });
+		const a = makeIntent({
+			id: "i-1",
+			goal: "Critical fix",
+			priority: "critical",
+			parentIntentId: "i-2",
+		});
+		const b = makeIntent({
+			id: "i-2",
+			goal: "Low priority task",
+			priority: "low",
+		});
 		const conflict = detector.detectPriorityInversion(a, b);
 		assert.ok(conflict);
 		assert.equal(conflict.type, "priority_inversion");
@@ -414,25 +437,33 @@ describe("InflectionPointDetector", () => {
 	const detector = new InflectionPointDetector();
 
 	it("should detect taste inflection point", () => {
-		const intent = makeIntent({ goal: "Update the branding style for the homepage" });
+		const intent = makeIntent({
+			goal: "Update the branding style for the homepage",
+		});
 		const points = detector.detect(intent);
 		assert.ok(points.some((p) => p.type === "taste"));
 	});
 
 	it("should detect ethics inflection point", () => {
-		const intent = makeIntent({ goal: "Implement user tracking with privacy considerations" });
+		const intent = makeIntent({
+			goal: "Implement user tracking with privacy considerations",
+		});
 		const points = detector.detect(intent);
 		assert.ok(points.some((p) => p.type === "ethics"));
 	});
 
 	it("should detect strategy inflection point", () => {
-		const intent = makeIntent({ goal: "Pivot the pricing model for the market" });
+		const intent = makeIntent({
+			goal: "Pivot the pricing model for the market",
+		});
 		const points = detector.detect(intent);
 		assert.ok(points.some((p) => p.type === "strategy"));
 	});
 
 	it("should detect stakeholder inflection point", () => {
-		const intent = makeIntent({ goal: "Address customer feedback on the dashboard" });
+		const intent = makeIntent({
+			goal: "Address customer feedback on the dashboard",
+		});
 		const points = detector.detect(intent);
 		assert.ok(points.some((p) => p.type === "stakeholder"));
 	});
@@ -446,18 +477,26 @@ describe("InflectionPointDetector", () => {
 	});
 
 	it("should return no inflection points for straightforward intent", () => {
-		const intent = makeIntent({ goal: "Fix null pointer exception", failureModes: ["Regression"] });
+		const intent = makeIntent({
+			goal: "Fix null pointer exception",
+			failureModes: ["Regression"],
+		});
 		const points = detector.detect(intent);
 		assert.equal(points.length, 0);
 	});
 
 	it("should detect escalation required", () => {
-		const intent = makeIntent({ goal: "Review ethical implications of bias detection" });
+		const intent = makeIntent({
+			goal: "Review ethical implications of bias detection",
+		});
 		assert.equal(detector.isEscalationRequired(intent), true);
 	});
 
 	it("should not require escalation for routine intent", () => {
-		const intent = makeIntent({ goal: "Fix null pointer exception", failureModes: ["Regression"] });
+		const intent = makeIntent({
+			goal: "Fix null pointer exception",
+			failureModes: ["Regression"],
+		});
 		assert.equal(detector.isEscalationRequired(intent), false);
 	});
 
@@ -482,7 +521,11 @@ describe("JudgmentBoundaryEnforcer", () => {
 	it("should detect safe action within boundaries", () => {
 		const intent = makeIntent({
 			judgmentBoundaries: [
-				{ description: "Do not modify production", threshold: "production deploy", escalateTo: "admin" },
+				{
+					description: "Do not modify production",
+					threshold: "production deploy",
+					escalateTo: "admin",
+				},
 			],
 		});
 		const result = enforcer.checkBoundaries(intent, "run local tests");
@@ -493,10 +536,17 @@ describe("JudgmentBoundaryEnforcer", () => {
 	it("should detect boundary violation", () => {
 		const intent = makeIntent({
 			judgmentBoundaries: [
-				{ description: "Do not modify production", threshold: "production deploy", escalateTo: "admin" },
+				{
+					description: "Do not modify production",
+					threshold: "production deploy",
+					escalateTo: "admin",
+				},
 			],
 		});
-		const result = enforcer.checkBoundaries(intent, "production deploy of new version");
+		const result = enforcer.checkBoundaries(
+			intent,
+			"production deploy of new version",
+		);
 		assert.equal(result.safe, false);
 		assert.ok(result.violations.length > 0);
 	});
@@ -504,7 +554,11 @@ describe("JudgmentBoundaryEnforcer", () => {
 	it("should detect near-boundary action", () => {
 		const intent = makeIntent({
 			judgmentBoundaries: [
-				{ description: "Do not modify production database", threshold: "production database migration", escalateTo: "dba" },
+				{
+					description: "Do not modify production database",
+					threshold: "production database migration",
+					escalateTo: "dba",
+				},
 			],
 		});
 		const result = enforcer.checkBoundaries(intent, "review production schema");
@@ -516,7 +570,10 @@ describe("JudgmentBoundaryEnforcer", () => {
 			constraints: ["Must not modify shared state"],
 			judgmentBoundaries: [],
 		});
-		const result = enforcer.checkBoundaries(intent, "modify the shared state variables");
+		const result = enforcer.checkBoundaries(
+			intent,
+			"modify the shared state variables",
+		);
 		assert.equal(result.safe, false);
 		assert.ok(result.violations.some((v) => v.includes("constraint")));
 	});
@@ -530,20 +587,34 @@ describe("JudgmentBoundaryEnforcer", () => {
 	it("should return proximity warnings", () => {
 		const intent = makeIntent({
 			judgmentBoundaries: [
-				{ description: "Do not delete user data", threshold: "delete user", escalateTo: "admin" },
+				{
+					description: "Do not delete user data",
+					threshold: "delete user",
+					escalateTo: "admin",
+				},
 			],
 		});
-		const warnings = enforcer.getProximityWarnings(intent, "archive old user accounts");
+		const warnings = enforcer.getProximityWarnings(
+			intent,
+			"archive old user accounts",
+		);
 		assert.ok(warnings.some((w) => w.includes("user")));
 	});
 
 	it("should return empty warnings when far from boundaries", () => {
 		const intent = makeIntent({
 			judgmentBoundaries: [
-				{ description: "Do not delete production data", threshold: "delete production", escalateTo: "admin" },
+				{
+					description: "Do not delete production data",
+					threshold: "delete production",
+					escalateTo: "admin",
+				},
 			],
 		});
-		const warnings = enforcer.getProximityWarnings(intent, "run unit tests locally");
+		const warnings = enforcer.getProximityWarnings(
+			intent,
+			"run unit tests locally",
+		);
 		assert.equal(warnings.length, 0);
 	});
 });

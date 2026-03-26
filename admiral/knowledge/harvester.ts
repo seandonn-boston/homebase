@@ -56,10 +56,6 @@ const SENSITIVE_PATTERNS: RegExp[] = [
 // ---------------------------------------------------------------------------
 
 export class KnowledgeHarvester {
-	constructor() {
-		// stateless
-	}
-
 	harvest(source: HarvestSource): HarvestResult {
 		let entries: ProposedEntry[];
 
@@ -84,8 +80,7 @@ export class KnowledgeHarvester {
 		entries = entries
 			.map((e) => ({
 				...e,
-				sourceAttribution:
-					source.author ?? e.sourceAttribution ?? "unknown",
+				sourceAttribution: source.author ?? e.sourceAttribution ?? "unknown",
 			}))
 			.filter((e) => !this.filterSensitive(e));
 
@@ -98,7 +93,7 @@ export class KnowledgeHarvester {
 		const lines = diff.split("\n");
 
 		// Detect new file additions
-		const newFiles: string[] = [];
+		const _newFiles: string[] = [];
 		const removedFiles: string[] = [];
 		const modifiedFiles: string[] = [];
 
@@ -169,8 +164,7 @@ export class KnowledgeHarvester {
 
 		// Extract title (first line or first heading)
 		const lines = description.split("\n").filter((l) => l.trim());
-		const title =
-			lines[0]?.replace(/^#+\s*/, "").trim() ?? "PR knowledge";
+		const title = lines[0]?.replace(/^#+\s*/, "").trim() ?? "PR knowledge";
 
 		// Look for rationale sections
 		const rationalePatterns = [
@@ -241,17 +235,13 @@ export class KnowledgeHarvester {
 
 		if (prefixMatch) {
 			const [, type, scope, desc] = prefixMatch;
-			const category =
-				type.toLowerCase() === "fix" ? "bug_fix" : "feature";
+			const category = type.toLowerCase() === "fix" ? "bug_fix" : "feature";
 
 			entries.push({
 				title: `${type}: ${desc}`,
 				content: body || desc,
 				category,
-				tags: [
-					type.toLowerCase(),
-					...(scope ? [scope.toLowerCase()] : []),
-				],
+				tags: [type.toLowerCase(), ...(scope ? [scope.toLowerCase()] : [])],
 				sourceAttribution: "commit_message",
 				confidence: 0.6,
 			});

@@ -6,7 +6,6 @@
  * Zero external dependencies — Node.js built-ins only.
  */
 
-import { createHash } from "node:crypto";
 import type { BrainEntryLite, BrainLinkLite } from "./gardener.js";
 
 // ---------------------------------------------------------------------------
@@ -38,17 +37,17 @@ export interface KnowledgeHealthReport {
 		coverage: number;
 		linkDensity: number;
 	};
-	trends: { metric: string; direction: "improving" | "declining" | "stable"; delta: number }[];
+	trends: {
+		metric: string;
+		direction: "improving" | "declining" | "stable";
+		delta: number;
+	}[];
 	totalEntries: number;
 	totalLinks: number;
 }
 
 export class KnowledgeQualityMetrics {
 	private history: KnowledgeHealthReport[] = [];
-
-	constructor() {
-		// stateless init — history accumulated in-memory
-	}
 
 	generateReport(
 		entries: BrainEntryLite[],
@@ -59,13 +58,16 @@ export class KnowledgeQualityMetrics {
 		const freshCutoff = now - 30 * DAY_MS;
 
 		// Freshness: % entries updated within 30 days
-		const freshCount = entries.filter((e) => e.updated_at >= freshCutoff).length;
+		const freshCount = entries.filter(
+			(e) => e.updated_at >= freshCutoff,
+		).length;
 		const freshness = entries.length > 0 ? freshCount / entries.length : 0;
 
 		// Accuracy proxy: avg usefulness_score
 		const accuracyProxy =
 			entries.length > 0
-				? entries.reduce((sum, e) => sum + e.usefulness_score, 0) / entries.length
+				? entries.reduce((sum, e) => sum + e.usefulness_score, 0) /
+					entries.length
 				: 0;
 
 		// Usage frequency: avg access_count
@@ -93,8 +95,7 @@ export class KnowledgeQualityMetrics {
 		const coverage = uniqueCategories.size / totalCategories;
 
 		// Link density: avg links per entry
-		const linkDensity =
-			entries.length > 0 ? links.length / entries.length : 0;
+		const linkDensity = entries.length > 0 ? links.length / entries.length : 0;
 
 		const report: KnowledgeHealthReport = {
 			timestamp: now,
@@ -118,9 +119,11 @@ export class KnowledgeQualityMetrics {
 		return report;
 	}
 
-	computeTrends(
-		current?: KnowledgeHealthReport,
-	): { metric: string; direction: "improving" | "declining" | "stable"; delta: number }[] {
+	computeTrends(current?: KnowledgeHealthReport): {
+		metric: string;
+		direction: "improving" | "declining" | "stable";
+		delta: number;
+	}[] {
 		const latest = current ?? this.history[this.history.length - 1];
 		const previous = current
 			? this.history[this.history.length - 1]
@@ -128,13 +131,21 @@ export class KnowledgeQualityMetrics {
 
 		if (!latest || !previous) return [];
 
-		const trends: { metric: string; direction: "improving" | "declining" | "stable"; delta: number }[] = [];
-		const metricKeys = Object.keys(latest.metrics) as (keyof KnowledgeHealthReport["metrics"])[];
+		const trends: {
+			metric: string;
+			direction: "improving" | "declining" | "stable";
+			delta: number;
+		}[] = [];
+		const metricKeys = Object.keys(
+			latest.metrics,
+		) as (keyof KnowledgeHealthReport["metrics"])[];
 
 		for (const key of metricKeys) {
 			const delta = latest.metrics[key] - previous.metrics[key];
-			const improving = key === "contradictionRate" ? delta < -0.01 : delta > 0.01;
-			const declining = key === "contradictionRate" ? delta > 0.01 : delta < -0.01;
+			const improving =
+				key === "contradictionRate" ? delta < -0.01 : delta > 0.01;
+			const declining =
+				key === "contradictionRate" ? delta > 0.01 : delta < -0.01;
 			trends.push({
 				metric: key,
 				direction: improving ? "improving" : declining ? "declining" : "stable",
@@ -166,10 +177,6 @@ export interface SessionTransfer {
 export class CrossSessionTransfer {
 	private transfers: SessionTransfer[] = [];
 
-	constructor() {
-		// stateless init
-	}
-
 	captureSessionEnd(
 		sessionId: string,
 		entries: BrainEntryLite[],
@@ -181,7 +188,8 @@ export class CrossSessionTransfer {
 				id: e.id,
 				title: e.title,
 				category: e.category,
-				relevance: e.usefulness_score * 0.6 + Math.min(e.access_count / 10, 1) * 0.4,
+				relevance:
+					e.usefulness_score * 0.6 + Math.min(e.access_count / 10, 1) * 0.4,
 			}))
 			.sort((a, b) => b.relevance - a.relevance);
 
@@ -198,8 +206,12 @@ export class CrossSessionTransfer {
 			}
 		}
 
-		const repeatFailures = (recentFailures ?? []).filter((f) => previousFailures.has(f));
-		const allFailures = [...new Set([...(recentFailures ?? []), ...repeatFailures])];
+		const repeatFailures = (recentFailures ?? []).filter((f) =>
+			previousFailures.has(f),
+		);
+		const allFailures = [
+			...new Set([...(recentFailures ?? []), ...repeatFailures]),
+		];
 
 		const transfer: SessionTransfer = {
 			sessionId,
@@ -275,17 +287,18 @@ export interface KnowledgeArchive {
 	version: string;
 	exportedAt: number;
 	exportedBy: string;
-	filter?: { categories?: string[]; tags?: string[]; since?: number; minQuality?: number };
+	filter?: {
+		categories?: string[];
+		tags?: string[];
+		since?: number;
+		minQuality?: number;
+	};
 	entries: BrainEntryLite[];
 	links: BrainLinkLite[];
 	metadata: { totalEntries: number; totalLinks: number };
 }
 
 export class KnowledgeExporter {
-	constructor() {
-		// stateless
-	}
-
 	export(
 		entries: BrainEntryLite[],
 		links: BrainLinkLite[],
@@ -308,7 +321,9 @@ export class KnowledgeExporter {
 		}
 
 		if (filter?.minQuality !== undefined) {
-			filtered = filtered.filter((e) => e.usefulness_score >= filter.minQuality!);
+			filtered = filtered.filter(
+				(e) => e.usefulness_score >= filter.minQuality!,
+			);
 		}
 
 		// Filter links to only include those between filtered entries
@@ -364,10 +379,6 @@ export class KnowledgeExporter {
 }
 
 export class KnowledgeImporter {
-	constructor() {
-		// stateless
-	}
-
 	deserialize(json: string): KnowledgeArchive {
 		const parsed = JSON.parse(json) as KnowledgeArchive;
 		return parsed;
@@ -464,14 +475,15 @@ export interface SearchResult {
 }
 
 export class KnowledgeSearchApi {
-	constructor() {
-		// stateless
-	}
-
 	search(
 		query: string,
 		entries: BrainEntryLite[],
-		options?: { category?: string; tags?: string[]; since?: number; limit?: number },
+		options?: {
+			category?: string;
+			tags?: string[];
+			since?: number;
+			limit?: number;
+		},
 	): SearchResult {
 		const start = Date.now();
 		const queryTokens = tokenize(query);
@@ -479,7 +491,9 @@ export class KnowledgeSearchApi {
 		// Score each entry by keyword overlap
 		const scored = entries
 			.map((e) => {
-				const entryTokens = tokenize(e.title + " " + e.content + " " + e.tags.join(" "));
+				const entryTokens = tokenize(
+					`${e.title} ${e.content} ${e.tags.join(" ")}`,
+				);
 				let matchCount = 0;
 				for (const qt of queryTokens) {
 					if (entryTokens.has(qt)) matchCount++;
@@ -498,7 +512,9 @@ export class KnowledgeSearchApi {
 
 		if (options?.tags && options.tags.length > 0) {
 			const tagSet = new Set(options.tags);
-			filtered = filtered.filter((s) => s.entry.tags.some((t) => tagSet.has(t)));
+			filtered = filtered.filter((s) =>
+				s.entry.tags.some((t) => tagSet.has(t)),
+			);
 		}
 
 		if (options?.since !== undefined) {
@@ -528,7 +544,9 @@ export class KnowledgeSearchApi {
 	}
 
 	getLinks(entryId: string, links: BrainLinkLite[]): BrainLinkLite[] {
-		return links.filter((l) => l.from_entry === entryId || l.to_entry === entryId);
+		return links.filter(
+			(l) => l.from_entry === entryId || l.to_entry === entryId,
+		);
 	}
 
 	getHealth(
@@ -537,7 +555,8 @@ export class KnowledgeSearchApi {
 	): { totalEntries: number; totalLinks: number; avgQuality: number } {
 		const avgQuality =
 			entries.length > 0
-				? entries.reduce((sum, e) => sum + e.usefulness_score, 0) / entries.length
+				? entries.reduce((sum, e) => sum + e.usefulness_score, 0) /
+					entries.length
 				: 0;
 
 		return {

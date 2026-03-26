@@ -51,14 +51,7 @@ function extractKeywords(text: string): Set<string> {
 // ---------------------------------------------------------------------------
 
 export class KnowledgeCurator {
-	constructor() {
-		// stateless
-	}
-
-	analyze(
-		entries: BrainEntryLite[],
-		links: BrainLinkLite[],
-	): CurationReport {
+	analyze(entries: BrainEntryLite[], links: BrainLinkLite[]): CurationReport {
 		const improvements: CuratorImprovement[] = [];
 		const qualityScores: { entryId: string; score: number }[] = [];
 
@@ -77,10 +70,8 @@ export class KnowledgeCurator {
 				// Skip if link already exists
 				const exists = links.some(
 					(l) =>
-						(l.from_entry === entry.id &&
-							l.to_entry === s.targetId) ||
-						(l.from_entry === s.targetId &&
-							l.to_entry === entry.id),
+						(l.from_entry === entry.id && l.to_entry === s.targetId) ||
+						(l.from_entry === s.targetId && l.to_entry === entry.id),
 				);
 				if (!exists) {
 					improvements.push({
@@ -174,8 +165,7 @@ export class KnowledgeCurator {
 
 		// Accessed in last 30 days
 		const recentCutoff = Date.now() - 30 * DAY_MS;
-		if (entry.updated_at > recentCutoff || entry.access_count > 0)
-			score += 0.2;
+		if (entry.updated_at > recentCutoff || entry.access_count > 0) score += 0.2;
 
 		return Math.round(score * 100) / 100;
 	}
@@ -190,18 +180,14 @@ export class KnowledgeCurator {
 			linkType: string;
 			confidence: number;
 		}[] = [];
-		const entryKeywords = extractKeywords(
-			entry.title + " " + entry.content,
-		);
+		const entryKeywords = extractKeywords(`${entry.title} ${entry.content}`);
 
 		if (entryKeywords.size === 0) return suggestions;
 
 		for (const other of otherEntries) {
 			if (other.id === entry.id) continue;
 
-			const otherKeywords = extractKeywords(
-				other.title + " " + other.content,
-			);
+			const otherKeywords = extractKeywords(`${other.title} ${other.content}`);
 			if (otherKeywords.size === 0) continue;
 
 			let overlap = 0;

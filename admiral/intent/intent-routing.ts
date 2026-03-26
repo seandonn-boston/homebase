@@ -54,8 +54,7 @@ export class IntentRouter {
 			(sub) => ({
 				subIntentId: sub.id,
 				agentCategory: sub.agentCategory,
-				modelTier:
-					TIER_BY_AUTHORITY[sub.authorityTier] ?? "standard",
+				modelTier: TIER_BY_AUTHORITY[sub.authorityTier] ?? "standard",
 				rationale: this.buildRationale(sub),
 			}),
 		);

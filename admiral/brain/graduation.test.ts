@@ -137,8 +137,8 @@ describe("GraduationMeasurement", () => {
 		gm.recordAssessment(a);
 		const trend = gm.getTrend();
 		assert.equal(trend.length, 1);
-		assert.equal(trend[0].criteria["hitRate"], 90);
-		assert.equal(trend[0].criteria["precision"], 95);
+		assert.equal(trend[0].criteria.hitRate, 90);
+		assert.equal(trend[0].criteria.precision, 95);
 	});
 
 	it("filters trend by days window", () => {

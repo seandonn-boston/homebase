@@ -7,7 +7,7 @@
  */
 
 import { createHash, randomUUID } from "node:crypto";
-import { appendFile, readFile, writeFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -54,10 +54,7 @@ export class SecurityAuditTrail {
 
 	/** Append a new entry to the trail with hash chain integrity. */
 	record(
-		entry: Omit<
-			SecurityAuditEntry,
-			"id" | "timestamp" | "prevHash" | "hash"
-		>,
+		entry: Omit<SecurityAuditEntry, "id" | "timestamp" | "prevHash" | "hash">,
 	): SecurityAuditEntry {
 		const id = `sec_${randomUUID()}`;
 		const timestamp = Date.now();
@@ -92,7 +89,7 @@ export class SecurityAuditTrail {
 
 	/** Verify SHA-256 hash chain integrity. */
 	validateChain(): { valid: boolean; breakPosition?: number } {
-		let prevHash = "";
+		let _prevHash = "";
 
 		for (let i = 0; i < this.entries.length; i++) {
 			const e = this.entries[i];
@@ -125,7 +122,7 @@ export class SecurityAuditTrail {
 				return { valid: false, breakPosition: i };
 			}
 
-			prevHash = e.hash;
+			_prevHash = e.hash;
 		}
 
 		return { valid: true };
@@ -143,8 +140,7 @@ export class SecurityAuditTrail {
 		return this.entries.filter((e) => {
 			if (filter.type && e.type !== filter.type) return false;
 			if (filter.agentId && e.agentId !== filter.agentId) return false;
-			if (filter.since != null && e.timestamp < filter.since)
-				return false;
+			if (filter.since != null && e.timestamp < filter.since) return false;
 			if (filter.severity && e.severity !== filter.severity) return false;
 			return true;
 		});
@@ -154,7 +150,7 @@ export class SecurityAuditTrail {
 	async save(): Promise<void> {
 		if (!this.logPath) return;
 		const lines = this.entries.map((e) => JSON.stringify(e)).join("\n");
-		await writeFile(this.logPath, lines + "\n", "utf-8");
+		await writeFile(this.logPath, `${lines}\n`, "utf-8");
 	}
 
 	/** Load entries from JSONL file, rebuilding the hash chain state. */
@@ -169,9 +165,7 @@ export class SecurityAuditTrail {
 			return;
 		}
 
-		const lines = data
-			.split("\n")
-			.filter((l) => l.trim().length > 0);
+		const lines = data.split("\n").filter((l) => l.trim().length > 0);
 		this.entries = lines.map((l) => JSON.parse(l) as SecurityAuditEntry);
 
 		if (this.entries.length > 0) {

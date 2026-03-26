@@ -2,8 +2,8 @@
  * Tests for AttackCorpus (SEC-01)
  */
 
-import { describe, it } from "node:test";
 import assert from "node:assert/strict";
+import { describe, it } from "node:test";
 import { AttackCorpus, type AttackScenario } from "./attack-corpus.js";
 
 describe("AttackCorpus", () => {
@@ -76,8 +76,8 @@ describe("AttackCorpus", () => {
 				timestamp: Date.now(),
 			});
 			const scenario = corpus.getScenario("ATK-0001");
-			assert.equal(scenario!.timesPassed, 1);
-			assert.equal(scenario!.timesFailed, 0);
+			assert.equal(scenario?.timesPassed, 1);
+			assert.equal(scenario?.timesFailed, 0);
 		});
 
 		it("should record a failing result", () => {
@@ -90,12 +90,12 @@ describe("AttackCorpus", () => {
 				timestamp: Date.now(),
 			});
 			const scenario = corpus.getScenario("ATK-0001");
-			assert.equal(scenario!.timesFailed, 1);
+			assert.equal(scenario?.timesFailed, 1);
 		});
 
 		it("should update lastTested on result", () => {
 			const corpus = AttackCorpus.createDefaultCorpus();
-			const before = corpus.getScenario("ATK-0001")!.lastTested;
+			const before = corpus.getScenario("ATK-0001")?.lastTested;
 			corpus.recordResult({
 				scenarioId: "ATK-0001",
 				passed: true,
@@ -103,7 +103,12 @@ describe("AttackCorpus", () => {
 				details: "OK",
 				timestamp: Date.now(),
 			});
-			assert.ok(corpus.getScenario("ATK-0001")!.lastTested! > (before ?? 0));
+			const scenario = corpus.getScenario("ATK-0001");
+			assert.ok(
+				scenario != null &&
+					scenario.lastTested != null &&
+					scenario.lastTested > (before ?? 0),
+			);
 		});
 	});
 
@@ -150,7 +155,7 @@ describe("AttackCorpus", () => {
 			});
 			const report = corpus.getReport();
 			assert.ok("critical" in report.bySeverity);
-			assert.equal(report.bySeverity["critical"].passed, 1);
+			assert.equal(report.bySeverity.critical.passed, 1);
 		});
 	});
 

@@ -2,14 +2,14 @@
  * Tests for Knowledge Operations (DE-07 to DE-10)
  */
 
-import { describe, it } from "node:test";
 import assert from "node:assert/strict";
+import { describe, it } from "node:test";
 import type { BrainEntryLite, BrainLinkLite } from "./gardener.js";
 import {
-	KnowledgeQualityMetrics,
 	CrossSessionTransfer,
 	KnowledgeExporter,
 	KnowledgeImporter,
+	KnowledgeQualityMetrics,
 	KnowledgeSearchApi,
 } from "./knowledge-operations.js";
 
@@ -100,7 +100,13 @@ describe("KnowledgeQualityMetrics", () => {
 			makeEntry({ id: "e-2" }),
 			makeEntry({ id: "e-3" }),
 		];
-		const links = [makeLink({ from_entry: "e-1", to_entry: "e-2", link_type: "contradicts" })];
+		const links = [
+			makeLink({
+				from_entry: "e-1",
+				to_entry: "e-2",
+				link_type: "contradicts",
+			}),
+		];
 		const report = metrics.generateReport(entries, links);
 		// 2 entries out of 3 involved in contradictions
 		assert.ok(Math.abs(report.metrics.contradictionRate - 2 / 3) < 0.001);
@@ -112,7 +118,11 @@ describe("KnowledgeQualityMetrics", () => {
 			makeEntry({ id: "e-1", category: "test" }),
 			makeEntry({ id: "e-2", category: "pattern" }),
 		];
-		const report = metrics.generateReport(entries, [], ["test", "pattern", "decision", "lesson"]);
+		const report = metrics.generateReport(
+			entries,
+			[],
+			["test", "pattern", "decision", "lesson"],
+		);
 		assert.equal(report.metrics.coverage, 0.5);
 	});
 
@@ -187,7 +197,11 @@ describe("CrossSessionTransfer", () => {
 	it("should extract lessons from high-usefulness entries", () => {
 		const transfer = new CrossSessionTransfer();
 		const entries = [
-			makeEntry({ id: "e-1", title: "Important Lesson", usefulness_score: 0.9 }),
+			makeEntry({
+				id: "e-1",
+				title: "Important Lesson",
+				usefulness_score: 0.9,
+			}),
 			makeEntry({ id: "e-2", title: "Low Value", usefulness_score: 0.2 }),
 		];
 		const result = transfer.captureSessionEnd("session-1", entries);
@@ -304,7 +318,9 @@ describe("KnowledgeExporter", () => {
 
 	it("should strip PII from archive", () => {
 		const exporter = new KnowledgeExporter();
-		const entries = [makeEntry({ id: "e-1", content: "Contact user@example.com for details" })];
+		const entries = [
+			makeEntry({ id: "e-1", content: "Contact user@example.com for details" }),
+		];
 		const archive = exporter.export(entries, []);
 		const stripped = exporter.stripPII(archive);
 		assert.ok(!stripped.entries[0].content.includes("user@example.com"));
@@ -349,7 +365,11 @@ describe("KnowledgeImporter", () => {
 			exportedAt: now,
 			exportedBy: "test",
 			entries: [
-				makeEntry({ id: "e-2", title: "Existing Entry", content: "Some test content for the entry" }),
+				makeEntry({
+					id: "e-2",
+					title: "Existing Entry",
+					content: "Some test content for the entry",
+				}),
 			],
 			links: [],
 			metadata: { totalEntries: 1, totalLinks: 0 },
@@ -361,13 +381,23 @@ describe("KnowledgeImporter", () => {
 
 	it("should detect conflicts when same title but different content", () => {
 		const importer = new KnowledgeImporter();
-		const existing = [makeEntry({ id: "e-1", title: "Shared Title", content: "Original content here" })];
+		const existing = [
+			makeEntry({
+				id: "e-1",
+				title: "Shared Title",
+				content: "Original content here",
+			}),
+		];
 		const archive = {
 			version: "1.0.0",
 			exportedAt: now,
 			exportedBy: "test",
 			entries: [
-				makeEntry({ id: "e-2", title: "Shared Title", content: "Completely different content about something else entirely" }),
+				makeEntry({
+					id: "e-2",
+					title: "Shared Title",
+					content: "Completely different content about something else entirely",
+				}),
 			],
 			links: [],
 			metadata: { totalEntries: 1, totalLinks: 0 },
@@ -445,8 +475,16 @@ describe("KnowledgeSearchApi", () => {
 
 	it("should search entries by keyword", () => {
 		const entries = [
-			makeEntry({ id: "e-1", title: "TypeScript patterns", content: "How to use generics" }),
-			makeEntry({ id: "e-2", title: "Python basics", content: "Intro to Python" }),
+			makeEntry({
+				id: "e-1",
+				title: "TypeScript patterns",
+				content: "How to use generics",
+			}),
+			makeEntry({
+				id: "e-2",
+				title: "Python basics",
+				content: "Intro to Python",
+			}),
 		];
 		const result = api.search("TypeScript generics", entries);
 		assert.equal(result.entries.length, 1);
@@ -481,7 +519,11 @@ describe("KnowledgeSearchApi", () => {
 
 	it("should respect limit option", () => {
 		const entries = Array.from({ length: 10 }, (_, i) =>
-			makeEntry({ id: `e-${i}`, title: `Test item ${i}`, content: "Common content" }),
+			makeEntry({
+				id: `e-${i}`,
+				title: `Test item ${i}`,
+				content: "Common content",
+			}),
 		);
 		const result = api.search("test common content", entries, { limit: 3 });
 		assert.equal(result.entries.length, 3);
@@ -528,8 +570,8 @@ describe("KnowledgeSearchApi", () => {
 			makeEntry({ id: "e-3", category: "pattern", created_at: now }),
 		];
 		const stats = api.getStats(entries);
-		assert.equal(stats.byCategory["test"], 2);
-		assert.equal(stats.byCategory["pattern"], 1);
+		assert.equal(stats.byCategory.test, 2);
+		assert.equal(stats.byCategory.pattern, 1);
 		assert.ok(Object.keys(stats.byMonth).length > 0);
 	});
 

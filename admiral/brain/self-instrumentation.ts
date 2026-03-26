@@ -235,10 +235,7 @@ export class ContradictionResolver {
 						seen.add(key);
 						const other = this.db.getEntry(link.to_entry);
 						if (other) {
-							const overlap = this.findKeywordOverlap(
-								entry,
-								other,
-							);
+							const overlap = this.findKeywordOverlap(entry, other);
 							contradictions.push({
 								entryA: entry.id,
 								entryB: link.to_entry,
@@ -257,10 +254,7 @@ export class ContradictionResolver {
 						seen.add(key);
 						const other = this.db.getEntry(contradictId);
 						if (other) {
-							const overlap = this.findKeywordOverlap(
-								entry,
-								other,
-							);
+							const overlap = this.findKeywordOverlap(entry, other);
 							contradictions.push({
 								entryA: entry.id,
 								entryB: contradictId,
@@ -296,13 +290,7 @@ export class ContradictionResolver {
 			case "supersede":
 				// Mark entryB as superseded by entryA
 				this.db.updateEntry(entryB, { superseded_by: entryA });
-				this.db.addLink(
-					entryA,
-					entryB,
-					"supersedes",
-					1.0,
-					resolvedBy,
-				);
+				this.db.addLink(entryA, entryB, "supersedes", 1.0, resolvedBy);
 				break;
 			case "withdraw":
 				// Delete the contradicting entry
@@ -310,13 +298,7 @@ export class ContradictionResolver {
 				break;
 			case "diverge":
 				// Keep both, add a "related_to" link to acknowledge divergence
-				this.db.addLink(
-					entryA,
-					entryB,
-					"related_to",
-					0.5,
-					resolvedBy,
-				);
+				this.db.addLink(entryA, entryB, "related_to", 0.5, resolvedBy);
 				break;
 		}
 
@@ -327,17 +309,10 @@ export class ContradictionResolver {
 	getPending(): { entryA: string; entryB: string }[] {
 		const all = this.detectContradictions();
 		const resolvedKeys = new Set(
-			this.resolutions.map((r) =>
-				[r.entryA, r.entryB].sort().join(":"),
-			),
+			this.resolutions.map((r) => [r.entryA, r.entryB].sort().join(":")),
 		);
 		return all
-			.filter(
-				(c) =>
-					!resolvedKeys.has(
-						[c.entryA, c.entryB].sort().join(":"),
-					),
-			)
+			.filter((c) => !resolvedKeys.has([c.entryA, c.entryB].sort().join(":")))
 			.map(({ entryA, entryB }) => ({ entryA, entryB }));
 	}
 
@@ -399,9 +374,7 @@ export class DecisionEntryValidator {
 
 		const validTiers = ["autonomous", "propose", "escalate"];
 		if (!validTiers.includes(obj.authorityTier as string)) {
-			errors.push(
-				`authorityTier must be one of: ${validTiers.join(", ")}`,
-			);
+			errors.push(`authorityTier must be one of: ${validTiers.join(", ")}`);
 		}
 
 		if (typeof obj.agent !== "string" || obj.agent.length === 0) {
@@ -409,16 +382,9 @@ export class DecisionEntryValidator {
 		}
 
 		if (obj.outcome !== undefined) {
-			const validOutcomes = [
-				"success",
-				"failure",
-				"partial",
-				"pending",
-			];
+			const validOutcomes = ["success", "failure", "partial", "pending"];
 			if (!validOutcomes.includes(obj.outcome as string)) {
-				errors.push(
-					`outcome must be one of: ${validOutcomes.join(", ")}`,
-				);
+				errors.push(`outcome must be one of: ${validOutcomes.join(", ")}`);
 			}
 		}
 
@@ -433,11 +399,7 @@ export class DecisionEntryValidator {
 		decision: DecisionEntry,
 	): Omit<
 		BrainEntry,
-		| "id"
-		| "created_at"
-		| "updated_at"
-		| "usefulness_score"
-		| "access_count"
+		"id" | "created_at" | "updated_at" | "usefulness_score" | "access_count"
 	> {
 		return {
 			title: `Decision: ${decision.decision}`,

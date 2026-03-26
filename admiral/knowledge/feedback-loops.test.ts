@@ -2,12 +2,9 @@
  * Tests for KnowledgeFeedbackLoop (DE-05, DE-06)
  */
 
-import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import {
-	KnowledgeFeedbackLoop,
-	type FeedbackEvent,
-} from "./feedback-loops.js";
+import { describe, it } from "node:test";
+import { type FeedbackEvent, KnowledgeFeedbackLoop } from "./feedback-loops.js";
 
 const now = Date.now();
 
@@ -119,8 +116,7 @@ describe("KnowledgeFeedbackLoop", () => {
 				type: "test_result",
 				outcome: "failed",
 				relatedEntryId: "entry-6",
-				context:
-					"Timeout in database connection handler caused test failure",
+				context: "Timeout in database connection handler caused test failure",
 				timestamp: now,
 			});
 			assert.deepEqual(result.weakened, ["entry-6"]);

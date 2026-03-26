@@ -2,8 +2,8 @@
  * Tests for KnowledgeCurator (DE-03)
  */
 
-import { describe, it } from "node:test";
 import assert from "node:assert/strict";
+import { describe, it } from "node:test";
 import { KnowledgeCurator } from "./curator.js";
 import type { BrainEntryLite, BrainLinkLite } from "./gardener.js";
 
@@ -65,8 +65,7 @@ describe("KnowledgeCurator", () => {
 			const withTags = makeEntry();
 			const withoutTags = makeEntry({ tags: [] });
 			const diff =
-				curator.scoreQuality(withTags) -
-				curator.scoreQuality(withoutTags);
+				curator.scoreQuality(withTags) - curator.scoreQuality(withoutTags);
 			assert.ok(Math.abs(diff - 0.2) < 0.01, `Expected ~0.2, got ${diff}`);
 		});
 	});
