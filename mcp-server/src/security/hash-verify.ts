@@ -10,9 +10,9 @@
 // ---------------------------------------------------------------------------
 
 interface HashEntry {
-  serverId: string;
-  hash: string;
-  registeredAt: number;
+	serverId: string;
+	hash: string;
+	registeredAt: number;
 }
 
 // ---------------------------------------------------------------------------
@@ -20,34 +20,44 @@ interface HashEntry {
 // ---------------------------------------------------------------------------
 
 export class BinaryHashVerifier {
-  private registry: Map<string, HashEntry> = new Map();
+	private registry: Map<string, HashEntry> = new Map();
 
-  constructor() {}
+	constructor() {}
 
-  registerHash(serverId: string, hash: string): void {
-    this.registry.set(serverId, {
-      serverId,
-      hash,
-      registeredAt: Date.now(),
-    });
-  }
+	registerHash(serverId: string, hash: string): void {
+		this.registry.set(serverId, {
+			serverId,
+			hash,
+			registeredAt: Date.now(),
+		});
+	}
 
-  verify(serverId: string, currentHash: string): { valid: boolean; reason?: string } {
-    const entry = this.registry.get(serverId);
-    if (!entry) {
-      return { valid: false, reason: "Server not registered" };
-    }
-    if (entry.hash !== currentHash) {
-      return { valid: false, reason: "Hash mismatch — binary may have been tampered with" };
-    }
-    return { valid: true };
-  }
+	verify(
+		serverId: string,
+		currentHash: string,
+	): { valid: boolean; reason?: string } {
+		const entry = this.registry.get(serverId);
+		if (!entry) {
+			return { valid: false, reason: "Server not registered" };
+		}
+		if (entry.hash !== currentHash) {
+			return {
+				valid: false,
+				reason: "Hash mismatch — binary may have been tampered with",
+			};
+		}
+		return { valid: true };
+	}
 
-  revokeServer(serverId: string): void {
-    this.registry.delete(serverId);
-  }
+	revokeServer(serverId: string): void {
+		this.registry.delete(serverId);
+	}
 
-  getRegisteredServers(): { serverId: string; hash: string; registeredAt: number }[] {
-    return Array.from(this.registry.values()).map((e) => ({ ...e }));
-  }
+	getRegisteredServers(): {
+		serverId: string;
+		hash: string;
+		registeredAt: number;
+	}[] {
+		return Array.from(this.registry.values()).map((e) => ({ ...e }));
+	}
 }

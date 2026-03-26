@@ -2,27 +2,32 @@
  * @admiral/mcp-server — public API surface.
  */
 
+export type {
+	JsonRpcError,
+	JsonRpcRequest,
+	JsonRpcResponse,
+} from "./protocol.js";
 // Protocol
 export {
-  parseRequest,
-  formatResponse,
-  formatError,
-  PARSE_ERROR,
-  INVALID_REQUEST,
-  METHOD_NOT_FOUND,
-  INVALID_PARAMS,
-  INTERNAL_ERROR,
+	formatError,
+	formatResponse,
+	INTERNAL_ERROR,
+	INVALID_PARAMS,
+	INVALID_REQUEST,
+	METHOD_NOT_FOUND,
+	PARSE_ERROR,
+	parseRequest,
 } from "./protocol.js";
-export type { JsonRpcRequest, JsonRpcResponse, JsonRpcError } from "./protocol.js";
-
-// Tool registry
-export { ToolRegistry } from "./tool-registry.js";
-export type { ToolDefinition, ToolHandler, ToolContext } from "./tool-registry.js";
-
-// Transports
-export { StdioTransport } from "./transport-stdio.js";
-export { HttpTransport } from "./transport-http.js";
-
+export type { McpServerConfig } from "./server.js";
 // Server
 export { McpServer } from "./server.js";
-export type { McpServerConfig } from "./server.js";
+export type {
+	ToolContext,
+	ToolDefinition,
+	ToolHandler,
+} from "./tool-registry.js";
+// Tool registry
+export { ToolRegistry } from "./tool-registry.js";
+export { HttpTransport } from "./transport-http.js";
+// Transports
+export { StdioTransport } from "./transport-stdio.js";
