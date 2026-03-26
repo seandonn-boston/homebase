@@ -12,23 +12,23 @@
 
 | Dimension | Score | Target | Key Gaps |
 |---|---|---|---|
-| Testing | 8/10 | 10/10 | 218 TS + 350+ bash tests, 90% coverage, coverage gate in CI. Missing: property tests, mutation testing |
+| Testing | 9/10 | 10/10 | 930+ TS + 350+ bash tests, 90% coverage, coverage gate in CI. Missing: property tests, mutation testing |
 | Code Quality Tooling | 8/10 | 10/10 | Coverage gate, license audit, ShellCheck, Biome. Missing: typed error hierarchy, strict null checks |
-| Architecture | 8/10 | 10/10 | Schema validation, config consolidation, hook/CP bridge, session state machine, event registry, handoff/escalation protocols. Missing: hook pipeline abstraction, plugin arch |
-| Spec Implementation | 7/10 | 10/10 | 19/19 hooks (100%), fleet registry + routing, brain B1 100%, execution patterns done, SO enforcement library, 71 agent definitions with schema. Missing: B2/B3, meta-governance agents, MCP server |
+| Architecture | 9/10 | 10/10 | Schema validation, config consolidation, hook/CP bridge, session state machine, event registry, handoff/escalation protocols, multi-agent pipeline orchestration, three-layer context assembly. Missing: plugin arch |
+| Spec Implementation | 9/10 | 10/10 | 19/19 hooks (100%), fleet registry + routing engine (86 rules), brain B1 100%, execution patterns done, SO enforcement library, 71 agent definitions, MCP server (12 tools, auth, RBAC), meta-governance agents (Sentinel/Arbiter/Compliance Monitor), progressive autonomy (4-stage trust), context engineering (3-zone profiles). Missing: B2/B3, ASP alignment |
 | Documentation | 7/10 | 10/10 | LICENSE, CoC, API docs, hook contracts, enforcement map. Missing: ADMIRAL_STYLE.md, runbook, ADRs |
 | CI/CD | 9/10 | 10/10 | Coverage gate, benchmarks, PR size check, fix-needs-tests, stale branches, changelog, release workflow. Missing: matrix builds, CodeQL |
-| Consistency | 7/10 | 10/10 | Config consolidated with schema validation. Missing: hook jq helpers, standardized error handling |
+| Consistency | 8/10 | 10/10 | Config consolidated with schema validation, unified TypeScript patterns across 4 modules. Missing: hook jq helpers |
 | Contributor Experience | 8/10 | 10/10 | CoC, LICENSE, badges, quality metrics dashboard. Missing: quick-start tutorial, good first issues |
-| Error Handling | 5/10 | 10/10 | Graceful degradation tested (A-13). Missing: typed error hierarchy, hook error standardization |
+| Error Handling | 6/10 | 10/10 | Graceful degradation tested (A-13), degradation policy engine with exponential backoff. Missing: typed error hierarchy |
 | Performance | 5/10 | 10/10 | Hook latency, server, RingBuffer benchmarks + regression detector. Missing: CI integration |
-| Observability | 7/10 | 10/10 | Structured logging (bash + TS), distributed tracing, Prometheus metrics, health aggregation, alert routing, log aggregation, SLO/SLI tracking. Missing: dashboards, incident timeline, performance regression detection |
-| Brain & Knowledge | 5/10 | 10/10 | B1 complete: auto-creation, retrieval, demand tracking, contradiction scan, consolidation. Missing: B2 SQLite, B3 production |
-| Fleet & Orchestration | 7/10 | 10/10 | 71 agent definitions (schema-validated), capability registry, template generator, agent validator, routing engine, tool permissions, fleet validator, handoff/escalation. Missing: runtime orchestration, parallel coordination at scale, ASP alignment |
+| Observability | 9/10 | 10/10 | Structured logging (bash + TS), distributed tracing with OpenTelemetry export, Prometheus metrics, health aggregation, alert routing, log aggregation, SLO/SLI tracking, fleet dashboard, governance dashboard, session thermal model, intervention catalog, canonical trace format. Missing: real-time visualization |
+| Brain & Knowledge | 5/10 | 10/10 | B1 complete: auto-creation, retrieval, demand tracking, contradiction scan, consolidation. MCP brain tools (query/record/retrieve/strengthen/audit/purge). Missing: B2 SQLite, B3 production |
+| Fleet & Orchestration | 9/10 | 10/10 | 71 agent definitions, capability registry, routing engine (task-type/file-ownership/capability-match), degradation policy, context assembly, handoff protocol, pipeline orchestration, fleet health monitoring, task decomposition, scaling policies, agent lifecycle, conflict resolution, trust-aware routing. Missing: ASP alignment, runtime agent instantiation |
 | Strategy Foundation | 9/10 | 10/10 | Ground Truth tooling, readiness assessment, Go/No-Go gate, task criteria, pipeline gate, validation hooks, LLM-Last enforcement |
-| Security & Compliance | 8/10 | 10/10 | 90-pattern injection detection (3 layers), privilege escalation hardening, secret scanning, tamper-proof audit trail (SHA-256 hash chain), input validation hardening, zero-trust on all tool responses. Missing: attack corpus automation, PII detection, SBOM |
+| Security & Compliance | 9/10 | 10/10 | 90-pattern injection detection (3 layers), privilege escalation hardening, secret scanning, tamper-proof audit trail, MCP behavioral security (baselining, trust decay, manifest guard, hash verification, canary ops), identity tokens with HMAC-SHA256, RBAC middleware. Missing: PII detection, SBOM |
 | Strategic Positioning | 2/10 | 10/10 | Missing OWASP/AEGIS/NIST/McKinsey/IMDA crosswalks |
-| **Overall** | **8/10** | **10/10** | Phase 4 complete: 71 fleet agents defined, defense-in-depth security (3 layers + audit), full observability stack (logging, tracing, metrics, alerting, SLOs). Next: fleet routing/orchestration, MCP integration, progressive autonomy |
+| **Overall** | **9/10** | **10/10** | Phase 5 complete: fleet routing engine (86 rules, 3 strategies), MCP server (12 tools, auth, 5 behavioral security layers), progressive autonomy (4-stage trust model with scoring, gating, persistence), meta-governance (Sentinel/Arbiter/Compliance Monitor, rule engine, intervention protocol), context engineering (3-zone profiles, compression, relevance scoring, overflow handling), platform adapters (5 platforms), observability enhancements (distributed tracing, dashboards, intervention auth, session thermal). 711 new tests. Next: Brain B2/B3, knowledge ecosystem, intent engineering |
 
 ---
 
