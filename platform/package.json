@@ -1,0 +1,20 @@
+{
+  "name": "@admiral/platform",
+  "version": "0.1.0-alpha",
+  "description": "Admiral Framework Platform Adapters — multi-platform governance translation layer",
+  "main": "dist/adapter-interface.js",
+  "types": "dist/adapter-interface.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "node --test dist/**/*.test.js",
+    "dev": "tsc --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "type": "commonjs",
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "typescript": "^6.0.2"
+  }
+}

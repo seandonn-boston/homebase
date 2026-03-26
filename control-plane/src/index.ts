@@ -25,6 +25,40 @@ export {
 export { AdmiralServer } from "./server";
 export { ExecutionTrace, TraceNode, TraceStats } from "./trace";
 
+// Observability enhancements
+export {
+  EnhancedStructuredLogger,
+  StructuredLogEntry,
+  StructuredLogFilter,
+  StructuredLogLevel,
+} from "./structured-logging";
+export { DistributedTracer, TraceSpan } from "./distributed-tracing";
+export {
+  InterventionAuthorizer,
+  InterventionType,
+  AuthLevel,
+  InterventionAuthConfig,
+} from "./intervention-auth";
+export {
+  CanonicalTraceBuilder,
+  CanonicalTrace,
+  CanonicalSpan,
+  CausalLink,
+} from "./trace-format";
+export { FleetDashboard, FleetDashboardData } from "./fleet-dashboard";
+export {
+  GovernanceDashboard,
+  GovernanceDashboardData,
+} from "./governance-dashboard";
+export { SessionThermalModel, ThermalState } from "./session-thermal";
+export {
+  INTERVENTION_CATALOG,
+  InterventionAction,
+  getInterventionAction,
+  getReversibleActions,
+  requiresConfirmation,
+} from "./intervention-catalog";
+
 import { EventStream } from "./events";
 import { AgentInstrumentation } from "./instrumentation";
 import { type DetectorConfig, RunawayDetector } from "./runaway-detector";
