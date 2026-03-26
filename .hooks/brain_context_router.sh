@@ -8,6 +8,15 @@
 # OUTPUT: JSON with optional alert and updated hook_state.brain_context_router
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$SCRIPT_DIR/.." && pwd)}"
+export CLAUDE_PROJECT_DIR="$PROJECT_DIR"
+
+# Source brain retriever for active context injection (B-02)
+if [ -f "$PROJECT_DIR/admiral/lib/brain_retriever.sh" ]; then
+  source "$PROJECT_DIR/admiral/lib/brain_retriever.sh"
+fi
+
 # Read payload from stdin
 PAYLOAD=$(cat)
 
@@ -63,6 +72,7 @@ fi
 # --- Evaluate routing compliance ---
 STALENESS_THRESHOLD=20
 
+BRAIN_CONTEXT=""
 if [ -n "$DETECTED_TIER" ]; then
   if [ "$BRAIN_QUERIES" -eq 0 ]; then
     # No brain_query at all in this session — BRAIN BYPASS
@@ -76,6 +86,20 @@ if [ -n "$DETECTED_TIER" ]; then
   elif [ $((TOOL_CALL_COUNT - LAST_QUERY_AT)) -gt $STALENESS_THRESHOLD ]; then
     # brain_query happened but is stale
     ALERT="BRAIN STALE: ${DETECTED_TIER^}-tier decision detected but last brain_query was $((TOOL_CALL_COUNT - LAST_QUERY_AT)) tool calls ago. Consider refreshing with a new query."
+  fi
+
+  # B-02: Active brain retrieval — inject matching context for Propose/Escalate
+  if type brain_retrieve_context &>/dev/null && type brain_extract_keywords &>/dev/null; then
+    KEYWORDS=$(brain_extract_keywords "$CONTENT" 2>/dev/null || echo "")
+    if [ -n "$KEYWORDS" ]; then
+      # Query brain with first keyword (most specific)
+      FIRST_KEYWORD=$(echo "$KEYWORDS" | awk '{print $1}')
+      BRAIN_ENTRIES=$(brain_retrieve_context "$FIRST_KEYWORD" "" 3 2>/dev/null || echo "[]")
+      ENTRY_COUNT=$(echo "$BRAIN_ENTRIES" | tr -d '\r' | jq 'length' 2>/dev/null || echo "0")
+      if [ "$ENTRY_COUNT" -gt 0 ]; then
+        BRAIN_CONTEXT=$(brain_format_context "$BRAIN_ENTRIES" 2>/dev/null || echo "")
+      fi
+    fi
   fi
 fi
 
@@ -92,8 +116,16 @@ UPDATED_STATE=$(jq -n \
     escalate_without_brain: $eb
   }')
 
+FULL_ALERT=""
 if [ -n "$ALERT" ]; then
-  jq -n --arg alert "$ALERT" --argjson state "$UPDATED_STATE" '{
+  FULL_ALERT="$ALERT"
+fi
+if [ -n "$BRAIN_CONTEXT" ]; then
+  FULL_ALERT="${FULL_ALERT:+$FULL_ALERT }$BRAIN_CONTEXT"
+fi
+
+if [ -n "$FULL_ALERT" ]; then
+  jq -n --arg alert "$FULL_ALERT" --argjson state "$UPDATED_STATE" '{
     alert: $alert,
     hook_state: { brain_context_router: $state }
   }'

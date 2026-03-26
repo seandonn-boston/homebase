@@ -1,0 +1,223 @@
+{
+  "$schema": "../schemas/enforcement-map.schema.json",
+  "version": "1.0.0",
+  "generated": "2026-03-24",
+  "summary": {
+    "total_standing_orders": 16,
+    "hook_enforced": 9,
+    "instruction_embedded": 5,
+    "guidance_only": 2,
+    "critical_gaps": 1,
+    "coverage_percentage": 56,
+    "target_coverage_percentage": 81
+  },
+  "standing_orders": [
+    {
+      "id": "SO-01",
+      "title": "Identity Discipline",
+      "enforcement_type": "instruction-embedded",
+      "hooks": [],
+      "coverage": "partial",
+      "gap": "No runtime detection of role drift",
+      "phase3_plan": "identity_validation.sh (S-01), SO-01 enforcement hook"
+    },
+    {
+      "id": "SO-02",
+      "title": "Output Routing",
+      "enforcement_type": "instruction-embedded",
+      "hooks": [],
+      "coverage": "minimal",
+      "gap": "No runtime validation of output destinations",
+      "phase3_plan": "SO-02 enforcement hook (low priority)"
+    },
+    {
+      "id": "SO-03",
+      "title": "Scope Boundaries",
+      "enforcement_type": "hard-block",
+      "hooks": [
+        {
+          "name": "scope_boundary_guard.sh",
+          "lifecycle": "PreToolUse",
+          "exit_behavior": "exit 2 on protected path writes",
+          "coverage": "full"
+        }
+      ],
+      "coverage": "full",
+      "gap": null,
+      "phase3_plan": "Upgrade Does NOT Do list to hard-blocking"
+    },
+    {
+      "id": "SO-04",
+      "title": "Context Honesty",
+      "enforcement_type": "guidance-only",
+      "hooks": [],
+      "coverage": "n/a",
+      "gap": "Metacognitive — no deterministic check possible",
+      "phase3_plan": "SO-04 enforcement hook — cross-reference tool use trace"
+    },
+    {
+      "id": "SO-05",
+      "title": "Decision Authority",
+      "enforcement_type": "soft-warning",
+      "hooks": [
+        {
+          "name": "brain_context_router.sh",
+          "lifecycle": "PostToolUse",
+          "exit_behavior": "exit 0 + advisory",
+          "coverage": "partial"
+        }
+      ],
+      "coverage": "partial",
+      "gap": "No blocking of Propose/Escalate-tier without approval",
+      "phase3_plan": "SO-05 enforcement hook — PreToolUse authority classification"
+    },
+    {
+      "id": "SO-06",
+      "title": "Recovery Protocol",
+      "enforcement_type": "soft-warning",
+      "hooks": [
+        {
+          "name": "loop_detector.sh",
+          "lifecycle": "PostToolUse",
+          "exit_behavior": "exit 0 + advisory",
+          "coverage": "partial"
+        }
+      ],
+      "coverage": "partial",
+      "gap": "No enforcement of ladder progression",
+      "phase3_plan": "SO-06 enforcement hook — track recovery ladder"
+    },
+    {
+      "id": "SO-07",
+      "title": "Checkpointing",
+      "enforcement_type": "instruction-embedded",
+      "hooks": [],
+      "coverage": "minimal",
+      "gap": "No runtime reminder when checkpoint overdue",
+      "phase3_plan": "SO-07 enforcement hook (low priority)"
+    },
+    {
+      "id": "SO-08",
+      "title": "Quality Standards",
+      "enforcement_type": "soft-warning",
+      "hooks": [
+        {
+          "name": "token_budget_tracker.sh",
+          "lifecycle": "PostToolUse",
+          "exit_behavior": "exit 0 + advisory",
+          "coverage": "partial"
+        }
+      ],
+      "coverage": "partial",
+      "gap": "No verification that quality gates were actually run",
+      "phase3_plan": "SO-08 enforcement hook + S-13 SDLC quality gates"
+    },
+    {
+      "id": "SO-09",
+      "title": "Communication Format",
+      "enforcement_type": "instruction-embedded",
+      "hooks": [],
+      "coverage": "adequate",
+      "gap": "No runtime format validation (needed for fleet)",
+      "phase3_plan": "SO-09 enforcement hook — validate inter-agent messages"
+    },
+    {
+      "id": "SO-10",
+      "title": "Prohibitions",
+      "enforcement_type": "hard-block",
+      "hooks": [
+        {
+          "name": "prohibitions_enforcer.sh",
+          "lifecycle": "PreToolUse",
+          "exit_behavior": "exit 2 on bypass/privilege/irreversible; exit 0 + advisory on secrets",
+          "coverage": "full"
+        }
+      ],
+      "coverage": "full",
+      "gap": null,
+      "phase3_plan": "Edge case hardening — encoded secrets, split patterns"
+    },
+    {
+      "id": "SO-11",
+      "title": "Context Discovery",
+      "enforcement_type": "soft-warning",
+      "hooks": [
+        {
+          "name": "brain_context_router.sh",
+          "lifecycle": "PostToolUse",
+          "exit_behavior": "exit 0 + advisory",
+          "coverage": "partial"
+        }
+      ],
+      "coverage": "partial",
+      "gap": "No blocking until minimum viable context confirmed",
+      "phase3_plan": "SO-11 enforcement hook — SessionStart context verification"
+    },
+    {
+      "id": "SO-12",
+      "title": "Zero-Trust Self-Protection",
+      "enforcement_type": "soft-warning",
+      "hooks": [
+        {
+          "name": "zero_trust_validator.sh",
+          "lifecycle": "PostToolUse",
+          "exit_behavior": "exit 0 + advisory",
+          "coverage": "full"
+        }
+      ],
+      "coverage": "full",
+      "gap": null,
+      "phase3_plan": "Enhance with pre/post risk assessment, RAG provenance"
+    },
+    {
+      "id": "SO-13",
+      "title": "Bias Awareness",
+      "enforcement_type": "guidance-only",
+      "hooks": [],
+      "coverage": "n/a",
+      "gap": "Metacognitive — no deterministic check possible",
+      "phase3_plan": "SO-13 enforcement hook — session-level drift tracking"
+    },
+    {
+      "id": "SO-14",
+      "title": "Compliance, Ethics, Legal",
+      "enforcement_type": "soft-warning",
+      "hooks": [
+        {
+          "name": "compliance_ethics_advisor.sh",
+          "lifecycle": "PostToolUse",
+          "exit_behavior": "exit 0 + advisory",
+          "coverage": "partial"
+        }
+      ],
+      "coverage": "critical_gap",
+      "gap": "Safety-tier SO with zero hard enforcement",
+      "phase3_plan": "SO-14 enforcement hook — hard-block deny-list, regulated domain detection"
+    },
+    {
+      "id": "SO-15",
+      "title": "Pre-Work Validation",
+      "enforcement_type": "soft-warning",
+      "hooks": [
+        {
+          "name": "pre_work_validator.sh",
+          "lifecycle": "PreToolUse",
+          "exit_behavior": "exit 0 + advisory",
+          "coverage": "full"
+        }
+      ],
+      "coverage": "full",
+      "gap": null,
+      "phase3_plan": "Enhance — reject vague criteria, enforce front-loading"
+    },
+    {
+      "id": "SO-16",
+      "title": "Protocol Governance",
+      "enforcement_type": "instruction-embedded",
+      "hooks": [],
+      "coverage": "minimal",
+      "gap": "No runtime MCP server approval enforcement",
+      "phase3_plan": "protocol_registry_guard.sh (S-04) — hard-block unapproved servers"
+    }
+  ]
+}

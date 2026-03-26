@@ -12,22 +12,22 @@
 
 | Dimension | Score | Target | Key Gaps |
 |---|---|---|---|
-| Testing | 8/10 | 10/10 | 372 TS + 37 bash suites, 90% coverage, coverage gate in CI. Missing: property tests, mutation testing |
+| Testing | 8/10 | 10/10 | 218 TS + 350+ bash tests, 90% coverage, coverage gate in CI. Missing: property tests, mutation testing |
 | Code Quality Tooling | 8/10 | 10/10 | Coverage gate, license audit, ShellCheck, Biome. Missing: typed error hierarchy, strict null checks |
-| Architecture | 7/10 | 10/10 | Schema validation, config consolidation, hook/CP bridge, session state machine, event registry. Missing: hook pipeline abstraction, plugin arch |
-| Spec Implementation | 3/10 | 10/10 | 8/15 hooks (53%), fleet 0%, brain B2/B3 0%, execution patterns 0%, meta-governance 0% |
-| Documentation | 7/10 | 10/10 | LICENSE, CoC, API docs added. Missing: ADMIRAL_STYLE.md, runbook, troubleshooting guide, ADRs |
+| Architecture | 8/10 | 10/10 | Schema validation, config consolidation, hook/CP bridge, session state machine, event registry, handoff/escalation protocols. Missing: hook pipeline abstraction, plugin arch |
+| Spec Implementation | 6/10 | 10/10 | 19/19 hooks (100%), fleet registry + routing, brain B1 100%, execution patterns done, SO enforcement library. Missing: B2/B3, meta-governance agents, MCP server |
+| Documentation | 7/10 | 10/10 | LICENSE, CoC, API docs, hook contracts, enforcement map. Missing: ADMIRAL_STYLE.md, runbook, ADRs |
 | CI/CD | 9/10 | 10/10 | Coverage gate, benchmarks, PR size check, fix-needs-tests, stale branches, changelog, release workflow. Missing: matrix builds, CodeQL |
 | Consistency | 7/10 | 10/10 | Config consolidated with schema validation. Missing: hook jq helpers, standardized error handling |
 | Contributor Experience | 8/10 | 10/10 | CoC, LICENSE, badges, quality metrics dashboard. Missing: quick-start tutorial, good first issues |
 | Error Handling | 5/10 | 10/10 | Graceful degradation tested (A-13). Missing: typed error hierarchy, hook error standardization |
 | Performance | 5/10 | 10/10 | Hook latency, server, RingBuffer benchmarks + regression detector. Missing: CI integration |
-| Brain & Knowledge | 2/10 | 10/10 | B1 file-based only, manual, no auto-recording, no semantic search |
-| Fleet & Orchestration | 1/10 | 10/10 | 71 roles defined, only Claude Code governed, no routing/handoff/parallel |
-| Strategy Foundation | 8/10 | 10/10 | Ground Truth tooling, readiness assessment, Go/No-Go gate, task criteria, pipeline gate. Missing: validation hooks (Phase 3) |
-| Security & Compliance | 5/10 | 10/10 | Security review process, injection detection, quarantine pipeline. Missing: data sensitivity, audit trail |
+| Brain & Knowledge | 5/10 | 10/10 | B1 complete: auto-creation, retrieval, demand tracking, contradiction scan, consolidation. Missing: B2 SQLite, B3 production |
+| Fleet & Orchestration | 4/10 | 10/10 | 8 agents defined, registry, routing engine, tool permissions, fleet validator, handoff/escalation. Missing: runtime orchestration, parallel coordination at scale |
+| Strategy Foundation | 9/10 | 10/10 | Ground Truth tooling, readiness assessment, Go/No-Go gate, task criteria, pipeline gate, validation hooks, LLM-Last enforcement |
+| Security & Compliance | 6/10 | 10/10 | Security review, injection detection, quarantine, MCP server guard, SO-14 compliance detection. Missing: data sensitivity classification, full audit trail |
 | Strategic Positioning | 2/10 | 10/10 | Missing OWASP/AEGIS/NIST/McKinsey/IMDA crosswalks |
-| **Overall** | **6/10** | **10/10** | Strong tooling foundation, CI/CD mature. Critical gaps in spec implementation and fleet orchestration |
+| **Overall** | **7/10** | **10/10** | Strong foundation with all hooks, fleet infrastructure, Brain B1, and execution patterns. Next: fleet definitions, security hardening, observability |
 
 ---
 

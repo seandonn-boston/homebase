@@ -1,0 +1,36 @@
+{
+  "$schema": "../schemas/approved-mcp-servers.schema.json",
+  "version": "1.0.0",
+  "description": "Registry of approved MCP servers. Unapproved servers are blocked by protocol_registry_guard.sh.",
+  "servers": [
+    {
+      "name": "admiral-brain",
+      "description": "Admiral Brain knowledge system MCP server",
+      "version_pin": "1.0.0",
+      "trust_level": "internal",
+      "approved_by": "Admiral",
+      "approved_at": "2026-03-25"
+    },
+    {
+      "name": "admiral-fleet",
+      "description": "Admiral Fleet orchestration MCP server",
+      "version_pin": "1.0.0",
+      "trust_level": "internal",
+      "approved_by": "Admiral",
+      "approved_at": "2026-03-25"
+    },
+    {
+      "name": "admiral-governance",
+      "description": "Admiral Governance tools MCP server",
+      "version_pin": "1.0.0",
+      "trust_level": "internal",
+      "approved_by": "Admiral",
+      "approved_at": "2026-03-25"
+    }
+  ],
+  "blocked_patterns": [
+    "latest",
+    "*-snapshot",
+    "*-dev"
+  ]
+}

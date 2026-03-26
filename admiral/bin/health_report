@@ -1,0 +1,113 @@
+#!/bin/bash
+# Admiral Framework — Health Report (S-17 companion)
+# Collects health data from all Admiral subsystems.
+# Used by health check endpoint and monitoring.
+set -euo pipefail
+
+PROJECT_DIR="${CLAUDE_PROJECT_DIR:-.}"
+ADMIRAL_DIR="$PROJECT_DIR/.admiral"
+
+# Collect hook execution stats
+hook_stats() {
+  local event_log="$ADMIRAL_DIR/event_log.jsonl"
+  if [ -f "$event_log" ]; then
+    local total
+    total=$(wc -l < "$event_log" | tr -d ' ')
+    local violations
+    violations=$(grep -c '"policy_violation"' "$event_log" 2>/dev/null || echo "0")
+    jq -n --argjson total "$total" --argjson violations "$violations" \
+      '{total_events: $total, policy_violations: $violations}'
+  else
+    jq -n '{total_events: 0, policy_violations: 0}'
+  fi
+}
+
+# Check state file health
+state_health() {
+  local state_file="$ADMIRAL_DIR/session_state.json"
+  if [ -f "$state_file" ]; then
+    local age_s=0
+    if stat --version &>/dev/null; then
+      age_s=$(( $(date +%s) - $(stat -c %Y "$state_file" 2>/dev/null || echo "$(date +%s)") ))
+    fi
+    local valid
+    valid=$(jq empty "$state_file" 2>/dev/null && echo "true" || echo "false")
+    jq -n --argjson age "$age_s" --arg valid "$valid" \
+      '{exists: true, age_seconds: $age, valid_json: ($valid == "true")}'
+  else
+    jq -n '{exists: false, age_seconds: 0, valid_json: false}'
+  fi
+}
+
+# Brain health
+brain_health() {
+  local brain_dir="$PROJECT_DIR/.brain"
+  if [ -d "$brain_dir" ]; then
+    local entry_count
+    entry_count=$(find "$brain_dir" -name "*.json" -not -path "*/_*" -type f 2>/dev/null | wc -l | tr -d ' ')
+    local demand_count=0
+    if [ -d "$brain_dir/_demand" ]; then
+      demand_count=$(find "$brain_dir/_demand" -name "*.json" -type f 2>/dev/null | wc -l | tr -d ' ')
+    fi
+    jq -n --argjson entries "$entry_count" --argjson demands "$demand_count" \
+      '{available: true, entries: $entries, demand_signals: $demands}'
+  else
+    jq -n '{available: false, entries: 0, demand_signals: 0}'
+  fi
+}
+
+# Alert rate
+alert_rate() {
+  local alert_log="$ADMIRAL_DIR/alerts.jsonl"
+  if [ -f "$alert_log" ]; then
+    local total
+    total=$(wc -l < "$alert_log" | tr -d ' ')
+    local critical
+    critical=$(grep -c '"critical"' "$alert_log" 2>/dev/null || echo "0")
+    jq -n --argjson total "$total" --argjson critical "$critical" \
+      '{total_alerts: $total, critical_alerts: $critical}'
+  else
+    jq -n '{total_alerts: 0, critical_alerts: 0}'
+  fi
+}
+
+# Determine overall status
+overall_status() {
+  local state_valid="$1"
+  local critical_alerts="$2"
+
+  if [ "$state_valid" = "false" ]; then
+    echo "degraded"
+  elif [ "$critical_alerts" -gt 0 ]; then
+    echo "degraded"
+  else
+    echo "healthy"
+  fi
+}
+
+# Collect all health data
+HOOKS=$(hook_stats | tr -d '\r')
+STATE=$(state_health | tr -d '\r')
+BRAIN=$(brain_health | tr -d '\r')
+ALERTS=$(alert_rate | tr -d '\r')
+
+STATE_VALID=$(echo "$STATE" | jq -r '.valid_json')
+CRITICAL_COUNT=$(echo "$ALERTS" | jq -r '.critical_alerts')
+STATUS=$(overall_status "$STATE_VALID" "$CRITICAL_COUNT")
+
+jq -n --arg status "$STATUS" \
+      --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+      --argjson hooks "$HOOKS" \
+      --argjson state "$STATE" \
+      --argjson brain "$BRAIN" \
+      --argjson alerts "$ALERTS" \
+      '{
+        status: $status,
+        timestamp: $ts,
+        subsystems: {
+          hooks: $hooks,
+          state: $state,
+          brain: $brain,
+          alerts: $alerts
+        }
+      }'

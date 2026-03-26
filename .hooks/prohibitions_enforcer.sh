@@ -11,6 +11,11 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$SCRIPT_DIR/.." && pwd)}"
 export CLAUDE_PROJECT_DIR="$PROJECT_DIR"
 
+# Source brain writer for automatic entry creation (B-01)
+if [ -f "$PROJECT_DIR/admiral/lib/brain_writer.sh" ]; then
+  source "$PROJECT_DIR/admiral/lib/brain_writer.sh"
+fi
+
 # Read payload from stdin
 PAYLOAD=$(cat)
 
@@ -144,6 +149,10 @@ fi
 
 # Emit output based on severity
 if [ "$HARD_BLOCK" = "true" ]; then
+  # Record violation to Brain (B-01)
+  if type brain_record_violation &>/dev/null; then
+    brain_record_violation "prohibitions_enforcer" "hard_block" "$ALERTS" "$TOOL_NAME"
+  fi
   jq -n --arg ctx "$ALERTS" '{
     "hookSpecificOutput": {
       "hookEventName": "PreToolUse",

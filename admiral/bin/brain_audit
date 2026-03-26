@@ -1,22 +1,65 @@
 #!/bin/bash
 # Admiral Framework — Brain Audit (B1)
 # Lists entries older than 90 days (decay awareness)
-# Usage: brain_audit [--project <name>] [--days <N>]
+# Usage: brain_audit [--project <name>] [--days <N>] [--demand]
 set -euo pipefail
 
 BRAIN_DIR="${BRAIN_DIR:-${CLAUDE_PROJECT_DIR:-.}/.brain}"
 
 DECAY_DAYS=90
 PROJECT=""
+SHOW_DEMAND=false
 
 # Parse flags
 while [ $# -gt 0 ]; do
   case "$1" in
     --project) PROJECT="$2"; shift 2 ;;
     --days) DECAY_DAYS="$2"; shift 2 ;;
+    --demand) SHOW_DEMAND=true; shift ;;
     *) shift ;;
   esac
 done
+
+# B-03: Demand signal report
+if [ "$SHOW_DEMAND" = "true" ]; then
+  DEMAND_DIR="$BRAIN_DIR/_demand"
+  echo "Brain Demand Signal Report"
+  echo "=========================="
+  echo ""
+
+  if [ ! -d "$DEMAND_DIR" ]; then
+    echo "No demand signals recorded."
+    echo ""
+    echo "Total demand signals: 0"
+    exit 0
+  fi
+
+  DEMAND_COUNT=0
+  DEMAND_FILES=$(find "$DEMAND_DIR" -name "*.json" -type f 2>/dev/null | sort -r)
+  for file in $DEMAND_FILES; do
+    [ -f "$file" ] || continue
+    DEMAND_COUNT=$((DEMAND_COUNT + 1))
+    KW=$(jq -r '.keyword' "$file" 2>/dev/null)
+    TS=$(jq -r '.timestamp' "$file" 2>/dev/null)
+    PROJ=$(jq -r '.project // "any"' "$file" 2>/dev/null)
+    echo "  [$TS] \"$KW\" (project: $PROJ)"
+  done
+
+  echo ""
+  echo "=========================="
+  echo "Total demand signals: $DEMAND_COUNT"
+
+  if [ "$DEMAND_COUNT" -gt 0 ]; then
+    echo ""
+    echo "Top requested keywords:"
+    find "$DEMAND_DIR" -name "*.json" -type f -exec jq -r '.keyword' {} \; 2>/dev/null | \
+      sort | uniq -c | sort -rn | head -10 | \
+      while read -r count keyword; do
+        echo "  $count x \"$keyword\""
+      done
+  fi
+  exit 0
+fi
 
 SEARCH_PATH="$BRAIN_DIR"
 if [ -n "$PROJECT" ]; then
