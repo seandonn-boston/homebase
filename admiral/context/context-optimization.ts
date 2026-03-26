@@ -20,6 +20,8 @@ import {
 // CE-02: Budget Tracker
 // ---------------------------------------------------------------------------
 
+const MAX_SNAPSHOTS = 500;
+
 export interface BudgetSnapshot {
   timestamp: number;
   overall: { used: number; total: number; percent: number };
@@ -45,6 +47,9 @@ export class ContextBudgetTracker {
     };
 
     this.snapshots.push(snapshot);
+    if (this.snapshots.length > MAX_SNAPSHOTS) {
+      this.snapshots.splice(0, this.snapshots.length - MAX_SNAPSHOTS);
+    }
     return snapshot;
   }
 

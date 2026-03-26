@@ -131,10 +131,8 @@ interface Subscription {
 export class GovernanceEventBus {
   private events: RingBuffer<GovernanceEvent>;
   private subscriptions: Map<string, Subscription> = new Map();
-  private readonly maxEvents: number;
 
   constructor(maxEvents: number = 5000) {
-    this.maxEvents = maxEvents;
     this.events = new RingBuffer(maxEvents);
   }
 

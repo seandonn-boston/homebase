@@ -55,6 +55,7 @@ const ERROR_RATE_THRESHOLD = 20;
 const UTILIZATION_THRESHOLD = 90;
 const BUDGET_BURN_THRESHOLD = 10000; // tokens per minute
 const DEDUP_WINDOW_MS = 5 * 60 * 1000; // 5 minutes
+const MAX_ALERTS = 1000;
 
 // ---------------------------------------------------------------------------
 // FleetHealthMonitor
@@ -220,6 +221,9 @@ export class FleetHealthMonitor {
     };
 
     this.alerts.push(alert);
+    if (this.alerts.length > MAX_ALERTS) {
+      this.alerts.splice(0, this.alerts.length - MAX_ALERTS);
+    }
     return alert;
   }
 }

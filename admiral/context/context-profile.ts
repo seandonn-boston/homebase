@@ -217,10 +217,12 @@ export class ContextProfileManager {
   evictToFit(targetTokens: number): ContextItem[] {
     const evicted: ContextItem[] = [];
     const sacrificeOrder = this.getSacrificeOrder();
+    let totalUsed = this.getOverallUtilization().used;
 
     for (const item of sacrificeOrder) {
-      if (this.getOverallUtilization().used <= targetTokens) break;
+      if (totalUsed <= targetTokens) break;
       this.removeItem(item.id);
+      totalUsed -= item.tokenCount;
       evicted.push(item);
     }
 

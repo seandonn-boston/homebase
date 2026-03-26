@@ -67,9 +67,11 @@ describe("EnhancedStructuredLogger", () => {
     const child = logger.withCorrelation("c1");
     child.info("from child");
 
-    // Both share the same buffer, both have component "test-component"
-    const entries = logger.getEntries({ component: "test-component" });
-    assert.strictEqual(entries.length, 2);
+    // Child has its own entries array (no shared mutable state with parent)
+    const parentEntries = logger.getEntries({ component: "test-component" });
+    assert.strictEqual(parentEntries.length, 1);
+    const childEntries = child.getEntries({ component: "test-component" });
+    assert.strictEqual(childEntries.length, 1);
   });
 
   it("respects minLevel configuration", () => {

@@ -78,6 +78,8 @@ function createToolStats(): ToolStats {
   };
 }
 
+const MAX_ANOMALIES = 1000;
+
 // ---------------------------------------------------------------------------
 // BehaviorMonitor
 // ---------------------------------------------------------------------------
@@ -164,6 +166,11 @@ export class BehaviorMonitor {
           });
         }
       }
+    }
+
+    // Trim anomalies to bounded size
+    if (this.anomalies.length > MAX_ANOMALIES) {
+      this.anomalies.splice(0, this.anomalies.length - MAX_ANOMALIES);
     }
 
     // Update baselines

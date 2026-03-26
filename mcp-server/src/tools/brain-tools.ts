@@ -4,7 +4,7 @@
  * Operates on JSON files in the `.brain/helm/` directory.
  */
 
-import * as fs from "node:fs";
+import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import * as crypto from "node:crypto";
 
@@ -44,9 +44,11 @@ export interface AuditRecord {
 // Helpers
 // ---------------------------------------------------------------------------
 
-function ensureDir(dir: string): void {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
+async function ensureDir(dir: string): Promise<void> {
+  try {
+    await fs.access(dir);
+  } catch {
+    await fs.mkdir(dir, { recursive: true });
   }
 }
 
@@ -57,19 +59,20 @@ function generateId(): string {
   return `${ts}-${rand}`;
 }
 
-function readJsonFile<T>(filePath: string): T | null {
+async function readJsonFile<T>(filePath: string): Promise<T | null> {
   try {
-    const raw = fs.readFileSync(filePath, "utf-8");
+    const raw = await fs.readFile(filePath, "utf-8");
     return JSON.parse(raw) as T;
   } catch {
     return null;
   }
 }
 
-function listBrainFiles(brainDir: string): string[] {
-  ensureDir(brainDir);
+async function listBrainFiles(brainDir: string): Promise<string[]> {
+  await ensureDir(brainDir);
   try {
-    return fs.readdirSync(brainDir)
+    const entries = await fs.readdir(brainDir);
+    return entries
       .filter((f) => f.endsWith(".json"))
       .map((f) => path.join(brainDir, f));
   } catch {
@@ -112,11 +115,11 @@ export function registerBrainTools(registry: ToolRegistry, brainDir: string): vo
       const filters = (params.filters ?? {}) as Record<string, unknown>;
       const limit = (params.limit as number) ?? 20;
 
-      const files = listBrainFiles(brainDir);
+      const files = await listBrainFiles(brainDir);
       const scored: Array<{ entry: BrainEntry; score: number }> = [];
 
       for (const file of files) {
-        const entry = readJsonFile<BrainEntry>(file);
+        const entry = await readJsonFile<BrainEntry>(file);
         if (!entry) continue;
 
         // Apply filters
@@ -161,13 +164,13 @@ export function registerBrainTools(registry: ToolRegistry, brainDir: string): vo
         throw { code: INVALID_PARAMS, message: "category, title, and content are required" };
       }
 
-      ensureDir(brainDir);
+      await ensureDir(brainDir);
 
       // Check for duplicates by title similarity
-      const files = listBrainFiles(brainDir);
+      const files = await listBrainFiles(brainDir);
       const normalizedTitle = title.toLowerCase().trim();
       for (const file of files) {
-        const existing = readJsonFile<BrainEntry>(file);
+        const existing = await readJsonFile<BrainEntry>(file);
         if (existing && existing.title.toLowerCase().trim() === normalizedTitle) {
           throw { code: INVALID_PARAMS, message: `Duplicate entry: "${existing.title}" already exists (id: ${existing.id})` };
         }
@@ -191,7 +194,7 @@ export function registerBrainTools(registry: ToolRegistry, brainDir: string): vo
 
       const filename = `${id}-${category}.json`;
       const filePath = path.join(brainDir, filename);
-      fs.writeFileSync(filePath, JSON.stringify(entry, null, 2), "utf-8");
+      await fs.writeFile(filePath, JSON.stringify(entry, null, 2), "utf-8");
 
       return { id, path: filePath };
     },
@@ -216,11 +219,11 @@ export function registerBrainTools(registry: ToolRegistry, brainDir: string): vo
       const depth = (params.depth as number) ?? 1;
 
       // Find entry by ID prefix in filename
-      const files = listBrainFiles(brainDir);
+      const files = await listBrainFiles(brainDir);
       let foundEntry: BrainEntry | null = null;
 
       for (const file of files) {
-        const entry = readJsonFile<BrainEntry>(file);
+        const entry = await readJsonFile<BrainEntry>(file);
         if (entry && entry.id === id) {
           foundEntry = entry;
           break;
@@ -236,7 +239,7 @@ export function registerBrainTools(registry: ToolRegistry, brainDir: string): vo
       if (traverseLinks && foundEntry.links.length > 0 && depth > 0) {
         for (const linkId of foundEntry.links) {
           for (const file of files) {
-            const entry = readJsonFile<BrainEntry>(file);
+            const entry = await readJsonFile<BrainEntry>(file);
             if (entry && entry.id === linkId) {
               linked.push(entry);
               break;
@@ -266,14 +269,14 @@ export function registerBrainTools(registry: ToolRegistry, brainDir: string): vo
       const agent = params.agent as string;
       if (!id || !agent) throw { code: INVALID_PARAMS, message: "id and agent are required" };
 
-      const files = listBrainFiles(brainDir);
+      const files = await listBrainFiles(brainDir);
       for (const file of files) {
-        const entry = readJsonFile<BrainEntry>(file);
+        const entry = await readJsonFile<BrainEntry>(file);
         if (entry && entry.id === id) {
           entry.usefulnessScore += 1;
           entry.updatedAt = Date.now();
           entry.accessLog.push({ agent, timestamp: Date.now() });
-          fs.writeFileSync(file, JSON.stringify(entry, null, 2), "utf-8");
+          await fs.writeFile(file, JSON.stringify(entry, null, 2), "utf-8");
           return { id, newScore: entry.usefulnessScore };
         }
       }
@@ -299,11 +302,11 @@ export function registerBrainTools(registry: ToolRegistry, brainDir: string): vo
       const until = params.until as number | undefined;
       const limit = (params.limit as number) ?? 50;
 
-      const files = listBrainFiles(brainDir);
+      const files = await listBrainFiles(brainDir);
       const trail: AuditRecord[] = [];
 
       for (const file of files) {
-        const entry = readJsonFile<BrainEntry>(file);
+        const entry = await readJsonFile<BrainEntry>(file);
         if (!entry) continue;
 
         for (const log of entry.accessLog) {
@@ -351,9 +354,9 @@ export function registerBrainTools(registry: ToolRegistry, brainDir: string): vo
         return { deleted: false, auditRecord: "purge not confirmed" };
       }
 
-      const files = listBrainFiles(brainDir);
+      const files = await listBrainFiles(brainDir);
       for (const file of files) {
-        const entry = readJsonFile<BrainEntry>(file);
+        const entry = await readJsonFile<BrainEntry>(file);
         if (entry && entry.id === id) {
           // Create audit record before deletion
           const auditId = `purge-${id}-${Date.now()}`;
@@ -368,10 +371,10 @@ export function registerBrainTools(registry: ToolRegistry, brainDir: string): vo
 
           // Write audit record
           const auditPath = path.join(brainDir, `${auditId}.audit.json`);
-          fs.writeFileSync(auditPath, JSON.stringify(audit, null, 2), "utf-8");
+          await fs.writeFile(auditPath, JSON.stringify(audit, null, 2), "utf-8");
 
           // Delete the entry
-          fs.unlinkSync(file);
+          await fs.unlink(file);
 
           return { deleted: true, auditRecord: auditId };
         }

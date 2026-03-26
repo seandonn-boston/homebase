@@ -104,6 +104,21 @@ export class SentinelAgent extends GovernanceAgent {
   }
 
   // -----------------------------------------------------------------------
+  // Shared helper: group events by sourceAgent
+  // -----------------------------------------------------------------------
+
+  private groupByAgent(events: GovernanceEvent[]): Map<string, GovernanceEvent[]> {
+    const groups = new Map<string, GovernanceEvent[]>();
+    for (const event of events) {
+      const agent = event.sourceAgent ?? "unknown";
+      const arr = groups.get(agent) ?? [];
+      arr.push(event);
+      groups.set(agent, arr);
+    }
+    return groups;
+  }
+
+  // -----------------------------------------------------------------------
   // Detection: budget anomalies
   // -----------------------------------------------------------------------
 
@@ -152,14 +167,7 @@ export class SentinelAgent extends GovernanceAgent {
     const findings: GovernanceFinding[] = [];
     const scopeEvents = events.filter((e) => e.type === "scope_drift");
 
-    // Group by agent
-    const groups = new Map<string, GovernanceEvent[]>();
-    for (const event of scopeEvents) {
-      const agent = event.sourceAgent ?? "unknown";
-      const arr = groups.get(agent) ?? [];
-      arr.push(event);
-      groups.set(agent, arr);
-    }
+    const groups = this.groupByAgent(scopeEvents);
 
     for (const [agent, group] of groups) {
       if (group.length >= this.config.scopeThreshold) {
@@ -189,32 +197,21 @@ export class SentinelAgent extends GovernanceAgent {
       (e) => e.type === "agent_failure" && e.timestamp >= cutoff,
     );
 
-    // Group by agent
-    const groups = new Map<string, GovernanceEvent[]>();
-    for (const event of failures) {
-      const agent = event.sourceAgent ?? "unknown";
-      const arr = groups.get(agent) ?? [];
-      arr.push(event);
-      groups.set(agent, arr);
-    }
+    const groups = this.groupByAgent(failures);
 
     for (const [agent, group] of groups) {
-      // Check for consecutive failures (sorted by time)
-      const sorted = [...group].sort((a, b) => a.timestamp - b.timestamp);
-      let consecutive = 0;
-      let maxConsecutive = 0;
-      for (const _event of sorted) {
-        consecutive++;
-        if (consecutive > maxConsecutive) maxConsecutive = consecutive;
-      }
+      // All events in the group are failures within the window.
+      // Since we only observe agent_failure events (no interleaved successes),
+      // the total count IS the consecutive failure count.
+      const totalFailures = group.length;
 
-      if (maxConsecutive >= this.config.failureThreshold) {
+      if (totalFailures >= this.config.failureThreshold) {
         findings.push({
           agentId: agent,
           type: "agent_failure",
           severity: "critical",
-          description: `Agent failure: ${maxConsecutive} consecutive failures from ${agent} within ${this.config.failureWindow}ms`,
-          evidence: { consecutiveFailures: maxConsecutive, window: this.config.failureWindow },
+          description: `Agent failure: ${totalFailures} consecutive failures from ${agent} within ${this.config.failureWindow}ms`,
+          evidence: { consecutiveFailures: totalFailures, window: this.config.failureWindow },
           recommendedAction: InterventionLevel.Suspend,
         });
       }

@@ -104,7 +104,7 @@ export class EnhancedStructuredLogger {
 
   /**
    * Return a new logger with the given correlation ID set.
-   * The child shares no mutable state with the parent.
+   * The child gets its own entries array (independent of the parent).
    */
   withCorrelation(correlationId: string): EnhancedStructuredLogger {
     const child = new EnhancedStructuredLogger(this.component, {
@@ -114,12 +114,12 @@ export class EnhancedStructuredLogger {
     child.correlationId = correlationId;
     child.traceId = this.traceId;
     child.spanId = this.spanId;
-    child.entries = this.entries; // shared buffer
     return child;
   }
 
   /**
    * Return a new logger with trace context set.
+   * The child gets its own entries array (independent of the parent).
    */
   withTrace(traceId: string, spanId: string): EnhancedStructuredLogger {
     const child = new EnhancedStructuredLogger(this.component, {
@@ -129,7 +129,6 @@ export class EnhancedStructuredLogger {
     child.correlationId = this.correlationId;
     child.traceId = traceId;
     child.spanId = spanId;
-    child.entries = this.entries; // shared buffer
     return child;
   }
 

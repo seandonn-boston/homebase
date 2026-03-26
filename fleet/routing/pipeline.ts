@@ -42,11 +42,36 @@ export interface Pipeline {
 // PipelineOrchestrator
 // ---------------------------------------------------------------------------
 
+const MAX_PIPELINES = 100;
+
 export class PipelineOrchestrator {
   private pipelines: Map<string, Pipeline> = new Map();
   private retryCounts: Map<string, number> = new Map(); // pipelineId -> retries used on current step
 
   constructor(private handoff: HandoffProtocol) {}
+
+  /**
+   * Remove oldest completed/failed/aborted pipelines when the map exceeds MAX_PIPELINES.
+   */
+  private pruneCompletedPipelines(): void {
+    if (this.pipelines.size <= MAX_PIPELINES) return;
+
+    const terminal: Pipeline[] = [];
+    for (const p of this.pipelines.values()) {
+      if (p.status === "completed" || p.status === "failed" || p.status === "aborted") {
+        terminal.push(p);
+      }
+    }
+
+    // Sort oldest first by completedAt (or createdAt as fallback)
+    terminal.sort((a, b) => (a.completedAt ?? a.createdAt) - (b.completedAt ?? b.createdAt));
+
+    const toRemove = this.pipelines.size - MAX_PIPELINES;
+    for (let i = 0; i < toRemove && i < terminal.length; i++) {
+      this.pipelines.delete(terminal[i].id);
+      this.retryCounts.delete(terminal[i].id);
+    }
+  }
 
   createPipeline(
     name: string,
@@ -123,6 +148,7 @@ export class PipelineOrchestrator {
     // Pipeline complete
     pipeline.status = "completed";
     pipeline.completedAt = Date.now();
+    this.pruneCompletedPipelines();
     return current;
   }
 
@@ -153,6 +179,7 @@ export class PipelineOrchestrator {
       current.completedAt = Date.now();
       pipeline.status = "failed";
       pipeline.completedAt = Date.now();
+      this.pruneCompletedPipelines();
       return { pipeline, nextAction: "abort" };
     }
 
@@ -172,6 +199,7 @@ export class PipelineOrchestrator {
       // No more steps
       pipeline.status = "completed";
       pipeline.completedAt = Date.now();
+      this.pruneCompletedPipelines();
       return { pipeline, nextAction: "skip" };
     }
 
@@ -181,6 +209,7 @@ export class PipelineOrchestrator {
     current.completedAt = Date.now();
     pipeline.status = "failed";
     pipeline.completedAt = Date.now();
+    this.pruneCompletedPipelines();
     return { pipeline, nextAction: "abort" };
   }
 
@@ -200,6 +229,7 @@ export class PipelineOrchestrator {
 
     pipeline.status = "aborted";
     pipeline.completedAt = Date.now();
+    this.pruneCompletedPipelines();
     return pipeline;
   }
 
