@@ -7,6 +7,7 @@
 
 import * as fs from "node:fs";
 import * as path from "node:path";
+import { errorMessage } from "./errors.js";
 
 export type HealthStatus = "healthy" | "degraded" | "unhealthy";
 
@@ -60,7 +61,7 @@ export class HealthAggregator {
           latency_ms: 0,
           last_check: new Date().toISOString(),
           details: {
-            error: err instanceof Error ? err.message : String(err),
+            error: errorMessage(err),
           },
         };
         worstStatus = "unhealthy";

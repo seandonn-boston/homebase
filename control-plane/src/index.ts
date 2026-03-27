@@ -11,6 +11,15 @@
  * 3. Execution Trace — visualization of agent reasoning trees
  */
 
+export {
+  AdmiralError,
+  NotFoundError,
+  ValidationError,
+  StateCorruptionError,
+  IngestionError,
+  errorMessage,
+  errorCode,
+} from "./errors";
 export { AgentEvent, EventListener, EventStream, EventStreamConfig, EventType } from "./events";
 export { JournalIngester } from "./ingest";
 export { AgentInstrumentation, InstrumentationConfig } from "./instrumentation";
