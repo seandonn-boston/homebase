@@ -14,6 +14,19 @@ import type { RunawayDetector } from "./runaway-detector";
 import type { ExecutionTrace } from "./trace";
 import { errorMessage } from "./errors.js";
 
+/** Route handler type */
+type RouteHandler = (res: http.ServerResponse, params: Record<string, string>) => void;
+
+/** Route definition: pattern + handler */
+interface Route {
+  pattern: RegExp;
+  paramNames: string[];
+  handler: RouteHandler;
+}
+
+/** ID validation pattern: alphanumeric, hyphens, underscores */
+const VALID_ID = /^[a-zA-Z0-9_-]+$/;
+
 export class AdmiralServer {
   private server: http.Server | null = null;
   private stream: EventStream;
@@ -22,6 +35,7 @@ export class AdmiralServer {
   private projectDir: string;
   private ingester: JournalIngester | null = null;
   private startedAt: number = Date.now();
+  private routes: Route[];
 
   constructor(
     stream: EventStream,
@@ -33,6 +47,7 @@ export class AdmiralServer {
     this.detector = detector;
     this.trace = trace;
     this.projectDir = projectDir || process.cwd();
+    this.routes = this.buildRoutes();
   }
 
   /** Set the ingester reference for health reporting */
@@ -57,6 +72,61 @@ export class AdmiralServer {
     });
   }
 
+  private buildRoutes(): Route[] {
+    return [
+      this.route("/health", (res) => this.serveHealth(res)),
+      this.route("/api/config", (res) => this.json(res, this.detector.getConfig())),
+      this.route("/api/events", (res) => this.json(res, this.stream.getEvents())),
+      this.route("/api/alerts", (res) => this.json(res, this.detector.getAlerts())),
+      this.route("/api/alerts/active", (res) => this.json(res, this.detector.getActiveAlerts())),
+      this.route("/api/trace", (res) => this.json(res, this.trace.buildTrace())),
+      this.route("/api/trace/ascii", (res) => {
+        res.writeHead(200, { "Content-Type": "text/plain" });
+        res.end(this.trace.renderAscii());
+      }),
+      this.route("/api/session", (res) => this.serveSessionState(res)),
+      this.route("/api/stats", (res) => {
+        const stats: Record<string, unknown> = { trace: this.trace.getStats() };
+        if (this.ingester) {
+          stats.ingester = this.ingester.getStats();
+        }
+        this.json(res, stats);
+      }),
+      this.route("/api/agents/:id/resume", (res, params) => {
+        if (!VALID_ID.test(params.id)) {
+          this.errorJson(res, 400, "Missing or invalid agent ID");
+          return;
+        }
+        this.detector.resumeAgent(params.id);
+        this.json(res, { resumed: params.id });
+      }),
+      this.route("/api/alerts/:id/resolve", (res, params) => {
+        if (!VALID_ID.test(params.id)) {
+          this.errorJson(res, 400, "Missing or invalid alert ID");
+          return;
+        }
+        this.detector.resolveAlert(params.id);
+        this.json(res, { resolved: params.id });
+      }),
+      this.route("/", (res) => this.serveDashboard(res)),
+      this.route("/index.html", (res) => this.serveDashboard(res)),
+    ];
+  }
+
+  /** Convert a path pattern like "/api/agents/:id/resume" into a Route */
+  private route(pattern: string, handler: RouteHandler): Route {
+    const paramNames: string[] = [];
+    const regexStr = pattern.replace(/:([a-zA-Z]+)/g, (_match, name: string) => {
+      paramNames.push(name);
+      return "([^/]+)";
+    });
+    return {
+      pattern: new RegExp(`^${regexStr}$`),
+      paramNames,
+      handler,
+    };
+  }
+
   private handleRequest(req: http.IncomingMessage, res: http.ServerResponse): void {
     try {
       const url = req.url || "/";
@@ -72,53 +142,20 @@ export class AdmiralServer {
         return;
       }
 
-      // API routes
-      if (url === "/health") {
-        this.serveHealth(res);
-      } else if (url === "/api/config") {
-        this.json(res, this.detector.getConfig());
-      } else if (url === "/api/events") {
-        this.json(res, this.stream.getEvents());
-      } else if (url === "/api/alerts") {
-        this.json(res, this.detector.getAlerts());
-      } else if (url === "/api/alerts/active") {
-        this.json(res, this.detector.getActiveAlerts());
-      } else if (url === "/api/trace") {
-        this.json(res, this.trace.buildTrace());
-      } else if (url === "/api/trace/ascii") {
-        res.writeHead(200, { "Content-Type": "text/plain" });
-        res.end(this.trace.renderAscii());
-      } else if (url === "/api/session") {
-        this.serveSessionState(res);
-      } else if (url === "/api/stats") {
-        const stats: Record<string, unknown> = { trace: this.trace.getStats() };
-        if (this.ingester) {
-          stats.ingester = this.ingester.getStats();
+      // Match against route table
+      for (const route of this.routes) {
+        const match = url.match(route.pattern);
+        if (match) {
+          const params: Record<string, string> = {};
+          for (let i = 0; i < route.paramNames.length; i++) {
+            params[route.paramNames[i]] = match[i + 1];
+          }
+          route.handler(res, params);
+          return;
         }
-        this.json(res, stats);
-      } else if (url.startsWith("/api/agents/") && url.endsWith("/resume")) {
-        const parts = url.split("/").filter(Boolean);
-        const agentId = parts[2];
-        if (agentId && agentId !== "resume" && /^[a-zA-Z0-9_-]+$/.test(agentId)) {
-          this.detector.resumeAgent(agentId);
-          this.json(res, { resumed: agentId });
-        } else {
-          this.errorJson(res, 400, "Missing or invalid agent ID");
-        }
-      } else if (url.startsWith("/api/alerts/") && url.endsWith("/resolve")) {
-        const parts = url.split("/").filter(Boolean);
-        const alertId = parts[2];
-        if (alertId && alertId !== "resolve" && /^[a-zA-Z0-9_-]+$/.test(alertId)) {
-          this.detector.resolveAlert(alertId);
-          this.json(res, { resolved: alertId });
-        } else {
-          this.errorJson(res, 400, "Missing or invalid alert ID");
-        }
-      } else if (url === "/" || url === "/index.html") {
-        this.serveDashboard(res);
-      } else {
-        this.errorJson(res, 404, "Not found");
       }
+
+      this.errorJson(res, 404, "Not found");
     } catch (err) {
       const message = errorMessage(err);
       console.error(`[admiral-server] Unhandled error: ${message}`);
