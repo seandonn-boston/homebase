@@ -53,7 +53,7 @@
 
 ### 4.3 Architecture Decision Records
 
-- [ ] **D-06:** ADR for hook payload schema — JSON over stdin/stdout rationale, fail-open, schema evolution strategy `[S]`
+- [x] **D-06:** ADR for hook payload schema — *Completed in Phase 9.* — ADR-005: JSON over stdin/stdout rationale, fail-open validation, additive schema evolution, `additionalProperties: true` for forward compat `[S]`
 - [ ] **D-07:** ADR for event ID generation — UUID vs timestamp+counter vs ULID trade-offs `[S]`
 - [ ] **D-12:** ADR for Standing Orders enforcement tiers — hook-enforced vs advisory vs guidance-only `[S]`
 - [ ] **D-13:** ADR for fleet orchestration approach — centralized vs peer-to-peer vs hybrid, 3+ alternatives compared `[M]`
