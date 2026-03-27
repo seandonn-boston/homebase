@@ -11,6 +11,10 @@ export CLAUDE_PROJECT_DIR="$PROJECT_DIR"
 # Source shared libraries
 source "$PROJECT_DIR/admiral/lib/state.sh"
 source "$PROJECT_DIR/admiral/lib/standing_orders.sh"
+if [ -f "$PROJECT_DIR/admiral/lib/hook_utils.sh" ]; then
+  source "$PROJECT_DIR/admiral/lib/hook_utils.sh"
+fi
+hook_init "session_start_adapter"
 
 # Read Claude Code payload from stdin
 PAYLOAD=$(cat)

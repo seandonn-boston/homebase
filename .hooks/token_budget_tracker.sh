@@ -11,14 +11,18 @@ PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$SCRIPT_DIR/.." && pwd)}"
 export CLAUDE_PROJECT_DIR="$PROJECT_DIR"
 
 source "$PROJECT_DIR/admiral/lib/state.sh"
+if [ -f "$PROJECT_DIR/admiral/lib/hook_utils.sh" ]; then
+  source "$PROJECT_DIR/admiral/lib/hook_utils.sh"
+fi
+hook_init "token_budget_tracker"
 
 # Read payload from stdin
 PAYLOAD=$(cat)
 
 # Extract fields
-TOOL_NAME=$(echo "$PAYLOAD" | jq -r '.tool_name // "unknown"')
-TOKENS_USED=$(echo "$PAYLOAD" | jq -r '.session_state.tokens_used // 0')
-TOKEN_BUDGET=$(echo "$PAYLOAD" | jq -r '.session_state.token_budget // 0')
+TOOL_NAME=$(jq_get "$PAYLOAD" '.tool_name' 'unknown')
+TOKENS_USED=$(jq_get "$PAYLOAD" '.session_state.tokens_used' '0')
+TOKEN_BUDGET=$(jq_get "$PAYLOAD" '.session_state.token_budget' '0')
 
 # Estimate tokens for this tool call
 ESTIMATED=$(estimate_tokens "$TOOL_NAME")

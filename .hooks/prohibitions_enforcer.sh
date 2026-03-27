@@ -15,17 +15,21 @@ export CLAUDE_PROJECT_DIR="$PROJECT_DIR"
 if [ -f "$PROJECT_DIR/admiral/lib/brain_writer.sh" ]; then
   source "$PROJECT_DIR/admiral/lib/brain_writer.sh"
 fi
+if [ -f "$PROJECT_DIR/admiral/lib/hook_utils.sh" ]; then
+  source "$PROJECT_DIR/admiral/lib/hook_utils.sh"
+fi
+hook_init "prohibitions_enforcer"
 
 # Read payload from stdin
 PAYLOAD=$(cat)
 
-TOOL_NAME=$(echo "$PAYLOAD" | jq -r '.tool_name // "unknown"')
+TOOL_NAME=$(jq_get "$PAYLOAD" '.tool_name' 'unknown')
 ALERTS=""
 HARD_BLOCK=false
 
 # --- Rule: Never bypass or disable enforcement mechanisms ---
 if [ "$TOOL_NAME" = "Bash" ]; then
-  COMMAND=$(echo "$PAYLOAD" | jq -r '.tool_input.command // ""')
+  COMMAND=$(jq_get "$PAYLOAD" '.tool_input.command')
 
   # Strip heredoc/here-string content before pattern matching to prevent false
   # positives when documentation or plan text references paths like .hooks/.
@@ -126,12 +130,12 @@ fi
 
 # --- Rule: Never store secrets in files → ADVISORY ONLY ---
 if [ "$TOOL_NAME" = "Write" ] || [ "$TOOL_NAME" = "Edit" ]; then
-  FILE_PATH=$(echo "$PAYLOAD" | jq -r '.tool_input.file_path // ""')
+  FILE_PATH=$(jq_get "$PAYLOAD" '.tool_input.file_path')
   CONTENT=""
   if [ "$TOOL_NAME" = "Write" ]; then
-    CONTENT=$(echo "$PAYLOAD" | jq -r '.tool_input.content // ""')
+    CONTENT=$(jq_get "$PAYLOAD" '.tool_input.content')
   else
-    CONTENT=$(echo "$PAYLOAD" | jq -r '.tool_input.new_string // ""')
+    CONTENT=$(jq_get "$PAYLOAD" '.tool_input.new_string')
   fi
 
   # Check for secrets in file content

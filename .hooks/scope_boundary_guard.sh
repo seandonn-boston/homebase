@@ -17,11 +17,15 @@ export CLAUDE_PROJECT_DIR="$PROJECT_DIR"
 if [ -f "$PROJECT_DIR/admiral/lib/brain_writer.sh" ]; then
   source "$PROJECT_DIR/admiral/lib/brain_writer.sh"
 fi
+if [ -f "$PROJECT_DIR/admiral/lib/hook_utils.sh" ]; then
+  source "$PROJECT_DIR/admiral/lib/hook_utils.sh"
+fi
+hook_init "scope_boundary_guard"
 
 # Read payload from stdin
 PAYLOAD=$(cat)
 
-TOOL_NAME=$(echo "$PAYLOAD" | jq -r '.tool_name // "unknown"')
+TOOL_NAME=$(jq_get "$PAYLOAD" '.tool_name' 'unknown')
 
 # Only check file-modifying tools
 # shellcheck disable=SC2034  # IS_WRITE tracks tool type for readability
@@ -30,7 +34,7 @@ case "$TOOL_NAME" in
   Write|Edit|NotebookEdit) IS_WRITE=true ;;
   Bash)
     # Check if bash command modifies protected paths
-    COMMAND=$(echo "$PAYLOAD" | jq -r '.tool_input.command // ""')
+    COMMAND=$(jq_get "$PAYLOAD" '.tool_input.command')
     # Skip non-modifying commands
     case "$COMMAND" in
       git\ status*|git\ log*|git\ diff*|git\ add*|git\ commit*|git\ push*|ls*|cat*|head*|tail*|echo*|pwd*)
@@ -56,10 +60,10 @@ PROTECTED_DIRS=(
 TARGET_PATH=""
 case "$TOOL_NAME" in
   Write|Edit)
-    TARGET_PATH=$(echo "$PAYLOAD" | jq -r '.tool_input.file_path // ""')
+    TARGET_PATH=$(jq_get "$PAYLOAD" '.tool_input.file_path')
     ;;
   NotebookEdit)
-    TARGET_PATH=$(echo "$PAYLOAD" | jq -r '.tool_input.notebook_path // ""')
+    TARGET_PATH=$(jq_get "$PAYLOAD" '.tool_input.notebook_path')
     ;;
   Bash)
     # Strip heredoc/here-string content before matching — heredoc bodies contain
