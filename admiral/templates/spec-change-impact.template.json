@@ -1,4 +1,7 @@
 {
+  "_purpose": "Spec Change Impact template — documents the impact of specification changes on implementation. Used by validate_spec_change to assess migration needs.",
+  "_usage": "Fill in when proposing spec changes. Run: admiral/bin/validate_spec_change <change-file>",
+  "_expected_output": "{ valid: true/false, risk_level: 'low|medium|high', migration_required: true/false }",
   "schema_version": "1.0.0",
   "change_id": "",
   "spec_version_from": "",

@@ -1,4 +1,7 @@
 {
+  "_purpose": "Ground Truth template — defines project identity, boundaries, success criteria, and environment. Used by validate_ground_truth and go_no_go_gate to verify project readiness.",
+  "_usage": "Copy to .admiral/ground-truth.json and fill in all fields. Run: admiral/bin/validate_ground_truth",
+  "_example_invocation": "cp admiral/templates/ground-truth.template.json .admiral/ground-truth.json && $EDITOR .admiral/ground-truth.json",
   "schema_version": "1.0.0",
   "project": {
     "name": "",
