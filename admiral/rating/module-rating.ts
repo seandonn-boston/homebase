@@ -84,30 +84,26 @@ function safeReadFile(path: string): string | null {
   }
 }
 
+const SKIP_DIRS = new Set(["node_modules", "dist", ".git"]);
+
 function collectFiles(dir: string, ext: string): string[] {
-  const files: string[] = [];
-  if (!existsSync(dir)) return files;
+  if (!existsSync(dir)) return [];
+  const results: string[] = [];
   const walk = (d: string) => {
     let entries: string[];
-    try {
-      entries = readdirSync(d);
-    } catch {
-      return;
-    }
+    try { entries = readdirSync(d); } catch { return; }
     for (const name of entries) {
-      if (name === "node_modules" || name === "dist" || name === ".git") continue;
+      if (SKIP_DIRS.has(name)) continue;
       const p = join(d, name);
       try {
         const st = statSync(p);
         if (st.isDirectory()) walk(p);
-        else if (name.endsWith(ext)) files.push(p);
-      } catch {
-        /* skip */
-      }
+        else if (name.endsWith(ext)) results.push(p);
+      } catch { /* skip */ }
     }
   };
   walk(dir);
-  return files;
+  return results;
 }
 
 function analyzeModule(rootDir: string, modulePath: string): ModuleScores {

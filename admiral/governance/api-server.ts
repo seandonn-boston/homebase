@@ -137,6 +137,7 @@ export class GovernanceApiServer {
   private routes: Route[] = [];
 
   // In-memory stores
+  private static readonly MAX_AUDIT_LOG = 10000;
   private policies: Map<string, PolicyRecord[]> = new Map(); // id -> versions (append-only)
   private auditLog: AuditEntry[] = [];
   private fleetStatus: FleetStatus = {
@@ -473,6 +474,9 @@ export class GovernanceApiServer {
       resource,
       details,
     });
+    if (this.auditLog.length > GovernanceApiServer.MAX_AUDIT_LOG) {
+      this.auditLog = this.auditLog.slice(-GovernanceApiServer.MAX_AUDIT_LOG);
+    }
   }
 
   getRoutes(): Route[] {

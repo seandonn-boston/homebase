@@ -63,6 +63,7 @@ const SEVERITY_ORDER: Record<string, number> = {
 };
 
 export class WebhookManager {
+  private static readonly MAX_DELIVERY_LOG = 5000;
   private registrations: Map<string, WebhookRegistration> = new Map();
   private deliveryLog: DeliveryResult[] = [];
   private rateCounts: Map<string, { count: number; windowStart: number }> = new Map();
@@ -221,6 +222,9 @@ export class WebhookManager {
       timestamp: new Date().toISOString(), attempts,
     };
     this.deliveryLog.push(result);
+    if (this.deliveryLog.length > WebhookManager.MAX_DELIVERY_LOG) {
+      this.deliveryLog = this.deliveryLog.slice(-WebhookManager.MAX_DELIVERY_LOG);
+    }
     return result;
   }
 }

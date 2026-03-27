@@ -69,57 +69,59 @@ function safeExec(cmd: string, cwd: string): string | null {
   }
 }
 
-function countFilesRecursive(dir: string, ext: string): number {
-  if (!existsSync(dir)) return 0;
-  let count = 0;
+const SKIP_DIRS = new Set(["node_modules", "dist", ".git"]);
+
+/** Walk a directory tree collecting files matching a predicate. */
+function walkDir(dir: string, predicate: (fullPath: string, name: string) => boolean): string[] {
+  const results: string[] = [];
+  if (!existsSync(dir)) return results;
   const walk = (d: string) => {
     let entries: string[];
-    try {
-      entries = readdirSync(d);
-    } catch {
-      return;
-    }
+    try { entries = readdirSync(d); } catch { return; }
     for (const name of entries) {
-      if (name === "node_modules" || name === "dist" || name === ".git") continue;
+      if (SKIP_DIRS.has(name)) continue;
       const p = join(d, name);
       try {
         const st = statSync(p);
         if (st.isDirectory()) walk(p);
-        else if (name.endsWith(ext)) count++;
-      } catch {
-        /* skip unreadable */
-      }
+        else if (predicate(p, name)) results.push(p);
+      } catch { /* skip unreadable */ }
     }
   };
   walk(dir);
-  return count;
+  return results;
 }
 
 function collectTsFiles(dir: string): string[] {
-  const files: string[] = [];
-  if (!existsSync(dir)) return files;
-  const walk = (d: string) => {
-    let entries: string[];
-    try {
-      entries = readdirSync(d);
-    } catch {
-      return;
-    }
-    for (const name of entries) {
-      if (name === "node_modules" || name === "dist" || name === ".git") continue;
-      const p = join(d, name);
-      try {
-        const st = statSync(p);
-        if (st.isDirectory()) walk(p);
-        else if (name.endsWith(".ts") && !name.endsWith(".d.ts")) files.push(p);
-      } catch {
-        /* skip */
-      }
-    }
-  };
-  walk(dir);
-  return files;
+  return walkDir(dir, (_p, name) => name.endsWith(".ts") && !name.endsWith(".d.ts"));
 }
+
+/** Cache for collectTsFiles to avoid repeated directory walks within a single run. */
+const tsFileCache = new Map<string, string[]>();
+
+function collectTsFilesCached(dir: string): string[] {
+  let cached = tsFileCache.get(dir);
+  if (!cached) {
+    cached = collectTsFiles(dir);
+    tsFileCache.set(dir, cached);
+  }
+  return cached;
+}
+
+/** Clear caches between runs (for testing). */
+export function clearCollectionCaches(): void {
+  tsFileCache.clear();
+}
+
+// ---------------------------------------------------------------------------
+// Precompiled regex patterns (avoid recompilation in loops)
+// ---------------------------------------------------------------------------
+
+const DEFECT_MARKER_RE = /\b(TODO|FIXME|HACK|XXX)\b/i;
+const TRY_CATCH_RE = /\btry\s*\{/g;
+const FUNCTION_RE = /\bfunction\s+\w+|=>\s*\{|\.then\(/g;
+const RECOVERY_PATTERN_RE = /recover|fallback|retry|graceful|degrad/i;
+const BRAIN_IMPORT_RE = /from\s+["'].*brain|from\s+["'].*knowledge/i;
 
 // ---------------------------------------------------------------------------
 // Benchmark Collectors
@@ -138,10 +140,10 @@ function collectFirstPassQuality(
   diagnostics: string[],
 ): BenchmarkResult {
   const admiralDir = join(rootDir, "admiral");
-  const sourceFiles = collectTsFiles(admiralDir).filter(
+  const sourceFiles = collectTsFilesCached(admiralDir).filter(
     (f) => !f.includes(".test.") && !f.includes("node_modules"),
   );
-  const testFiles = collectTsFiles(admiralDir).filter(
+  const testFiles = collectTsFilesCached(admiralDir).filter(
     (f) => f.includes(".test.") && !f.includes("node_modules"),
   );
 
@@ -150,13 +152,11 @@ function collectFirstPassQuality(
     return { benchmarkId: "first-pass-quality", value: null, status: "insufficient-data", source: "file-scan" };
   }
 
-  // Count source files that have a corresponding test file
-  const testedModules = sourceFiles.filter((sf) => {
-    const testName = sf.replace(/\.ts$/, ".test.ts");
-    return testFiles.includes(testName);
-  });
+  const testFileSet = new Set(testFiles);
+  const testedModules = sourceFiles.filter((sf) =>
+    testFileSet.has(sf.replace(/\.ts$/, ".test.ts")),
+  );
 
-  // Count defect markers across all source files
   let totalLines = 0;
   let defectMarkers = 0;
   for (const f of sourceFiles) {
@@ -165,7 +165,7 @@ function collectFirstPassQuality(
     const lines = content.split("\n");
     totalLines += lines.length;
     for (const line of lines) {
-      if (/\b(TODO|FIXME|HACK|XXX)\b/i.test(line)) defectMarkers++;
+      if (DEFECT_MARKER_RE.test(line)) defectMarkers++;
     }
   }
 
@@ -198,7 +198,7 @@ function collectRecoverySuccessRate(
   diagnostics: string[],
 ): BenchmarkResult {
   const admiralDir = join(rootDir, "admiral");
-  const allFiles = collectTsFiles(admiralDir).filter((f) => !f.includes("node_modules"));
+  const allFiles = collectTsFilesCached(admiralDir).filter((f) => !f.includes("node_modules"));
 
   let recoveryPatterns = 0;
   let errorHandlers = 0;
@@ -208,13 +208,13 @@ function collectRecoverySuccessRate(
     const content = safeReadFile(f);
     if (!content) continue;
     // Count try/catch blocks as recovery mechanisms
-    const tryCatches = (content.match(/\btry\s*\{/g) || []).length;
+    const tryCatches = (content.match(TRY_CATCH_RE) || []).length;
     errorHandlers += tryCatches;
     // Count functions
-    const funcs = (content.match(/\bfunction\s+\w+|=>\s*\{|\.then\(/g) || []).length;
+    const funcs = (content.match(FUNCTION_RE) || []).length;
     totalFunctions += funcs;
     // Count explicit recovery patterns
-    if (/recover|fallback|retry|graceful|degrad/i.test(content)) {
+    if (RECOVERY_PATTERN_RE.test(content)) {
       recoveryPatterns++;
     }
   }
@@ -378,7 +378,7 @@ function collectGovernanceOverhead(
   for (const dir of allDirs) {
     const dirPath = join(admiralDir, dir);
     if (!existsSync(dirPath)) continue;
-    const files = collectTsFiles(dirPath);
+    const files = collectTsFilesCached(dirPath);
     for (const f of files) {
       const content = safeReadFile(f);
       if (!content) continue;
@@ -439,7 +439,7 @@ function collectCoordinationOverhead(
 
   // Fleet coordination code
   if (existsSync(fleetDir)) {
-    const fleetFiles = collectTsFiles(fleetDir);
+    const fleetFiles = collectTsFilesCached(fleetDir);
     for (const f of fleetFiles) {
       const content = safeReadFile(f);
       if (!content) continue;
@@ -471,7 +471,7 @@ function collectCoordinationOverhead(
   }
 
   // All admiral code for the denominator
-  const allFiles = collectTsFiles(admiralDir);
+  const allFiles = collectTsFilesCached(admiralDir);
   for (const f of allFiles) {
     const content = safeReadFile(f);
     if (content) totalLines += content.split("\n").length;
@@ -529,11 +529,11 @@ function collectKnowledgeReuse(
   const knowledgeFiles = existsSync(knowledgeDir) ? readdirSync(knowledgeDir).filter((f) => f.endsWith(".ts")).length : 0;
 
   // Check for Brain integration in TypeScript code
-  const allFiles = collectTsFiles(join(rootDir, "admiral"));
+  const allFiles = collectTsFilesCached(join(rootDir, "admiral"));
   let brainImports = 0;
   for (const f of allFiles) {
     const content = safeReadFile(f);
-    if (content && /from\s+["'].*brain|from\s+["'].*knowledge/i.test(content)) {
+    if (content && BRAIN_IMPORT_RE.test(content)) {
       brainImports++;
     }
   }

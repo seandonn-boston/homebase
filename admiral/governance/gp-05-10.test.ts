@@ -106,11 +106,11 @@ describe("GP-05: Event Streaming", () => {
 
   it("replays events since timestamp", () => {
     const stream = new GovernanceEventStream();
-    stream.emit({ type: "old", severity: "low", agent: "a1", tenant: "t1", data: {} });
-    const midpoint = new Date().toISOString();
+    // Use a past timestamp as midpoint so the "new" event is guaranteed after it
+    const pastTimestamp = new Date(Date.now() - 1000).toISOString();
     stream.emit({ type: "new", severity: "low", agent: "a1", tenant: "t1", data: {} });
 
-    const replayed = stream.replay(midpoint);
+    const replayed = stream.replay(pastTimestamp);
     assert.equal(replayed.length, 1);
     assert.equal(replayed[0].type, "new");
   });
