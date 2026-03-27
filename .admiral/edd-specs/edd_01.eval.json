@@ -1,0 +1,37 @@
+{
+  "task_id": "EDD-01",
+  "version": "1",
+  "description": "Define the EDD evaluation spec format — JSON schema, validation library, and example spec.",
+  "deterministic": [
+    {
+      "name": "Schema file exists",
+      "command": "test -f admiral/schemas/evaluation-spec.v1.schema.json",
+      "expected_exit": 0
+    },
+    {
+      "name": "Schema is valid JSON",
+      "command": "jq empty admiral/schemas/evaluation-spec.v1.schema.json",
+      "expected_exit": 0
+    },
+    {
+      "name": "Spec library exists",
+      "command": "test -f admiral/lib/edd_spec.sh",
+      "expected_exit": 0
+    },
+    {
+      "name": "Spec validation tests pass",
+      "command": "bash admiral/tests/test_edd_spec.sh",
+      "expected_exit": 0,
+      "timeout_ms": 30000
+    }
+  ],
+  "probabilistic": [
+    {
+      "name": "Schema covers all required fields",
+      "description": "The JSON schema defines task_id, version, deterministic (with command, expected_exit), and probabilistic (with description, verification_method) as specified in the TODO item.",
+      "verification_method": "agent_review"
+    }
+  ],
+  "ci_required": true,
+  "dependencies": []
+}
