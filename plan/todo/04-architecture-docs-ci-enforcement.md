@@ -63,7 +63,7 @@
 
 - [ ] **D-08:** Create operational runbook — setup, common failures, recovery procedures, 10+ failure scenarios `[L]`
 - [ ] **D-09:** Create hook troubleshooting guide — all 13+ hooks with failure modes, debugging steps `[M]`
-- [ ] **D-10:** Create Brain user guide — brain_query, brain_record, brain_retrieve, brain_audit CLI examples `[M]`
+- [x] **D-10:** Create Brain user guide — *Completed in Phase 9.* — `docs/BRAIN_USER_GUIDE.md` with CLI examples for all 5 brain tools (record, query, retrieve, audit, consolidate), entry types, tier comparison, graduation criteria, hook integration, file layout `[M]`
 - [ ] **D-11:** Create security model document — threat model, attack surfaces, defense layers, quarantine `[L]`
 
 ### 4.5 Contributor & Reference Documentation
