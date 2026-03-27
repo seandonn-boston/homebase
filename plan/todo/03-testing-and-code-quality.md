@@ -56,7 +56,7 @@
 - [x] **Q-07: Document TypeScript export conventions** — *Completed in Phase 9.* — Added "Exports" section to ADMIRAL_STYLE.md: named exports only, index.ts as public API surface, type-only re-exports, no barrel files, grouped by domain.
 - [x] **Q-08: Improve `server.ts` URL routing** — *Completed in Phase 9.* — Replaced if/else chain with declarative route table using `Route` type (`pattern: RegExp`, `paramNames`, `handler`). Added `:id` param extraction via `route()` builder. Eliminated `url.split("/")` and `agentId !== "resume"` guards. All 18 server tests pass.
 - [x] **Q-11: Dead code elimination audit** — *Completed during Phase 0 simplify review (removed dead variables from validate_ground_truth, validate_task_criteria, validate_constants_sync, readiness_assess, spec_first_gate, go_no_go_gate).* — Find and remove unused functions, variables, and unreachable code in both TypeScript and bash. Enable `noUnusedLocals` and `noUnusedParameters` in tsconfig. Grep bash for orphaned functions.
-- [ ] **Q-12: TypeScript strict null checks enforcement** — *Deferred to Phase 2 (requires fixing all resulting type errors).* — Enable `strictNullChecks` in tsconfig.json. Fix all resulting type errors. No `as any` casts to suppress null check errors.
+- [x] **Q-12: TypeScript strict null checks enforcement** — *Already satisfied.* — `strict: true` in tsconfig.json enables `strictNullChecks` (verified via `--showConfig`). No `as any` casts in production code (4 in test files for internal access, none for null suppression). All source files compile cleanly under strict null checks.
 
 ## Evaluation-Driven Design (EDD) Gate
 
