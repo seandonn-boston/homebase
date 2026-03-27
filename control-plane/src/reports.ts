@@ -10,6 +10,7 @@
 import { randomUUID } from "node:crypto";
 import type * as http from "node:http";
 import type { GovernanceEvent } from "./event-stream";
+import { pathOnly, readJsonBody } from "./http-helpers";
 import type { GovernancePolicy } from "./policies";
 
 // ---------------------------------------------------------------------------
@@ -119,31 +120,6 @@ export interface ReporterContext {
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-
-function readJsonBody(req: http.IncomingMessage): Promise<unknown> {
-  return new Promise((resolve, reject) => {
-    const chunks: Buffer[] = [];
-    req.on("data", (chunk: Buffer) => chunks.push(chunk));
-    req.on("end", () => {
-      const raw = Buffer.concat(chunks).toString("utf-8");
-      if (!raw.trim()) {
-        resolve({});
-        return;
-      }
-      try {
-        resolve(JSON.parse(raw));
-      } catch {
-        reject(new Error("Invalid JSON in request body"));
-      }
-    });
-    req.on("error", reject);
-  });
-}
-
-function pathOnly(url: string): string {
-  const q = url.indexOf("?");
-  return q === -1 ? url : url.slice(0, q);
-}
 
 function formatDate(iso: string): string {
   return iso.slice(0, 10);

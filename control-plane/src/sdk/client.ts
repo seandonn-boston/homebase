@@ -54,6 +54,8 @@ function buildQueryString(params: Record<string, string | number | boolean | und
 
 const DEFAULT_MAX_RETRIES = 3;
 const DEFAULT_INITIAL_BACKOFF_MS = 200;
+/** Maximum response body size in bytes (10 MB). */
+const MAX_RESPONSE_BODY_BYTES = 10 * 1024 * 1024;
 
 export class GovernanceClient {
   private readonly baseUrl: string;
@@ -201,7 +203,20 @@ export class GovernanceClient {
 
       const req = transport.request(options, (res) => {
         let respBody = "";
-        res.on("data", (chunk: string) => {
+        let respBodyBytes = 0;
+        res.on("data", (chunk: Buffer | string) => {
+          const chunkBytes = typeof chunk === "string" ? Buffer.byteLength(chunk) : chunk.length;
+          respBodyBytes += chunkBytes;
+          if (respBodyBytes > MAX_RESPONSE_BODY_BYTES) {
+            res.destroy();
+            reject(
+              new GovernanceSdkError(
+                `Response body exceeded ${MAX_RESPONSE_BODY_BYTES} bytes limit`,
+                res.statusCode ?? 0,
+              ),
+            );
+            return;
+          }
           respBody += chunk;
         });
         res.on("end", () => {

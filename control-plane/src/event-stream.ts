@@ -10,6 +10,7 @@
 
 import { randomUUID } from "node:crypto";
 import type * as http from "node:http";
+import { parseQuery, pathOnly } from "./http-helpers";
 import { RingBuffer } from "./ring-buffer";
 
 // ---------------------------------------------------------------------------
@@ -77,27 +78,6 @@ interface SseSubscriber {
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-
-function parseQuery(url: string): Record<string, string> {
-  const qIdx = url.indexOf("?");
-  if (qIdx === -1) return {};
-  const qs = url.slice(qIdx + 1);
-  const result: Record<string, string> = {};
-  for (const pair of qs.split("&")) {
-    const eqIdx = pair.indexOf("=");
-    if (eqIdx === -1) {
-      result[decodeURIComponent(pair)] = "";
-    } else {
-      result[decodeURIComponent(pair.slice(0, eqIdx))] = decodeURIComponent(pair.slice(eqIdx + 1));
-    }
-  }
-  return result;
-}
-
-function pathOnly(url: string): string {
-  const q = url.indexOf("?");
-  return q === -1 ? url : url.slice(0, q);
-}
 
 function matchesFilter(event: GovernanceEvent, filter: EventFilter): boolean {
   if (filter.type && event.type !== filter.type) return false;

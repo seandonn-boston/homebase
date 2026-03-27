@@ -65,10 +65,16 @@ const DEFAULT_CONFIG: Required<WebhookDispatcherConfig> = {
 // WebhookDispatcher
 // ---------------------------------------------------------------------------
 
+/** Max entries allowed in the rate limit map before forced cleanup. */
+const RATE_LIMIT_MAX_ENTRIES = 10_000;
+/** Run cleanup every N dispatches. */
+const RATE_LIMIT_CLEANUP_INTERVAL = 100;
+
 export class WebhookDispatcher {
   private subscriptions: Map<string, WebhookSubscription> = new Map();
   private rateLimitState: Map<string, RateLimitState> = new Map();
   private config: Required<WebhookDispatcherConfig>;
+  private dispatchCount = 0;
 
   constructor(config: WebhookDispatcherConfig = {}) {
     this.config = { ...DEFAULT_CONFIG, ...config };
@@ -146,6 +152,11 @@ export class WebhookDispatcher {
   // -------------------------------------------------------------------------
 
   async dispatch(event: WebhookEvent): Promise<WebhookDeliveryResult[]> {
+    this.dispatchCount++;
+    if (this.dispatchCount % RATE_LIMIT_CLEANUP_INTERVAL === 0) {
+      this.cleanupRateLimitState();
+    }
+
     const results: WebhookDeliveryResult[] = [];
     const candidates = Array.from(this.subscriptions.values()).filter((sub) =>
       this.matchesSubscription(event, sub),
@@ -194,6 +205,11 @@ export class WebhookDispatcher {
     const now = Date.now();
     const windowMs = 60_000;
 
+    // Cap max entries to prevent unbounded growth
+    if (this.rateLimitState.size >= RATE_LIMIT_MAX_ENTRIES) {
+      this.cleanupRateLimitState();
+    }
+
     const state = this.rateLimitState.get(subId);
     if (!state || now - state.windowStart >= windowMs) {
       // Start new window
@@ -207,6 +223,17 @@ export class WebhookDispatcher {
 
     this.rateLimitState.set(subId, { count: state.count + 1, windowStart: state.windowStart });
     return false;
+  }
+
+  /** Remove rate limit entries whose window has expired. */
+  private cleanupRateLimitState(): void {
+    const now = Date.now();
+    const windowMs = 60_000;
+    for (const [key, state] of this.rateLimitState) {
+      if (now - state.windowStart >= windowMs) {
+        this.rateLimitState.delete(key);
+      }
+    }
   }
 
   // -------------------------------------------------------------------------

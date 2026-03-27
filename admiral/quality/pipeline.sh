@@ -125,11 +125,13 @@ run_lint() {
   if command -v shellcheck >/dev/null 2>&1; then
     local sh_issues=0
     local sh_out=""
+    # Process all .sh files in batches via xargs; each batch produces a JSON
+    # array, so we merge them with jq -s 'add // []' to handle multiple arrays.
     sh_out=$(find "$OPT_PATH" \
       \( -name "node_modules" -o -name ".git" -o -name "dist" \) -prune \
-      -o -name "*.sh" -print 2>/dev/null \
-      | head -100 \
-      | xargs shellcheck --format=json 2>/dev/null || true)
+      -o -name "*.sh" -print0 2>/dev/null \
+      | xargs -0 -n 50 shellcheck --format=json 2>/dev/null \
+      | jq -s 'add // []' 2>/dev/null || true)
 
     if [ -n "$sh_out" ]; then
       sh_issues=$(echo "$sh_out" | jq 'length' 2>/dev/null | tr -d '\r' || echo "0")

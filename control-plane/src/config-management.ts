@@ -8,6 +8,7 @@
  */
 
 import type * as http from "node:http";
+import { pathOnly, readJsonBody, sendJson } from "./http-helpers";
 
 // ---------------------------------------------------------------------------
 // Public types
@@ -175,40 +176,6 @@ function validateAgainstSchema(config: ConfigMap, schema: ConfigSchema): Validat
   }
 
   return { valid: errors.length === 0, errors };
-}
-
-// ---------------------------------------------------------------------------
-// HTTP helpers
-// ---------------------------------------------------------------------------
-
-function readJsonBody(req: http.IncomingMessage): Promise<unknown> {
-  return new Promise((resolve, reject) => {
-    const chunks: Buffer[] = [];
-    req.on("data", (chunk: Buffer) => chunks.push(chunk));
-    req.on("end", () => {
-      const raw = Buffer.concat(chunks).toString("utf-8");
-      if (!raw.trim()) {
-        resolve({});
-        return;
-      }
-      try {
-        resolve(JSON.parse(raw));
-      } catch {
-        reject(new Error("Invalid JSON in request body"));
-      }
-    });
-    req.on("error", reject);
-  });
-}
-
-function pathOnly(url: string): string {
-  const q = url.indexOf("?");
-  return q === -1 ? url : url.slice(0, q);
-}
-
-function sendJson(res: http.ServerResponse, status: number, body: unknown): void {
-  res.writeHead(status, { "Content-Type": "application/json" });
-  res.end(JSON.stringify(body, null, 2));
 }
 
 // ---------------------------------------------------------------------------
