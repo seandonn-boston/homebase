@@ -16,7 +16,7 @@ Consider promoting IF-05 (performance profiling) and IF-08 (session replay) from
 
 ## Agent Lifecycle & Marketplace
 
-- [ ] **IF-01: Agent versioning** — Semantic versioning for agent definitions so updates do not break running sessions. Maintain a version registry with changelogs and support rollback without disrupting active sessions.
+- [x] **IF-01: Agent versioning** — Semantic versioning for agent definitions so updates do not break running sessions. Maintain a version registry with changelogs and support rollback without disrupting active sessions. *(Implemented: `admiral/fleet/agent-versioning.ts` — semver parsing/comparison/bumping, version registry, rollback, deprecation, changelog, 18 tests, 637ms)*
 - [ ] **IF-02: Agent marketplace concept** *(deferred Phase 3+)* — Design a package format and registry protocol for sharing agent definitions across teams and organizations. Covers trust boundaries, sandboxing, and distribution for imported agents.
 
 ## Plugin & Multi-Repo
