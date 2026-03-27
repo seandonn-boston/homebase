@@ -12,6 +12,6 @@
     "resolveJsonModule": true,
     "types": ["node"]
   },
-  "include": ["governance/**/*.ts", "context/**/*.ts", "intent/**/*.ts", "brain/**/*.ts", "knowledge/**/*.ts", "security/**/*.ts"],
+  "include": ["governance/**/*.ts", "context/**/*.ts", "intent/**/*.ts", "brain/**/*.ts", "knowledge/**/*.ts", "security/**/*.ts", "quality/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }
