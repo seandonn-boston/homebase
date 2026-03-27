@@ -55,23 +55,23 @@ MCP is the protocol bridge between agents and the Admiral framework. Platform ad
 
 ## Platform Adapter Interface
 
-- [ ] **PA-01: Abstract platform adapter interface** — TypeScript interface covering lifecycle hooks, context injection, tool permission enforcement, configuration loading, event emission, subagent coordination; minimal contract with typed inputs/outputs.
-- [ ] **PA-07: Platform capability matrix** — Comprehensive matrix documenting feature coverage per platform (Claude Code, Cursor, Windsurf, API-direct, VS Code); Full/Partial/None ratings with limitation notes.
-- [ ] **PA-08: Shared adapter test suite** — Standardized test cases for every interface method; all adapters import and pass the shared suite; extension points for platform-specific tests.
-- [ ] **PA-09: Platform-specific context injection** — Per-platform context injection strategies respecting size limits; priority budget allocation (Identity/Authority/Constraints never truncated); context sufficiency verification.
+- [x] **PA-01: Abstract platform adapter interface** — TypeScript interface covering lifecycle hooks, context injection, tool permission enforcement, configuration loading, event emission, subagent coordination; minimal contract with typed inputs/outputs. *(Implemented: `platform/adapter-interface.ts`)*
+- [x] **PA-07: Platform capability matrix** — Comprehensive matrix documenting feature coverage per platform (Claude Code, Cursor, Windsurf, API-direct, VS Code); Full/Partial/None ratings with limitation notes. *(Implemented: `platform/capability-matrix.ts`)*
+- [x] **PA-08: Shared adapter test suite** — Standardized test cases for every interface method; all adapters import and pass the shared suite; extension points for platform-specific tests. *(Implemented: `platform/adapter-interface.test.ts` — 60 tests, 10 suites)*
+- [x] **PA-09: Platform-specific context injection** — Per-platform context injection strategies respecting size limits; priority budget allocation (Identity/Authority/Constraints never truncated); context sufficiency verification. *(Implemented: per-adapter `injectContext()` with standing/session/working layers)*
 
 ## Platform Adapter Implementations
 
-- [ ] **PA-02a: Claude Code adapter refactor** — Extract all Claude Code-specific logic into `platform/claude-code/`; adapter translates hook payloads, context injection, config loading; no behavior change to existing hooks.
-- [ ] **PA-02b: Claude Code adapter tests** — Full coverage of adapter interface; valid and invalid inputs; backward compatibility verification; test patterns documented as templates.
-- [ ] **PA-03: Cursor IDE adapter** — Translate standing orders into `.cursorrules`; map tool permissions to Cursor's model; gap analysis documenting full/partial/none feature coverage.
-- [ ] **PA-04: Windsurf/Codeium IDE adapter** — Translate governance into `.windsurfrules`; handle Cascade flows and multi-step execution; gap analysis.
-- [ ] **PA-05: Headless API-direct adapter** — For CI/CD pipelines and scripted usage; lifecycle hooks as function calls; programmatic context assembly; JSON-lines event emission.
-- [ ] **PA-06: VS Code extension scaffold** — Fleet status sidebar, agent identity status bar, alert notifications; communicates with MCP server for fleet data.
-- [ ] **PA-10: Event-driven agent framework** — Trigger patterns: PR opened, CI failure, issue created, webhook, monitor finding; each with authority level, allowed actions, result routing, cost cap.
-- [ ] **PA-11: Headless agent authority narrowing** — Default headless agents to Autonomous-1 tier; cannot merge PRs, delete branches, modify production infrastructure; enforced by hook.
-- [ ] **PA-12: Scheduled agent runner** — Cron-like scheduler for maintenance agents (knowledge gardening, stale cleanup, health reports); config-driven with cost circuit breakers and monthly budget ceilings.
-- [ ] **PA-13: Context bootstrap for headless agents** — Automated context assembly: load event payload, load Ground Truth, query Brain, apply scope constraints, configure result routing.
+- [x] **PA-02a: Claude Code adapter refactor** — Extract all Claude Code-specific logic into `platform/claude-code/`; adapter translates hook payloads, context injection, config loading; no behavior change to existing hooks. *(Implemented: `platform/adapters/claude-code.ts`)*
+- [x] **PA-02b: Claude Code adapter tests** — Full coverage of adapter interface; valid and invalid inputs; backward compatibility verification; test patterns documented as templates. *(Implemented: 13 tests in adapter-interface.test.ts)*
+- [x] **PA-03: Cursor IDE adapter** — Translate standing orders into `.cursorrules`; map tool permissions to Cursor's model; gap analysis documenting full/partial/none feature coverage. *(Implemented: `platform/adapters/cursor.ts`)*
+- [x] **PA-04: Windsurf/Codeium IDE adapter** — Translate governance into `.windsurfrules`; handle Cascade flows and multi-step execution; gap analysis. *(Implemented: `platform/adapters/windsurf.ts`)*
+- [x] **PA-05: Headless API-direct adapter** — For CI/CD pipelines and scripted usage; lifecycle hooks as function calls; programmatic context assembly; JSON-lines event emission. *(Implemented: `platform/adapters/headless.ts`)*
+- [x] **PA-06: VS Code extension scaffold** — Fleet status sidebar, agent identity status bar, alert notifications; communicates with MCP server for fleet data. *(Implemented: `platform/adapters/vscode.ts`)*
+- [x] **PA-10: Event-driven agent framework** — Trigger patterns: PR opened, CI failure, issue created, webhook, monitor finding; each with authority level, allowed actions, result routing, cost cap. *(Implemented: `EventDrivenAgentFramework` in `platform/adapters/headless.ts`)*
+- [x] **PA-11: Headless agent authority narrowing** — Default headless agents to Autonomous-1 tier; cannot merge PRs, delete branches, modify production infrastructure; enforced by hook. *(Implemented: `HeadlessAuthorityNarrower` in `platform/adapters/headless.ts`)*
+- [x] **PA-12: Scheduled agent runner** — Cron-like scheduler for maintenance agents (knowledge gardening, stale cleanup, health reports); config-driven with cost circuit breakers and monthly budget ceilings. *(Implemented: `ScheduledAgentRunner` in `platform/adapters/headless.ts`)*
+- [x] **PA-13: Context bootstrap for headless agents** — Automated context assembly: load event payload, load Ground Truth, query Brain, apply scope constraints, configure result routing. *(Implemented: `HeadlessContextBootstrap` in `platform/adapters/headless.ts`)*
 
 ---
 
