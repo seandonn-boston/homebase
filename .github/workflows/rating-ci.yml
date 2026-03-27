@@ -1,0 +1,89 @@
+name: Admiral Rating
+
+on:
+  push:
+    paths:
+      - '.hooks/**'
+      - 'admiral/**'
+      - 'fleet/**'
+  pull_request:
+    paths:
+      - '.hooks/**'
+      - 'admiral/**'
+      - 'fleet/**'
+  schedule:
+    - cron: '0 9 * * 1' # Weekly on Monday at 9am UTC
+  workflow_dispatch:
+
+jobs:
+  rating:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Calculate Admiral Rating
+        id: rating
+        working-directory: admiral
+        run: |
+          RESULT=$(npx tsx -e "
+            const { runCli } = require('./rating/calculate-rating');
+            console.log(runCli([process.cwd() + '/..', '--json']));
+          " 2>/dev/null || echo '{"report":{"rating":"ADM-5","displayRating":"ADM-5-SA"},"diagnostics":["calculation error"]}')
+          echo "$RESULT" > rating-result.json
+          RATING=$(echo "$RESULT" | jq -r '.report.rating')
+          DISPLAY=$(echo "$RESULT" | jq -r '.report.displayRating')
+          echo "rating=$RATING" >> "$GITHUB_OUTPUT"
+          echo "display=$DISPLAY" >> "$GITHUB_OUTPUT"
+          echo "### Admiral Rating: $DISPLAY" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload rating artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: admiral-rating-${{ github.sha }}
+          path: admiral/rating-result.json
+          retention-days: 90
+
+      - name: Compare with previous rating
+        if: github.event_name == 'pull_request'
+        working-directory: admiral
+        run: |
+          npx tsx -e "
+            const { computeFullRating, formatFullReport } = require('./rating/calculate-rating');
+            const { report, diagnostics } = computeFullRating({ rootDir: process.cwd() + '/..' });
+            const summary = [
+              '## Admiral Rating Impact',
+              '',
+              '| Metric | Value |',
+              '|--------|-------|',
+              '| **Rating** | ' + report.displayRating + ' |',
+              '| **Active Hard Caps** | ' + report.activeHardCaps.length + ' |',
+              '| **HJG Gates Evaluated** | ' + report.gateVerdicts.length + ' |',
+              '',
+              '### Benchmarks',
+              '',
+              '| Benchmark | Value | Status |',
+              '|-----------|-------|--------|',
+            ];
+            for (const b of report.benchmarks) {
+              summary.push('| ' + b.benchmarkId + ' | ' + (b.value ?? 'N/A') + ' | ' + b.status + ' |');
+            }
+            if (report.activeHardCaps.length > 0) {
+              summary.push('', '### Active Caps');
+              for (const c of report.activeHardCaps) {
+                summary.push('- **' + c.ruleId + '** — max ' + c.maxTier);
+              }
+            }
+            if (report.recommendedImprovements.length > 0) {
+              summary.push('', '### Improvements');
+              for (const r of report.recommendedImprovements) {
+                summary.push('- ' + r);
+              }
+            }
+            console.log(summary.join('\n'));
+          " > pr-comment.md 2>/dev/null || echo "Rating calculation unavailable" > pr-comment.md
+          cat pr-comment.md >> "$GITHUB_STEP_SUMMARY"

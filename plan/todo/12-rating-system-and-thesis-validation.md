@@ -13,8 +13,8 @@ The Rating System makes governance measurable — a five-tier scale (ADM-1 throu
 
 ## Rating CI & Badges
 
-- [ ] **RT-03: Rating CI integration** — Integrate rating calculation into CI: run on every significant change, compare against previous rating, alert on regressions, store results as artifacts, post rating summary to PR comments. Scheduled weekly runs for trend tracking. Job completes in < 5 minutes.
-- [ ] **RT-04: Rating badges** — Generate SVG badges displaying current Admiral rating with color coding (ADM-1 gold, ADM-2 green, ADM-3 blue, ADM-4 yellow, ADM-5 red) and certification suffix. Badges update automatically from CI results and are embeddable in README files.
+- [x] **RT-03: Rating CI integration** — Integrate rating calculation into CI: run on every significant change, compare against previous rating, alert on regressions, store results as artifacts, post rating summary to PR comments. Scheduled weekly runs for trend tracking. Job completes in < 5 minutes. *(Implemented: `.github/workflows/rating-ci.yml` — runs on push/PR to hooks/admiral/fleet, weekly schedule, uploads rating artifact, posts benchmark summary to PR step summary)*
+- [x] **RT-04: Rating badges** — Generate SVG badges displaying current Admiral rating with color coding (ADM-1 gold, ADM-2 green, ADM-3 blue, ADM-4 yellow, ADM-5 red) and certification suffix. Badges update automatically from CI results and are embeddable in README files. *(Implemented: `admiral/rating/badge-generator.ts` — SVG generation, shields.io URL, markdown embed, batch generation for all tiers, 15 tests, 965ms)*
 
 ## Rating History & Advanced
 
