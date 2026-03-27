@@ -108,17 +108,18 @@ This ensures no two workers ever pick the same task, with zero external coordina
 ## Execution Algorithm
 
 1. **Run Session Continuity Protocol** to detect and resume in-progress work.
-2. Identify the active phase and next incomplete task in `plan/todo/`.
-3. **Check for claimed tasks**: list existing `task/phase-<NN>/*` branches. Skip tasks that already have a branch (claimed by another worker or prior session).
-4. Verify dependencies and preconditions. If a task is blocked, skip it and take the next unblocked task.
-5. Create/checkout phase slush branch per policy.
-6. Create task branch from the phase slush branch (or checkout existing one). **This is the claim — do it before starting implementation.**
-7. Execute subtasks as commit-sized increments:
+2. **EDD Gate Check (if spec exists):** If the most recently completed task has an evaluation spec in `.admiral/edd-specs/`, run `admiral/bin/edd_gate <task-id> --confirm-probabilistic`. If the gate fails, report what's missing in the Output Contract instead of starting new work. If no spec exists for the task, skip this check (specs are optional — not all tasks have them).
+3. Identify the active phase and next incomplete task in `plan/todo/`.
+4. **Check for claimed tasks**: list existing `task/phase-<NN>/*` branches. Skip tasks that already have a branch (claimed by another worker or prior session).
+5. Verify dependencies and preconditions. If a task is blocked, skip it and take the next unblocked task.
+6. Create/checkout phase slush branch per policy.
+7. Create task branch from the phase slush branch (or checkout existing one). **This is the claim — do it before starting implementation.**
+8. Execute subtasks as commit-sized increments:
    - First subtask: TDD-first (where applicable).
    - Each subtask: implement, commit, update TODO status.
    - Final subtask: run tests, run linters, cleanup, ensure CI passes. Fix failures before completion.
-7. Open PR from task branch → phase slush. Resolve conflicts. Merge.
-8. At phase completion, run `/phase-closeout` (do not merge slush to main directly).
+9. Open PR from task branch → phase slush. Resolve conflicts. Merge.
+10. At phase completion, run `/phase-closeout` (do not merge slush to main directly).
 
 ## What goes wrong during task execution
 
