@@ -68,7 +68,7 @@
 
 ### 4.5 Contributor & Reference Documentation
 
-- [ ] **D-15:** Glossary of Admiral Framework terms — 25+ terms with definitions, examples, cross-references `[M]`
+- [x] **D-15:** Glossary of Admiral Framework terms — *Completed in Phase 9.* — 35+ terms across 7 domains (governance, work structure, hooks, brain, control plane, quality, configuration) with abbreviations table `[M]`
 - [ ] **D-16:** Quick-start tutorial for new contributors — clone-to-PR in 30 minutes `[M]`
 - [ ] **D-17:** Hook development guide — hook anatomy, lifecycle, worked example from zero `[L]`
 - [ ] **D-18:** FAQ document — 20+ questions across general, architecture, development, operations, security `[M]`
