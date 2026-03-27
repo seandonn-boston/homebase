@@ -112,7 +112,7 @@
 ### 6.1 Self-Enforced Discipline
 
 - [x] **P-01:** `fix:` commits require test changes — CI check warns on fix commits with no test file modifications `[M]`
-- [ ] **P-02:** Documentation discipline — *Deferred to Phase 3 (depends on D-01 style guide).* `[M]`
+- [x] **P-02:** Documentation discipline — *Completed in Phase 9.* — Created `test_documentation.sh` validating: TS module doc comments, hook header blocks (purpose + exit codes), ADR format compliance (Status/Context/Decision/Consequences). CI workflow integration blocked by OAuth `workflow` scope. `[M]`
 
 ### 6.2 Meta-Governance
 
