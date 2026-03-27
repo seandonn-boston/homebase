@@ -32,11 +32,11 @@ Consider promoting IF-05 (performance profiling) and IF-08 (session replay) from
 
 ## Testing & Debugging
 
-- [ ] **IF-08: Agent replay and debugging** — Record and replay agent sessions capturing every tool invocation, hook execution, brain query, handoff, and model API call. Supports replay comparison, configurable retention, and anonymization.
+- [x] **IF-08: Agent replay and debugging** — Record and replay agent sessions capturing every tool invocation, hook execution, brain query, handoff, and model API call. Supports replay comparison, configurable retention, and anonymization. *(Implemented: `admiral/fleet/agent-replay.ts` — session recording, comparison, anonymization, retention cleanup, 3 tests)*
 
 ## Predictive Health Models
 
-- [ ] **IF-13: Prediction model specifications** — Implement 6 prediction models from the inevitable-features extension: context exhaustion (linear extrapolation), budget exhaustion (burn rate projection), quality degradation (correlated threshold warning), retry loop risk (frequency-based >3 errors/5min), tool failure cascade (latency trend extrapolation), orchestrator overload (multi-signal composite). Simple trend extrapolation, not ML.
+- [x] **IF-13: Prediction model specifications** — Implement 6 prediction models from the inevitable-features extension: context exhaustion (linear extrapolation), budget exhaustion (burn rate projection), quality degradation (correlated threshold warning), retry loop risk (frequency-based >3 errors/5min), tool failure cascade (latency trend extrapolation), orchestrator overload (multi-signal composite). Simple trend extrapolation, not ML. *(Implemented: `admiral/fleet/prediction-models.ts` — linear regression, 6 prediction functions, composite runner, 8 tests)*
 
 ## Governance Evolution
 
@@ -45,8 +45,8 @@ Consider promoting IF-05 (performance profiling) and IF-08 (session replay) from
 
 ## Collaboration & Dashboard
 
-- [ ] **IF-11: Agent collaboration patterns** — Reusable multi-agent coordination primitives: Pipeline (sequential), Broadcast (one-to-many), Consensus (voting with quorum), and Delegation (orchestrator assigns subtasks). Patterns are composable and governance-integrated.
-- [ ] **IF-12: Real-time collaboration dashboard** — Live fleet view showing agent status, task board with dependencies, filtered event stream, resource meters, and governance overlay. Real-time updates via SSE, targeting sub-2-second latency.
+- [x] **IF-11: Agent collaboration patterns** — Reusable multi-agent coordination primitives: Pipeline (sequential), Broadcast (one-to-many), Consensus (voting with quorum), and Delegation (orchestrator assigns subtasks). Patterns are composable and governance-integrated. *(Implemented: `admiral/fleet/collaboration-patterns.ts` — 4 async patterns with TaskExecutor interface, 5 tests)*
+- [ ] **IF-12: Real-time collaboration dashboard** — Live fleet view showing agent status, task board with dependencies, filtered event stream, resource meters, and governance overlay. Real-time updates via SSE, targeting sub-2-second latency. *(Deferred — requires SSE server infrastructure and real-time data feeds from operational fleet)*
 
 ---
 
