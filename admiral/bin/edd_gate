@@ -1,7 +1,7 @@
 #!/bin/bash
 # Admiral Framework — EDD Gate Validator (EDD-02)
 # Executes evaluation specs to verify task completion.
-# Usage: edd_gate <task-id> [--json] [--confirm-probabilistic]
+# Usage: edd_gate <task-id> [--json] [--confirm-probabilistic] [--save-proof]
 #
 # Exit codes:
 #   0 = all checks pass (task is done)
@@ -25,18 +25,20 @@ fi
 TASK_ID=""
 JSON_MODE=false
 CONFIRM_PROB=false
+SAVE_PROOF=false
 
 for arg in "$@"; do
   case "$arg" in
     --json) JSON_MODE=true ;;
     --confirm-probabilistic) CONFIRM_PROB=true ;;
+    --save-proof) SAVE_PROOF=true ;;
     -*) echo "Unknown flag: $arg" >&2; exit 2 ;;
     *) TASK_ID="$arg" ;;
   esac
 done
 
 if [ -z "$TASK_ID" ]; then
-  echo "Usage: edd_gate <task-id> [--json] [--confirm-probabilistic]" >&2
+  echo "Usage: edd_gate <task-id> [--json] [--confirm-probabilistic] [--save-proof]" >&2
   exit 2
 fi
 
@@ -202,6 +204,45 @@ else
   fi
   echo "  CI: $CI_STATUS"
   echo "  Verdict: $VERDICT"
+fi
+
+# Save proof artifact if requested (EDD-04)
+if [ "$SAVE_PROOF" = "true" ]; then
+  PROOF_DIR="$PROJECT_DIR/.admiral/proofs"
+  mkdir -p "$PROOF_DIR"
+  PROOF_FILE="$PROOF_DIR/${TASK_ID}.proof.json"
+
+  # Get CI run URL if available
+  CI_RUN_URL=""
+  if [ "$CI_REQUIRED" = "true" ]; then
+    CI_RUN_URL=$(gh run list --limit 1 --json url --jq '.[0].url' 2>/dev/null) || CI_RUN_URL=""
+  fi
+
+  jq -cn \
+    --arg id "$TASK_ID" \
+    --arg verdict "$VERDICT" \
+    --argjson det_results "$DET_RESULTS" \
+    --argjson prob_results "$PROB_RESULTS" \
+    --argjson det_passed "$DET_PASSED" \
+    --argjson det_failed "$DET_FAILED" \
+    --argjson prob_confirmed "$PROB_CONFIRMED" \
+    --argjson prob_pending "$PROB_PENDING" \
+    --arg ci_status "$CI_STATUS" \
+    --arg ci_url "$CI_RUN_URL" \
+    --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+    '{
+      task_id: $id,
+      verdict: $verdict,
+      timestamp: $ts,
+      deterministic: {passed: $det_passed, failed: $det_failed, total: ($det_passed + $det_failed), results: $det_results},
+      probabilistic: {confirmed: $prob_confirmed, pending: $prob_pending, total: ($prob_confirmed + $prob_pending), results: $prob_results},
+      ci_status: $ci_status,
+      ci_run_url: $ci_url
+    }' > "$PROOF_FILE"
+
+  if [ "$JSON_MODE" != "true" ]; then
+    echo "  Proof saved: $PROOF_FILE"
+  fi
 fi
 
 if [ "$VERDICT" = "pass" ]; then
