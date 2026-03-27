@@ -1,6 +1,6 @@
 # Admiral Framework — Comprehensive Roadmap Index
 
-**Last updated:** 2026-03-25
+**Last updated:** 2026-03-27
 
 **Target:** Transform Helm from a strong prototype into a showcase-quality, fully-governed, spec-complete AI agent orchestration platform — a codebase that earns a 10/10 on every dimension.
 
@@ -13,11 +13,11 @@
 | Dimension | Score | Target | Key Gaps |
 |---|---|---|---|
 | Testing | 9/10 | 10/10 | 930+ TS + 350+ bash tests, 90% coverage, coverage gate in CI. Missing: property tests, mutation testing |
-| Code Quality Tooling | 8/10 | 10/10 | Coverage gate, license audit, ShellCheck, Biome. Missing: typed error hierarchy, strict null checks |
+| Code Quality Tooling | 9/10 | 10/10 | Coverage gate, license audit, ShellCheck, Biome, automated code review (6 checkers), quality gate pipeline (6 stages), quality metrics collection, quality scoring (6 dimensions), trend analysis, debt tracking, complexity budgets, regression prevention. Missing: typed error hierarchy |
 | Architecture | 9/10 | 10/10 | Schema validation, config consolidation, hook/CP bridge, session state machine, event registry, handoff/escalation protocols, multi-agent pipeline orchestration, three-layer context assembly. Missing: plugin arch |
 | Spec Implementation | 9/10 | 10/10 | 19/19 hooks, fleet routing (86 rules), brain B1+B2 (SQLite/FTS5), execution patterns, SO enforcement, 71 agents, MCP server (12 tools), governance agents, progressive autonomy, context engineering, intent engineering (capture/decompose/validate/route), knowledge graph + maintenance agents. Missing: B3 production, ASP alignment |
 | Documentation | 7/10 | 10/10 | LICENSE, CoC, API docs, hook contracts, enforcement map. Missing: ADMIRAL_STYLE.md, runbook, ADRs |
-| CI/CD | 9/10 | 10/10 | Coverage gate, benchmarks, PR size check, fix-needs-tests, stale branches, changelog, release workflow. Missing: matrix builds, CodeQL |
+| CI/CD | 9/10 | 10/10 | Coverage gate, benchmarks, PR size check, fix-needs-tests, stale branches, changelog, release workflow, rating CI workflow. Missing: matrix builds, CodeQL |
 | Consistency | 8/10 | 10/10 | Config consolidated with schema validation, unified TypeScript patterns across 4 modules. Missing: hook jq helpers |
 | Contributor Experience | 8/10 | 10/10 | CoC, LICENSE, badges, quality metrics dashboard. Missing: quick-start tutorial, good first issues |
 | Error Handling | 6/10 | 10/10 | Graceful degradation tested (A-13), degradation policy engine with exponential backoff. Missing: typed error hierarchy |
@@ -27,8 +27,8 @@
 | Fleet & Orchestration | 9/10 | 10/10 | 71 agent definitions, capability registry, routing engine (task-type/file-ownership/capability-match), degradation policy, context assembly, handoff protocol, pipeline orchestration, fleet health monitoring, task decomposition, scaling policies, agent lifecycle, conflict resolution, trust-aware routing. Missing: ASP alignment, runtime agent instantiation |
 | Strategy Foundation | 9/10 | 10/10 | Ground Truth tooling, readiness assessment, Go/No-Go gate, task criteria, pipeline gate, validation hooks, LLM-Last enforcement |
 | Security & Compliance | 9/10 | 10/10 | 90-pattern injection detection (3 layers), privilege escalation hardening, secret scanning, tamper-proof audit trail (SHA-256 hash chain), MCP behavioral security (5 layers), identity tokens, RBAC, PII detection (email/SSN/CC/API keys/JWT), attack corpus (30 ATK scenarios), security audit trail. Missing: SBOM, Leash Cedar integration |
-| Strategic Positioning | 2/10 | 10/10 | Missing OWASP/AEGIS/NIST/McKinsey/IMDA crosswalks |
-| **Overall** | **9/10** | **10/10** | Phase 6 complete: Brain B2 SQLite (FTS5 search, knowledge graph, graduation metrics, self-instrumentation), intent engineering (capture/decompose/validate/route with 5 templates), knowledge ecosystem (gardener/curator/harvester agents, feedback loops, export/import, search API, quality metrics), platform security (PII detection, audit trail hash chain, 30 ATK attack corpus), brain excellence (versioning, expiration, analytics, backup, templates, provenance). 383 new tests. Next: platform adapters, governance platform, thesis validation |
+| Strategic Positioning | 3/10 | 10/10 | Rating system with 5-tier scale, benchmark comparisons against pristine repos. Missing: OWASP/AEGIS/NIST/McKinsey/IMDA crosswalks |
+| **Overall** | **9/10** | **10/10** | Phase 7 complete: Platform adapters (6 platforms, 13 PA items), QA system (10 automated quality tools), Rating system (5-tier ADM scale, 7 core benchmarks, automated calculation, CI integration, badges, history tracking, improvement recommender, per-module ratings, benchmark comparisons, dashboard, alerts), Governance platform (REST API, policy management, event streaming, reporting, SDK, config management, webhooks). 544 new tests. Next: thesis validation, strategic positioning, exemplary codebase |
 
 ---
 
