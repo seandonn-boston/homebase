@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "evaluation-spec.v1.schema.json",
+  "title": "Admiral EDD Evaluation Specification",
+  "description": "Machine-readable Definition of Done for a task. Each task declares deterministic checks (commands that must pass) and probabilistic checks (outcomes that need verification).",
+  "type": "object",
+  "required": ["task_id", "version", "deterministic"],
+  "properties": {
+    "task_id": {
+      "type": "string",
+      "description": "The task identifier (e.g., 'Q-01', 'T-15', 'EDD-01').",
+      "pattern": "^[A-Z]+-[0-9]+$"
+    },
+    "version": {
+      "type": "string",
+      "description": "Schema version for forward compatibility.",
+      "const": "1"
+    },
+    "description": {
+      "type": "string",
+      "description": "Human-readable summary of what this task accomplishes."
+    },
+    "deterministic": {
+      "type": "array",
+      "description": "Checks with deterministic outcomes — command + expected exit code.",
+      "items": {
+        "type": "object",
+        "required": ["name", "command", "expected_exit"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Human-readable name for this check."
+          },
+          "command": {
+            "type": "string",
+            "description": "Shell command to execute. Runs in project root."
+          },
+          "expected_exit": {
+            "type": "integer",
+            "description": "Expected exit code. 0 for success.",
+            "default": 0
+          },
+          "timeout_ms": {
+            "type": "integer",
+            "description": "Maximum execution time in milliseconds.",
+            "default": 30000
+          },
+          "working_dir": {
+            "type": "string",
+            "description": "Working directory relative to project root. Defaults to project root."
+          }
+        }
+      },
+      "minItems": 1
+    },
+    "probabilistic": {
+      "type": "array",
+      "description": "Checks with probabilistic outcomes — require human or agent verification.",
+      "items": {
+        "type": "object",
+        "required": ["name", "description", "verification_method"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Human-readable name for this check."
+          },
+          "description": {
+            "type": "string",
+            "description": "What to verify — the expected outcome in plain language."
+          },
+          "verification_method": {
+            "type": "string",
+            "description": "How to verify: 'human_review', 'agent_review', 'output_inspection', 'visual_confirmation'.",
+            "enum": ["human_review", "agent_review", "output_inspection", "visual_confirmation"]
+          },
+          "evidence_command": {
+            "type": "string",
+            "description": "Optional command that produces evidence for review (e.g., screenshot, output sample)."
+          }
+        }
+      },
+      "default": []
+    },
+    "ci_required": {
+      "type": "boolean",
+      "description": "Whether CI must pass before the task is considered done.",
+      "default": true
+    },
+    "dependencies": {
+      "type": "array",
+      "description": "Task IDs that must be complete before this task can be evaluated.",
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Z]+-[0-9]+$"
+      },
+      "default": []
+    }
+  }
+}
