@@ -137,6 +137,26 @@ JSON payloads use `snake_case` for field names:
 
 TypeScript code uses `camelCase` internally but `snake_case` at JSON boundaries.
 
+### Exports
+
+- **Named exports only.** No default exports. This ensures consistent import syntax and enables tree-shaking.
+- **`index.ts` is the public API surface.** Only types and functions re-exported from `index.ts` are considered public. Internal modules may be imported directly for testing but are not part of the stable API.
+- **Re-export from `index.ts`**, not barrel files. Each module exports its own types; `index.ts` selectively re-exports what consumers need.
+- **Export types separately** with `export type` when the export is type-only (interfaces, type aliases). This enables `isolatedModules` compatibility.
+
+```typescript
+// In module file (events.ts):
+export type EventType = "tool_called" | "tool_result" | ...;
+export class EventStream { ... }
+
+// In index.ts:
+export { EventStream, EventType } from "./events";
+export type { AgentEvent } from "./events";  // type-only re-export
+```
+
+- **Do not export internal helpers.** If a function is only used within its module, keep it unexported.
+- **Group related exports** in `index.ts` by domain (events, detection, tracing, errors).
+
 ---
 
 ## Hook Output Contract
