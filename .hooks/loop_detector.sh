@@ -29,17 +29,10 @@ if [ -f "$PROJECT_DIR/admiral/lib/jq_helpers.sh" ]; then
   source "$PROJECT_DIR/admiral/lib/jq_helpers.sh"
 fi
 
-# Load thresholds from central config, falling back to hardcoded defaults
-CONFIG_FILE="$PROJECT_DIR/admiral/config.json"
-if [ -f "$CONFIG_FILE" ]; then
-  MAX_SAME_ERROR=$(jq_get "$(cat "$CONFIG_FILE")" '.hooks.maxSameError' '3')
-  MAX_TOTAL_ERRORS=$(jq_get "$(cat "$CONFIG_FILE")" '.hooks.maxTotalErrors' '10')
-  SUCCESS_DECAY=$(jq_get "$(cat "$CONFIG_FILE")" '.hooks.successDecay' '1')
-else
-  MAX_SAME_ERROR=3
-  MAX_TOTAL_ERRORS=10
-  SUCCESS_DECAY=1
-fi
+# Load thresholds from central config via hook_config.sh
+MAX_SAME_ERROR=$(config_max_same_error)
+MAX_TOTAL_ERRORS=$(config_max_total_errors)
+SUCCESS_DECAY=$(config_success_decay)
 
 # Read payload from stdin
 PAYLOAD=$(cat)
