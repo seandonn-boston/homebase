@@ -28,7 +28,7 @@ Context engineering treats the context window as the agent's working memory — 
 ## Code Review & Test Generation
 
 - [x] **QA-01: Code review automation** — Run automated checks on every code change: naming conventions, cyclomatic complexity, test presence, import hygiene, documentation presence, file size limits; produce structured reports per the Part 7 QA Issue Report template (ISSUE, SEVERITY, LOCATION, EXPECTED, ACTUAL, CONFIDENCE); target < 30s and < 5% false positive rate. *(Implemented: `admiral/quality/code-review.ts` — 6 checkers, structured QA Issue Reports, 38 tests, 213ms)*
-- [ ] **QA-02: Test generation framework** — Generate test skeletons for new `.ts` and `.sh` files with describe/it blocks for each public function, edge case placeholders, and project convention adherence; skeletons must compile/parse without errors; callable standalone and integratable into CI.
+- [x] **QA-02: Test generation framework** — Generate test skeletons for new `.ts` and `.sh` files with describe/it blocks for each public function, edge case placeholders, and project convention adherence; skeletons must compile/parse without errors; callable standalone and integratable into CI. *(Implemented: `admiral/quality/test-generator.ts` — TS and shell parsers, skeleton generation with edge case placeholders, 30 tests, 203ms)*
 
 ## Quality Pipeline & Metrics
 
