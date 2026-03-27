@@ -71,7 +71,7 @@
 - [x] **D-15:** Glossary of Admiral Framework terms — *Completed in Phase 9.* — 35+ terms across 7 domains (governance, work structure, hooks, brain, control plane, quality, configuration) with abbreviations table `[M]`
 - [ ] **D-16:** Quick-start tutorial for new contributors — clone-to-PR in 30 minutes `[M]`
 - [ ] **D-17:** Hook development guide — hook anatomy, lifecycle, worked example from zero `[L]`
-- [ ] **D-18:** FAQ document — 20+ questions across general, architecture, development, operations, security `[M]`
+- [x] **D-18:** FAQ document — *Completed in Phase 9.* — `docs/FAQ.md` with 22 questions across 5 categories (general, architecture, development, operations, security) `[M]`
 - [x] **D-19:** API versioning strategy — *Completed in Phase 9.* — `docs/API_VERSIONING.md`: semantic versioning per interface, additive-only evolution, backward compat rules, deprecation policy (1 phase cycle), breaking changes checklist, schema version table `[M]`
 
 ---
