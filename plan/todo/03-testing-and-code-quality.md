@@ -29,7 +29,7 @@
 
 ## Advanced Testing Techniques
 
-- [ ] **T-15: Property-based testing for RingBuffer** — *Deferred to Phase 2 (requires fast-check npm dependency setup).* — Use fast-check to verify RingBuffer invariants: size never exceeds capacity, toArray returns insertion order, correct element count after N pushes, evicted elements are oldest. Done when property tests pass with 1000+ generated test cases.
+- [x] **T-15: Property-based testing for RingBuffer** — *Completed in Phase 9.* — Added fast-check dependency and 10 property-based tests: size bounds, insertion order, element count, eviction count, get/toArray consistency, iterator/toArray consistency, clear reset, reuse after clear, filter ordering, capacity-1 behavior. 10,000 generated test cases (1000 per property), all passing. Updated tsconfig moduleResolution to node16.
 - [ ] **T-16: Mutation testing setup** — *Deferred to Phase 2 (requires Stryker setup, pilot scope).* — Configure Stryker for mutation testing. Start with RingBuffer and EventStream as pilot modules. Done when mutation score >=80% for pilot modules.
 - [x] **T-17: Test for `standing_orders.sh` rendering** — Verify all 16 Standing Orders render correctly from source files. Test missing SO files for graceful degradation. Done when output format matches expected template.
 - [x] **T-18: Test for `injection_detect.sh`** — Verify all 5 quarantine layers with comprehensive attack corpus (>=10 attack vectors per layer). Done when false positive rate < 1% on benign corpus, all attack items correctly flagged.
