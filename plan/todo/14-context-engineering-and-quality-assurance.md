@@ -38,7 +38,7 @@ Context engineering treats the context window as the agent's working memory — 
 
 ## Quality Intelligence
 
-- [ ] **QA-05: Quality trend analysis** — Compute moving averages (7-day, 30-day) over collected metrics; detect declining trends (3+ consecutive periods); generate actionable alerts linking metric, module, magnitude, and causal commits; configurable thresholds.
+- [x] **QA-05: Quality trend analysis** — Compute moving averages (7-day, 30-day) over collected metrics; detect declining trends (3+ consecutive periods); generate actionable alerts linking metric, module, magnitude, and causal commits; configurable thresholds. *(Implemented: `admiral/quality/trend-analysis.ts` — 5 tracked metrics, 7/30-day moving averages, decline/improvement detection, configurable thresholds, 23 tests, 1.1s)*
 - [ ] **QA-06: Technical debt tracker** — Scan five debt sources (TODO/FIXME/HACK comments, high-complexity modules, skipped tests, vulnerable/outdated dependencies, code duplication); estimate remediation effort (S/M/L); produce prioritized backlog sorted by risk and a debt ratio metric.
 - [ ] **QA-07: Code complexity budget** — Enforce per-module maximum cyclomatic complexity; block over-budget commits in CI; implement a complexity credit system (net complexity must not increase); generate refactoring recommendations; budgets ratchet — loosening requires Admiral approval.
 - [ ] **QA-09: Quality score per module** — Aggregate six dimensions into a 0-100 composite score: test coverage (25%), complexity compliance (20%), lint cleanliness (15%), documentation completeness (15%), defect density (15%), code churn stability (10%); classify green/yellow/red; track over time with trend indicators.
