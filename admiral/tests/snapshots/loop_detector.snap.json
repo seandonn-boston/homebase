@@ -1,0 +1,26 @@
+{
+  "_comment": "Output schema snapshot for loop_detector.sh",
+  "_hook": "loop_detector",
+  "_event": "PostToolUse",
+  "shapes": {
+    "no_alert": {
+      "hook_state": {
+        "loop_detector": {
+          "error_counts": "object",
+          "total_errors": "number"
+        }
+      }
+    },
+    "with_alert": {
+      "hook_state": {
+        "loop_detector": {
+          "error_counts": "object",
+          "total_errors": "number"
+        }
+      },
+      "alert": "string"
+    }
+  },
+  "required_fields": ["hook_state"],
+  "exit_code": 0
+}

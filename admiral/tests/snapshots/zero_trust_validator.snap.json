@@ -1,0 +1,24 @@
+{
+  "_comment": "Output schema snapshot for zero_trust_validator.sh",
+  "_hook": "zero_trust_validator",
+  "_event": "PostToolUse",
+  "shapes": {
+    "no_alert": {
+      "hook_state": {
+        "zero_trust": {
+          "external_data_count": "string"
+        }
+      }
+    },
+    "with_alert": {
+      "hook_state": {
+        "zero_trust": {
+          "external_data_count": "string"
+        }
+      },
+      "alert": "string"
+    }
+  },
+  "required_fields": ["hook_state"],
+  "exit_code": 0
+}

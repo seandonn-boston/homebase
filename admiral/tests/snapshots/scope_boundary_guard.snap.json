@@ -1,0 +1,27 @@
+{
+  "_comment": "Output schema snapshot for scope_boundary_guard.sh",
+  "_hook": "scope_boundary_guard",
+  "_event": "PreToolUse",
+  "shapes": {
+    "allow": {},
+    "allow_with_override": {
+      "hookSpecificOutput": {
+        "hookEventName": "string",
+        "permissionDecision": "string",
+        "additionalContext": "string"
+      }
+    },
+    "deny": {
+      "hookSpecificOutput": {
+        "hookEventName": "string",
+        "permissionDecision": "string",
+        "additionalContext": "string"
+      }
+    }
+  },
+  "required_fields": [],
+  "exit_codes": {
+    "allow": 0,
+    "deny": 2
+  }
+}

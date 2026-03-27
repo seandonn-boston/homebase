@@ -1,0 +1,13 @@
+{
+  "_comment": "Output schema snapshot for token_budget_tracker.sh",
+  "_hook": "token_budget_tracker",
+  "_event": "PostToolUse",
+  "shapes": {
+    "default": {
+      "tokens_used": "number",
+      "alert": "string"
+    }
+  },
+  "required_fields": ["tokens_used"],
+  "exit_code": 0
+}

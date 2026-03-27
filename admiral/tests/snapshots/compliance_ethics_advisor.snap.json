@@ -1,0 +1,24 @@
+{
+  "_comment": "Output schema snapshot for compliance_ethics_advisor.sh",
+  "_hook": "compliance_ethics_advisor",
+  "_event": "PostToolUse",
+  "shapes": {
+    "no_alert": {
+      "hook_state": {
+        "compliance": {
+          "flags_count": "number"
+        }
+      }
+    },
+    "with_alert": {
+      "hook_state": {
+        "compliance": {
+          "flags_count": "number"
+        }
+      },
+      "alert": "string"
+    }
+  },
+  "required_fields": ["hook_state"],
+  "exit_code": 0
+}
