@@ -1,0 +1,27 @@
+{
+  "_comment": "Output schema snapshot for prohibitions_enforcer.sh",
+  "_hook": "prohibitions_enforcer",
+  "_event": "PreToolUse",
+  "shapes": {
+    "allow_no_alerts": {},
+    "allow_with_advisory": {
+      "hookSpecificOutput": {
+        "hookEventName": "string",
+        "permissionDecision": "string",
+        "additionalContext": "string"
+      }
+    },
+    "deny": {
+      "hookSpecificOutput": {
+        "hookEventName": "string",
+        "permissionDecision": "string",
+        "additionalContext": "string"
+      }
+    }
+  },
+  "required_fields": [],
+  "exit_codes": {
+    "allow": 0,
+    "deny": 2
+  }
+}

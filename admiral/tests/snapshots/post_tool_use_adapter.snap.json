@@ -1,0 +1,17 @@
+{
+  "_comment": "Output schema snapshot for post_tool_use_adapter.sh",
+  "_hook": "post_tool_use_adapter",
+  "_event": "PostToolUse",
+  "shapes": {
+    "no_alerts": {
+      "continue": "boolean"
+    },
+    "with_alerts": {
+      "continue": "boolean",
+      "suppressOutput": "boolean",
+      "systemMessage": "string"
+    }
+  },
+  "required_fields": ["continue"],
+  "exit_code": 0
+}

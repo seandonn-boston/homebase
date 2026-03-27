@@ -1,0 +1,27 @@
+{
+  "_comment": "Output schema snapshot for pre_tool_use_adapter.sh",
+  "_hook": "pre_tool_use_adapter",
+  "_event": "PreToolUse",
+  "shapes": {
+    "allow_no_context": {},
+    "allow_with_context": {
+      "hookSpecificOutput": {
+        "hookEventName": "string",
+        "permissionDecision": "string",
+        "additionalContext": "string"
+      }
+    },
+    "deny": {
+      "hookSpecificOutput": {
+        "hookEventName": "string",
+        "permissionDecision": "string",
+        "additionalContext": "string"
+      }
+    }
+  },
+  "required_fields": [],
+  "exit_codes": {
+    "allow": 0,
+    "deny": 2
+  }
+}
