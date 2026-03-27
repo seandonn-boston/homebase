@@ -12,6 +12,7 @@ import type { EventStream } from "./events";
 import type { JournalIngester } from "./ingest";
 import type { RunawayDetector } from "./runaway-detector";
 import type { ExecutionTrace } from "./trace";
+import { errorMessage } from "./errors.js";
 
 export class AdmiralServer {
   private server: http.Server | null = null;
@@ -119,7 +120,7 @@ export class AdmiralServer {
         this.errorJson(res, 404, "Not found");
       }
     } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
+      const message = errorMessage(err);
       console.error(`[admiral-server] Unhandled error: ${message}`);
       this.errorJson(res, 500, "Internal server error");
     }
@@ -163,7 +164,7 @@ export class AdmiralServer {
         res.end(JSON.stringify({ error: "No session state file found" }));
       }
     } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
+      const message = errorMessage(err);
       console.error(`[admiral-server] Failed to read session state: ${message}`);
       res.writeHead(500, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ error: "Failed to read session state", detail: message }));
