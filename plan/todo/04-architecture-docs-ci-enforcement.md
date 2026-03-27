@@ -57,7 +57,7 @@
 - [x] **D-07:** ADR for event ID generation — *Completed in Phase 9.* — ADR-006: `evt_<uuid-v4>` via `crypto.randomUUID()`, replaces `Date.now()`, ULID rejected (extra dependency), 4 alternatives compared `[S]`
 - [x] **D-12:** ADR for Standing Orders enforcement tiers — *Completed in Phase 9.* — ADR-007: 3 tiers (hook-enforced hard, hook-enforced advisory, guidance-only) with SO-to-tier mapping for all 16 SOs `[S]`
 - [x] **D-13:** ADR for fleet orchestration approach — *Completed in Phase 9.* — ADR-008: git-mediated hybrid (branch-based task claiming, file-system state, fleet registry, task router, handoff protocol), 3 alternatives compared `[M]`
-- [ ] **D-14:** ADR for brain level graduation criteria — B1 -> B2 -> B3 graduation metrics, automatic vs manual `[M]`
+- [x] **D-14:** ADR for brain level graduation criteria — *Completed in Phase 9.* — ADR-009: semi-automatic (recommend + confirm), B1->B2 (hit rate >= 85%, precision >= 90%, 100+ entries), B2->B3 (reuse rate >= 70%, semantic precision >= 85%), trend tracking `[M]`
 
 ### 4.4 Operational Documentation
 
