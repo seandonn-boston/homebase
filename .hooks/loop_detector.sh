@@ -25,13 +25,16 @@ if [ -f "$PROJECT_DIR/admiral/lib/brain_writer.sh" ]; then
 fi
 
 source "$PROJECT_DIR/admiral/lib/state.sh"
+if [ -f "$PROJECT_DIR/admiral/lib/jq_helpers.sh" ]; then
+  source "$PROJECT_DIR/admiral/lib/jq_helpers.sh"
+fi
 
 # Load thresholds from central config, falling back to hardcoded defaults
 CONFIG_FILE="$PROJECT_DIR/admiral/config.json"
 if [ -f "$CONFIG_FILE" ]; then
-  MAX_SAME_ERROR=$(jq -r '.hooks.maxSameError // 3' "$CONFIG_FILE" 2>/dev/null) || MAX_SAME_ERROR=3
-  MAX_TOTAL_ERRORS=$(jq -r '.hooks.maxTotalErrors // 10' "$CONFIG_FILE" 2>/dev/null) || MAX_TOTAL_ERRORS=10
-  SUCCESS_DECAY=$(jq -r '.hooks.successDecay // 1' "$CONFIG_FILE" 2>/dev/null) || SUCCESS_DECAY=1
+  MAX_SAME_ERROR=$(jq_get "$(cat "$CONFIG_FILE")" '.hooks.maxSameError' '3')
+  MAX_TOTAL_ERRORS=$(jq_get "$(cat "$CONFIG_FILE")" '.hooks.maxTotalErrors' '10')
+  SUCCESS_DECAY=$(jq_get "$(cat "$CONFIG_FILE")" '.hooks.successDecay' '1')
 else
   MAX_SAME_ERROR=3
   MAX_TOTAL_ERRORS=10
@@ -43,20 +46,20 @@ PAYLOAD=$(cat)
 
 # Extract tool response and check for errors
 # shellcheck disable=SC2034  # TOOL_NAME reserved for future use in error signatures
-TOOL_NAME=$(echo "$PAYLOAD" | jq -r '.tool_name // "unknown"')
-TOOL_RESPONSE=$(echo "$PAYLOAD" | jq -r '.tool_response // empty' 2>/dev/null)
+TOOL_NAME=$(jq_get "$PAYLOAD" '.tool_name' 'unknown')
+TOOL_RESPONSE=$(jq_get "$PAYLOAD" '.tool_response')
 
 # Check if the tool response indicates an error
 IS_ERROR=false
 ERROR_TEXT=""
 if [ -n "$TOOL_RESPONSE" ]; then
   # Check for Bash exit code > 0
-  BASH_EXIT=$(echo "$TOOL_RESPONSE" | jq -r '.exit_code // empty' 2>/dev/null)
+  BASH_EXIT=$(jq_get "$TOOL_RESPONSE" '.exit_code')
   if [ -n "$BASH_EXIT" ] && [ "$BASH_EXIT" != "0" ]; then
     IS_ERROR=true
   fi
   # Check for error strings in output
-  ERROR_TEXT=$(echo "$TOOL_RESPONSE" | jq -r '.stderr // .error // empty' 2>/dev/null)
+  ERROR_TEXT=$(jq_get "$TOOL_RESPONSE" '.stderr // .error')
   if [ -n "$ERROR_TEXT" ]; then
     IS_ERROR=true
   fi
@@ -64,7 +67,7 @@ fi
 
 # Load loop detector state
 LOOP_STATE=$(echo "$PAYLOAD" | jq '.session_state.hook_state.loop_detector // {"error_counts": {}, "total_errors": 0}')
-TOTAL_ERRORS=$(echo "$LOOP_STATE" | jq -r '.total_errors // 0')
+TOTAL_ERRORS=$(jq_get "$LOOP_STATE" '.total_errors' '0')
 ALERT=""
 
 if [ "$IS_ERROR" = "false" ]; then
@@ -72,7 +75,7 @@ if [ "$IS_ERROR" = "false" ]; then
   if [ "$TOTAL_ERRORS" -gt 0 ]; then
     NEW_TOTAL=$((TOTAL_ERRORS - SUCCESS_DECAY))
     [ "$NEW_TOTAL" -lt 0 ] && NEW_TOTAL=0
-    LOOP_STATE=$(echo "$LOOP_STATE" | jq --argjson total "$NEW_TOTAL" '.total_errors = $total')
+    LOOP_STATE=$(jq_set "$LOOP_STATE" '.total_errors' "$NEW_TOTAL")
   fi
   echo "{\"hook_state\": {\"loop_detector\": $LOOP_STATE}}"
   exit 0
@@ -81,7 +84,7 @@ fi
 # Error detected — compute signature and track
 # Use session_id as the agent identifier — in multi-agent scenarios,
 # each agent runs in its own session, so session_id is agent-scoped.
-SESSION_ID=$(echo "$PAYLOAD" | jq -r '.session_state.session_id // "unknown"')
+SESSION_ID=$(jq_get "$PAYLOAD" '.session_state.session_id' 'unknown')
 ERROR_MSG="${ERROR_TEXT:-$(echo "$TOOL_RESPONSE" | jq -r 'tostring' 2>/dev/null | head -c 200)}"
 SIG=$(compute_loop_sig "$SESSION_ID" "$ERROR_MSG")
 
@@ -113,7 +116,7 @@ fi
 
 # Output updated state with alert (if any)
 if [ -n "$ALERT" ]; then
-  echo "{\"hook_state\": {\"loop_detector\": $LOOP_STATE}, \"alert\": $(echo "$ALERT" | jq -Rs '.')}"
+  echo "{\"hook_state\": {\"loop_detector\": $LOOP_STATE}, \"alert\": $(jq_to_json_string "$ALERT")}"
 else
   echo "{\"hook_state\": {\"loop_detector\": $LOOP_STATE}}"
 fi

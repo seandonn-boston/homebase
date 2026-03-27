@@ -12,8 +12,14 @@ set -euo pipefail
 # Read payload from stdin (includes session_state from adapter)
 PAYLOAD=$(cat)
 
-TOOL_NAME=$(echo "$PAYLOAD" | jq -r '.tool_name // "unknown"')
-PROJECT_DIR=$(echo "$PAYLOAD" | jq -r '.session_state.project_dir // ""' 2>/dev/null)
+# Source jq helpers if available
+PROJECT_DIR_EARLY="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
+if [ -f "$PROJECT_DIR_EARLY/admiral/lib/jq_helpers.sh" ]; then
+  source "$PROJECT_DIR_EARLY/admiral/lib/jq_helpers.sh"
+fi
+
+TOOL_NAME=$(jq_get "$PAYLOAD" '.tool_name' 'unknown')
+PROJECT_DIR=$(jq_get "$PAYLOAD" '.session_state.project_dir')
 if [ -z "$PROJECT_DIR" ]; then
   PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 fi
@@ -28,7 +34,7 @@ fi
 # --- Injection marker scanning on ALL tool responses (SEC-13) ---
 # Scan every tool response for prompt injection markers, not just WebFetch/WebSearch.
 # MCP-sourced injections indicate server compromise or rug pull — escalate to CRITICAL.
-TOOL_RESPONSE=$(echo "$PAYLOAD" | jq -r '.tool_response // ""' 2>/dev/null)
+TOOL_RESPONSE=$(jq_get "$PAYLOAD" '.tool_response')
 if [ -n "$TOOL_RESPONSE" ]; then
   # Detect injection patterns in any tool response
   if echo "$TOOL_RESPONSE" | grep -qiE '(ignore (all |any )?(previous|prior|above) (instructions|directives|rules)|disregard (all |any )?previous|new instructions:|system prompt:|you are now [a-z]+|forget (all |your )?previous|override authority|bypass (all |any )?(security|safety|enforcement|hooks))'; then
@@ -49,7 +55,7 @@ fi
 # --- Blast radius assessment for write operations ---
 # "What damage could this cause if I'm wrong? Scale verification to blast radius."
 if [ "$TOOL_NAME" = "Write" ] || [ "$TOOL_NAME" = "Edit" ]; then
-  FILE_PATH=$(echo "$PAYLOAD" | jq -r '.tool_input.file_path // ""' 2>/dev/null)
+  FILE_PATH=$(jq_get "$PAYLOAD" '.tool_input.file_path')
   # Strip project dir prefix to get relative path; if path is outside project, use full path
   REL_PATH="${FILE_PATH#$PROJECT_DIR/}"
   [ "$REL_PATH" = "$FILE_PATH" ] && [ -n "$FILE_PATH" ] && \
@@ -72,7 +78,7 @@ fi
 # --- Excessive scope detection for Bash ---
 # "Request only the minimum access scope needed"
 if [ "$TOOL_NAME" = "Bash" ]; then
-  COMMAND=$(echo "$PAYLOAD" | jq -r '.tool_input.command // ""' 2>/dev/null)
+  COMMAND=$(jq_get "$PAYLOAD" '.tool_input.command')
 
   # Detect overly broad operations
   if echo "$COMMAND" | grep -qE '(chmod -R|chown -R|find / |rm -rf /|git add -A|git add \.)'; then
@@ -86,18 +92,18 @@ if [ "$TOOL_NAME" = "Bash" ]; then
 fi
 
 # --- Track external data ingestion count from payload state (no independent load_state) ---
-EXTERNAL_COUNT=$(echo "$PAYLOAD" | jq -r '.session_state.hook_state.zero_trust.external_data_count // 0')
+EXTERNAL_COUNT=$(jq_get "$PAYLOAD" '.session_state.hook_state.zero_trust.external_data_count' '0')
 
 if [ "$TOOL_NAME" = "WebFetch" ] || [ "$TOOL_NAME" = "WebSearch" ]; then
   EXTERNAL_COUNT=$((EXTERNAL_COUNT + 1))
 fi
 
 # Update hook state
-HOOK_STATE=$(jq -n --argjson count "$EXTERNAL_COUNT" '{"external_data_count": $count}')
+HOOK_STATE=$(jq_build "external_data_count" "$EXTERNAL_COUNT")
 
 # Output
 if [ -n "$ALERTS" ]; then
-  echo "{\"hook_state\": {\"zero_trust\": $HOOK_STATE}, \"alert\": $(echo "$ALERTS" | jq -Rs '.')}"
+  echo "{\"hook_state\": {\"zero_trust\": $HOOK_STATE}, \"alert\": $(jq_to_json_string "$ALERTS")}"
 else
   echo "{\"hook_state\": {\"zero_trust\": $HOOK_STATE}}"
 fi
