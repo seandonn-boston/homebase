@@ -13,6 +13,11 @@ MAX_BRAIN_ENTRY_BYTES="${ADMIRAL_MAX_BRAIN_ENTRY:-65536}"    # 64KB
 MAX_CLI_ARG_BYTES="${ADMIRAL_MAX_CLI_ARG:-8192}"             # 8KB
 MAX_PATH_LENGTH="${ADMIRAL_MAX_PATH_LENGTH:-4096}"           # 4096 chars
 
+# Source jq helpers if available
+if [ -f "${CLAUDE_PROJECT_DIR:-.}/admiral/lib/jq_helpers.sh" ]; then
+  source "${CLAUDE_PROJECT_DIR:-.}/admiral/lib/jq_helpers.sh"
+fi
+
 # Validate input does not contain null bytes
 # Returns: 0 = clean, 1 = null bytes found
 validate_no_null_bytes() {

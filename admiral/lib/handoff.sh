@@ -4,6 +4,11 @@
 
 HANDOFF_DIR="${CLAUDE_PROJECT_DIR:-.}/.admiral/handoffs"
 
+# Source jq helpers if available
+if [ -f "${CLAUDE_PROJECT_DIR:-.}/admiral/lib/jq_helpers.sh" ]; then
+  source "${CLAUDE_PROJECT_DIR:-.}/admiral/lib/jq_helpers.sh"
+fi
+
 # Create a new handoff
 # Usage: handoff_create <from_agent> <to_agent> <task> <deliverable> [context_files_json]
 handoff_create() {
@@ -75,7 +80,7 @@ handoff_validate() {
     local value
     value=$(jq -r ".$field // \"\"" "$filepath" | tr -d '\r')
     if [ -z "$value" ] || [ "$value" = "null" ]; then
-      errors=$(echo "$errors" | jq --arg f "$field" '. + ["Missing required field: " + $f]')
+      errors=$(jq_array_append "$errors" "Missing required field: $field")
     fi
   done
 
@@ -85,7 +90,7 @@ handoff_validate() {
   case "$status" in
     pending|accepted|rejected|completed|failed) ;;
     *)
-      errors=$(echo "$errors" | jq --arg s "$status" '. + ["Invalid status: " + $s]')
+      errors=$(jq_array_append "$errors" "Invalid status: $status")
       ;;
   esac
 

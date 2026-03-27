@@ -12,20 +12,23 @@ export CLAUDE_PROJECT_DIR="$PROJECT_DIR"
 
 # Source shared libraries
 source "$PROJECT_DIR/admiral/lib/state.sh"
+if [ -f "$PROJECT_DIR/admiral/lib/jq_helpers.sh" ]; then
+  source "$PROJECT_DIR/admiral/lib/jq_helpers.sh"
+fi
 
 # Read Claude Code payload from stdin
 PAYLOAD=$(cat)
 
 # Extract tool name
-TOOL_NAME=$(echo "$PAYLOAD" | jq -r '.tool_name // "unknown"')
+TOOL_NAME=$(jq_get "$PAYLOAD" '.tool_name' 'unknown')
 
 # Collect advisory context from all sub-hooks
 ALL_CONTEXT=""
 
 # --- Sub-hook 1: Budget Checkpoint ---
 STATE=$(load_state)
-TOKENS_USED=$(echo "$STATE" | jq -r '.tokens_used // 0')
-TOKEN_BUDGET=$(echo "$STATE" | jq -r '.token_budget // 0')
+TOKENS_USED=$(jq_get "$STATE" '.tokens_used' '0')
+TOKEN_BUDGET=$(jq_get "$STATE" '.token_budget' '0')
 ESTIMATED=$(estimate_tokens "$TOOL_NAME")
 
 if [ "$TOKEN_BUDGET" -gt 0 ]; then
@@ -42,7 +45,7 @@ if [ "$TOKEN_BUDGET" -gt 0 ]; then
 fi
 
 # Build enriched payload with session_state for sub-hooks that need it
-ENRICHED_PAYLOAD=$(echo "$PAYLOAD" | jq --argjson state "$STATE" '. + {session_state: $state}')
+ENRICHED_PAYLOAD=$(jq_merge "$PAYLOAD" 'session_state' "$STATE")
 
 # Ensure hook error log directory exists
 mkdir -p "$PROJECT_DIR/.admiral"
@@ -53,7 +56,7 @@ if [ -x "$SCRIPT_DIR/scope_boundary_guard.sh" ]; then
   SCOPE_EXIT=0
   SCOPE_OUTPUT=$(echo "$PAYLOAD" | "$SCRIPT_DIR/scope_boundary_guard.sh" 2>>"$PROJECT_DIR/.admiral/hook_errors.log") || SCOPE_EXIT=$?
   if [ -n "$SCOPE_OUTPUT" ]; then
-    SCOPE_CTX=$(echo "$SCOPE_OUTPUT" | jq -r '.hookSpecificOutput.additionalContext // empty' 2>/dev/null) || true
+    SCOPE_CTX=$(jq_get "$SCOPE_OUTPUT" '.hookSpecificOutput.additionalContext') || true
     if [ -n "$SCOPE_CTX" ]; then
       ALL_CONTEXT+="$SCOPE_CTX "
     fi
@@ -71,7 +74,7 @@ if [ -x "$SCRIPT_DIR/prohibitions_enforcer.sh" ]; then
   PROHIB_EXIT=0
   PROHIB_OUTPUT=$(echo "$PAYLOAD" | "$SCRIPT_DIR/prohibitions_enforcer.sh" 2>>"$PROJECT_DIR/.admiral/hook_errors.log") || PROHIB_EXIT=$?
   if [ -n "$PROHIB_OUTPUT" ]; then
-    PROHIB_CTX=$(echo "$PROHIB_OUTPUT" | jq -r '.hookSpecificOutput.additionalContext // empty' 2>/dev/null) || true
+    PROHIB_CTX=$(jq_get "$PROHIB_OUTPUT" '.hookSpecificOutput.additionalContext') || true
     if [ -n "$PROHIB_CTX" ]; then
       ALL_CONTEXT+="$PROHIB_CTX "
     fi
@@ -89,14 +92,14 @@ if [ -x "$SCRIPT_DIR/pre_work_validator.sh" ]; then
   PREWORK_OUTPUT=""
   PREWORK_OUTPUT=$(echo "$ENRICHED_PAYLOAD" | "$SCRIPT_DIR/pre_work_validator.sh" 2>>"$PROJECT_DIR/.admiral/hook_errors.log") || true
   if [ -n "$PREWORK_OUTPUT" ]; then
-    PREWORK_CTX=$(echo "$PREWORK_OUTPUT" | jq -r '.additionalContext // empty' 2>/dev/null) || true
+    PREWORK_CTX=$(jq_get "$PREWORK_OUTPUT" '.additionalContext') || true
     if [ -n "$PREWORK_CTX" ]; then
       ALL_CONTEXT+="$PREWORK_CTX "
     fi
     # Persist pre_work_validator state if validation passed
-    PW_VALIDATED=$(echo "$PREWORK_OUTPUT" | jq -r '.hook_state.pre_work_validator.validated // empty' 2>/dev/null) || true
+    PW_VALIDATED=$(jq_get "$PREWORK_OUTPUT" '.hook_state.pre_work_validator.validated') || true
     if [ "$PW_VALIDATED" = "true" ]; then
-      STATE=$(echo "$STATE" | jq '.hook_state.pre_work_validator = {"validated": true}')
+      STATE=$(jq_set "$STATE" '.hook_state.pre_work_validator' '{"validated": true}')
       echo "$STATE" | save_state 2>/dev/null || true
     fi
   fi
@@ -104,8 +107,8 @@ fi
 
 # Log pre_tool_use event to event log
 EVENT_LOG="$PROJECT_DIR/.admiral/event_log.jsonl"
-TRACE_ID=$(echo "$STATE" | jq -r '.trace_id // "unknown"')
-TOOL_CALL_COUNT=$(echo "$STATE" | jq -r '.tool_call_count // 0')
+TRACE_ID=$(jq_get "$STATE" '.trace_id' 'unknown')
+TOOL_CALL_COUNT=$(jq_get "$STATE" '.tool_call_count' '0')
 jq -n --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
       --arg trace "$TRACE_ID" \
       --arg tool "$TOOL_NAME" \

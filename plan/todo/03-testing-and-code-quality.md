@@ -40,7 +40,7 @@
 
 ## Bash Standardization
 
-- [ ] **Q-01: Create shared jq helpers library** — *Deferred to Phase 2 (requires refactoring all 13 hooks).* — Extract common jq patterns into `admiral/lib/jq_helpers.sh`: `jq_get_field()`, `jq_set_field()`, `jq_array_append()`, `jq_validate()`. Refactor all hooks to use these helpers.
+- [x] **Q-01: Create shared jq helpers library** — *Completed in Phase 9.* — Created `admiral/lib/jq_helpers.sh` with 12 functions: `jq_get()`, `jq_get_path()`, `jq_set()`, `jq_set_string()`, `jq_increment()`, `jq_merge()`, `jq_build()`, `jq_array_append()`, `jq_array_append_json()`, `jq_length()`, `jq_is_valid()`, `jq_to_json_string()`. All fail-open per ADR-004. Refactored 4 hooks (post_tool_use_adapter, pre_tool_use_adapter, loop_detector, zero_trust_validator) plus 2 libs (handoff, input_validation). 45 test cases in `test_jq_helpers.sh`.
 - [ ] **Q-02: Standardize hook error handling pattern** — *Deferred to Phase 2 (requires refactoring all 13 hooks).* — Create `admiral/lib/hook_utils.sh` with `hook_log()`, `hook_fail_soft()`, `hook_fail_hard()`, `hook_pass()`. Refactor all 13 hooks. Consistent exit codes and fail-open/fail-closed behavior per ADR-004.
 - [ ] **Q-03: Document and enforce hook header standard** — *Deferred to Phase 2 (depends on D-01 style guide).* — Define mandatory header for every hook script (purpose, exit codes, dependencies, SO reference, last modified). CI validation script checks all hooks for header compliance.
 - [ ] **Q-04: Eliminate hook config loading duplication** — *Deferred to Phase 2 (depends on Q-01).* — Extract repeated config loading and secret detection patterns into `admiral/lib/hook_config.sh`. Single source of truth for config access.
