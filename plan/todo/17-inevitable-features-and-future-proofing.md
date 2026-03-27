@@ -21,13 +21,13 @@ Consider promoting IF-05 (performance profiling) and IF-08 (session replay) from
 
 ## Plugin & Multi-Repo
 
-- [ ] **IF-03: Plugin system architecture** — Extensibility model with plugin interfaces for three extension points: hook plugins, agent plugins, and integration plugins. Each plugin is sandboxed with declared permissions and a manifest schema.
-- [ ] **IF-04: Multi-repository support** — Govern agents across multiple repositories with shared policies via a hub-and-spoke model. Supports shared Standing Orders, per-repo overrides, cross-repo brain access, and unified fleet health metrics.
+- [x] **IF-03: Plugin system architecture** — Extensibility model with plugin interfaces for three extension points: hook plugins, agent plugins, and integration plugins. Each plugin is sandboxed with declared permissions and a manifest schema. *(Implemented: `admiral/fleet/plugin-system.ts` — manifest schema, permission model, sandbox with enforcement, 4 tests)*
+- [x] **IF-04: Multi-repository support** — Govern agents across multiple repositories with shared policies via a hub-and-spoke model. Supports shared Standing Orders, per-repo overrides, cross-repo brain access, and unified fleet health metrics. *(Implemented: `admiral/fleet/multi-repo.ts` — hub-spoke config, effective policy/SO computation, aggregate health, 4 tests)*
 
 ## Performance & Cost
 
-- [ ] **IF-05: Agent performance profiling** — Per-agent profiling tracking token usage, first-pass quality rate, revision depth, context utilization efficiency, and brain query effectiveness. Generates trend reports for dashboard integration.
-- [ ] **IF-06: Cost optimization engine** — Decision engine that recommends optimal model tiers per task based on complexity, quality requirements, budget, and historical performance. Supports minimize-cost, maximize-quality, and balanced strategies.
+- [x] **IF-05: Agent performance profiling** — Per-agent profiling tracking token usage, first-pass quality rate, revision depth, context utilization efficiency, and brain query effectiveness. Generates trend reports for dashboard integration. *(Implemented: `admiral/fleet/performance-profiling.ts` — snapshot recording, trend computation, 3 tests)*
+- [x] **IF-06: Cost optimization engine** — Decision engine that recommends optimal model tiers per task based on complexity, quality requirements, budget, and historical performance. Supports minimize-cost, maximize-quality, and balanced strategies. *(Implemented: `admiral/fleet/cost-optimizer.ts` — 3-tier model, 3 strategies, budget constraints, alternatives, 4 tests)*
 - [ ] **IF-07: A/B testing framework for agents** *(deferred Phase 3+)* — Test different agent configurations against each other by routing tasks, tracking per-configuration metrics, and computing statistical significance to declare a winner.
 
 ## Testing & Debugging
