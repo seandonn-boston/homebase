@@ -56,7 +56,7 @@
 - [x] **D-06:** ADR for hook payload schema — *Completed in Phase 9.* — ADR-005: JSON over stdin/stdout rationale, fail-open validation, additive schema evolution, `additionalProperties: true` for forward compat `[S]`
 - [x] **D-07:** ADR for event ID generation — *Completed in Phase 9.* — ADR-006: `evt_<uuid-v4>` via `crypto.randomUUID()`, replaces `Date.now()`, ULID rejected (extra dependency), 4 alternatives compared `[S]`
 - [x] **D-12:** ADR for Standing Orders enforcement tiers — *Completed in Phase 9.* — ADR-007: 3 tiers (hook-enforced hard, hook-enforced advisory, guidance-only) with SO-to-tier mapping for all 16 SOs `[S]`
-- [ ] **D-13:** ADR for fleet orchestration approach — centralized vs peer-to-peer vs hybrid, 3+ alternatives compared `[M]`
+- [x] **D-13:** ADR for fleet orchestration approach — *Completed in Phase 9.* — ADR-008: git-mediated hybrid (branch-based task claiming, file-system state, fleet registry, task router, handoff protocol), 3 alternatives compared `[M]`
 - [ ] **D-14:** ADR for brain level graduation criteria — B1 -> B2 -> B3 graduation metrics, automatic vs manual `[M]`
 
 ### 4.4 Operational Documentation
