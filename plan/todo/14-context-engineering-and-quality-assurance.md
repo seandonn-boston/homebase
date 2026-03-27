@@ -32,7 +32,7 @@ Context engineering treats the context window as the agent's working memory — 
 
 ## Quality Pipeline & Metrics
 
-- [ ] **QA-03: Quality gate pipeline** — Multi-stage pipeline (lint, type-check, test, coverage, security, review) that stops on Blocker failures, collects full reports for non-Blockers, and feeds failures back to agents via the self-healing loop; produce summary JSON with per-stage pass/fail and timing.
+- [x] **QA-03: Quality gate pipeline** — Multi-stage pipeline (lint, type-check, test, coverage, security, review) that stops on Blocker failures, collects full reports for non-Blockers, and feeds failures back to agents via the self-healing loop; produce summary JSON with per-stage pass/fail and timing. *(Implemented: `admiral/quality/quality-gate.ts` — 6 stages, halt-on-blocker, JSON/text reports, 32 tests, 1.1s)*
 - [ ] **QA-04: Quality metrics collection** — Collect per-module metrics (cyclomatic complexity, test coverage, code churn, defect density, lint violations, test-to-code ratio) with timestamps; output JSON consumable by the control plane dashboard; accumulate historical data across CI runs.
 - [ ] **QA-08: Review checklist automation** — Generate risk-appropriate review checklists based on changed files; classify file risk (hooks/config = high, tests/docs = low); include domain-specific items; pre-fill automatically verifiable items; output as markdown for PR descriptions.
 
