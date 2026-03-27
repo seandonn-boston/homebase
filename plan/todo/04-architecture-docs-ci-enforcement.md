@@ -49,7 +49,7 @@
 ### 4.2 Inline Documentation
 
 - [ ] **D-04:** Add inline "why" comments to hooks — *Deferred to Phase 2.* — audit all 13+ hooks, annotate regex patterns, thresholds, state mutations, magic numbers `[L]`
-- [ ] **D-05:** Add usage examples to templates — purpose, when to use, example invocation, expected output `[S]`
+- [x] **D-05:** Add usage examples to templates — *Completed in Phase 9.* — Added `_purpose`, `_usage`, `_expected_output`/`_example_invocation` fields to ground-truth, task-criteria, and spec-change-impact templates `[S]`
 
 ### 4.3 Architecture Decision Records
 

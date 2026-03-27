@@ -1,4 +1,7 @@
 {
+  "_purpose": "Task Criteria template — defines success criteria, verification methods, and failure guidance for a specific task. Used by validate_task_criteria to check task completion.",
+  "_usage": "Copy and fill in for each task. Run: admiral/bin/validate_task_criteria <task-id>",
+  "_expected_output": "{ valid: true/false, criteria_met: [...], criteria_unmet: [...] }",
   "schema_version": "1.0.0",
   "task": {
     "id": "",
