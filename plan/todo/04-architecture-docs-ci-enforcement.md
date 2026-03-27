@@ -42,7 +42,7 @@
 
 ### 4.1 Core Project Documents
 
-- [ ] **D-01:** Create ADMIRAL_STYLE.md — naming conventions, error handling, jq patterns, exit codes, comment standards, testing requirements `[L]` — *Deferred to Phase 2 (large scope, gates Q-03/Q-13/D-17).*
+- [x] **D-01:** Create ADMIRAL_STYLE.md — *Completed in Phase 9.* — Comprehensive style guide covering file naming, bash/TS conventions, exit code taxonomy (0/1/2/3/4/126/127), hook output contracts, testing requirements, fail-open/fail-closed patterns, jq helper usage, structured logging, and comment standards. `[L]`
 - [x] **D-02:** Add CODE_OF_CONDUCT.md — Contributor Covenant v2.1 `[S]`
 - [x] **D-03:** Add LICENSE file — MIT license at repo root `[S]`
 
