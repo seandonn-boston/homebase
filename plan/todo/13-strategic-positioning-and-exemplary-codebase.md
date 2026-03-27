@@ -30,10 +30,10 @@ Strategic positioning makes Admiral legible to enterprises, regulators, analysts
 - [x] **X-01: Deterministic Simulation Testing** — Create simulation harness that replays recorded hook sequences and verifies byte-identical outcomes across runs; normalize non-determinism (timestamps, random values); produce clear diffs on divergence. *(Implemented: `admiral/exemplary/simulation-testing.ts` — normalize, hash, run simulation with diff, 4 tests)*
 - [x] **X-02: Chaos Testing for Hooks** — Inject 25+ failure scenarios; verify all hooks fail open and state files are never corrupted. *(Implemented: `admiral/exemplary/chaos-testing.ts` — 26 scenarios, payload generators, chaos test runner, 5 tests)*
 - [x] **X-03: End-to-End Claude Code Session Simulation** — Simulate full session lifecycle with 50+ PreToolUse/PostToolUse cycles. *(Implemented: `admiral/exemplary/session-simulation.ts` — budget/loop/brain/error tracking, state progression, 5 tests)*
-- [ ] **X-05: Implement Sentinel Governance Agent** — Build first non-Claude-Code governed agent; Sentinel monitors for loops, budget violations, and scope drift via unified event log; reference implementation of Part 10 (Meta-Agent Governance).
-- [ ] **X-06: Implement Triage Router Agent** — Build routing agent that assigns tasks based on type, capabilities, load, and availability; log routing decisions with rationale; reference implementation of Part 3 (Fleet Composition).
-- [ ] **X-14: Security Penetration Testing Suite** — Automated suite covering 30+ attack scenarios across 5+ categories (prompt injection, privilege escalation, data exfiltration, tool abuse, identity spoofing); produce security posture report as CI artifact.
-- [ ] **X-15: Load Testing for Control Plane Server** — Verify server handles 1000+ concurrent connections; measure response times under load; 30-minute soak test for memory leaks; document breaking point and capacity limits.
+- [x] **X-05: Implement Sentinel Governance Agent** — Build first non-Claude-Code governed agent; Sentinel monitors for loops, budget violations, and scope drift via unified event log. *(Implemented: `admiral/exemplary/sentinel-agent.ts` — loop/budget/scope checks, alert accumulation, 4 tests)*
+- [x] **X-06: Implement Triage Router Agent** — Build routing agent that assigns tasks based on type, capabilities, load, and availability; log routing decisions with rationale. *(Implemented: `admiral/exemplary/triage-router.ts` — capability matching, load-aware scoring, decision logging, 5 tests)*
+- [ ] **X-14: Security Penetration Testing Suite** — Automated suite covering 30+ attack scenarios across 5+ categories. *(Deferred — requires running security infrastructure and attack corpus execution environment)*
+- [ ] **X-15: Load Testing for Control Plane Server** — Verify server handles 1000+ concurrent connections. *(Deferred — requires running server and sustained load generation)*
 
 ## Profiling & Contract Testing
 
