@@ -397,7 +397,7 @@ describe("CodeReviewEngine", () => {
       summary: {
         totalFiles: 2,
         totalIssues: 1,
-        byseverity: { Blocker: 0, Critical: 1, Major: 0, Minor: 0, Info: 0 },
+        bySeverity: { Blocker: 0, Critical: 1, Major: 0, Minor: 0, Info: 0 },
         passRate: 0.5,
       },
       durationMs: 1,

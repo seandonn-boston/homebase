@@ -8,8 +8,8 @@
  * Zero external dependencies — Node.js built-ins only.
  */
 
-import { readFileSync, statSync, existsSync, readdirSync } from "node:fs";
-import { basename, dirname, extname, join, relative } from "node:path";
+import { type Dirent, readFileSync, existsSync, readdirSync } from "node:fs";
+import { basename, dirname, extname, join } from "node:path";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -37,7 +37,7 @@ export interface ReviewReport {
 export interface ReviewSummary {
   totalFiles: number;
   totalIssues: number;
-  byseverity: Record<Severity, number>;
+  bySeverity: Record<Severity, number>;
   passRate: number; // 0-1, files with zero Blocker/Critical issues
 }
 
@@ -59,12 +59,14 @@ export type CheckerName =
 type Checker = (filePath: string, content: string, lines: string[]) => QAIssue[];
 
 // ---------------------------------------------------------------------------
-// Defaults
+// Shared constants and helpers
 // ---------------------------------------------------------------------------
 
 const DEFAULT_MAX_FILE_LINES = 500;
 const DEFAULT_MAX_FILE_SIZE_BYTES = 50_000;
 const DEFAULT_MAX_CYCLOMATIC_COMPLEXITY = 15;
+
+const SOURCE_EXTENSIONS = new Set([".ts", ".js", ".tsx", ".jsx"]);
 
 const ALL_CHECKERS: CheckerName[] = [
   "naming",
@@ -75,6 +77,45 @@ const ALL_CHECKERS: CheckerName[] = [
   "fileSize",
 ];
 
+function isSourceFile(ext: string): boolean {
+  return ext === ".ts" || ext === ".js";
+}
+
+function isTestFile(filePath: string): boolean {
+  return filePath.includes(".test.") || filePath.includes(".spec.");
+}
+
+/** Extract file path from a location string, handling Windows drive letters (C:\...:42) */
+function extractFilePath(location: string): string {
+  const lastColon = location.lastIndexOf(":");
+  // If the only colon is a drive letter (position 1), return the whole string
+  if (lastColon <= 1) return location;
+  // Check if everything after the last colon is digits (line number)
+  const afterColon = location.slice(lastColon + 1);
+  if (/^\d+$/.test(afterColon)) return location.slice(0, lastColon);
+  return location;
+}
+
+// ---------------------------------------------------------------------------
+// Cyclomatic complexity — hoisted regex patterns (allocated once)
+// ---------------------------------------------------------------------------
+
+const COMPLEXITY_PATTERNS: readonly RegExp[] = [
+  /\bif\s*\(/g,
+  /\belse\s+if\s*\(/g,
+  /\bfor\s*\(/g,
+  /\bwhile\s*\(/g,
+  /\bcase\s+/g,
+  /\bcatch\s*\(/g,
+  /\?\?/g,
+  /\?\./g,
+  /&&/g,
+  /\|\|/g,
+  /\?[^.?]/g,
+];
+
+const ELSE_IF_PATTERN = /\belse\s+if\s*\(/g;
+
 // ---------------------------------------------------------------------------
 // Naming Conventions Checker
 // ---------------------------------------------------------------------------
@@ -83,7 +124,6 @@ function checkNaming(filePath: string, _content: string, lines: string[]): QAIss
   const issues: QAIssue[] = [];
   const ext = extname(filePath);
 
-  // File name: should be kebab-case or dot-notation for .test/.spec files
   const file = basename(filePath);
   const nameWithoutExt = file.replace(/\.(test|spec)\.(ts|js|tsx|jsx)$/, "").replace(/\.(ts|js|tsx|jsx)$/, "");
   if (nameWithoutExt !== nameWithoutExt.toLowerCase()) {
@@ -97,58 +137,55 @@ function checkNaming(filePath: string, _content: string, lines: string[]): QAIss
     });
   }
 
-  if (ext === ".ts" || ext === ".js") {
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i];
+  if (!isSourceFile(ext)) return issues;
 
-      // Exported class names should be PascalCase
-      const classMatch = line.match(/export\s+class\s+(\w+)/);
-      if (classMatch) {
-        const name = classMatch[1];
-        if (name[0] !== name[0].toUpperCase() || name.includes("_")) {
-          issues.push({
-            issue: "Exported class not PascalCase",
-            severity: "Minor",
-            location: `${filePath}:${i + 1}`,
-            expected: "PascalCase class name",
-            actual: name,
-            confidence: 0.95,
-          });
-        }
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+
+    const classMatch = line.match(/export\s+class\s+(\w+)/);
+    if (classMatch) {
+      const name = classMatch[1];
+      if (name[0] !== name[0].toUpperCase() || name.includes("_")) {
+        issues.push({
+          issue: "Exported class not PascalCase",
+          severity: "Minor",
+          location: `${filePath}:${i + 1}`,
+          expected: "PascalCase class name",
+          actual: name,
+          confidence: 0.95,
+        });
       }
+    }
 
-      // Exported function names should be camelCase
-      const funcMatch = line.match(/export\s+(?:async\s+)?function\s+(\w+)/);
-      if (funcMatch) {
-        const name = funcMatch[1];
-        if (name[0] !== name[0].toLowerCase()) {
-          issues.push({
-            issue: "Exported function not camelCase",
-            severity: "Minor",
-            location: `${filePath}:${i + 1}`,
-            expected: "camelCase function name",
-            actual: name,
-            confidence: 0.9,
-          });
-        }
+    const funcMatch = line.match(/export\s+(?:async\s+)?function\s+(\w+)/);
+    if (funcMatch) {
+      const name = funcMatch[1];
+      if (name[0] !== name[0].toLowerCase()) {
+        issues.push({
+          issue: "Exported function not camelCase",
+          severity: "Minor",
+          location: `${filePath}:${i + 1}`,
+          expected: "camelCase function name",
+          actual: name,
+          confidence: 0.9,
+        });
       }
+    }
 
-      // Exported constants: UPPER_SNAKE or camelCase are both acceptable
-      // Only flag if it's PascalCase (likely a misnamed class/type)
-      const constMatch = line.match(/export\s+const\s+(\w+)/);
-      if (constMatch) {
-        const name = constMatch[1];
-        const isPascalCase = /^[A-Z][a-z]/.test(name) && !name.includes("_");
-        if (isPascalCase) {
-          issues.push({
-            issue: "Exported const uses PascalCase (reserved for classes/types)",
-            severity: "Info",
-            location: `${filePath}:${i + 1}`,
-            expected: "camelCase or UPPER_SNAKE_CASE for constants",
-            actual: name,
-            confidence: 0.7,
-          });
-        }
+    // UPPER_SNAKE or camelCase are both acceptable — only flag PascalCase (likely a misnamed class/type)
+    const constMatch = line.match(/export\s+const\s+(\w+)/);
+    if (constMatch) {
+      const name = constMatch[1];
+      const isPascalCase = /^[A-Z][a-z]/.test(name) && !name.includes("_");
+      if (isPascalCase) {
+        issues.push({
+          issue: "Exported const uses PascalCase (reserved for classes/types)",
+          severity: "Info",
+          location: `${filePath}:${i + 1}`,
+          expected: "camelCase or UPPER_SNAKE_CASE for constants",
+          actual: name,
+          confidence: 0.7,
+        });
       }
     }
   }
@@ -161,25 +198,11 @@ function checkNaming(filePath: string, _content: string, lines: string[]): QAIss
 // ---------------------------------------------------------------------------
 
 export function computeCyclomaticComplexity(functionBody: string): number {
-  // Start at 1 for the function itself
   let complexity = 1;
 
-  // Count decision points
-  const patterns = [
-    /\bif\s*\(/g,
-    /\belse\s+if\s*\(/g,
-    /\bfor\s*\(/g,
-    /\bwhile\s*\(/g,
-    /\bcase\s+/g,
-    /\bcatch\s*\(/g,
-    /\?\?/g,    // nullish coalescing
-    /\?\./g,    // optional chaining (decision point)
-    /&&/g,      // logical AND
-    /\|\|/g,    // logical OR
-    /\?[^.?]/g, // ternary (but not ?. or ??)
-  ];
-
-  for (const pattern of patterns) {
+  for (const pattern of COMPLEXITY_PATTERNS) {
+    // Reset lastIndex since these are /g patterns reused across calls
+    pattern.lastIndex = 0;
     const matches = functionBody.match(pattern);
     if (matches) {
       complexity += matches.length;
@@ -187,7 +210,8 @@ export function computeCyclomaticComplexity(functionBody: string): number {
   }
 
   // Subtract double-counted else-if (counted once in if and once in else if)
-  const elseIfCount = (functionBody.match(/\belse\s+if\s*\(/g) || []).length;
+  ELSE_IF_PATTERN.lastIndex = 0;
+  const elseIfCount = (functionBody.match(ELSE_IF_PATTERN) || []).length;
   complexity -= elseIfCount;
 
   return complexity;
@@ -199,17 +223,20 @@ interface FunctionSpan {
   body: string;
 }
 
-function extractFunctions(lines: string[]): FunctionSpan[] {
+function extractFunctions(content: string): FunctionSpan[] {
   const functions: FunctionSpan[] = [];
-  const content = lines.join("\n");
 
-  // Match function/method declarations and extract their bodies via brace counting
   const funcPattern = /(?:(?:export\s+)?(?:async\s+)?function\s+(\w+)|(\w+)\s*\([^)]*\)\s*(?::\s*[^{]+)?\s*\{)/g;
   let match: RegExpExecArray | null;
 
+  // Pre-build newline index for O(log n) line lookups instead of O(n) per function
+  const newlineOffsets: number[] = [-1];
+  for (let i = 0; i < content.length; i++) {
+    if (content[i] === "\n") newlineOffsets.push(i);
+  }
+
   while ((match = funcPattern.exec(content)) !== null) {
     const name = match[1] || match[2];
-    // Skip common false positives
     if (["if", "for", "while", "switch", "catch"].includes(name)) continue;
 
     const braceStart = content.indexOf("{", match.index + match[0].length - 1);
@@ -231,7 +258,16 @@ function extractFunctions(lines: string[]): FunctionSpan[] {
     if (braceEnd === -1) continue;
 
     const body = content.slice(braceStart, braceEnd + 1);
-    const startLine = content.slice(0, match.index).split("\n").length;
+
+    // Binary search for line number
+    let lo = 0;
+    let hi = newlineOffsets.length - 1;
+    while (lo < hi) {
+      const mid = (lo + hi + 1) >> 1;
+      if (newlineOffsets[mid] < match.index) lo = mid;
+      else hi = mid - 1;
+    }
+    const startLine = lo + 1;
 
     functions.push({ name, startLine, body });
   }
@@ -241,18 +277,16 @@ function extractFunctions(lines: string[]): FunctionSpan[] {
 
 function checkComplexity(
   filePath: string,
-  _content: string,
-  lines: string[],
+  content: string,
+  _lines: string[],
   maxComplexity = DEFAULT_MAX_CYCLOMATIC_COMPLEXITY,
 ): QAIssue[] {
   const issues: QAIssue[] = [];
-  const ext = extname(filePath);
 
-  if (ext !== ".ts" && ext !== ".js") return issues;
-  // Skip test files — test functions are naturally longer
-  if (filePath.includes(".test.") || filePath.includes(".spec.")) return issues;
+  if (!isSourceFile(extname(filePath))) return issues;
+  if (isTestFile(filePath)) return issues;
 
-  const functions = extractFunctions(lines);
+  const functions = extractFunctions(content);
 
   for (const fn of functions) {
     const complexity = computeCyclomaticComplexity(fn.body);
@@ -261,7 +295,7 @@ function checkComplexity(
         issue: `Function '${fn.name}' has cyclomatic complexity ${complexity}`,
         severity: complexity > maxComplexity * 2 ? "Critical" : "Major",
         location: `${filePath}:${fn.startLine}`,
-        expected: `Cyclomatic complexity ≤ ${maxComplexity}`,
+        expected: `Cyclomatic complexity \u2264 ${maxComplexity}`,
         actual: `Complexity: ${complexity}`,
         confidence: 0.85,
       });
@@ -277,12 +311,10 @@ function checkComplexity(
 
 function checkTestPresence(filePath: string, _content: string, _lines: string[]): QAIssue[] {
   const issues: QAIssue[] = [];
-  const ext = extname(filePath);
 
-  if (ext !== ".ts" && ext !== ".js") return issues;
-  // Skip if this IS a test file
-  if (filePath.includes(".test.") || filePath.includes(".spec.")) return issues;
-  // Skip type-only files, config files, index files
+  if (!isSourceFile(extname(filePath))) return issues;
+  if (isTestFile(filePath)) return issues;
+
   const file = basename(filePath);
   if (file === "index.ts" || file === "index.js" || file.endsWith(".d.ts")) return issues;
 
@@ -320,18 +352,16 @@ function checkTestPresence(filePath: string, _content: string, _lines: string[])
 
 function checkImportHygiene(filePath: string, _content: string, lines: string[]): QAIssue[] {
   const issues: QAIssue[] = [];
-  const ext = extname(filePath);
 
-  if (ext !== ".ts" && ext !== ".js") return issues;
+  if (!isSourceFile(extname(filePath))) return issues;
 
   let lastImportLine = -1;
   let hasNonImportBeforeImport = false;
-  const importedNames = new Map<string, number>(); // name -> line number
+  const importedNames = new Map<string, number>();
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i].trim();
 
-    // Skip empty lines and comments
     if (line === "" || line.startsWith("//") || line.startsWith("/*") || line.startsWith("*")) {
       continue;
     }
@@ -350,7 +380,6 @@ function checkImportHygiene(filePath: string, _content: string, lines: string[])
       }
       lastImportLine = i;
 
-      // Check for duplicate imports
       const nameMatch = line.match(/import\s+(?:type\s+)?(?:\{[^}]*\}\s+from\s+|(\w+)\s+from\s+)?["']([^"']+)["']/);
       if (nameMatch) {
         const source = nameMatch[2];
@@ -368,7 +397,6 @@ function checkImportHygiene(filePath: string, _content: string, lines: string[])
         }
       }
 
-      // Check for wildcard imports
       if (/import\s+\*\s+as/.test(line)) {
         issues.push({
           issue: "Wildcard import detected",
@@ -395,12 +423,10 @@ function checkImportHygiene(filePath: string, _content: string, lines: string[])
 
 function checkDocumentation(filePath: string, _content: string, lines: string[]): QAIssue[] {
   const issues: QAIssue[] = [];
-  const ext = extname(filePath);
 
-  if (ext !== ".ts" && ext !== ".js") return issues;
-  if (filePath.includes(".test.") || filePath.includes(".spec.")) return issues;
+  if (!isSourceFile(extname(filePath))) return issues;
+  if (isTestFile(filePath)) return issues;
 
-  // Check for module-level documentation (JSDoc comment or header comment in first 10 lines)
   const headerLines = lines.slice(0, 10).join("\n");
   const hasModuleDoc = /\/\*\*[\s\S]*?\*\//.test(headerLines) || /^\/\//.test(headerLines.trim());
 
@@ -415,11 +441,9 @@ function checkDocumentation(filePath: string, _content: string, lines: string[])
     });
   }
 
-  // Check exported classes/interfaces have documentation
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
     if (/export\s+(class|interface|enum)\s+\w+/.test(line)) {
-      // Check if preceded by a comment (within 3 lines above)
       const hasDoc =
         (i > 0 &&
           (lines[i - 1].trim().startsWith("*/") ||
@@ -452,8 +476,8 @@ function checkDocumentation(filePath: string, _content: string, lines: string[])
 // ---------------------------------------------------------------------------
 
 function checkFileSize(
-  filePath: string,
-  _content: string,
+  _filePath: string,
+  content: string,
   lines: string[],
   maxLines = DEFAULT_MAX_FILE_LINES,
   maxBytes = DEFAULT_MAX_FILE_SIZE_BYTES,
@@ -464,27 +488,23 @@ function checkFileSize(
     issues.push({
       issue: `File exceeds ${maxLines} line limit`,
       severity: lines.length > maxLines * 2 ? "Critical" : "Major",
-      location: filePath,
-      expected: `≤ ${maxLines} lines`,
+      location: _filePath,
+      expected: `\u2264 ${maxLines} lines`,
       actual: `${lines.length} lines`,
       confidence: 0.95,
     });
   }
 
-  try {
-    const stat = statSync(filePath);
-    if (stat.size > maxBytes) {
-      issues.push({
-        issue: `File exceeds ${maxBytes} byte limit`,
-        severity: stat.size > maxBytes * 2 ? "Critical" : "Major",
-        location: filePath,
-        expected: `≤ ${maxBytes} bytes`,
-        actual: `${stat.size} bytes`,
-        confidence: 0.95,
-      });
-    }
-  } catch {
-    // File may not exist on disk (e.g., in-memory review)
+  const byteSize = Buffer.byteLength(content, "utf-8");
+  if (byteSize > maxBytes) {
+    issues.push({
+      issue: `File exceeds ${maxBytes} byte limit`,
+      severity: byteSize > maxBytes * 2 ? "Critical" : "Major",
+      location: _filePath,
+      expected: `\u2264 ${maxBytes} bytes`,
+      actual: `${byteSize} bytes`,
+      confidence: 0.95,
+    });
   }
 
   return issues;
@@ -496,6 +516,7 @@ function checkFileSize(
 
 export class CodeReviewEngine {
   private readonly options: Required<ReviewOptions>;
+  private readonly checkerMap: Map<CheckerName, Checker>;
 
   constructor(options: ReviewOptions = {}) {
     this.options = {
@@ -504,24 +525,16 @@ export class CodeReviewEngine {
       maxCyclomaticComplexity: options.maxCyclomaticComplexity ?? DEFAULT_MAX_CYCLOMATIC_COMPLEXITY,
       checkers: options.checkers ?? ALL_CHECKERS,
     };
-  }
 
-  private getChecker(name: CheckerName): Checker {
-    switch (name) {
-      case "naming":
-        return checkNaming;
-      case "complexity":
-        return (fp, c, l) => checkComplexity(fp, c, l, this.options.maxCyclomaticComplexity);
-      case "testPresence":
-        return checkTestPresence;
-      case "importHygiene":
-        return checkImportHygiene;
-      case "documentation":
-        return checkDocumentation;
-      case "fileSize":
-        return (fp, c, l) =>
-          checkFileSize(fp, c, l, this.options.maxFileLines, this.options.maxFileSizeBytes);
-    }
+    // Build checker closures once at construction, not per-file
+    this.checkerMap = new Map<CheckerName, Checker>([
+      ["naming", checkNaming],
+      ["complexity", (fp, c, l) => checkComplexity(fp, c, l, this.options.maxCyclomaticComplexity)],
+      ["testPresence", checkTestPresence],
+      ["importHygiene", checkImportHygiene],
+      ["documentation", checkDocumentation],
+      ["fileSize", (fp, c, l) => checkFileSize(fp, c, l, this.options.maxFileLines, this.options.maxFileSizeBytes)],
+    ]);
   }
 
   /**
@@ -533,8 +546,10 @@ export class CodeReviewEngine {
     const issues: QAIssue[] = [];
 
     for (const checkerName of this.options.checkers) {
-      const checker = this.getChecker(checkerName);
-      issues.push(...checker(filePath, fileContent, lines));
+      const checker = this.checkerMap.get(checkerName);
+      if (checker) {
+        issues.push(...checker(filePath, fileContent, lines));
+      }
     }
 
     return issues;
@@ -564,7 +579,7 @@ export class CodeReviewEngine {
 
     const durationMs = Math.round(performance.now() - start);
 
-    const byseverity: Record<Severity, number> = {
+    const bySeverity: Record<Severity, number> = {
       Blocker: 0,
       Critical: 0,
       Major: 0,
@@ -572,15 +587,13 @@ export class CodeReviewEngine {
       Info: 0,
     };
     for (const issue of allIssues) {
-      byseverity[issue.severity]++;
+      bySeverity[issue.severity]++;
     }
 
-    // Pass rate: files with zero Blocker/Critical issues
     const filesWithBlockers = new Set<string>();
     for (const issue of allIssues) {
       if (issue.severity === "Blocker" || issue.severity === "Critical") {
-        // Extract file path from location (may include :line)
-        filesWithBlockers.add(issue.location.split(":")[0]);
+        filesWithBlockers.add(extractFilePath(issue.location));
       }
     }
     const passRate = filePaths.length === 0 ? 1 : (filePaths.length - filesWithBlockers.size) / filePaths.length;
@@ -592,7 +605,7 @@ export class CodeReviewEngine {
       summary: {
         totalFiles: filePaths.length,
         totalIssues: allIssues.length,
-        byseverity,
+        bySeverity,
         passRate,
       },
       durationMs,
@@ -600,33 +613,27 @@ export class CodeReviewEngine {
   }
 
   /**
-   * Discover TypeScript/JavaScript files in a directory (non-recursive by default).
+   * Discover TypeScript/JavaScript files in a directory, recursively by default.
    */
   static discoverFiles(dir: string, recursive = true): string[] {
     const files: string[] = [];
-    const extensions = new Set([".ts", ".js", ".tsx", ".jsx"]);
 
     function walk(currentDir: string): void {
-      let entries: string[];
+      let entries: Dirent<string>[];
       try {
-        entries = readdirSync(currentDir);
+        entries = readdirSync(currentDir, { withFileTypes: true, encoding: "utf-8" }) as Dirent<string>[];
       } catch {
         return;
       }
 
       for (const entry of entries) {
-        const fullPath = join(currentDir, entry);
-        try {
-          const stat = statSync(fullPath);
-          if (stat.isDirectory()) {
-            if (recursive && entry !== "node_modules" && entry !== "dist" && entry !== ".git") {
-              walk(fullPath);
-            }
-          } else if (extensions.has(extname(entry))) {
-            files.push(fullPath);
+        const fullPath = join(currentDir, entry.name);
+        if (entry.isDirectory()) {
+          if (recursive && entry.name !== "node_modules" && entry.name !== "dist" && entry.name !== ".git") {
+            walk(fullPath);
           }
-        } catch {
-          // Skip inaccessible entries
+        } else if (SOURCE_EXTENSIONS.has(extname(entry.name))) {
+          files.push(fullPath);
         }
       }
     }
@@ -641,10 +648,10 @@ export class CodeReviewEngine {
   static formatReport(report: ReviewReport): string {
     const lines: string[] = [];
 
-    lines.push("═══════════════════════════════════════════════════════");
+    lines.push("\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550");
     lines.push("  QA CODE REVIEW REPORT");
     lines.push(`  ${report.timestamp}`);
-    lines.push("═══════════════════════════════════════════════════════");
+    lines.push("\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550");
     lines.push("");
     lines.push(`Files reviewed: ${report.summary.totalFiles}`);
     lines.push(`Issues found:   ${report.summary.totalIssues}`);
@@ -652,19 +659,19 @@ export class CodeReviewEngine {
     lines.push(`Duration:       ${report.durationMs}ms`);
     lines.push("");
 
-    const { byseverity } = report.summary;
+    const { bySeverity } = report.summary;
     lines.push("By severity:");
     for (const sev of ["Blocker", "Critical", "Major", "Minor", "Info"] as Severity[]) {
-      if (byseverity[sev] > 0) {
-        lines.push(`  ${sev}: ${byseverity[sev]}`);
+      if (bySeverity[sev] > 0) {
+        lines.push(`  ${sev}: ${bySeverity[sev]}`);
       }
     }
     lines.push("");
 
     if (report.issues.length > 0) {
-      lines.push("───────────────────────────────────────────────────────");
+      lines.push("\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500");
       lines.push("  ISSUES");
-      lines.push("───────────────────────────────────────────────────────");
+      lines.push("\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500");
 
       for (const issue of report.issues) {
         lines.push("");
@@ -675,11 +682,11 @@ export class CodeReviewEngine {
         lines.push(`  Confidence: ${(issue.confidence * 100).toFixed(0)}%`);
       }
     } else {
-      lines.push("No issues found. ✓");
+      lines.push("No issues found.");
     }
 
     lines.push("");
-    lines.push("═══════════════════════════════════════════════════════");
+    lines.push("\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550");
     return lines.join("\n");
   }
 
