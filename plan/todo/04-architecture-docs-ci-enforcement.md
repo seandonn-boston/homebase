@@ -103,7 +103,7 @@
 - [x] **C-11:** PR size limits — warn on PRs > 500 lines changed, exclude generated/lock files `[S]`
 - [x] **C-12:** Stale branch cleanup automation — auto-delete merged branches, issue for stale unmerged `[S]`
 - [x] **C-13:** CI build caching optimization — *Already configured: setup-node@v6 with `cache: 'npm'` in control-plane-ci.yml.* — cache node_modules, .tsbuildinfo, ShellCheck binary `[S]`
-- [ ] **C-15:** Dependency update automation — *Deferred (requires Dependabot/Renovate configuration).* — Dependabot/Renovate, auto-merge patches, grouped updates `[S]`
+- [x] **C-15:** Dependency update automation — *Completed in Phase 9.* — Enhanced `.github/dependabot.yml`: weekly schedule (Monday), grouped minor/patch updates, commit message prefixes, 10 PR limit for npm, actions grouping `[S]`
 
 ---
 
