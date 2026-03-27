@@ -9,7 +9,7 @@ The Rating System makes governance measurable — a five-tier scale (ADM-1 throu
 ## Rating Data Model & Calculation
 
 - [x] **RT-01: Rating system data model** — Define JSON schema for all 5 rating tiers (ADM-1 through ADM-5), 7 core evaluation dimensions per entity category, hard cap rules, Human Judgment Gate requirements, Phase 1 metric thresholds, and certification tier suffixes (-SA, -IA). Schema must be unambiguous — given the same inputs, any implementation produces the same rating. *(Implemented: `admiral/rating/rating-model.ts` — 5 tiers, 5 entity categories with dimensions, 10 hard cap rules, 6 HJG gates, tier eligibility thresholds, deterministic calculation engine, 65 tests, 814ms)*
-- [ ] **RT-02: Automated rating calculation** — Implement `calculate_rating.sh` that collects 7 core benchmarks, runs behavioral probes, applies hard cap rules, identifies next-tier gate requirements, and produces a Rating Report in the reference format. The script should be honest — ADM-4 or ADM-5 initially is the correct result.
+- [x] **RT-02: Automated rating calculation** — Implement `calculate_rating.sh` that collects 7 core benchmarks, runs behavioral probes, applies hard cap rules, identifies next-tier gate requirements, and produces a Rating Report in the reference format. The script should be honest — ADM-4 or ADM-5 initially is the correct result. *(Implemented: `admiral/rating/calculate-rating.ts` — 7 benchmark collectors, attack corpus analysis, full report with diagnostics, JSON/text output, 21 tests, 5.6s)*
 
 ## Rating CI & Badges
 
