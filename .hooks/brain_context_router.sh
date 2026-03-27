@@ -17,6 +17,12 @@ if [ -f "$PROJECT_DIR/admiral/lib/brain_retriever.sh" ]; then
   source "$PROJECT_DIR/admiral/lib/brain_retriever.sh"
 fi
 
+# Source hook utilities
+if [ -f "$PROJECT_DIR/admiral/lib/hook_utils.sh" ]; then
+  source "$PROJECT_DIR/admiral/lib/hook_utils.sh"
+fi
+hook_init "brain_context_router"
+
 # Read payload from stdin
 PAYLOAD=$(cat)
 
