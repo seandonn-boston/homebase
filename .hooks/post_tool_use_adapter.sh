@@ -1,7 +1,7 @@
 #!/bin/bash
 # Admiral Framework — PostToolUse Hook Adapter
 # Translates Claude Code PostToolUse payload to Admiral hook contracts.
-# Fires in order: token_budget_tracker, loop_detector, context_health_check (every 10th), zero_trust_validator, compliance_ethics_advisor, brain_context_router
+# Fires in order: token_budget_tracker, loop_detector, context_health_check (every 10th), zero_trust_validator, compliance_ethics_advisor, brain_context_router, repeat_audit_logger
 # DESIGN PRINCIPLE: All hooks are advisory-only (exit 0). No hook can block tool use.
 # Hook failures are isolated — one failing hook cannot cascade into others.
 set -euo pipefail
@@ -145,6 +145,45 @@ if [ -x "$SCRIPT_DIR/brain_context_router.sh" ]; then
     BRAIN_ALERT=$(echo "$BRAIN_OUTPUT" | jq -r '.alert // empty' 2>/dev/null) || true
     if [ -n "$BRAIN_ALERT" ]; then
       MESSAGES+="[Context Routing] $BRAIN_ALERT\n"
+    fi
+  fi
+fi
+
+# --- Hook 7: repeat_audit_logger (iteration boundary detection, isolated, advisory only) ---
+# Scans tool output for REPEAT iteration markers and logs to repeat_audit.jsonl.
+# Tracks last known iteration in session state to avoid duplicate entries.
+if [ -x "$SCRIPT_DIR/repeat_audit_logger.sh" ]; then
+  TOOL_OUTPUT=$(echo "$PAYLOAD" | jq -r '.tool_output // ""' 2>/dev/null) || TOOL_OUTPUT=""
+  # Match "REPEAT iteration N" or "REPEAT ITERATION N" (from output contract)
+  ITER_MATCH=$(echo "$TOOL_OUTPUT" | grep -oiE 'REPEAT (iteration|ITERATION) [0-9]+' | head -1) || true
+  if [ -n "$ITER_MATCH" ]; then
+    ITER_NUM=$(echo "$ITER_MATCH" | grep -oE '[0-9]+')
+    LAST_ITER=$(echo "$STATE" | jq -r '.hook_state.repeat_audit.last_iteration // -1')
+    # Only log if this is a new iteration (avoid duplicates from multi-line output)
+    if [ "$ITER_NUM" != "$LAST_ITER" ]; then
+      # Extract status from output contract pattern "STATUS: [Complete | Blocked | Terminated]"
+      ITER_STATUS=$(echo "$TOOL_OUTPUT" | grep -oE 'STATUS: \w+' | head -1 | sed 's/STATUS: //') || ITER_STATUS="in_progress"
+      # Extract task chain if present
+      ITER_TASK=$(echo "$TOOL_OUTPUT" | grep -oE 'TASK EXECUTION:.*' | head -1 | sed 's/TASK EXECUTION: //') || ITER_TASK=""
+      # Extract repeatFlag status
+      ITER_RF=$(echo "$TOOL_OUTPUT" | grep -oE 'REPEATFLAG: .*' | head -1 | sed 's/REPEATFLAG: //') || ITER_RF=""
+      # Extract endRepeat status
+      ITER_ER=$(echo "$TOOL_OUTPUT" | grep -oE 'ENDREPEAT: .*' | head -1 | sed 's/ENDREPEAT: //') || ITER_ER=""
+      # Extract exit strategy status
+      ITER_ES=$(echo "$TOOL_OUTPUT" | grep -oE 'EXIT STRATEGY: .*' | head -1 | sed 's/EXIT STRATEGY: //') || ITER_ES=""
+      # Fire the audit logger
+      jq -n \
+        --argjson iter "$ITER_NUM" \
+        --arg status "${ITER_STATUS:-in_progress}" \
+        --arg task "$ITER_TASK" \
+        --arg rf "$ITER_RF" \
+        --arg er "$ITER_ER" \
+        --arg es "$ITER_ES" \
+        '{iteration: $iter, status: $status, task: $task, repeatFlag: $rf, endRepeat: $er, exitStrategy: $es}' \
+        | "$SCRIPT_DIR/repeat_audit_logger.sh" 2>>"$HOOK_ERROR_LOG" || true
+      # Update state with last seen iteration
+      STATE=$(echo "$STATE" | jq --argjson i "$ITER_NUM" '.hook_state.repeat_audit = {last_iteration: $i}')
+      MESSAGES+="[Repeat Audit] Iteration $ITER_NUM logged\n"
     fi
   fi
 fi

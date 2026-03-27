@@ -8,22 +8,22 @@ Context engineering treats the context window as the agent's working memory — 
 
 ## Context Profiles & Budget
 
-- [ ] **CE-01: Context profile implementation** — Implement the three context zones (Standing 15-25%, Session 50-65%, Working 20-30%) as a runtime data model with allocation tracking, token counting per zone, the 50K standing context hard limit, and a machine-parseable profile template (STANDING CONTEXT, SESSION CONTEXT, ON-DEMAND CONTEXT, REFRESH TRIGGERS, SACRIFICE ORDER).
-- [ ] **CE-02: Context budget tracker enhancement** — Track actual vs allocated token usage per profile zone; emit warnings and trigger sacrifice order on budget overruns; log historical budget adherence; produce dashboard-ready JSON metrics.
+- [x] **CE-01: Context profile implementation** — Implement the three context zones (Standing 15-25%, Session 50-65%, Working 20-30%) as a runtime data model with allocation tracking, token counting per zone, the 50K standing context hard limit, and a machine-parseable profile template (STANDING CONTEXT, SESSION CONTEXT, ON-DEMAND CONTEXT, REFRESH TRIGGERS, SACRIFICE ORDER).
+- [x] **CE-02: Context budget tracker enhancement** — Track actual vs allocated token usage per profile zone; emit warnings and trigger sacrifice order on budget overruns; log historical budget adherence; produce dashboard-ready JSON metrics.
 
 ## Context Optimization
 
-- [ ] **CE-03: Context compression strategies** — Implement three compression strategies (summarization, prioritization, eviction) that trigger automatically at 85% utilization; protect identity and constraints from compression; make sacrifice order configurable per profile; validate compressed content preserves essential information.
-- [ ] **CE-04: Context relevance scoring** — Score context items across five dimensions (recency, frequency, semantic proximity, authority weight, dependency); produce a ranked list in < 100ms for 100 items; drive eviction order during compression and loading priority during refresh.
-- [ ] **CE-05: Context injection ordering** — Implement the Loading Order Protocol as an automated context assembler: identity and constraints first (primacy), reference material in the middle, current task last (recency); enforce constraints-over-task conflict resolution; validate ordering via PostToolUse hook.
+- [x] **CE-03: Context compression strategies** — Implement three compression strategies (summarization, prioritization, eviction) that trigger automatically at 85% utilization; protect identity and constraints from compression; make sacrifice order configurable per profile; validate compressed content preserves essential information.
+- [x] **CE-04: Context relevance scoring** — Score context items across five dimensions (recency, frequency, semantic proximity, authority weight, dependency); produce a ranked list in < 100ms for 100 items; drive eviction order during compression and loading priority during refresh.
+- [x] **CE-05: Context injection ordering** — Implement the Loading Order Protocol as an automated context assembler: identity and constraints first (primacy), reference material in the middle, current task last (recency); enforce constraints-over-task conflict resolution; validate ordering via PostToolUse hook.
 
 ## Context Lifecycle & Intelligence
 
-- [ ] **CE-06: Context window utilization dashboard** — Visualize per-zone utilization, utilization over time, top-10 largest items with relevance scores, compression events, sacrifice order log, and comparison against spec-defined targets; highlight anomalies (standing > 25%, working growth without checkpoints, nearing window limit).
-- [ ] **CE-07: Context overflow handling** — Implement graduated degradation: warning at 80%, session context compression and checkpoint at 90%, emergency minimum-viable-context at 95%, forced checkpoint and session handoff at 100%; log every compression action with what was removed and why; no silent context loss.
-- [ ] **CE-08: Dynamic context allocation** — Adjust zone percentages based on task complexity (simple/standard/complex); respect standing context hard limits; log adjustments; expose allocation profiles as configurable JSON.
-- [ ] **CE-09: Context preloading** — Pre-load context from four sources (file dependencies, historical patterns via Brain, skill triggers, interface contracts) before the agent requests it; respect zone budgets; deprioritize unused preloads in future predictions via learning feedback loop.
-- [ ] **CE-10: Context audit trail** — Capture context snapshots at every Propose-tier and Escalate-tier decision point; record gaps, compression/eviction history, and source attribution; make the trail queryable by agent, decision, or time range; store diffs for efficiency.
+- [x] **CE-06: Context window utilization dashboard** — Visualize per-zone utilization, utilization over time, top-10 largest items with relevance scores, compression events, sacrifice order log, and comparison against spec-defined targets; highlight anomalies (standing > 25%, working growth without checkpoints, nearing window limit).
+- [x] **CE-07: Context overflow handling** — Implement graduated degradation: warning at 80%, session context compression and checkpoint at 90%, emergency minimum-viable-context at 95%, forced checkpoint and session handoff at 100%; log every compression action with what was removed and why; no silent context loss.
+- [x] **CE-08: Dynamic context allocation** — Adjust zone percentages based on task complexity (simple/standard/complex); respect standing context hard limits; log adjustments; expose allocation profiles as configurable JSON.
+- [x] **CE-09: Context preloading** — Pre-load context from four sources (file dependencies, historical patterns via Brain, skill triggers, interface contracts) before the agent requests it; respect zone budgets; deprioritize unused preloads in future predictions via learning feedback loop.
+- [x] **CE-10: Context audit trail** — Capture context snapshots at every Propose-tier and Escalate-tier decision point; record gaps, compression/eviction history, and source attribution; make the trail queryable by agent, decision, or time range; store diffs for efficiency.
 
 ## Code Review & Test Generation
 

@@ -8,23 +8,23 @@ Intent engineering moves beyond prompts to structured intent capture, decomposit
 
 ## Intent Capture & Validation
 
-- [ ] **IE-01: Intent capture schema** — Define the structured JSON schema for capturing intent using six elements (Goal, Priority, Constraints, Failure modes, Judgment boundaries, Values); support machine-parseable and human-readable rendering; enforce required fields by authority tier; support progressive completion with warnings for missing elements.
-- [ ] **IE-03: Intent validation** — Implement validation checking completeness, ambiguity detection (flag vague terms without measurable criteria), constraint consistency (detect contradictions), achievability assessment (verify fleet can fulfill), and scope estimation; produce structured pass/warn/fail reports with improvement suggestions.
-- [ ] **IE-09: Human inflection point detection** — Detect moments requiring human judgment (taste, ethics, strategy, stakeholder, novel ambiguity); map to Escalate tier; integrate with Standing Orders escalation triggers; surface structured notification to operator with context.
-- [ ] **IE-10: Judgment boundary enforcement** — Enforce judgment boundaries from captured intents at runtime; monitor agent actions against declared boundaries; trigger pre-emptive escalation before boundaries are crossed; log boundary proximity events for intent health tracking.
+- [x] **IE-01: Intent capture schema** — Define the structured JSON schema for capturing intent using six elements (Goal, Priority, Constraints, Failure modes, Judgment boundaries, Values); support machine-parseable and human-readable rendering; enforce required fields by authority tier; support progressive completion with warnings for missing elements.
+- [x] **IE-03: Intent validation** — Implement validation checking completeness, ambiguity detection (flag vague terms without measurable criteria), constraint consistency (detect contradictions), achievability assessment (verify fleet can fulfill), and scope estimation; produce structured pass/warn/fail reports with improvement suggestions.
+- [x] **IE-09: Human inflection point detection** — Detect moments requiring human judgment (taste, ethics, strategy, stakeholder, novel ambiguity); map to Escalate tier; integrate with Standing Orders escalation triggers; surface structured notification to operator with context.
+- [x] **IE-10: Judgment boundary enforcement** — Enforce judgment boundaries from captured intents at runtime; monitor agent actions against declared boundaries; trigger pre-emptive escalation before boundaries are crossed; log boundary proximity events for intent health tracking.
 
-- [ ] **IE-08: Intent conflict detection** — Detect conflicts between concurrent intents: goal contradiction, constraint violation, resource contention, scope overlap, and priority inversion; produce structured conflict reports with resolution recommendations (reorder, defer, merge, escalate); run detection when new intents are added.
+- [x] **IE-08: Intent conflict detection** — Detect conflicts between concurrent intents: goal contradiction, constraint violation, resource contention, scope overlap, and priority inversion; produce structured conflict reports with resolution recommendations (reorder, defer, merge, escalate); run detection when new intents are added.
 
 ## Intent Decomposition & Routing
 
-- [ ] **IE-02: Intent decomposition engine** — Break high-level intents into sub-intent task graphs; preserve parent constraints and values in each sub-intent; assign authority tiers based on risk; identify dependencies between sub-intents; map sub-intents to qualified agent categories.
-- [ ] **IE-05: Intent-to-agent mapping** — Map intent categories to agent types and model tiers considering domain, required expertise, complexity/risk, multi-agent coordination patterns (sequential, parallel, pipeline), and fallback routing; produce machine-readable routing plans for the Orchestrator.
+- [x] **IE-02: Intent decomposition engine** — Break high-level intents into sub-intent task graphs; preserve parent constraints and values in each sub-intent; assign authority tiers based on risk; identify dependencies between sub-intents; map sub-intents to qualified agent categories.
+- [x] **IE-05: Intent-to-agent mapping** — Map intent categories to agent types and model tiers considering domain, required expertise, complexity/risk, multi-agent coordination patterns (sequential, parallel, pipeline), and fallback routing; produce machine-readable routing plans for the Orchestrator.
 
 ## Intent Operations
 
-- [ ] **IE-04: Intent tracking dashboard** — Build a CLI/control-plane view showing active intents with status, sub-intent progress graphs, intent health indicators, constraint violation alerts, and queryable intent history; integrate with control plane if available.
-- [ ] **IE-06: Intent history and learning** — Record full intent lifecycles (capture through outcome); extract recurring intent patterns; track routing effectiveness per agent-intent combination; store significant patterns as Brain entries to inform future processing.
-- [ ] **IE-07: Intent templates** — Create five pre-filled intent templates (bug fix, feature implementation, refactoring, code review, security audit) with sensible defaults for all six intent elements; templates are loadable, customizable, and extensible with project-specific additions.
+- [x] **IE-04: Intent tracking dashboard** — Build a CLI/control-plane view showing active intents with status, sub-intent progress graphs, intent health indicators, constraint violation alerts, and queryable intent history; integrate with control plane if available.
+- [x] **IE-06: Intent history and learning** — Record full intent lifecycles (capture through outcome); extract recurring intent patterns; track routing effectiveness per agent-intent combination; store significant patterns as Brain entries to inform future processing.
+- [x] **IE-07: Intent templates** — Create five pre-filled intent templates (bug fix, feature implementation, refactoring, code review, security audit) with sensible defaults for all six intent elements; templates are loadable, customizable, and extensible with project-specific additions.
 
 ## Governance API
 

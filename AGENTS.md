@@ -34,15 +34,15 @@ Spec reference: `aiStrat/admiral/spec/part11-protocols.md`
 
 ## Current Focus
 
-**Phase 5 — Fleet Orchestration, MCP & Autonomy**
+**Phase 9 — Quality Rigor & Documentation** (gap closure)
 
-The project follows a [9-phase roadmap](plan/ROADMAP.md). Phases 0-4 are complete. Current priorities:
+The project follows a [13-phase roadmap](plan/ROADMAP.md). Phases 0–8 built the broad architecture (~85% of items). Phases 9–12 close depth gaps. Current priorities:
 
-1. Fleet Routing & Orchestration (Stream 15: O-01 to O-10)
-2. MCP Integration (Stream 16: M-01 to M-14)
-3. Progressive Autonomy (Stream 18: AU-01 to AU-11)
-4. Meta-Governance (Stream 19: MG-01 to MG-10)
-5. Context Engineering (Stream 30: CE-01 to CE-10)
+1. Testing depth: property tests, snapshot tests, EDD gate (todo/03)
+2. Code quality: jq helpers, typed error hierarchy, exit code taxonomy (todo/03)
+3. Documentation: ADMIRAL_STYLE.md, 9 ADRs, runbook, guides, glossary (todo/04)
+4. CI hardening: matrix builds, CodeQL, dependency automation (todo/04)
+5. Self-enforcement: doc discipline, SO compliance audit, hook coverage (todo/04)
 
 Full roadmap: [`plan/index.md`](plan/index.md) | Execution phasing: [`plan/ROADMAP.md`](plan/ROADMAP.md)
 

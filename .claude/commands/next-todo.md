@@ -91,14 +91,29 @@ A prior session may have been interrupted mid-task. **Before starting new work**
 1. Subtask = one meaningful commit. No branch, no PR.
 2. If a subtask needs multiple commits or a PR → promote it to a task and escalate.
 
+## Parallel Worker Awareness
+
+When multiple Claude Code instances run `/next-todo` in parallel (via git worktrees), **branch existence is the coordination lock:**
+
+1. **Before selecting a task**, list all existing task branches:
+   ```
+   git branch -a --list 'task/phase-<NN>/*'
+   ```
+2. **Skip any task whose branch already exists** — another worker has claimed it.
+3. **Select the next unclaimed, unblocked, incomplete task** from `plan/todo/*.md`.
+4. **Create the task branch immediately** after selection to claim it — do not start work before the branch exists.
+
+This ensures no two workers ever pick the same task, with zero external coordination beyond git itself.
+
 ## Execution Algorithm
 
 1. **Run Session Continuity Protocol** to detect and resume in-progress work.
 2. Identify the active phase and next incomplete task in `plan/todo/`.
-3. Verify dependencies and preconditions. If a task is blocked, skip it and take the next unblocked task.
-4. Create/checkout phase slush branch per policy.
-5. Create task branch from the phase slush branch (or checkout existing one).
-6. Execute subtasks as commit-sized increments:
+3. **Check for claimed tasks**: list existing `task/phase-<NN>/*` branches. Skip tasks that already have a branch (claimed by another worker or prior session).
+4. Verify dependencies and preconditions. If a task is blocked, skip it and take the next unblocked task.
+5. Create/checkout phase slush branch per policy.
+6. Create task branch from the phase slush branch (or checkout existing one). **This is the claim — do it before starting implementation.**
+7. Execute subtasks as commit-sized increments:
    - First subtask: TDD-first (where applicable).
    - Each subtask: implement, commit, update TODO status.
    - Final subtask: run tests, run linters, cleanup, ensure CI passes. Fix failures before completion.

@@ -1,6 +1,6 @@
 # Command Primer
 
-Operational definitions and concepts for executing `/next-todo`, `/phase-closeout`, `/repeat`, and any future commands in this system. This document bridges the abstract Admiral Framework spec (`aiStrat/`) with concrete command execution.
+Operational definitions and concepts for executing `/next-todo`, `/phase-closeout`, `/repeat`, `/spawn-worker`, and any future commands in this system. This document bridges the abstract Admiral Framework spec (`aiStrat/`) with concrete command execution.
 
 **When to read this:** If you're executing a command and a term is unclear, check here first. If it's not here, check `aiStrat/admiral/spec/` — but most of what you need should be grounded below.
 
@@ -167,6 +167,8 @@ The most common agent failure mode. The tendency to declare "done" prematurely �
 Admiral reviews     Human approves slush→main merge
     ↓
 /repeat             Orchestrates the cycle across phases
+
+/spawn-worker       Create a parallel worktree for concurrent execution
 ```
 
 - `/next-todo` is the workhorse — it finds work, creates branches, executes tasks, merges PRs.
@@ -174,8 +176,29 @@ Admiral reviews     Human approves slush→main merge
 - `/repeat` is the orchestrator — it chains commands into an event-driven loop across multiple phases.
 - `/simplify` is the reviewer — it catches over-engineering, duplication, and quality issues.
 - `/loop` is the timer — for recurring checks on an interval. Not for task execution.
+- `/spawn-worker` is the parallelizer — it creates git worktrees so multiple Claude Code instances can work on different tasks simultaneously.
 
 Each command trusts the others' contracts. `/repeat` doesn't re-verify what `/phase-closeout` already checked. `/phase-closeout` doesn't re-execute what `/next-todo` already built. The Output Contract from each command is the interface.
+
+### Parallel Execution via Worktrees
+
+Multiple Claude Code instances can work on different tasks simultaneously using git worktrees. Each worktree is a separate checkout of the same repository — same `.git` database, different branch.
+
+**Coordination mechanism:** Branch existence is the task lock. When `/next-todo` creates `task/phase-07/sec-01-attack-corpus`, that branch is globally visible. Any other worker's `/next-todo` sees it and skips that task. No external coordination layer needed.
+
+**The pattern:**
+
+1. **Admiral** runs `/spawn-worker` (or `admiral/bin/spawn-worktree` directly) to create a worktree at `../helm-wt-<N>/`.
+2. VS Code opens in the new worktree.
+3. Each instance runs `/next-todo` or `/repeat` independently.
+4. All task branches merge into the same slush branch — git handles ordering.
+5. When done, `admiral/bin/spawn-worktree --remove ../helm-wt-<N>` cleans up.
+
+**Constraints:**
+- Git prevents the same branch from being checked out in two worktrees.
+- Merge conflicts are resolved by the second merger, per standard `/next-todo` policy.
+- Each worker consumes API tokens independently — diminishing returns beyond 3-4 parallel workers.
+- `/phase-closeout` runs once, after all workers finish, from any worktree (or the main repo).
 
 ---
 
