@@ -1,0 +1,27 @@
+{
+  "$schema": "https://raw.githubusercontent.com/stryker-mutator/stryker/master/packages/core/schema/stryker-core.schema.json",
+  "mutate": [
+    "src/ring-buffer.ts",
+    "src/events.ts"
+  ],
+  "testRunner": "command",
+  "commandRunner": {
+    "command": "npx tsc --skipLibCheck && node --test dist/src/ring-buffer.test.js dist/src/ring-buffer.property.test.js dist/src/events.test.js"
+  },
+  "checkers": [],
+  "reporters": ["clear-text", "html", "json"],
+  "htmlReporter": {
+    "fileName": "reports/mutation/mutation.html"
+  },
+  "jsonReporter": {
+    "fileName": "reports/mutation/mutation.json"
+  },
+  "thresholds": {
+    "high": 80,
+    "low": 60,
+    "break": 80
+  },
+  "concurrency": 2,
+  "timeoutMS": 30000,
+  "tempDirName": ".stryker-tmp"
+}
