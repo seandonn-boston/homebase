@@ -321,21 +321,24 @@ If spec debt resolution surfaces new requirements, those requirements must be in
 
 ---
 
-## Phase 13 — Cleanup
+## Phase 13 — Codebase Cleanup & Refactoring
 
-> Eliminate all lint/check suppressions across the entire codebase. Every `shellcheck disable`, `biome-ignore`, `eslint-disable`, `@ts-ignore`, and similar suppression must be removed and the underlying issue fixed. No exceptions.
+> Comprehensive codebase cleanup: eliminate all lint/check suppressions, remove dead code and dead files, deduplicate repeated logic, normalize naming conventions, and fine-tune operations. Scope covers everything created from Phase 0 onward — `aiStrat/` is excluded (pre-existing, read-only).
 
 | Scope | Description |
 |-------|-------------|
-| **Shell scripts** | Remove all `# shellcheck disable=SCXXXX` directives. Fix the actual issues (unused variables, quoting, unreachable code). |
-| **TypeScript** | Remove all `// biome-ignore`, `// @ts-ignore`, `// @ts-expect-error`, `// eslint-disable` directives. Fix with proper types, refactoring, or code changes. |
-| **Other files** | Scan for any suppression patterns in any file type. No file is exempt. |
+| **Suppression removal** | Remove every `# shellcheck disable`, `// biome-ignore`, `// @ts-ignore`, `// @ts-expect-error`, `// eslint-disable`, and similar directive. Fix the underlying issue in every case. Zero suppressions allowed. |
+| **Dead code & dead files** | Identify and remove unused functions, variables, exports, files, and directories. If it's not imported, called, or referenced — it goes. |
+| **Deduplication** | Find repeated logic across shell scripts and TypeScript modules. Extract shared utilities. Three similar blocks of code should be one function. |
+| **Naming conventions** | Normalize function names, file names, variable names, and directory structure to consistent conventions per ADMIRAL_STYLE.md. |
+| **Operational fine-tuning** | Tighten error handling, improve logging consistency, optimize hot paths, reduce unnecessary I/O. |
+| **Exclusion** | `aiStrat/` is read-only and exempt — it predates Phase 0. |
 
-**Why now:** Phases 0–12 built the full system. Suppressions accumulated during rapid development as a pragmatic shortcut. A showcase-quality codebase cannot claim 10/10 code quality while silencing its own tools. This phase ensures every diagnostic tool runs unsuppressed.
+**Why now:** Phases 0–12 built the full system under velocity. Pragmatic shortcuts accumulated: suppressions, copy-paste patterns, inconsistent naming, orphaned code. A showcase-quality codebase cannot claim 10/10 while silencing its own tools or carrying dead weight. This phase is the final polish.
 
-**Concurrency:** One comprehensive pass across the full codebase.
+**Concurrency:** Multiple cleanup streams can run in parallel (suppressions, dead code, naming, dedup are independent).
 
-**Exit criteria:** Zero suppression directives in any file. All lint, shellcheck, and type-check tools pass cleanly without any per-line or per-file disables. CI enforces a "no-suppress" policy going forward.
+**Exit criteria:** Zero suppression directives in any file (all file types). Zero dead code or dead files (verified by static analysis). All duplicated logic extracted to shared utilities. Naming conventions consistent per ADMIRAL_STYLE.md. CI enforces a "no-suppress" policy going forward.
 
 ---
 
