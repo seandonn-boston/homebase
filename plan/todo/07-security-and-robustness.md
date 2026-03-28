@@ -27,7 +27,7 @@ Defense in depth for the Admiral Framework: adversarial testing, injection defen
 
 - [x] **S-20: PII detection sanitizer (Layer 1)** — Pattern-based detection for PII (email, SSN, credit card, API keys, JWT tokens) before data is stored in the Brain. Fast regex-based scanner runs before every Brain write operation. Produces a sanitization report (what was found, what was redacted). False positive rate measurable and below 5%.
 - [x] **S-21: Database-level PII rejection (Layer 2)** — SQL trigger on Brain B2/B3 tier tables rejecting INSERT/UPDATE operations containing PII patterns. Defense in depth: if the application layer (S-20) misses something, the data layer catches it. Rejection is logged with the specific pattern matched.
-- [ ] **S-45: Data classification tags and cross-server flow control** — Define data classification labels (sensitivity levels) enforced at origin. Server sensitivity ceilings are configurable. Cross-classification transfers require Admiral approval gates. Provenance tracking follows data through the pipeline.
+- [x] **S-45: Data classification tags and cross-server flow control** — *Completed in Phase 10.* — `admiral/security/data-classification.ts` implements 4-level sensitivity taxonomy (PUBLIC/INTERNAL/CONFIDENTIAL/RESTRICTED), server sensitivity ceilings (configurable per MCP server in `approved_mcp_servers.json`), cross-classification transfer gates with Admiral approval mechanism, and provenance chain tracking. 20-test suite covering flow control, approvals, provenance, and utilities.
 
 ## Audit & Compliance
 

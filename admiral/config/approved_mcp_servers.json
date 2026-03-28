@@ -8,6 +8,8 @@
       "description": "Admiral Brain knowledge system MCP server",
       "version_pin": "1.0.0",
       "trust_level": "internal",
+      "max_sensitivity_ceiling": "CONFIDENTIAL",
+      "default_output_classification": "INTERNAL",
       "approved_by": "Admiral",
       "approved_at": "2026-03-25"
     },
@@ -16,6 +18,8 @@
       "description": "Admiral Fleet orchestration MCP server",
       "version_pin": "1.0.0",
       "trust_level": "internal",
+      "max_sensitivity_ceiling": "INTERNAL",
+      "default_output_classification": "INTERNAL",
       "approved_by": "Admiral",
       "approved_at": "2026-03-25"
     },
@@ -24,6 +28,8 @@
       "description": "Admiral Governance tools MCP server",
       "version_pin": "1.0.0",
       "trust_level": "internal",
+      "max_sensitivity_ceiling": "RESTRICTED",
+      "default_output_classification": "CONFIDENTIAL",
       "approved_by": "Admiral",
       "approved_at": "2026-03-25"
     }
