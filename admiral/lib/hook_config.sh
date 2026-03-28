@@ -135,14 +135,6 @@ SECRET_PATTERNS=(
   'BEGIN PGP'
 )
 
-# Patterns that indicate secrets in file content
-# shellcheck disable=SC2034
-SECRET_CONTENT_PATTERNS='(password|api_key|secret_key|private_key|AWS_ACCESS_KEY|BEGIN RSA|BEGIN OPENSSH)\s*[:=]'
-
-# Sensitive file extensions/names
-# shellcheck disable=SC2034
-SENSITIVE_FILE_PATTERN='*.env|*credentials*|*secret*|*.pem|*.key'
-
 # Check if content contains potential secrets.
 # Usage: if config_has_secrets "$content"; then ...
 # Returns: 0 if secrets detected, 1 if clean

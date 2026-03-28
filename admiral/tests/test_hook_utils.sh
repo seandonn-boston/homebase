@@ -2,7 +2,6 @@
 # Admiral Framework — Hook Utilities Tests (Q-02)
 # Tests for admiral/lib/hook_utils.sh standardized hook error handling.
 # Exit code: 0 = all pass, 1 = failures
-# shellcheck disable=SC2317
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -11,41 +10,7 @@ export CLAUDE_PROJECT_DIR="$PROJECT_DIR"
 export ADMIRAL_LOG_LEVEL="fatal"  # Suppress log output during tests
 
 # shellcheck source=/dev/null
-source "$PROJECT_DIR/admiral/lib/hook_utils.sh"
-
-PASS=0
-FAIL=0
-ERRORS=""
-
-assert_eq() {
-  local test_name="$1"
-  local expected="$2"
-  local actual="$3"
-  if [ "$expected" = "$actual" ]; then
-    PASS=$((PASS + 1))
-    echo "  [PASS] $test_name"
-  else
-    FAIL=$((FAIL + 1))
-    ERRORS+="  [FAIL] $test_name — expected '$expected', got '$actual'\n"
-    echo "  [FAIL] $test_name — expected '$expected', got '$actual'"
-  fi
-}
-
-assert_exit() {
-  local test_name="$1"
-  local expected_exit="$2"
-  shift 2
-  local rc=0
-  "$@" >/dev/null 2>&1 || rc=$?
-  if [ "$rc" -eq "$expected_exit" ]; then
-    PASS=$((PASS + 1))
-    echo "  [PASS] $test_name"
-  else
-    FAIL=$((FAIL + 1))
-    ERRORS+="  [FAIL] $test_name — expected exit $expected_exit, got $rc\n"
-    echo "  [FAIL] $test_name — expected exit $expected_exit, got $rc"
-  fi
-}
+source "$SCRIPT_DIR/../lib/assert.sh"
 
 assert_json_field() {
   local test_name="$1"
@@ -54,15 +19,12 @@ assert_json_field() {
   local expected="$4"
   local actual
   actual=$(printf '%s' "$json" | jq -r "$field" 2>/dev/null) || actual="PARSE_ERROR"
-  if [ "$expected" = "$actual" ]; then
-    PASS=$((PASS + 1))
-    echo "  [PASS] $test_name"
-  else
-    FAIL=$((FAIL + 1))
-    ERRORS+="  [FAIL] $test_name — field $field: expected '$expected', got '$actual'\n"
-    echo "  [FAIL] $test_name — field $field: expected '$expected', got '$actual'"
-  fi
+  assert_eq "$test_name" "$expected" "$actual"
 }
+
+# Source the library under test after assert definitions
+# shellcheck source=/dev/null
+source "$PROJECT_DIR/admiral/lib/hook_utils.sh"
 
 echo "=== Hook Utilities Tests (Q-02) ==="
 echo ""
@@ -198,17 +160,4 @@ assert_json_field "hook_advisory context" "$ADV_OUTPUT" '.hookSpecificOutput.add
 
 # ─── Summary ─────────────────────────────────────────────────────────
 
-echo ""
-echo "=== Results ==="
-echo "  Passed: $PASS"
-echo "  Failed: $FAIL"
-
-if [ "$FAIL" -gt 0 ]; then
-  echo ""
-  echo "Failures:"
-  printf '%b' "$ERRORS"
-  exit 1
-fi
-
-echo "  All tests passed."
-exit 0
+print_results "Hook Utilities Tests"

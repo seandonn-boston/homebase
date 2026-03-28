@@ -13,8 +13,6 @@ if [ -f "$SCRIPT_DIR/jq_helpers.sh" ]; then
 fi
 
 EDD_SPECS_DIR="${PROJECT_DIR}/.admiral/edd-specs"
-# shellcheck disable=SC2034
-EDD_SCHEMA="${PROJECT_DIR}/admiral/schemas/evaluation-spec.v1.schema.json"
 
 # Ensure the specs directory exists
 edd_ensure_dir() {
