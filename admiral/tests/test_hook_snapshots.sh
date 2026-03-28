@@ -135,8 +135,8 @@ fi
 
 # Test pre_tool_use_adapter allow case (non-modifying tool)
 if [ -x "$HOOKS_DIR/pre_tool_use_adapter.sh" ]; then
-  PRE_OUTPUT=$(echo '{"tool_name":"Read","tool_input":{"file_path":"/tmp/test.txt"}}' | \
-    timeout 10 bash "$HOOKS_DIR/pre_tool_use_adapter.sh" 2>/dev/null) || true
+  echo '{"tool_name":"Read","tool_input":{"file_path":"/tmp/test.txt"}}' | \
+    timeout 10 bash "$HOOKS_DIR/pre_tool_use_adapter.sh" >/dev/null 2>&1 || true
 
   PRE_EXIT=$?
   assert_eq "pre_tool_use_adapter exits 0 for Read" "0" "$PRE_EXIT"

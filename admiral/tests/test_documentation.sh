@@ -26,7 +26,7 @@ for ts_file in "$PROJECT_DIR/control-plane/src/"*.ts; do
 
   # Skip test files and index.ts
   case "$basename" in
-    *.test.ts|*.property.test.ts|index.ts|test-helpers.ts) continue ;;
+    *.property.test.ts|*.test.ts|index.ts|test-helpers.ts) continue ;;
   esac
 
   # Check first 10 lines for a doc comment (/** or //)

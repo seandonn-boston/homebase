@@ -2,6 +2,7 @@
 # Admiral Framework — Hook Utilities Tests (Q-02)
 # Tests for admiral/lib/hook_utils.sh standardized hook error handling.
 # Exit code: 0 = all pass, 1 = failures
+# shellcheck disable=SC2317
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
