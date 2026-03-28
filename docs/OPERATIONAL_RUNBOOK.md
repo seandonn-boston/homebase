@@ -69,8 +69,6 @@ This script verifies all required and optional tools are present and reports the
 
 3. **Verify hooks are executable:**
    ```bash
-   ls -la .hooks/*.sh
-   # All hook scripts should have execute permission
    chmod +x .hooks/*.sh
    ```
 
@@ -83,7 +81,7 @@ This script verifies all required and optional tools are present and reports the
 5. **Run the test suite:**
    ```bash
    npm test --prefix control-plane
-   bash .hooks/tests/run_all_tests.sh
+   bash .hooks/tests/test_hooks.sh
    ```
 
 ### Claude Code Integration
@@ -152,6 +150,7 @@ npm start --prefix control-plane
 |----------|--------|---------|
 | `/health` | GET | Health check (200 healthy, 503 stale) |
 | `/api/events` | GET | All events in stream |
+| `/api/alerts` | GET | All alerts (resolved and unresolved) |
 | `/api/alerts/active` | GET | Unresolved alerts |
 | `/api/alerts/:id/resolve` | GET | Resolve an alert |
 | `/api/agents/:id/resume` | GET | Resume a paused agent |
@@ -159,6 +158,8 @@ npm start --prefix control-plane
 | `/api/session` | GET | Current session state |
 | `/api/stats` | GET | Trace and ingester statistics |
 | `/api/config` | GET | Detector configuration |
+
+See [`control-plane/API.md`](../control-plane/API.md) for full endpoint documentation with curl examples.
 
 ### Quick Health Check
 
@@ -198,6 +199,8 @@ Individual hooks are invoked by these adapters, not directly by Claude Code.
 | 0 | Success or fail-open | Tool execution proceeds |
 | 1 | Error, fail-open | Hook degraded gracefully; tool proceeds |
 | 2 | Hard-block | Tool execution is denied |
+
+See [`ADMIRAL_STYLE.md`](../ADMIRAL_STYLE.md) for the full exit code taxonomy (codes 0–4, 126, 127).
 
 ### Hook Inventory
 
@@ -256,50 +259,24 @@ If hooks are noticeably slow, check for missing `jq` (falls back to slower parsi
 
 ## Brain System Operations
 
-### Brain Tiers
+For tier details, CLI examples, and file layout, see [`docs/BRAIN_USER_GUIDE.md`](BRAIN_USER_GUIDE.md).
 
-| Tier | Storage | Search | Status |
-|------|---------|--------|--------|
-| B1 | File-based (`.brain/`) | grep keyword | Active |
-| B2 | SQLite + FTS5 | Full-text search | Schema ready |
-| B3 | Postgres + pgvector | Semantic search | Not started |
-
-### Brain CLI Tools
+### Quick Reference
 
 ```bash
-# Record a decision or insight
+# Record a decision
 admiral/bin/brain_record --type decision --content "Chose X over Y because..."
 
 # Query the brain
 admiral/bin/brain_query --query "authentication patterns"
 
-# Retrieve a specific entry
-admiral/bin/brain_retrieve --id <entry-id>
-
 # Audit brain consistency
 admiral/bin/brain_audit
-
-# Consolidate B1 entries (deduplication, cleanup)
-admiral/bin/brain_consolidate
 ```
-
-### Brain File Layout
-
-```
-.brain/
-  helm/          # Project-scoped brain entries
-  traced-demo/   # Demo/example entries
-```
-
-Each entry is a JSON file with metadata (type, tags, timestamp, provenance).
 
 ### Brain Health
 
-Run `admiral/bin/brain_audit` to check for:
-- Orphaned entries (no references)
-- Stale entries (older than configured threshold)
-- Duplicate entries
-- Schema violations
+Run `admiral/bin/brain_audit` to check for orphaned entries, stale entries, duplicates, and schema violations.
 
 ---
 
@@ -410,7 +387,7 @@ admiral/bin/readiness_assess
 
 **Diagnosis:**
 ```bash
-cat .admiral/session_state.json | jq .
+jq . .admiral/session_state.json
 # If jq fails, the file is corrupt
 ```
 
@@ -475,7 +452,7 @@ cat .admiral/session_state.json | jq '.hook_state.loop_detector'
 **Diagnosis:**
 ```bash
 ls admiral/standing-orders/
-# Should contain SO-01.md through SO-16.md
+# Should contain so01-*.json through so16-*.json
 ```
 
 **Resolution:**
@@ -492,7 +469,7 @@ ls admiral/standing-orders/
 # Check brain entries exist
 ls .brain/helm/
 # Check entry format
-cat .brain/helm/<any-entry>.json | jq .
+jq . .brain/helm/<any-entry>.json
 ```
 
 **Resolution:**
@@ -548,6 +525,8 @@ admiral/bin/validate_config --json
 
 ## Recovery Procedures
 
+For component-specific recovery, see the relevant failure scenario above. This section covers full system reset only.
+
 ### Full State Reset
 
 When the Admiral state is unrecoverable:
@@ -563,55 +542,6 @@ rm -rf .admiral/proofs/ .admiral/confirmations/
 admiral/bin/validate_config --json
 
 # 4. Start a new session — state reinitializes automatically
-```
-
-### Hook Pipeline Recovery
-
-If the hook pipeline is misbehaving:
-
-```bash
-# 1. Test each hook individually with a minimal payload
-echo '{"tool_name":"Read","tool_input":{"file_path":"README.md"}}' \
-  | .hooks/pre_tool_use_adapter.sh
-
-# 2. Check hook dependencies
-admiral/bin/check_dependencies
-
-# 3. Run the hook test suite
-bash .hooks/tests/run_all_tests.sh
-
-# 4. Check for syntax errors
-shellcheck .hooks/*.sh
-```
-
-### Control Plane Recovery
-
-```bash
-# 1. Stop the server (kill the process)
-# 2. Clean build artifacts
-rm -rf control-plane/dist/
-
-# 3. Rebuild
-npm run build --prefix control-plane
-
-# 4. Run tests to verify
-npm test --prefix control-plane
-
-# 5. Restart
-npm start --prefix control-plane
-```
-
-### Brain Recovery
-
-```bash
-# 1. Audit brain for inconsistencies
-admiral/bin/brain_audit
-
-# 2. Consolidate (deduplicate, clean up)
-admiral/bin/brain_consolidate
-
-# 3. Verify entries
-admiral/bin/brain_query --query "test query"
 ```
 
 ---
