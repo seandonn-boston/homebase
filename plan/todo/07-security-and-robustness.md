@@ -53,7 +53,7 @@ Defense in depth for the Admiral Framework: adversarial testing, injection defen
 
 - [x] **SEC-08: Dependency vulnerability scanning** — *Completed in Phase 10.* — `admiral/bin/audit_dependencies.sh` runs `npm audit --json`, produces structured report with severity breakdown, affected packages, fix availability, blocking decision. CI workflow runs on PR (package changes), daily cron (main), and manual dispatch. Report uploaded as artifact. 19-test validation suite.
 - [x] **SEC-09: SBOM generation** — *Completed in Phase 10.* — `admiral/bin/generate_sbom.sh` generates CycloneDX 1.5 JSON SBOM covering all 5 npm workspace projects (direct + transitive from lockfiles) and 8 system dependencies with version detection. CI workflow (`.github/workflows/sbom.yml`) runs on PR (package changes), weekly cron, and manual dispatch. SBOM uploaded as artifact with 90-day retention. 41-test validation suite.
-- [ ] **SEC-11: Rate limiting for control plane API** — Token bucket or sliding window rate limiting on all control plane endpoints. Higher limits for high-frequency endpoints (events, health), lower for administrative endpoints (configuration, pause). Return 429 with Retry-After header. Log violations. Limits configurable via environment variables.
+- [x] **SEC-11: Rate limiting for control plane API** — *Completed in Phase 10.* — `control-plane/src/rate-limiter.ts` implements sliding window rate limiting with 3 tiers: high (120/min for health, events, stats), medium (60/min for config, alerts, session), admin (20/min for agent resume, alert resolve). Returns 429 with Retry-After header. Limits configurable via `RATE_LIMIT_*` environment variables. Violations tracked. 22-test suite (unit + integration).
 
 ---
 

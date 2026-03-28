@@ -11,6 +11,7 @@ import * as path from "node:path";
 import { errorMessage } from "./errors.js";
 import type { EventStream } from "./events";
 import type { JournalIngester } from "./ingest";
+import { RateLimiter } from "./rate-limiter.js";
 import type { RunawayDetector } from "./runaway-detector";
 import type { ExecutionTrace } from "./trace";
 
@@ -36,6 +37,7 @@ export class AdmiralServer {
   private ingester: JournalIngester | null = null;
   private startedAt: number = Date.now();
   private routes: Route[];
+  private rateLimiter: RateLimiter;
 
   constructor(
     stream: EventStream,
@@ -48,6 +50,7 @@ export class AdmiralServer {
     this.trace = trace;
     this.projectDir = projectDir || process.cwd();
     this.routes = this.buildRoutes();
+    this.rateLimiter = RateLimiter.fromEnv();
   }
 
   /** Set the ingester reference for health reporting */
@@ -139,6 +142,25 @@ export class AdmiralServer {
       if (req.method === "OPTIONS") {
         res.writeHead(204);
         res.end();
+        return;
+      }
+
+      // Rate limiting
+      const clientIp = req.socket.remoteAddress || "unknown";
+      const limitResult = this.rateLimiter.check(clientIp, url);
+      if (!limitResult.allowed) {
+        const retryAfterSec = Math.ceil(limitResult.retryAfterMs / 1000);
+        res.writeHead(429, {
+          "Content-Type": "application/json",
+          "Retry-After": String(retryAfterSec),
+        });
+        res.end(
+          JSON.stringify({
+            error: "Too Many Requests",
+            status: 429,
+            retryAfter: retryAfterSec,
+          }),
+        );
         return;
       }
 
