@@ -8,11 +8,11 @@
 import * as fs from "node:fs";
 import * as http from "node:http";
 import * as path from "node:path";
+import { errorMessage } from "./errors.js";
 import type { EventStream } from "./events";
 import type { JournalIngester } from "./ingest";
 import type { RunawayDetector } from "./runaway-detector";
 import type { ExecutionTrace } from "./trace";
-import { errorMessage } from "./errors.js";
 
 /** Route handler type */
 type RouteHandler = (res: http.ServerResponse, params: Record<string, string>) => void;

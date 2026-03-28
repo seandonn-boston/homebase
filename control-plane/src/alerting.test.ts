@@ -2,8 +2,8 @@
  * Tests for Alert Routing (OB-05)
  */
 
-import { describe, it, beforeEach } from "node:test";
 import assert from "node:assert/strict";
+import { beforeEach, describe, it } from "node:test";
 import { AlertRouter } from "./alerting";
 
 describe("AlertRouter", () => {

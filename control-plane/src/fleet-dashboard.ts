@@ -5,7 +5,7 @@
  * health status, resource consumption, attention items, and recent events.
  */
 
-import { AgentEvent, EventStream } from "./events";
+import type { AgentEvent, EventStream } from "./events";
 
 export interface FleetDashboardData {
   running: { agentId: string; task: string; duration: number }[];
@@ -58,8 +58,7 @@ export class FleetDashboard {
         case "token_spent":
           agentTokens.set(
             event.agentId,
-            (agentTokens.get(event.agentId) ?? 0) +
-              ((event.data.tokens as number) ?? 0),
+            (agentTokens.get(event.agentId) ?? 0) + ((event.data.tokens as number) ?? 0),
           );
           break;
         case "policy_violation":
@@ -102,7 +101,7 @@ export class FleetDashboard {
     // Attention items from violations
     const attention: FleetDashboardData["attention"] = violations.map((v) => ({
       agentId: v.agentId,
-      reason: (v.data.reason as string) ?? v.data.message as string ?? "policy violation",
+      reason: (v.data.reason as string) ?? (v.data.message as string) ?? "policy violation",
       severity: (v.data.severity as string) ?? "high",
     }));
 
@@ -122,9 +121,7 @@ export class FleetDashboard {
   /**
    * Get detailed info for a single agent.
    */
-  getAgentDetail(
-    agentId: string,
-  ): { events: AgentEvent[]; metrics: Record<string, number> } {
+  getAgentDetail(agentId: string): { events: AgentEvent[]; metrics: Record<string, number> } {
     const events = this.eventStream.getEventsByAgent(agentId);
 
     let tokenTotal = 0;

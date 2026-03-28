@@ -2,12 +2,12 @@
  * Tests for Distributed Tracing (OB-02)
  */
 
+import assert from "node:assert/strict";
 import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
-import { describe, it, beforeEach, afterEach } from "node:test";
-import assert from "node:assert/strict";
-import { TracingContext, parseTraceFile, getSpansByTraceId } from "./tracing";
+import { afterEach, beforeEach, describe, it } from "node:test";
+import { getSpansByTraceId, parseTraceFile, type Span, TracingContext } from "./tracing";
 
 describe("TracingContext", () => {
   let tmpDir: string;
@@ -108,10 +108,7 @@ describe("parseTraceFile", () => {
   });
 
   it("handles empty files", () => {
-    const tmpFile = path.join(
-      os.tmpdir(),
-      `trace-test-${Date.now()}.jsonl`,
-    );
+    const tmpFile = path.join(os.tmpdir(), `trace-test-${Date.now()}.jsonl`);
     fs.writeFileSync(tmpFile, "");
     assert.deepStrictEqual(parseTraceFile(tmpFile), []);
     fs.unlinkSync(tmpFile);
@@ -124,7 +121,7 @@ describe("getSpansByTraceId", () => {
       { trace_id: "aaa", span_id: "1" },
       { trace_id: "bbb", span_id: "2" },
       { trace_id: "aaa", span_id: "3" },
-    ] as any[];
+    ] as Span[];
 
     const result = getSpansByTraceId(spans, "aaa");
     assert.strictEqual(result.length, 2);

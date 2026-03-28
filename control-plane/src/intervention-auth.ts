@@ -83,9 +83,7 @@ export class InterventionAuthorizer {
    * Get the minimum required auth level for an intervention type.
    */
   getRequiredLevel(interventionType: InterventionType): AuthLevel {
-    const entry = this.config.find(
-      (c) => c.interventionType === interventionType,
-    );
+    const entry = this.config.find((c) => c.interventionType === interventionType);
     return entry?.requiredLevel ?? "owner"; // default to highest if unknown
   }
 }

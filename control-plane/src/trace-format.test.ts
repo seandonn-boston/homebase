@@ -3,7 +3,7 @@
  */
 
 import assert from "node:assert/strict";
-import { describe, it, beforeEach } from "node:test";
+import { beforeEach, describe, it } from "node:test";
 import { CanonicalTraceBuilder } from "./trace-format";
 
 describe("CanonicalTraceBuilder", () => {
@@ -180,13 +180,17 @@ describe("CanonicalTraceBuilder", () => {
       tags: { env: "test" },
     });
 
-    const otel = builder.toOpenTelemetry() as any;
+    const otel = builder.toOpenTelemetry() as {
+      resourceSpans: Array<{
+        scopeSpans: Array<{
+          spans: Array<{ name: string; attributes: Array<{ key: string }> }>;
+        }>;
+      }>;
+    };
     assert.ok(otel.resourceSpans !== undefined);
     const spans = otel.resourceSpans[0].scopeSpans[0].spans;
     assert.strictEqual(spans.length, 1);
     assert.strictEqual(spans[0].name, "op");
-    assert.ok(
-      spans[0].attributes.find((a: any) => a.key === "agent.id") !== undefined,
-    );
+    assert.ok(spans[0].attributes.find((a) => a.key === "agent.id") !== undefined);
   });
 });

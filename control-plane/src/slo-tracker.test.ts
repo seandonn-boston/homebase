@@ -2,9 +2,9 @@
  * Tests for SLO/SLI Tracker (OB-08)
  */
 
-import { describe, it, beforeEach } from "node:test";
 import assert from "node:assert/strict";
-import { SLOTracker, CORE_SLIS, CORE_SLOS } from "./slo-tracker";
+import { beforeEach, describe, it } from "node:test";
+import { CORE_SLIS, SLOTracker } from "./slo-tracker";
 
 describe("SLOTracker", () => {
   let tracker: SLOTracker;
@@ -30,9 +30,9 @@ describe("SLOTracker", () => {
   });
 
   it("tracks good observations (above threshold)", () => {
-    tracker.observe("first_pass_quality", 0.80); // good (> 0.75)
-    tracker.observe("first_pass_quality", 0.60); // bad
-    tracker.observe("first_pass_quality", 0.90); // good
+    tracker.observe("first_pass_quality", 0.8); // good (> 0.75)
+    tracker.observe("first_pass_quality", 0.6); // bad
+    tracker.observe("first_pass_quality", 0.9); // good
 
     const status = tracker.getStatus("first_pass_quality");
     assert.ok(Math.abs(status!.current - 2 / 3) < 0.001);
@@ -94,6 +94,7 @@ describe("SLOTracker", () => {
 
     t.observe("test", 50);
     // Manually age the observation
+    // biome-ignore lint/suspicious/noExplicitAny: accessing private field for test
     const obs = (t as any).observations.get("test");
     obs[0].timestamp = Date.now() - 200;
 

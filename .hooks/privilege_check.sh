@@ -38,6 +38,7 @@ SESSION_AGENT_ID=$(echo "$_state" | jq -r '.session_agent_id // ""' | tr -d '\r'
 if [ -n "$SESSION_AGENT_ID" ] && [ "$SESSION_AGENT_ID" != "null" ] && \
    [ -n "$AGENT_ID" ] && [ "$AGENT_ID" != "null" ] && \
    [ "$AGENT_ID" != "$SESSION_AGENT_ID" ]; then
+  # shellcheck disable=SC2034 — DETAILS used by audit trail in future phases
   DETAILS=$(jq -cn --arg original "$SESSION_AGENT_ID" --arg current "$AGENT_ID" \
     '{original_agent_id: $original, attempted_agent_id: $current}')
 

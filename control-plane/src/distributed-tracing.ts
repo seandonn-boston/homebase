@@ -68,11 +68,7 @@ export class DistributedTracer {
   /**
    * Start a child span within an existing trace.
    */
-  startSpan(
-    traceId: string,
-    operationName: string,
-    parentSpanId?: string,
-  ): TraceSpan {
+  startSpan(traceId: string, operationName: string, parentSpanId?: string): TraceSpan {
     const spanId = this.generateSpanId();
 
     const span: TraceSpan = {
@@ -160,9 +156,7 @@ export class DistributedTracer {
       resourceSpans: [
         {
           resource: {
-            attributes: [
-              { key: "service.name", value: { stringValue: "admiral" } },
-            ],
+            attributes: [{ key: "service.name", value: { stringValue: "admiral" } }],
           },
           scopeSpans: [
             {

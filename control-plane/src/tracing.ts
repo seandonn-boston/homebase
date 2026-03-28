@@ -31,9 +31,7 @@ export class TracingContext {
   constructor(opts?: { traceId?: string; logDir?: string }) {
     this.traceId = opts?.traceId ?? TracingContext.generateTraceId();
     this.logDir = opts?.logDir ?? null;
-    this.logFile = this.logDir
-      ? path.join(this.logDir, "traces.jsonl")
-      : null;
+    this.logFile = this.logDir ? path.join(this.logDir, "traces.jsonl") : null;
   }
 
   /** Generate a 32-char hex trace ID */
@@ -88,9 +86,7 @@ export class TracingContext {
     if (attributes) {
       span.attributes = { ...span.attributes, ...attributes };
     }
-    span.duration_ms =
-      new Date(span.end_time).getTime() -
-      new Date(span.start_time).getTime();
+    span.duration_ms = new Date(span.end_time).getTime() - new Date(span.start_time).getTime();
 
     this.writeSpan(span);
   }

@@ -3,7 +3,7 @@
  */
 
 import assert from "node:assert/strict";
-import { describe, it, beforeEach } from "node:test";
+import { beforeEach, describe, it } from "node:test";
 import { DistributedTracer } from "./distributed-tracing";
 
 describe("DistributedTracer", () => {
@@ -90,12 +90,11 @@ describe("DistributedTracer", () => {
     const root = tracer.startTrace("export-op", "agent-1");
     tracer.endSpan(root.spanId);
 
-    const exported = tracer.exportTrace(root.traceId) as any;
+    const exported = tracer.exportTrace(root.traceId) as {
+      resourceSpans: Array<{ scopeSpans: Array<{ spans: Array<{ name: string }> }> }>;
+    };
     assert.ok(exported.resourceSpans !== undefined);
     assert.strictEqual(exported.resourceSpans[0].scopeSpans[0].spans.length, 1);
-    assert.strictEqual(
-      exported.resourceSpans[0].scopeSpans[0].spans[0].name,
-      "export-op",
-    );
+    assert.strictEqual(exported.resourceSpans[0].scopeSpans[0].spans[0].name, "export-op");
   });
 });

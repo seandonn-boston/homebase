@@ -14,10 +14,7 @@ describe("RingBuffer property-based tests", () => {
           const buf = new RingBuffer<number>(capacity);
           for (const item of items) {
             buf.push(item);
-            assert.ok(
-              buf.size <= capacity,
-              `size ${buf.size} exceeded capacity ${capacity}`,
-            );
+            assert.ok(buf.size <= capacity, `size ${buf.size} exceeded capacity ${capacity}`);
           }
         },
       ),
@@ -96,11 +93,7 @@ describe("RingBuffer property-based tests", () => {
           }
           const arr = buf.toArray();
           for (let i = 0; i < arr.length; i++) {
-            assert.equal(
-              buf.get(i),
-              arr[i],
-              `get(${i}) mismatch: ${buf.get(i)} vs ${arr[i]}`,
-            );
+            assert.equal(buf.get(i), arr[i], `get(${i}) mismatch: ${buf.get(i)} vs ${arr[i]}`);
           }
         },
       ),
@@ -200,17 +193,14 @@ describe("RingBuffer property-based tests", () => {
   // Invariant 10: capacity of 1 always holds only the last item
   it("capacity-1 buffer always holds only the last pushed item", () => {
     fc.assert(
-      fc.property(
-        fc.array(fc.integer(), { minLength: 1, maxLength: 500 }),
-        (items) => {
-          const buf = new RingBuffer<number>(1);
-          for (const item of items) buf.push(item);
+      fc.property(fc.array(fc.integer(), { minLength: 1, maxLength: 500 }), (items) => {
+        const buf = new RingBuffer<number>(1);
+        for (const item of items) buf.push(item);
 
-          assert.equal(buf.size, 1);
-          assert.equal(buf.get(0), items[items.length - 1]);
-          assert.equal(buf.evictedCount, items.length - 1);
-        },
-      ),
+        assert.equal(buf.size, 1);
+        assert.equal(buf.get(0), items[items.length - 1]);
+        assert.equal(buf.evictedCount, items.length - 1);
+      }),
       { numRuns: 1000 },
     );
   });

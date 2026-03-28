@@ -8,8 +8,8 @@
 
 import * as fs from "node:fs";
 import * as path from "node:path";
+import { errorMessage } from "./errors.js";
 import type { EventStream } from "./events";
-import { IngestionError, errorMessage } from "./errors.js";
 
 /** Raw event shape as emitted by hooks */
 interface HookEvent {
@@ -175,9 +175,7 @@ export class JournalIngester {
     } catch (err) {
       this.readErrors++;
       if (this.readErrors === 1) {
-        console.error(
-          `[admiral-ingester] First read error: ${errorMessage(err)}`,
-        );
+        console.error(`[admiral-ingester] First read error: ${errorMessage(err)}`);
       }
     }
 

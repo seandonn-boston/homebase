@@ -135,7 +135,8 @@ edd_capture_evidence() {
   local command="$3"
   _ensure_confirm_dir
 
-  local evidence_file="$CONFIRMATIONS_DIR/$(_normalize_task "$task_id")_$(_normalize_check "$check_name").evidence.txt"
+  local evidence_file
+  evidence_file="$CONFIRMATIONS_DIR/$(_normalize_task "$task_id")_$(_normalize_check "$check_name").evidence.txt"
 
   bash -c "$command" > "$evidence_file" 2>&1 || true
   printf '%s' "$evidence_file"

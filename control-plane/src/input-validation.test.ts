@@ -2,17 +2,17 @@
  * Tests for Input Validation Hardening (SEC-12)
  */
 
-import { describe, it } from "node:test";
 import assert from "node:assert/strict";
+import { describe, it } from "node:test";
 import {
-  containsNullBytes,
   containsInvalidChars,
-  validateSize,
+  containsNullBytes,
+  LIMITS,
   validateJson,
+  validateJsonRequestBody,
   validatePath,
   validateRequestBody,
-  validateJsonRequestBody,
-  LIMITS,
+  validateSize,
 } from "./input-validation";
 
 describe("containsNullBytes", () => {
@@ -104,11 +104,7 @@ describe("validateRequestBody", () => {
   it("rejects control characters", () => {
     const result = validateRequestBody("hello\x01world");
     assert.strictEqual(result.valid, false);
-    assert.ok(
-      result.errors.includes(
-        "Request body contains invalid control characters",
-      ),
-    );
+    assert.ok(result.errors.includes("Request body contains invalid control characters"));
   });
 
   it("rejects oversized bodies", () => {

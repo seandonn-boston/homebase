@@ -2,12 +2,12 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
   AdmiralError,
-  NotFoundError,
-  ValidationError,
-  StateCorruptionError,
-  IngestionError,
-  errorMessage,
   errorCode,
+  errorMessage,
+  IngestionError,
+  NotFoundError,
+  StateCorruptionError,
+  ValidationError,
 } from "./errors.js";
 
 describe("AdmiralError", () => {
@@ -76,10 +76,7 @@ describe("ValidationError", () => {
 
 describe("StateCorruptionError", () => {
   it("creates with message and state path", () => {
-    const err = new StateCorruptionError(
-      "JSON parse failed",
-      "/tmp/state.json",
-    );
+    const err = new StateCorruptionError("JSON parse failed", "/tmp/state.json");
     assert.equal(err.message, "JSON parse failed");
     assert.equal(err.code, "STATE_CORRUPTION");
     assert.equal(err.name, "StateCorruptionError");
@@ -94,11 +91,7 @@ describe("StateCorruptionError", () => {
 
 describe("IngestionError", () => {
   it("creates with source and line", () => {
-    const err = new IngestionError(
-      "malformed JSONL",
-      "event_log.jsonl",
-      42,
-    );
+    const err = new IngestionError("malformed JSONL", "event_log.jsonl", 42);
     assert.equal(err.message, "malformed JSONL");
     assert.equal(err.code, "INGESTION_ERROR");
     assert.equal(err.name, "IngestionError");
