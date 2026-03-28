@@ -20,7 +20,7 @@ Defense in depth for the Admiral Framework: adversarial testing, injection defen
 
 ## Privilege & Access Control
 
-- [~] **SEC-04: Privilege escalation hardening** — Prevent agents from gaining permissions beyond their role. Block authority tier self-modification (ATK-0003 defense), tool invocation outside declared allowlists, and identity token forging/transfer. Add runtime checks at every decision point where authority tier is consulted. Log all privilege check results to the audit trail. *(partial — see audit)*
+- [x] **SEC-04: Privilege escalation hardening** — *Completed in Phase 10.* — `admiral/security/privilege-enforcer.ts` provides runtime authority tier enforcement: validates agents act within autonomous/propose/escalate tiers, blocks self-modification (ATK-0003), enforces minimum privilege inheritance on delegation (ATK-0010), logs all privilege checks for audit. Combined with existing `privilege_check.sh` hook (identity binding, file-level blocks). 23-test suite.
 - [x] **SEC-05: Secret scanning for Brain entries** — Pre-write scan detecting API keys (`sk-`, `ghp_`, `AKIA`), JWT tokens, PEM private keys, passwords in key-value pairs, and connection strings with credentials. Quarantine entries containing secrets with a clear explanation. Must have < 2% false positive rate on legitimate technical brain entries.
 
 ## Data Protection
