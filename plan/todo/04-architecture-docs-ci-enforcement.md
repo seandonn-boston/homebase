@@ -64,7 +64,7 @@
 - [x] **D-08:** Create operational runbook — *Completed in Phase 9.* — `docs/OPERATIONAL_RUNBOOK.md` with prerequisites, setup, session lifecycle, control plane ops, hook system, brain system, fleet ops, validation, 10 failure scenarios (hard blocks, state corruption, jq missing, server issues, loop detector, SO loading, brain queries, worktree conflicts, CI failures, config validation) with diagnosis and resolution, recovery procedures, monitoring reference `[L]`
 - [x] **D-09:** Create hook troubleshooting guide — *Completed in Phase 9.* — `docs/HOOK_TROUBLESHOOTING.md` with quick reference table, general debugging steps, per-hook failure mode tables for all 17 hooks (6 hard-block, 11 advisory), common false positives, debug commands, resolution steps `[M]`
 - [x] **D-10:** Create Brain user guide — *Completed in Phase 9.* — `docs/BRAIN_USER_GUIDE.md` with CLI examples for all 5 brain tools (record, query, retrieve, audit, consolidate), entry types, tier comparison, graduation criteria, hook integration, file layout `[M]`
-- [ ] **D-11:** Create security model document — threat model, attack surfaces, defense layers, quarantine `[L]`
+- [x] **D-11:** Create security model document — *Completed in Phase 9.* — `docs/SECURITY_MODEL.md` with threat model (4 actors, 6 categories, 30 ATK scenarios), 5 attack surfaces, 4-tier defense architecture, identity/authorization (RBAC, token binding, tier enforcement), injection prevention (70+ patterns), 5-layer quarantine pipeline (LLM-airgapped layers 1-3), secret detection (40+ patterns), privilege escalation defense, hash-chained audit trail, residual risk analysis `[L]`
 
 ### 4.5 Contributor & Reference Documentation
 
