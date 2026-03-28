@@ -82,7 +82,7 @@ echo "--- hook_log ---"
 
 # hook_log should not error and should write to stderr
 hook_init "log_test"
-LOG_OUTPUT=$(hook_log "info" "test message" 2>&1) || true
+hook_log "info" "test message" >/dev/null 2>&1 || true
 assert_eq "hook_log does not error" "0" "$?"
 
 # ─── hook_pass ───────────────────────────────────────────────────────
@@ -94,7 +94,7 @@ hook_init "pass_test"
 
 # hook_pass exits 0 — test in subshell
 PASS_EXIT=0
-PASS_OUTPUT=$(bash -c "source '$PROJECT_DIR/admiral/lib/hook_utils.sh'; hook_init pass_test; hook_pass" 2>/dev/null) || PASS_EXIT=$?
+bash -c "source '$PROJECT_DIR/admiral/lib/hook_utils.sh'; hook_init pass_test; hook_pass" >/dev/null 2>&1 || PASS_EXIT=$?
 assert_eq "hook_pass exits 0" "0" "$PASS_EXIT"
 
 # hook_pass with extra JSON
