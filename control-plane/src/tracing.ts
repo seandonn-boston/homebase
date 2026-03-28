@@ -124,7 +124,7 @@ export class TracingContext {
     if (!this.logFile || !this.logDir) return;
     try {
       fs.mkdirSync(this.logDir, { recursive: true });
-      fs.appendFileSync(this.logFile, JSON.stringify(span) + "\n");
+      fs.appendFileSync(this.logFile, `${JSON.stringify(span)}\n`);
     } catch {
       // Tracing should never crash the application
     }
