@@ -8,6 +8,9 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 export CLAUDE_PROJECT_DIR="$PROJECT_DIR"
 
+# shellcheck source=/dev/null
+source "$SCRIPT_DIR/../lib/assert.sh"
+
 # Use temp dir for test confirmations
 TEST_DIR=$(mktemp -d)
 trap 'rm -rf "$TEST_DIR"' EXIT
@@ -18,40 +21,6 @@ source "$PROJECT_DIR/admiral/lib/edd_confirm.sh"
 
 # Override after sourcing
 CONFIRMATIONS_DIR="$TEST_DIR/confirmations"
-
-PASS=0
-FAIL=0
-ERRORS=""
-
-assert_eq() {
-  local test_name="$1"
-  local expected="$2"
-  local actual="$3"
-  if [ "$expected" = "$actual" ]; then
-    PASS=$((PASS + 1))
-    echo "  [PASS] $test_name"
-  else
-    FAIL=$((FAIL + 1))
-    ERRORS+="  [FAIL] $test_name — expected '$expected', got '$actual'\n"
-    echo "  [FAIL] $test_name — expected '$expected', got '$actual'"
-  fi
-}
-
-assert_exit() {
-  local test_name="$1"
-  local expected_exit="$2"
-  shift 2
-  local rc=0
-  "$@" >/dev/null 2>&1 || rc=$?
-  if [ "$rc" -eq "$expected_exit" ]; then
-    PASS=$((PASS + 1))
-    echo "  [PASS] $test_name"
-  else
-    FAIL=$((FAIL + 1))
-    ERRORS+="  [FAIL] $test_name — expected exit $expected_exit, got $rc\n"
-    echo "  [FAIL] $test_name — expected exit $expected_exit, got $rc"
-  fi
-}
 
 echo "=== EDD Confirmation Protocol Tests (EDD-05) ==="
 echo ""
@@ -93,9 +62,14 @@ assert_eq "rejection verdict" "rejected" "$REJ_VERDICT"
 echo ""
 echo "--- edd_is_confirmed ---"
 
-assert_exit "confirmed check returns 0" 0 edd_is_confirmed "Q-01" "looks right"
-assert_exit "rejected check returns 1" 1 edd_is_confirmed "Q-03" "formatting"
-assert_exit "missing check returns 1" 1 edd_is_confirmed "NONEXISTENT-99" "anything"
+rc=0; edd_is_confirmed "Q-01" "looks right" || rc=$?
+assert_exit_code "confirmed check returns 0" 0 "$rc"
+
+rc=0; edd_is_confirmed "Q-03" "formatting" || rc=$?
+assert_exit_code "rejected check returns 1" 1 "$rc"
+
+rc=0; edd_is_confirmed "NONEXISTENT-99" "anything" || rc=$?
+assert_exit_code "missing check returns 1" 1 "$rc"
 
 # ─── edd_get_confirmations ──────────────────────────────────────────
 
@@ -123,17 +97,4 @@ assert_eq "evidence contains output" "test output" "$EV_CONTENT"
 
 # ─── Summary ─────────────────────────────────────────────────────────
 
-echo ""
-echo "=== Results ==="
-echo "  Passed: $PASS"
-echo "  Failed: $FAIL"
-
-if [ "$FAIL" -gt 0 ]; then
-  echo ""
-  echo "Failures:"
-  printf '%b' "$ERRORS"
-  exit 1
-fi
-
-echo "  All tests passed."
-exit 0
+print_results "EDD Confirmation Protocol Tests"

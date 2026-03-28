@@ -10,9 +10,8 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
-PASS=0
-FAIL=0
-ERRORS=""
+# shellcheck source=/dev/null
+source "$SCRIPT_DIR/../lib/assert.sh"
 
 echo "=== Documentation Discipline Validation (P-02) ==="
 echo ""
@@ -53,16 +52,17 @@ for hook_file in "$PROJECT_DIR/.hooks/"*.sh; do
 
   HOOK_OK=true
 
-  # Check for purpose description (Admiral Framework in first 5 lines)
-  if ! head -5 "$hook_file" | grep -q "Admiral Framework"; then
+  # Read header once for both checks
+  hook_header=$(head -10 "$hook_file")
+
+  if ! printf '%s' "$hook_header" | head -5 | grep -q "Admiral Framework"; then
     FAIL=$((FAIL + 1))
     ERRORS+="  [FAIL] .hooks/$basename — missing 'Admiral Framework' purpose line\n"
     echo "  [FAIL] .hooks/$basename — missing purpose line"
     HOOK_OK=false
   fi
 
-  # Check for exit code documentation (exit, advisory, hard-block in first 10 lines)
-  if ! head -10 "$hook_file" | grep -qiE '(exit [0-9]|advisory|hard-block|fail-open|always exit|NEVER hard|NEVER blocks)'; then
+  if ! printf '%s' "$hook_header" | grep -qiE '(exit [0-9]|advisory|hard-block|fail-open|always exit|NEVER hard|NEVER blocks)'; then
     FAIL=$((FAIL + 1))
     ERRORS+="  [FAIL] .hooks/$basename — no exit code documentation in header\n"
     echo "  [FAIL] .hooks/$basename — no exit code docs"
@@ -104,17 +104,4 @@ done
 
 # ─── Summary ─────────────────────────────────────────────────────────
 
-echo ""
-echo "=== Results ==="
-echo "  Passed: $PASS"
-echo "  Failed: $FAIL"
-
-if [ "$FAIL" -gt 0 ]; then
-  echo ""
-  echo "Violations:"
-  printf '%b' "$ERRORS"
-  exit 1
-fi
-
-echo "  All documentation checks passed."
-exit 0
+print_results "Documentation Discipline Validation"

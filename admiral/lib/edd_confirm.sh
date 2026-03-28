@@ -20,9 +20,23 @@ fi
 
 CONFIRMATIONS_DIR="${PROJECT_DIR}/.admiral/confirmations"
 
-# Ensure confirmations directory exists
 _ensure_confirm_dir() {
   mkdir -p "$CONFIRMATIONS_DIR"
+}
+
+# Normalize a task ID: lowercase, hyphens to underscores
+_normalize_task() {
+  printf '%s' "$1" | tr '[:upper:]' '[:lower:]' | tr '-' '_'
+}
+
+# Normalize a check name: lowercase, spaces/special chars to underscores, strip non-alnum
+_normalize_check() {
+  printf '%s' "$1" | tr '[:upper:]' '[:lower:]' | tr ' ' '_' | tr -cd 'a-z0-9_'
+}
+
+# Build the confirmation file path for a task/check pair
+_confirm_path() {
+  printf '%s/%s_%s.confirm.json' "$CONFIRMATIONS_DIR" "$(_normalize_task "$1")" "$(_normalize_check "$2")"
 }
 
 # Record a visual confirmation for a probabilistic check.
@@ -40,11 +54,8 @@ edd_confirm() {
   local ts
   ts=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 
-  local normalized_task
-  normalized_task=$(printf '%s' "$task_id" | tr '[:upper:]' '[:lower:]' | tr '-' '_')
-  local normalized_check
-  normalized_check=$(printf '%s' "$check_name" | tr '[:upper:]' '[:lower:]' | tr ' ' '_' | tr -cd 'a-z0-9_')
-  local confirm_file="$CONFIRMATIONS_DIR/${normalized_task}_${normalized_check}.confirm.json"
+  local confirm_file
+  confirm_file=$(_confirm_path "$task_id" "$check_name")
 
   jq -cn \
     --arg task_id "$task_id" \
@@ -71,12 +82,8 @@ edd_confirm() {
 edd_is_confirmed() {
   local task_id="$1"
   local check_name="$2"
-
-  local normalized_task
-  normalized_task=$(printf '%s' "$task_id" | tr '[:upper:]' '[:lower:]' | tr '-' '_')
-  local normalized_check
-  normalized_check=$(printf '%s' "$check_name" | tr '[:upper:]' '[:lower:]' | tr ' ' '_' | tr -cd 'a-z0-9_')
-  local confirm_file="$CONFIRMATIONS_DIR/${normalized_task}_${normalized_check}.confirm.json"
+  local confirm_file
+  confirm_file=$(_confirm_path "$task_id" "$check_name")
 
   if [ -f "$confirm_file" ]; then
     local verdict
@@ -95,7 +102,7 @@ edd_get_confirmations() {
   _ensure_confirm_dir
 
   local normalized_task
-  normalized_task=$(printf '%s' "$task_id" | tr '[:upper:]' '[:lower:]' | tr '-' '_')
+  normalized_task=$(_normalize_task "$task_id")
   local result="[]"
 
   for confirm_file in "$CONFIRMATIONS_DIR/${normalized_task}_"*.confirm.json; do
@@ -118,11 +125,7 @@ edd_capture_evidence() {
   local command="$3"
   _ensure_confirm_dir
 
-  local normalized_task
-  normalized_task=$(printf '%s' "$task_id" | tr '[:upper:]' '[:lower:]' | tr '-' '_')
-  local normalized_check
-  normalized_check=$(printf '%s' "$check_name" | tr '[:upper:]' '[:lower:]' | tr ' ' '_' | tr -cd 'a-z0-9_')
-  local evidence_file="$CONFIRMATIONS_DIR/${normalized_task}_${normalized_check}.evidence.txt"
+  local evidence_file="$CONFIRMATIONS_DIR/$(_normalize_task "$task_id")_$(_normalize_check "$check_name").evidence.txt"
 
   bash -c "$command" > "$evidence_file" 2>&1 || true
   printf '%s' "$evidence_file"

@@ -38,9 +38,8 @@ cat > "$ADMIRAL_DIR/session_state.json" << 'EOF'
 }
 EOF
 
-PASS=0
-FAIL=0
-ERRORS=""
+# shellcheck source=/dev/null
+source "$SCRIPT_DIR/../lib/assert.sh"
 
 # Test idempotency: run a hook twice with the same input, compare outputs
 test_idempotent() {
@@ -167,17 +166,4 @@ test_idempotent "pre_tool_use_adapter (safe read)" \
 
 # ─── Summary ─────────────────────────────────────────────────────────
 
-echo ""
-echo "=== Results ==="
-echo "  Passed: $PASS"
-echo "  Failed: $FAIL"
-
-if [ "$FAIL" -gt 0 ]; then
-  echo ""
-  echo "Failures:"
-  printf '%b' "$ERRORS"
-  exit 1
-fi
-
-echo "  All hooks are idempotent."
-exit 0
+print_results "Hook Idempotency Verification"
