@@ -33,7 +33,7 @@ Defense in depth for the Admiral Framework: adversarial testing, injection defen
 
 - [x] **S-22: Security audit trail** — Persistent append-only JSONL log of all security-relevant events: blocked tool uses, injection attempt detections, privilege escalation attempts, PII detection events, zero-trust validation failures. Wire into `prohibitions_enforcer.sh`, `zero_trust_validator.sh`, sanitizer, and database triggers. Each entry includes timestamp, event type, agent ID, action taken, and details.
 - [x] **SEC-06: Audit trail tamper detection** — SHA-256 hash chain on the audit log where each entry includes a `prev_hash` field. Validate chain integrity on startup and periodically during operation. Store chain checkpoints at configurable intervals. Chain break triggers a critical alert identifying the break position. Validation completes in < 1 second for logs up to 100K entries.
-- [ ] **SEC-07: Security incident response playbook** — Document procedures covering 5 phases (detection, containment, investigation, remediation, post-mortem) for 4 critical scenarios: compromised brain entry, identity spoofing, unauthorized tool access, and audit log tampering. Include step-by-step runbook commands. Integrate into Standing Orders.
+- [x] **SEC-07: Security incident response playbook** — *Completed in Phase 10.* — `docs/INCIDENT_RESPONSE.md` with 5-phase procedures (detect, contain, investigate, remediate, post-mortem) for 4 critical scenarios (compromised brain, identity spoofing, unauthorized tool, audit tampering). 16 bash code blocks with runbook commands, severity levels P1-P4, Standing Orders integration (SO-09/10/13/16), incident log template. 26-test validation suite.
 
 ## MCP/A2A Security
 
