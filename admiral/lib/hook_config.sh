@@ -136,11 +136,11 @@ SECRET_PATTERNS=(
 )
 
 # Patterns that indicate secrets in file content
-# shellcheck disable=SC2034 — exported for use by hooks sourcing this library
+# shellcheck disable=SC2034
 SECRET_CONTENT_PATTERNS='(password|api_key|secret_key|private_key|AWS_ACCESS_KEY|BEGIN RSA|BEGIN OPENSSH)\s*[:=]'
 
 # Sensitive file extensions/names
-# shellcheck disable=SC2034 — exported for use by hooks sourcing this library
+# shellcheck disable=SC2034
 SENSITIVE_FILE_PATTERN='*.env|*credentials*|*secret*|*.pem|*.key'
 
 # Check if content contains potential secrets.
