@@ -24,13 +24,23 @@ _ensure_confirm_dir() {
   mkdir -p "$CONFIRMATIONS_DIR"
 }
 
+# Validate an identifier contains only safe characters (no path traversal)
+_validate_id() {
+  if ! printf '%s' "$1" | grep -qE '^[a-zA-Z0-9_.  -]+$'; then
+    echo "ERROR: Invalid identifier: $1" >&2
+    return 1
+  fi
+}
+
 # Normalize a task ID: lowercase, hyphens to underscores
 _normalize_task() {
+  _validate_id "$1" || return 1
   printf '%s' "$1" | tr '[:upper:]' '[:lower:]' | tr '-' '_'
 }
 
 # Normalize a check name: lowercase, spaces/special chars to underscores, strip non-alnum
 _normalize_check() {
+  _validate_id "$1" || return 1
   printf '%s' "$1" | tr '[:upper:]' '[:lower:]' | tr ' ' '_' | tr -cd 'a-z0-9_'
 }
 

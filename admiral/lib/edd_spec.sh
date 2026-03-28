@@ -25,6 +25,11 @@ edd_ensure_dir() {
 # Returns: path to the spec file
 edd_spec_path() {
   local task_id="$1"
+  # Reject path traversal and unsafe characters
+  if ! printf '%s' "$task_id" | grep -qE '^[a-zA-Z0-9_-]+$'; then
+    echo "ERROR: Invalid task ID: $task_id" >&2
+    return 1
+  fi
   local normalized
   normalized=$(printf '%s' "$task_id" | tr '[:upper:]' '[:lower:]' | tr '-' '_')
   printf '%s/%s.eval.json' "$EDD_SPECS_DIR" "$normalized"

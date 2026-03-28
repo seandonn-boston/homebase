@@ -84,6 +84,11 @@ for i in $(seq 0 $((DET_TOTAL - 1))); do
 
   EXEC_DIR="$PROJECT_DIR"
   if [ -n "$WORKING_DIR" ] && [ "$WORKING_DIR" != "null" ]; then
+    # Reject path traversal in working_dir
+    if printf '%s' "$WORKING_DIR" | grep -qE '(\.\.|^/)'; then
+      echo "ERROR: Invalid working_dir (path traversal rejected): $WORKING_DIR" >&2
+      exit 2
+    fi
     EXEC_DIR="$PROJECT_DIR/$WORKING_DIR"
   fi
 
