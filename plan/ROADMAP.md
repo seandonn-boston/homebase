@@ -48,6 +48,8 @@ Phase 10 Security Hardening & Brain B3
 Phase 11 Developer Experience & Monitoring
   │
 Phase 12 Strategic Positioning & Completion
+  │
+Phase 13 Cleanup
 ```
 
 ---
@@ -319,6 +321,24 @@ If spec debt resolution surfaces new requirements, those requirements must be in
 
 ---
 
+## Phase 13 — Cleanup
+
+> Eliminate all lint/check suppressions across the entire codebase. Every `shellcheck disable`, `biome-ignore`, `eslint-disable`, `@ts-ignore`, and similar suppression must be removed and the underlying issue fixed. No exceptions.
+
+| Scope | Description |
+|-------|-------------|
+| **Shell scripts** | Remove all `# shellcheck disable=SCXXXX` directives. Fix the actual issues (unused variables, quoting, unreachable code). |
+| **TypeScript** | Remove all `// biome-ignore`, `// @ts-ignore`, `// @ts-expect-error`, `// eslint-disable` directives. Fix with proper types, refactoring, or code changes. |
+| **Other files** | Scan for any suppression patterns in any file type. No file is exempt. |
+
+**Why now:** Phases 0–12 built the full system. Suppressions accumulated during rapid development as a pragmatic shortcut. A showcase-quality codebase cannot claim 10/10 code quality while silencing its own tools. This phase ensures every diagnostic tool runs unsuppressed.
+
+**Concurrency:** One comprehensive pass across the full codebase.
+
+**Exit criteria:** Zero suppression directives in any file. All lint, shellcheck, and type-check tools pass cleanly without any per-line or per-file disables. CI enforces a "no-suppress" policy going forward.
+
+---
+
 ## Stream-to-Phase Map (Quick Reference)
 
 | Stream | Name | Phase(s) |
@@ -397,6 +417,8 @@ Phase 10 ║ [Stream 24: Security↑] [Stream 11-B3: Brain B3]
 Phase 11 ║ [Stream 26: DX] [Stream 27: Monitoring] [Stream 15↑] [Stream 18↑] [Stream 25↑]
          ║
 Phase 12 ║ [Stream 12: Positioning↑] [Stream 13: Exemplary↑] [Stream 23↑] [Stream 28↑] [Stream 33↑]
+         ║
+Phase 13 ║ [Full codebase: remove all lint/check suppressions]
 ```
 
 *↑ = depth continuation of a stream that delivered foundational outputs in an earlier phase.*
