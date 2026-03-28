@@ -35,6 +35,7 @@ export {
   InterventionAuthorizer,
   InterventionType,
 } from "./intervention-auth";
+export { EndpointTier, RateLimiter, RateLimitResult, RateLimitTier } from "./rate-limiter";
 export {
   getInterventionAction,
   getReversibleActions,
