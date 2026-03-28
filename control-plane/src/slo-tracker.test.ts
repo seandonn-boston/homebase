@@ -2,7 +2,8 @@
  * Tests for SLO/SLI Tracker (OB-08)
  */
 
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, beforeEach } from "node:test";
+import assert from "node:assert/strict";
 import { SLOTracker, CORE_SLIS, CORE_SLOS } from "./slo-tracker";
 
 describe("SLOTracker", () => {
@@ -14,7 +15,7 @@ describe("SLOTracker", () => {
 
   it("initializes with core SLIs and SLOs", () => {
     const status = tracker.getAllStatus();
-    expect(status.length).toBe(CORE_SLIS.length);
+    assert.strictEqual(status.length, CORE_SLIS.length);
   });
 
   it("tracks good observations (below threshold)", () => {
@@ -23,9 +24,9 @@ describe("SLOTracker", () => {
     tracker.observe("hook_latency_p99", 150); // bad (> 100ms)
 
     const status = tracker.getStatus("hook_latency_p99");
-    expect(status).not.toBeNull();
-    expect(status!.observationCount).toBe(3);
-    expect(status!.current).toBeCloseTo(2 / 3);
+    assert.ok(status !== null);
+    assert.strictEqual(status!.observationCount, 3);
+    assert.ok(Math.abs(status!.current - 2 / 3) < 0.001);
   });
 
   it("tracks good observations (above threshold)", () => {
@@ -34,7 +35,7 @@ describe("SLOTracker", () => {
     tracker.observe("first_pass_quality", 0.90); // good
 
     const status = tracker.getStatus("first_pass_quality");
-    expect(status!.current).toBeCloseTo(2 / 3);
+    assert.ok(Math.abs(status!.current - 2 / 3) < 0.001);
   });
 
   it("calculates error budget correctly", () => {
@@ -57,24 +58,24 @@ describe("SLOTracker", () => {
     for (let i = 0; i < 2; i++) t.observe("test", 200);
 
     const status = t.getStatus("test");
-    expect(status!.current).toBeCloseTo(0.98);
-    expect(status!.inViolation).toBe(true);
-    expect(status!.errorBudgetConsumedPct).toBe(100); // Capped at 100%
+    assert.ok(Math.abs(status!.current - 0.98) < 0.001);
+    assert.strictEqual(status!.inViolation, true);
+    assert.strictEqual(status!.errorBudgetConsumedPct, 100); // Capped at 100%
   });
 
   it("returns empty status for unknown SLI", () => {
-    expect(tracker.getStatus("nonexistent")).toBeNull();
+    assert.strictEqual(tracker.getStatus("nonexistent"), null);
   });
 
   it("ignores observations for unknown SLIs", () => {
     tracker.observe("nonexistent", 42);
-    expect(tracker.getStatus("nonexistent")).toBeNull();
+    assert.strictEqual(tracker.getStatus("nonexistent"), null);
   });
 
   it("reports no violation when no observations", () => {
     const status = tracker.getStatus("hook_latency_p99");
-    expect(status!.inViolation).toBe(false);
-    expect(status!.current).toBe(1);
+    assert.strictEqual(status!.inViolation, false);
+    assert.strictEqual(status!.current, 1);
   });
 
   it("prunes old observations", () => {
@@ -97,6 +98,6 @@ describe("SLOTracker", () => {
     obs[0].timestamp = Date.now() - 200;
 
     const pruned = t.prune();
-    expect(pruned).toBe(1);
+    assert.strictEqual(pruned, 1);
   });
 });

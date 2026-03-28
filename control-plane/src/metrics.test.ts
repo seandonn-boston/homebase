@@ -2,7 +2,8 @@
  * Tests for MetricsCollector (OB-03)
  */
 
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, beforeEach } from "node:test";
+import assert from "node:assert/strict";
 import { MetricsCollector } from "./metrics";
 
 describe("MetricsCollector", () => {
@@ -18,11 +19,11 @@ describe("MetricsCollector", () => {
     metrics.recordHookExecution("zero_trust_validator", 150, "fail");
 
     const stats = metrics.hookLatency["zero_trust_validator"].getStats();
-    expect(stats.count).toBe(3);
-    expect(stats.sum).toBe(190);
+    assert.strictEqual(stats.count, 3);
+    assert.strictEqual(stats.sum, 190);
 
-    expect(metrics.hookResults.get({ hook: "zero_trust_validator", result: "pass" })).toBe(2);
-    expect(metrics.hookResults.get({ hook: "zero_trust_validator", result: "fail" })).toBe(1);
+    assert.strictEqual(metrics.hookResults.get({ hook: "zero_trust_validator", result: "pass" }), 2);
+    assert.strictEqual(metrics.hookResults.get({ hook: "zero_trust_validator", result: "fail" }), 1);
   });
 
   it("records events by type", () => {
@@ -30,8 +31,8 @@ describe("MetricsCollector", () => {
     metrics.recordEvent("tool_called");
     metrics.recordEvent("task_completed");
 
-    expect(metrics.eventThroughput.get({ type: "tool_called" })).toBe(2);
-    expect(metrics.eventThroughput.get({ type: "task_completed" })).toBe(1);
+    assert.strictEqual(metrics.eventThroughput.get({ type: "tool_called" }), 2);
+    assert.strictEqual(metrics.eventThroughput.get({ type: "task_completed" }), 1);
   });
 
   it("records brain query latency", () => {
@@ -39,19 +40,19 @@ describe("MetricsCollector", () => {
     metrics.recordBrainQuery(200);
 
     const stats = metrics.brainQueryLatency.getStats();
-    expect(stats.count).toBe(2);
-    expect(stats.sum).toBe(250);
+    assert.strictEqual(stats.count, 2);
+    assert.strictEqual(stats.sum, 250);
   });
 
   it("tracks gauges correctly", () => {
     metrics.activeSessions.set(5);
-    expect(metrics.activeSessions.get()).toBe(5);
+    assert.strictEqual(metrics.activeSessions.get(), 5);
 
     metrics.activeSessions.inc();
-    expect(metrics.activeSessions.get()).toBe(6);
+    assert.strictEqual(metrics.activeSessions.get(), 6);
 
     metrics.activeSessions.dec(2);
-    expect(metrics.activeSessions.get()).toBe(4);
+    assert.strictEqual(metrics.activeSessions.get(), 4);
   });
 
   it("renders Prometheus exposition format", () => {
@@ -61,13 +62,13 @@ describe("MetricsCollector", () => {
 
     const output = metrics.toPrometheus();
 
-    expect(output).toContain("# HELP admiral_hook_duration_ms");
-    expect(output).toContain("# TYPE admiral_hook_duration_ms histogram");
-    expect(output).toContain('admiral_hook_duration_ms_bucket{hook="test_hook"');
-    expect(output).toContain("# HELP admiral_hook_results_total");
-    expect(output).toContain('admiral_hook_results_total{hook="test_hook",result="pass"} 1');
-    expect(output).toContain('admiral_events_total{type="tool_called"} 1');
-    expect(output).toContain("admiral_active_sessions 3");
+    assert.ok(output.includes("# HELP admiral_hook_duration_ms"));
+    assert.ok(output.includes("# TYPE admiral_hook_duration_ms histogram"));
+    assert.ok(output.includes('admiral_hook_duration_ms_bucket{hook="test_hook"'));
+    assert.ok(output.includes("# HELP admiral_hook_results_total"));
+    assert.ok(output.includes('admiral_hook_results_total{hook="test_hook",result="pass"} 1'));
+    assert.ok(output.includes('admiral_events_total{type="tool_called"} 1'));
+    assert.ok(output.includes("admiral_active_sessions 3"));
   });
 
   it("histogram buckets are cumulative", () => {
@@ -80,9 +81,9 @@ describe("MetricsCollector", () => {
     const bucket50 = stats.buckets.find(b => b.le === 50);
     const bucket500 = stats.buckets.find(b => b.le === 500);
 
-    expect(bucket5?.count).toBe(1);
-    expect(bucket50?.count).toBe(2);  // cumulative: 5ms + 50ms
-    expect(bucket500?.count).toBe(3); // cumulative: all three
+    assert.strictEqual(bucket5?.count, 1);
+    assert.strictEqual(bucket50?.count, 2);  // cumulative: 5ms + 50ms
+    assert.strictEqual(bucket500?.count, 3); // cumulative: all three
   });
 
   it("records API requests with endpoint and status", () => {
@@ -90,7 +91,7 @@ describe("MetricsCollector", () => {
     metrics.recordApiRequest("/health", 3, 200);
     metrics.recordApiRequest("/api/events", 15, 200);
 
-    expect(metrics.apiRequests.get({ endpoint: "/health", status: "200" })).toBe(2);
-    expect(metrics.apiRequests.get({ endpoint: "/api/events", status: "200" })).toBe(1);
+    assert.strictEqual(metrics.apiRequests.get({ endpoint: "/health", status: "200" }), 2);
+    assert.strictEqual(metrics.apiRequests.get({ endpoint: "/api/events", status: "200" }), 1);
   });
 });

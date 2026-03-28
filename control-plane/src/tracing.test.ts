@@ -5,7 +5,8 @@
 import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { describe, it, beforeEach, afterEach } from "node:test";
+import assert from "node:assert/strict";
 import { TracingContext, parseTraceFile, getSpansByTraceId } from "./tracing";
 
 describe("TracingContext", () => {
@@ -21,12 +22,12 @@ describe("TracingContext", () => {
 
   it("generates valid trace IDs (32 hex chars)", () => {
     const id = TracingContext.generateTraceId();
-    expect(id).toMatch(/^[0-9a-f]{32}$/);
+    assert.ok(id.match(/^[0-9a-f]{32}$/));
   });
 
   it("generates valid span IDs (16 hex chars)", () => {
     const id = TracingContext.generateSpanId();
-    expect(id).toMatch(/^[0-9a-f]{16}$/);
+    assert.ok(id.match(/^[0-9a-f]{16}$/));
   });
 
   it("creates spans with all required fields", () => {
@@ -35,13 +36,13 @@ describe("TracingContext", () => {
       attributes: { key: "value" },
     });
 
-    expect(span.trace_id).toBe(ctx.id);
-    expect(span.span_id).toMatch(/^[0-9a-f]{16}$/);
-    expect(span.operation).toBe("test_operation");
-    expect(span.start_time).toMatch(/^\d{4}-\d{2}-\d{2}T/);
-    expect(span.end_time).toBeNull();
-    expect(span.status).toBe("in_progress");
-    expect(span.attributes).toEqual({ key: "value" });
+    assert.strictEqual(span.trace_id, ctx.id);
+    assert.ok(span.span_id.match(/^[0-9a-f]{16}$/));
+    assert.strictEqual(span.operation, "test_operation");
+    assert.ok(span.start_time.match(/^\d{4}-\d{2}-\d{2}T/));
+    assert.strictEqual(span.end_time, null);
+    assert.strictEqual(span.status, "in_progress");
+    assert.deepStrictEqual(span.attributes, { key: "value" });
   });
 
   it("ends spans with duration calculation", () => {
@@ -51,10 +52,10 @@ describe("TracingContext", () => {
     ctx.endSpan(span.span_id, "ok", { result: "success" });
 
     const spans = ctx.getSpans();
-    expect(spans[0].status).toBe("ok");
-    expect(spans[0].end_time).not.toBeNull();
-    expect(spans[0].duration_ms).toBeGreaterThanOrEqual(0);
-    expect(spans[0].attributes.result).toBe("success");
+    assert.strictEqual(spans[0].status, "ok");
+    assert.ok(spans[0].end_time !== null);
+    assert.ok(spans[0].duration_ms! >= 0);
+    assert.strictEqual(spans[0].attributes.result, "success");
   });
 
   it("supports parent-child span relationships", () => {
@@ -64,7 +65,7 @@ describe("TracingContext", () => {
       parentSpanId: parent.span_id,
     });
 
-    expect(child.parent_span_id).toBe(parent.span_id);
+    assert.strictEqual(child.parent_span_id, parent.span_id);
   });
 
   it("builds tree from parent-child spans", () => {
@@ -74,9 +75,9 @@ describe("TracingContext", () => {
     ctx.startSpan("child2", { parentSpanId: root.span_id });
 
     const tree = ctx.buildTree();
-    expect(tree).toHaveLength(1);
-    expect(tree[0].children).toHaveLength(2);
-    expect(tree[0].operation).toBe("root");
+    assert.strictEqual(tree.length, 1);
+    assert.strictEqual(tree[0].children.length, 2);
+    assert.strictEqual(tree[0].operation, "root");
   });
 
   it("writes spans to trace log file", () => {
@@ -85,25 +86,25 @@ describe("TracingContext", () => {
     ctx.startSpan("op2");
 
     const logFile = path.join(tmpDir, "traces.jsonl");
-    expect(fs.existsSync(logFile)).toBe(true);
+    assert.strictEqual(fs.existsSync(logFile), true);
 
     const spans = parseTraceFile(logFile);
-    expect(spans.length).toBeGreaterThanOrEqual(2);
+    assert.ok(spans.length >= 2);
   });
 
   it("uses provided trace ID", () => {
     const customId = "a".repeat(32);
     const ctx = new TracingContext({ traceId: customId, logDir: tmpDir });
-    expect(ctx.id).toBe(customId);
+    assert.strictEqual(ctx.id, customId);
 
     const span = ctx.startSpan("op");
-    expect(span.trace_id).toBe(customId);
+    assert.strictEqual(span.trace_id, customId);
   });
 });
 
 describe("parseTraceFile", () => {
   it("handles missing files", () => {
-    expect(parseTraceFile("/nonexistent")).toEqual([]);
+    assert.deepStrictEqual(parseTraceFile("/nonexistent"), []);
   });
 
   it("handles empty files", () => {
@@ -112,7 +113,7 @@ describe("parseTraceFile", () => {
       `trace-test-${Date.now()}.jsonl`,
     );
     fs.writeFileSync(tmpFile, "");
-    expect(parseTraceFile(tmpFile)).toEqual([]);
+    assert.deepStrictEqual(parseTraceFile(tmpFile), []);
     fs.unlinkSync(tmpFile);
   });
 });
@@ -126,6 +127,6 @@ describe("getSpansByTraceId", () => {
     ] as any[];
 
     const result = getSpansByTraceId(spans, "aaa");
-    expect(result).toHaveLength(2);
+    assert.strictEqual(result.length, 2);
   });
 });
