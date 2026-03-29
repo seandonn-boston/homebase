@@ -23,7 +23,7 @@ Brain is Admiral's primary competitive moat. Ship B2 within **120 days** before 
 
 - [x] **B-21b** Brain Stale Detection — `brain_context_router` emits BRAIN STALE advisory when last brain_query was 20+ tool calls ago; complements BRAIN BYPASS; enforces SO-05/SO-11
 - [x] **B-21c** Möbius Loop `_meta` namespace — Brain self-instrumentation recording health snapshots, knowledge gaps, query patterns, graduation assessments in reserved `_meta` project; all agents read, only Admiral/orchestrator/Brain MCP write
-- [~] **B-21d** Contradiction resolution workflow — Full resolution protocol: writing agent chooses supersede, diverge, or withdraw on conflict; retrieval returns both sides with explicit conflict flag; escalation when decisions depend on conflicting entries *(partial — see audit)*
+- [x] **B-21d** Contradiction resolution workflow — *Completed in Phase 10.* — `ConflictAwareResolver` extends `ContradictionResolver` with: auto-detection on insert via `insertWithConflictCheck()`, conflict-flagged retrieval via `retrieveWithConflictFlag()`, and escalation triggers when decisions depend on conflicting entries via `checkDecisionDependencies()`. 10 new tests covering insert conflicts, clean inserts, conflict flags, superseded exclusion, escalation triggers.
 - [~] **B-21e** Decision entry schema — Formalized JSON schema for decision entries (decision, alternatives, reasoning, authority tier, agent, outcome); validated by brain_record; canonical format for causality tracing integration *(partial — see audit)*
 
 ## B1 Excellence

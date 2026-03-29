@@ -336,6 +336,186 @@ export class ContradictionResolver {
 	}
 }
 
+/** Result of a conflict-aware retrieval */
+export interface ConflictAwareResult {
+	entry: BrainEntry;
+	hasConflicts: boolean;
+	conflictingEntries: string[];
+}
+
+/** Result of an insert with conflict check */
+export interface InsertWithConflictResult {
+	entryId: string;
+	conflicts: Array<{
+		entryId: string;
+		overlap: string[];
+	}>;
+	requiresResolution: boolean;
+}
+
+/** Escalation recommendation */
+export interface EscalationRecommendation {
+	trigger: "contradiction_in_decision_dependency";
+	decisionEntryId: string;
+	conflictingEntries: [string, string];
+	severity: "high" | "critical";
+	message: string;
+}
+
+/**
+ * Extended contradiction resolution workflow (B-21d completion).
+ * Adds auto-detection on insert, conflict-aware retrieval, and
+ * escalation triggers for decision dependencies.
+ */
+export class ConflictAwareResolver extends ContradictionResolver {
+	private escalations: EscalationRecommendation[] = [];
+
+	constructor(private database: BrainDatabase) {
+		super(database);
+	}
+
+	/**
+	 * Insert a brain entry with automatic contradiction scanning.
+	 * Returns the entry ID and any detected conflicts.
+	 */
+	insertWithConflictCheck(
+		entry: Omit<BrainEntry, "id" | "created_at" | "updated_at" | "usefulness_score" | "access_count">,
+	): InsertWithConflictResult {
+		// Insert the entry
+		const inserted = this.database.insertEntry(entry);
+		const id = inserted.id;
+
+		// Scan for contradictions involving the new entry
+		const newEntry = this.database.getEntry(id);
+		if (!newEntry) {
+			return { entryId: id, conflicts: [], requiresResolution: false };
+		}
+
+		const allEntries = this.database.getAllEntries();
+		const conflicts: Array<{ entryId: string; overlap: string[] }> = [];
+
+		for (const existing of allEntries) {
+			if (existing.id === id) continue;
+
+			// Check for keyword overlap
+			const overlap = this.computeOverlap(newEntry, existing);
+			if (overlap.length >= 3) {
+				// Significant overlap — potential contradiction
+				conflicts.push({ entryId: existing.id, overlap });
+
+				// Auto-add contradicts metadata
+				const currentContradicts = newEntry.contradicts ?? [];
+				if (!currentContradicts.includes(existing.id)) {
+					this.database.updateEntry(id, {
+						contradicts: [...currentContradicts, existing.id],
+					});
+				}
+			}
+		}
+
+		return {
+			entryId: id,
+			conflicts,
+			requiresResolution: conflicts.length > 0,
+		};
+	}
+
+	/**
+	 * Retrieve entries with explicit conflict flags.
+	 * Each result indicates whether the entry has active contradictions.
+	 */
+	retrieveWithConflictFlag(entryId: string): ConflictAwareResult | null {
+		const entry = this.database.getEntry(entryId);
+		if (!entry) return null;
+
+		const conflicting: string[] = [];
+
+		// Check explicit contradicts field
+		if (entry.contradicts) {
+			conflicting.push(...entry.contradicts);
+		}
+
+		// Check contradiction links
+		const links = this.database.getLinks(entryId, "outgoing");
+		for (const link of links) {
+			if (link.link_type === "contradicts" && !conflicting.includes(link.to_entry)) {
+				conflicting.push(link.to_entry);
+			}
+		}
+
+		// Check incoming contradiction links
+		const incomingLinks = this.database.getLinks(entryId, "incoming");
+		for (const link of incomingLinks) {
+			if (link.link_type === "contradicts" && !conflicting.includes(link.from_entry)) {
+				conflicting.push(link.from_entry);
+			}
+		}
+
+		// Filter out entries that have been resolved (superseded)
+		const activeConflicts = conflicting.filter((cId) => {
+			const conflictEntry = this.database.getEntry(cId);
+			return conflictEntry && !conflictEntry.superseded_by;
+		});
+
+		return {
+			entry,
+			hasConflicts: activeConflicts.length > 0,
+			conflictingEntries: activeConflicts,
+		};
+	}
+
+	/**
+	 * Check if a decision entry depends on conflicting Brain entries.
+	 * If so, generates an escalation recommendation.
+	 */
+	checkDecisionDependencies(decisionEntryId: string): EscalationRecommendation | null {
+		const entry = this.database.getEntry(decisionEntryId);
+		if (!entry || entry.category !== "decision") return null;
+
+		// Find entries referenced in the decision's metadata or content
+		const referencedIds: string[] = [];
+		if (entry.metadata?.dependencies && Array.isArray(entry.metadata.dependencies)) {
+			referencedIds.push(...(entry.metadata.dependencies as string[]));
+		}
+
+		// Check if any referenced entries are in conflict
+		for (const refId of referencedIds) {
+			const result = this.retrieveWithConflictFlag(refId);
+			if (result && result.hasConflicts) {
+				const escalation: EscalationRecommendation = {
+					trigger: "contradiction_in_decision_dependency",
+					decisionEntryId,
+					conflictingEntries: [refId, result.conflictingEntries[0]],
+					severity: "critical",
+					message: `Decision '${entry.title}' depends on entry '${refId}' which has unresolved contradictions with ${result.conflictingEntries.join(", ")}`,
+				};
+				this.escalations.push(escalation);
+				return escalation;
+			}
+		}
+
+		return null;
+	}
+
+	/** Get all escalation recommendations */
+	getEscalations(): EscalationRecommendation[] {
+		return [...this.escalations];
+	}
+
+	private computeOverlap(a: BrainEntry, b: BrainEntry): string[] {
+		const wordsA = this.extractWords(a);
+		const wordsB = this.extractWords(b);
+		return [...wordsA].filter((w) => wordsB.has(w));
+	}
+
+	private extractWords(entry: BrainEntry): Set<string> {
+		const text = `${entry.title} ${entry.content} ${entry.tags.join(" ")}`;
+		return new Set(
+			text.toLowerCase().split(/\W+/).filter((w) => w.length > 3),
+		);
+	}
+}
+
 // ---------------------------------------------------------------------------
 // B-21e: Decision Entry Schema & Validation
 // ---------------------------------------------------------------------------
