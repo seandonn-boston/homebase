@@ -9,7 +9,7 @@ Defense in depth for the Admiral Framework: adversarial testing, injection defen
 ## Attack Corpus & Testing
 
 - [x] **SEC-01: Attack corpus test automation** — Build a test runner that iterates all 30 ATK scenarios (18 original + 12 new MCP/A2A/temporal entries ATK-0019 through ATK-0030), injects triggers into agent sessions or quarantine pipelines, verifies defenses activate, updates `times_passed`/`times_failed`/`last_tested` metadata, and produces a structured JSON report with severity weighting. Create the 12 new ATK entries from `MCP-SECURITY-ANALYSIS.md` Section 8 templates covering sleeper activation, rug pulls, behavioral drift, tool description poisoning, cross-server exfiltration, server-side prompt injection, A2A cascade attacks, trust transitivity, and Brain poisoning.
-- [~] **SEC-10: Security regression test suite** — Create a regression test framework where every security fix adds a corresponding test reproducing the original vulnerability. Maintain a registry mapping CVE/issue IDs to test files. Seed with at least 5 regression tests from attack corpus entries. CI runs regression tests on every PR and blocks merges on failure. *(partial — see audit)*
+- [x] **SEC-10: Security regression test suite** — *Completed in Phase 10.* — `admiral/security/regression-test-suite.ts` provides framework where each security fix adds a regression test. Registry maps ATK/issue IDs to test files. Seeded with 5 regression tests (ATK-0001 injection override, ATK-0003 self-modification, ATK-0002 authority claims, ATK-0010 delegation escalation, ATK-0012 encoding bypass). Suite runner with category filtering, blocking gate, and run history. 16-test validation suite.
 
 ## Injection Defense
 
