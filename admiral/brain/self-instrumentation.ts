@@ -528,6 +528,9 @@ export interface DecisionEntry {
 	agent: string;
 	outcome?: "success" | "failure" | "partial" | "pending";
 	timestamp: number;
+	dependencies?: string[];
+	context?: string;
+	reversible?: boolean;
 }
 
 export class DecisionEntryValidator {
@@ -604,7 +607,36 @@ export class DecisionEntryValidator {
 				authorityTier: decision.authorityTier,
 				outcome: decision.outcome,
 				originalTimestamp: decision.timestamp,
+				dependencies: decision.dependencies,
+				context: decision.context,
+				reversible: decision.reversible,
 			},
 		};
 	}
+
+	/**
+	 * Validate and record a decision entry to the Brain.
+	 * Returns the validation result. If valid and a database is provided,
+	 * the entry is written with proper schema enforcement.
+	 */
+	recordDecision(
+		decision: DecisionEntry,
+		db?: BrainDatabase,
+	): { valid: boolean; errors: string[]; entryId?: string } {
+		const validation = this.validate(decision);
+		if (!validation.valid) {
+			return validation;
+		}
+
+		if (db) {
+			const brainEntry = this.toEntry(decision);
+			const inserted = db.insertEntry(brainEntry);
+			return { valid: true, errors: [], entryId: inserted.id };
+		}
+
+		return { valid: true, errors: [] };
+	}
+
+	/** Schema file path for external validation tools */
+	static readonly SCHEMA_PATH = "admiral/schemas/decision-entry.v1.schema.json";
 }
