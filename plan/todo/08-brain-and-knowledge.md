@@ -30,7 +30,7 @@ Brain is Admiral's primary competitive moat. Ship B2 within **120 days** before 
 
 - [x] **B-22** Brain entry versioning — supersession chain tracking, rollback support
 - [x] **B-23** Brain entry expiration — TTL-based expiration, auto-archive, pre-expiry warnings
-- [ ] **B-24** Cross-project knowledge sharing — share entries across projects with permissions, provenance maintained
+- [x] **B-24** Cross-project knowledge sharing — *Completed in Phase 10.* — `admiral/brain/cross-project-sharing.ts` with project registration, allowed target enforcement, permission levels (read-only/read-write/admin), share depth limits, provenance chain tracking, share logging, and revocation. 19-test suite.
 - [x] **B-25** Brain usage analytics — per-entry usage tracking, analytics endpoint, gap detection, ROI
 - [x] **B-26** Brain backup and restore — automated backup with point-in-time recovery, integrity verification
 - [ ] **B-27** Brain schema migration testing — test B1→B2→B3 migrations, all types covered, metadata preserved, edge cases
