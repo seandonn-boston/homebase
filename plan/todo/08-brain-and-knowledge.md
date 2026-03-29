@@ -33,7 +33,7 @@ Brain is Admiral's primary competitive moat. Ship B2 within **120 days** before 
 - [x] **B-24** Cross-project knowledge sharing — *Completed in Phase 10.* — `admiral/brain/cross-project-sharing.ts` with project registration, allowed target enforcement, permission levels (read-only/read-write/admin), share depth limits, provenance chain tracking, share logging, and revocation. 19-test suite.
 - [x] **B-25** Brain usage analytics — per-entry usage tracking, analytics endpoint, gap detection, ROI
 - [x] **B-26** Brain backup and restore — automated backup with point-in-time recovery, integrity verification
-- [ ] **B-27** Brain schema migration testing — test B1→B2→B3 migrations, all types covered, metadata preserved, edge cases
+- [x] **B-27** Brain schema migration testing — *Completed in Phase 10.* — `admiral/brain/migration-testing.test.ts` with 26 tests covering: B1→B2 migration basics (standard, multi, empty, missing dir), entry type coverage (LESSON, DECISION, FAILURE, uncategorized), metadata preservation (tags, source_agent, confidence, metadata object, scope), edge cases (special chars, long content, empty tags, invalid JSON, missing fields), idempotency, contradiction links, version tracking, and validateB1Entry.
 - [x] **B-28** Brain entry templates — 5+ pre-defined templates for common entry types, `--template` flag, validation
 
 ## B2 SQLite Core
