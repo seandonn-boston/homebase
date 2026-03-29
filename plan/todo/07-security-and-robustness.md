@@ -37,7 +37,7 @@ Defense in depth for the Admiral Framework: adversarial testing, injection defen
 
 ## MCP/A2A Security
 
-- [~] **S-44: A2A payload content inspection** — Run all incoming A2A messages through quarantine Layers 1-2 before execution. Detect injection patterns in A2A payloads. Flag behavioral anomalies (statistically unusual outputs). Implement taint tracking recording agent contribution chains for cascade containment. *(partial — see audit)*
+- [x] **S-44: A2A payload content inspection** — *Completed in Phase 10.* — `admiral/security/a2a-inspection.ts` runs A2A messages through Layer 1 (19 injection patterns across 7 categories) and Layer 2 (structural validation, self-messaging prevention, size limits, suspicious metadata). Behavioral anomaly detection via agent baselines. Taint tracking with propagation chains for cascade containment. 17-test suite.
 - [~] **SEC-14: Cascade containment circuit breakers** — On MCP server compromise: (1) quarantine all Brain entries written by agents that used the flagged server (exclude from queries, do not delete), (2) suspend A2A connections for affected agents, (3) compute contamination graph tracing data lineage through agents and Brain entries. Analogous to epoch-based trust revocation applied to data integrity. *(partial — see audit)*
 
 ## Advanced Quarantine Layers
