@@ -567,4 +567,98 @@ describe("DecisionEntryValidator", () => {
 		const entry = validator.toEntry(d);
 		assert.ok(!entry.content.includes("Outcome:"));
 	});
+
+	it("includes dependencies in metadata", () => {
+		const d = { ...validDecision(), dependencies: ["entry-1", "entry-2"] };
+		const entry = validator.toEntry(d);
+		assert.deepEqual(entry.metadata.dependencies, ["entry-1", "entry-2"]);
+	});
+
+	it("includes context in metadata", () => {
+		const d = { ...validDecision(), context: "During sprint review" };
+		const entry = validator.toEntry(d);
+		assert.equal(entry.metadata.context, "During sprint review");
+	});
+
+	it("includes reversible flag in metadata", () => {
+		const d = { ...validDecision(), reversible: true };
+		const entry = validator.toEntry(d);
+		assert.equal(entry.metadata.reversible, true);
+	});
+
+	it("recordDecision validates before writing", () => {
+		const invalid = { ...validDecision(), decision: "" };
+		const result = validator.recordDecision(invalid);
+		assert.equal(result.valid, false);
+		assert.equal(result.entryId, undefined);
+	});
+
+	it("recordDecision returns valid for good input without db", () => {
+		const result = validator.recordDecision(validDecision());
+		assert.equal(result.valid, true);
+		assert.equal(result.entryId, undefined);
+	});
+
+	it("schema path is defined", () => {
+		assert.equal(
+			DecisionEntryValidator.SCHEMA_PATH,
+			"admiral/schemas/decision-entry.v1.schema.json",
+		);
+	});
+});
+
+describe("Decision Entry JSON Schema", () => {
+	it("schema file exists", () => {
+		const { existsSync } = require("node:fs");
+		const { join } = require("node:path");
+		const schemaPath = join(__dirname, "..", "..", "schemas", "decision-entry.v1.schema.json");
+		assert.ok(existsSync(schemaPath), `Schema file not found at ${schemaPath}`);
+	});
+
+	it("schema is valid JSON with required fields", () => {
+		const { readFileSync } = require("node:fs");
+		const { join } = require("node:path");
+		const schemaPath = join(__dirname, "..", "..", "schemas", "decision-entry.v1.schema.json");
+		const schema = JSON.parse(readFileSync(schemaPath, "utf-8"));
+		assert.ok(schema.required.includes("decision"));
+		assert.ok(schema.required.includes("alternatives"));
+		assert.ok(schema.required.includes("reasoning"));
+		assert.ok(schema.required.includes("authorityTier"));
+		assert.ok(schema.required.includes("agent"));
+		assert.ok(schema.required.includes("timestamp"));
+	});
+
+	it("schema defines authorityTier enum", () => {
+		const { readFileSync } = require("node:fs");
+		const { join } = require("node:path");
+		const schemaPath = join(__dirname, "..", "..", "schemas", "decision-entry.v1.schema.json");
+		const schema = JSON.parse(readFileSync(schemaPath, "utf-8"));
+		assert.deepEqual(schema.properties.authorityTier.enum, [
+			"autonomous",
+			"propose",
+			"escalate",
+		]);
+	});
+
+	it("schema defines outcome enum", () => {
+		const { readFileSync } = require("node:fs");
+		const { join } = require("node:path");
+		const schemaPath = join(__dirname, "..", "..", "schemas", "decision-entry.v1.schema.json");
+		const schema = JSON.parse(readFileSync(schemaPath, "utf-8"));
+		assert.deepEqual(schema.properties.outcome.enum, [
+			"success",
+			"failure",
+			"partial",
+			"pending",
+		]);
+	});
+
+	it("schema includes dependencies field", () => {
+		const { readFileSync } = require("node:fs");
+		const { join } = require("node:path");
+		const schemaPath = join(__dirname, "..", "..", "schemas", "decision-entry.v1.schema.json");
+		const schema = JSON.parse(readFileSync(schemaPath, "utf-8"));
+		assert.ok(schema.properties.dependencies);
+		assert.equal(schema.properties.dependencies.type, "array");
+	});
 });
