@@ -47,7 +47,7 @@ Defense in depth for the Admiral Framework: adversarial testing, injection defen
 
 ## Leash Integration
 
-- [ ] **SEC-15: Leash Cedar policy generation spec** — Design mapping from Admiral's Decision Authority Tiers (Autonomous/Propose/Escalate/Blocked) to Cedar policy language. Generate Cedar policies from agent tier assignments for StrongDM Leash kernel-level enforcement. Cover tier-to-Cedar mapping, policy generation triggers, Leash-present and Leash-absent deployment. Turns Leash from competitor into enforcement backend. Depends on SEC-04.
+- [x] **SEC-15: Leash Cedar policy generation spec** — *Completed in Phase 10.* — `admiral/docs/leash-integration-spec.md` maps all 4 authority tiers (Enforced/Autonomous/Propose/Escalate) to Cedar policy language. Entity model, policy generation algorithm, triggers, and 4-phase migration path. Covers Leash-present and Leash-absent deployment. 3 example Cedar policies (implementer-1, security-agent, standing-orders) in `admiral/security/cedar-generator/examples/`. 38-test validation suite.
 
 ## CI Security
 
