@@ -9,6 +9,7 @@ import type { DecisionEntry } from "./self-instrumentation";
 import {
 	BrainMetaNamespace,
 	BrainStaleDetector,
+	ConflictAwareResolver,
 	ContradictionResolver,
 	DecisionEntryValidator,
 } from "./self-instrumentation";
@@ -318,6 +319,161 @@ describe("ContradictionResolver", () => {
 
 		assert.ok(contradictions[0].overlap.length > 0);
 		assert.ok(contradictions[0].overlap.includes("deploy"));
+	});
+});
+
+// ---------------------------------------------------------------------------
+// B-21d (completion): ConflictAwareResolver
+// ---------------------------------------------------------------------------
+
+describe("ConflictAwareResolver", () => {
+	let dir: string;
+	let db: BrainDatabase;
+
+	beforeEach(() => {
+		dir = makeTmpDir();
+		db = new BrainDatabase(dir);
+		db.migrate();
+	});
+
+	afterEach(() => {
+		db.close();
+		rmSync(dir, { recursive: true, force: true });
+	});
+
+	it("insertWithConflictCheck detects overlapping entries", () => {
+		db.insertEntry(
+			makeEntry({
+				title: "Deployment strategy kubernetes approach",
+				content: "Use kubernetes for deployment orchestration strategy",
+			}),
+		);
+
+		const resolver = new ConflictAwareResolver(db);
+		const result = resolver.insertWithConflictCheck(
+			makeEntry({
+				title: "Deployment strategy docker approach",
+				content: "Use docker only for deployment orchestration strategy",
+			}),
+		);
+
+		assert.ok(result.entryId);
+		assert.ok(result.conflicts.length > 0);
+		assert.equal(result.requiresResolution, true);
+	});
+
+	it("insertWithConflictCheck passes for unrelated entries", () => {
+		db.insertEntry(makeEntry({ title: "Security policy", content: "Enforce RBAC" }));
+
+		const resolver = new ConflictAwareResolver(db);
+		const result = resolver.insertWithConflictCheck(
+			makeEntry({ title: "UI components", content: "Build React dashboard" }),
+		);
+
+		assert.equal(result.conflicts.length, 0);
+		assert.equal(result.requiresResolution, false);
+	});
+
+	it("retrieveWithConflictFlag returns conflict info", () => {
+		const a = db.insertEntry(makeEntry({ title: "Approach A" }));
+		const b = db.insertEntry(makeEntry({ title: "Approach B" }));
+		db.addLink(a.id, b.id, "contradicts");
+
+		const resolver = new ConflictAwareResolver(db);
+		const result = resolver.retrieveWithConflictFlag(a.id);
+
+		assert.ok(result);
+		assert.equal(result.hasConflicts, true);
+		assert.ok(result.conflictingEntries.includes(b.id));
+	});
+
+	it("retrieveWithConflictFlag returns no conflicts for clean entries", () => {
+		const a = db.insertEntry(makeEntry({ title: "Clean entry" }));
+
+		const resolver = new ConflictAwareResolver(db);
+		const result = resolver.retrieveWithConflictFlag(a.id);
+
+		assert.ok(result);
+		assert.equal(result.hasConflicts, false);
+		assert.equal(result.conflictingEntries.length, 0);
+	});
+
+	it("retrieveWithConflictFlag excludes superseded conflicts", () => {
+		const a = db.insertEntry(makeEntry({ title: "Current" }));
+		const b = db.insertEntry(makeEntry({ title: "Outdated" }));
+		db.addLink(a.id, b.id, "contradicts");
+		db.updateEntry(b.id, { superseded_by: a.id });
+
+		const resolver = new ConflictAwareResolver(db);
+		const result = resolver.retrieveWithConflictFlag(a.id);
+
+		assert.ok(result);
+		assert.equal(result.hasConflicts, false);
+	});
+
+	it("retrieveWithConflictFlag returns null for missing entry", () => {
+		const resolver = new ConflictAwareResolver(db);
+		assert.equal(resolver.retrieveWithConflictFlag("nonexistent"), null);
+	});
+
+	it("checkDecisionDependencies triggers escalation on conflict", () => {
+		const depEntry = db.insertEntry(makeEntry({ title: "Policy A" }));
+		const conflicting = db.insertEntry(makeEntry({ title: "Policy B" }));
+		db.addLink(depEntry.id, conflicting.id, "contradicts");
+
+		const decisionEntry = db.insertEntry(
+			makeEntry({
+				title: "Decision: use Policy A",
+				category: "decision",
+				metadata: { dependencies: [depEntry.id] },
+			}),
+		);
+
+		const resolver = new ConflictAwareResolver(db);
+		const escalation = resolver.checkDecisionDependencies(decisionEntry.id);
+
+		assert.ok(escalation);
+		assert.equal(escalation.trigger, "contradiction_in_decision_dependency");
+		assert.equal(escalation.severity, "critical");
+	});
+
+	it("checkDecisionDependencies returns null when no conflicts", () => {
+		const depEntry = db.insertEntry(makeEntry({ title: "Clean dep" }));
+		const decisionEntry = db.insertEntry(
+			makeEntry({
+				title: "Decision: clean",
+				category: "decision",
+				metadata: { dependencies: [depEntry.id] },
+			}),
+		);
+
+		const resolver = new ConflictAwareResolver(db);
+		assert.equal(resolver.checkDecisionDependencies(decisionEntry.id), null);
+	});
+
+	it("checkDecisionDependencies ignores non-decision entries", () => {
+		const resolver = new ConflictAwareResolver(db);
+		const entry = db.insertEntry(makeEntry({ title: "Not a decision" }));
+		assert.equal(resolver.checkDecisionDependencies(entry.id), null);
+	});
+
+	it("getEscalations tracks all escalation recommendations", () => {
+		const dep = db.insertEntry(makeEntry({ title: "Dep" }));
+		const conflict = db.insertEntry(makeEntry({ title: "Conflict" }));
+		db.addLink(dep.id, conflict.id, "contradicts");
+
+		const decision = db.insertEntry(
+			makeEntry({
+				title: "Decision",
+				category: "decision",
+				metadata: { dependencies: [dep.id] },
+			}),
+		);
+
+		const resolver = new ConflictAwareResolver(db);
+		resolver.checkDecisionDependencies(decision.id);
+
+		assert.equal(resolver.getEscalations().length, 1);
 	});
 });
 
