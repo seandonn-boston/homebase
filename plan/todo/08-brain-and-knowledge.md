@@ -50,7 +50,7 @@ Brain is Admiral's primary competitive moat. Ship B2 within **120 days** before 
 ## B3 Production
 
 - [~] **B-12** MCP server scaffold — 8 tool endpoints (brain_record, brain_query, brain_retrieve, brain_strengthen, brain_supersede, brain_status, brain_audit, brain_purge) *(partial — see audit)*
-- [ ] **B-13** Postgres + pgvector schema deployment — migrations, rollback, connection pooling
+- [x] **B-13** Postgres + pgvector schema deployment — *Completed in Phase 10.* — `admiral/brain/postgres-schema.ts` with 5 versioned migrations (entries+FTS, links, pgvector+embeddings, audit+demand, meta), rollback support, migration status tracking, connection pool config from env vars. 19-test suite.
 - [x] **B-14** Identity token lifecycle — *Completed in Phase 10.* — `admiral/brain/identity-tokens.ts` with create (configurable TTL), rotate (overlapping validity window), revoke (immediate), validate, bulk agent revocation, auto-expiry pruning, stats. 20-test suite.
 - [x] **B-15** Access control enforcement — *Completed in Phase 10.* — `admiral/brain/access-control.ts` with 3 access levels (read-only/contributor/admin), scope-based grants, per-entry overrides, expired grant handling, readable/writable filtering, full decision audit log. 18-test suite.
 
