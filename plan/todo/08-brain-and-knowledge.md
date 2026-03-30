@@ -44,7 +44,7 @@ Brain is Admiral's primary competitive moat. Ship B2 within **120 days** before 
 
 ## B2 Semantic Search
 
-- [ ] **B-10** Embedding generation pipeline — pluggable backends (API or pre-computed), model version tracking, re-embedding on model change
+- [x] **B-10** Embedding generation pipeline — *Completed in Phase 10.* — `admiral/brain/embedding-pipeline.ts` with pluggable `EmbeddingBackend` interface, hash-based test backend, model version tracking, text change detection, batch generation, re-embedding on model switch with skip/reembed/fail reporting, pipeline stats. 17-test suite.
 - [ ] **B-11** Similarity search — cosine distance, `brain_query --semantic "topic"`, blend keyword and semantic signals
 
 ## B3 Production
