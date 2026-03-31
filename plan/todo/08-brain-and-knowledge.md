@@ -56,7 +56,7 @@ Brain is Admiral's primary competitive moat. Ship B2 within **120 days** before 
 
 ## B3 Advanced
 
-- [ ] **B-16** Multi-signal retrieval pipeline — keyword (FTS), semantic (pgvector), temporal (recency), link-based (graph proximity); configurable weights, query-time signal selection
+- [x] **B-16** Multi-signal retrieval pipeline — *Completed in Phase 10.* — `admiral/brain/multi-signal-retrieval.ts` blending 4 signals (keyword FTS, semantic embeddings, temporal recency decay, link graph proximity) with configurable weights, query-time signal selection, weight normalization, pluggable providers. 15-test suite.
 - [x] **B-17** Multi-hop link traversal — supports/contradicts/supersedes/related_to relationships, configurable depth, cycle detection, traversal path in results
 - [~] **B-18** Quarantine integration — external content passes 5-layer pipeline before brain ingestion, `quarantine_status` metadata *(partial — see audit)*
 - [x] **B-19** Sensitivity classification — *Completed in Phase 10.* — `admiral/brain/sensitivity-classification.ts` with 4-level taxonomy (PUBLIC/INTERNAL/CONFIDENTIAL/RESTRICTED), agent clearance grants, access checking, query filtering by clearance, single and bulk reclassification with audit log. 15-test suite.
