@@ -45,9 +45,7 @@ export class StructuredLogger {
     this.minLevel = opts.minLevel ?? "info";
     this.correlationId = opts.correlationId ?? "";
     this.logDir = opts.logDir ?? null;
-    this.logFile = this.logDir
-      ? path.join(this.logDir, "admiral.jsonl")
-      : null;
+    this.logFile = this.logDir ? path.join(this.logDir, "admiral.jsonl") : null;
   }
 
   /** Update correlation ID (e.g., when a new session starts) */
@@ -85,11 +83,7 @@ export class StructuredLogger {
     this.log("fatal", message, context);
   }
 
-  private log(
-    level: LogLevel,
-    message: string,
-    context?: Record<string, unknown>,
-  ): void {
+  private log(level: LogLevel, message: string, context?: Record<string, unknown>): void {
     if (LEVEL_ORDINALS[level] < LEVEL_ORDINALS[this.minLevel]) {
       return;
     }
@@ -106,13 +100,13 @@ export class StructuredLogger {
     const line = JSON.stringify(entry);
 
     // Write to stderr for real-time visibility
-    process.stderr.write(line + "\n");
+    process.stderr.write(`${line}\n`);
 
     // Append to log file if configured
     if (this.logFile && this.logDir) {
       try {
         fs.mkdirSync(this.logDir, { recursive: true });
-        fs.appendFileSync(this.logFile, line + "\n");
+        fs.appendFileSync(this.logFile, `${line}\n`);
       } catch {
         // Logging should never crash the application
       }

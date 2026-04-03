@@ -26,15 +26,12 @@ export function containsNullBytes(input: string): boolean {
 
 /** Check for invalid control characters (except \t, \n, \r) */
 export function containsInvalidChars(input: string): boolean {
-  // eslint-disable-next-line no-control-regex
+  // biome-ignore lint/suspicious/noControlCharactersInRegex: intentional control char detection
   return /[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/.test(input);
 }
 
 /** Validate input size in bytes */
-export function validateSize(
-  input: string,
-  maxBytes: number,
-): ValidationResult {
+export function validateSize(input: string, maxBytes: number): ValidationResult {
   const size = Buffer.byteLength(input, "utf-8");
   if (size > maxBytes) {
     return {
@@ -60,9 +57,7 @@ export function validatePath(filePath: string): ValidationResult {
   const errors: string[] = [];
 
   if (filePath.length > LIMITS.MAX_PATH_LENGTH) {
-    errors.push(
-      `Path too long: ${filePath.length} chars (max ${LIMITS.MAX_PATH_LENGTH})`,
-    );
+    errors.push(`Path too long: ${filePath.length} chars (max ${LIMITS.MAX_PATH_LENGTH})`);
   }
 
   if (containsNullBytes(filePath)) {

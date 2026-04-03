@@ -160,11 +160,7 @@ export class MetricsCollector {
   }
 
   /** Record an API request */
-  recordApiRequest(
-    endpoint: string,
-    durationMs: number,
-    status: number,
-  ): void {
+  recordApiRequest(endpoint: string, durationMs: number, status: number): void {
     if (!this.apiLatency[endpoint]) {
       this.apiLatency[endpoint] = new SimpleHistogram(LATENCY_BUCKETS);
     }
@@ -182,17 +178,11 @@ export class MetricsCollector {
     for (const [hook, hist] of Object.entries(this.hookLatency)) {
       const stats = hist.getStats();
       for (const b of stats.buckets) {
-        lines.push(
-          `admiral_hook_duration_ms_bucket{hook="${hook}",le="${b.le}"} ${b.count}`,
-        );
+        lines.push(`admiral_hook_duration_ms_bucket{hook="${hook}",le="${b.le}"} ${b.count}`);
       }
-      lines.push(
-        `admiral_hook_duration_ms_bucket{hook="${hook}",le="+Inf"} ${stats.count}`,
-      );
+      lines.push(`admiral_hook_duration_ms_bucket{hook="${hook}",le="+Inf"} ${stats.count}`);
       lines.push(`admiral_hook_duration_ms_sum{hook="${hook}"} ${stats.sum}`);
-      lines.push(
-        `admiral_hook_duration_ms_count{hook="${hook}"} ${stats.count}`,
-      );
+      lines.push(`admiral_hook_duration_ms_count{hook="${hook}"} ${stats.count}`);
     }
 
     // Hook results counter
@@ -216,19 +206,13 @@ export class MetricsCollector {
     }
 
     // Brain query latency
-    lines.push(
-      "# HELP admiral_brain_query_duration_ms Brain query latency in milliseconds",
-    );
+    lines.push("# HELP admiral_brain_query_duration_ms Brain query latency in milliseconds");
     lines.push("# TYPE admiral_brain_query_duration_ms histogram");
     const bqStats = this.brainQueryLatency.getStats();
     for (const b of bqStats.buckets) {
-      lines.push(
-        `admiral_brain_query_duration_ms_bucket{le="${b.le}"} ${b.count}`,
-      );
+      lines.push(`admiral_brain_query_duration_ms_bucket{le="${b.le}"} ${b.count}`);
     }
-    lines.push(
-      `admiral_brain_query_duration_ms_bucket{le="+Inf"} ${bqStats.count}`,
-    );
+    lines.push(`admiral_brain_query_duration_ms_bucket{le="+Inf"} ${bqStats.count}`);
     lines.push(`admiral_brain_query_duration_ms_sum ${bqStats.sum}`);
     lines.push(`admiral_brain_query_duration_ms_count ${bqStats.count}`);
 
@@ -247,14 +231,10 @@ export class MetricsCollector {
       "# HELP admiral_governance_overhead_ratio Governance overhead as ratio of total tokens",
     );
     lines.push("# TYPE admiral_governance_overhead_ratio gauge");
-    lines.push(
-      `admiral_governance_overhead_ratio ${this.governanceOverhead.get()}`,
-    );
+    lines.push(`admiral_governance_overhead_ratio ${this.governanceOverhead.get()}`);
 
     // API latency
-    lines.push(
-      "# HELP admiral_api_duration_ms API request latency in milliseconds",
-    );
+    lines.push("# HELP admiral_api_duration_ms API request latency in milliseconds");
     lines.push("# TYPE admiral_api_duration_ms histogram");
     for (const [endpoint, hist] of Object.entries(this.apiLatency)) {
       const stats = hist.getStats();
@@ -263,17 +243,11 @@ export class MetricsCollector {
           `admiral_api_duration_ms_bucket{endpoint="${endpoint}",le="${b.le}"} ${b.count}`,
         );
       }
-      lines.push(
-        `admiral_api_duration_ms_bucket{endpoint="${endpoint}",le="+Inf"} ${stats.count}`,
-      );
-      lines.push(
-        `admiral_api_duration_ms_sum{endpoint="${endpoint}"} ${stats.sum}`,
-      );
-      lines.push(
-        `admiral_api_duration_ms_count{endpoint="${endpoint}"} ${stats.count}`,
-      );
+      lines.push(`admiral_api_duration_ms_bucket{endpoint="${endpoint}",le="+Inf"} ${stats.count}`);
+      lines.push(`admiral_api_duration_ms_sum{endpoint="${endpoint}"} ${stats.sum}`);
+      lines.push(`admiral_api_duration_ms_count{endpoint="${endpoint}"} ${stats.count}`);
     }
 
-    return lines.join("\n") + "\n";
+    return `${lines.join("\n")}\n`;
   }
 }
