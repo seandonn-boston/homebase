@@ -1,0 +1,46 @@
+{
+  "_comment": "Quality scoring weights and thresholds for quality_scorer.sh (QA-09).",
+  "dimensions": {
+    "test_coverage": {
+      "weight": 0.25,
+      "description": "Test coverage percentage (0-100)",
+      "ideal": 90,
+      "acceptable": 60
+    },
+    "complexity": {
+      "weight": 0.20,
+      "description": "Inverse of avg cyclomatic complexity score (lower complexity = higher score)",
+      "ideal_max_avg": 5,
+      "acceptable_max_avg": 15
+    },
+    "lint": {
+      "weight": 0.15,
+      "description": "Inverse of lint violations count (0 violations = 100 score)",
+      "violations_per_100_lines_acceptable": 1
+    },
+    "docs": {
+      "weight": 0.15,
+      "description": "Documentation ratio: test_to_code_ratio proxy",
+      "ideal_ratio": 1.0,
+      "acceptable_ratio": 0.5
+    },
+    "churn": {
+      "weight": 0.10,
+      "description": "Inverse churn score (high churn = lower score; stable = higher)",
+      "low_churn_lines": 100,
+      "high_churn_lines": 1000
+    },
+    "defect_density": {
+      "weight": 0.15,
+      "description": "Inverse defect density (0 defects/1k lines = 100)",
+      "acceptable_per_1k": 2.0,
+      "critical_per_1k": 10.0
+    }
+  },
+  "thresholds": {
+    "green": 80,
+    "yellow": 60,
+    "red_max": 59
+  },
+  "history_file": "admiral/quality/metrics/quality_scores.json"
+}
