@@ -5,7 +5,7 @@
  * metadata for confirmation, reversibility, and audit requirements.
  */
 
-import { InterventionType } from "./intervention-auth";
+import type { InterventionType } from "./intervention-auth";
 
 export interface InterventionAction {
   type: InterventionType;
@@ -55,13 +55,7 @@ export const INTERVENTION_CATALOG: InterventionAction[] = [
     confirmationRequired: true,
     reversible: false,
     reversalPath: "N/A — original proposal is logged for audit",
-    auditFields: [
-      "agentId",
-      "originalProposal",
-      "override",
-      "reason",
-      "operatorId",
-    ],
+    auditFields: ["agentId", "originalProposal", "override", "reason", "operatorId"],
   },
   {
     type: "reroute_task",
@@ -69,13 +63,7 @@ export const INTERVENTION_CATALOG: InterventionAction[] = [
     confirmationRequired: true,
     reversible: true,
     reversalPath: "reroute_task (back to original agent)",
-    auditFields: [
-      "taskId",
-      "fromAgentId",
-      "toAgentId",
-      "reason",
-      "operatorId",
-    ],
+    auditFields: ["taskId", "fromAgentId", "toAgentId", "reason", "operatorId"],
   },
   {
     type: "promote_tier",
@@ -99,13 +87,7 @@ export const INTERVENTION_CATALOG: InterventionAction[] = [
     confirmationRequired: true,
     reversible: true,
     reversalPath: "modify_policies (restore previous configuration)",
-    auditFields: [
-      "policyId",
-      "previousConfig",
-      "newConfig",
-      "reason",
-      "operatorId",
-    ],
+    auditFields: ["policyId", "previousConfig", "newConfig", "reason", "operatorId"],
   },
   {
     type: "resume_agent",
@@ -120,9 +102,7 @@ export const INTERVENTION_CATALOG: InterventionAction[] = [
 /**
  * Look up an intervention action by type.
  */
-export function getInterventionAction(
-  type: string,
-): InterventionAction | undefined {
+export function getInterventionAction(type: string): InterventionAction | undefined {
   return INTERVENTION_CATALOG.find((a) => a.type === type);
 }
 

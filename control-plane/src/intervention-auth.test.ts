@@ -3,7 +3,7 @@
  */
 
 import assert from "node:assert/strict";
-import { describe, it, beforeEach } from "node:test";
+import { beforeEach, describe, it } from "node:test";
 import { InterventionAuthorizer } from "./intervention-auth";
 
 describe("InterventionAuthorizer", () => {
@@ -33,10 +33,7 @@ describe("InterventionAuthorizer", () => {
 
   it("requires owner level for policy modification", () => {
     assert.strictEqual(auth.authorize("modify_policies", "any").authorized, false);
-    assert.strictEqual(
-      auth.authorize("modify_policies", "operator").authorized,
-      false,
-    );
+    assert.strictEqual(auth.authorize("modify_policies", "operator").authorized, false);
     assert.strictEqual(auth.authorize("modify_policies", "owner").authorized, true);
   });
 
