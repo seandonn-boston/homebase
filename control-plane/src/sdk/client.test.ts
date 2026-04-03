@@ -12,9 +12,7 @@ import { GovernanceSdkError, GovernanceValidationError } from "./types";
 // Minimal mock API server
 // ---------------------------------------------------------------------------
 
-interface RouteHandler {
-  (req: http.IncomingMessage, res: http.ServerResponse): void;
-}
+type RouteHandler = (req: http.IncomingMessage, res: http.ServerResponse) => void;
 
 class MockApiServer {
   private server: http.Server;
@@ -65,7 +63,9 @@ class MockApiServer {
 function readBody(req: http.IncomingMessage): Promise<string> {
   return new Promise((resolve) => {
     let data = "";
-    req.on("data", (chunk: string) => { data += chunk; });
+    req.on("data", (chunk: string) => {
+      data += chunk;
+    });
     req.on("end", () => resolve(data));
   });
 }
@@ -104,7 +104,10 @@ describe("GovernanceClient — getHealth", () => {
       });
     });
     await mock.start();
-    client = new GovernanceClient({ baseUrl: `http://127.0.0.1:${mock.port}`, token: "test-token" });
+    client = new GovernanceClient({
+      baseUrl: `http://127.0.0.1:${mock.port}`,
+      token: "test-token",
+    });
   });
 
   afterEach(() => mock.stop());
@@ -155,7 +158,10 @@ describe("GovernanceClient — createPolicy", () => {
         mock.sendJson(res, 400, { success: false, error: "name required" });
         return;
       }
-      mock.sendJson(res, 201, { success: true, data: { ...makePolicy(), name: String(parsed.name) } });
+      mock.sendJson(res, 201, {
+        success: true,
+        data: { ...makePolicy(), name: String(parsed.name) },
+      });
     });
     await mock.start();
     client = new GovernanceClient({ baseUrl: `http://127.0.0.1:${mock.port}`, token: "tok" });
@@ -185,7 +191,10 @@ describe("GovernanceClient — updatePolicy", () => {
     mock.on("PUT", "/api/v1/policies/pol-1", async (req, res) => {
       const body = await readBody(req);
       const parsed = JSON.parse(body) as Record<string, unknown>;
-      mock.sendJson(res, 200, { success: true, data: { ...makePolicy(), version: 2, rationale: parsed.rationale } });
+      mock.sendJson(res, 200, {
+        success: true,
+        data: { ...makePolicy(), version: 2, rationale: parsed.rationale },
+      });
     });
     await mock.start();
     client = new GovernanceClient({ baseUrl: `http://127.0.0.1:${mock.port}`, token: "tok" });
@@ -229,7 +238,16 @@ describe("GovernanceClient — getAuditEvents", () => {
     mock.on("GET", "/api/v1/audit/events", (_req, res) => {
       mock.sendJson(res, 200, {
         success: true,
-        data: [{ id: "evt-1", timestamp: new Date().toISOString(), type: "policy.created", severity: "info", source: "api", detail: {} }],
+        data: [
+          {
+            id: "evt-1",
+            timestamp: new Date().toISOString(),
+            type: "policy.created",
+            severity: "info",
+            source: "api",
+            detail: {},
+          },
+        ],
       });
     });
     await mock.start();
@@ -318,7 +336,10 @@ describe("GovernanceClient — retry logic", () => {
       if (attempts < 2) {
         mock.sendJson(res, 503, { success: false, error: "Service Unavailable" });
       } else {
-        mock.sendJson(res, 200, { success: true, data: { status: "healthy", uptime_ms: 1, policies: 0, auditEvents: 0 } });
+        mock.sendJson(res, 200, {
+          success: true,
+          data: { status: "healthy", uptime_ms: 1, policies: 0, auditEvents: 0 },
+        });
       }
     });
     await mock.start();
@@ -387,7 +408,7 @@ describe("GovernanceClient — retry logic", () => {
 });
 
 describe("GovernanceClient — subscribeToEvents", () => {
-  it("returns an EventSubscription that can be closed", (t, done) => {
+  it("returns an EventSubscription that can be closed", (_t, done) => {
     const mock = new MockApiServer();
     mock.on("GET", "/api/v1/events/stream", (_req, res) => {
       res.writeHead(200, { "Content-Type": "text/event-stream" });

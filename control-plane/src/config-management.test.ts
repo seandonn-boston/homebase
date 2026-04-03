@@ -5,8 +5,8 @@
 import assert from "node:assert/strict";
 import * as http from "node:http";
 import { afterEach, beforeEach, describe, it } from "node:test";
+import type { ConfigSchema } from "./config-management";
 import { ConfigurationManager } from "./config-management";
-import type { ConfigMap, ConfigSchema } from "./config-management";
 
 // ---------------------------------------------------------------------------
 // HTTP helpers
@@ -33,7 +33,9 @@ function httpRequest(
       },
       (res) => {
         let respBody = "";
-        res.on("data", (chunk: string) => { respBody += chunk; });
+        res.on("data", (chunk: string) => {
+          respBody += chunk;
+        });
         res.on("end", () => resolve({ status: res.statusCode ?? 0, body: respBody }));
       },
     );
@@ -303,7 +305,9 @@ describe("ConfigurationManager — HTTP endpoints", () => {
         res.end("Not Found");
       }
     });
-    await new Promise<void>((resolve) => { server.listen(0, () => resolve()); });
+    await new Promise<void>((resolve) => {
+      server.listen(0, () => resolve());
+    });
     port = (server.address() as { port: number }).port;
   });
 
@@ -342,10 +346,14 @@ describe("ConfigurationManager — HTTP endpoints", () => {
 
   it("GET /api/v1/config/history returns all versions", async () => {
     await httpRequest(`http://127.0.0.1:${port}/api/v1/config`, "POST", {
-      config: { a: 1 }, author: "alice", rationale: "v1",
+      config: { a: 1 },
+      author: "alice",
+      rationale: "v1",
     });
     await httpRequest(`http://127.0.0.1:${port}/api/v1/config`, "POST", {
-      config: { a: 2 }, author: "bob", rationale: "v2",
+      config: { a: 2 },
+      author: "bob",
+      rationale: "v2",
     });
     const res = await httpRequest(`http://127.0.0.1:${port}/api/v1/config/history`, "GET");
     const body = JSON.parse(res.body);
@@ -354,7 +362,9 @@ describe("ConfigurationManager — HTTP endpoints", () => {
 
   it("GET /api/v1/config/versions/:n returns specific version", async () => {
     await httpRequest(`http://127.0.0.1:${port}/api/v1/config`, "POST", {
-      config: { x: 1 }, author: "alice", rationale: "v1",
+      config: { x: 1 },
+      author: "alice",
+      rationale: "v1",
     });
     const res = await httpRequest(`http://127.0.0.1:${port}/api/v1/config/versions/1`, "GET");
     const body = JSON.parse(res.body);
@@ -363,10 +373,14 @@ describe("ConfigurationManager — HTTP endpoints", () => {
 
   it("POST /api/v1/config/diff returns diff between two versions", async () => {
     await httpRequest(`http://127.0.0.1:${port}/api/v1/config`, "POST", {
-      config: { x: 1, y: 2 }, author: "alice", rationale: "v1",
+      config: { x: 1, y: 2 },
+      author: "alice",
+      rationale: "v1",
     });
     await httpRequest(`http://127.0.0.1:${port}/api/v1/config`, "POST", {
-      config: { x: 10, z: 3 }, author: "bob", rationale: "v2",
+      config: { x: 10, z: 3 },
+      author: "bob",
+      rationale: "v2",
     });
     const res = await httpRequest(`http://127.0.0.1:${port}/api/v1/config/diff`, "POST", {
       versionA: 1,
@@ -380,10 +394,14 @@ describe("ConfigurationManager — HTTP endpoints", () => {
 
   it("POST /api/v1/config/rollback reverts to target version", async () => {
     await httpRequest(`http://127.0.0.1:${port}/api/v1/config`, "POST", {
-      config: { x: 1 }, author: "alice", rationale: "v1",
+      config: { x: 1 },
+      author: "alice",
+      rationale: "v1",
     });
     await httpRequest(`http://127.0.0.1:${port}/api/v1/config`, "POST", {
-      config: { x: 2 }, author: "bob", rationale: "v2",
+      config: { x: 2 },
+      author: "bob",
+      rationale: "v2",
     });
     const res = await httpRequest(`http://127.0.0.1:${port}/api/v1/config/rollback`, "POST", {
       targetVersion: 1,
@@ -406,7 +424,9 @@ describe("ConfigurationManager — HTTP endpoints", () => {
 
   it("GET /api/v1/config/export returns exported set", async () => {
     await httpRequest(`http://127.0.0.1:${port}/api/v1/config`, "POST", {
-      config: { x: 1 }, author: "alice", rationale: "v1",
+      config: { x: 1 },
+      author: "alice",
+      rationale: "v1",
     });
     const res = await httpRequest(`http://127.0.0.1:${port}/api/v1/config/export`, "GET");
     assert.equal(res.status, 200);
@@ -418,7 +438,9 @@ describe("ConfigurationManager — HTTP endpoints", () => {
   it("POST /api/v1/config/import imports config set", async () => {
     // First export from current manager
     await httpRequest(`http://127.0.0.1:${port}/api/v1/config`, "POST", {
-      config: { x: 42 }, author: "alice", rationale: "v1",
+      config: { x: 42 },
+      author: "alice",
+      rationale: "v1",
     });
     const exportRes = await httpRequest(`http://127.0.0.1:${port}/api/v1/config/export`, "GET");
     const exported = JSON.parse(exportRes.body).data;
@@ -427,12 +449,21 @@ describe("ConfigurationManager — HTTP endpoints", () => {
     const mgr2 = new ConfigurationManager();
     const server2 = http.createServer((req, res) => {
       const handled = mgr2.route(req, res);
-      if (!handled) { res.writeHead(404); res.end(); }
+      if (!handled) {
+        res.writeHead(404);
+        res.end();
+      }
     });
-    await new Promise<void>((resolve) => { server2.listen(0, () => resolve()); });
+    await new Promise<void>((resolve) => {
+      server2.listen(0, () => resolve());
+    });
     const port2 = (server2.address() as { port: number }).port;
 
-    const importRes = await httpRequest(`http://127.0.0.1:${port2}/api/v1/config/import`, "POST", exported);
+    const importRes = await httpRequest(
+      `http://127.0.0.1:${port2}/api/v1/config/import`,
+      "POST",
+      exported,
+    );
     assert.equal(importRes.status, 200);
     const body = JSON.parse(importRes.body);
     assert.equal(body.data.imported, 1);

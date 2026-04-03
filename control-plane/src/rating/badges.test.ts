@@ -4,7 +4,7 @@
 
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { generateBadge, generateDetailedBadge, generateBadgeMarkdown } from "./badges";
+import { generateBadge, generateBadgeMarkdown, generateDetailedBadge } from "./badges";
 
 describe("generateBadge", () => {
   it("returns a string starting with <svg", () => {
@@ -56,7 +56,7 @@ describe("generateBadge", () => {
 
   it("includes aria-label for accessibility", () => {
     const svg = generateBadge("ADM-2", "-SA");
-    assert.ok(svg.includes('aria-label='), "has aria-label");
+    assert.ok(svg.includes("aria-label="), "has aria-label");
     assert.ok(svg.includes("ADM-2-SA"), "aria-label contains rating");
   });
 

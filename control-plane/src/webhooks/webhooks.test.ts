@@ -5,13 +5,13 @@
 import assert from "node:assert/strict";
 import * as http from "node:http";
 import { afterEach, beforeEach, describe, it } from "node:test";
-import { formatSlackPayload } from "./slack";
-import { formatPagerDutyPayload } from "./pagerduty";
-import { formatJiraPayload } from "./jira";
-import { formatGenericPayload, signPayload, deliverWebhook } from "./generic";
 import { WebhookDispatcher } from "./dispatcher";
-import { meetsSeverityThreshold } from "./types";
+import { deliverWebhook, formatGenericPayload, signPayload } from "./generic";
+import { formatJiraPayload } from "./jira";
+import { formatPagerDutyPayload } from "./pagerduty";
+import { formatSlackPayload } from "./slack";
 import type { WebhookEvent } from "./types";
+import { meetsSeverityThreshold } from "./types";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -68,7 +68,9 @@ describe("formatSlackPayload", () => {
   it("returns a payload with text and blocks", () => {
     const event = makeEvent({ type: "policy_violation", severity: "critical" });
     const payload = formatSlackPayload(event);
-    assert.ok(payload.text.includes("policy_violation") || payload.text.includes("Policy Violation"));
+    assert.ok(
+      payload.text.includes("policy_violation") || payload.text.includes("Policy Violation"),
+    );
     assert.ok(Array.isArray(payload.blocks));
     assert.ok(payload.blocks!.length > 0);
   });
@@ -112,12 +114,18 @@ describe("formatPagerDutyPayload", () => {
     assert.equal(payload.routing_key, "test-routing-key");
     assert.equal(payload.event_action, "trigger");
     assert.equal(payload.payload.severity, "critical");
-    assert.ok(payload.payload.summary.includes("Policy Violation") || payload.payload.summary.includes("policy_violation"));
+    assert.ok(
+      payload.payload.summary.includes("Policy Violation") ||
+        payload.payload.summary.includes("policy_violation"),
+    );
   });
 
   it("maps admiral severity to PD severity correctly", () => {
     assert.equal(formatPagerDutyPayload(makeEvent({ severity: "high" })).payload.severity, "error");
-    assert.equal(formatPagerDutyPayload(makeEvent({ severity: "medium" })).payload.severity, "warning");
+    assert.equal(
+      formatPagerDutyPayload(makeEvent({ severity: "medium" })).payload.severity,
+      "warning",
+    );
     assert.equal(formatPagerDutyPayload(makeEvent({ severity: "low" })).payload.severity, "info");
     assert.equal(formatPagerDutyPayload(makeEvent({ severity: "info" })).payload.severity, "info");
   });
@@ -153,7 +161,10 @@ describe("formatJiraPayload", () => {
     const payload = formatJiraPayload(event, { projectKey: "TEST" });
     assert.equal(payload.fields.project.key, "TEST");
     assert.equal(payload.fields.priority.name, "Highest");
-    assert.ok(payload.fields.summary.includes("Policy Violation") || payload.fields.summary.includes("policy_violation"));
+    assert.ok(
+      payload.fields.summary.includes("Policy Violation") ||
+        payload.fields.summary.includes("policy_violation"),
+    );
     assert.ok(Array.isArray(payload.fields.labels));
   });
 
@@ -165,7 +176,10 @@ describe("formatJiraPayload", () => {
 
   it("maps severity to Jira priority", () => {
     assert.equal(formatJiraPayload(makeEvent({ severity: "high" })).fields.priority.name, "High");
-    assert.equal(formatJiraPayload(makeEvent({ severity: "medium" })).fields.priority.name, "Medium");
+    assert.equal(
+      formatJiraPayload(makeEvent({ severity: "medium" })).fields.priority.name,
+      "Medium",
+    );
     assert.equal(formatJiraPayload(makeEvent({ severity: "low" })).fields.priority.name, "Low");
     assert.equal(formatJiraPayload(makeEvent({ severity: "info" })).fields.priority.name, "Lowest");
   });
@@ -235,7 +249,9 @@ describe("deliverWebhook", () => {
     receivedHeaders = [];
     server = http.createServer((req, res) => {
       let body = "";
-      req.on("data", (chunk: string) => { body += chunk; });
+      req.on("data", (chunk: string) => {
+        body += chunk;
+      });
       req.on("end", () => {
         receivedBodies.push(body);
         receivedHeaders.push(req.headers);
@@ -243,7 +259,9 @@ describe("deliverWebhook", () => {
         res.end("OK");
       });
     });
-    await new Promise<void>((resolve) => { server.listen(0, () => resolve()); });
+    await new Promise<void>((resolve) => {
+      server.listen(0, () => resolve());
+    });
     port = (server.address() as { port: number }).port;
   });
 
@@ -404,14 +422,18 @@ describe("WebhookDispatcher — filtering", () => {
     dispatcher = new WebhookDispatcher({ maxRetries: 0, initialBackoffMs: 5 });
     server = http.createServer((_req, res) => {
       deliveryCount++;
-      let body = "";
-      _req.on("data", (c: string) => { body += c; });
+      let _body = "";
+      _req.on("data", (c: string) => {
+        _body += c;
+      });
       _req.on("end", () => {
         res.writeHead(200);
         res.end("OK");
       });
     });
-    await new Promise<void>((resolve) => { server.listen(0, () => resolve()); });
+    await new Promise<void>((resolve) => {
+      server.listen(0, () => resolve());
+    });
     port = (server.address() as { port: number }).port;
   });
 
@@ -480,14 +502,18 @@ describe("WebhookDispatcher — rate limiting", () => {
     dispatcher = new WebhookDispatcher({ maxRetries: 0, initialBackoffMs: 0 });
     server = http.createServer((_req, res) => {
       deliveryCount++;
-      let body = "";
-      _req.on("data", (c: string) => { body += c; });
+      let _body = "";
+      _req.on("data", (c: string) => {
+        _body += c;
+      });
       _req.on("end", () => {
         res.writeHead(200);
         res.end("OK");
       });
     });
-    await new Promise<void>((resolve) => { server.listen(0, () => resolve()); });
+    await new Promise<void>((resolve) => {
+      server.listen(0, () => resolve());
+    });
     port = (server.address() as { port: number }).port;
   });
 
@@ -528,8 +554,10 @@ describe("WebhookDispatcher — retry with backoff", () => {
   it("retries on server error and returns result", async () => {
     let attempts = 0;
     const server = http.createServer((_req, res) => {
-      let body = "";
-      _req.on("data", (c: string) => { body += c; });
+      let _body = "";
+      _req.on("data", (c: string) => {
+        _body += c;
+      });
       _req.on("end", () => {
         attempts++;
         if (attempts < 2) {
@@ -541,7 +569,9 @@ describe("WebhookDispatcher — retry with backoff", () => {
         }
       });
     });
-    await new Promise<void>((resolve) => { server.listen(0, () => resolve()); });
+    await new Promise<void>((resolve) => {
+      server.listen(0, () => resolve());
+    });
     const port = (server.address() as { port: number }).port;
 
     const dispatcher = new WebhookDispatcher({ maxRetries: 2, initialBackoffMs: 5 });
@@ -561,14 +591,18 @@ describe("WebhookDispatcher — retry with backoff", () => {
 
   it("returns failure after exhausting retries", async () => {
     const server = http.createServer((_req, res) => {
-      let body = "";
-      _req.on("data", (c: string) => { body += c; });
+      let _body = "";
+      _req.on("data", (c: string) => {
+        _body += c;
+      });
       _req.on("end", () => {
         res.writeHead(500);
         res.end("Error");
       });
     });
-    await new Promise<void>((resolve) => { server.listen(0, () => resolve()); });
+    await new Promise<void>((resolve) => {
+      server.listen(0, () => resolve());
+    });
     const port = (server.address() as { port: number }).port;
 
     const dispatcher = new WebhookDispatcher({ maxRetries: 1, initialBackoffMs: 5 });
@@ -588,15 +622,19 @@ describe("WebhookDispatcher — retry with backoff", () => {
   it("does not retry on 4xx client errors", async () => {
     let attempts = 0;
     const server = http.createServer((_req, res) => {
-      let body = "";
-      _req.on("data", (c: string) => { body += c; });
+      let _body = "";
+      _req.on("data", (c: string) => {
+        _body += c;
+      });
       _req.on("end", () => {
         attempts++;
         res.writeHead(400);
         res.end("Bad Request");
       });
     });
-    await new Promise<void>((resolve) => { server.listen(0, () => resolve()); });
+    await new Promise<void>((resolve) => {
+      server.listen(0, () => resolve());
+    });
     const port = (server.address() as { port: number }).port;
 
     const dispatcher = new WebhookDispatcher({ maxRetries: 3, initialBackoffMs: 5 });
@@ -618,14 +656,18 @@ describe("WebhookDispatcher — format routing", () => {
     let receivedBody = "";
     const server = http.createServer((_req, res) => {
       let body = "";
-      _req.on("data", (c: string) => { body += c; });
+      _req.on("data", (c: string) => {
+        body += c;
+      });
       _req.on("end", () => {
         receivedBody = body;
         res.writeHead(200);
         res.end("OK");
       });
     });
-    await new Promise<void>((resolve) => { server.listen(0, () => resolve()); });
+    await new Promise<void>((resolve) => {
+      server.listen(0, () => resolve());
+    });
     const port = (server.address() as { port: number }).port;
 
     const dispatcher = new WebhookDispatcher({ maxRetries: 0 });
@@ -647,14 +689,18 @@ describe("WebhookDispatcher — format routing", () => {
     let receivedBody = "";
     const server = http.createServer((_req, res) => {
       let body = "";
-      _req.on("data", (c: string) => { body += c; });
+      _req.on("data", (c: string) => {
+        body += c;
+      });
       _req.on("end", () => {
         receivedBody = body;
         res.writeHead(202);
         res.end("Accepted");
       });
     });
-    await new Promise<void>((resolve) => { server.listen(0, () => resolve()); });
+    await new Promise<void>((resolve) => {
+      server.listen(0, () => resolve());
+    });
     const port = (server.address() as { port: number }).port;
 
     const dispatcher = new WebhookDispatcher({ maxRetries: 0 });
@@ -665,7 +711,10 @@ describe("WebhookDispatcher — format routing", () => {
     });
 
     await dispatcher.dispatch(makeEvent({ type: "policy_violation", severity: "critical" }));
-    const body = JSON.parse(receivedBody) as { event_action: string; payload: { severity: string } };
+    const body = JSON.parse(receivedBody) as {
+      event_action: string;
+      payload: { severity: string };
+    };
     assert.ok(typeof body.event_action === "string");
     assert.equal(body.payload.severity, "critical");
 

@@ -22,13 +22,55 @@ function makeReport(overrides: Partial<RatingReport> = {}): RatingReport {
     ratingLabel: "ADM-3-SA",
     overallScore: 65,
     dimensionScores: [
-      { dimensionId: "enforcement_coverage", score: 55, weightedContribution: 11, evidence: "e", capTriggered: false },
-      { dimensionId: "hook_quality", score: 55, weightedContribution: 8.25, evidence: "e", capTriggered: false },
-      { dimensionId: "standing_orders_compliance", score: 60, weightedContribution: 12, evidence: "e", capTriggered: false },
-      { dimensionId: "brain_utilization", score: 60, weightedContribution: 6, evidence: "e", capTriggered: false },
-      { dimensionId: "fleet_governance", score: 55, weightedContribution: 8.25, evidence: "e", capTriggered: false },
-      { dimensionId: "security_posture", score: 55, weightedContribution: 5.5, evidence: "e", capTriggered: false },
-      { dimensionId: "observability_maturity", score: 60, weightedContribution: 6, evidence: "e", capTriggered: false },
+      {
+        dimensionId: "enforcement_coverage",
+        score: 55,
+        weightedContribution: 11,
+        evidence: "e",
+        capTriggered: false,
+      },
+      {
+        dimensionId: "hook_quality",
+        score: 55,
+        weightedContribution: 8.25,
+        evidence: "e",
+        capTriggered: false,
+      },
+      {
+        dimensionId: "standing_orders_compliance",
+        score: 60,
+        weightedContribution: 12,
+        evidence: "e",
+        capTriggered: false,
+      },
+      {
+        dimensionId: "brain_utilization",
+        score: 60,
+        weightedContribution: 6,
+        evidence: "e",
+        capTriggered: false,
+      },
+      {
+        dimensionId: "fleet_governance",
+        score: 55,
+        weightedContribution: 8.25,
+        evidence: "e",
+        capTriggered: false,
+      },
+      {
+        dimensionId: "security_posture",
+        score: 55,
+        weightedContribution: 5.5,
+        evidence: "e",
+        capTriggered: false,
+      },
+      {
+        dimensionId: "observability_maturity",
+        score: 60,
+        weightedContribution: 6,
+        evidence: "e",
+        capTriggered: false,
+      },
     ],
     moduleRatings: [],
     activeCaps: [],
@@ -99,13 +141,55 @@ describe("RecommendationEngine", () => {
     const report = makeReport({
       overallScore: 95,
       dimensionScores: [
-        { dimensionId: "enforcement_coverage", score: 95, weightedContribution: 19, evidence: "e", capTriggered: false },
-        { dimensionId: "hook_quality", score: 95, weightedContribution: 14.25, evidence: "e", capTriggered: false },
-        { dimensionId: "standing_orders_compliance", score: 95, weightedContribution: 19, evidence: "e", capTriggered: false },
-        { dimensionId: "brain_utilization", score: 95, weightedContribution: 9.5, evidence: "e", capTriggered: false },
-        { dimensionId: "fleet_governance", score: 95, weightedContribution: 14.25, evidence: "e", capTriggered: false },
-        { dimensionId: "security_posture", score: 95, weightedContribution: 9.5, evidence: "e", capTriggered: false },
-        { dimensionId: "observability_maturity", score: 95, weightedContribution: 9.5, evidence: "e", capTriggered: false },
+        {
+          dimensionId: "enforcement_coverage",
+          score: 95,
+          weightedContribution: 19,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "hook_quality",
+          score: 95,
+          weightedContribution: 14.25,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "standing_orders_compliance",
+          score: 95,
+          weightedContribution: 19,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "brain_utilization",
+          score: 95,
+          weightedContribution: 9.5,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "fleet_governance",
+          score: 95,
+          weightedContribution: 14.25,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "security_posture",
+          score: 95,
+          weightedContribution: 9.5,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "observability_maturity",
+          score: 95,
+          weightedContribution: 9.5,
+          evidence: "e",
+          capTriggered: false,
+        },
       ],
     });
     const recs = engine.getRecommendations(report);
@@ -115,13 +199,56 @@ describe("RecommendationEngine", () => {
   it("cap-triggered dimensions get priority 0", () => {
     const report = makeReport({
       dimensionScores: [
-        { dimensionId: "enforcement_coverage", score: 20, weightedContribution: 4, evidence: "e", capTriggered: true, capRule: "below 30" },
-        { dimensionId: "hook_quality", score: 60, weightedContribution: 9, evidence: "e", capTriggered: false },
-        { dimensionId: "standing_orders_compliance", score: 65, weightedContribution: 13, evidence: "e", capTriggered: false },
-        { dimensionId: "brain_utilization", score: 60, weightedContribution: 6, evidence: "e", capTriggered: false },
-        { dimensionId: "fleet_governance", score: 60, weightedContribution: 9, evidence: "e", capTriggered: false },
-        { dimensionId: "security_posture", score: 60, weightedContribution: 6, evidence: "e", capTriggered: false },
-        { dimensionId: "observability_maturity", score: 65, weightedContribution: 6.5, evidence: "e", capTriggered: false },
+        {
+          dimensionId: "enforcement_coverage",
+          score: 20,
+          weightedContribution: 4,
+          evidence: "e",
+          capTriggered: true,
+          capRule: "below 30",
+        },
+        {
+          dimensionId: "hook_quality",
+          score: 60,
+          weightedContribution: 9,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "standing_orders_compliance",
+          score: 65,
+          weightedContribution: 13,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "brain_utilization",
+          score: 60,
+          weightedContribution: 6,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "fleet_governance",
+          score: 60,
+          weightedContribution: 9,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "security_posture",
+          score: 60,
+          weightedContribution: 6,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "observability_maturity",
+          score: 65,
+          weightedContribution: 6.5,
+          evidence: "e",
+          capTriggered: false,
+        },
       ],
     });
     const recs = engine.getRecommendations(report);
@@ -142,13 +269,55 @@ describe("RecommendationEngine", () => {
   it("impactScore is estimatedGain divided by effort units", () => {
     const report = makeReport({
       dimensionScores: [
-        { dimensionId: "enforcement_coverage", score: 10, weightedContribution: 2, evidence: "e", capTriggered: false },
-        { dimensionId: "hook_quality", score: 10, weightedContribution: 1.5, evidence: "e", capTriggered: false },
-        { dimensionId: "standing_orders_compliance", score: 10, weightedContribution: 2, evidence: "e", capTriggered: false },
-        { dimensionId: "brain_utilization", score: 10, weightedContribution: 1, evidence: "e", capTriggered: false },
-        { dimensionId: "fleet_governance", score: 10, weightedContribution: 1.5, evidence: "e", capTriggered: false },
-        { dimensionId: "security_posture", score: 10, weightedContribution: 1, evidence: "e", capTriggered: false },
-        { dimensionId: "observability_maturity", score: 10, weightedContribution: 1, evidence: "e", capTriggered: false },
+        {
+          dimensionId: "enforcement_coverage",
+          score: 10,
+          weightedContribution: 2,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "hook_quality",
+          score: 10,
+          weightedContribution: 1.5,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "standing_orders_compliance",
+          score: 10,
+          weightedContribution: 2,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "brain_utilization",
+          score: 10,
+          weightedContribution: 1,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "fleet_governance",
+          score: 10,
+          weightedContribution: 1.5,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "security_posture",
+          score: 10,
+          weightedContribution: 1,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "observability_maturity",
+          score: 10,
+          weightedContribution: 1,
+          evidence: "e",
+          capTriggered: false,
+        },
       ],
     });
     const recs = engine.getRecommendations(report);
@@ -156,8 +325,7 @@ describe("RecommendationEngine", () => {
       assert.ok(rec.impactScore > 0, "impactScore positive");
       // S effort (units=1): impactScore = gain/1; M (units=3): gain/3; L (units=9): gain/9
       const expectedUnits = { S: 1, M: 3, L: 9 }[rec.effort];
-      const expected =
-        Math.round((rec.estimatedGain / expectedUnits) * 10) / 10;
+      const expected = Math.round((rec.estimatedGain / expectedUnits) * 10) / 10;
       assert.equal(rec.impactScore, expected, `impactScore for ${rec.id}`);
     }
   });
@@ -174,13 +342,55 @@ describe("RecommendationEngine", () => {
       tier: "ADM-1",
       overallScore: 98,
       dimensionScores: [
-        { dimensionId: "enforcement_coverage", score: 98, weightedContribution: 19.6, evidence: "e", capTriggered: false },
-        { dimensionId: "hook_quality", score: 98, weightedContribution: 14.7, evidence: "e", capTriggered: false },
-        { dimensionId: "standing_orders_compliance", score: 98, weightedContribution: 19.6, evidence: "e", capTriggered: false },
-        { dimensionId: "brain_utilization", score: 98, weightedContribution: 9.8, evidence: "e", capTriggered: false },
-        { dimensionId: "fleet_governance", score: 98, weightedContribution: 14.7, evidence: "e", capTriggered: false },
-        { dimensionId: "security_posture", score: 98, weightedContribution: 9.8, evidence: "e", capTriggered: false },
-        { dimensionId: "observability_maturity", score: 98, weightedContribution: 9.8, evidence: "e", capTriggered: false },
+        {
+          dimensionId: "enforcement_coverage",
+          score: 98,
+          weightedContribution: 19.6,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "hook_quality",
+          score: 98,
+          weightedContribution: 14.7,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "standing_orders_compliance",
+          score: 98,
+          weightedContribution: 19.6,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "brain_utilization",
+          score: 98,
+          weightedContribution: 9.8,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "fleet_governance",
+          score: 98,
+          weightedContribution: 14.7,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "security_posture",
+          score: 98,
+          weightedContribution: 9.8,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "observability_maturity",
+          score: 98,
+          weightedContribution: 9.8,
+          evidence: "e",
+          capTriggered: false,
+        },
       ],
     });
     const result = engine.getNextTierRecommendations(report);
@@ -191,7 +401,7 @@ describe("RecommendationEngine", () => {
   it("recommendations with prerequisites reference valid ids", () => {
     const report = makeReport();
     const recs = engine.getRecommendations(report);
-    const ids = new Set(recs.map((r) => r.id));
+    const _ids = new Set(recs.map((r) => r.id));
     // Also include all possible IDs from catalog (prereqs may not be in result set)
     // Just verify prereqs are non-empty strings
     for (const rec of recs) {
