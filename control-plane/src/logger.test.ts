@@ -5,9 +5,9 @@
 import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { StructuredLogger, parseLogFile } from "./logger";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import type { LogEntry } from "./logger";
+import { parseLogFile, StructuredLogger } from "./logger";
 
 describe("StructuredLogger", () => {
   let tmpDir: string;

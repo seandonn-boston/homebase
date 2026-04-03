@@ -118,9 +118,7 @@ export class SLOTracker {
     if (!sli) return;
 
     const good =
-      sli.direction === "below"
-        ? value <= sli.goodThreshold
-        : value >= sli.goodThreshold;
+      sli.direction === "below" ? value <= sli.goodThreshold : value >= sli.goodThreshold;
 
     const observations = this.observations.get(sliName);
     if (observations) {
@@ -159,9 +157,7 @@ export class SLOTracker {
     const errorBudgetUsed = Math.max(0, 1 - current);
     const errorBudgetRemaining = Math.max(0, errorBudgetTotal - errorBudgetUsed);
     const errorBudgetConsumedPct =
-      errorBudgetTotal > 0
-        ? Math.min(100, (errorBudgetUsed / errorBudgetTotal) * 100)
-        : 0;
+      errorBudgetTotal > 0 ? Math.min(100, (errorBudgetUsed / errorBudgetTotal) * 100) : 0;
 
     return {
       sli: sliName,
