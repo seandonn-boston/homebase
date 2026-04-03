@@ -5,18 +5,16 @@
 import assert from "node:assert/strict";
 import * as http from "node:http";
 import { afterEach, beforeEach, describe, it } from "node:test";
-import { GovernanceReporter } from "./reports";
-import type { ReporterContext, ReportType } from "./reports";
 import type { GovernanceEvent } from "./event-stream";
 import type { GovernancePolicy } from "./policies";
+import type { ReporterContext, ReportType } from "./reports";
+import { GovernanceReporter } from "./reports";
 
 // ---------------------------------------------------------------------------
 // Mock context
 // ---------------------------------------------------------------------------
 
-function makeEvent(
-  overrides: Partial<GovernanceEvent> = {},
-): GovernanceEvent {
+function makeEvent(overrides: Partial<GovernanceEvent> = {}): GovernanceEvent {
   return {
     id: `gevt_${Math.random().toString(36).slice(2)}`,
     timestamp: new Date().toISOString(),
@@ -92,7 +90,9 @@ function httpPost(url: string, body: unknown): Promise<{ status: number; body: s
       },
       (res) => {
         let respBody = "";
-        res.on("data", (chunk: string) => { respBody += chunk; });
+        res.on("data", (chunk: string) => {
+          respBody += chunk;
+        });
         res.on("end", () => resolve({ status: res.statusCode ?? 0, body: respBody }));
       },
     );
@@ -132,7 +132,10 @@ describe("GovernanceReporter — compliance report", () => {
     ];
     const reporter = new GovernanceReporter(makeContext(events, [policy]));
     const result = reporter.generate({ type: "compliance", startDate: start, endDate: end });
-    const data = result.json as { totalViolations: number; byPolicy: Array<{ violations: number }> };
+    const data = result.json as {
+      totalViolations: number;
+      byPolicy: Array<{ violations: number }>;
+    };
     assert.equal(data.totalViolations, 2);
     assert.equal(data.byPolicy[0].violations, 2);
   });
@@ -290,7 +293,9 @@ describe("GovernanceReporter — HTTP endpoint", () => {
         res.end("Not Found");
       }
     });
-    await new Promise<void>((resolve) => { server.listen(0, () => resolve()); });
+    await new Promise<void>((resolve) => {
+      server.listen(0, () => resolve());
+    });
     port = (server.address() as { port: number }).port;
   });
 
@@ -363,7 +368,9 @@ describe("GovernanceReporter — HTTP endpoint", () => {
         { hostname: parsed.hostname, port: parsed.port, path: parsed.pathname, method: "GET" },
         (r) => {
           let body = "";
-          r.on("data", (c: string) => { body += c; });
+          r.on("data", (c: string) => {
+            body += c;
+          });
           r.on("end", () => resolve({ status: r.statusCode ?? 0, body }));
         },
       );

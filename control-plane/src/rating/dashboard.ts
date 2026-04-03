@@ -9,9 +9,16 @@
  */
 
 import { generateBadge } from "./badges";
-import { RATING_DIMENSIONS, RATING_TIERS, type DimensionId, type ModuleRating, type RatingReport, type RatingTierCode } from "./types";
 import type { RatingHistory, TrendResult } from "./history";
 import type { Recommendation } from "./recommendations";
+import {
+  type DimensionId,
+  type ModuleRating,
+  RATING_DIMENSIONS,
+  RATING_TIERS,
+  type RatingReport,
+  type RatingTierCode,
+} from "./types";
 
 // ---------------------------------------------------------------------------
 // Dashboard data types
@@ -276,7 +283,11 @@ const GATE_CATALOG: Array<{
 
 function buildGateStatuses(report: RatingReport): GateStatus[] {
   const tierRank: Record<RatingTierCode, number> = {
-    "ADM-1": 5, "ADM-2": 4, "ADM-3": 3, "ADM-4": 2, "ADM-5": 1,
+    "ADM-1": 5,
+    "ADM-2": 4,
+    "ADM-3": 3,
+    "ADM-4": 2,
+    "ADM-5": 1,
   };
   const currentRank = tierRank[report.tier];
 
@@ -356,10 +367,7 @@ function buildNextTierRequirement(
 // History summary
 // ---------------------------------------------------------------------------
 
-function buildHistorySummary(
-  history: RatingHistory,
-  trendWindow: number,
-): HistorySummary {
+function buildHistorySummary(history: RatingHistory, trendWindow: number): HistorySummary {
   const all = history.getHistory();
 
   if (all.length === 0) {

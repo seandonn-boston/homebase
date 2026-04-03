@@ -106,8 +106,7 @@ export const RATING_DIMENSIONS: Record<DimensionId, RatingDimension> = {
     description:
       "Percentage of safety-critical constraints with deterministic enforcement via hooks.",
     weight: 20,
-    metric:
-      "Hook inventory mapped against Standing Orders and decision authority tiers.",
+    metric: "Hook inventory mapped against Standing Orders and decision authority tiers.",
   },
   hook_quality: {
     id: "hook_quality",
@@ -115,17 +114,14 @@ export const RATING_DIMENSIONS: Record<DimensionId, RatingDimension> = {
     description:
       "Quality of hook implementations: pass/fail rates, latency, coverage of PreToolUse/PostToolUse/SessionStart.",
     weight: 15,
-    metric:
-      "Hook execution logs: frequency, pass/fail rate, latency percentiles.",
+    metric: "Hook execution logs: frequency, pass/fail rate, latency percentiles.",
   },
   standing_orders_compliance: {
     id: "standing_orders_compliance",
     name: "Standing Orders Compliance",
-    description:
-      "Adherence to the 15 non-negotiable standing orders across all agent operations.",
+    description: "Adherence to the 15 non-negotiable standing orders across all agent operations.",
     weight: 20,
-    metric:
-      "Standing order violation rate from operational logs over evaluation period.",
+    metric: "Standing order violation rate from operational logs over evaluation period.",
   },
   brain_utilization: {
     id: "brain_utilization",
@@ -133,8 +129,7 @@ export const RATING_DIMENSIONS: Record<DimensionId, RatingDimension> = {
     description:
       "Institutional memory usage: brain reuse rate, entry freshness, mean usefulness score.",
     weight: 10,
-    metric:
-      "Brain access patterns over evaluation period; entry freshness scores.",
+    metric: "Brain access patterns over evaluation period; entry freshness scores.",
   },
   fleet_governance: {
     id: "fleet_governance",
@@ -151,8 +146,7 @@ export const RATING_DIMENSIONS: Record<DimensionId, RatingDimension> = {
     description:
       "Attack resilience, identity violation rate, unauthorized authority escalation rate.",
     weight: 10,
-    metric:
-      "Attack corpus pass rate; identity probes; authority compliance audit.",
+    metric: "Attack corpus pass rate; identity probes; authority compliance audit.",
   },
   observability_maturity: {
     id: "observability_maturity",
@@ -160,8 +154,7 @@ export const RATING_DIMENSIONS: Record<DimensionId, RatingDimension> = {
     description:
       "Trace support, per-operation attribution, token-level accounting, audit trail completeness.",
     weight: 10,
-    metric:
-      "Trace coverage; audit trail completeness from random decision sample.",
+    metric: "Trace coverage; audit trail completeness from random decision sample.",
   },
 };
 
@@ -334,9 +327,6 @@ export function minTier(tiers: RatingTierCode[]): RatingTierCode {
 }
 
 /** Build a full rating label from tier code + suffix */
-export function buildRatingLabel(
-  tier: RatingTierCode,
-  suffix: CertificationSuffix,
-): string {
+export function buildRatingLabel(tier: RatingTierCode, suffix: CertificationSuffix): string {
   return `${tier}${suffix}`;
 }

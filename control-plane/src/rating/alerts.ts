@@ -8,7 +8,13 @@
  * Zero external dependencies.
  */
 
-import { compareTiers, RATING_DIMENSIONS, type DimensionId, type RatingReport, type RatingTierCode } from "./types";
+import {
+  compareTiers,
+  type DimensionId,
+  RATING_DIMENSIONS,
+  type RatingReport,
+  type RatingTierCode,
+} from "./types";
 
 // ---------------------------------------------------------------------------
 // Alert types
@@ -83,9 +89,9 @@ export const DEFAULT_THRESHOLDS: AlertThresholds = {
   dimensionImprovementThreshold: 8,
   expiryWarningDays: 30,
   watchedThresholds: {
-    enforcement_coverage: 50,  // hard cap threshold
-    security_posture: 70,      // attack corpus threshold
-    brain_utilization: 15,     // knowledge reuse threshold
+    enforcement_coverage: 50, // hard cap threshold
+    security_posture: 70, // attack corpus threshold
+    brain_utilization: 15, // knowledge reuse threshold
   },
   watchedOverallThresholds: [30, 60, 80, 95],
 };
@@ -107,8 +113,7 @@ export class RatingAlertManager {
         ...thresholds.watchedThresholds,
       },
       watchedOverallThresholds:
-        thresholds.watchedOverallThresholds ??
-        DEFAULT_THRESHOLDS.watchedOverallThresholds,
+        thresholds.watchedOverallThresholds ?? DEFAULT_THRESHOLDS.watchedOverallThresholds,
     };
   }
 
@@ -120,10 +125,7 @@ export class RatingAlertManager {
    * @param previousReport The previous rating report to compare against
    * @returns Sorted list of triggered alerts
    */
-  checkAlerts(
-    currentReport: RatingReport,
-    previousReport: RatingReport,
-  ): RatingAlert[] {
+  checkAlerts(currentReport: RatingReport, previousReport: RatingReport): RatingAlert[] {
     const alerts: RatingAlert[] = [];
 
     // Tier regression / improvement
@@ -133,9 +135,7 @@ export class RatingAlertManager {
     alerts.push(...this.checkOverallScoreChange(currentReport, previousReport));
 
     // Overall score threshold crossings
-    alerts.push(
-      ...this.checkOverallThresholds(currentReport, previousReport),
-    );
+    alerts.push(...this.checkOverallThresholds(currentReport, previousReport));
 
     // Per-dimension checks
     alerts.push(...this.checkDimensionChanges(currentReport, previousReport));
@@ -188,10 +188,7 @@ export class RatingAlertManager {
   // Private alert checkers
   // -------------------------------------------------------------------------
 
-  private checkTierChange(
-    current: RatingReport,
-    previous: RatingReport,
-  ): RatingAlert[] {
+  private checkTierChange(current: RatingReport, previous: RatingReport): RatingAlert[] {
     const diff = compareTiers(current.tier, previous.tier);
     if (diff === 0) return [];
 
@@ -235,10 +232,7 @@ export class RatingAlertManager {
     }
   }
 
-  private checkOverallScoreChange(
-    current: RatingReport,
-    previous: RatingReport,
-  ): RatingAlert[] {
+  private checkOverallScoreChange(current: RatingReport, previous: RatingReport): RatingAlert[] {
     const delta = current.overallScore - previous.overallScore;
     const alerts: RatingAlert[] = [];
 
@@ -281,10 +275,7 @@ export class RatingAlertManager {
     return alerts;
   }
 
-  private checkOverallThresholds(
-    current: RatingReport,
-    previous: RatingReport,
-  ): RatingAlert[] {
+  private checkOverallThresholds(current: RatingReport, previous: RatingReport): RatingAlert[] {
     const alerts: RatingAlert[] = [];
 
     for (const threshold of this.thresholds.watchedOverallThresholds) {
@@ -331,16 +322,11 @@ export class RatingAlertManager {
     return alerts;
   }
 
-  private checkDimensionChanges(
-    current: RatingReport,
-    previous: RatingReport,
-  ): RatingAlert[] {
+  private checkDimensionChanges(current: RatingReport, previous: RatingReport): RatingAlert[] {
     const alerts: RatingAlert[] = [];
 
     for (const currDs of current.dimensionScores) {
-      const prevDs = previous.dimensionScores.find(
-        (d) => d.dimensionId === currDs.dimensionId,
-      );
+      const prevDs = previous.dimensionScores.find((d) => d.dimensionId === currDs.dimensionId);
       if (!prevDs) continue;
 
       const delta = currDs.score - prevDs.score;
@@ -370,8 +356,7 @@ export class RatingAlertManager {
             type: "dimension_improvement",
             severity: "info",
             title: `${dim.name} score improved by ${delta} points`,
-            message:
-              `${dim.name} improved from ${prevDs.score} to ${currDs.score} (+${delta} points).`,
+            message: `${dim.name} improved from ${prevDs.score} to ${currDs.score} (+${delta} points).`,
             dimension: currDs.dimensionId,
             currentTier: current.tier,
             currentScore: current.overallScore,
@@ -382,8 +367,7 @@ export class RatingAlertManager {
       }
 
       // Check watched dimension thresholds
-      const watchedThreshold =
-        this.thresholds.watchedThresholds[currDs.dimensionId];
+      const watchedThreshold = this.thresholds.watchedThresholds[currDs.dimensionId];
       if (watchedThreshold !== undefined) {
         const wasAbove = prevDs.score >= watchedThreshold;
         const isAbove = currDs.score >= watchedThreshold;
@@ -428,10 +412,7 @@ export class RatingAlertManager {
     return alerts;
   }
 
-  private checkCapChanges(
-    current: RatingReport,
-    previous: RatingReport,
-  ): RatingAlert[] {
+  private checkCapChanges(current: RatingReport, previous: RatingReport): RatingAlert[] {
     const alerts: RatingAlert[] = [];
 
     const prevCapConditions = new Set(previous.activeCaps.map((c) => c.condition));
@@ -485,10 +466,7 @@ export class RatingAlertManager {
     const validUntil = new Date(report.validUntil).getTime();
     const daysUntilExpiry = (validUntil - now) / (1000 * 60 * 60 * 24);
 
-    if (
-      daysUntilExpiry >= 0 &&
-      daysUntilExpiry <= this.thresholds.expiryWarningDays
-    ) {
+    if (daysUntilExpiry >= 0 && daysUntilExpiry <= this.thresholds.expiryWarningDays) {
       const severity: AlertSeverity =
         daysUntilExpiry <= 7 ? "critical" : daysUntilExpiry <= 14 ? "high" : "medium";
 
@@ -515,9 +493,7 @@ export class RatingAlertManager {
   // Alert construction
   // -------------------------------------------------------------------------
 
-  private makeAlert(
-    fields: Omit<RatingAlert, "id" | "timestamp">,
-  ): RatingAlert {
+  private makeAlert(fields: Omit<RatingAlert, "id" | "timestamp">): RatingAlert {
     this.idCounter++;
     return {
       id: `alert_${String(this.idCounter).padStart(4, "0")}`,
@@ -534,8 +510,6 @@ export class RatingAlertManager {
       low: 3,
       info: 4,
     };
-    return [...alerts].sort(
-      (a, b) => severityOrder[a.severity] - severityOrder[b.severity],
-    );
+    return [...alerts].sort((a, b) => severityOrder[a.severity] - severityOrder[b.severity]);
   }
 }
