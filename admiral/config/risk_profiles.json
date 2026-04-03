@@ -1,0 +1,66 @@
+{
+  "_comment": "Risk classification profiles for review_checklist.sh (QA-08).",
+  "risk_levels": {
+    "high": {
+      "label": "HIGH",
+      "min_reviewers": 2,
+      "checklist_items": [
+        "Security implications reviewed (injection, privilege escalation, data exposure)",
+        "Authentication and authorisation paths verified",
+        "Input validation present and tested",
+        "Secrets / credentials NOT hardcoded",
+        "Error handling covers failure modes",
+        "Audit trail / logging appropriate",
+        "Backward compatibility confirmed or breakage documented",
+        "Rollback plan documented if deployment risk exists",
+        "Performance impact assessed",
+        "Tests cover happy path AND failure paths"
+      ]
+    },
+    "medium": {
+      "label": "MEDIUM",
+      "min_reviewers": 1,
+      "checklist_items": [
+        "Logic changes have corresponding test updates",
+        "Error handling covers expected failure modes",
+        "No unintended side effects on adjacent modules",
+        "Config changes are backward compatible or migration provided",
+        "Performance impact assessed for hot paths"
+      ]
+    },
+    "low": {
+      "label": "LOW",
+      "min_reviewers": 1,
+      "checklist_items": [
+        "Spelling and formatting correct",
+        "Links / references valid",
+        "No accidental debug or placeholder content"
+      ]
+    }
+  },
+  "path_patterns": {
+    "high": [
+      ".hooks/",
+      "admiral/security",
+      "admiral/lib/injection_detect",
+      "admiral/lib/audit_integrity",
+      "admiral/lib/security_audit",
+      "admiral/lib/input_validation",
+      "admiral/config/",
+      ".admiral/"
+    ],
+    "low": [
+      "tests/",
+      "admiral/quality/tests/",
+      ".claude/commands/",
+      "plan/",
+      "docs/",
+      ".brain/"
+    ]
+  },
+  "auto_verifiable": {
+    "lint_pass": "Run: npx biome check / shellcheck",
+    "test_pass": "Run: bash run_tests.sh or npm test",
+    "no_secrets": "Checked by: git-secrets or trufflehog scan"
+  }
+}
