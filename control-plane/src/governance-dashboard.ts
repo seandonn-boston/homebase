@@ -5,7 +5,7 @@
  * intervention history, and policy status.
  */
 
-import { EventStream } from "./events";
+import type { EventStream } from "./events";
 
 export interface GovernanceDashboardData {
   agents: { agentId: string; healthy: boolean; lastFinding: number }[];
@@ -61,19 +61,11 @@ export class GovernanceDashboard {
       }
 
       if (event.type === "policy_violation") {
-        agentViolations.set(
-          event.agentId,
-          (agentViolations.get(event.agentId) ?? 0) + 1,
-        );
+        agentViolations.set(event.agentId, (agentViolations.get(event.agentId) ?? 0) + 1);
 
         const policyId =
-          (event.data.policyId as string) ??
-          (event.data.policy as string) ??
-          "unknown";
-        policyViolations.set(
-          policyId,
-          (policyViolations.get(policyId) ?? 0) + 1,
-        );
+          (event.data.policyId as string) ?? (event.data.policy as string) ?? "unknown";
+        policyViolations.set(policyId, (policyViolations.get(policyId) ?? 0) + 1);
       }
 
       // Detect intervention events from data tags
@@ -89,7 +81,7 @@ export class GovernanceDashboard {
 
     // Build agents list
     const agents: GovernanceDashboardData["agents"] = [];
-    for (const [agentId, lastSeen] of agentLastSeen) {
+    for (const [agentId, _lastSeen] of agentLastSeen) {
       agents.push({
         agentId,
         healthy: !agentStopped.has(agentId),

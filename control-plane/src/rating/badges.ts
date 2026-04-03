@@ -28,27 +28,27 @@ interface BadgeColors {
 const TIER_COLORS: Record<RatingTierCode, BadgeColors> = {
   "ADM-1": {
     labelBg: "#555",
-    valueBg: "#c8a400",   // gold
+    valueBg: "#c8a400", // gold
     valueText: "#fff",
   },
   "ADM-2": {
     labelBg: "#555",
-    valueBg: "#2ea44f",   // green
+    valueBg: "#2ea44f", // green
     valueText: "#fff",
   },
   "ADM-3": {
     labelBg: "#555",
-    valueBg: "#0075ca",   // blue
+    valueBg: "#0075ca", // blue
     valueText: "#fff",
   },
   "ADM-4": {
     labelBg: "#555",
-    valueBg: "#e3b341",   // yellow
+    valueBg: "#e3b341", // yellow
     valueText: "#222",
   },
   "ADM-5": {
     labelBg: "#555",
-    valueBg: "#cf222e",   // red
+    valueBg: "#cf222e", // red
     valueText: "#fff",
   },
 };
@@ -136,10 +136,8 @@ export function generateDetailedBadge(
   const subText = `${tierData.name}${scoreText}`;
 
   const labelWidth = approximateTextWidth(label, 11) + 10;
-  const valueWidth = Math.max(
-    approximateTextWidth(valueText, 11),
-    approximateTextWidth(subText, 9),
-  ) + 12;
+  const valueWidth =
+    Math.max(approximateTextWidth(valueText, 11), approximateTextWidth(subText, 9)) + 12;
   const totalWidth = labelWidth + valueWidth;
   const height = 28;
 

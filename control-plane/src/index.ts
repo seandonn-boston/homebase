@@ -11,9 +11,28 @@
  * 3. Execution Trace — visualization of agent reasoning trees
  */
 
+export { DistributedTracer, TraceSpan } from "./distributed-tracing";
 export { AgentEvent, EventListener, EventStream, EventStreamConfig, EventType } from "./events";
+export { FleetDashboard, FleetDashboardData } from "./fleet-dashboard";
+export {
+  GovernanceDashboard,
+  GovernanceDashboardData,
+} from "./governance-dashboard";
 export { JournalIngester } from "./ingest";
 export { AgentInstrumentation, InstrumentationConfig } from "./instrumentation";
+export {
+  AuthLevel,
+  InterventionAuthConfig,
+  InterventionAuthorizer,
+  InterventionType,
+} from "./intervention-auth";
+export {
+  getInterventionAction,
+  getReversibleActions,
+  INTERVENTION_CATALOG,
+  InterventionAction,
+  requiresConfirmation,
+} from "./intervention-catalog";
 export {
   Alert,
   ControlChart,
@@ -23,8 +42,7 @@ export {
   SPCViolation,
 } from "./runaway-detector";
 export { AdmiralServer } from "./server";
-export { ExecutionTrace, TraceNode, TraceStats } from "./trace";
-
+export { SessionThermalModel, ThermalState } from "./session-thermal";
 // Observability enhancements
 export {
   EnhancedStructuredLogger,
@@ -32,32 +50,13 @@ export {
   StructuredLogFilter,
   StructuredLogLevel,
 } from "./structured-logging";
-export { DistributedTracer, TraceSpan } from "./distributed-tracing";
+export { ExecutionTrace, TraceNode, TraceStats } from "./trace";
 export {
-  InterventionAuthorizer,
-  InterventionType,
-  AuthLevel,
-  InterventionAuthConfig,
-} from "./intervention-auth";
-export {
-  CanonicalTraceBuilder,
-  CanonicalTrace,
   CanonicalSpan,
+  CanonicalTrace,
+  CanonicalTraceBuilder,
   CausalLink,
 } from "./trace-format";
-export { FleetDashboard, FleetDashboardData } from "./fleet-dashboard";
-export {
-  GovernanceDashboard,
-  GovernanceDashboardData,
-} from "./governance-dashboard";
-export { SessionThermalModel, ThermalState } from "./session-thermal";
-export {
-  INTERVENTION_CATALOG,
-  InterventionAction,
-  getInterventionAction,
-  getReversibleActions,
-  requiresConfirmation,
-} from "./intervention-catalog";
 
 import { EventStream } from "./events";
 import { AgentInstrumentation } from "./instrumentation";

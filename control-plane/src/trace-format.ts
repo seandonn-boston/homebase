@@ -67,10 +67,7 @@ export class CanonicalTraceBuilder {
 
   build(): CanonicalTrace {
     const agentIds = new Set(this.spans.map((s) => s.agentId));
-    const totalCost = this.spans.reduce(
-      (sum, s) => sum + s.costAttribution.tokens,
-      0,
-    );
+    const totalCost = this.spans.reduce((sum, s) => sum + s.costAttribution.tokens, 0);
     const governanceEvents = this.spans.reduce(
       (sum, s) => sum + (s.governanceMetadata?.violations.length ?? 0),
       0,

@@ -117,9 +117,7 @@ export class RatingHistory {
   getHistory(since?: string): HistoryEntry[] {
     if (!since) return [...this.entries];
     const sinceMs = new Date(since).getTime();
-    return this.entries.filter(
-      (e) => new Date(e.timestamp).getTime() >= sinceMs,
-    );
+    return this.entries.filter((e) => new Date(e.timestamp).getTime() >= sinceMs);
   }
 
   /**
@@ -136,10 +134,7 @@ export class RatingHistory {
    * @param dimension The dimension ID or "overall"
    * @param window Number of most recent entries to include
    */
-  getTrend(
-    dimension: DimensionId | "overall",
-    window: number,
-  ): TrendResult {
+  getTrend(dimension: DimensionId | "overall", window: number): TrendResult {
     const recent = this.entries.slice(-Math.max(1, window));
 
     const points: TrendPoint[] = recent.map((e) => ({
@@ -152,14 +147,9 @@ export class RatingHistory {
     }));
 
     const average =
-      points.length > 0
-        ? points.reduce((sum, p) => sum + p.score, 0) / points.length
-        : 0;
+      points.length > 0 ? points.reduce((sum, p) => sum + p.score, 0) / points.length : 0;
 
-    const delta =
-      points.length >= 2
-        ? points[points.length - 1].score - points[0].score
-        : 0;
+    const delta = points.length >= 2 ? points[points.length - 1].score - points[0].score : 0;
 
     let direction: "improving" | "declining" | "stable";
     if (delta > 2) direction = "improving";
@@ -187,14 +177,9 @@ export class RatingHistory {
    * Check if the rating has regressed between two entries.
    * Returns true if tier dropped or overall score declined by more than threshold.
    */
-  hasRegressed(
-    previous: HistoryEntry,
-    current: HistoryEntry,
-    scoreThreshold = 5,
-  ): boolean {
+  hasRegressed(previous: HistoryEntry, current: HistoryEntry, scoreThreshold = 5): boolean {
     if (tierRank(current.tier) < tierRank(previous.tier)) return true;
-    if (previous.overallScore - current.overallScore > scoreThreshold)
-      return true;
+    if (previous.overallScore - current.overallScore > scoreThreshold) return true;
     return false;
   }
 

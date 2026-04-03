@@ -10,7 +10,13 @@
  * Zero external dependencies.
  */
 
-import { RATING_DIMENSIONS, RATING_TIERS, type DimensionId, type RatingReport, type RatingTierCode } from "./types";
+import {
+  type DimensionId,
+  RATING_DIMENSIONS,
+  RATING_TIERS,
+  type RatingReport,
+  type RatingTierCode,
+} from "./types";
 
 // ---------------------------------------------------------------------------
 // Recommendation types
@@ -407,9 +413,7 @@ export class RecommendationEngine {
     const recs: Recommendation[] = [];
 
     for (const template of ACTION_CATALOG) {
-      const dimScore = report.dimensionScores.find(
-        (d) => d.dimensionId === template.dimension,
-      );
+      const dimScore = report.dimensionScores.find((d) => d.dimensionId === template.dimension);
       const currentScore = dimScore?.score ?? 0;
 
       if (currentScore >= template.triggerIfBelow) continue;
@@ -447,9 +451,10 @@ export class RecommendationEngine {
   /**
    * Get the set of recommendations needed to reach the next tier.
    */
-  getNextTierRecommendations(
-    report: RatingReport,
-  ): { targetTier: RatingTierCode; recommendations: Recommendation[] } {
+  getNextTierRecommendations(report: RatingReport): {
+    targetTier: RatingTierCode;
+    recommendations: Recommendation[];
+  } {
     const currentTierCode = report.tier;
     const nextTier = this.nextTier(currentTierCode);
     if (!nextTier) {
@@ -460,7 +465,7 @@ export class RecommendationEngine {
     const targetMinScore = RATING_TIERS[nextTier].minScore;
 
     // Filter to recommendations that would close the gap
-    const gap = targetMinScore - report.overallScore;
+    const _gap = targetMinScore - report.overallScore;
     const relevant = all.filter((r) => {
       const dim = RATING_DIMENSIONS[r.dimension];
       const weightedGain = (r.estimatedGain * dim.weight) / 100;

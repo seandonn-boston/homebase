@@ -2,7 +2,7 @@
  * Tests for Alert Routing (OB-05)
  */
 
-import { describe, it, expect, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { AlertRouter } from "./alerting";
 
 describe("AlertRouter", () => {

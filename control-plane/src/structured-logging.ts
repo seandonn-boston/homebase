@@ -5,8 +5,6 @@
  * log buffer, and span-level context propagation.
  */
 
-import * as crypto from "node:crypto";
-
 export interface StructuredLogEntry {
   timestamp: string;
   level: "debug" | "info" | "warn" | "error" | "fatal";
@@ -47,10 +45,7 @@ export class EnhancedStructuredLogger {
   private entries: StructuredLogEntry[] = [];
   private maxEntries: number;
 
-  constructor(
-    component: string,
-    opts?: { minLevel?: StructuredLogLevel; maxEntries?: number },
-  ) {
+  constructor(component: string, opts?: { minLevel?: StructuredLogLevel; maxEntries?: number }) {
     this.component = component;
     this.minLevel = opts?.minLevel ?? "debug";
     this.maxEntries = opts?.maxEntries ?? 10_000;
@@ -150,9 +145,7 @@ export class EnhancedStructuredLogger {
 
     if (filter?.since) {
       const since = filter.since;
-      result = result.filter(
-        (e) => new Date(e.timestamp).getTime() >= since,
-      );
+      result = result.filter((e) => new Date(e.timestamp).getTime() >= since);
     }
 
     return result;

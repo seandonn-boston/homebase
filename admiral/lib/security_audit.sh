@@ -55,7 +55,7 @@ audit_scope_violation() {
 }
 
 audit_injection_detected() {
-  local source="$1" severity="$2" details_json="$3"
+  local _source="$1" severity="$2" details_json="$3"
   audit_security_event "injection_detected" "flagged" "$severity" "$details_json" "system"
 }
 

@@ -2,7 +2,7 @@
  * Tests for MetricsCollector (OB-03)
  */
 
-import { describe, it, expect, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { MetricsCollector } from "./metrics";
 
 describe("MetricsCollector", () => {
@@ -17,7 +17,7 @@ describe("MetricsCollector", () => {
     metrics.recordHookExecution("zero_trust_validator", 25, "pass");
     metrics.recordHookExecution("zero_trust_validator", 150, "fail");
 
-    const stats = metrics.hookLatency["zero_trust_validator"].getStats();
+    const stats = metrics.hookLatency.zero_trust_validator.getStats();
     expect(stats.count).toBe(3);
     expect(stats.sum).toBe(190);
 
@@ -71,17 +71,17 @@ describe("MetricsCollector", () => {
   });
 
   it("histogram buckets are cumulative", () => {
-    metrics.recordHookExecution("h", 5, "pass");   // fits in 5ms bucket
-    metrics.recordHookExecution("h", 50, "pass");  // fits in 50ms bucket
+    metrics.recordHookExecution("h", 5, "pass"); // fits in 5ms bucket
+    metrics.recordHookExecution("h", 50, "pass"); // fits in 50ms bucket
     metrics.recordHookExecution("h", 500, "pass"); // fits in 500ms bucket
 
-    const stats = metrics.hookLatency["h"].getStats();
-    const bucket5 = stats.buckets.find(b => b.le === 5);
-    const bucket50 = stats.buckets.find(b => b.le === 50);
-    const bucket500 = stats.buckets.find(b => b.le === 500);
+    const stats = metrics.hookLatency.h.getStats();
+    const bucket5 = stats.buckets.find((b) => b.le === 5);
+    const bucket50 = stats.buckets.find((b) => b.le === 50);
+    const bucket500 = stats.buckets.find((b) => b.le === 500);
 
     expect(bucket5?.count).toBe(1);
-    expect(bucket50?.count).toBe(2);  // cumulative: 5ms + 50ms
+    expect(bucket50?.count).toBe(2); // cumulative: 5ms + 50ms
     expect(bucket500?.count).toBe(3); // cumulative: all three
   });
 

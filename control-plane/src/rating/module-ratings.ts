@@ -9,15 +9,15 @@
  */
 
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
-import { join, basename } from "node:path";
+import { basename, join } from "node:path";
 import {
   compareTiers,
-  scoreToTier,
   type DimensionId,
   type DimensionScore,
   type ModuleClassification,
   type ModuleRating,
   type RatingTierCode,
+  scoreToTier,
 } from "./types";
 
 // ---------------------------------------------------------------------------
@@ -63,14 +63,44 @@ const DEFAULT_MODULE_PATTERNS: Array<{
   isCritical: boolean;
 }> = [
   { pathSegment: ".hooks", name: "Hooks", classification: "critical", isCritical: true },
-  { pathSegment: "admiral/governance", name: "Governance", classification: "critical", isCritical: true },
-  { pathSegment: "admiral/standing-orders", name: "Standing Orders", classification: "critical", isCritical: true },
-  { pathSegment: "admiral/security", name: "Security", classification: "critical", isCritical: true },
-  { pathSegment: "control-plane/src", name: "Control Plane", classification: "standard", isCritical: false },
+  {
+    pathSegment: "admiral/governance",
+    name: "Governance",
+    classification: "critical",
+    isCritical: true,
+  },
+  {
+    pathSegment: "admiral/standing-orders",
+    name: "Standing Orders",
+    classification: "critical",
+    isCritical: true,
+  },
+  {
+    pathSegment: "admiral/security",
+    name: "Security",
+    classification: "critical",
+    isCritical: true,
+  },
+  {
+    pathSegment: "control-plane/src",
+    name: "Control Plane",
+    classification: "standard",
+    isCritical: false,
+  },
   { pathSegment: "admiral/brain", name: "Brain", classification: "standard", isCritical: false },
   { pathSegment: ".brain", name: "Brain Store", classification: "standard", isCritical: false },
-  { pathSegment: "admiral/quality", name: "Quality", classification: "standard", isCritical: false },
-  { pathSegment: "admiral/benchmarks", name: "Benchmarks", classification: "support", isCritical: false },
+  {
+    pathSegment: "admiral/quality",
+    name: "Quality",
+    classification: "standard",
+    isCritical: false,
+  },
+  {
+    pathSegment: "admiral/benchmarks",
+    name: "Benchmarks",
+    classification: "support",
+    isCritical: false,
+  },
   { pathSegment: "admiral/docs", name: "Docs", classification: "support", isCritical: false },
   { pathSegment: "admiral/config", name: "Config", classification: "support", isCritical: false },
   { pathSegment: "plan", name: "Plan", classification: "support", isCritical: false },
@@ -229,16 +259,11 @@ export class ModuleRater {
     }
   }
 
-  private scoreEnforcement(
-    mod: ModuleDefinition,
-    classification: ModuleClassification,
-  ): number {
+  private scoreEnforcement(mod: ModuleDefinition, classification: ModuleClassification): number {
     if (classification === "support") return 70; // support modules not enforcement-heavy
 
     const files = this.collectFilesShallow(mod.path);
-    const hasHooks = files.some(
-      (f) => f.endsWith(".sh") && basename(f).startsWith("hook"),
-    );
+    const hasHooks = files.some((f) => f.endsWith(".sh") && basename(f).startsWith("hook"));
     const hasConfig = files.some((f) => f.includes("config"));
 
     let score = 40;
@@ -250,15 +275,10 @@ export class ModuleRater {
     return clamp(score, 0, 100);
   }
 
-  private scoreHookQuality(
-    mod: ModuleDefinition,
-    classification: ModuleClassification,
-  ): number {
+  private scoreHookQuality(mod: ModuleDefinition, classification: ModuleClassification): number {
     if (classification === "support") return 65;
 
-    const files = this.collectFilesShallow(mod.path).filter((f) =>
-      f.endsWith(".sh"),
-    );
+    const files = this.collectFilesShallow(mod.path).filter((f) => f.endsWith(".sh"));
     if (files.length === 0) return 30;
 
     let withErrorHandling = 0;
@@ -273,10 +293,7 @@ export class ModuleRater {
     return clamp(Math.round(30 + pct * 70), 0, 100);
   }
 
-  private scoreStandingOrders(
-    mod: ModuleDefinition,
-    classification: ModuleClassification,
-  ): number {
+  private scoreStandingOrders(mod: ModuleDefinition, classification: ModuleClassification): number {
     if (classification === "support") return 60;
     const files = this.collectFilesShallow(mod.path);
     if (files.length === 0) return 20;
@@ -320,9 +337,7 @@ export class ModuleRater {
   ): number {
     const files = this.collectFilesShallow(mod.path);
     const hasAuth = files.some((f) => f.includes("auth"));
-    const hasValidation = files.some(
-      (f) => f.includes("validation") || f.includes("validate"),
-    );
+    const hasValidation = files.some((f) => f.includes("validation") || f.includes("validate"));
     const hasSecurity = files.some((f) => f.includes("security"));
 
     let score = classification === "critical" ? 50 : 40;
@@ -333,10 +348,7 @@ export class ModuleRater {
     return clamp(score, 0, 100);
   }
 
-  private scoreObservability(
-    mod: ModuleDefinition,
-    classification: ModuleClassification,
-  ): number {
+  private scoreObservability(mod: ModuleDefinition, classification: ModuleClassification): number {
     const files = this.collectFilesShallow(mod.path);
     const hasLogging = files.some(
       (f) => f.includes("log") || f.includes("trace") || f.includes("metric"),
