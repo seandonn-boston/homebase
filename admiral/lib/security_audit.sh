@@ -66,7 +66,7 @@ audit_privilege_escalation() {
 }
 
 audit_secret_detected() {
-  local source="$1" details_json="$2"
+  local _source="$1" details_json="$2"
   audit_security_event "secret_detected" "quarantined" "critical" "$details_json" "system"
 }
 

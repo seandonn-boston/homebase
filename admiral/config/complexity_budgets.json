@@ -1,0 +1,77 @@
+{
+  "_comment": "Per-module complexity budgets. Keys are module paths relative to PROJECT_ROOT.",
+  "_schema": {
+    "max_avg": "Maximum average cyclomatic complexity per file in module",
+    "max_per_file": "Maximum cyclomatic complexity for any single file",
+    "max_per_function": "Maximum cyclomatic complexity for any single function (estimated)",
+    "credits_available": "Carry-over credits from previous complexity reductions"
+  },
+  "defaults": {
+    "max_avg": 10,
+    "max_per_file": 20,
+    "max_per_function": 15,
+    "credits_available": 0
+  },
+  "modules": {
+    "admiral/quality": {
+      "max_avg": 12,
+      "max_per_file": 25,
+      "max_per_function": 18,
+      "credits_available": 0
+    },
+    "admiral/security": {
+      "max_avg": 8,
+      "max_per_file": 15,
+      "max_per_function": 12,
+      "credits_available": 0
+    },
+    "admiral/hooks": {
+      "max_avg": 8,
+      "max_per_file": 15,
+      "max_per_function": 12,
+      "credits_available": 0
+    },
+    "admiral/config": {
+      "max_avg": 5,
+      "max_per_file": 10,
+      "max_per_function": 8,
+      "credits_available": 0
+    },
+    "admiral/lib": {
+      "max_avg": 10,
+      "max_per_file": 20,
+      "max_per_function": 15,
+      "credits_available": 0
+    },
+    "admiral/brain": {
+      "max_avg": 12,
+      "max_per_file": 25,
+      "max_per_function": 18,
+      "credits_available": 0
+    },
+    "admiral/intent": {
+      "max_avg": 10,
+      "max_per_file": 20,
+      "max_per_function": 15,
+      "credits_available": 0
+    },
+    "admiral/knowledge": {
+      "max_avg": 10,
+      "max_per_file": 20,
+      "max_per_function": 15,
+      "credits_available": 0
+    },
+    "admiral/governance": {
+      "max_avg": 12,
+      "max_per_file": 25,
+      "max_per_function": 18,
+      "credits_available": 0
+    },
+    "admiral/adapters": {
+      "max_avg": 10,
+      "max_per_file": 20,
+      "max_per_function": 15,
+      "credits_available": 0
+    }
+  }
+}
