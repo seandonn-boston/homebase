@@ -6,7 +6,6 @@ import assert from "node:assert/strict";
 import * as http from "node:http";
 import { afterEach, beforeEach, describe, it } from "node:test";
 import { GovernanceEventStream } from "./event-stream";
-import type { GovernanceEventType, GovernanceEventSeverity } from "./event-stream";
 
 // ---------------------------------------------------------------------------
 // HTTP helpers
@@ -30,7 +29,9 @@ function httpGet(url: string, headers: Record<string, string> = {}): Promise<Htt
       },
       (res) => {
         let body = "";
-        res.on("data", (chunk: string) => { body += chunk; });
+        res.on("data", (chunk: string) => {
+          body += chunk;
+        });
         res.on("end", () => resolve({ status: res.statusCode ?? 0, body }));
       },
     );
@@ -88,7 +89,13 @@ describe("GovernanceEventStream — emit and query", () => {
   });
 
   it("supports tenantId and agentId on emitted events", () => {
-    const evt = stream.emit("agent_started", "info", "fleet", {}, { tenantId: "t1", agentId: "a1" });
+    const evt = stream.emit(
+      "agent_started",
+      "info",
+      "fleet",
+      {},
+      { tenantId: "t1", agentId: "a1" },
+    );
     assert.equal(evt.tenantId, "t1");
     assert.equal(evt.agentId, "a1");
   });
@@ -276,7 +283,7 @@ describe("GovernanceEventStream — HTTP endpoints", () => {
 // ---------------------------------------------------------------------------
 
 describe("GovernanceEventStream — subscriber management", () => {
-  it("tracks subscriber count", (t, done) => {
+  it("tracks subscriber count", (_t, done) => {
     const stream = new GovernanceEventStream({ bufferCapacity: 10 });
     const server = http.createServer((req, res) => {
       stream.route(req, res);

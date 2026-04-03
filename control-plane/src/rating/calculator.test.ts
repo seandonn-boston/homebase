@@ -3,10 +3,10 @@
  */
 
 import assert from "node:assert/strict";
-import { mkdirSync, writeFileSync, rmSync, mkdtempSync } from "node:fs";
-import { join } from "node:path";
+import { mkdirSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { describe, it, before, after } from "node:test";
+import { join } from "node:path";
+import { after, before, describe, it } from "node:test";
 import { RatingCalculator } from "./calculator";
 
 // ---------------------------------------------------------------------------
@@ -51,10 +51,7 @@ describe("RatingCalculator", () => {
     assert.ok(report.id.startsWith("rat_"), "id has rat_ prefix");
     assert.ok(report.generatedAt, "has generatedAt");
     assert.equal(report.entity, "test-fleet");
-    assert.ok(
-      ["ADM-1", "ADM-2", "ADM-3", "ADM-4", "ADM-5"].includes(report.tier),
-      "valid tier",
-    );
+    assert.ok(["ADM-1", "ADM-2", "ADM-3", "ADM-4", "ADM-5"].includes(report.tier), "valid tier");
     assert.ok(report.overallScore >= 0 && report.overallScore <= 100, "score in range");
     assert.equal(report.dimensionScores.length, 7, "7 dimension scores");
     assert.ok(Array.isArray(report.activeCaps), "has activeCaps");
@@ -78,9 +75,7 @@ describe("RatingCalculator", () => {
       },
     });
 
-    const ec = report.dimensionScores.find(
-      (d) => d.dimensionId === "enforcement_coverage",
-    );
+    const ec = report.dimensionScores.find((d) => d.dimensionId === "enforcement_coverage");
     assert.equal(ec?.score, 90, "enforcement_coverage override respected");
     assert.ok(report.overallScore > 60, "high overrides yield good score");
   });
@@ -207,9 +202,7 @@ describe("RatingCalculator", () => {
     });
 
     assert.ok(report.recommendations.length > 0, "has recommendations");
-    const criticalRec = report.recommendations.find((r) =>
-      r.includes("CRITICAL"),
-    );
+    const criticalRec = report.recommendations.find((r) => r.includes("CRITICAL"));
     assert.ok(criticalRec, "has critical recommendation for low score");
   });
 

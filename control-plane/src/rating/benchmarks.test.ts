@@ -4,7 +4,7 @@
 
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { BenchmarkComparator, BENCHMARKS } from "./benchmarks";
+import { BENCHMARKS, BenchmarkComparator } from "./benchmarks";
 import type { RatingReport } from "./types";
 
 // ---------------------------------------------------------------------------
@@ -22,13 +22,55 @@ function makeReport(overrides: Partial<RatingReport> = {}): RatingReport {
     ratingLabel: "ADM-3-SA",
     overallScore: 65,
     dimensionScores: [
-      { dimensionId: "enforcement_coverage", score: 70, weightedContribution: 14, evidence: "e", capTriggered: false },
-      { dimensionId: "hook_quality", score: 60, weightedContribution: 9, evidence: "e", capTriggered: false },
-      { dimensionId: "standing_orders_compliance", score: 65, weightedContribution: 13, evidence: "e", capTriggered: false },
-      { dimensionId: "brain_utilization", score: 55, weightedContribution: 5.5, evidence: "e", capTriggered: false },
-      { dimensionId: "fleet_governance", score: 68, weightedContribution: 10.2, evidence: "e", capTriggered: false },
-      { dimensionId: "security_posture", score: 62, weightedContribution: 6.2, evidence: "e", capTriggered: false },
-      { dimensionId: "observability_maturity", score: 70, weightedContribution: 7, evidence: "e", capTriggered: false },
+      {
+        dimensionId: "enforcement_coverage",
+        score: 70,
+        weightedContribution: 14,
+        evidence: "e",
+        capTriggered: false,
+      },
+      {
+        dimensionId: "hook_quality",
+        score: 60,
+        weightedContribution: 9,
+        evidence: "e",
+        capTriggered: false,
+      },
+      {
+        dimensionId: "standing_orders_compliance",
+        score: 65,
+        weightedContribution: 13,
+        evidence: "e",
+        capTriggered: false,
+      },
+      {
+        dimensionId: "brain_utilization",
+        score: 55,
+        weightedContribution: 5.5,
+        evidence: "e",
+        capTriggered: false,
+      },
+      {
+        dimensionId: "fleet_governance",
+        score: 68,
+        weightedContribution: 10.2,
+        evidence: "e",
+        capTriggered: false,
+      },
+      {
+        dimensionId: "security_posture",
+        score: 62,
+        weightedContribution: 6.2,
+        evidence: "e",
+        capTriggered: false,
+      },
+      {
+        dimensionId: "observability_maturity",
+        score: 70,
+        weightedContribution: 7,
+        evidence: "e",
+        capTriggered: false,
+      },
     ],
     moduleRatings: [],
     activeCaps: [],
@@ -102,10 +144,7 @@ describe("BenchmarkComparator.compareToBenchmark", () => {
 
   it("gap is positive when project is ahead of benchmark", () => {
     const report = makeReport({ overallScore: 95, tier: "ADM-1" });
-    const result = comparator.compareToBenchmark(
-      report,
-      BENCHMARKS.industry_average,
-    );
+    const result = comparator.compareToBenchmark(report, BENCHMARKS.industry_average);
     assert.ok(result.overallGap > 0, "positive gap when ahead");
     assert.equal(result.tierStatus, "ahead", "tier status: ahead");
   });
@@ -114,13 +153,55 @@ describe("BenchmarkComparator.compareToBenchmark", () => {
     // Make a report where enforcement_coverage is strong but brain_utilization is weak
     const report = makeReport({
       dimensionScores: [
-        { dimensionId: "enforcement_coverage", score: 95, weightedContribution: 19, evidence: "e", capTriggered: false },
-        { dimensionId: "hook_quality", score: 60, weightedContribution: 9, evidence: "e", capTriggered: false },
-        { dimensionId: "standing_orders_compliance", score: 65, weightedContribution: 13, evidence: "e", capTriggered: false },
-        { dimensionId: "brain_utilization", score: 20, weightedContribution: 2, evidence: "e", capTriggered: false },
-        { dimensionId: "fleet_governance", score: 68, weightedContribution: 10.2, evidence: "e", capTriggered: false },
-        { dimensionId: "security_posture", score: 62, weightedContribution: 6.2, evidence: "e", capTriggered: false },
-        { dimensionId: "observability_maturity", score: 70, weightedContribution: 7, evidence: "e", capTriggered: false },
+        {
+          dimensionId: "enforcement_coverage",
+          score: 95,
+          weightedContribution: 19,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "hook_quality",
+          score: 60,
+          weightedContribution: 9,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "standing_orders_compliance",
+          score: 65,
+          weightedContribution: 13,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "brain_utilization",
+          score: 20,
+          weightedContribution: 2,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "fleet_governance",
+          score: 68,
+          weightedContribution: 10.2,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "security_posture",
+          score: 62,
+          weightedContribution: 6.2,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "observability_maturity",
+          score: 70,
+          weightedContribution: 7,
+          evidence: "e",
+          capTriggered: false,
+        },
       ],
     });
 
@@ -129,10 +210,7 @@ describe("BenchmarkComparator.compareToBenchmark", () => {
       result.strengths.includes("enforcement_coverage"),
       "enforcement_coverage is a strength",
     );
-    assert.ok(
-      result.weaknesses.includes("brain_utilization"),
-      "brain_utilization is a weakness",
-    );
+    assert.ok(result.weaknesses.includes("brain_utilization"), "brain_utilization is a weakness");
   });
 
   it("has 7 dimension gaps", () => {
@@ -155,10 +233,7 @@ describe("BenchmarkComparator.compareToBenchmark", () => {
 
   it("closingActions mentions meeting/exceeding when ahead", () => {
     const report = makeReport({ overallScore: 99, tier: "ADM-1" });
-    const result = comparator.compareToBenchmark(
-      report,
-      BENCHMARKS.industry_average,
-    );
+    const result = comparator.compareToBenchmark(report, BENCHMARKS.industry_average);
     assert.ok(
       result.closingActions[0].includes("meets or exceeds"),
       "first action mentions meeting benchmark",

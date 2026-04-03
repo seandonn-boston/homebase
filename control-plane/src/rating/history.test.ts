@@ -4,9 +4,9 @@
 
 import assert from "node:assert/strict";
 import { mkdtempSync, rmSync } from "node:fs";
-import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { describe, it, before, after } from "node:test";
+import { join } from "node:path";
+import { after, before, describe, it } from "node:test";
 import { RatingHistory } from "./history";
 import type { RatingReport } from "./types";
 
@@ -26,13 +26,55 @@ function makeReport(overrides: Partial<RatingReport> = {}): RatingReport {
     ratingLabel: "ADM-3-SA",
     overallScore: 65,
     dimensionScores: [
-      { dimensionId: "enforcement_coverage", score: 70, weightedContribution: 14, evidence: "e", capTriggered: false },
-      { dimensionId: "hook_quality", score: 60, weightedContribution: 9, evidence: "e", capTriggered: false },
-      { dimensionId: "standing_orders_compliance", score: 65, weightedContribution: 13, evidence: "e", capTriggered: false },
-      { dimensionId: "brain_utilization", score: 55, weightedContribution: 5.5, evidence: "e", capTriggered: false },
-      { dimensionId: "fleet_governance", score: 68, weightedContribution: 10.2, evidence: "e", capTriggered: false },
-      { dimensionId: "security_posture", score: 62, weightedContribution: 6.2, evidence: "e", capTriggered: false },
-      { dimensionId: "observability_maturity", score: 70, weightedContribution: 7, evidence: "e", capTriggered: false },
+      {
+        dimensionId: "enforcement_coverage",
+        score: 70,
+        weightedContribution: 14,
+        evidence: "e",
+        capTriggered: false,
+      },
+      {
+        dimensionId: "hook_quality",
+        score: 60,
+        weightedContribution: 9,
+        evidence: "e",
+        capTriggered: false,
+      },
+      {
+        dimensionId: "standing_orders_compliance",
+        score: 65,
+        weightedContribution: 13,
+        evidence: "e",
+        capTriggered: false,
+      },
+      {
+        dimensionId: "brain_utilization",
+        score: 55,
+        weightedContribution: 5.5,
+        evidence: "e",
+        capTriggered: false,
+      },
+      {
+        dimensionId: "fleet_governance",
+        score: 68,
+        weightedContribution: 10.2,
+        evidence: "e",
+        capTriggered: false,
+      },
+      {
+        dimensionId: "security_posture",
+        score: 62,
+        weightedContribution: 6.2,
+        evidence: "e",
+        capTriggered: false,
+      },
+      {
+        dimensionId: "observability_maturity",
+        score: 70,
+        weightedContribution: 7,
+        evidence: "e",
+        capTriggered: false,
+      },
     ],
     moduleRatings: [],
     activeCaps: [],
@@ -119,13 +161,9 @@ describe("RatingHistory", () => {
     const history = new RatingHistory(path);
 
     // Add old entry (2024)
-    history.append(
-      makeReport({ generatedAt: "2024-01-15T10:00:00.000Z", id: "rat_old" }),
-    );
+    history.append(makeReport({ generatedAt: "2024-01-15T10:00:00.000Z", id: "rat_old" }));
     // Add recent entry
-    history.append(
-      makeReport({ generatedAt: new Date().toISOString(), id: "rat_new" }),
-    );
+    history.append(makeReport({ generatedAt: new Date().toISOString(), id: "rat_new" }));
 
     const recent = history.getHistory("2025-01-01T00:00:00.000Z");
     assert.equal(recent.length, 1, "only recent entry returned");
@@ -176,13 +214,55 @@ describe("RatingHistory", () => {
     const makeWithHookQuality = (score: number) =>
       makeReport({
         dimensionScores: [
-          { dimensionId: "enforcement_coverage", score: 70, weightedContribution: 14, evidence: "e", capTriggered: false },
-          { dimensionId: "hook_quality", score, weightedContribution: score * 0.15, evidence: "e", capTriggered: false },
-          { dimensionId: "standing_orders_compliance", score: 65, weightedContribution: 13, evidence: "e", capTriggered: false },
-          { dimensionId: "brain_utilization", score: 55, weightedContribution: 5.5, evidence: "e", capTriggered: false },
-          { dimensionId: "fleet_governance", score: 68, weightedContribution: 10.2, evidence: "e", capTriggered: false },
-          { dimensionId: "security_posture", score: 62, weightedContribution: 6.2, evidence: "e", capTriggered: false },
-          { dimensionId: "observability_maturity", score: 70, weightedContribution: 7, evidence: "e", capTriggered: false },
+          {
+            dimensionId: "enforcement_coverage",
+            score: 70,
+            weightedContribution: 14,
+            evidence: "e",
+            capTriggered: false,
+          },
+          {
+            dimensionId: "hook_quality",
+            score,
+            weightedContribution: score * 0.15,
+            evidence: "e",
+            capTriggered: false,
+          },
+          {
+            dimensionId: "standing_orders_compliance",
+            score: 65,
+            weightedContribution: 13,
+            evidence: "e",
+            capTriggered: false,
+          },
+          {
+            dimensionId: "brain_utilization",
+            score: 55,
+            weightedContribution: 5.5,
+            evidence: "e",
+            capTriggered: false,
+          },
+          {
+            dimensionId: "fleet_governance",
+            score: 68,
+            weightedContribution: 10.2,
+            evidence: "e",
+            capTriggered: false,
+          },
+          {
+            dimensionId: "security_posture",
+            score: 62,
+            weightedContribution: 6.2,
+            evidence: "e",
+            capTriggered: false,
+          },
+          {
+            dimensionId: "observability_maturity",
+            score: 70,
+            weightedContribution: 7,
+            evidence: "e",
+            capTriggered: false,
+          },
         ],
       });
 
@@ -211,8 +291,12 @@ describe("RatingHistory", () => {
   it("hasRegressed: tier drop is regression", () => {
     const path = join(tmpDir, "regress-tier.json");
     const history = new RatingHistory(path);
-    const prev = history.append(makeReport({ tier: "ADM-2", ratingLabel: "ADM-2", overallScore: 82 }));
-    const curr = history.append(makeReport({ tier: "ADM-3", ratingLabel: "ADM-3", overallScore: 70 }));
+    const prev = history.append(
+      makeReport({ tier: "ADM-2", ratingLabel: "ADM-2", overallScore: 82 }),
+    );
+    const curr = history.append(
+      makeReport({ tier: "ADM-3", ratingLabel: "ADM-3", overallScore: 70 }),
+    );
 
     assert.ok(history.hasRegressed(prev, curr), "tier drop is regression");
   });
@@ -233,6 +317,6 @@ describe("RatingHistory", () => {
     const entry = history.append(makeReport());
 
     assert.ok("enforcement_coverage" in entry.dimensionScores);
-    assert.equal(entry.dimensionScores["enforcement_coverage"], 70);
+    assert.equal(entry.dimensionScores.enforcement_coverage, 70);
   });
 });

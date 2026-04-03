@@ -12,9 +12,7 @@ import type { RatingReport } from "./types";
 // ---------------------------------------------------------------------------
 
 function makeReport(overrides: Partial<RatingReport> = {}): RatingReport {
-  const validFuture = new Date(
-    Date.now() + 365 * 24 * 3600 * 1000,
-  ).toISOString();
+  const validFuture = new Date(Date.now() + 365 * 24 * 3600 * 1000).toISOString();
   return {
     id: `rat_${Math.random().toString(36).slice(2, 10)}`,
     generatedAt: new Date().toISOString(),
@@ -24,13 +22,55 @@ function makeReport(overrides: Partial<RatingReport> = {}): RatingReport {
     ratingLabel: "ADM-3-SA",
     overallScore: 65,
     dimensionScores: [
-      { dimensionId: "enforcement_coverage", score: 70, weightedContribution: 14, evidence: "e", capTriggered: false },
-      { dimensionId: "hook_quality", score: 60, weightedContribution: 9, evidence: "e", capTriggered: false },
-      { dimensionId: "standing_orders_compliance", score: 65, weightedContribution: 13, evidence: "e", capTriggered: false },
-      { dimensionId: "brain_utilization", score: 55, weightedContribution: 5.5, evidence: "e", capTriggered: false },
-      { dimensionId: "fleet_governance", score: 68, weightedContribution: 10.2, evidence: "e", capTriggered: false },
-      { dimensionId: "security_posture", score: 72, weightedContribution: 7.2, evidence: "e", capTriggered: false },
-      { dimensionId: "observability_maturity", score: 70, weightedContribution: 7, evidence: "e", capTriggered: false },
+      {
+        dimensionId: "enforcement_coverage",
+        score: 70,
+        weightedContribution: 14,
+        evidence: "e",
+        capTriggered: false,
+      },
+      {
+        dimensionId: "hook_quality",
+        score: 60,
+        weightedContribution: 9,
+        evidence: "e",
+        capTriggered: false,
+      },
+      {
+        dimensionId: "standing_orders_compliance",
+        score: 65,
+        weightedContribution: 13,
+        evidence: "e",
+        capTriggered: false,
+      },
+      {
+        dimensionId: "brain_utilization",
+        score: 55,
+        weightedContribution: 5.5,
+        evidence: "e",
+        capTriggered: false,
+      },
+      {
+        dimensionId: "fleet_governance",
+        score: 68,
+        weightedContribution: 10.2,
+        evidence: "e",
+        capTriggered: false,
+      },
+      {
+        dimensionId: "security_posture",
+        score: 72,
+        weightedContribution: 7.2,
+        evidence: "e",
+        capTriggered: false,
+      },
+      {
+        dimensionId: "observability_maturity",
+        score: 70,
+        weightedContribution: 7,
+        evidence: "e",
+        capTriggered: false,
+      },
     ],
     moduleRatings: [],
     activeCaps: [],
@@ -120,13 +160,55 @@ describe("RatingAlertManager", () => {
     const prev = makeReport();
     const curr = makeReport({
       dimensionScores: [
-        { dimensionId: "enforcement_coverage", score: 60, weightedContribution: 12, evidence: "e", capTriggered: false },
-        { dimensionId: "hook_quality", score: 60, weightedContribution: 9, evidence: "e", capTriggered: false },
-        { dimensionId: "standing_orders_compliance", score: 65, weightedContribution: 13, evidence: "e", capTriggered: false },
-        { dimensionId: "brain_utilization", score: 55, weightedContribution: 5.5, evidence: "e", capTriggered: false },
-        { dimensionId: "fleet_governance", score: 68, weightedContribution: 10.2, evidence: "e", capTriggered: false },
-        { dimensionId: "security_posture", score: 72, weightedContribution: 7.2, evidence: "e", capTriggered: false },
-        { dimensionId: "observability_maturity", score: 70, weightedContribution: 7, evidence: "e", capTriggered: false },
+        {
+          dimensionId: "enforcement_coverage",
+          score: 60,
+          weightedContribution: 12,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "hook_quality",
+          score: 60,
+          weightedContribution: 9,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "standing_orders_compliance",
+          score: 65,
+          weightedContribution: 13,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "brain_utilization",
+          score: 55,
+          weightedContribution: 5.5,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "fleet_governance",
+          score: 68,
+          weightedContribution: 10.2,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "security_posture",
+          score: 72,
+          weightedContribution: 7.2,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "observability_maturity",
+          score: 70,
+          weightedContribution: 7,
+          evidence: "e",
+          capTriggered: false,
+        },
       ],
     });
     // enforcement_coverage dropped from 70 to 60 (10 points >= 5 threshold)
@@ -142,13 +224,55 @@ describe("RatingAlertManager", () => {
     const prev = makeReport();
     const curr = makeReport({
       dimensionScores: [
-        { dimensionId: "enforcement_coverage", score: 25, weightedContribution: 5, evidence: "e", capTriggered: true },
-        { dimensionId: "hook_quality", score: 60, weightedContribution: 9, evidence: "e", capTriggered: false },
-        { dimensionId: "standing_orders_compliance", score: 65, weightedContribution: 13, evidence: "e", capTriggered: false },
-        { dimensionId: "brain_utilization", score: 55, weightedContribution: 5.5, evidence: "e", capTriggered: false },
-        { dimensionId: "fleet_governance", score: 68, weightedContribution: 10.2, evidence: "e", capTriggered: false },
-        { dimensionId: "security_posture", score: 72, weightedContribution: 7.2, evidence: "e", capTriggered: false },
-        { dimensionId: "observability_maturity", score: 70, weightedContribution: 7, evidence: "e", capTriggered: false },
+        {
+          dimensionId: "enforcement_coverage",
+          score: 25,
+          weightedContribution: 5,
+          evidence: "e",
+          capTriggered: true,
+        },
+        {
+          dimensionId: "hook_quality",
+          score: 60,
+          weightedContribution: 9,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "standing_orders_compliance",
+          score: 65,
+          weightedContribution: 13,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "brain_utilization",
+          score: 55,
+          weightedContribution: 5.5,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "fleet_governance",
+          score: 68,
+          weightedContribution: 10.2,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "security_posture",
+          score: 72,
+          weightedContribution: 7.2,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "observability_maturity",
+          score: 70,
+          weightedContribution: 7,
+          evidence: "e",
+          capTriggered: false,
+        },
       ],
     });
     const alerts = manager.checkAlerts(curr, prev);
@@ -164,20 +288,60 @@ describe("RatingAlertManager", () => {
     const prev = makeReport(); // ec=70
     const curr = makeReport({
       dimensionScores: [
-        { dimensionId: "enforcement_coverage", score: 45, weightedContribution: 9, evidence: "e", capTriggered: false },
-        { dimensionId: "hook_quality", score: 60, weightedContribution: 9, evidence: "e", capTriggered: false },
-        { dimensionId: "standing_orders_compliance", score: 65, weightedContribution: 13, evidence: "e", capTriggered: false },
-        { dimensionId: "brain_utilization", score: 55, weightedContribution: 5.5, evidence: "e", capTriggered: false },
-        { dimensionId: "fleet_governance", score: 68, weightedContribution: 10.2, evidence: "e", capTriggered: false },
-        { dimensionId: "security_posture", score: 72, weightedContribution: 7.2, evidence: "e", capTriggered: false },
-        { dimensionId: "observability_maturity", score: 70, weightedContribution: 7, evidence: "e", capTriggered: false },
+        {
+          dimensionId: "enforcement_coverage",
+          score: 45,
+          weightedContribution: 9,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "hook_quality",
+          score: 60,
+          weightedContribution: 9,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "standing_orders_compliance",
+          score: 65,
+          weightedContribution: 13,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "brain_utilization",
+          score: 55,
+          weightedContribution: 5.5,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "fleet_governance",
+          score: 68,
+          weightedContribution: 10.2,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "security_posture",
+          score: 72,
+          weightedContribution: 7.2,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "observability_maturity",
+          score: 70,
+          weightedContribution: 7,
+          evidence: "e",
+          capTriggered: false,
+        },
       ],
     });
     const alerts = manager.checkAlerts(curr, prev);
     const threshold = alerts.find(
-      (a) =>
-        a.type === "threshold_crossed_below" &&
-        a.dimension === "enforcement_coverage",
+      (a) => a.type === "threshold_crossed_below" && a.dimension === "enforcement_coverage",
     );
     assert.ok(threshold, "threshold_crossed_below fired for enforcement_coverage");
     assert.equal(threshold?.severity, "high");
@@ -221,9 +385,7 @@ describe("RatingAlertManager", () => {
   });
 
   it("expiry_warning alert when rating expires within 30 days", () => {
-    const soonExpiring = new Date(
-      Date.now() + 20 * 24 * 3600 * 1000,
-    ).toISOString();
+    const soonExpiring = new Date(Date.now() + 20 * 24 * 3600 * 1000).toISOString();
     const prev = makeReport({ validUntil: soonExpiring });
     const curr = makeReport({ validUntil: soonExpiring });
     const alerts = manager.checkAlerts(curr, prev);
@@ -237,9 +399,7 @@ describe("RatingAlertManager", () => {
   });
 
   it("no expiry_warning when rating is far in the future", () => {
-    const distantExpiry = new Date(
-      Date.now() + 300 * 24 * 3600 * 1000,
-    ).toISOString();
+    const distantExpiry = new Date(Date.now() + 300 * 24 * 3600 * 1000).toISOString();
     const prev = makeReport({ validUntil: distantExpiry });
     const curr = makeReport({ validUntil: distantExpiry });
     const alerts = manager.checkAlerts(curr, prev);
@@ -274,8 +434,7 @@ describe("RatingAlertManager", () => {
 
     for (let i = 1; i < alerts.length; i++) {
       assert.ok(
-        severityOrder[alerts[i - 1].severity] <=
-          severityOrder[alerts[i].severity],
+        severityOrder[alerts[i - 1].severity] <= severityOrder[alerts[i].severity],
         `Alert ${i - 1} (${alerts[i - 1].severity}) should come before alert ${i} (${alerts[i].severity})`,
       );
     }
@@ -302,21 +461,61 @@ describe("RatingAlertManager", () => {
   it("checkAbsoluteAlerts detects dimension below threshold", () => {
     const report = makeReport({
       dimensionScores: [
-        { dimensionId: "enforcement_coverage", score: 40, weightedContribution: 8, evidence: "e", capTriggered: false },
-        { dimensionId: "hook_quality", score: 60, weightedContribution: 9, evidence: "e", capTriggered: false },
-        { dimensionId: "standing_orders_compliance", score: 65, weightedContribution: 13, evidence: "e", capTriggered: false },
-        { dimensionId: "brain_utilization", score: 55, weightedContribution: 5.5, evidence: "e", capTriggered: false },
-        { dimensionId: "fleet_governance", score: 68, weightedContribution: 10.2, evidence: "e", capTriggered: false },
-        { dimensionId: "security_posture", score: 72, weightedContribution: 7.2, evidence: "e", capTriggered: false },
-        { dimensionId: "observability_maturity", score: 70, weightedContribution: 7, evidence: "e", capTriggered: false },
+        {
+          dimensionId: "enforcement_coverage",
+          score: 40,
+          weightedContribution: 8,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "hook_quality",
+          score: 60,
+          weightedContribution: 9,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "standing_orders_compliance",
+          score: 65,
+          weightedContribution: 13,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "brain_utilization",
+          score: 55,
+          weightedContribution: 5.5,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "fleet_governance",
+          score: 68,
+          weightedContribution: 10.2,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "security_posture",
+          score: 72,
+          weightedContribution: 7.2,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "observability_maturity",
+          score: 70,
+          weightedContribution: 7,
+          evidence: "e",
+          capTriggered: false,
+        },
       ],
     });
     const alerts = manager.checkAbsoluteAlerts(report);
     // enforcement_coverage (40) is below watched threshold (50)
     const thresh = alerts.find(
-      (a) =>
-        a.type === "threshold_crossed_below" &&
-        a.dimension === "enforcement_coverage",
+      (a) => a.type === "threshold_crossed_below" && a.dimension === "enforcement_coverage",
     );
     assert.ok(thresh, "absolute threshold alert for enforcement_coverage");
   });

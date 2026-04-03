@@ -8,7 +8,13 @@
  * Zero external dependencies.
  */
 
-import { RATING_DIMENSIONS, compareTiers, type DimensionId, type RatingReport, type RatingTierCode } from "./types";
+import {
+  compareTiers,
+  type DimensionId,
+  RATING_DIMENSIONS,
+  type RatingReport,
+  type RatingTierCode,
+} from "./types";
 
 // ---------------------------------------------------------------------------
 // Benchmark types
@@ -209,10 +215,7 @@ export class BenchmarkComparator {
    * Compare a rating report against a known benchmark.
    * Returns a gap analysis with strengths, weaknesses, and closing actions.
    */
-  compareToBenchmark(
-    report: RatingReport,
-    benchmark: Benchmark,
-  ): BenchmarkComparison {
+  compareToBenchmark(report: RatingReport, benchmark: Benchmark): BenchmarkComparison {
     const overallGap = report.overallScore - benchmark.overallScore;
 
     const dimensionGaps: DimensionGap[] = [];
@@ -221,8 +224,7 @@ export class BenchmarkComparator {
 
     for (const dimId of Object.keys(benchmark.dimensionScores) as DimensionId[]) {
       const dim = RATING_DIMENSIONS[dimId];
-      const currentScore =
-        report.dimensionScores.find((d) => d.dimensionId === dimId)?.score ?? 0;
+      const currentScore = report.dimensionScores.find((d) => d.dimensionId === dimId)?.score ?? 0;
       const benchmarkScore = benchmark.dimensionScores[dimId];
       const gap = currentScore - benchmarkScore;
       const weightedGap = (gap * dim.weight) / 100;

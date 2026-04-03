@@ -12,19 +12,19 @@
 
 import { randomUUID } from "node:crypto";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
-import { join, relative } from "node:path";
+import { join } from "node:path";
 import {
-  HARD_CAP_RULES,
-  RATING_DIMENSIONS,
   buildRatingLabel,
-  compareTiers,
-  scoreToTier,
   type CertificationSuffix,
+  compareTiers,
   type DimensionId,
   type DimensionScore,
+  HARD_CAP_RULES,
   type HardCapRule,
+  RATING_DIMENSIONS,
   type RatingReport,
   type RatingTierCode,
+  scoreToTier,
 } from "./types";
 
 // ---------------------------------------------------------------------------
@@ -71,16 +71,11 @@ export class RatingCalculator {
   // -------------------------------------------------------------------------
 
   calculate(input: CalculatorInput): RatingReport {
-    const dimensionScores = this.collectDimensionScores(
-      input.dimensionOverrides ?? {},
-    );
+    const dimensionScores = this.collectDimensionScores(input.dimensionOverrides ?? {});
 
     const overallScore = this.computeWeightedScore(dimensionScores);
 
-    const { tier, activeCaps } = this.applyHardCaps(
-      scoreToTier(overallScore),
-      dimensionScores,
-    );
+    const { tier, activeCaps } = this.applyHardCaps(scoreToTier(overallScore), dimensionScores);
 
     const suffix = input.certificationSuffix ?? "";
     const now = new Date();
@@ -172,9 +167,7 @@ export class RatingCalculator {
           }
         }
       } else if (rule.dimension !== null && rule.threshold !== undefined) {
-        const ds = dimensionScores.find(
-          (d) => d.dimensionId === rule.dimension,
-        );
+        const ds = dimensionScores.find((d) => d.dimensionId === rule.dimension);
         if (ds && ds.score < rule.threshold) {
           triggered = true;
           ds.capTriggered = true;
@@ -216,11 +209,7 @@ export class RatingCalculator {
     const soCount = existsSync(soPath) ? countFiles(soPath, [".md", ".json"]) : 0;
 
     // Look for hook config in .claude/settings.local.json
-    const claudeSettings = join(
-      this.projectRoot,
-      ".claude",
-      "settings.local.json",
-    );
+    const claudeSettings = join(this.projectRoot, ".claude", "settings.local.json");
     const hasClaudeSettings = existsSync(claudeSettings);
 
     // Heuristic scoring
@@ -264,13 +253,9 @@ export class RatingCalculator {
       for (const f of files) {
         totalHooks++;
         const content = safeReadFile(f);
-        if (
-          content.includes("set -e") ||
-          content.includes("set -euo pipefail")
-        )
+        if (content.includes("set -e") || content.includes("set -euo pipefail"))
           hookWithErrorHandling++;
-        if (content.includes("echo") || content.includes("log"))
-          hookWithLogging++;
+        if (content.includes("echo") || content.includes("log")) hookWithLogging++;
       }
     }
 
@@ -280,9 +265,7 @@ export class RatingCalculator {
 
     const errorHandlingPct = hookWithErrorHandling / totalHooks;
     const loggingPct = hookWithLogging / totalHooks;
-    const score = Math.round(
-      30 + errorHandlingPct * 40 + loggingPct * 30,
-    );
+    const score = Math.round(30 + errorHandlingPct * 40 + loggingPct * 30);
 
     const evidence = [
       `total hooks: ${totalHooks}`,
@@ -344,15 +327,13 @@ export class RatingCalculator {
 
     // Check for recent brain activity (files modified in last 30 days)
     const thirtyDaysAgo = Date.now() - 30 * 24 * 60 * 60 * 1000;
-    const recentFiles = collectFiles(brainPath, [".json", ".md"]).filter(
-      (f) => {
-        try {
-          return statSync(f).mtimeMs > thirtyDaysAgo;
-        } catch {
-          return false;
-        }
-      },
-    );
+    const recentFiles = collectFiles(brainPath, [".json", ".md"]).filter((f) => {
+      try {
+        return statSync(f).mtimeMs > thirtyDaysAgo;
+      } catch {
+        return false;
+      }
+    });
 
     let score = 20; // base: brain exists
     if (brainFiles >= 20) score += 30;
@@ -362,10 +343,9 @@ export class RatingCalculator {
     const recencyPct = brainFiles > 0 ? recentFiles.length / brainFiles : 0;
     score += Math.round(recencyPct * 50);
 
-    const evidence = [
-      `brain entries: ${brainFiles}`,
-      `recent (30d): ${recentFiles.length}`,
-    ].join("; ");
+    const evidence = [`brain entries: ${brainFiles}`, `recent (30d): ${recentFiles.length}`].join(
+      "; ",
+    );
 
     return { score: clamp(score, 0, 100), evidence };
   }
@@ -373,21 +353,15 @@ export class RatingCalculator {
   private probeFleetGovernance(): ProbeResult {
     // Check governance artifacts
     const govPath = join(this.projectRoot, "admiral", "governance");
-    const govFiles = existsSync(govPath)
-      ? countFiles(govPath, [".sh", ".ts", ".json", ".md"])
-      : 0;
+    const govFiles = existsSync(govPath) ? countFiles(govPath, [".sh", ".ts", ".json", ".md"]) : 0;
 
     // Check governance-platform
     const gpPath = join(this.projectRoot, "admiral", "governance-platform");
-    const gpFiles = existsSync(gpPath)
-      ? countFiles(gpPath, [".sh", ".ts", ".json", ".md"])
-      : 0;
+    const gpFiles = existsSync(gpPath) ? countFiles(gpPath, [".sh", ".ts", ".json", ".md"]) : 0;
 
     // Check control-plane
     const cpSrc = join(this.projectRoot, "control-plane", "src");
-    const cpFiles = existsSync(cpSrc)
-      ? countFiles(cpSrc, [".ts"])
-      : 0;
+    const cpFiles = existsSync(cpSrc) ? countFiles(cpSrc, [".ts"]) : 0;
 
     let score = 0;
     if (govFiles >= 5) score += 30;
@@ -417,9 +391,7 @@ export class RatingCalculator {
 
   private probeSecurityPosture(): ProbeResult {
     const secPath = join(this.projectRoot, "admiral", "security");
-    const secFiles = existsSync(secPath)
-      ? countFiles(secPath, [".sh", ".ts", ".json", ".md"])
-      : 0;
+    const secFiles = existsSync(secPath) ? countFiles(secPath, [".sh", ".ts", ".json", ".md"]) : 0;
 
     // Check for security audit output
     const auditPath = join(this.projectRoot, ".admiral");
@@ -430,12 +402,7 @@ export class RatingCalculator {
     const hasAuth = existsSync(authTs);
 
     // Check for input validation
-    const inputVal = join(
-      this.projectRoot,
-      "control-plane",
-      "src",
-      "input-validation.ts",
-    );
+    const inputVal = join(this.projectRoot, "control-plane", "src", "input-validation.ts");
     const hasInputVal = existsSync(inputVal);
 
     let score = 10; // baseline
@@ -463,9 +430,7 @@ export class RatingCalculator {
     const hasTracing = existsSync(join(cpSrc, "tracing.ts"));
     const hasMetrics = existsSync(join(cpSrc, "metrics.ts"));
     const hasLogger = existsSync(join(cpSrc, "logger.ts"));
-    const hasStructuredLogging = existsSync(
-      join(cpSrc, "structured-logging.ts"),
-    );
+    const hasStructuredLogging = existsSync(join(cpSrc, "structured-logging.ts"));
     const hasDistTracing = existsSync(join(cpSrc, "distributed-tracing.ts"));
     const hasSloTracker = existsSync(join(cpSrc, "slo-tracker.ts"));
     const hasEventStream = existsSync(join(cpSrc, "event-stream.ts"));
@@ -496,10 +461,7 @@ export class RatingCalculator {
   // Recommendations
   // -------------------------------------------------------------------------
 
-  private buildRecommendations(
-    scores: DimensionScore[],
-    tier: RatingTierCode,
-  ): string[] {
+  private buildRecommendations(scores: DimensionScore[], tier: RatingTierCode): string[] {
     const recs: Array<{ text: string; priority: number }> = [];
 
     for (const ds of scores) {
@@ -529,9 +491,7 @@ export class RatingCalculator {
       });
     }
 
-    return recs
-      .sort((a, b) => a.priority - b.priority)
-      .map((r) => r.text);
+    return recs.sort((a, b) => a.priority - b.priority).map((r) => r.text);
   }
 }
 
@@ -539,59 +499,43 @@ export class RatingCalculator {
 // Advice per dimension
 // ---------------------------------------------------------------------------
 
-function getDimensionAdvice(
-  id: DimensionId,
-  severity: "critical" | "high" | "medium",
-): string {
+function getDimensionAdvice(id: DimensionId, severity: "critical" | "high" | "medium"): string {
   const advice: Record<DimensionId, Record<string, string>> = {
     enforcement_coverage: {
-      critical:
-        "Implement deterministic hooks for all safety-critical constraints immediately.",
+      critical: "Implement deterministic hooks for all safety-critical constraints immediately.",
       high: "Add hooks for top-priority constraints. Map Standing Orders to enforcement tiers.",
       medium:
         "Extend hook coverage to remaining constraints. Audit hook inventory against Standing Orders.",
     },
     hook_quality: {
-      critical:
-        "Add error handling (set -euo pipefail) and logging to all hooks.",
+      critical: "Add error handling (set -euo pipefail) and logging to all hooks.",
       high: "Improve hook reliability: add structured logging, retry logic, and failure reporting.",
-      medium:
-        "Harden hooks with timeout handling and audit trail output.",
+      medium: "Harden hooks with timeout handling and audit trail output.",
     },
     standing_orders_compliance: {
-      critical:
-        "Deploy all 15 Standing Orders and add enforcement hooks immediately.",
+      critical: "Deploy all 15 Standing Orders and add enforcement hooks immediately.",
       high: "Audit compliance against all 15 Standing Orders. Remediate violations.",
-      medium:
-        "Add automated compliance checks to CI pipeline.",
+      medium: "Add automated compliance checks to CI pipeline.",
     },
     brain_utilization: {
-      critical:
-        "Create .brain directory and start capturing institutional knowledge entries.",
+      critical: "Create .brain directory and start capturing institutional knowledge entries.",
       high: "Increase brain reuse rate. Add brain lookups before starting new tasks.",
-      medium:
-        "Improve brain entry freshness. Archive stale entries. Add usefulness scoring.",
+      medium: "Improve brain entry freshness. Archive stale entries. Add usefulness scoring.",
     },
     fleet_governance: {
-      critical:
-        "Deploy governance-platform with fleet coordination protocols.",
+      critical: "Deploy governance-platform with fleet coordination protocols.",
       high: "Add recovery mechanisms. Improve handoff success rate.",
-      medium:
-        "Reduce governance overhead. Optimize coordination token ratio.",
+      medium: "Reduce governance overhead. Optimize coordination token ratio.",
     },
     security_posture: {
-      critical:
-        "Implement authentication, input validation, and run security audit immediately.",
+      critical: "Implement authentication, input validation, and run security audit immediately.",
       high: "Run full attack corpus. Address identity violation risks.",
-      medium:
-        "Extend security coverage. Add authorization checks to all endpoints.",
+      medium: "Extend security coverage. Add authorization checks to all endpoints.",
     },
     observability_maturity: {
-      critical:
-        "Add basic logging and tracing to establish observability baseline.",
+      critical: "Add basic logging and tracing to establish observability baseline.",
       high: "Add distributed tracing, metrics collection, and SLO tracking.",
-      medium:
-        "Improve audit trail completeness. Add per-operation attribution.",
+      medium: "Improve audit trail completeness. Add per-operation attribution.",
     },
   };
 
@@ -620,7 +564,7 @@ function collectFiles(dir: string, extensions: string[]): string[] {
     for (const entry of entries) {
       if (entry.startsWith(".") && depth > 0) continue;
       const full = join(current, entry);
-      let stat;
+      let stat: ReturnType<typeof statSync>;
       try {
         stat = statSync(full);
       } catch {

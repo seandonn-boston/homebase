@@ -4,11 +4,11 @@
 
 import assert from "node:assert/strict";
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { describe, it, before, after } from "node:test";
-import { ModuleRater } from "./module-ratings";
+import { join } from "node:path";
+import { after, before, describe, it } from "node:test";
 import type { ModuleDefinition } from "./module-ratings";
+import { ModuleRater } from "./module-ratings";
 
 // ---------------------------------------------------------------------------
 // Helpers

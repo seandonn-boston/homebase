@@ -4,9 +4,9 @@
 
 import assert from "node:assert/strict";
 import { mkdtempSync, rmSync } from "node:fs";
-import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { describe, it, before, after } from "node:test";
+import { join } from "node:path";
+import { after, before, describe, it } from "node:test";
 import { getDashboardData } from "./dashboard";
 import { RatingHistory } from "./history";
 import type { RatingReport } from "./types";
@@ -26,13 +26,55 @@ function makeReport(overrides: Partial<RatingReport> = {}): RatingReport {
     ratingLabel: "ADM-3-SA",
     overallScore: 65,
     dimensionScores: [
-      { dimensionId: "enforcement_coverage", score: 70, weightedContribution: 14, evidence: "hooks: 3", capTriggered: false },
-      { dimensionId: "hook_quality", score: 60, weightedContribution: 9, evidence: "2 hooks with error handling", capTriggered: false },
-      { dimensionId: "standing_orders_compliance", score: 65, weightedContribution: 13, evidence: "5 SOs", capTriggered: false },
-      { dimensionId: "brain_utilization", score: 55, weightedContribution: 5.5, evidence: "brain: 8 entries", capTriggered: false },
-      { dimensionId: "fleet_governance", score: 68, weightedContribution: 10.2, evidence: "governance: 5 files", capTriggered: false },
-      { dimensionId: "security_posture", score: 62, weightedContribution: 6.2, evidence: "auth.ts: true", capTriggered: false },
-      { dimensionId: "observability_maturity", score: 70, weightedContribution: 7, evidence: "tracing: true", capTriggered: false },
+      {
+        dimensionId: "enforcement_coverage",
+        score: 70,
+        weightedContribution: 14,
+        evidence: "hooks: 3",
+        capTriggered: false,
+      },
+      {
+        dimensionId: "hook_quality",
+        score: 60,
+        weightedContribution: 9,
+        evidence: "2 hooks with error handling",
+        capTriggered: false,
+      },
+      {
+        dimensionId: "standing_orders_compliance",
+        score: 65,
+        weightedContribution: 13,
+        evidence: "5 SOs",
+        capTriggered: false,
+      },
+      {
+        dimensionId: "brain_utilization",
+        score: 55,
+        weightedContribution: 5.5,
+        evidence: "brain: 8 entries",
+        capTriggered: false,
+      },
+      {
+        dimensionId: "fleet_governance",
+        score: 68,
+        weightedContribution: 10.2,
+        evidence: "governance: 5 files",
+        capTriggered: false,
+      },
+      {
+        dimensionId: "security_posture",
+        score: 62,
+        weightedContribution: 6.2,
+        evidence: "auth.ts: true",
+        capTriggered: false,
+      },
+      {
+        dimensionId: "observability_maturity",
+        score: 70,
+        weightedContribution: 7,
+        evidence: "tracing: true",
+        capTriggered: false,
+      },
     ],
     moduleRatings: [
       {
@@ -128,13 +170,55 @@ describe("getDashboardData", () => {
   it("dimension status: excellent for score >= 80", () => {
     const report = makeReport({
       dimensionScores: [
-        { dimensionId: "enforcement_coverage", score: 85, weightedContribution: 17, evidence: "e", capTriggered: false },
-        { dimensionId: "hook_quality", score: 85, weightedContribution: 12.75, evidence: "e", capTriggered: false },
-        { dimensionId: "standing_orders_compliance", score: 85, weightedContribution: 17, evidence: "e", capTriggered: false },
-        { dimensionId: "brain_utilization", score: 85, weightedContribution: 8.5, evidence: "e", capTriggered: false },
-        { dimensionId: "fleet_governance", score: 85, weightedContribution: 12.75, evidence: "e", capTriggered: false },
-        { dimensionId: "security_posture", score: 85, weightedContribution: 8.5, evidence: "e", capTriggered: false },
-        { dimensionId: "observability_maturity", score: 85, weightedContribution: 8.5, evidence: "e", capTriggered: false },
+        {
+          dimensionId: "enforcement_coverage",
+          score: 85,
+          weightedContribution: 17,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "hook_quality",
+          score: 85,
+          weightedContribution: 12.75,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "standing_orders_compliance",
+          score: 85,
+          weightedContribution: 17,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "brain_utilization",
+          score: 85,
+          weightedContribution: 8.5,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "fleet_governance",
+          score: 85,
+          weightedContribution: 12.75,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "security_posture",
+          score: 85,
+          weightedContribution: 8.5,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "observability_maturity",
+          score: 85,
+          weightedContribution: 8.5,
+          evidence: "e",
+          capTriggered: false,
+        },
       ],
     });
     const data = getDashboardData(report, history);
@@ -146,13 +230,55 @@ describe("getDashboardData", () => {
   it("dimension status: critical for score < 40", () => {
     const report = makeReport({
       dimensionScores: [
-        { dimensionId: "enforcement_coverage", score: 20, weightedContribution: 4, evidence: "e", capTriggered: false },
-        { dimensionId: "hook_quality", score: 85, weightedContribution: 12.75, evidence: "e", capTriggered: false },
-        { dimensionId: "standing_orders_compliance", score: 85, weightedContribution: 17, evidence: "e", capTriggered: false },
-        { dimensionId: "brain_utilization", score: 85, weightedContribution: 8.5, evidence: "e", capTriggered: false },
-        { dimensionId: "fleet_governance", score: 85, weightedContribution: 12.75, evidence: "e", capTriggered: false },
-        { dimensionId: "security_posture", score: 85, weightedContribution: 8.5, evidence: "e", capTriggered: false },
-        { dimensionId: "observability_maturity", score: 85, weightedContribution: 8.5, evidence: "e", capTriggered: false },
+        {
+          dimensionId: "enforcement_coverage",
+          score: 20,
+          weightedContribution: 4,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "hook_quality",
+          score: 85,
+          weightedContribution: 12.75,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "standing_orders_compliance",
+          score: 85,
+          weightedContribution: 17,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "brain_utilization",
+          score: 85,
+          weightedContribution: 8.5,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "fleet_governance",
+          score: 85,
+          weightedContribution: 12.75,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "security_posture",
+          score: 85,
+          weightedContribution: 8.5,
+          evidence: "e",
+          capTriggered: false,
+        },
+        {
+          dimensionId: "observability_maturity",
+          score: 85,
+          weightedContribution: 8.5,
+          evidence: "e",
+          capTriggered: false,
+        },
       ],
     });
     const data = getDashboardData(report, history);
@@ -238,7 +364,11 @@ describe("getDashboardData", () => {
   });
 
   it("badgeSvg contains the tier code and suffix", () => {
-    const report = makeReport({ tier: "ADM-2", certificationSuffix: "-IA", ratingLabel: "ADM-2-IA" });
+    const report = makeReport({
+      tier: "ADM-2",
+      certificationSuffix: "-IA",
+      ratingLabel: "ADM-2-IA",
+    });
     const data = getDashboardData(report, history);
     assert.ok(data.badgeSvg.includes("ADM-2-IA"), "badge has ADM-2-IA");
   });
