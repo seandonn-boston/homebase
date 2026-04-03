@@ -55,7 +55,7 @@ export class LogAggregator {
         }
       }
 
-      fs.appendFileSync(logFile, JSON.stringify(entry) + "\n");
+      fs.appendFileSync(logFile, `${JSON.stringify(entry)}\n`);
     } catch {
       // Log aggregation should never crash
     }
@@ -79,9 +79,7 @@ export class LogAggregator {
       filtered = filtered.filter((e) => e.level === q.level);
     }
     if (q.correlationId) {
-      filtered = filtered.filter(
-        (e) => e.correlation_id === q.correlationId,
-      );
+      filtered = filtered.filter((e) => e.correlation_id === q.correlationId);
     }
     if (q.search) {
       const term = q.search.toLowerCase();
@@ -128,8 +126,7 @@ export class LogAggregator {
       byLevel,
       byComponent,
       oldestEntry: entries.length > 0 ? entries[0].timestamp : null,
-      newestEntry:
-        entries.length > 0 ? entries[entries.length - 1].timestamp : null,
+      newestEntry: entries.length > 0 ? entries[entries.length - 1].timestamp : null,
     };
   }
 

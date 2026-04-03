@@ -119,9 +119,7 @@ export class AlertRouter {
   getActive(): Alert[] {
     return Array.from(this.alerts.values())
       .filter((a) => !a.resolved)
-      .sort(
-        (a, b) => SEVERITY_ORDER[a.severity] - SEVERITY_ORDER[b.severity],
-      );
+      .sort((a, b) => SEVERITY_ORDER[a.severity] - SEVERITY_ORDER[b.severity]);
   }
 
   /** Get all alerts */
@@ -131,9 +129,7 @@ export class AlertRouter {
 
   /** Get alerts by severity */
   getBySeverity(severity: AlertSeverity): Alert[] {
-    return Array.from(this.alerts.values()).filter(
-      (a) => a.severity === severity,
-    );
+    return Array.from(this.alerts.values()).filter((a) => a.severity === severity);
   }
 
   /** Check for alerts needing escalation */
@@ -168,10 +164,7 @@ export class AlertRouter {
 
   /** Get alert summary counts */
   getSummary(): Record<AlertSeverity, { active: number; total: number }> {
-    const summary: Record<
-      AlertSeverity,
-      { active: number; total: number }
-    > = {
+    const summary: Record<AlertSeverity, { active: number; total: number }> = {
       critical: { active: 0, total: 0 },
       high: { active: 0, total: 0 },
       medium: { active: 0, total: 0 },

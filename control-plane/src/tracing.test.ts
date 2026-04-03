@@ -5,8 +5,8 @@
 import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { TracingContext, parseTraceFile, getSpansByTraceId } from "./tracing";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { getSpansByTraceId, parseTraceFile, TracingContext } from "./tracing";
 
 describe("TracingContext", () => {
   let tmpDir: string;
@@ -107,10 +107,7 @@ describe("parseTraceFile", () => {
   });
 
   it("handles empty files", () => {
-    const tmpFile = path.join(
-      os.tmpdir(),
-      `trace-test-${Date.now()}.jsonl`,
-    );
+    const tmpFile = path.join(os.tmpdir(), `trace-test-${Date.now()}.jsonl`);
     fs.writeFileSync(tmpFile, "");
     expect(parseTraceFile(tmpFile)).toEqual([]);
     fs.unlinkSync(tmpFile);
@@ -123,6 +120,7 @@ describe("getSpansByTraceId", () => {
       { trace_id: "aaa", span_id: "1" },
       { trace_id: "bbb", span_id: "2" },
       { trace_id: "aaa", span_id: "3" },
+      // biome-ignore lint/suspicious/noExplicitAny: test stub data
     ] as any[];
 
     const result = getSpansByTraceId(spans, "aaa");

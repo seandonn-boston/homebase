@@ -2,16 +2,16 @@
  * Tests for Input Validation Hardening (SEC-12)
  */
 
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import {
-  containsNullBytes,
   containsInvalidChars,
-  validateSize,
+  containsNullBytes,
+  LIMITS,
   validateJson,
+  validateJsonRequestBody,
   validatePath,
   validateRequestBody,
-  validateJsonRequestBody,
-  LIMITS,
+  validateSize,
 } from "./input-validation";
 
 describe("containsNullBytes", () => {
@@ -103,9 +103,7 @@ describe("validateRequestBody", () => {
   it("rejects control characters", () => {
     const result = validateRequestBody("hello\x01world");
     expect(result.valid).toBe(false);
-    expect(result.errors).toContain(
-      "Request body contains invalid control characters",
-    );
+    expect(result.errors).toContain("Request body contains invalid control characters");
   });
 
   it("rejects oversized bodies", () => {

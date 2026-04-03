@@ -50,11 +50,7 @@ export class SessionThermalModel {
             Math.floor(budget * TEMPERATURE_THRESHOLDS.hot),
             Math.floor(budget * TEMPERATURE_THRESHOLDS.critical),
           ]
-        : [
-            ABSOLUTE_THRESHOLDS.warm,
-            ABSOLUTE_THRESHOLDS.hot,
-            ABSOLUTE_THRESHOLDS.critical,
-          ];
+        : [ABSOLUTE_THRESHOLDS.warm, ABSOLUTE_THRESHOLDS.hot, ABSOLUTE_THRESHOLDS.critical];
 
     const state: ThermalState = {
       sessionId,
@@ -134,9 +130,7 @@ export class SessionThermalModel {
     return this.sessions.get(sessionId);
   }
 
-  private computeTemperature(
-    state: ThermalState,
-  ): "cold" | "warm" | "hot" | "critical" {
+  private computeTemperature(state: ThermalState): "cold" | "warm" | "hot" | "critical" {
     if (state.budget > 0) {
       const ratio = state.consumed / state.budget;
       if (ratio >= TEMPERATURE_THRESHOLDS.critical) return "critical";
