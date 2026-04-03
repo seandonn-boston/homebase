@@ -11,7 +11,8 @@ PASS=0
 FAIL=0
 
 # Use temp dir for log output — set BEFORE sourcing so the library picks them up
-export ADMIRAL_LOG_DIR=$(mktemp -d)
+ADMIRAL_LOG_DIR=$(mktemp -d)
+export ADMIRAL_LOG_DIR
 export ADMIRAL_LOG_FILE="${ADMIRAL_LOG_DIR}/admiral.jsonl"
 export ADMIRAL_LOG_LEVEL="debug"
 export ADMIRAL_CORRELATION_ID="test-trace-123"
