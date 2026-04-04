@@ -85,6 +85,13 @@ export {
   SPCMonitor,
   SPCViolation,
 } from "./runaway-detector";
+export {
+  type AgentMetrics,
+  type FleetSummary,
+  ResultAggregator,
+  type SessionSummary,
+  type TaskSummary,
+} from "./result-aggregator";
 export { AdmiralServer } from "./server";
 export { SessionThermalModel, ThermalState } from "./session-thermal";
 // Observability enhancements
