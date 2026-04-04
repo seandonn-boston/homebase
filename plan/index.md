@@ -1,6 +1,6 @@
 # Admiral Framework — Comprehensive Roadmap Index
 
-**Last updated:** 2026-03-26
+**Last updated:** 2026-03-27
 
 **Target:** Transform Helm from a strong prototype into a showcase-quality, fully-governed, spec-complete AI agent orchestration platform — a codebase that earns a 10/10 on every dimension.
 
@@ -12,23 +12,23 @@
 
 | Dimension | Score | Target | Key Gaps |
 |---|---|---|---|
-| Testing | 9/10 | 10/10 | 1315+ TS + 350+ bash tests, 90% coverage, coverage gate in CI, quality regression gate. Missing: property tests, mutation testing |
-| Code Quality Tooling | 9/10 | 10/10 | Coverage gate, license audit, ShellCheck, Biome, automated code review (6 checks), quality pipeline (6 stages), complexity budgets, review checklists. Missing: typed error hierarchy |
-| Architecture | 9/10 | 10/10 | Schema validation, config consolidation, hook/CP bridge, session state machine, event registry, handoff/escalation protocols, multi-agent pipeline orchestration, three-layer context assembly, governance REST API, platform adapter interface. Missing: plugin arch |
-| Spec Implementation | 9/10 | 10/10 | 19/19 hooks, fleet routing (86 rules), brain B1+B2 (SQLite/FTS5), execution patterns, SO enforcement, 71 agents, MCP server (12 tools), governance agents, progressive autonomy, context engineering, intent engineering, knowledge graph, governance platform API (10 endpoints), 5 platform adapters, rating system (5 tiers), QA system (10 tools). Missing: B3 production, ASP alignment |
-| Documentation | 8/10 | 10/10 | LICENSE, CoC, API docs, hook contracts, enforcement map, deployment guide, platform capability matrix. Missing: ADMIRAL_STYLE.md, ADRs |
-| CI/CD | 9/10 | 10/10 | Coverage gate, benchmarks, PR size check, fix-needs-tests, stale branches, changelog, release workflow, rating CI integration, quality regression gate. Missing: matrix builds, CodeQL |
+| Testing | 9/10 | 10/10 | 930+ TS + 350+ bash tests, 90% coverage, coverage gate in CI. Missing: property tests, mutation testing |
+| Code Quality Tooling | 9/10 | 10/10 | Coverage gate, license audit, ShellCheck, Biome, automated code review (6 checkers), quality gate pipeline (6 stages), quality metrics collection, quality scoring (6 dimensions), trend analysis, debt tracking, complexity budgets, regression prevention. Missing: typed error hierarchy |
+| Architecture | 9/10 | 10/10 | Schema validation, config consolidation, hook/CP bridge, session state machine, event registry, handoff/escalation protocols, multi-agent pipeline orchestration, three-layer context assembly. Missing: plugin arch |
+| Spec Implementation | 9/10 | 10/10 | 19/19 hooks, fleet routing (86 rules), brain B1+B2 (SQLite/FTS5), execution patterns, SO enforcement, 71 agents, MCP server (12 tools), governance agents, progressive autonomy, context engineering, intent engineering (capture/decompose/validate/route), knowledge graph + maintenance agents. Missing: B3 production, ASP alignment |
+| Documentation | 7/10 | 10/10 | LICENSE, CoC, API docs, hook contracts, enforcement map. Missing: ADMIRAL_STYLE.md, runbook, ADRs |
+| CI/CD | 9/10 | 10/10 | Coverage gate, benchmarks, PR size check, fix-needs-tests, stale branches, changelog, release workflow, rating CI workflow. Missing: matrix builds, CodeQL |
 | Consistency | 8/10 | 10/10 | Config consolidated with schema validation, unified TypeScript patterns across 4 modules. Missing: hook jq helpers |
-| Contributor Experience | 8/10 | 10/10 | CoC, LICENSE, badges, quality metrics dashboard, deployment guide. Missing: quick-start tutorial, good first issues |
+| Contributor Experience | 8/10 | 10/10 | CoC, LICENSE, badges, quality metrics dashboard. Missing: quick-start tutorial, good first issues |
 | Error Handling | 6/10 | 10/10 | Graceful degradation tested (A-13), degradation policy engine with exponential backoff. Missing: typed error hierarchy |
 | Performance | 5/10 | 10/10 | Hook latency, server, RingBuffer benchmarks + regression detector. Missing: CI integration |
-| Observability | 9/10 | 10/10 | Structured logging (bash + TS), distributed tracing with OpenTelemetry export, Prometheus metrics, health aggregation, alert routing, log aggregation, SLO/SLI tracking, fleet dashboard, governance dashboard, session thermal model, intervention catalog, canonical trace format, governance event streaming (SSE + polling). Missing: real-time visualization |
+| Observability | 9/10 | 10/10 | Structured logging (bash + TS), distributed tracing with OpenTelemetry export, Prometheus metrics, health aggregation, alert routing, log aggregation, SLO/SLI tracking, fleet dashboard, governance dashboard, session thermal model, intervention catalog, canonical trace format. Missing: real-time visualization |
 | Brain & Knowledge | 8/10 | 10/10 | B1 complete, B2 SQLite with FTS5 search, knowledge graph (6 link types, multi-hop traversal), graduation metrics (B1→B2, B2→B3), self-instrumentation (stale detection, meta namespace, contradiction resolution), entry versioning/expiration/templates, provenance tracking, knowledge maintenance agents (gardener/curator/harvester), feedback loops, export/import, usage analytics. Missing: B3 Postgres+pgvector, embedding pipeline |
 | Fleet & Orchestration | 9/10 | 10/10 | 71 agent definitions, capability registry, routing engine (task-type/file-ownership/capability-match), degradation policy, context assembly, handoff protocol, pipeline orchestration, fleet health monitoring, task decomposition, scaling policies, agent lifecycle, conflict resolution, trust-aware routing. Missing: ASP alignment, runtime agent instantiation |
 | Strategy Foundation | 9/10 | 10/10 | Ground Truth tooling, readiness assessment, Go/No-Go gate, task criteria, pipeline gate, validation hooks, LLM-Last enforcement |
-| Security & Compliance | 9/10 | 10/10 | 90-pattern injection detection (3 layers), privilege escalation hardening, secret scanning, tamper-proof audit trail (SHA-256 hash chain), MCP behavioral security (5 layers), identity tokens, RBAC, PII detection (email/SSN/CC/API keys/JWT), attack corpus (30 ATK scenarios), security audit trail, webhook HMAC signing. Missing: SBOM, Leash Cedar integration |
-| Strategic Positioning | 2/10 | 10/10 | Missing OWASP/AEGIS/NIST/McKinsey/IMDA crosswalks |
-| **Overall** | **9/10** | **10/10** | Phase 7 complete: Governance Platform (REST API, visibility pillar, policy management, event streaming, reporting, SDK, config management, webhooks), Quality Assurance System (code review, test generator, quality pipeline, metrics, trends, debt tracker, complexity budgets, review checklists, quality scorer, regression gate), Rating System (5-tier ADM model, calculator, CI integration, badges, history, recommendations, module ratings, benchmarks, dashboard, alerts), Platform Adapters verified (5 adapters + capability matrix). 385 new tests. Next: thesis validation, strategic positioning, exemplary codebase, inevitable features |
+| Security & Compliance | 9/10 | 10/10 | 90-pattern injection detection (3 layers), privilege escalation hardening, secret scanning, tamper-proof audit trail (SHA-256 hash chain), MCP behavioral security (5 layers), identity tokens, RBAC, PII detection (email/SSN/CC/API keys/JWT), attack corpus (30 ATK scenarios), security audit trail. Missing: SBOM, Leash Cedar integration |
+| Strategic Positioning | 3/10 | 10/10 | Rating system with 5-tier scale, benchmark comparisons. Thesis validation framework with 12 metrics, A/B comparison, ROI model. Missing: OWASP/AEGIS/NIST crosswalks (all deferred Phase 3+) |
+| **Overall** | **9/10** | **10/10** | Phase 8 complete: Thesis validation (12 metrics, A/B framework, case studies, quality tracking, survey, false positives, overhead measurement, ROI model), Inevitable features (agent versioning, plugins, multi-repo, profiling, cost optimizer, replay, collaboration patterns, predictions), Exemplary codebase (simulation testing, chaos testing, session simulation, sentinel agent, triage router, hook profiling, unified event log, build verification, architecture visualization, contract testing, API docs, license audit, git audit, doc coverage). 147 new tests. Remaining: strategic positioning crosswalks (deferred), operational testing (pentest, load test) |
 
 ---
 
