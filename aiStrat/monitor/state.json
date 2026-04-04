@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-03-25T07:51:36Z",
+  "last_updated": "2026-04-04T07:48:06Z",
   "sources": {
     "anthropic": {
       "type": "model_provider",
@@ -10,8 +10,8 @@
     },
     "openai": {
       "type": "model_provider",
-      "last_scanned": "2026-03-25T07:51:36Z",
-      "known_version": "v0.13.1",
+      "last_scanned": "2026-04-04T07:48:06Z",
+      "known_version": "v0.13.4",
       "enabled": true
     },
     "google-deepmind": {
@@ -22,19 +22,19 @@
     },
     "meta-llama": {
       "type": "model_provider",
-      "last_scanned": "2026-03-25T07:51:36Z",
+      "last_scanned": "2026-04-04T07:48:06Z",
       "known_version": "v0.2.0",
       "enabled": true
     },
     "mistralai": {
       "type": "model_provider",
-      "last_scanned": "2026-03-25T07:51:36Z",
+      "last_scanned": "2026-04-04T07:48:06Z",
       "known_version": "v1.10.0",
       "enabled": true
     },
     "deepseek-ai": {
       "type": "model_provider",
-      "last_scanned": "2026-03-25T07:51:36Z",
+      "last_scanned": "2026-04-04T07:48:06Z",
       "known_version": "v1.0.0",
       "enabled": true
     },
@@ -52,8 +52,8 @@
     },
     "cline": {
       "type": "framework",
-      "last_scanned": "2026-03-25T07:51:36Z",
-      "known_version": "v3.75.0",
+      "last_scanned": "2026-04-04T07:48:06Z",
+      "known_version": "v3.77.0",
       "enabled": true
     },
     "cursor": {
@@ -82,6 +82,94 @@
     }
   },
   "scan_history": [
+    {
+      "timestamp": "2026-04-04T07:48:06Z",
+      "scan_type": "full",
+      "status": "success",
+      "findings_count": 23,
+      "high_priority_count": 3,
+      "digest_file": "monitor/digests/2026-04-04.md"
+    },
+    {
+      "timestamp": "2026-04-03T08:01:38Z",
+      "scan_type": "full",
+      "status": "success",
+      "findings_count": 23,
+      "high_priority_count": 3,
+      "digest_file": "monitor/digests/2026-04-03.md"
+    },
+    {
+      "timestamp": "2026-04-02T08:05:40Z",
+      "scan_type": "full",
+      "status": "success",
+      "findings_count": 21,
+      "high_priority_count": 3,
+      "digest_file": "monitor/digests/2026-04-02.md"
+    },
+    {
+      "timestamp": "2026-04-01T08:15:20Z",
+      "scan_type": "full",
+      "status": "success",
+      "findings_count": 21,
+      "high_priority_count": 3,
+      "digest_file": "monitor/digests/2026-04-01.md"
+    },
+    {
+      "timestamp": "2026-03-31T08:08:01Z",
+      "scan_type": "full",
+      "status": "success",
+      "findings_count": 20,
+      "high_priority_count": 3,
+      "digest_file": "monitor/digests/2026-03-31.md"
+    },
+    {
+      "timestamp": "2026-03-30T08:21:12Z",
+      "scan_type": "full",
+      "status": "success",
+      "findings_count": 20,
+      "high_priority_count": 3,
+      "digest_file": "monitor/digests/2026-03-30.md"
+    },
+    {
+      "timestamp": "2026-03-30T07:27:43Z",
+      "scan_type": "discover",
+      "status": "success",
+      "findings_count": 20,
+      "high_priority_count": 3,
+      "digest_file": "monitor/digests/2026-03-30-weekly.md"
+    },
+    {
+      "timestamp": "2026-03-29T07:51:23Z",
+      "scan_type": "full",
+      "status": "success",
+      "findings_count": 20,
+      "high_priority_count": 3,
+      "digest_file": "monitor/digests/2026-03-29.md"
+    },
+    {
+      "timestamp": "2026-03-28T07:43:06Z",
+      "scan_type": "full",
+      "status": "success",
+      "findings_count": 20,
+      "high_priority_count": 3,
+      "digest_file": "monitor/digests/2026-03-28.md"
+    },
+    {
+      "timestamp": "2026-03-27T07:59:39Z",
+      "scan_type": "full",
+      "status": "success",
+      "findings_count": 21,
+      "high_priority_count": 3,
+      "digest_file": "monitor/digests/2026-03-27.md"
+    },
+    {
+      "timestamp": "2026-03-26T08:01:42Z",
+      "scan_type": "full",
+      "status": "success",
+      "findings_count": 22,
+      "high_priority_count": 3,
+      "digest_file": "monitor/digests/2026-03-26.md"
+    },
     {
       "timestamp": "2026-03-25T07:51:36Z",
       "scan_type": "full",
