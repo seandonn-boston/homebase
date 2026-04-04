@@ -86,6 +86,14 @@ export {
   SPCViolation,
 } from "./runaway-detector";
 export {
+  type DAGEdge,
+  type DecompositionInput,
+  type SubtaskInput,
+  type SubtaskNode,
+  type TaskDAG,
+  TaskDAGBuilder,
+} from "./task-decomposition";
+export {
   type AgentMetrics,
   type FleetSummary,
   ResultAggregator,
