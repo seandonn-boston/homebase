@@ -212,3 +212,98 @@ brain_b2_queue_size() {
   fi
   wc -l < "$BRAIN_B2_WRITE_QUEUE" 2>/dev/null | tr -d ' '
 }
+
+# ── Fallback: Write Queue Replay (HB-05) ─────────────────────
+#
+# Replays queued writes to Brain B2 when it becomes available.
+# Entries are processed in order (FIFO). Successfully replayed
+# entries are removed from the queue. Failed entries remain for
+# the next replay attempt.
+
+# Replay the write queue to Brain B2 via sqlite3.
+# Returns: JSON {"replayed": N, "failed": N, "remaining": N}
+# Requires: sqlite3, BRAIN_DB_FILE from brain_query.sh
+brain_b2_replay_queue() {
+  local db_file="${BRAIN_DB_FILE:-${CLAUDE_PROJECT_DIR:-.}/.brain-b2/brain-b2.db}"
+
+  if [ ! -f "$BRAIN_B2_WRITE_QUEUE" ]; then
+    echo '{"replayed":0,"failed":0,"remaining":0}'
+    return 0
+  fi
+
+  if [ ! -f "$db_file" ] || ! command -v sqlite3 >/dev/null 2>&1; then
+    local remaining
+    remaining=$(wc -l < "$BRAIN_B2_WRITE_QUEUE" 2>/dev/null | tr -d ' ')
+    printf '{"replayed":0,"failed":0,"remaining":%s}' "${remaining:-0}"
+    return 0
+  fi
+
+  local replayed=0
+  local failed=0
+  local failed_lines=""
+  local ts_ms
+  ts_ms=$(( $(date +%s 2>/dev/null || echo "0") * 1000 ))
+
+  while IFS= read -r line; do
+    [ -z "$line" ] && continue
+
+    local op category title content source_hook
+    op=$(printf '%s' "$line" | jq -r '.op // empty' 2>/dev/null | tr -d '\r')
+    category=$(printf '%s' "$line" | jq -r '.category // ""' 2>/dev/null | tr -d '\r')
+    title=$(printf '%s' "$line" | jq -r '.title // ""' 2>/dev/null | tr -d '\r')
+    content=$(printf '%s' "$line" | jq -r '.content // ""' 2>/dev/null | tr -d '\r')
+    source_hook=$(printf '%s' "$line" | jq -r '.source_hook // "replay"' 2>/dev/null | tr -d '\r')
+
+    if [ "$op" != "insert" ]; then
+      failed=$((failed + 1))
+      failed_lines="${failed_lines}${line}
+"
+      continue
+    fi
+
+    # Escape single quotes for SQL
+    local safe_title safe_content safe_cat safe_source
+    safe_title=$(printf '%s' "$title" | sed "s/'/''/g")
+    safe_content=$(printf '%s' "$content" | sed "s/'/''/g")
+    safe_cat=$(printf '%s' "$category" | sed "s/'/''/g")
+    safe_source=$(printf '%s' "$source_hook" | sed "s/'/''/g")
+
+    local uuid
+    uuid=$(cat /proc/sys/kernel/random/uuid 2>/dev/null || printf '%s-%s' "$(date +%s)" "$replayed")
+
+    if sqlite3 "$db_file" "INSERT INTO brain_entries (id, title, content, category, scope, tags, created_at, updated_at, source_agent, metadata) VALUES ('$uuid', '$safe_title', '$safe_content', '$safe_cat', '', '[]', $ts_ms, $ts_ms, '$safe_source', '{}');" 2>/dev/null; then
+      replayed=$((replayed + 1))
+    else
+      failed=$((failed + 1))
+      failed_lines="${failed_lines}${line}
+"
+    fi
+  done < "$BRAIN_B2_WRITE_QUEUE"
+
+  # Rewrite queue with only failed entries
+  if [ "$failed" -gt 0 ]; then
+    printf '%s' "$failed_lines" > "$BRAIN_B2_WRITE_QUEUE" 2>/dev/null || true
+  else
+    rm -f "$BRAIN_B2_WRITE_QUEUE" 2>/dev/null || true
+  fi
+
+  local remaining
+  remaining=$(brain_b2_queue_size)
+  printf '{"replayed":%d,"failed":%d,"remaining":%s}' "$replayed" "$failed" "$remaining"
+}
+
+# Check if B2 is available and replay queue if so.
+# Intended to be called at session start or periodically.
+brain_b2_check_and_replay() {
+  local db_file="${BRAIN_DB_FILE:-${CLAUDE_PROJECT_DIR:-.}/.brain-b2/brain-b2.db}"
+
+  if [ ! -f "$db_file" ] || ! command -v sqlite3 >/dev/null 2>&1; then
+    return 0
+  fi
+
+  local queue_size
+  queue_size=$(brain_b2_queue_size)
+  if [ "$queue_size" -gt 0 ] 2>/dev/null; then
+    brain_b2_replay_queue
+  fi
+}
