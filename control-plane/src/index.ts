@@ -23,6 +23,13 @@ export {
 } from "./errors";
 export { AgentEvent, EventListener, EventStream, EventStreamConfig, EventType } from "./events";
 export {
+  ExecutionStatePersistence,
+  type ExecutionStateConfig,
+  type HistoryEntry,
+  type PersistedState,
+  type RestoreResult,
+} from "./execution-state";
+export {
   type EscalationEvent,
   type FailureRecord,
   type LimitEnforcerConfig,
