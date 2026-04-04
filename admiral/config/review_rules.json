@@ -1,0 +1,17 @@
+{
+  "complexity_threshold": 15,
+  "max_file_lines": 500,
+  "naming": {
+    "bash": "^[a-z][a-z0-9_]*\\.sh$",
+    "typescript": "^[a-z][a-z0-9-]*\\.ts$"
+  },
+  "banned_imports": [],
+  "severity_map": {
+    "complexity": "Major",
+    "naming": "Minor",
+    "test_missing": "Major",
+    "import_hygiene": "Major",
+    "documentation": "Cosmetic",
+    "file_size": "Minor"
+  }
+}

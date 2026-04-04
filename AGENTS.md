@@ -34,15 +34,14 @@ Spec reference: `aiStrat/admiral/spec/part11-protocols.md`
 
 ## Current Focus
 
-**Phase 5 — Fleet Orchestration, MCP & Autonomy**
+**Phase 8 — Excellence, Validation & Strategic Positioning**
 
-The project follows a [9-phase roadmap](plan/ROADMAP.md). Phases 0-4 are complete. Current priorities:
+The project follows a [9-phase roadmap](plan/ROADMAP.md). Phases 0-7 are complete. Current priorities:
 
-1. Fleet Routing & Orchestration (Stream 15: O-01 to O-10)
-2. MCP Integration (Stream 16: M-01 to M-14)
-3. Progressive Autonomy (Stream 18: AU-01 to AU-11)
-4. Meta-Governance (Stream 19: MG-01 to MG-10)
-5. Context Engineering (Stream 30: CE-01 to CE-10)
+1. Exemplary Codebase (Stream 13: X-01 to X-18)
+2. Thesis Validation (Stream 33: TV-01 to TV-09)
+3. Strategic Positioning (Stream 12: R-01 to R-11)
+4. Inevitable Features (Stream 28: IF-01 to IF-13)
 
 Full roadmap: [`plan/index.md`](plan/index.md) | Execution phasing: [`plan/ROADMAP.md`](plan/ROADMAP.md)
 
