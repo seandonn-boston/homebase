@@ -22,7 +22,7 @@ Source streams: **Stream 34 (Agent Execution Runtime, EX-01 to EX-06)** | **Stre
 
 ### Access Pattern & Implementation
 
-- [ ] **HB-01** — Access pattern selection: evaluate direct SQLite vs control plane API vs MCP; document as ADR-010; define hook-side API; prototype with <100ms P99 benchmark `[M]`
+- [x] **HB-01** — Access pattern selection: evaluate direct SQLite vs control plane API vs MCP; document as ADR-010; define hook-side API; prototype with <100ms P99 benchmark `[M]`
 - [ ] **HB-02** — Hook-side query helpers: `brain_query_precedent`, `brain_query_violations`, `brain_query_context`, `brain_check_pattern`; structured JSON, 50ms timeout, graceful fallback `[L]`
 - [ ] **HB-03** — Hook-side write helpers: `brain_record_decision`, `brain_record_violation`, `brain_record_pattern`; non-blocking, fire-and-forget with async queue; extend existing `brain_writer.sh` `[M]`
 
