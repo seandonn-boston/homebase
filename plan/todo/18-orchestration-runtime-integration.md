@@ -8,7 +8,7 @@ Source streams: **Stream 34 (Agent Execution Runtime, EX-01 to EX-06)** | **Stre
 
 ### Session Lifecycle Engine
 
-- [ ] **EX-01** — Session spawner: core engine that creates/manages agent sessions; resolves agent definitions, assembles context, tracks state (pending → running → complete/failed), emits lifecycle events `[L]`
+- [x] **EX-01** — Session spawner: core engine that creates/manages agent sessions; resolves agent definitions, assembles context, tracks state (pending → running → complete/failed), emits lifecycle events `[L]`
 - [ ] **EX-02** — Task queue: priority queue (CRITICAL > HIGH > MEDIUM > LOW) with FIFO within priority; task state tracking, cancellation support, disk persistence for crash recovery `[L]`
 - [ ] **EX-03** — Execution state persistence: atomic writes (tmp + rename), crash recovery (resume queued, retry/fail interrupted), JSONL with compaction `[M]`
 

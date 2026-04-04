@@ -22,6 +22,16 @@ export {
   ValidationError,
 } from "./errors";
 export { AgentEvent, EventListener, EventStream, EventStreamConfig, EventType } from "./events";
+export {
+  ExecutionRuntime,
+  type RuntimeConfig,
+  type RuntimeEventType,
+  type RuntimeStats,
+  type Session,
+  type SessionConfig,
+  type SessionResult,
+  type SessionState,
+} from "./execution-runtime";
 export { FleetDashboard, FleetDashboardData } from "./fleet-dashboard";
 export {
   GovernanceDashboard,
