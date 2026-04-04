@@ -91,6 +91,14 @@
 | 27 | [Monitoring & Scanner](stream-27-monitoring-and-scanner.md) | `stream-27-monitoring-and-scanner.md` | MON-01 to MON-10 | Scanner, daily digests, handoff validation |
 | 28 | [Inevitable Features](stream-28-inevitable-features.md) | `stream-28-inevitable-features.md` | IF-01 to IF-13 | Versioning, marketplace, plugins, multi-repo, A/B testing, predictive health models |
 
+### Part V-B: Orchestration Runtime (Streams 34-36, Phase 11)
+
+| # | Stream | File | Items | Focus |
+|---|---|---|---|---|
+| 34 | [Agent Execution Runtime](stream-34-agent-execution-runtime.md) | `stream-34-agent-execution-runtime.md` | EX-01 to EX-06 | Session spawner, task queue, state persistence, timeouts, result aggregation, task decomposition |
+| 35 | [Hook-to-B2 Integration](stream-35-hook-to-b2-integration.md) | `stream-35-hook-to-b2-integration.md` | HB-01 to HB-06 | Access pattern, query/write helpers, transactional safety, fallback, benchmarks |
+| 36 | [E2E Multi-Agent Test](stream-36-e2e-multi-agent-test.md) | `stream-36-e2e-multi-agent-test.md` | E2E-01 to E2E-04 | Test harness, happy path, failure path, CI integration |
+
 ### Part VI: Strategic & Excellence (Streams 12-13, 29-33)
 
 | # | Stream | File | Items | Focus |
@@ -115,8 +123,9 @@
 | Part III: Fleet & Multi-Agent | 14-18 | ~66 items | Agent definitions, routing, MCP (incl. server security), adapters, autonomy |
 | Part IV: Governance & Data | 19-23 | ~56 items | Meta-governance, data ecosystem, spec debt, intent, platform |
 | Part V: Hardening & Observability | 24-28 | ~64 items | Security (incl. MCP/A2A), observability, DX, monitoring, future features |
+| Part V-B: Orchestration Runtime | 34-36 | ~16 items | Execution runtime, hook-to-B2 integration, E2E multi-agent test |
 | Part VI: Strategic & Excellence | 12-13, 29-33 | ~86 items | Positioning, excellence, SOs, context, QA, rating, thesis |
-| **Total** | **34 streams** | **~479 items** | **Complete roadmap** |
+| **Total** | **37 streams** | **~495 items** | **Complete roadmap** |
 
 ---
 
