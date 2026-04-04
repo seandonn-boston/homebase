@@ -32,6 +32,15 @@ export {
   type SessionResult,
   type SessionState,
 } from "./execution-runtime";
+export {
+  type EnqueueOptions,
+  type QueueConfig,
+  type QueueMetrics,
+  type Task,
+  TaskQueue,
+  type TaskPriority,
+  type TaskState,
+} from "./task-queue";
 export { FleetDashboard, FleetDashboardData } from "./fleet-dashboard";
 export {
   GovernanceDashboard,
