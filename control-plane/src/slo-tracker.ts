@@ -123,6 +123,10 @@ export class SLOTracker {
     const observations = this.observations.get(sliName);
     if (observations) {
       observations.push({ timestamp: Date.now(), value, good });
+      // Auto-prune when array grows large to prevent unbounded memory growth
+      if (observations.length > 10_000) {
+        this.pruneOne(sliName);
+      }
     }
   }
 
@@ -197,5 +201,16 @@ export class SLOTracker {
     }
 
     return pruned;
+  }
+
+  private pruneOne(sliName: string): void {
+    const slo = this.slos.get(sliName);
+    const observations = this.observations.get(sliName);
+    if (!slo || !observations) return;
+    const cutoff = Date.now() - slo.windowMs;
+    this.observations.set(
+      sliName,
+      observations.filter((o) => o.timestamp >= cutoff),
+    );
   }
 }

@@ -11,9 +11,28 @@
  * 3. Execution Trace — visualization of agent reasoning trees
  */
 
+export { DistributedTracer, TraceSpan } from "./distributed-tracing";
 export { AgentEvent, EventListener, EventStream, EventStreamConfig, EventType } from "./events";
+export { FleetDashboard, FleetDashboardData } from "./fleet-dashboard";
+export {
+  GovernanceDashboard,
+  GovernanceDashboardData,
+} from "./governance-dashboard";
 export { JournalIngester } from "./ingest";
 export { AgentInstrumentation, InstrumentationConfig } from "./instrumentation";
+export {
+  AuthLevel,
+  InterventionAuthConfig,
+  InterventionAuthorizer,
+  InterventionType,
+} from "./intervention-auth";
+export {
+  getInterventionAction,
+  getReversibleActions,
+  INTERVENTION_CATALOG,
+  InterventionAction,
+  requiresConfirmation,
+} from "./intervention-catalog";
 export {
   Alert,
   ControlChart,
@@ -23,7 +42,21 @@ export {
   SPCViolation,
 } from "./runaway-detector";
 export { AdmiralServer } from "./server";
+export { SessionThermalModel, ThermalState } from "./session-thermal";
+// Observability enhancements
+export {
+  EnhancedStructuredLogger,
+  StructuredLogEntry,
+  StructuredLogFilter,
+  StructuredLogLevel,
+} from "./structured-logging";
 export { ExecutionTrace, TraceNode, TraceStats } from "./trace";
+export {
+  CanonicalSpan,
+  CanonicalTrace,
+  CanonicalTraceBuilder,
+  CausalLink,
+} from "./trace-format";
 
 import { EventStream } from "./events";
 import { AgentInstrumentation } from "./instrumentation";

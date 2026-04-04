@@ -106,10 +106,18 @@ validate_structural() {
   fi
 
   # Step 5: Check for excessively deep nesting (DoS prevention)
-  local depth
-  depth=$(printf '%s' "$normalized" | jq '[path(..)] | map(length) | max // 0' 2>/dev/null || echo "0")
-  if [ "$depth" -gt 20 ]; then
-    errors=$(printf '%s' "$errors" | jq -c --arg d "$depth" \
+  # Use bracket counting instead of jq path(..) to avoid O(total-nodes) on large inputs
+  local depth=0 max_depth=0
+  while IFS= read -r -n1 ch; do
+    case "$ch" in
+      '{'|'[') depth=$((depth + 1)); [ "$depth" -gt "$max_depth" ] && max_depth=$depth ;;
+      '}'|']') depth=$((depth - 1)) ;;
+    esac
+    # Early exit if already over limit
+    if [ "$max_depth" -gt 20 ]; then break; fi
+  done < <(printf '%s' "$normalized")
+  if [ "$max_depth" -gt 20 ]; then
+    errors=$(printf '%s' "$errors" | jq -c --arg d "$max_depth" \
       '. + ["Excessive JSON nesting depth: " + $d + " (max 20)"]')
   fi
 
