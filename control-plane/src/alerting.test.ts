@@ -2,7 +2,8 @@
  * Tests for Alert Routing (OB-05)
  */
 
-import { beforeEach, describe, expect, it } from "vitest";
+import assert from "node:assert/strict";
+import { beforeEach, describe, it } from "node:test";
 import { AlertRouter } from "./alerting";
 
 describe("AlertRouter", () => {
@@ -16,20 +17,20 @@ describe("AlertRouter", () => {
     const alert = router.fire("high", "test_hook", "Hook failed", {
       hook: "zero_trust",
     });
-    expect(alert).not.toBeNull();
-    expect(alert!.id).toMatch(/^alert-/);
-    expect(alert!.severity).toBe("high");
-    expect(alert!.component).toBe("test_hook");
-    expect(alert!.message).toBe("Hook failed");
-    expect(alert!.acknowledged).toBe(false);
-    expect(alert!.resolved).toBe(false);
+    assert.ok(alert !== null);
+    assert.ok(alert!.id.match(/^alert-/));
+    assert.strictEqual(alert!.severity, "high");
+    assert.strictEqual(alert!.component, "test_hook");
+    assert.strictEqual(alert!.message, "Hook failed");
+    assert.strictEqual(alert!.acknowledged, false);
+    assert.strictEqual(alert!.resolved, false);
   });
 
   it("deduplicates identical alerts within window", () => {
     const a1 = router.fire("high", "comp", "msg");
     const a2 = router.fire("high", "comp", "msg");
-    expect(a1).not.toBeNull();
-    expect(a2).toBeNull(); // Suppressed
+    assert.ok(a1 !== null);
+    assert.strictEqual(a2, null); // Suppressed
   });
 
   it("allows same alert after dedup window expires", async () => {
@@ -37,19 +38,19 @@ describe("AlertRouter", () => {
     router2.fire("high", "comp", "msg");
     await new Promise((r) => setTimeout(r, 60));
     const a2 = router2.fire("high", "comp", "msg");
-    expect(a2).not.toBeNull();
+    assert.ok(a2 !== null);
   });
 
   it("acknowledges alerts", () => {
     const alert = router.fire("high", "comp", "msg")!;
-    expect(router.acknowledge(alert.id)).toBe(true);
-    expect(router.getAll()[0].acknowledged).toBe(true);
+    assert.strictEqual(router.acknowledge(alert.id), true);
+    assert.strictEqual(router.getAll()[0].acknowledged, true);
   });
 
   it("resolves alerts", () => {
     const alert = router.fire("high", "comp", "msg")!;
     router.resolve(alert.id);
-    expect(router.getActive()).toHaveLength(0);
+    assert.strictEqual(router.getActive().length, 0);
   });
 
   it("sorts active alerts by severity", () => {
@@ -58,9 +59,9 @@ describe("AlertRouter", () => {
     router.fire("medium", "c", "medium alert");
 
     const active = router.getActive();
-    expect(active[0].severity).toBe("critical");
-    expect(active[1].severity).toBe("medium");
-    expect(active[2].severity).toBe("low");
+    assert.strictEqual(active[0].severity, "critical");
+    assert.strictEqual(active[1].severity, "medium");
+    assert.strictEqual(active[2].severity, "low");
   });
 
   it("filters by severity", () => {
@@ -68,9 +69,9 @@ describe("AlertRouter", () => {
     router.fire("low", "c", "l1");
     router.fire("high", "c2", "h2");
 
-    expect(router.getBySeverity("high")).toHaveLength(2);
-    expect(router.getBySeverity("low")).toHaveLength(1);
-    expect(router.getBySeverity("critical")).toHaveLength(0);
+    assert.strictEqual(router.getBySeverity("high").length, 2);
+    assert.strictEqual(router.getBySeverity("low").length, 1);
+    assert.strictEqual(router.getBySeverity("critical").length, 0);
   });
 
   it("checks escalation for unacknowledged alerts", () => {
@@ -87,19 +88,19 @@ describe("AlertRouter", () => {
     });
     router2.fire("critical", "c", "urgent");
     const escalated = router2.checkEscalation();
-    expect(escalated).toHaveLength(1);
-    expect(escalated[0].escalated).toBe(true);
+    assert.strictEqual(escalated.length, 1);
+    assert.strictEqual(escalated[0].escalated, true);
   });
 
   it("suppresses medium/low alerts during maintenance", () => {
     router.setMaintenanceMode(true);
-    expect(router.isMaintenanceMode()).toBe(true);
+    assert.strictEqual(router.isMaintenanceMode(), true);
 
     const critical = router.fire("critical", "c", "critical");
     const medium = router.fire("medium", "c", "medium");
 
-    expect(critical).not.toBeNull();
-    expect(medium).toBeNull();
+    assert.ok(critical !== null);
+    assert.strictEqual(medium, null);
   });
 
   it("provides alert summary counts", () => {
@@ -109,9 +110,9 @@ describe("AlertRouter", () => {
     router.resolve(router.getAll()[0].id); // resolve critical
 
     const summary = router.getSummary();
-    expect(summary.critical.total).toBe(1);
-    expect(summary.critical.active).toBe(0);
-    expect(summary.high.total).toBe(2);
-    expect(summary.high.active).toBe(2);
+    assert.strictEqual(summary.critical.total, 1);
+    assert.strictEqual(summary.critical.active, 0);
+    assert.strictEqual(summary.high.total, 2);
+    assert.strictEqual(summary.high.active, 2);
   });
 });

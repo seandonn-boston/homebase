@@ -7,7 +7,7 @@
 
 ## How to Read This Document
 
-The work is organized into **9 Phases**. Each phase contains streams that can be worked **concurrently** within that phase, but phases themselves have dependency relationships — a phase generally cannot start until the prior phase's foundational outputs exist. Some streams span multiple phases (noted with `(continues)` markers).
+The work is organized into **13 Phases (0–12)**. Each phase contains streams that can be worked **concurrently** within that phase, but phases themselves have dependency relationships — a phase generally cannot start until the prior phase's foundational outputs exist. Some streams span multiple phases (noted with `(continues)` markers).
 
 **Key:**
 - **Streams** are the unit of work (Stream 0–33)
@@ -37,6 +37,19 @@ Phase 6  Knowledge Ecosystem, Context & Intent
 Phase 7  Platform Scale & Governance-as-a-Service
   │
 Phase 8  Excellence, Validation & Strategic Positioning
+  │
+  │  ── Phases 0-8: broad architecture complete (85%+ items done) ──
+  │  ── Phases 9-12: gap closure, depth, and production hardening ──
+  │
+Phase 9  Quality Rigor & Documentation
+  │
+Phase 10 Security Hardening & Brain B3
+  │
+Phase 11 Developer Experience & Monitoring
+  │
+Phase 12 Strategic Positioning & Completion
+  │
+Phase 13 Cleanup
 ```
 
 ---
@@ -212,11 +225,117 @@ If spec debt resolution surfaces new requirements, those requirements must be in
 | **12** | Strategic Positioning | OWASP crosswalk, NIST/ISO/EU AI Act alignment, competitive matrix, enterprise playbook, open-source strategy, academic positioning | Streams 32, 33 | — (capstone) |
 | **28** | Inevitable Features | Agent versioning, plugin architecture, multi-repo, performance profiling, cost optimization, session replay, collaboration patterns, real-time dashboard, A/B testing, marketplace concept | Streams 15, 19, 20, 25 | — (capstone) |
 
-**Why last:** These streams are the capstone. Exemplary codebase (Stream 13) requires almost everything else to exist. Thesis validation (Stream 33) needs measurement systems producing data. Strategic positioning (Stream 12) needs implementation depth and validation evidence. Inevitable features (Stream 28) extend a stable platform.
+**Why ninth:** These streams are the capstone of the broad architecture phases. Exemplary codebase (Stream 13) requires almost everything else to exist. Thesis validation (Stream 33) needs measurement systems producing data. Strategic positioning (Stream 12) needs implementation depth and validation evidence. Inevitable features (Stream 28) extend a stable platform.
 
 **Concurrency:** All four streams are independent and can run fully in parallel.
 
 **Exit criteria:** Codebase withstands chaos testing and adversarial scenarios. The thesis "deterministic enforcement beats advisory guidance" has quantitative evidence. Admiral is positioned against OWASP, NIST, ISO, and competitors. Future-proofing infrastructure exists for versioning, plugins, and multi-repo.
+
+---
+
+## Phase 9 — Quality Rigor & Documentation
+
+> Close the testing, code quality, and documentation gaps that Phases 1–2 left incomplete. These are the "last mile" items that separate a working prototype from a contributor-ready, auditable codebase.
+
+| Stream | Name | Scope | ← Needs | Feeds → |
+|--------|------|-------|---------|---------|
+| **01** | Testing *(depth)* | Property-based tests (RingBuffer), snapshot tests for hook JSON schemas | Phase 1 foundation | Streams 6, 13 |
+| **02** | Code Quality *(depth)* | Shared jq helpers, standardized hook error handling, typed error hierarchy, exit code taxonomy, hook idempotency verification, TS strict null checks | Phase 1 foundation | Streams 3, 6 |
+| **03** | Architecture *(depth)* | Hook execution pipeline abstraction, plugin architecture for hook extensions | Phase 2 foundation | Streams 6, 7 |
+| **04** | Documentation *(depth)* | ADMIRAL_STYLE.md, 9 ADRs (hook payload, event ID, SO tiers, fleet orchestration, brain graduation), operational runbook, troubleshooting guide, Brain user guide, security model doc, glossary, quick-start tutorial, hook dev guide, FAQ, API versioning strategy | Phase 2 foundation | Streams 6, 26 |
+| **05** | CI/CD *(depth)* | Matrix CI builds (ubuntu + macOS), CodeQL security scanning, dependency update automation | Phase 2 foundation | Streams 6, 13 |
+| **06** | Self-Enforcement *(depth)* | Documentation discipline enforcement, Standing Order compliance audit, hook coverage report | Phase 2 foundation | Streams 8, 13 |
+
+**Why now:** Phases 0–8 built the broad architecture. These items were deferred during rapid feature development but are prerequisites for contributor onboarding (Phase 11) and auditable compliance (Phase 12). Documentation and testing rigor compound — every ADR and test written here reduces questions and rework in later phases.
+
+**Concurrency:** All six stream continuations are independent and can run fully in parallel.
+
+**Exit criteria:** Property tests and snapshot tests exist. Typed error hierarchy is implemented. All 9 ADRs are written and approved. ADMIRAL_STYLE.md governs all new code. Operational runbook covers 10+ failure scenarios. CI runs matrix builds with CodeQL.
+
+**Todo files:** `todo/03` (18 items), `todo/04` (25 items) — ~43 items total.
+
+**Status:** COMPLETE (2026-03-28). All Phase 9 tasks done. Deferred items: A-08/A-09 (plugin arch, Phase 3), D-04 (inline comments, Phase 2), C-02/C-03 (matrix CI/CodeQL, infrastructure-dependent), P-09/P-10 (SO compliance audit/hook coverage, Phase 3). Closeout: 384 TS tests pass (0 failures), vitest-to-node:test migration, security hardening (path traversal prevention), code deduplication (shared assert.sh, normalization helpers).
+
+---
+
+## Phase 10 — Security Hardening & Brain B3
+
+> Complete the security defense-in-depth stack and graduate the Brain to production-tier persistence with embeddings and semantic search.
+
+| Stream | Name | Scope | ← Needs | Feeds → |
+|--------|------|-------|---------|---------|
+| **24** | Security *(depth)* | Data classification tags, incident response playbook, dependency vulnerability scanning, SBOM generation, rate limiting, Leash Cedar policy spec; complete partial items: injection Layer 2 for handoff docs, centralized privilege escalation checks, security regression CVE mapping, A2A content inspection, cascade containment circuit breakers | Phase 4 foundation | Streams 9, 13 |
+| **11** | Brain B3 *(production)* | Embedding generation pipeline, similarity search, Postgres+pgvector deployment, identity token lifecycle, per-entry access control, multi-signal retrieval, sensitivity classification, audit logging, cross-project sharing, schema migration testing, knowledge search REST API; complete partial items: MCP→B3 backend, quarantine integration, contradiction resolution workflow, decision entry schema | Phase 6 (B2 complete) | Streams 20, 22 |
+
+**Why now:** Security depth items (SBOM, incident response, rate limiting) are prerequisites for enterprise positioning (Phase 12). Brain B3 (Postgres, embeddings, semantic search) requires B2 stability and unlocks the knowledge search API that the governance platform needs.
+
+**Concurrency:** Security and Brain B3 are independent and can run in parallel.
+
+**Exit criteria:** Full 5-layer injection defense stack. Incident response playbook with 4 critical scenarios. SBOM generated in CI. Brain B3 operational with Postgres, pgvector, and semantic search. Knowledge search REST API serves queries with authentication and rate limiting.
+
+**Todo files:** `todo/07` (6 missing + 5 partial = ~11 items), `todo/08` (11 missing + 4 partial = ~15 items) — ~26 items total.
+
+---
+
+## Phase 11 — Developer Experience & Monitoring
+
+> Make the project contributor-friendly with one-command setup, tooling, and operational monitoring. This is the phase that turns Helm from "impressive but hard to approach" into "clone and contribute in 30 minutes."
+
+| Stream | Name | Scope | ← Needs | Feeds → |
+|--------|------|-------|---------|---------|
+| **26** | Developer Experience | Dev container configuration, one-command setup, interactive guide, hot reload, hook development CLI, local CI runner, IDE templates, debugging guide, error message audit, example-driven docs, changelog automation, good first issues catalog, pre-flight checklist tooling, local agent session simulator | Phase 9 (docs, style guide) | All contributor-facing streams |
+| **27** | Monitoring & Scanner | Full scanner implementation, daily digest automation, weekly trend reports, state management, custom scan rules, scan history, CI integration, alert thresholds, dashboard integration, handoff validation | Phase 2 foundation | Streams 31, 32 |
+| **15** | Fleet *(remaining)* | Agent definition template generator, model tier promotion/demotion tracking, category-specific context checklists, progressive disclosure via skills, agent warm-up/cool-down | Phase 5 foundation | — |
+| **18** | Autonomy *(remaining)* | Admiral approval UI/API | Phase 5 foundation | Stream 23 |
+| **25** | Observability *(remaining)* | Performance regression detection | Phase 4 foundation | Stream 27 |
+
+**Why now:** Developer experience depends on documentation (Phase 9) being complete — you can't write a quick-start tutorial without a style guide or troubleshooting guide. Monitoring scanner needs the measurement infrastructure from Phase 2 to be stable. The remaining fleet/autonomy/observability items are small gaps that fit naturally alongside DX work.
+
+**Concurrency:** DX and Monitoring are independent. Remaining fleet/autonomy/observability items are independent of each other and of DX/Monitoring.
+
+**Exit criteria:** `make setup` (or equivalent) works from a clean clone. Dev container boots in < 2 minutes. Hook scaffold CLI generates valid hooks. Scanner runs daily and produces digests. Dashboard shows scanner results. Contributors can find good first issues and follow a guided tutorial.
+
+**Todo files:** `todo/15` (22 missing + 3 partial = ~25 items), `todo/06` (5 remaining), `todo/11` (1 remaining), `todo/09` (1 remaining) — ~32 items total.
+
+---
+
+## Phase 12 — Strategic Positioning & Completion
+
+> Position Admiral for enterprise adoption with compliance crosswalks, competitive analysis, and the remaining deferred platform features. This is the capstone that makes the project legible to enterprises, regulators, and academics.
+
+| Stream | Name | Scope | ← Needs | Feeds → |
+|--------|------|-------|---------|---------|
+| **12** | Strategic Positioning | OWASP Agentic Top 10 crosswalk, Forrester AEGIS alignment, KPMG TACO tagging, NIST Zero Trust alignment, ISO 42001 mapping, EU AI Act compliance, McKinsey mapping, Singapore IMDA alignment, AI Work OS positioning document, competitive differentiation matrix, enterprise adoption playbook | Phases 9–11 (complete implementation) | — (capstone) |
+| **13** | Exemplary Codebase *(remaining)* | Security penetration testing suite, load testing for control plane, contribution complexity analyzer, accessibility audit for dashboards | Phases 9–10 (security, testing depth) | — (capstone) |
+| **23** | Governance Platform *(remaining)* | Multi-tenant support, governance policy language DSL, governance deployment guide | Phase 7 foundation | — |
+| **28** | Inevitable Features *(remaining)* | Agent marketplace concept, A/B testing framework for agents, natural language policy authoring, governance compliance certification, real-time collaboration dashboard | Phases 7–10 (stable platform) | — |
+| **33** | Thesis Validation *(remaining)* | Academic paper outline | Phase 8 foundation | Stream 12 |
+
+**Why now:** Compliance crosswalks require a complete, auditable implementation to map against (Phases 9–10). Competitive positioning requires DX and monitoring to be operational (Phase 11). These items were explicitly marked DEFERRED in earlier phases because the implementation wasn't mature enough to credibly position against OWASP, NIST, or ISO standards.
+
+**Concurrency:** All five stream continuations are independent and can run fully in parallel.
+
+**Exit criteria:** All 6 compliance crosswalks (OWASP, AEGIS, NIST, ISO 42001, EU AI Act, TACO) complete with coverage percentages. Competitive matrix covers 8+ competitors. Enterprise playbook covers 5 adoption stages. Pentest suite has 30+ scenarios. Academic paper outline ready for conference submission.
+
+**Todo files:** `todo/13` (14 missing + 1 partial = ~15 items), `todo/17` (5 items), `todo/16` (3 items), `todo/12` (1 item) — ~24 items total.
+
+---
+
+## Phase 13 — Cleanup
+
+> Eliminate all lint/check suppressions across the entire codebase. Every `shellcheck disable`, `biome-ignore`, `eslint-disable`, `@ts-ignore`, and similar suppression must be removed and the underlying issue fixed. No exceptions.
+
+| Scope | Description |
+|-------|-------------|
+| **Shell scripts** | Remove all `# shellcheck disable=SCXXXX` directives. Fix the actual issues (unused variables, quoting, unreachable code). |
+| **TypeScript** | Remove all `// biome-ignore`, `// @ts-ignore`, `// @ts-expect-error`, `// eslint-disable` directives. Fix with proper types, refactoring, or code changes. |
+| **Other files** | Scan for any suppression patterns in any file type. No file is exempt. |
+
+**Why now:** Phases 0–12 built the full system. Suppressions accumulated during rapid development as a pragmatic shortcut. A showcase-quality codebase cannot claim 10/10 code quality while silencing its own tools. This phase ensures every diagnostic tool runs unsuppressed.
+
+**Concurrency:** One comprehensive pass across the full codebase.
+
+**Exit criteria:** Zero suppression directives in any file. All lint, shellcheck, and type-check tools pass cleanly without any per-line or per-file disables. CI enforces a "no-suppress" policy going forward.
 
 ---
 
@@ -225,39 +344,39 @@ If spec debt resolution surfaces new requirements, those requirements must be in
 | Stream | Name | Phase(s) |
 |--------|------|----------|
 | 00 | Strategy Triangle | 0 |
-| 01 | Testing | 1 |
-| 02 | Code Quality | 1 |
-| 03 | Architecture | 2 |
-| 04 | Documentation | 1 |
-| 05 | CI/CD | 2 |
-| 06 | Self-Enforcement | 2 |
+| 01 | Testing | 1, **9** (depth) |
+| 02 | Code Quality | 1, **9** (depth) |
+| 03 | Architecture | 2, **9** (depth) |
+| 04 | Documentation | 1, **9** (depth) |
+| 05 | CI/CD | 2, **9** (depth) |
+| 06 | Self-Enforcement | 2, **9** (depth) |
 | 07 | Hooks & Fleet Foundation | 3 |
 | 08 | Execution Patterns & Ops | 3 |
 | 09 | Platform Security Governance | 6 |
 | 10 | Protocols & Ecosystem Gaps | 6 |
-| 11 | Brain System | 3 (B1), 6 (B2+B3) |
-| 12 | Strategic Positioning | 8 |
-| 13 | Exemplary Codebase | 8 |
+| 11 | Brain System | 3 (B1), 6 (B2+B3), **10** (B3 production) |
+| 12 | Strategic Positioning | 8, **12** (crosswalks) |
+| 13 | Exemplary Codebase | 8, **12** (pentest, load test) |
 | 14 | Fleet Agent Definitions | 4 |
-| 15 | Fleet Routing & Orchestration | 5 |
+| 15 | Fleet Routing & Orchestration | 5, **11** (remaining) |
 | 16 | MCP Integration | 5 |
 | 17 | Platform Adapters | 7 |
-| 18 | Progressive Autonomy | 5 |
+| 18 | Progressive Autonomy | 5, **11** (remaining) |
 | 19 | Meta-Governance | 5 |
 | 20 | Data Ecosystem | 6 |
 | 21 | Spec Debt Resolution | 0 |
 | 22 | Intent Engineering | 6 |
-| 23 | Governance Platform | 7 |
-| 24 | Security Hardening | 4 |
-| 25 | Observability | 4 |
-| 26 | Developer Experience | 1 |
-| 27 | Monitoring & Scanner | 2 |
-| 28 | Inevitable Features | 8 |
+| 23 | Governance Platform | 7, **12** (remaining) |
+| 24 | Security Hardening | 4, **10** (depth) |
+| 25 | Observability | 4, **11** (remaining) |
+| 26 | Developer Experience | 1, **11** (full implementation) |
+| 27 | Monitoring & Scanner | 2, **11** (full implementation) |
+| 28 | Inevitable Features | 8, **12** (remaining) |
 | 29 | Standing Orders Implementation | 3 |
 | 30 | Context Engineering | 5 |
 | 31 | Quality Assurance System | 7 |
 | 32 | Rating System | 7 |
-| 33 | Thesis Validation | 8 |
+| 33 | Thesis Validation | 8, **12** (paper outline) |
 
 ---
 
@@ -288,28 +407,21 @@ Phase 7  ║ [Stream 17: Adapters] [Stream 23: Governance Platform] [Stream 31: 
          ║                                                               └──→ [Stream 32: Rating]
          ║
 Phase 8  ║ [Stream 13: Exemplary] [Stream 33: Thesis] [Stream 28: Inevitable] [Stream 12: Strategy]
+         ║
+         ║  ── Gap Closure Phases (Phases 0-8 built broad architecture; 9-12 close depth gaps) ──
+         ║
+Phase 9  ║ [Stream 01: Testing↑] [Stream 02: Quality↑] [Stream 03: Arch↑] [Stream 04: Docs↑] [Stream 05: CI↑] [Stream 06: Enforcement↑]
+         ║
+Phase 10 ║ [Stream 24: Security↑] [Stream 11-B3: Brain B3]
+         ║
+Phase 11 ║ [Stream 26: DX] [Stream 27: Monitoring] [Stream 15↑] [Stream 18↑] [Stream 25↑]
+         ║
+Phase 12 ║ [Stream 12: Positioning↑] [Stream 13: Exemplary↑] [Stream 23↑] [Stream 28↑] [Stream 33↑]
+         ║
+Phase 13 ║ [Full codebase: remove all lint/check suppressions]
 ```
 
----
-
-## Competitive Urgency Overlay
-
-> Source: `research/competitive-threat-strongdm-perplexity-comet-2026.md`, `aiStrat/admiral/extensions/inevitable-features.md`
-
-Three competitors are converging on adjacent capabilities. The following internal targets overlay the phased roadmap, based on estimated competitor timelines from `research/competitive-threat-strongdm-perplexity-comet-2026.md` (March 2026 analysis — estimates, not confirmed roadmaps):
-
-| Feature | Phase | Internal Target | Competitor Context | Designed-for Differentiator |
-|---|---|---|---|---|
-| **Causality Tracing** (OB-02 + OB-09) | 4 | 90-day internal target | Perplexity Computer exposing subagent traces (est. 6–12 mo) | Designed for cross-platform tracing (CLI + API + browser + backend) |
-| **Brain B2** (B-07 to B-11) | 6 | 120-day internal target | Comet Enterprise persistent interaction patterns (est. 12–18 mo) | Designed for institutional memory compounding across sessions, projects, agents |
-| **Predictive Health** (IF-05 + fleet health) | 8 | 180-day internal target | Leash trend analysis on Record data (est. 12–18 mo) | Requires Brain + tracing operational data; designed to be self-improving |
-| **Decision Authority Tiers** (enforcement) | 3 | Current priority | Comet binary domain-level controls (shipped) | Graduated trust — 4 tiers, not on/off |
-| **Standing Orders** (Stream 29) | 3 | Current priority | None | Category doesn't exist in competitor products |
-| **Leash Cedar integration** (SEC-15) | 4–5 | After SEC-04 | Leash as standalone enforcement | Turns competitor into enforcement backend |
-
-**The compounding effect:** Each feature is designed to feed the next — Causality Tracing → Living Memory → Predictive Health. By 90 days of operation, these would form a self-improving system that is difficult to replicate retroactively.
-
-**Implication for phasing:** Consider promoting IF-05 (performance profiling) and IF-08 (session replay) from Phase 8 to Phase 5–6. These produce the data that causality tracing and predictive health consume.
+*↑ = depth continuation of a stream that delivered foundational outputs in an earlier phase.*
 
 ---
 
@@ -390,6 +502,27 @@ At sprint completion: Part 3 at 100%, Part 5 (B1) at 100%, Part 11 at 50%+. Thes
 
 ---
 
+## Competitive Urgency Overlay
+
+> Source: `research/competitive-threat-strongdm-perplexity-comet-2026.md`, `aiStrat/admiral/extensions/inevitable-features.md`
+
+Three competitors are converging on adjacent capabilities. The following internal targets overlay the phased roadmap, based on estimated competitor timelines from `research/competitive-threat-strongdm-perplexity-comet-2026.md` (March 2026 analysis — estimates, not confirmed roadmaps):
+
+| Feature | Phase | Internal Target | Competitor Context | Designed-for Differentiator |
+|---|---|---|---|---|
+| **Causality Tracing** (OB-02 + OB-09) | 4 | 90-day internal target | Perplexity Computer exposing subagent traces (est. 6–12 mo) | Designed for cross-platform tracing (CLI + API + browser + backend) |
+| **Brain B2** (B-07 to B-11) | 6 | 120-day internal target | Comet Enterprise persistent interaction patterns (est. 12–18 mo) | Designed for institutional memory compounding across sessions, projects, agents |
+| **Predictive Health** (IF-05 + fleet health) | 8 | 180-day internal target | Leash trend analysis on Record data (est. 12–18 mo) | Requires Brain + tracing operational data; designed to be self-improving |
+| **Decision Authority Tiers** (enforcement) | 3 | Current priority | Comet binary domain-level controls (shipped) | Graduated trust — 4 tiers, not on/off |
+| **Standing Orders** (Stream 29) | 3 | Current priority | None | Category doesn't exist in competitor products |
+| **Leash Cedar integration** (SEC-15) | 4–5 | After SEC-04 | Leash as standalone enforcement | Turns competitor into enforcement backend |
+
+**The compounding effect:** Each feature is designed to feed the next — Causality Tracing → Living Memory → Predictive Health. By 90 days of operation, these would form a self-improving system that is difficult to replicate retroactively.
+
+**Implication for phasing:** Consider promoting IF-05 (performance profiling) and IF-08 (session replay) from Phase 8 to Phase 5–6. These produce the data that causality tracing and predictive health consume.
+
+---
+
 ## Critical Path
 
 The longest dependency chain through the project:
@@ -427,3 +560,7 @@ Streams 21 and 00 run in parallel (Phase 0), but both must deliver before Phase 
 4. **Phase 8 streams are capstones** — they integrate and validate everything built before them. They should not start until the systems they measure/test/position are stable.
 
 5. **No phase requires all prior phases to be 100% complete.** The dependency is on specific outputs, not phase-level completion. Use the `← Needs` column to determine readiness.
+
+6. **Phases 9–12 are gap closure phases.** They continue streams that delivered foundational outputs in Phases 0–8 but have remaining depth items. A stream appearing in both Phase 2 and Phase 9 means Phase 2 built the foundation and Phase 9 completes the details (ADRs, property tests, typed errors, etc.).
+
+7. **Phase 12 items marked DEFERRED require complete implementation to credibly produce.** Compliance crosswalks cannot be written against an incomplete codebase. Enterprise playbooks cannot reference features that don't exist. These items were intentionally deferred, not forgotten.

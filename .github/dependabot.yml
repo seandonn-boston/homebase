@@ -1,15 +1,36 @@
 version: 2
 updates:
+  # NPM dependencies for control-plane
   - package-ecosystem: "npm"
     directory: "/control-plane"
     schedule:
       interval: "weekly"
-    open-pull-requests-limit: 5
+      day: "monday"
+    open-pull-requests-limit: 10
+    groups:
+      # Group minor/patch updates to reduce PR noise
+      minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
     labels:
       - "dependencies"
+    commit-message:
+      prefix: "deps"
+
+  # GitHub Actions versions
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "monthly"
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    groups:
+      actions:
+        patterns:
+          - "*"
     labels:
+      - "dependencies"
       - "ci"
+    commit-message:
+      prefix: "ci"

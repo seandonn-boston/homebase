@@ -42,37 +42,37 @@
 
 ### 4.1 Core Project Documents
 
-- [ ] **D-01:** Create ADMIRAL_STYLE.md — naming conventions, error handling, jq patterns, exit codes, comment standards, testing requirements `[L]` — *Deferred to Phase 2 (large scope, gates Q-03/Q-13/D-17).*
+- [x] **D-01:** Create ADMIRAL_STYLE.md — *Completed in Phase 9.* — Comprehensive style guide covering file naming, bash/TS conventions, exit code taxonomy (0/1/2/3/4/126/127), hook output contracts, testing requirements, fail-open/fail-closed patterns, jq helper usage, structured logging, and comment standards. `[L]`
 - [x] **D-02:** Add CODE_OF_CONDUCT.md — Contributor Covenant v2.1 `[S]`
 - [x] **D-03:** Add LICENSE file — MIT license at repo root `[S]`
 
 ### 4.2 Inline Documentation
 
 - [ ] **D-04:** Add inline "why" comments to hooks — *Deferred to Phase 2.* — audit all 13+ hooks, annotate regex patterns, thresholds, state mutations, magic numbers `[L]`
-- [ ] **D-05:** Add usage examples to templates — purpose, when to use, example invocation, expected output `[S]`
+- [x] **D-05:** Add usage examples to templates — *Completed in Phase 9.* — Added `_purpose`, `_usage`, `_expected_output`/`_example_invocation` fields to ground-truth, task-criteria, and spec-change-impact templates `[S]`
 
 ### 4.3 Architecture Decision Records
 
-- [ ] **D-06:** ADR for hook payload schema — JSON over stdin/stdout rationale, fail-open, schema evolution strategy `[S]`
-- [ ] **D-07:** ADR for event ID generation — UUID vs timestamp+counter vs ULID trade-offs `[S]`
-- [ ] **D-12:** ADR for Standing Orders enforcement tiers — hook-enforced vs advisory vs guidance-only `[S]`
-- [ ] **D-13:** ADR for fleet orchestration approach — centralized vs peer-to-peer vs hybrid, 3+ alternatives compared `[M]`
-- [ ] **D-14:** ADR for brain level graduation criteria — B1 -> B2 -> B3 graduation metrics, automatic vs manual `[M]`
+- [x] **D-06:** ADR for hook payload schema — *Completed in Phase 9.* — ADR-005: JSON over stdin/stdout rationale, fail-open validation, additive schema evolution, `additionalProperties: true` for forward compat `[S]`
+- [x] **D-07:** ADR for event ID generation — *Completed in Phase 9.* — ADR-006: `evt_<uuid-v4>` via `crypto.randomUUID()`, replaces `Date.now()`, ULID rejected (extra dependency), 4 alternatives compared `[S]`
+- [x] **D-12:** ADR for Standing Orders enforcement tiers — *Completed in Phase 9.* — ADR-007: 3 tiers (hook-enforced hard, hook-enforced advisory, guidance-only) with SO-to-tier mapping for all 16 SOs `[S]`
+- [x] **D-13:** ADR for fleet orchestration approach — *Completed in Phase 9.* — ADR-008: git-mediated hybrid (branch-based task claiming, file-system state, fleet registry, task router, handoff protocol), 3 alternatives compared `[M]`
+- [x] **D-14:** ADR for brain level graduation criteria — *Completed in Phase 9.* — ADR-009: semi-automatic (recommend + confirm), B1->B2 (hit rate >= 85%, precision >= 90%, 100+ entries), B2->B3 (reuse rate >= 70%, semantic precision >= 85%), trend tracking `[M]`
 
 ### 4.4 Operational Documentation
 
-- [ ] **D-08:** Create operational runbook — setup, common failures, recovery procedures, 10+ failure scenarios `[L]`
-- [ ] **D-09:** Create hook troubleshooting guide — all 13+ hooks with failure modes, debugging steps `[M]`
-- [ ] **D-10:** Create Brain user guide — brain_query, brain_record, brain_retrieve, brain_audit CLI examples `[M]`
-- [ ] **D-11:** Create security model document — threat model, attack surfaces, defense layers, quarantine `[L]`
+- [x] **D-08:** Create operational runbook — *Completed in Phase 9.* — `docs/OPERATIONAL_RUNBOOK.md` with prerequisites, setup, session lifecycle, control plane ops, hook system, brain system, fleet ops, validation, 10 failure scenarios (hard blocks, state corruption, jq missing, server issues, loop detector, SO loading, brain queries, worktree conflicts, CI failures, config validation) with diagnosis and resolution, recovery procedures, monitoring reference `[L]`
+- [x] **D-09:** Create hook troubleshooting guide — *Completed in Phase 9.* — `docs/HOOK_TROUBLESHOOTING.md` with quick reference table, general debugging steps, per-hook failure mode tables for all 17 hooks (6 hard-block, 11 advisory), common false positives, debug commands, resolution steps `[M]`
+- [x] **D-10:** Create Brain user guide — *Completed in Phase 9.* — `docs/BRAIN_USER_GUIDE.md` with CLI examples for all 5 brain tools (record, query, retrieve, audit, consolidate), entry types, tier comparison, graduation criteria, hook integration, file layout `[M]`
+- [x] **D-11:** Create security model document — *Completed in Phase 9.* — `docs/SECURITY_MODEL.md` with threat model (4 actors, 6 categories, 30 ATK scenarios), 5 attack surfaces, 4-tier defense architecture, identity/authorization (RBAC, token binding, tier enforcement), injection prevention (70+ patterns), 5-layer quarantine pipeline (LLM-airgapped layers 1-3), secret detection (40+ patterns), privilege escalation defense, hash-chained audit trail, residual risk analysis `[L]`
 
 ### 4.5 Contributor & Reference Documentation
 
-- [ ] **D-15:** Glossary of Admiral Framework terms — 25+ terms with definitions, examples, cross-references `[M]`
-- [ ] **D-16:** Quick-start tutorial for new contributors — clone-to-PR in 30 minutes `[M]`
-- [ ] **D-17:** Hook development guide — hook anatomy, lifecycle, worked example from zero `[L]`
-- [ ] **D-18:** FAQ document — 20+ questions across general, architecture, development, operations, security `[M]`
-- [ ] **D-19:** API versioning strategy — versioning scheme, backward compatibility, deprecation policy, breaking changes `[M]`
+- [x] **D-15:** Glossary of Admiral Framework terms — *Completed in Phase 9.* — 35+ terms across 7 domains (governance, work structure, hooks, brain, control plane, quality, configuration) with abbreviations table `[M]`
+- [x] **D-16:** Quick-start tutorial for new contributors — *Completed in Phase 9.* — `docs/QUICK_START.md` with 6-step guided tutorial: prerequisites, clone/build, run tests, understand structure, pick work, make change/PR. Includes troubleshooting section and "what's next" pointers `[M]`
+- [x] **D-17:** Hook development guide — *Completed in Phase 9.* — `docs/HOOK_DEVELOPMENT_GUIDE.md` with hook anatomy (header, boilerplate, exit codes), lifecycle (SessionStart/PreToolUse/PostToolUse), 5-step creation process, worked example (file size guard from zero), testing guide, adapter integration, common patterns (payload extraction, tool filtering, state management, structured output), and pre-submission checklist `[L]`
+- [x] **D-18:** FAQ document — *Completed in Phase 9.* — `docs/FAQ.md` with 22 questions across 5 categories (general, architecture, development, operations, security) `[M]`
+- [x] **D-19:** API versioning strategy — *Completed in Phase 9.* — `docs/API_VERSIONING.md`: semantic versioning per interface, additive-only evolution, backward compat rules, deprecation policy (1 phase cycle), breaking changes checklist, schema version table `[M]`
 
 ---
 
@@ -103,7 +103,7 @@
 - [x] **C-11:** PR size limits — warn on PRs > 500 lines changed, exclude generated/lock files `[S]`
 - [x] **C-12:** Stale branch cleanup automation — auto-delete merged branches, issue for stale unmerged `[S]`
 - [x] **C-13:** CI build caching optimization — *Already configured: setup-node@v6 with `cache: 'npm'` in control-plane-ci.yml.* — cache node_modules, .tsbuildinfo, ShellCheck binary `[S]`
-- [ ] **C-15:** Dependency update automation — *Deferred (requires Dependabot/Renovate configuration).* — Dependabot/Renovate, auto-merge patches, grouped updates `[S]`
+- [x] **C-15:** Dependency update automation — *Completed in Phase 9.* — Enhanced `.github/dependabot.yml`: weekly schedule (Monday), grouped minor/patch updates, commit message prefixes, 10 PR limit for npm, actions grouping `[S]`
 
 ---
 
@@ -112,7 +112,7 @@
 ### 6.1 Self-Enforced Discipline
 
 - [x] **P-01:** `fix:` commits require test changes — CI check warns on fix commits with no test file modifications `[M]`
-- [ ] **P-02:** Documentation discipline — *Deferred to Phase 3 (depends on D-01 style guide).* `[M]`
+- [x] **P-02:** Documentation discipline — *Completed in Phase 9.* — Created `test_documentation.sh` validating: TS module doc comments, hook header blocks (purpose + exit codes), ADR format compliance (Status/Context/Decision/Consequences). CI workflow integration blocked by OAuth `workflow` scope. `[M]`
 
 ### 6.2 Meta-Governance
 

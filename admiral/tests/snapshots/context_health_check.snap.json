@@ -1,0 +1,16 @@
+{
+  "_comment": "Output schema snapshot for context_health_check.sh",
+  "_hook": "context_health_check",
+  "_event": "PostToolUse",
+  "shapes": {
+    "ok": {
+      "status": "string"
+    },
+    "warning": {
+      "status": "string",
+      "alert": "string"
+    }
+  },
+  "required_fields": ["status"],
+  "exit_code": 0
+}

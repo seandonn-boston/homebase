@@ -21,6 +21,6 @@ Claude Code does not natively read `AGENTS.md`. This file is the Claude Code ent
 When starting a new session, orient with:
 
 1. **What to work on:** [`plan/index.md`](plan/index.md) — current scores and all 34 streams
-2. **Execution order:** [`plan/ROADMAP.md`](plan/ROADMAP.md) — 9-phase dependency map
-3. **Current phase:** Phase 0 — Strategy Foundation & Spec Debt Resolution
+2. **Execution order:** [`plan/ROADMAP.md`](plan/ROADMAP.md) — 13-phase dependency map (Phases 0–8 broad architecture, Phases 9–12 gap closure)
+3. **Current phase:** Phase 9 — Quality Rigor & Documentation
 4. **Boundaries:** See `AGENTS.md` § Boundaries before making changes

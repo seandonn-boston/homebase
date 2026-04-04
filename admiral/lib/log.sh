@@ -93,3 +93,6 @@ log_info()  { log_structured info "$@"; }
 log_warn()  { log_structured warn "$@"; }
 log_error() { log_structured error "$@"; }
 log_fatal() { log_structured fatal "$@"; }
+
+# Alias for Q-10 compatibility — log_json is the documented name in ADMIRAL_STYLE.md
+log_json() { log_structured "$@"; }

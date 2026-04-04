@@ -2,7 +2,8 @@
  * Tests for Input Validation Hardening (SEC-12)
  */
 
-import { describe, expect, it } from "vitest";
+import assert from "node:assert/strict";
+import { describe, it } from "node:test";
 import {
   containsInvalidChars,
   containsNullBytes,
@@ -16,114 +17,114 @@ import {
 
 describe("containsNullBytes", () => {
   it("detects null bytes", () => {
-    expect(containsNullBytes("hello\0world")).toBe(true);
+    assert.strictEqual(containsNullBytes("hello\0world"), true);
   });
 
   it("passes clean strings", () => {
-    expect(containsNullBytes("hello world")).toBe(false);
+    assert.strictEqual(containsNullBytes("hello world"), false);
   });
 });
 
 describe("containsInvalidChars", () => {
   it("detects control characters", () => {
-    expect(containsInvalidChars("hello\x01world")).toBe(true);
-    expect(containsInvalidChars("hello\x7fworld")).toBe(true);
+    assert.strictEqual(containsInvalidChars("hello\x01world"), true);
+    assert.strictEqual(containsInvalidChars("hello\x7fworld"), true);
   });
 
   it("allows tabs, newlines, carriage returns", () => {
-    expect(containsInvalidChars("hello\tworld\n")).toBe(false);
-    expect(containsInvalidChars("line1\r\nline2")).toBe(false);
+    assert.strictEqual(containsInvalidChars("hello\tworld\n"), false);
+    assert.strictEqual(containsInvalidChars("line1\r\nline2"), false);
   });
 
   it("allows normal text", () => {
-    expect(containsInvalidChars("Hello World! 123 @#$%")).toBe(false);
+    assert.strictEqual(containsInvalidChars("Hello World! 123 @#$%"), false);
   });
 });
 
 describe("validateSize", () => {
   it("passes within limit", () => {
-    expect(validateSize("hello", 100).valid).toBe(true);
+    assert.strictEqual(validateSize("hello", 100).valid, true);
   });
 
   it("rejects oversized input", () => {
     const result = validateSize("x".repeat(200), 100);
-    expect(result.valid).toBe(false);
-    expect(result.errors[0]).toContain("too large");
+    assert.strictEqual(result.valid, false);
+    assert.ok(result.errors[0].includes("too large"));
   });
 });
 
 describe("validateJson", () => {
   it("validates well-formed JSON", () => {
-    expect(validateJson('{"key":"value"}').valid).toBe(true);
-    expect(validateJson("[]").valid).toBe(true);
-    expect(validateJson('"string"').valid).toBe(true);
+    assert.strictEqual(validateJson('{"key":"value"}').valid, true);
+    assert.strictEqual(validateJson("[]").valid, true);
+    assert.strictEqual(validateJson('"string"').valid, true);
   });
 
   it("rejects malformed JSON", () => {
-    expect(validateJson("{broken").valid).toBe(false);
-    expect(validateJson("not json at all").valid).toBe(false);
+    assert.strictEqual(validateJson("{broken").valid, false);
+    assert.strictEqual(validateJson("not json at all").valid, false);
   });
 });
 
 describe("validatePath", () => {
   it("passes normal paths", () => {
-    expect(validatePath("/tmp/test.txt").valid).toBe(true);
-    expect(validatePath("admiral/lib/test.sh").valid).toBe(true);
+    assert.strictEqual(validatePath("/tmp/test.txt").valid, true);
+    assert.strictEqual(validatePath("admiral/lib/test.sh").valid, true);
   });
 
   it("rejects paths with null bytes", () => {
-    expect(validatePath("/tmp/test\0.txt").valid).toBe(false);
+    assert.strictEqual(validatePath("/tmp/test\0.txt").valid, false);
   });
 
   it("rejects excessively long paths", () => {
     const longPath = "a/".repeat(LIMITS.MAX_PATH_LENGTH);
-    expect(validatePath(longPath).valid).toBe(false);
+    assert.strictEqual(validatePath(longPath).valid, false);
   });
 
   it("rejects excessive path traversal", () => {
-    expect(validatePath("../../../etc/passwd").valid).toBe(false);
+    assert.strictEqual(validatePath("../../../etc/passwd").valid, false);
   });
 
   it("allows limited path traversal", () => {
-    expect(validatePath("../../file.txt").valid).toBe(true);
+    assert.strictEqual(validatePath("../../file.txt").valid, true);
   });
 });
 
 describe("validateRequestBody", () => {
   it("passes valid request bodies", () => {
-    expect(validateRequestBody('{"hello":"world"}').valid).toBe(true);
+    assert.strictEqual(validateRequestBody('{"hello":"world"}').valid, true);
   });
 
   it("rejects null bytes", () => {
     const result = validateRequestBody("hello\0world");
-    expect(result.valid).toBe(false);
-    expect(result.errors).toContain("Request body contains null bytes");
+    assert.strictEqual(result.valid, false);
+    assert.ok(result.errors.includes("Request body contains null bytes"));
   });
 
   it("rejects control characters", () => {
     const result = validateRequestBody("hello\x01world");
-    expect(result.valid).toBe(false);
-    expect(result.errors).toContain("Request body contains invalid control characters");
+    assert.strictEqual(result.valid, false);
+    assert.ok(result.errors.includes("Request body contains invalid control characters"));
   });
 
   it("rejects oversized bodies", () => {
     const result = validateRequestBody("x".repeat(200), 100);
-    expect(result.valid).toBe(false);
+    assert.strictEqual(result.valid, false);
   });
 });
 
 describe("validateJsonRequestBody", () => {
   it("passes valid JSON bodies", () => {
-    expect(validateJsonRequestBody('{"key":"value"}').valid).toBe(true);
+    assert.strictEqual(validateJsonRequestBody('{"key":"value"}').valid, true);
   });
 
   it("rejects non-JSON bodies", () => {
     const result = validateJsonRequestBody("not json");
-    expect(result.valid).toBe(false);
+    assert.strictEqual(result.valid, false);
   });
 
   it("rejects valid JSON with null bytes", () => {
     const result = validateJsonRequestBody('{"key":"val\0ue"}');
-    expect(result.valid).toBe(false);
+    assert.strictEqual(result.valid, false);
   });
 });

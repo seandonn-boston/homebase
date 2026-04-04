@@ -12,8 +12,15 @@ set -euo pipefail
 # Read payload from stdin (includes session_state from adapter)
 PAYLOAD=$(cat)
 
-TOOL_NAME=$(echo "$PAYLOAD" | jq -r '.tool_name // "unknown"')
-PROJECT_DIR=$(echo "$PAYLOAD" | jq -r '.session_state.project_dir // ""' 2>/dev/null)
+# Source hook utilities
+_PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
+if [ -f "$_PROJECT_DIR/admiral/lib/hook_utils.sh" ]; then
+  source "$_PROJECT_DIR/admiral/lib/hook_utils.sh"
+fi
+hook_init "compliance_ethics_advisor"
+
+TOOL_NAME=$(jq_get "$PAYLOAD" '.tool_name' 'unknown')
+PROJECT_DIR=$(jq_get "$PAYLOAD" '.session_state.project_dir')
 if [ -z "$PROJECT_DIR" ]; then
   PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 fi
@@ -24,9 +31,9 @@ ALERTS=""
 if [ "$TOOL_NAME" = "Write" ] || [ "$TOOL_NAME" = "Edit" ]; then
   CONTENT=""
   if [ "$TOOL_NAME" = "Write" ]; then
-    CONTENT=$(echo "$PAYLOAD" | jq -r '.tool_input.content // ""' 2>/dev/null)
+    CONTENT=$(jq_get "$PAYLOAD" '.tool_input.content')
   else
-    CONTENT=$(echo "$PAYLOAD" | jq -r '.tool_input.new_string // ""' 2>/dev/null)
+    CONTENT=$(jq_get "$PAYLOAD" '.tool_input.new_string')
   fi
 
   if [ -n "$CONTENT" ]; then
@@ -58,7 +65,7 @@ if [ "$TOOL_NAME" = "Write" ] || [ "$TOOL_NAME" = "Edit" ]; then
   fi
 
   # Check for writes to compliance-sensitive paths
-  FILE_PATH=$(echo "$PAYLOAD" | jq -r '.tool_input.file_path // ""' 2>/dev/null)
+  FILE_PATH=$(jq_get "$PAYLOAD" '.tool_input.file_path')
   case "$FILE_PATH" in
     *privacy*|*gdpr*|*compliance*|*hipaa*|*pci*)
       ALERTS+="COMPLIANCE (SO-14): Modification to compliance-sensitive file '${FILE_PATH##*/}'. Ensure changes maintain regulatory compliance. Route compliance questions to a human expert if uncertain. "
@@ -67,7 +74,7 @@ if [ "$TOOL_NAME" = "Write" ] || [ "$TOOL_NAME" = "Edit" ]; then
 fi
 
 # --- Track compliance flags from payload state ---
-COMPLIANCE_FLAGS=$(echo "$PAYLOAD" | jq -r '.session_state.hook_state.compliance.flags_count // 0')
+COMPLIANCE_FLAGS=$(jq_get "$PAYLOAD" '.session_state.hook_state.compliance.flags_count' '0')
 
 if [ -n "$ALERTS" ]; then
   COMPLIANCE_FLAGS=$((COMPLIANCE_FLAGS + 1))
@@ -78,7 +85,7 @@ HOOK_STATE=$(jq -n --argjson count "$COMPLIANCE_FLAGS" '{"flags_count": $count}'
 
 # Output
 if [ -n "$ALERTS" ]; then
-  echo "{\"hook_state\": {\"compliance\": $HOOK_STATE}, \"alert\": $(echo "$ALERTS" | jq -Rs '.')}"
+  echo "{\"hook_state\": {\"compliance\": $HOOK_STATE}, \"alert\": $(jq_to_json_string "$ALERTS")}"
 else
   echo "{\"hook_state\": {\"compliance\": $HOOK_STATE}}"
 fi

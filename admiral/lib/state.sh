@@ -146,26 +146,20 @@ increment_state_field() {
   with_state_lock _increment_state_field_inner
 }
 
-# Get token estimation for a tool — reads from central config with hardcoded fallback.
+# Get token estimation for a tool — delegates to hook_config.sh if available,
+# falls back to hardcoded defaults otherwise.
 # Token estimates are rough approximations based on typical Claude Code tool call sizes.
-# Read tools return file content (higher tokens). Agent spawns include full prompts (highest).
-# These defaults are overridable via admiral/config.json → tokenEstimates.
 # Source: empirical observation of ~50 Claude Code sessions, rounded to nearest 100.
 estimate_tokens() {
   local tool_name="$1"
-  local config_file="${CLAUDE_PROJECT_DIR:-$PROJECT_DIR}/admiral/config.json"
 
-  # Try central config first
-  if [ -f "$config_file" ]; then
-    local estimate
-    estimate=$(jq -r --arg t "$tool_name" '.tokenEstimates[$t] // .tokenEstimates.default // 500' "$config_file" 2>/dev/null)
-    if [ -n "$estimate" ] && [ "$estimate" != "null" ]; then
-      echo "$estimate"
-      return
-    fi
+  # Use centralized config if hook_config.sh is loaded
+  if type config_token_estimate &>/dev/null; then
+    config_token_estimate "$tool_name"
+    return
   fi
 
-  # Fallback to hardcoded defaults
+  # Fallback to hardcoded defaults (when hook_config.sh is not sourced)
   case "$tool_name" in
     Bash)         echo 500  ;;
     Read)         echo 1000 ;;

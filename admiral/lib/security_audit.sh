@@ -55,8 +55,8 @@ audit_scope_violation() {
 }
 
 audit_injection_detected() {
-  local _source="$1" severity="$2" details_json="$3"
-  audit_security_event "injection_detected" "flagged" "$severity" "$details_json" "system"
+  local source="$1" severity="$2" details_json="$3"
+  audit_security_event "injection_detected" "flagged" "$severity" "$details_json" "$source"
 }
 
 audit_privilege_escalation() {
@@ -66,8 +66,8 @@ audit_privilege_escalation() {
 }
 
 audit_secret_detected() {
-  local _source="$1" details_json="$2"
-  audit_security_event "secret_detected" "quarantined" "critical" "$details_json" "system"
+  local source="$1" details_json="$2"
+  audit_security_event "secret_detected" "quarantined" "critical" "$details_json" "$source"
 }
 
 audit_zero_trust_failure() {

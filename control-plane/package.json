@@ -12,12 +12,16 @@
     "dev": "tsc --watch",
     "example": "tsc && node dist/examples/demo.js",
     "lint": "npx @biomejs/biome check src/",
-    "lint:fix": "npx @biomejs/biome check --write src/"
+    "lint:fix": "npx @biomejs/biome check --write src/",
+    "test:mutation": "npx stryker run"
   },
   "license": "MIT",
   "devDependencies": {
     "@biomejs/biome": "^2.4.9",
+    "@stryker-mutator/core": "^9.6.0",
+    "@stryker-mutator/typescript-checker": "^9.6.0",
     "@types/node": "^25.5.0",
+    "fast-check": "^4.6.0",
     "typescript": "^6.0.2"
   }
 }

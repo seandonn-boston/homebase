@@ -12,6 +12,15 @@
  */
 
 export { DistributedTracer, TraceSpan } from "./distributed-tracing";
+export {
+  AdmiralError,
+  errorCode,
+  errorMessage,
+  IngestionError,
+  NotFoundError,
+  StateCorruptionError,
+  ValidationError,
+} from "./errors";
 export { AgentEvent, EventListener, EventStream, EventStreamConfig, EventType } from "./events";
 export { FleetDashboard, FleetDashboardData } from "./fleet-dashboard";
 export {

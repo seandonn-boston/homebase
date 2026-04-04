@@ -503,26 +503,24 @@ echo ""
 # ============================================================
 echo "=== Edge Case Tests ==="
 
-# 7a: Malformed JSON input — adapters propagate jq parse error (exit != 0)
-# Note: Per ADR-004 hooks should fail-open, but adapters currently let jq
-# errors propagate. Tracked for fix in Q-02 (standardize hook error handling).
+# 7a: Malformed JSON input — adapters fail-open per ADR-004 (Q-02 fix applied)
 MALFORMED_RC=0
 echo "this is not json at all" | "$HOOKS_DIR/pre_tool_use_adapter.sh" >/dev/null 2>&1 || MALFORMED_RC=$?
-if [ "$MALFORMED_RC" -ne 0 ]; then
+if [ "$MALFORMED_RC" -eq 0 ]; then
   PASS=$((PASS + 1))
-  echo "  PASS: pre_tool_use_adapter rejects malformed JSON (exit $MALFORMED_RC)"
+  echo "  PASS: pre_tool_use_adapter fails-open on malformed JSON (exit 0)"
 else
   FAIL=$((FAIL + 1))
-  echo "  FAIL: pre_tool_use_adapter should reject malformed JSON"
+  echo "  FAIL: pre_tool_use_adapter should fail-open on malformed JSON (got exit $MALFORMED_RC)"
 fi
 MALFORMED_RC2=0
 echo "{{{{not valid json" | "$HOOKS_DIR/post_tool_use_adapter.sh" >/dev/null 2>&1 || MALFORMED_RC2=$?
-if [ "$MALFORMED_RC2" -ne 0 ]; then
+if [ "$MALFORMED_RC2" -eq 0 ]; then
   PASS=$((PASS + 1))
-  echo "  PASS: post_tool_use_adapter rejects malformed JSON (exit $MALFORMED_RC2)"
+  echo "  PASS: post_tool_use_adapter fails-open on malformed JSON (exit 0)"
 else
   FAIL=$((FAIL + 1))
-  echo "  FAIL: post_tool_use_adapter should reject malformed JSON"
+  echo "  FAIL: post_tool_use_adapter should fail-open on malformed JSON (got exit $MALFORMED_RC2)"
 fi
 
 # 7b: Empty stdin — hooks should not crash

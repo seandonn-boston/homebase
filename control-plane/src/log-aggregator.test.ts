@@ -2,10 +2,11 @@
  * Tests for Log Aggregation (OB-06)
  */
 
+import assert from "node:assert/strict";
 import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, it } from "node:test";
 import { LogAggregator } from "./log-aggregator";
 import type { LogEntry } from "./logger";
 
@@ -39,8 +40,8 @@ describe("LogAggregator", () => {
     agg.ingest(makeEntry({ message: "world" }));
 
     const result = agg.query({});
-    expect(result.total).toBe(2);
-    expect(result.entries[0].message).toBe("hello");
+    assert.strictEqual(result.total, 2);
+    assert.strictEqual(result.entries[0].message, "hello");
   });
 
   it("filters by component", () => {
@@ -49,7 +50,7 @@ describe("LogAggregator", () => {
     agg.ingest(makeEntry({ component: "hooks" }));
 
     const result = agg.query({ component: "hooks" });
-    expect(result.total).toBe(2);
+    assert.strictEqual(result.total, 2);
   });
 
   it("filters by level", () => {
@@ -58,7 +59,7 @@ describe("LogAggregator", () => {
     agg.ingest(makeEntry({ level: "info" }));
 
     const result = agg.query({ level: "error" });
-    expect(result.total).toBe(1);
+    assert.strictEqual(result.total, 1);
   });
 
   it("filters by correlation ID", () => {
@@ -66,7 +67,7 @@ describe("LogAggregator", () => {
     agg.ingest(makeEntry({ correlation_id: "trace-2" }));
 
     const result = agg.query({ correlationId: "trace-1" });
-    expect(result.total).toBe(1);
+    assert.strictEqual(result.total, 1);
   });
 
   it("supports full-text search", () => {
@@ -74,8 +75,8 @@ describe("LogAggregator", () => {
     agg.ingest(makeEntry({ message: "Brain query completed" }));
 
     const result = agg.query({ search: "hook" });
-    expect(result.total).toBe(1);
-    expect(result.entries[0].message).toContain("Hook");
+    assert.strictEqual(result.total, 1);
+    assert.ok(result.entries[0].message.includes("Hook"));
   });
 
   it("supports pagination with limit and offset", () => {
@@ -84,12 +85,12 @@ describe("LogAggregator", () => {
     }
 
     const page1 = agg.query({ limit: 3, offset: 0 });
-    expect(page1.entries).toHaveLength(3);
-    expect(page1.total).toBe(10);
+    assert.strictEqual(page1.entries.length, 3);
+    assert.strictEqual(page1.total, 10);
 
     const page2 = agg.query({ limit: 3, offset: 3 });
-    expect(page2.entries).toHaveLength(3);
-    expect(page2.entries[0].message).toBe("msg-3");
+    assert.strictEqual(page2.entries.length, 3);
+    assert.strictEqual(page2.entries[0].message, "msg-3");
   });
 
   it("rotates logs when file exceeds max size", () => {
@@ -106,8 +107,8 @@ describe("LogAggregator", () => {
 
     const logFile = path.join(tmpDir, "admiral.jsonl");
     const rotated1 = `${logFile}.1`;
-    expect(fs.existsSync(logFile)).toBe(true);
-    expect(fs.existsSync(rotated1)).toBe(true);
+    assert.strictEqual(fs.existsSync(logFile), true);
+    assert.strictEqual(fs.existsSync(rotated1), true);
   });
 
   it("returns distinct components", () => {
@@ -116,7 +117,7 @@ describe("LogAggregator", () => {
     agg.ingest(makeEntry({ component: "hooks" }));
 
     const components = agg.getComponents();
-    expect(components).toEqual(["brain", "hooks"]);
+    assert.deepStrictEqual(components, ["brain", "hooks"]);
   });
 
   it("returns log statistics", () => {
@@ -125,10 +126,10 @@ describe("LogAggregator", () => {
     agg.ingest(makeEntry({ level: "info", component: "brain" }));
 
     const stats = agg.getStats();
-    expect(stats.totalEntries).toBe(3);
-    expect(stats.byLevel.info).toBe(2);
-    expect(stats.byLevel.error).toBe(1);
-    expect(stats.byComponent.hooks).toBe(2);
-    expect(stats.byComponent.brain).toBe(1);
+    assert.strictEqual(stats.totalEntries, 3);
+    assert.strictEqual(stats.byLevel.info, 2);
+    assert.strictEqual(stats.byLevel.error, 1);
+    assert.strictEqual(stats.byComponent.hooks, 2);
+    assert.strictEqual(stats.byComponent.brain, 1);
   });
 });

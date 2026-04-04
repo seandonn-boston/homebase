@@ -26,7 +26,7 @@ export function containsNullBytes(input: string): boolean {
 
 /** Check for invalid control characters (except \t, \n, \r) */
 export function containsInvalidChars(input: string): boolean {
-  // biome-ignore lint/suspicious/noControlCharactersInRegex: intentional control char detection
+  // biome-ignore lint/suspicious/noControlCharactersInRegex: intentional security check for control chars
   return /[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/.test(input);
 }
 

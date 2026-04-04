@@ -1,0 +1,257 @@
+#!/bin/bash
+# Admiral Framework — EDD Gate Validator (EDD-02)
+# Executes evaluation specs to verify task completion.
+# Usage: edd_gate <task-id> [--json] [--confirm-probabilistic] [--save-proof]
+#
+# Exit codes:
+#   0 = all checks pass (task is done)
+#   1 = one or more checks failed
+#   2 = spec not found or invalid
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$SCRIPT_DIR/../.." && pwd)}"
+export CLAUDE_PROJECT_DIR="$PROJECT_DIR"
+
+# Source libraries
+if [ -f "$PROJECT_DIR/admiral/lib/edd_spec.sh" ]; then
+  source "$PROJECT_DIR/admiral/lib/edd_spec.sh"
+fi
+if [ -f "$PROJECT_DIR/admiral/lib/jq_helpers.sh" ]; then
+  source "$PROJECT_DIR/admiral/lib/jq_helpers.sh"
+fi
+
+# Parse arguments
+TASK_ID=""
+JSON_MODE=false
+CONFIRM_PROB=false
+SAVE_PROOF=false
+
+for arg in "$@"; do
+  case "$arg" in
+    --json) JSON_MODE=true ;;
+    --confirm-probabilistic) CONFIRM_PROB=true ;;
+    --save-proof) SAVE_PROOF=true ;;
+    -*) echo "Unknown flag: $arg" >&2; exit 2 ;;
+    *) TASK_ID="$arg" ;;
+  esac
+done
+
+if [ -z "$TASK_ID" ]; then
+  echo "Usage: edd_gate <task-id> [--json] [--confirm-probabilistic] [--save-proof]" >&2
+  exit 2
+fi
+
+# Load spec
+SPEC=$(edd_load_spec "$TASK_ID")
+if [ -z "$SPEC" ]; then
+  if [ "$JSON_MODE" = "true" ]; then
+    jq -cn --arg id "$TASK_ID" '{task_id: $id, verdict: "error", reason: "Spec not found"}'
+  else
+    echo "ERROR: No evaluation spec found for $TASK_ID" >&2
+  fi
+  exit 2
+fi
+
+# Validate spec
+VALIDATION=$(edd_validate_spec "$SPEC" 2>/dev/null) || true
+IS_VALID=$(printf '%s' "$VALIDATION" | jq -r '.valid' 2>/dev/null) || IS_VALID="false"
+if [ "$IS_VALID" != "true" ]; then
+  if [ "$JSON_MODE" = "true" ]; then
+    jq -cn --arg id "$TASK_ID" --argjson val "$VALIDATION" '{task_id: $id, verdict: "error", reason: "Invalid spec", validation: $val}'
+  else
+    echo "ERROR: Invalid evaluation spec for $TASK_ID" >&2
+    printf '%s\n' "$VALIDATION" >&2
+  fi
+  exit 2
+fi
+
+# Execute deterministic checks
+DET_TOTAL=$(edd_deterministic_count "$SPEC")
+DET_PASSED=0
+DET_FAILED=0
+DET_RESULTS="[]"
+
+for i in $(seq 0 $((DET_TOTAL - 1))); do
+  CHECK_NAME=$(printf '%s' "$SPEC" | jq -r ".deterministic[$i].name")
+  CHECK_CMD=$(printf '%s' "$SPEC" | jq -r ".deterministic[$i].command")
+  EXPECTED_EXIT=$(printf '%s' "$SPEC" | jq -r ".deterministic[$i].expected_exit")
+  TIMEOUT_MS=$(printf '%s' "$SPEC" | jq -r ".deterministic[$i].timeout_ms // 30000")
+  WORKING_DIR=$(printf '%s' "$SPEC" | jq -r ".deterministic[$i].working_dir // \"\"")
+
+  TIMEOUT_SEC=$((TIMEOUT_MS / 1000))
+  [ "$TIMEOUT_SEC" -lt 1 ] && TIMEOUT_SEC=1
+
+  EXEC_DIR="$PROJECT_DIR"
+  if [ -n "$WORKING_DIR" ] && [ "$WORKING_DIR" != "null" ]; then
+    # Reject path traversal in working_dir
+    if printf '%s' "$WORKING_DIR" | grep -qE '(\.\.|^/)'; then
+      echo "ERROR: Invalid working_dir (path traversal rejected): $WORKING_DIR" >&2
+      exit 2
+    fi
+    EXEC_DIR="$PROJECT_DIR/$WORKING_DIR"
+  fi
+
+  ACTUAL_EXIT=0
+  CHECK_OUTPUT=$(cd "$EXEC_DIR" && timeout "$TIMEOUT_SEC" bash -c "$CHECK_CMD" 2>&1) || ACTUAL_EXIT=$?
+
+  if [ "$ACTUAL_EXIT" -eq "$EXPECTED_EXIT" ]; then
+    DET_PASSED=$((DET_PASSED + 1))
+    STATUS="pass"
+    if [ "$JSON_MODE" != "true" ]; then
+      echo "  [PASS] $CHECK_NAME"
+    fi
+  else
+    DET_FAILED=$((DET_FAILED + 1))
+    STATUS="fail"
+    if [ "$JSON_MODE" != "true" ]; then
+      echo "  [FAIL] $CHECK_NAME (expected exit $EXPECTED_EXIT, got $ACTUAL_EXIT)"
+    fi
+  fi
+
+  # Build output hash for proof artifacts
+  OUTPUT_HASH=$(printf '%s' "$CHECK_OUTPUT" | sha256sum 2>/dev/null | cut -c1-16 || echo "n/a")
+
+  DET_RESULTS=$(printf '%s' "$DET_RESULTS" | jq -c \
+    --arg name "$CHECK_NAME" \
+    --arg cmd "$CHECK_CMD" \
+    --argjson expected "$EXPECTED_EXIT" \
+    --argjson actual "$ACTUAL_EXIT" \
+    --arg status "$STATUS" \
+    --arg hash "$OUTPUT_HASH" \
+    '. + [{name: $name, command: $cmd, expected_exit: $expected, actual_exit: $actual, status: $status, output_hash: $hash}]')
+done
+
+# Evaluate probabilistic checks
+PROB_TOTAL=$(edd_probabilistic_count "$SPEC")
+PROB_CONFIRMED=0
+PROB_PENDING=0
+PROB_RESULTS="[]"
+
+for i in $(seq 0 $((PROB_TOTAL - 1))); do
+  CHECK_NAME=$(printf '%s' "$SPEC" | jq -r ".probabilistic[$i].name")
+  CHECK_DESC=$(printf '%s' "$SPEC" | jq -r ".probabilistic[$i].description")
+  VERIFY_METHOD=$(printf '%s' "$SPEC" | jq -r ".probabilistic[$i].verification_method")
+
+  if [ "$CONFIRM_PROB" = "true" ]; then
+    PROB_CONFIRMED=$((PROB_CONFIRMED + 1))
+    STATUS="confirmed"
+    if [ "$JSON_MODE" != "true" ]; then
+      echo "  [CONFIRMED] $CHECK_NAME"
+    fi
+  else
+    PROB_PENDING=$((PROB_PENDING + 1))
+    STATUS="pending"
+    if [ "$JSON_MODE" != "true" ]; then
+      echo "  [PENDING] $CHECK_NAME — requires $VERIFY_METHOD"
+    fi
+  fi
+
+  PROB_RESULTS=$(printf '%s' "$PROB_RESULTS" | jq -c \
+    --arg name "$CHECK_NAME" \
+    --arg desc "$CHECK_DESC" \
+    --arg method "$VERIFY_METHOD" \
+    --arg status "$STATUS" \
+    '. + [{name: $name, description: $desc, verification_method: $method, status: $status}]')
+done
+
+# Check CI status if required
+CI_REQUIRED=$(printf '%s' "$SPEC" | jq -r '.ci_required // true')
+CI_STATUS="n/a"
+if [ "$CI_REQUIRED" = "true" ]; then
+  # Check latest CI run status via gh CLI
+  LATEST_RUN=$(gh run list --limit 1 --json status,conclusion 2>/dev/null) || LATEST_RUN="[]"
+  if [ "$LATEST_RUN" != "[]" ] && [ -n "$LATEST_RUN" ]; then
+    CI_CONCLUSION=$(printf '%s' "$LATEST_RUN" | jq -r '.[0].conclusion // "unknown"' 2>/dev/null) || CI_CONCLUSION="unknown"
+    CI_STATUS="$CI_CONCLUSION"
+  else
+    CI_STATUS="unknown"
+  fi
+fi
+
+# Determine verdict
+ALL_DET_PASS=$([ "$DET_FAILED" -eq 0 ] && echo "true" || echo "false")
+ALL_PROB_DONE=$([ "$PROB_PENDING" -eq 0 ] && echo "true" || echo "false")
+
+if [ "$ALL_DET_PASS" = "true" ] && [ "$ALL_PROB_DONE" = "true" ]; then
+  VERDICT="pass"
+else
+  VERDICT="fail"
+fi
+
+# Output
+if [ "$JSON_MODE" = "true" ]; then
+  jq -cn \
+    --arg id "$TASK_ID" \
+    --arg verdict "$VERDICT" \
+    --argjson det_results "$DET_RESULTS" \
+    --argjson prob_results "$PROB_RESULTS" \
+    --argjson det_passed "$DET_PASSED" \
+    --argjson det_failed "$DET_FAILED" \
+    --argjson prob_confirmed "$PROB_CONFIRMED" \
+    --argjson prob_pending "$PROB_PENDING" \
+    --arg ci_status "$CI_STATUS" \
+    --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+    '{
+      task_id: $id,
+      verdict: $verdict,
+      timestamp: $ts,
+      deterministic: {passed: $det_passed, failed: $det_failed, total: ($det_passed + $det_failed), results: $det_results},
+      probabilistic: {confirmed: $prob_confirmed, pending: $prob_pending, total: ($prob_confirmed + $prob_pending), results: $prob_results},
+      ci_status: $ci_status
+    }'
+else
+  echo ""
+  echo "=== EDD Gate: $TASK_ID ==="
+  echo "  Deterministic: $DET_PASSED/$DET_TOTAL passed"
+  if [ "$PROB_TOTAL" -gt 0 ]; then
+    echo "  Probabilistic: $PROB_CONFIRMED/$PROB_TOTAL confirmed"
+  fi
+  echo "  CI: $CI_STATUS"
+  echo "  Verdict: $VERDICT"
+fi
+
+# Save proof artifact if requested (EDD-04)
+if [ "$SAVE_PROOF" = "true" ]; then
+  PROOF_DIR="$PROJECT_DIR/.admiral/proofs"
+  mkdir -p "$PROOF_DIR"
+  PROOF_FILE="$PROOF_DIR/${TASK_ID}.proof.json"
+
+  # Get CI run URL if available
+  CI_RUN_URL=""
+  if [ "$CI_REQUIRED" = "true" ]; then
+    CI_RUN_URL=$(gh run list --limit 1 --json url --jq '.[0].url' 2>/dev/null) || CI_RUN_URL=""
+  fi
+
+  jq -cn \
+    --arg id "$TASK_ID" \
+    --arg verdict "$VERDICT" \
+    --argjson det_results "$DET_RESULTS" \
+    --argjson prob_results "$PROB_RESULTS" \
+    --argjson det_passed "$DET_PASSED" \
+    --argjson det_failed "$DET_FAILED" \
+    --argjson prob_confirmed "$PROB_CONFIRMED" \
+    --argjson prob_pending "$PROB_PENDING" \
+    --arg ci_status "$CI_STATUS" \
+    --arg ci_url "$CI_RUN_URL" \
+    --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+    '{
+      task_id: $id,
+      verdict: $verdict,
+      timestamp: $ts,
+      deterministic: {passed: $det_passed, failed: $det_failed, total: ($det_passed + $det_failed), results: $det_results},
+      probabilistic: {confirmed: $prob_confirmed, pending: $prob_pending, total: ($prob_confirmed + $prob_pending), results: $prob_results},
+      ci_status: $ci_status,
+      ci_run_url: $ci_url
+    }' > "$PROOF_FILE"
+
+  if [ "$JSON_MODE" != "true" ]; then
+    echo "  Proof saved: $PROOF_FILE"
+  fi
+fi
+
+if [ "$VERDICT" = "pass" ]; then
+  exit 0
+else
+  exit 1
+fi

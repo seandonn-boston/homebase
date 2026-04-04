@@ -52,16 +52,18 @@ describe("AdmiralServer — edge cases", () => {
     assert.equal(res.status, 404); // /api/events?... !== /api/events
   });
 
-  it("/api/agents/resume/resume is rejected (resume is not a valid agent ID)", async () => {
+  it("/api/agents/resume/resume matches route with id='resume'", async () => {
+    // "resume" passes VALID_ID (/^[a-zA-Z0-9_-]+$/) so the route matches
     const res = await httpGet(`${baseUrl}/api/agents/resume/resume`);
-    assert.equal(res.status, 400);
+    assert.equal(res.status, 200);
     const data = JSON.parse(res.body);
-    assert.ok(data.error.includes("invalid"));
+    assert.equal(data.resumed, "resume");
   });
 
-  it("/api/alerts/resolve/resolve is rejected", async () => {
+  it("/api/alerts/resolve/resolve matches route with id='resolve'", async () => {
+    // "resolve" passes VALID_ID so the route matches
     const res = await httpGet(`${baseUrl}/api/alerts/resolve/resolve`);
-    assert.equal(res.status, 400);
+    assert.equal(res.status, 200);
   });
 
   it("/api/agents//resume (empty agent ID) returns 400", async () => {

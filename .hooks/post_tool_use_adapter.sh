@@ -1,7 +1,7 @@
 #!/bin/bash
 # Admiral Framework — PostToolUse Hook Adapter
 # Translates Claude Code PostToolUse payload to Admiral hook contracts.
-# Fires in order: token_budget_tracker, loop_detector, context_health_check (every 10th), zero_trust_validator, compliance_ethics_advisor, brain_context_router
+# Fires in order: token_budget_tracker, loop_detector, context_health_check (every 10th), zero_trust_validator, compliance_ethics_advisor, brain_context_router, repeat_audit_logger
 # DESIGN PRINCIPLE: All hooks are advisory-only (exit 0). No hook can block tool use.
 # Hook failures are isolated — one failing hook cannot cascade into others.
 set -euo pipefail
@@ -19,11 +19,16 @@ else
   exit 0
 fi
 
+# Source jq helpers -- fail-open if missing
+if [ -f "$PROJECT_DIR/admiral/lib/jq_helpers.sh" ]; then
+  source "$PROJECT_DIR/admiral/lib/jq_helpers.sh"
+fi
+
 # Read Claude Code payload from stdin
 PAYLOAD=$(cat)
 
 # Extract fields
-TOOL_NAME=$(echo "$PAYLOAD" | jq -r '.tool_name // "unknown"')
+TOOL_NAME=$(jq_get "$PAYLOAD" '.tool_name' 'unknown')
 
 # Ensure hook error log directory exists
 mkdir -p "$PROJECT_DIR/.admiral"
@@ -32,17 +37,17 @@ HOOK_ERROR_LOG="$PROJECT_DIR/.admiral/hook_errors.log"
 # Load session state — fail-open if state is corrupt
 STATE=$(load_state 2>>"$HOOK_ERROR_LOG") || STATE='{}'
 # Validate loaded state is parseable JSON
-if ! echo "$STATE" | jq empty 2>/dev/null; then
+if ! jq_is_valid "$STATE"; then
   # State is corrupt — reset it and continue
   init_session_state "recovery-$(date +%s)"
   STATE=$(load_state 2>/dev/null) || STATE='{}'
 fi
 
-TOOL_CALL_COUNT=$(echo "$STATE" | jq -r '.tool_call_count // 0')
+TOOL_CALL_COUNT=$(jq_get "$STATE" '.tool_call_count' '0')
 TOOL_CALL_COUNT=$((TOOL_CALL_COUNT + 1))
 
 # Update tool call count
-STATE=$(echo "$STATE" | jq --argjson c "$TOOL_CALL_COUNT" '.tool_call_count = $c')
+STATE=$(jq_set "$STATE" '.tool_call_count' "$TOOL_CALL_COUNT")
 
 # Collect hook output messages
 MESSAGES=""
@@ -50,13 +55,13 @@ MESSAGES=""
 # --- Hook 1: token_budget_tracker (isolated) ---
 if [ -x "$SCRIPT_DIR/token_budget_tracker.sh" ]; then
   TRACKER_OUTPUT=""
-  TRACKER_OUTPUT=$(echo "$PAYLOAD" | jq --argjson state "$STATE" '. + {session_state: $state}' | "$SCRIPT_DIR/token_budget_tracker.sh" 2>>"$HOOK_ERROR_LOG") || true
+  TRACKER_OUTPUT=$(jq_merge "$PAYLOAD" 'session_state' "$STATE" | "$SCRIPT_DIR/token_budget_tracker.sh" 2>>"$HOOK_ERROR_LOG") || true
   if [ -n "$TRACKER_OUTPUT" ]; then
-    NEW_TOKENS=$(echo "$TRACKER_OUTPUT" | jq -r '.tokens_used // empty' 2>/dev/null) || true
+    NEW_TOKENS=$(jq_get "$TRACKER_OUTPUT" '.tokens_used') || true
     if [ -n "$NEW_TOKENS" ]; then
-      STATE=$(echo "$STATE" | jq --argjson t "$NEW_TOKENS" '.tokens_used = $t')
+      STATE=$(jq_set "$STATE" '.tokens_used' "$NEW_TOKENS")
     fi
-    ALERT=$(echo "$TRACKER_OUTPUT" | jq -r '.alert // empty' 2>/dev/null) || true
+    ALERT=$(jq_get "$TRACKER_OUTPUT" '.alert') || true
     if [ -n "$ALERT" ]; then
       MESSAGES+="[Budget] $ALERT\n"
     fi
@@ -64,25 +69,25 @@ if [ -x "$SCRIPT_DIR/token_budget_tracker.sh" ]; then
 fi
 
 # Update tokens_used for event logging
-TOKENS_USED=$(echo "$STATE" | jq -r '.tokens_used // 0')
+TOKENS_USED=$(jq_get "$STATE" '.tokens_used' '0')
 
 # Extract agent identity for event logging
-SESSION_ID=$(echo "$STATE" | jq -r '.session_id // "unknown"')
+SESSION_ID=$(jq_get "$STATE" '.session_id' 'unknown')
 AGENT_ID="${ADMIRAL_AGENT_ID:-claude-code}"
 AGENT_NAME="${ADMIRAL_AGENT_NAME:-Claude Code Agent}"
 
 # --- Hook 2: loop_detector (isolated, advisory only) ---
 if [ -x "$SCRIPT_DIR/loop_detector.sh" ]; then
   LOOP_OUTPUT=""
-  LOOP_OUTPUT=$(echo "$PAYLOAD" | jq --argjson state "$STATE" '. + {session_state: $state}' | "$SCRIPT_DIR/loop_detector.sh" 2>>"$HOOK_ERROR_LOG") || true
+  LOOP_OUTPUT=$(jq_merge "$PAYLOAD" 'session_state' "$STATE" | "$SCRIPT_DIR/loop_detector.sh" 2>>"$HOOK_ERROR_LOG") || true
   if [ -n "$LOOP_OUTPUT" ]; then
     # Update loop detector state if returned
-    LOOP_STATE=$(echo "$LOOP_OUTPUT" | jq '.hook_state.loop_detector // empty' 2>/dev/null) || true
+    LOOP_STATE=$(jq_get "$LOOP_OUTPUT" '.hook_state.loop_detector') || true
     if [ -n "$LOOP_STATE" ] && [ "$LOOP_STATE" != "null" ]; then
-      STATE=$(echo "$STATE" | jq --argjson ls "$LOOP_STATE" '.hook_state.loop_detector = $ls')
+      STATE=$(jq_set "$STATE" '.hook_state.loop_detector' "$LOOP_STATE")
     fi
     # Capture advisory alert from loop detector
-    LOOP_ALERT=$(echo "$LOOP_OUTPUT" | jq -r '.alert // empty' 2>/dev/null) || true
+    LOOP_ALERT=$(jq_get "$LOOP_OUTPUT" '.alert') || true
     if [ -n "$LOOP_ALERT" ]; then
       MESSAGES+="[Loop] $LOOP_ALERT\n"
     fi
@@ -92,9 +97,9 @@ fi
 # --- Hook 3: context_health_check (every 10th tool call, isolated, advisory only) ---
 if [ $((TOOL_CALL_COUNT % 10)) -eq 0 ] && [ -x "$SCRIPT_DIR/context_health_check.sh" ]; then
   HEALTH_OUTPUT=""
-  HEALTH_OUTPUT=$(echo "$PAYLOAD" | jq --argjson state "$STATE" '. + {session_state: $state}' | "$SCRIPT_DIR/context_health_check.sh" 2>>"$HOOK_ERROR_LOG") || true
+  HEALTH_OUTPUT=$(jq_merge "$PAYLOAD" 'session_state' "$STATE" | "$SCRIPT_DIR/context_health_check.sh" 2>>"$HOOK_ERROR_LOG") || true
   if [ -n "$HEALTH_OUTPUT" ]; then
-    HEALTH_ALERT=$(echo "$HEALTH_OUTPUT" | jq -r '.alert // empty' 2>/dev/null) || true
+    HEALTH_ALERT=$(jq_get "$HEALTH_OUTPUT" '.alert') || true
     if [ -n "$HEALTH_ALERT" ]; then
       MESSAGES+="[Context] $HEALTH_ALERT\n"
     fi
@@ -104,13 +109,13 @@ fi
 # --- Hook 4: zero_trust_validator (SO-12, isolated, advisory only) ---
 if [ -x "$SCRIPT_DIR/zero_trust_validator.sh" ]; then
   ZT_OUTPUT=""
-  ZT_OUTPUT=$(echo "$PAYLOAD" | jq --argjson state "$STATE" '. + {session_state: $state}' | "$SCRIPT_DIR/zero_trust_validator.sh" 2>>"$HOOK_ERROR_LOG") || true
+  ZT_OUTPUT=$(jq_merge "$PAYLOAD" 'session_state' "$STATE" | "$SCRIPT_DIR/zero_trust_validator.sh" 2>>"$HOOK_ERROR_LOG") || true
   if [ -n "$ZT_OUTPUT" ]; then
-    ZT_STATE=$(echo "$ZT_OUTPUT" | jq '.hook_state.zero_trust // empty' 2>/dev/null) || true
+    ZT_STATE=$(jq_get "$ZT_OUTPUT" '.hook_state.zero_trust') || true
     if [ -n "$ZT_STATE" ] && [ "$ZT_STATE" != "null" ]; then
-      STATE=$(echo "$STATE" | jq --argjson zs "$ZT_STATE" '.hook_state.zero_trust = $zs')
+      STATE=$(jq_set "$STATE" '.hook_state.zero_trust' "$ZT_STATE")
     fi
-    ZT_ALERT=$(echo "$ZT_OUTPUT" | jq -r '.alert // empty' 2>/dev/null) || true
+    ZT_ALERT=$(jq_get "$ZT_OUTPUT" '.alert') || true
     if [ -n "$ZT_ALERT" ]; then
       MESSAGES+="[Zero-Trust] $ZT_ALERT\n"
     fi
@@ -120,13 +125,13 @@ fi
 # --- Hook 5: compliance_ethics_advisor (SO-14, isolated, advisory only) ---
 if [ -x "$SCRIPT_DIR/compliance_ethics_advisor.sh" ]; then
   COMP_OUTPUT=""
-  COMP_OUTPUT=$(echo "$PAYLOAD" | jq --argjson state "$STATE" '. + {session_state: $state}' | "$SCRIPT_DIR/compliance_ethics_advisor.sh" 2>>"$HOOK_ERROR_LOG") || true
+  COMP_OUTPUT=$(jq_merge "$PAYLOAD" 'session_state' "$STATE" | "$SCRIPT_DIR/compliance_ethics_advisor.sh" 2>>"$HOOK_ERROR_LOG") || true
   if [ -n "$COMP_OUTPUT" ]; then
-    COMP_STATE=$(echo "$COMP_OUTPUT" | jq '.hook_state.compliance // empty' 2>/dev/null) || true
+    COMP_STATE=$(jq_get "$COMP_OUTPUT" '.hook_state.compliance') || true
     if [ -n "$COMP_STATE" ] && [ "$COMP_STATE" != "null" ]; then
-      STATE=$(echo "$STATE" | jq --argjson cs "$COMP_STATE" '.hook_state.compliance = $cs')
+      STATE=$(jq_set "$STATE" '.hook_state.compliance' "$COMP_STATE")
     fi
-    COMP_ALERT=$(echo "$COMP_OUTPUT" | jq -r '.alert // empty' 2>/dev/null) || true
+    COMP_ALERT=$(jq_get "$COMP_OUTPUT" '.alert') || true
     if [ -n "$COMP_ALERT" ]; then
       MESSAGES+="[Compliance] $COMP_ALERT\n"
     fi
@@ -136,15 +141,54 @@ fi
 # --- Hook 6: brain_context_router (isolated, advisory only) ---
 if [ -x "$SCRIPT_DIR/brain_context_router.sh" ]; then
   BRAIN_OUTPUT=""
-  BRAIN_OUTPUT=$(echo "$PAYLOAD" | jq --argjson state "$STATE" '. + {session_state: $state}' | "$SCRIPT_DIR/brain_context_router.sh" 2>>"$HOOK_ERROR_LOG") || true
+  BRAIN_OUTPUT=$(jq_merge "$PAYLOAD" 'session_state' "$STATE" | "$SCRIPT_DIR/brain_context_router.sh" 2>>"$HOOK_ERROR_LOG") || true
   if [ -n "$BRAIN_OUTPUT" ]; then
-    BRAIN_STATE=$(echo "$BRAIN_OUTPUT" | jq '.hook_state.brain_context_router // empty' 2>/dev/null) || true
+    BRAIN_STATE=$(jq_get "$BRAIN_OUTPUT" '.hook_state.brain_context_router') || true
     if [ -n "$BRAIN_STATE" ] && [ "$BRAIN_STATE" != "null" ]; then
-      STATE=$(echo "$STATE" | jq --argjson bs "$BRAIN_STATE" '.hook_state.brain_context_router = $bs')
+      STATE=$(jq_set "$STATE" '.hook_state.brain_context_router' "$BRAIN_STATE")
     fi
-    BRAIN_ALERT=$(echo "$BRAIN_OUTPUT" | jq -r '.alert // empty' 2>/dev/null) || true
+    BRAIN_ALERT=$(jq_get "$BRAIN_OUTPUT" '.alert') || true
     if [ -n "$BRAIN_ALERT" ]; then
       MESSAGES+="[Context Routing] $BRAIN_ALERT\n"
+    fi
+  fi
+fi
+
+# --- Hook 7: repeat_audit_logger (iteration boundary detection, isolated, advisory only) ---
+# Scans tool output for REPEAT iteration markers and logs to repeat_audit.jsonl.
+# Tracks last known iteration in session state to avoid duplicate entries.
+if [ -x "$SCRIPT_DIR/repeat_audit_logger.sh" ]; then
+  TOOL_OUTPUT=$(jq_get "$PAYLOAD" '.tool_output') || TOOL_OUTPUT=""
+  # Match "REPEAT iteration N" or "REPEAT ITERATION N" (from output contract)
+  ITER_MATCH=$(echo "$TOOL_OUTPUT" | grep -oiE 'REPEAT (iteration|ITERATION) [0-9]+' | head -1) || true
+  if [ -n "$ITER_MATCH" ]; then
+    ITER_NUM=$(echo "$ITER_MATCH" | grep -oE '[0-9]+')
+    LAST_ITER=$(jq_get "$STATE" '.hook_state.repeat_audit.last_iteration' '-1')
+    # Only log if this is a new iteration (avoid duplicates from multi-line output)
+    if [ "$ITER_NUM" != "$LAST_ITER" ]; then
+      # Extract status from output contract pattern "STATUS: [Complete | Blocked | Terminated]"
+      ITER_STATUS=$(echo "$TOOL_OUTPUT" | grep -oE 'STATUS: \w+' | head -1 | sed 's/STATUS: //') || ITER_STATUS="in_progress"
+      # Extract task chain if present
+      ITER_TASK=$(echo "$TOOL_OUTPUT" | grep -oE 'TASK EXECUTION:.*' | head -1 | sed 's/TASK EXECUTION: //') || ITER_TASK=""
+      # Extract repeatFlag status
+      ITER_RF=$(echo "$TOOL_OUTPUT" | grep -oE 'REPEATFLAG: .*' | head -1 | sed 's/REPEATFLAG: //') || ITER_RF=""
+      # Extract endRepeat status
+      ITER_ER=$(echo "$TOOL_OUTPUT" | grep -oE 'ENDREPEAT: .*' | head -1 | sed 's/ENDREPEAT: //') || ITER_ER=""
+      # Extract exit strategy status
+      ITER_ES=$(echo "$TOOL_OUTPUT" | grep -oE 'EXIT STRATEGY: .*' | head -1 | sed 's/EXIT STRATEGY: //') || ITER_ES=""
+      # Fire the audit logger
+      jq -n \
+        --argjson iter "$ITER_NUM" \
+        --arg status "${ITER_STATUS:-in_progress}" \
+        --arg task "$ITER_TASK" \
+        --arg rf "$ITER_RF" \
+        --arg er "$ITER_ER" \
+        --arg es "$ITER_ES" \
+        '{iteration: $iter, status: $status, task: $task, repeatFlag: $rf, endRepeat: $er, exitStrategy: $es}' \
+        | "$SCRIPT_DIR/repeat_audit_logger.sh" 2>>"$HOOK_ERROR_LOG" || true
+      # Update state with last seen iteration
+      STATE=$(jq_set "$STATE" '.hook_state.repeat_audit' "{\"last_iteration\": $ITER_NUM}")
+      MESSAGES+="[Repeat Audit] Iteration $ITER_NUM logged\n"
     fi
   fi
 fi
@@ -154,7 +198,7 @@ echo "$STATE" | save_state 2>>"$HOOK_ERROR_LOG" || true
 
 # Log events to JSONL — enriched schema for control plane ingestion
 EVENT_LOG="$PROJECT_DIR/.admiral/event_log.jsonl"
-TRACE_ID=$(echo "$STATE" | jq -r '.trace_id // "unknown"')
+TRACE_ID=$(jq_get "$STATE" '.trace_id' 'unknown')
 EVENT_TS=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 
 # Primary event: tool_called

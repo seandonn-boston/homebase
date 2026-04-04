@@ -34,14 +34,15 @@ Spec reference: `aiStrat/admiral/spec/part11-protocols.md`
 
 ## Current Focus
 
-**Phase 8 — Excellence, Validation & Strategic Positioning**
+**Phase 9 — Quality Rigor & Documentation** (gap closure)
 
-The project follows a [9-phase roadmap](plan/ROADMAP.md). Phases 0-7 are complete. Current priorities:
+The project follows a [13-phase roadmap](plan/ROADMAP.md). Phases 0–8 built the broad architecture (~85% of items). Phases 9–12 close depth gaps. Current priorities:
 
-1. Exemplary Codebase (Stream 13: X-01 to X-18)
-2. Thesis Validation (Stream 33: TV-01 to TV-09)
-3. Strategic Positioning (Stream 12: R-01 to R-11)
-4. Inevitable Features (Stream 28: IF-01 to IF-13)
+1. Testing depth: property tests, snapshot tests, EDD gate (todo/03)
+2. Code quality: jq helpers, typed error hierarchy, exit code taxonomy (todo/03)
+3. Documentation: ADMIRAL_STYLE.md, 9 ADRs, runbook, guides, glossary (todo/04)
+4. CI hardening: matrix builds, CodeQL, dependency automation (todo/04)
+5. Self-enforcement: doc discipline, SO compliance audit, hook coverage (todo/04)
 
 Full roadmap: [`plan/index.md`](plan/index.md) | Execution phasing: [`plan/ROADMAP.md`](plan/ROADMAP.md)
 

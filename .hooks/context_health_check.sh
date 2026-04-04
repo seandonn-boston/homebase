@@ -6,6 +6,13 @@
 # Timeout: 10s
 set -euo pipefail
 
+# Source hook utilities
+_PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
+if [ -f "$_PROJECT_DIR/admiral/lib/hook_utils.sh" ]; then
+  source "$_PROJECT_DIR/admiral/lib/hook_utils.sh"
+fi
+hook_init "context_health_check"
+
 # Read payload from stdin
 PAYLOAD=$(cat)
 

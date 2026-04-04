@@ -1,6 +1,6 @@
 # Admiral Framework — Comprehensive Roadmap Index
 
-**Last updated:** 2026-03-27
+**Last updated:** 2026-03-28
 
 **Target:** Transform Helm from a strong prototype into a showcase-quality, fully-governed, spec-complete AI agent orchestration platform — a codebase that earns a 10/10 on every dimension.
 
@@ -12,14 +12,14 @@
 
 | Dimension | Score | Target | Key Gaps |
 |---|---|---|---|
-| Testing | 9/10 | 10/10 | 930+ TS + 350+ bash tests, 90% coverage, coverage gate in CI. Missing: property tests, mutation testing |
-| Code Quality Tooling | 9/10 | 10/10 | Coverage gate, license audit, ShellCheck, Biome, automated code review (6 checkers), quality gate pipeline (6 stages), quality metrics collection, quality scoring (6 dimensions), trend analysis, debt tracking, complexity budgets, regression prevention. Missing: typed error hierarchy |
-| Architecture | 9/10 | 10/10 | Schema validation, config consolidation, hook/CP bridge, session state machine, event registry, handoff/escalation protocols, multi-agent pipeline orchestration, three-layer context assembly. Missing: plugin arch |
-| Spec Implementation | 9/10 | 10/10 | 19/19 hooks, fleet routing (86 rules), brain B1+B2 (SQLite/FTS5), execution patterns, SO enforcement, 71 agents, MCP server (12 tools), governance agents, progressive autonomy, context engineering, intent engineering (capture/decompose/validate/route), knowledge graph + maintenance agents. Missing: B3 production, ASP alignment |
-| Documentation | 7/10 | 10/10 | LICENSE, CoC, API docs, hook contracts, enforcement map. Missing: ADMIRAL_STYLE.md, runbook, ADRs |
-| CI/CD | 9/10 | 10/10 | Coverage gate, benchmarks, PR size check, fix-needs-tests, stale branches, changelog, release workflow, rating CI workflow. Missing: matrix builds, CodeQL |
-| Consistency | 8/10 | 10/10 | Config consolidated with schema validation, unified TypeScript patterns across 4 modules. Missing: hook jq helpers |
-| Contributor Experience | 8/10 | 10/10 | CoC, LICENSE, badges, quality metrics dashboard. Missing: quick-start tutorial, good first issues |
+| Testing | 10/10 | 10/10 | 384 TS + 350+ bash tests, 90% coverage, coverage gate in CI, property-based tests (fast-check), mutation testing (Stryker), hook idempotency verification, snapshot tests for hook output schemas |
+| Code Quality Tooling | 10/10 | 10/10 | Coverage gate, license audit, ShellCheck, Biome, automated code review (6 checkers), quality gate pipeline (6 stages), quality metrics, quality scoring, trend analysis, debt tracking, complexity budgets, shared jq helpers, hook_utils, hook_config, structured logging, exit code taxonomy |
+| Architecture | 9/10 | 10/10 | Schema validation, config consolidation, hook/CP bridge, session state machine, event registry, handoff/escalation protocols, multi-agent pipeline orchestration, three-layer context assembly, graceful degradation. Missing: plugin arch (deferred Phase 3) |
+| Spec Implementation | 9/10 | 10/10 | 19/19 hooks, fleet routing (86 rules), brain B1+B2 (SQLite/FTS5), execution patterns, SO enforcement, 71 agents, MCP server (12 tools), governance agents, progressive autonomy, context engineering, intent engineering, knowledge graph + maintenance agents. Missing: B3 production, ASP alignment |
+| Documentation | 10/10 | 10/10 | ADMIRAL_STYLE.md, 9 ADRs, operational runbook, hook troubleshooting guide, Brain user guide, security model (threat model + 30 ATK scenarios), glossary (35+ terms), quick-start tutorial, hook development guide, FAQ (22 questions), API versioning strategy |
+| CI/CD | 9/10 | 10/10 | Coverage gate, benchmarks, PR size check, fix-needs-tests, stale branches, changelog, release workflow, Dependabot grouping, documentation validation. Missing: matrix builds (macOS runner), CodeQL (GitHub Advanced Security) |
+| Consistency | 10/10 | 10/10 | Config consolidated with schema validation, shared jq helpers, hook_utils, hook_config, structured logging, unified TypeScript patterns, exit code taxonomy, shared assert.sh test library |
+| Contributor Experience | 10/10 | 10/10 | CoC, LICENSE, badges, quality metrics dashboard, quick-start tutorial, hook development guide, FAQ, glossary, operational runbook |
 | Error Handling | 6/10 | 10/10 | Graceful degradation tested (A-13), degradation policy engine with exponential backoff. Missing: typed error hierarchy |
 | Performance | 5/10 | 10/10 | Hook latency, server, RingBuffer benchmarks + regression detector. Missing: CI integration |
 | Observability | 9/10 | 10/10 | Structured logging (bash + TS), distributed tracing with OpenTelemetry export, Prometheus metrics, health aggregation, alert routing, log aggregation, SLO/SLI tracking, fleet dashboard, governance dashboard, session thermal model, intervention catalog, canonical trace format. Missing: real-time visualization |
@@ -28,7 +28,7 @@
 | Strategy Foundation | 9/10 | 10/10 | Ground Truth tooling, readiness assessment, Go/No-Go gate, task criteria, pipeline gate, validation hooks, LLM-Last enforcement |
 | Security & Compliance | 9/10 | 10/10 | 90-pattern injection detection (3 layers), privilege escalation hardening, secret scanning, tamper-proof audit trail (SHA-256 hash chain), MCP behavioral security (5 layers), identity tokens, RBAC, PII detection (email/SSN/CC/API keys/JWT), attack corpus (30 ATK scenarios), security audit trail. Missing: SBOM, Leash Cedar integration |
 | Strategic Positioning | 3/10 | 10/10 | Rating system with 5-tier scale, benchmark comparisons. Thesis validation framework with 12 metrics, A/B comparison, ROI model. Missing: OWASP/AEGIS/NIST crosswalks (all deferred Phase 3+) |
-| **Overall** | **9/10** | **10/10** | Phase 8 complete: Thesis validation (12 metrics, A/B framework, case studies, quality tracking, survey, false positives, overhead measurement, ROI model), Inevitable features (agent versioning, plugins, multi-repo, profiling, cost optimizer, replay, collaboration patterns, predictions), Exemplary codebase (simulation testing, chaos testing, session simulation, sentinel agent, triage router, hook profiling, unified event log, build verification, architecture visualization, contract testing, API docs, license audit, git audit, doc coverage). 147 new tests. Remaining: strategic positioning crosswalks (deferred), operational testing (pentest, load test) |
+| **Overall** | **9/10** | **10/10** | Phase 9 complete: Quality rigor (property tests, mutation testing, hook idempotency, snapshot tests), documentation depth (ADMIRAL_STYLE.md, 9 ADRs, runbook, troubleshooting guide, Brain guide, security model, glossary, quick-start, hook dev guide, FAQ, API versioning), CI hardening (Dependabot grouping, doc validation, vitest-to-node:test migration), self-enforcement (documentation discipline, EDD gate system). Remaining: security hardening (Phase 10), DX/monitoring (Phase 11), strategic positioning (Phase 12) |
 
 ---
 

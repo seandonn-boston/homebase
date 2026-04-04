@@ -90,8 +90,9 @@ describe("DistributedTracer", () => {
     const root = tracer.startTrace("export-op", "agent-1");
     tracer.endSpan(root.spanId);
 
-    // biome-ignore lint/suspicious/noExplicitAny: test assertion on dynamic export format
-    const exported = tracer.exportTrace(root.traceId) as any;
+    const exported = tracer.exportTrace(root.traceId) as {
+      resourceSpans: Array<{ scopeSpans: Array<{ spans: Array<{ name: string }> }> }>;
+    };
     assert.ok(exported.resourceSpans !== undefined);
     assert.strictEqual(exported.resourceSpans[0].scopeSpans[0].spans.length, 1);
     assert.strictEqual(exported.resourceSpans[0].scopeSpans[0].spans[0].name, "export-op");
