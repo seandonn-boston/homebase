@@ -34,10 +34,10 @@ Source streams: **Stream 34 (Agent Execution Runtime, EX-01 to EX-06)** | **Stre
 
 ## End-to-End Multi-Agent Test (Stream 36)
 
-- [ ] **E2E-01** — Test harness: mock agents with predefined behaviors, real routing/runtime/handoff, assertion helpers for state/handoff/results `[L]`
-- [ ] **E2E-02** — Happy path: task → Agent A → handoff → Agent B → aggregated result; validates routing, handoff schema, state transitions `[M]`
-- [ ] **E2E-03** — Failure path: Agent A fails → degradation policy → re-route to Agent B → success; validates failure detection, re-routing, escalation events `[M]`
-- [ ] **E2E-04** — CI integration: <30s smoke test in CI workflow, structured report, build fails on E2E failure `[S]`
+- [x] **E2E-01** — Test harness: mock agents with predefined behaviors, real routing/runtime/handoff, assertion helpers for state/handoff/results `[L]`
+- [x] **E2E-02** — Happy path: task → Agent A → handoff → Agent B → aggregated result; validates routing, handoff schema, state transitions `[M]`
+- [x] **E2E-03** — Failure path: Agent A fails → degradation policy → re-route to Agent B → success; validates failure detection, re-routing, escalation events `[M]`
+- [x] **E2E-04** — CI integration: <30s smoke test in CI workflow, structured report, build fails on E2E failure `[S]` *(tests run via npm test, <100ms total; CI already has E2E smoke step)*
 
 ---
 
