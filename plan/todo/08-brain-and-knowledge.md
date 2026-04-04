@@ -23,17 +23,17 @@ Brain is Admiral's primary competitive moat. Ship B2 within **120 days** before 
 
 - [x] **B-21b** Brain Stale Detection — `brain_context_router` emits BRAIN STALE advisory when last brain_query was 20+ tool calls ago; complements BRAIN BYPASS; enforces SO-05/SO-11
 - [x] **B-21c** Möbius Loop `_meta` namespace — Brain self-instrumentation recording health snapshots, knowledge gaps, query patterns, graduation assessments in reserved `_meta` project; all agents read, only Admiral/orchestrator/Brain MCP write
-- [~] **B-21d** Contradiction resolution workflow — Full resolution protocol: writing agent chooses supersede, diverge, or withdraw on conflict; retrieval returns both sides with explicit conflict flag; escalation when decisions depend on conflicting entries *(partial — see audit)*
-- [~] **B-21e** Decision entry schema — Formalized JSON schema for decision entries (decision, alternatives, reasoning, authority tier, agent, outcome); validated by brain_record; canonical format for causality tracing integration *(partial — see audit)*
+- [x] **B-21d** Contradiction resolution workflow — *Completed in Phase 10.* — `ConflictAwareResolver` extends `ContradictionResolver` with: auto-detection on insert via `insertWithConflictCheck()`, conflict-flagged retrieval via `retrieveWithConflictFlag()`, and escalation triggers when decisions depend on conflicting entries via `checkDecisionDependencies()`. 10 new tests covering insert conflicts, clean inserts, conflict flags, superseded exclusion, escalation triggers.
+- [x] **B-21e** Decision entry schema — *Completed in Phase 10.* — `admiral/schemas/decision-entry.v1.schema.json` formalizes decision entries with required fields (decision, alternatives, reasoning, authorityTier, agent, timestamp) plus optional dependencies, context, reversible. `DecisionEntryValidator.recordDecision()` validates and writes to Brain. Extended DecisionEntry interface with dependencies for causality tracing. 9 new tests.
 
 ## B1 Excellence
 
 - [x] **B-22** Brain entry versioning — supersession chain tracking, rollback support
 - [x] **B-23** Brain entry expiration — TTL-based expiration, auto-archive, pre-expiry warnings
-- [ ] **B-24** Cross-project knowledge sharing — share entries across projects with permissions, provenance maintained
+- [x] **B-24** Cross-project knowledge sharing — *Completed in Phase 10.* — `admiral/brain/cross-project-sharing.ts` with project registration, allowed target enforcement, permission levels (read-only/read-write/admin), share depth limits, provenance chain tracking, share logging, and revocation. 19-test suite.
 - [x] **B-25** Brain usage analytics — per-entry usage tracking, analytics endpoint, gap detection, ROI
 - [x] **B-26** Brain backup and restore — automated backup with point-in-time recovery, integrity verification
-- [ ] **B-27** Brain schema migration testing — test B1→B2→B3 migrations, all types covered, metadata preserved, edge cases
+- [x] **B-27** Brain schema migration testing — *Completed in Phase 10.* — `admiral/brain/migration-testing.test.ts` with 26 tests covering: B1→B2 migration basics (standard, multi, empty, missing dir), entry type coverage (LESSON, DECISION, FAILURE, uncategorized), metadata preservation (tags, source_agent, confidence, metadata object, scope), edge cases (special chars, long content, empty tags, invalid JSON, missing fields), idempotency, contradiction links, version tracking, and validateB1Entry.
 - [x] **B-28** Brain entry templates — 5+ pre-defined templates for common entry types, `--template` flag, validation
 
 ## B2 SQLite Core
@@ -44,23 +44,23 @@ Brain is Admiral's primary competitive moat. Ship B2 within **120 days** before 
 
 ## B2 Semantic Search
 
-- [ ] **B-10** Embedding generation pipeline — pluggable backends (API or pre-computed), model version tracking, re-embedding on model change
-- [ ] **B-11** Similarity search — cosine distance, `brain_query --semantic "topic"`, blend keyword and semantic signals
+- [x] **B-10** Embedding generation pipeline — *Completed in Phase 10.* — `admiral/brain/embedding-pipeline.ts` with pluggable `EmbeddingBackend` interface, hash-based test backend, model version tracking, text change detection, batch generation, re-embedding on model switch with skip/reembed/fail reporting, pipeline stats. 17-test suite.
+- [x] **B-11** Similarity search — *Completed in Phase 10.* — `admiral/brain/similarity-search.ts` with cosine distance, semantic search over embeddings, blended keyword+semantic search with configurable weights, find-similar-entries, match type classification. 17-test suite.
 
 ## B3 Production
 
 - [~] **B-12** MCP server scaffold — 8 tool endpoints (brain_record, brain_query, brain_retrieve, brain_strengthen, brain_supersede, brain_status, brain_audit, brain_purge) *(partial — see audit)*
-- [ ] **B-13** Postgres + pgvector schema deployment — migrations, rollback, connection pooling
-- [ ] **B-14** Identity token lifecycle — create, rotate, revoke; configurable TTL, overlapping validity window, immediate revocation
-- [ ] **B-15** Access control enforcement — per-agent per-entry clearance levels (read-only, contributor, admin), write scoping by project, access decisions logged
+- [x] **B-13** Postgres + pgvector schema deployment — *Completed in Phase 10.* — `admiral/brain/postgres-schema.ts` with 5 versioned migrations (entries+FTS, links, pgvector+embeddings, audit+demand, meta), rollback support, migration status tracking, connection pool config from env vars. 19-test suite.
+- [x] **B-14** Identity token lifecycle — *Completed in Phase 10.* — `admiral/brain/identity-tokens.ts` with create (configurable TTL), rotate (overlapping validity window), revoke (immediate), validate, bulk agent revocation, auto-expiry pruning, stats. 20-test suite.
+- [x] **B-15** Access control enforcement — *Completed in Phase 10.* — `admiral/brain/access-control.ts` with 3 access levels (read-only/contributor/admin), scope-based grants, per-entry overrides, expired grant handling, readable/writable filtering, full decision audit log. 18-test suite.
 
 ## B3 Advanced
 
 - [ ] **B-16** Multi-signal retrieval pipeline — keyword (FTS), semantic (pgvector), temporal (recency), link-based (graph proximity); configurable weights, query-time signal selection
 - [x] **B-17** Multi-hop link traversal — supports/contradicts/supersedes/related_to relationships, configurable depth, cycle detection, traversal path in results
 - [~] **B-18** Quarantine integration — external content passes 5-layer pipeline before brain ingestion, `quarantine_status` metadata *(partial — see audit)*
-- [ ] **B-19** Sensitivity classification — public/internal/confidential/restricted levels, queries filter by agent clearance, bulk reclassification
-- [ ] **B-20** Audit logging — append-only log of all operations, queryable by time/agent/operation/entry, configurable retention
+- [x] **B-19** Sensitivity classification — *Completed in Phase 10.* — `admiral/brain/sensitivity-classification.ts` with 4-level taxonomy (PUBLIC/INTERNAL/CONFIDENTIAL/RESTRICTED), agent clearance grants, access checking, query filtering by clearance, single and bulk reclassification with audit log. 15-test suite.
+- [x] **B-20** Audit logging — *Completed in Phase 10.* — `admiral/brain/audit-logging.ts` with append-only log, queryable by time/agent/operation/entry, configurable retention (maxEntries, maxAge), JSONL export, summary statistics. 15-test suite.
 
 ## Graduation & Provenance
 

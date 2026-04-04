@@ -42,6 +42,7 @@ export {
   InterventionAction,
   requiresConfirmation,
 } from "./intervention-catalog";
+export { EndpointTier, RateLimiter, RateLimitResult, RateLimitTier } from "./rate-limiter";
 export {
   Alert,
   ControlChart,

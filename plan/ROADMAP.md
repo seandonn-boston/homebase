@@ -7,7 +7,7 @@
 
 ## How to Read This Document
 
-The work is organized into **13 Phases (0–12)**. Each phase contains streams that can be worked **concurrently** within that phase, but phases themselves have dependency relationships — a phase generally cannot start until the prior phase's foundational outputs exist. Some streams span multiple phases (noted with `(continues)` markers).
+The work is organized into **15 Phases (0–14)**. Each phase contains streams that can be worked **concurrently** within that phase, but phases themselves have dependency relationships — a phase generally cannot start until the prior phase's foundational outputs exist. Some streams span multiple phases (noted with `(continues)` markers).
 
 **Key:**
 - **Streams** are the unit of work (Stream 0–33)
@@ -39,17 +39,19 @@ Phase 7  Platform Scale & Governance-as-a-Service
 Phase 8  Excellence, Validation & Strategic Positioning
   │
   │  ── Phases 0-8: broad architecture complete (85%+ items done) ──
-  │  ── Phases 9-12: gap closure, depth, and production hardening ──
+  │  ── Phases 9-13: gap closure, orchestration runtime, depth, and production hardening ──
   │
 Phase 9  Quality Rigor & Documentation
   │
-Phase 10 Security Hardening & Brain B3
+Phase 10 Security Hardening, Brain B3 & Roadmap Reconciliation
   │
-Phase 11 Developer Experience & Monitoring
+Phase 11 Orchestration Runtime & Integration
   │
-Phase 12 Strategic Positioning & Completion
+Phase 12 Developer Experience & Monitoring
   │
-Phase 13 Cleanup
+Phase 13 Strategic Positioning & Completion
+  │
+Phase 14 Cleanup
 ```
 
 ---
@@ -246,7 +248,7 @@ If spec debt resolution surfaces new requirements, those requirements must be in
 | **05** | CI/CD *(depth)* | Matrix CI builds (ubuntu + macOS), CodeQL security scanning, dependency update automation | Phase 2 foundation | Streams 6, 13 |
 | **06** | Self-Enforcement *(depth)* | Documentation discipline enforcement, Standing Order compliance audit, hook coverage report | Phase 2 foundation | Streams 8, 13 |
 
-**Why now:** Phases 0–8 built the broad architecture. These items were deferred during rapid feature development but are prerequisites for contributor onboarding (Phase 11) and auditable compliance (Phase 12). Documentation and testing rigor compound — every ADR and test written here reduces questions and rework in later phases.
+**Why now:** Phases 0–8 built the broad architecture. These items were deferred during rapid feature development but are prerequisites for contributor onboarding (Phase 12) and auditable compliance (Phase 13). Documentation and testing rigor compound — every ADR and test written here reduces questions and rework in later phases.
 
 **Concurrency:** All six stream continuations are independent and can run fully in parallel.
 
@@ -258,26 +260,47 @@ If spec debt resolution surfaces new requirements, those requirements must be in
 
 ---
 
-## Phase 10 — Security Hardening & Brain B3
+## Phase 10 — Security Hardening, Brain B3 & Roadmap Reconciliation
 
-> Complete the security defense-in-depth stack and graduate the Brain to production-tier persistence with embeddings and semantic search.
+> Complete the security defense-in-depth stack, graduate the Brain to production-tier persistence with embeddings and semantic search, and reconcile roadmap status claims against actual code.
 
 | Stream | Name | Scope | ← Needs | Feeds → |
 |--------|------|-------|---------|---------|
 | **24** | Security *(depth)* | Data classification tags, incident response playbook, dependency vulnerability scanning, SBOM generation, rate limiting, Leash Cedar policy spec; complete partial items: injection Layer 2 for handoff docs, centralized privilege escalation checks, security regression CVE mapping, A2A content inspection, cascade containment circuit breakers | Phase 4 foundation | Streams 9, 13 |
 | **11** | Brain B3 *(production)* | Embedding generation pipeline, similarity search, Postgres+pgvector deployment, identity token lifecycle, per-entry access control, multi-signal retrieval, sensitivity classification, audit logging, cross-project sharing, schema migration testing, knowledge search REST API; complete partial items: MCP→B3 backend, quarantine integration, contradiction resolution workflow, decision entry schema | Phase 6 (B2 complete) | Streams 20, 22 |
+| **37** | Roadmap-to-Code Reconciliation | Audit all roadmap items marked "done" against actual code; flag false completions; update status markers; produce a reconciliation report mapping every claimed deliverable to its file/test; establish ongoing drift detection between roadmap claims and codebase reality | — | All phases (accurate status enables correct prioritization) |
 
-**Why now:** Security depth items (SBOM, incident response, rate limiting) are prerequisites for enterprise positioning (Phase 12). Brain B3 (Postgres, embeddings, semantic search) requires B2 stability and unlocks the knowledge search API that the governance platform needs.
+**Why now:** Security depth items (SBOM, incident response, rate limiting) are prerequisites for enterprise positioning (Phase 13). Brain B3 (Postgres, embeddings, semantic search) requires B2 stability and unlocks the knowledge search API that the governance platform needs. Roadmap reconciliation (Stream 37) is critical housekeeping — several items across the roadmap are marked as done but aren't fully implemented. Running this audit now prevents compounding planning errors in Phases 11–13.
 
-**Concurrency:** Security and Brain B3 are independent and can run in parallel.
+**Concurrency:** All three streams are independent and can run in parallel. Roadmap reconciliation has no code dependencies and can start immediately.
 
-**Exit criteria:** Full 5-layer injection defense stack. Incident response playbook with 4 critical scenarios. SBOM generated in CI. Brain B3 operational with Postgres, pgvector, and semantic search. Knowledge search REST API serves queries with authentication and rate limiting.
+**Exit criteria:** Full 5-layer injection defense stack. Incident response playbook with 4 critical scenarios. SBOM generated in CI. Brain B3 operational with Postgres, pgvector, and semantic search. Knowledge search REST API serves queries with authentication and rate limiting. Reconciliation report exists mapping every "done" claim to its implementation artifact, with false completions flagged and corrected.
 
-**Todo files:** `todo/07` (6 missing + 5 partial = ~11 items), `todo/08` (11 missing + 4 partial = ~15 items) — ~26 items total.
+**Todo files:** `todo/07` (6 missing + 5 partial = ~11 items), `todo/08` (11 missing + 4 partial = ~15 items) — ~26 items total + reconciliation audit.
 
 ---
 
-## Phase 11 — Developer Experience & Monitoring
+## Phase 11 — Orchestration Runtime & Integration
+
+> Build the core engine that turns Admiral from a policy engine into an operating system for agent fleets. This phase closes the central planning gap in the orchestration layer: the runtime that spawns agent sessions, the integration path between hooks and persistent storage, and the end-to-end proof that multi-agent coordination actually works.
+
+| Stream | Name | Scope | ← Needs | Feeds → |
+|--------|------|-------|---------|---------|
+| **34** | Agent Execution Runtime | Core engine that spawns agent sessions, manages task queues, tracks execution state (pending/running/complete/failed), collects results, handles timeouts and retries; session lifecycle management (init → execute → collect → teardown); task decomposition interface (accepts intent, produces subtask graph); execution state persistence (resume after crash); result aggregation and reporting; resource limits per session (token budget, wall-clock, file-write caps) | Streams 8, 14, 15 | Streams 16, 18, 19, 23 |
+| **35** | Hook-to-B2 Integration | Define and implement the integration path between bash hooks and Brain B2 (SQLite/FTS5); decide access pattern (direct SQLite queries, control plane API, or MCP tool calls); implement hook-side query helpers (read context before hook logic, write results after); ensure transactional safety (hooks must not corrupt Brain state on failure); latency budget (hooks are synchronous — B2 queries must complete in <100ms); fallback behavior when B2 is unavailable | Streams 7, 11 (B2) | Streams 11 (B3), 20, 30 |
+| **36** | End-to-End Multi-Agent Test Scenario | Concrete integration test proving two or more agents can hand off work and complete a task; test covers: task assignment → Agent A executes → handoff event → Agent B picks up → result collected; validates routing, execution runtime, state persistence, and result aggregation in a single scenario; includes failure case (Agent A fails, task re-routes to Agent B); runs in CI as a smoke test for the orchestration layer | Streams 15, 34 | Streams 13, 33 |
+
+**Why now:** The governance core (Standing Orders, hooks, Brain) is solid and the broad architecture phases (0–8) cover it well. But there is a planning gap at the center of the orchestration layer — the part that turns Admiral from a policy engine into an operating system for agent fleets. Without the Agent Execution Runtime (Stream 34), there is no engine to actually spawn and manage agent sessions. Without Hook-to-B2 Integration (Stream 35), hooks operate in a stateless vacuum, unable to leverage institutional memory. Without an end-to-end multi-agent test (Stream 36), the claim that Admiral enables fleet coordination remains unvalidated. These three streams close that gap.
+
+**Dependencies:** Stream 34 (execution runtime) requires execution patterns (Stream 8), agent definitions (Stream 14), and routing (Stream 15) from Phases 3–5. Stream 35 (Hook-to-B2) requires hooks (Stream 7) and Brain B2 (Stream 11) from Phases 3 and 6. Stream 36 (E2E test) requires routing (Stream 15) and the execution runtime (Stream 34). Brain B3 production work (Phase 10) should be underway or complete so the Hook-to-B2 integration can also inform the B3 migration path.
+
+**Concurrency:** Streams 34 and 35 are independent and can run in parallel. Stream 36 depends on Stream 34 delivering the runtime and must start after it.
+
+**Exit criteria:** Agent execution runtime can spawn sessions, track state, and collect results for at least 3 concurrent tasks. Hook-to-B2 integration path is decided, implemented, and documented (with latency benchmarks). End-to-end multi-agent test passes in CI, covering both happy path and failure/re-route scenarios.
+
+---
+
+## Phase 12 — Developer Experience & Monitoring
 
 > Make the project contributor-friendly with one-command setup, tooling, and operational monitoring. This is the phase that turns Helm from "impressive but hard to approach" into "clone and contribute in 30 minutes."
 
@@ -289,7 +312,7 @@ If spec debt resolution surfaces new requirements, those requirements must be in
 | **18** | Autonomy *(remaining)* | Admiral approval UI/API | Phase 5 foundation | Stream 23 |
 | **25** | Observability *(remaining)* | Performance regression detection | Phase 4 foundation | Stream 27 |
 
-**Why now:** Developer experience depends on documentation (Phase 9) being complete — you can't write a quick-start tutorial without a style guide or troubleshooting guide. Monitoring scanner needs the measurement infrastructure from Phase 2 to be stable. The remaining fleet/autonomy/observability items are small gaps that fit naturally alongside DX work.
+**Why now:** Developer experience depends on documentation (Phase 9) being complete — you can't write a quick-start tutorial without a style guide or troubleshooting guide. Monitoring scanner needs the measurement infrastructure from Phase 2 to be stable. The remaining fleet/autonomy/observability items are small gaps that fit naturally alongside DX work. The orchestration runtime (Phase 11) should be underway so that the local agent session simulator in DX can target a real runtime.
 
 **Concurrency:** DX and Monitoring are independent. Remaining fleet/autonomy/observability items are independent of each other and of DX/Monitoring.
 
@@ -299,19 +322,19 @@ If spec debt resolution surfaces new requirements, those requirements must be in
 
 ---
 
-## Phase 12 — Strategic Positioning & Completion
+## Phase 13 — Strategic Positioning & Completion
 
-> Position Admiral for enterprise adoption with compliance crosswalks, competitive analysis, and the remaining deferred platform features. This is the capstone that makes the project legible to enterprises, regulators, and academics.
+> Position Admiral for enterprise adoption with compliance crosswalks, competitive analysis, and the remaining deferred platform features. This is the capstone that makes the project legible to enterprises, regulators, and academics. With the orchestration runtime proven (Phase 11), positioning claims about fleet coordination are now backed by working code.
 
 | Stream | Name | Scope | ← Needs | Feeds → |
 |--------|------|-------|---------|---------|
-| **12** | Strategic Positioning | OWASP Agentic Top 10 crosswalk, Forrester AEGIS alignment, KPMG TACO tagging, NIST Zero Trust alignment, ISO 42001 mapping, EU AI Act compliance, McKinsey mapping, Singapore IMDA alignment, AI Work OS positioning document, competitive differentiation matrix, enterprise adoption playbook | Phases 9–11 (complete implementation) | — (capstone) |
-| **13** | Exemplary Codebase *(remaining)* | Security penetration testing suite, load testing for control plane, contribution complexity analyzer, accessibility audit for dashboards | Phases 9–10 (security, testing depth) | — (capstone) |
+| **12** | Strategic Positioning | OWASP Agentic Top 10 crosswalk, Forrester AEGIS alignment, KPMG TACO tagging, NIST Zero Trust alignment, ISO 42001 mapping, EU AI Act compliance, McKinsey mapping, Singapore IMDA alignment, AI Work OS positioning document, competitive differentiation matrix, enterprise adoption playbook | Phases 9–12 (complete implementation) | — (capstone) |
+| **13** | Exemplary Codebase *(remaining)* | Security penetration testing suite, load testing for control plane, contribution complexity analyzer, accessibility audit for dashboards | Phases 9–11 (security, testing depth, orchestration runtime) | — (capstone) |
 | **23** | Governance Platform *(remaining)* | Multi-tenant support, governance policy language DSL, governance deployment guide | Phase 7 foundation | — |
-| **28** | Inevitable Features *(remaining)* | Agent marketplace concept, A/B testing framework for agents, natural language policy authoring, governance compliance certification, real-time collaboration dashboard | Phases 7–10 (stable platform) | — |
+| **28** | Inevitable Features *(remaining)* | Agent marketplace concept, A/B testing framework for agents, natural language policy authoring, governance compliance certification, real-time collaboration dashboard | Phases 7–11 (stable platform + orchestration runtime) | — |
 | **33** | Thesis Validation *(remaining)* | Academic paper outline | Phase 8 foundation | Stream 12 |
 
-**Why now:** Compliance crosswalks require a complete, auditable implementation to map against (Phases 9–10). Competitive positioning requires DX and monitoring to be operational (Phase 11). These items were explicitly marked DEFERRED in earlier phases because the implementation wasn't mature enough to credibly position against OWASP, NIST, or ISO standards.
+**Why now:** Compliance crosswalks require a complete, auditable implementation to map against (Phases 9–11). Competitive positioning requires DX and monitoring to be operational (Phase 12). The orchestration runtime (Phase 11) must be proven before enterprise playbooks can credibly claim fleet coordination capabilities. These items were explicitly marked DEFERRED in earlier phases because the implementation wasn't mature enough to credibly position against OWASP, NIST, or ISO standards.
 
 **Concurrency:** All five stream continuations are independent and can run fully in parallel.
 
@@ -321,21 +344,24 @@ If spec debt resolution surfaces new requirements, those requirements must be in
 
 ---
 
-## Phase 13 — Cleanup
+## Phase 14 — Codebase Cleanup & Refactoring
 
-> Eliminate all lint/check suppressions across the entire codebase. Every `shellcheck disable`, `biome-ignore`, `eslint-disable`, `@ts-ignore`, and similar suppression must be removed and the underlying issue fixed. No exceptions.
+> Comprehensive codebase cleanup: eliminate all lint/check suppressions, remove dead code and dead files, deduplicate repeated logic, normalize naming conventions, and fine-tune operations. Scope covers everything created from Phase 0 onward — `aiStrat/` is excluded (pre-existing, read-only).
 
 | Scope | Description |
 |-------|-------------|
-| **Shell scripts** | Remove all `# shellcheck disable=SCXXXX` directives. Fix the actual issues (unused variables, quoting, unreachable code). |
-| **TypeScript** | Remove all `// biome-ignore`, `// @ts-ignore`, `// @ts-expect-error`, `// eslint-disable` directives. Fix with proper types, refactoring, or code changes. |
-| **Other files** | Scan for any suppression patterns in any file type. No file is exempt. |
+| **Suppression removal** | Remove every `# shellcheck disable`, `// biome-ignore`, `// @ts-ignore`, `// @ts-expect-error`, `// eslint-disable`, and similar directive. Fix the underlying issue in every case. Zero suppressions allowed. |
+| **Dead code & dead files** | Identify and remove unused functions, variables, exports, files, and directories. If it's not imported, called, or referenced — it goes. |
+| **Deduplication** | Find repeated logic across shell scripts and TypeScript modules. Extract shared utilities. Three similar blocks of code should be one function. |
+| **Naming conventions** | Normalize function names, file names, variable names, and directory structure to consistent conventions per ADMIRAL_STYLE.md. |
+| **Operational fine-tuning** | Tighten error handling, improve logging consistency, optimize hot paths, reduce unnecessary I/O. |
+| **Exclusion** | `aiStrat/` is read-only and exempt — it predates Phase 0. |
 
-**Why now:** Phases 0–12 built the full system. Suppressions accumulated during rapid development as a pragmatic shortcut. A showcase-quality codebase cannot claim 10/10 code quality while silencing its own tools. This phase ensures every diagnostic tool runs unsuppressed.
+**Why now:** Phases 0–13 built the full system under velocity. Pragmatic shortcuts accumulated: suppressions, copy-paste patterns, inconsistent naming, orphaned code. A showcase-quality codebase cannot claim 10/10 while silencing its own tools or carrying dead weight. This phase is the final polish.
 
-**Concurrency:** One comprehensive pass across the full codebase.
+**Concurrency:** Multiple cleanup streams can run in parallel (suppressions, dead code, naming, dedup are independent).
 
-**Exit criteria:** Zero suppression directives in any file. All lint, shellcheck, and type-check tools pass cleanly without any per-line or per-file disables. CI enforces a "no-suppress" policy going forward.
+**Exit criteria:** Zero suppression directives in any file (all file types). Zero dead code or dead files (verified by static analysis). All duplicated logic extracted to shared utilities. Naming conventions consistent per ADMIRAL_STYLE.md. CI enforces a "no-suppress" policy going forward.
 
 ---
 
@@ -355,28 +381,32 @@ If spec debt resolution surfaces new requirements, those requirements must be in
 | 09 | Platform Security Governance | 6 |
 | 10 | Protocols & Ecosystem Gaps | 6 |
 | 11 | Brain System | 3 (B1), 6 (B2+B3), **10** (B3 production) |
-| 12 | Strategic Positioning | 8, **12** (crosswalks) |
-| 13 | Exemplary Codebase | 8, **12** (pentest, load test) |
+| 12 | Strategic Positioning | 8, **13** (crosswalks) |
+| 13 | Exemplary Codebase | 8, **13** (pentest, load test) |
 | 14 | Fleet Agent Definitions | 4 |
-| 15 | Fleet Routing & Orchestration | 5, **11** (remaining) |
+| 15 | Fleet Routing & Orchestration | 5, **12** (remaining) |
 | 16 | MCP Integration | 5 |
 | 17 | Platform Adapters | 7 |
-| 18 | Progressive Autonomy | 5, **11** (remaining) |
+| 18 | Progressive Autonomy | 5, **12** (remaining) |
 | 19 | Meta-Governance | 5 |
 | 20 | Data Ecosystem | 6 |
 | 21 | Spec Debt Resolution | 0 |
 | 22 | Intent Engineering | 6 |
-| 23 | Governance Platform | 7, **12** (remaining) |
+| 23 | Governance Platform | 7, **13** (remaining) |
 | 24 | Security Hardening | 4, **10** (depth) |
-| 25 | Observability | 4, **11** (remaining) |
-| 26 | Developer Experience | 1, **11** (full implementation) |
-| 27 | Monitoring & Scanner | 2, **11** (full implementation) |
-| 28 | Inevitable Features | 8, **12** (remaining) |
+| 25 | Observability | 4, **12** (remaining) |
+| 26 | Developer Experience | 1, **12** (full implementation) |
+| 27 | Monitoring & Scanner | 2, **12** (full implementation) |
+| 28 | Inevitable Features | 8, **13** (remaining) |
 | 29 | Standing Orders Implementation | 3 |
 | 30 | Context Engineering | 5 |
 | 31 | Quality Assurance System | 7 |
 | 32 | Rating System | 7 |
-| 33 | Thesis Validation | 8, **12** (paper outline) |
+| 33 | Thesis Validation | 8, **13** (paper outline) |
+| 34 | Agent Execution Runtime | **11** |
+| 35 | Hook-to-B2 Integration | **11** |
+| 36 | End-to-End Multi-Agent Test | **11** |
+| 37 | Roadmap-to-Code Reconciliation | **10** |
 
 ---
 
@@ -408,17 +438,20 @@ Phase 7  ║ [Stream 17: Adapters] [Stream 23: Governance Platform] [Stream 31: 
          ║
 Phase 8  ║ [Stream 13: Exemplary] [Stream 33: Thesis] [Stream 28: Inevitable] [Stream 12: Strategy]
          ║
-         ║  ── Gap Closure Phases (Phases 0-8 built broad architecture; 9-12 close depth gaps) ──
+         ║  ── Gap Closure & Integration Phases (Phases 0-8 built broad architecture; 9-13 close depth gaps + orchestration runtime) ──
          ║
 Phase 9  ║ [Stream 01: Testing↑] [Stream 02: Quality↑] [Stream 03: Arch↑] [Stream 04: Docs↑] [Stream 05: CI↑] [Stream 06: Enforcement↑]
          ║
-Phase 10 ║ [Stream 24: Security↑] [Stream 11-B3: Brain B3]
+Phase 10 ║ [Stream 24: Security↑] [Stream 11-B3: Brain B3] [Stream 37: Roadmap Reconciliation]
          ║
-Phase 11 ║ [Stream 26: DX] [Stream 27: Monitoring] [Stream 15↑] [Stream 18↑] [Stream 25↑]
+Phase 11 ║ [Stream 34: Execution Runtime] [Stream 35: Hook-to-B2]
+         ║          └──→ [Stream 36: E2E Multi-Agent Test] (after Stream 34 runtime)
          ║
-Phase 12 ║ [Stream 12: Positioning↑] [Stream 13: Exemplary↑] [Stream 23↑] [Stream 28↑] [Stream 33↑]
+Phase 12 ║ [Stream 26: DX] [Stream 27: Monitoring] [Stream 15↑] [Stream 18↑] [Stream 25↑]
          ║
-Phase 13 ║ [Full codebase: remove all lint/check suppressions]
+Phase 13 ║ [Stream 12: Positioning↑] [Stream 13: Exemplary↑] [Stream 23↑] [Stream 28↑] [Stream 33↑]
+         ║
+Phase 14 ║ [Full codebase: remove all lint/check suppressions]
 ```
 
 *↑ = depth continuation of a stream that delivered foundational outputs in an earlier phase.*
@@ -540,6 +573,10 @@ Stream 14 (Agent Definitions — machine-readable specs for 71+ roles)
   ↓
 Stream 15 (Routing & Orchestration — wires agents to tasks)
   ↓
+Stream 34 (Agent Execution Runtime — spawns sessions, manages task queues)
+  ↓
+Stream 36 (E2E Multi-Agent Test — proves fleet coordination works)
+  ↓
 Stream 16 (MCP — exposes capabilities as tools)
   ↓
 Stream 23 (Governance Platform — deploys as service)
@@ -561,6 +598,8 @@ Streams 21 and 00 run in parallel (Phase 0), but both must deliver before Phase 
 
 5. **No phase requires all prior phases to be 100% complete.** The dependency is on specific outputs, not phase-level completion. Use the `← Needs` column to determine readiness.
 
-6. **Phases 9–12 are gap closure phases.** They continue streams that delivered foundational outputs in Phases 0–8 but have remaining depth items. A stream appearing in both Phase 2 and Phase 9 means Phase 2 built the foundation and Phase 9 completes the details (ADRs, property tests, typed errors, etc.).
+6. **Phases 9–13 are gap closure and integration phases.** Phases 9–10 and 12 continue streams that delivered foundational outputs in Phases 0–8 but have remaining depth items. Phase 11 closes the orchestration planning gap — the runtime, integration, and validation work that turns Admiral from a policy engine into an operating system for agent fleets. A stream appearing in both Phase 2 and Phase 9 means Phase 2 built the foundation and Phase 9 completes the details (ADRs, property tests, typed errors, etc.).
 
-7. **Phase 12 items marked DEFERRED require complete implementation to credibly produce.** Compliance crosswalks cannot be written against an incomplete codebase. Enterprise playbooks cannot reference features that don't exist. These items were intentionally deferred, not forgotten.
+7. **Phase 13 items marked DEFERRED require complete implementation to credibly produce.** Compliance crosswalks cannot be written against an incomplete codebase. Enterprise playbooks cannot reference features that don't exist. These items were intentionally deferred, not forgotten.
+
+8. **Phase 11 (Orchestration Runtime) is on the critical path for fleet claims.** No enterprise positioning (Phase 13) or thesis validation should claim multi-agent coordination capabilities until the end-to-end multi-agent test (Stream 36) passes in CI.

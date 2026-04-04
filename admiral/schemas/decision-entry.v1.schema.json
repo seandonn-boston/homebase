@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "admiral/schemas/decision-entry.v1.schema.json",
+  "title": "Admiral Decision Entry Schema v1",
+  "description": "Canonical schema for decision entries stored in the Brain. Captures the decision, alternatives considered, reasoning, authority tier, agent identity, and outcome. Used for causality tracing and audit.",
+  "type": "object",
+  "required": ["decision", "alternatives", "reasoning", "authorityTier", "agent", "timestamp"],
+  "additionalProperties": false,
+  "properties": {
+    "decision": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The decision that was made."
+    },
+    "alternatives": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Alternatives that were considered before reaching this decision."
+    },
+    "reasoning": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Why this decision was chosen over the alternatives."
+    },
+    "authorityTier": {
+      "type": "string",
+      "enum": ["autonomous", "propose", "escalate"],
+      "description": "The authority tier under which this decision was made."
+    },
+    "agent": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The agent that made the decision."
+    },
+    "outcome": {
+      "type": "string",
+      "enum": ["success", "failure", "partial", "pending"],
+      "description": "The outcome of the decision, if known."
+    },
+    "timestamp": {
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "description": "Unix timestamp (ms) when the decision was made."
+    },
+    "dependencies": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Brain entry IDs that this decision depends on. Used for contradiction escalation."
+    },
+    "context": {
+      "type": "string",
+      "description": "Additional context about the circumstances of the decision."
+    },
+    "reversible": {
+      "type": "boolean",
+      "description": "Whether this decision can be reversed."
+    }
+  }
+}
