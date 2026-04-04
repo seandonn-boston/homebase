@@ -14,7 +14,7 @@ Source streams: **Stream 34 (Agent Execution Runtime, EX-01 to EX-06)** | **Stre
 
 ### Task Lifecycle Management
 
-- [ ] **EX-04** — Timeout and retry handling: wall-clock timeout, token budget, file-write cap; graceful termination, configurable retries with exponential backoff, escalation on permanent failure `[M]`
+- [x] **EX-04** — Timeout and retry handling: wall-clock timeout, token budget, file-write cap; graceful termination, configurable retries with exponential backoff, escalation on permanent failure `[M]`
 - [ ] **EX-05** — Result aggregation: collect session results (status, duration, tokens, files, tests); per-task summaries, per-agent metrics, fleet-wide summary; API queryable `[M]`
 - [ ] **EX-06** — Task decomposition interface: accept high-level tasks, produce subtask DAGs; validate (no cycles, valid agents), calculate critical path, identify parallel opportunities; integrates with O-07 `[L]`
 

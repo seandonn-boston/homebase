@@ -23,6 +23,14 @@ export {
 } from "./errors";
 export { AgentEvent, EventListener, EventStream, EventStreamConfig, EventType } from "./events";
 export {
+  type EscalationEvent,
+  type FailureRecord,
+  type LimitEnforcerConfig,
+  LimitEnforcer,
+  type RetryPolicy,
+  type RetryRecord,
+} from "./execution-limits";
+export {
   ExecutionRuntime,
   type RuntimeConfig,
   type RuntimeEventType,
