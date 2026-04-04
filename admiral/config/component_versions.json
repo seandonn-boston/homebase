@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0.0",
   "description": "Tracks Admiral component versions independently from the spec version. Used by the self-upgrade system to detect version mismatches and plan migrations.",
-  "last_updated": "2026-03-23",
-  "framework_version": "v0.7.0-alpha",
+  "last_updated": "2026-03-25",
+  "framework_version": "v0.8.0-alpha",
   "components": {
     "hooks": {
       "version": "0.6.0",
@@ -19,7 +19,58 @@
         ".hooks/zero_trust_validator.sh",
         ".hooks/brain_context_router.sh",
         ".hooks/pre_work_validator.sh",
-        ".hooks/compliance_ethics_advisor.sh"
+        ".hooks/compliance_ethics_advisor.sh",
+        ".hooks/privilege_check.sh",
+        ".hooks/identity_validation.sh",
+        ".hooks/tier_validation.sh",
+        ".hooks/governance_heartbeat_monitor.sh",
+        ".hooks/protocol_registry_guard.sh",
+        ".hooks/tool_permission_guard.sh",
+        ".hooks/ground_truth_validator.sh"
+      ]
+    },
+    "fleet": {
+      "version": "0.8.0",
+      "files": [
+        "fleet/agents/definitions/",
+        "fleet/agents/capability-registry.json",
+        "admiral/bin/validate_agent_definitions.sh",
+        "admiral/bin/generate-agent.sh",
+        "admiral/bin/generate_capability_registry.sh",
+        "admiral/bin/validate_fleet.sh",
+        "admiral/lib/agent_registry.sh",
+        "admiral/lib/task_router.sh"
+      ]
+    },
+    "security": {
+      "version": "0.8.0",
+      "files": [
+        "admiral/lib/injection_detect.sh",
+        "admiral/lib/input_validation.sh",
+        "admiral/lib/security_audit.sh",
+        "admiral/lib/audit_integrity.sh",
+        "admiral/monitor/quarantine/secret_scanner.sh",
+        "admiral/monitor/quarantine/layer2_structural.sh",
+        "admiral/monitor/quarantine/layer3_semantic.sh",
+        "admiral/monitor/quarantine/layer4_llm_advisory.sh",
+        "admiral/monitor/quarantine/layer5_antibodies.sh",
+        "admiral/monitor/quarantine/quarantine_pipeline.sh"
+      ]
+    },
+    "observability": {
+      "version": "0.8.0",
+      "files": [
+        "admiral/lib/log.sh",
+        "admiral/lib/tracing.sh",
+        "admiral/lib/event_log.sh",
+        "admiral/lib/alerting.sh",
+        "control-plane/src/logger.ts",
+        "control-plane/src/metrics.ts",
+        "control-plane/src/health.ts",
+        "control-plane/src/alerting.ts",
+        "control-plane/src/log-aggregator.ts",
+        "control-plane/src/slo-tracker.ts",
+        "control-plane/src/tracing.ts"
       ]
     },
     "state_management": {
@@ -77,7 +128,7 @@
       ]
     },
     "control_plane": {
-      "version": "0.6.0",
+      "version": "0.8.0",
       "files": [
         "control-plane/src/"
       ]

@@ -1,0 +1,40 @@
+{
+  "agent_id": "contract-test-writer",
+  "version": "1.0.0",
+  "role": "qa",
+  "asp_spec_ref": null,
+  "model_tier": "tier2_workhorse",
+  "tools": {
+    "allowed": [
+      "Read",
+      "Bash",
+      "Glob",
+      "Grep"
+    ],
+    "denied": [
+      "Write",
+      "Edit",
+      "Agent",
+      "NotebookEdit"
+    ]
+  },
+  "paths": {
+    "read": [
+      "**/*"
+    ],
+    "write": [],
+    "denied": [
+      "aiStrat/**",
+      ".github/workflows/**"
+    ]
+  },
+  "authority": {
+    "autonomous": [],
+    "propose": [],
+    "escalate": [
+      "security_decision",
+      "spec_modification"
+    ]
+  },
+  "standing_orders": "all"
+}

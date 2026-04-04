@@ -34,14 +34,15 @@ Spec reference: `aiStrat/admiral/spec/part11-protocols.md`
 
 ## Current Focus
 
-**Phase 3 — Core Spec Implementation**
+**Phase 5 — Fleet Orchestration, MCP & Autonomy**
 
-The project follows a [9-phase roadmap](plan/ROADMAP.md). Phases 0-2 are complete. Current priorities:
+The project follows a [9-phase roadmap](plan/ROADMAP.md). Phases 0-4 are complete. Current priorities:
 
-1. Hooks & Fleet Foundation (Stream 07: S-01 to S-09, S-04b, S-05)
-2. Execution Patterns & Ops (Stream 08: S-10 to S-17)
-3. Standing Orders Implementation (Stream 29: SO-01 to SO-17)
-4. Brain B1 Completion (Stream 11: B-01 to B-06, B-21b to B-21e)
+1. Fleet Routing & Orchestration (Stream 15: O-01 to O-10)
+2. MCP Integration (Stream 16: M-01 to M-14)
+3. Progressive Autonomy (Stream 18: AU-01 to AU-11)
+4. Meta-Governance (Stream 19: MG-01 to MG-10)
+5. Context Engineering (Stream 30: CE-01 to CE-10)
 
 Full roadmap: [`plan/index.md`](plan/index.md) | Execution phasing: [`plan/ROADMAP.md`](plan/ROADMAP.md)
 
