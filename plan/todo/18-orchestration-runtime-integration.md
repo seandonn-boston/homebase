@@ -28,9 +28,9 @@ Source streams: **Stream 34 (Agent Execution Runtime, EX-01 to EX-06)** | **Stre
 
 ### Safety & Resilience
 
-- [ ] **HB-04** — Transactional safety: WAL for hook-initiated writes, atomic batching, crash recovery, read isolation; fault injection tests (mid-write kill, disk full, lock contention) `[L]`
+- [x] **HB-04** — Transactional safety: WAL for hook-initiated writes, atomic batching, crash recovery, read isolation; fault injection tests (mid-write kill, disk full, lock contention) `[L]`
 - [x] **HB-05** — Fallback behavior: empty results on B2 unavailable, bounded write buffer (1000 entries, FIFO eviction), ordered replay on recovery, health check integration `[M]`
-- [ ] **HB-06** — Latency benchmarks: 5 scenarios (single query, query+write, concurrent, cold/warm, FTS5 corpus); structured JSON output, baseline for regression detection `[S]`
+- [x] **HB-06** — Latency benchmarks: 5 scenarios (single query, query+write, concurrent, cold/warm, FTS5 corpus); structured JSON output, baseline for regression detection `[S]`
 
 ## End-to-End Multi-Agent Test (Stream 36)
 
