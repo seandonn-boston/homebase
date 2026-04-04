@@ -128,6 +128,30 @@ rm -f "$BRAIN_B2_WRITE_QUEUE"
 size=$(brain_b2_queue_size)
 assert_eq "Empty queue is 0" "0" "$size"
 
+# Test 11: Replay returns zeros when no queue
+echo "11. Replay with no queue file"
+rm -f "$BRAIN_B2_WRITE_QUEUE"
+result=$(brain_b2_replay_queue)
+replayed=$(printf '%s' "$result" | jq -r '.replayed' 2>/dev/null || echo "error")
+assert_eq "No queue = 0 replayed" "0" "$replayed"
+
+# Test 12: Replay returns remaining when B2 unavailable
+echo "12. Replay when B2 unavailable"
+brain_b2_queue_write "test" "Entry 1" "Content" "test"
+brain_b2_queue_write "test" "Entry 2" "Content" "test"
+export BRAIN_DB_FILE="/nonexistent/brain.db"
+result=$(brain_b2_replay_queue)
+remaining=$(printf '%s' "$result" | jq -r '.remaining' 2>/dev/null || echo "error")
+assert_eq "Entries remain when B2 down" "true" "$([ "$remaining" -ge 1 ] && echo true || echo false)"
+export BRAIN_DB_FILE="$TEST_ADMIRAL_DIR/brain-b2.db"
+
+# Test 13: check_and_replay runs without error
+echo "13. check_and_replay runs without error"
+rm -f "$BRAIN_B2_WRITE_QUEUE"
+brain_b2_check_and_replay
+result=$?
+assert_eq "check_and_replay succeeds" "0" "$result"
+
 # Summary
 echo ""
 echo "================================================="
