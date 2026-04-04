@@ -91,9 +91,10 @@ export class TaskDAGBuilder {
     let totalEstimatedDuration = 0;
 
     if (isValid) {
-      criticalPath = this.computeCriticalPath(nodes);
-      parallelGroups = this.computeParallelGroups(nodes);
-      totalEstimatedDuration = this.computeTotalDuration(nodes, criticalPath);
+      const nodeMap = new Map(nodes.map((n) => [n.id, n]));
+      criticalPath = this.computeCriticalPath(nodes, nodeMap);
+      parallelGroups = this.computeParallelGroups(nodes, nodeMap);
+      totalEstimatedDuration = this.computeTotalDuration(criticalPath, nodeMap);
     }
 
     const totalBudgetTokens = nodes.reduce((sum, n) => sum + n.budgetTokens, 0);
@@ -189,10 +190,9 @@ export class TaskDAGBuilder {
 
   // ── Critical Path ──────────────────────────────────────────
 
-  private computeCriticalPath(nodes: SubtaskNode[]): string[] {
+  private computeCriticalPath(nodes: SubtaskNode[], nodeMap: Map<string, SubtaskNode>): string[] {
     if (nodes.length === 0) return [];
 
-    const nodeMap = new Map(nodes.map((n) => [n.id, n]));
     const sorted = this.topologicalSort(nodes);
     const longestPath = new Map<string, number>();
     const predecessor = new Map<string, string | null>();
@@ -244,10 +244,12 @@ export class TaskDAGBuilder {
 
   // ── Parallel Groups ────────────────────────────────────────
 
-  private computeParallelGroups(nodes: SubtaskNode[]): string[][] {
+  private computeParallelGroups(
+    nodes: SubtaskNode[],
+    nodeMap: Map<string, SubtaskNode>,
+  ): string[][] {
     if (nodes.length === 0) return [];
 
-    const nodeMap = new Map(nodes.map((n) => [n.id, n]));
     const sorted = this.topologicalSort(nodes);
 
     // Compute the "level" of each node (longest path from a root)
@@ -312,8 +314,7 @@ export class TaskDAGBuilder {
     return result;
   }
 
-  private computeTotalDuration(nodes: SubtaskNode[], criticalPath: string[]): number {
-    const nodeMap = new Map(nodes.map((n) => [n.id, n]));
+  private computeTotalDuration(criticalPath: string[], nodeMap: Map<string, SubtaskNode>): number {
     return criticalPath.reduce((sum, id) => {
       const node = nodeMap.get(id);
       return sum + (node?.estimatedDuration ?? 1);

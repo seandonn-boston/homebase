@@ -137,10 +137,8 @@ export class LimitEnforcer {
   registerForRetry(
     taskId: string,
     sessionConfig: SessionConfig,
-    policy?: Partial<RetryPolicy>,
+    _policy?: Partial<RetryPolicy>,
   ): void {
-    const retryPolicy = { ...this.config.retryPolicy, ...policy };
-
     this.retryRecords.set(taskId, {
       taskId,
       sessionConfig,

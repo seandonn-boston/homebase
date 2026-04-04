@@ -57,6 +57,7 @@ const DEFAULT_CONFIG: ExecutionStateConfig = {
 
 export class ExecutionStatePersistence {
   private config: ExecutionStateConfig;
+  private appendsSinceCompaction = 0;
 
   constructor(config: Partial<ExecutionStateConfig> & { statePath: string }) {
     this.config = { ...DEFAULT_CONFIG, ...config };
@@ -152,7 +153,12 @@ export class ExecutionStatePersistence {
       // Non-critical — history is supplementary
     }
 
-    this.compactHistoryIfNeeded();
+    this.appendsSinceCompaction++;
+    // Only check compaction every 100 appends to avoid reading the file on every write
+    if (this.appendsSinceCompaction >= 100) {
+      this.compactHistoryIfNeeded();
+      this.appendsSinceCompaction = 0;
+    }
   }
 
   /**
