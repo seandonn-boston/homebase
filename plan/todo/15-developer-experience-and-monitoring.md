@@ -23,10 +23,10 @@ Developer experience treats contributors as users of the development workflow. M
 ## Documentation & Onboarding
 
 - [x] **DX-03: Interactive development guide** — Step-by-step walkthroughs for 6 common tasks: adding a hook, adding an API endpoint, adding a Standing Order, adding a brain entry type, modifying the quarantine pipeline, adding an attack corpus entry. Each includes prerequisites, commands, expected output, and verification.
-- [ ] **DX-07: Error message improvement audit** — Review all error messages across hooks, control plane, and CLI tools for clarity and actionability. Every message must answer: what went wrong, why it matters, what to do. Improve at least 20 messages with documented before/after.
+- [x] **DX-07: Error message improvement audit** — Review all error messages across hooks, control plane, and CLI tools for clarity and actionability. Every message must answer: what went wrong, why it matters, what to do. Improve at least 20 messages with documented before/after.
 - [x] **DX-09: Debugging guide** — Document how to debug hooks (bash), control plane (TypeScript), and brain queries. Include troubleshooting decision trees for at least 5 common symptoms (hook not firing, hook blocking unexpectedly, server crash, slow queries, missing events).
-- [ ] **DX-10: Example-driven documentation** — Create working, copy-paste-executable code examples for every API endpoint and tool. Cover event stream, trace, health, agent status, brain query, and all hook input/output formats. Smoke-test examples in CI.
-- [ ] **DX-12: Good first issues catalog** — Identify and maintain at least 15 well-scoped, self-contained issues for new contributors. Categorize by component and difficulty. Include a contributing guide covering the end-to-end contribution workflow.
+- [x] **DX-10: Example-driven documentation** — Create working, copy-paste-executable code examples for every API endpoint and tool. Cover event stream, trace, health, agent status, brain query, and all hook input/output formats. Smoke-test examples in CI.
+- [x] **DX-12: Good first issues catalog** — Identify and maintain at least 15 well-scoped, self-contained issues for new contributors. Categorize by component and difficulty. Include a contributing guide covering the end-to-end contribution workflow.
 
 ## Local Testing & Simulation
 
