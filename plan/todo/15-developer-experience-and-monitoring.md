@@ -30,7 +30,7 @@ Developer experience treats contributors as users of the development workflow. M
 
 ## Local Testing & Simulation
 
-- [ ] **DX-14: Local agent session simulator** — CLI tool simulating multi-agent Admiral sessions without LLM API calls. Generates realistic hook payloads, triggers hooks, displays results. Scenario files define tool use sequences; supports multiple agent identities, brain interactions, and state progression visualization. `admiral session simulate <scenario>` with 3+ built-in scenarios.
+- [x] **DX-14: Local agent session simulator** — CLI tool simulating multi-agent Admiral sessions without LLM API calls. Generates realistic hook payloads, triggers hooks, displays results. Scenario files define tool use sequences; supports multiple agent identities, brain interactions, and state progression visualization. `admiral session simulate <scenario>` with 3+ built-in scenarios.
 
 ---
 
