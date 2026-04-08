@@ -1,0 +1,35 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Control Plane Server",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/control-plane/dist/src/cli.js",
+      "args": ["--port", "4510"],
+      "cwd": "${workspaceFolder}",
+      "outFiles": ["${workspaceFolder}/control-plane/dist/**/*.js"],
+      "sourceMaps": true,
+      "preLaunchTask": "build-control-plane"
+    },
+    {
+      "name": "Run Current Test File",
+      "type": "node",
+      "request": "launch",
+      "program": "${file}",
+      "args": ["--test"],
+      "cwd": "${workspaceFolder}/control-plane",
+      "outFiles": ["${workspaceFolder}/control-plane/dist/**/*.js"],
+      "sourceMaps": true
+    },
+    {
+      "name": "Debug Hook",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/.hooks/tests/test_hooks.sh",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-x"],
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}
