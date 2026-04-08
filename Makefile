@@ -70,9 +70,8 @@ lint:
 
 # ── CI (local) ────────────────────────────────────────────────
 
-ci: lint build test
-	@echo ""
-	@echo "Local CI pipeline complete."
+ci:
+	@bash scripts/ci-local.sh
 
 # ── Dev ───────────────────────────────────────────────────────
 
