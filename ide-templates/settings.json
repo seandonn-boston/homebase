@@ -1,0 +1,32 @@
+{
+  "editor.defaultFormatter": "biomejs.biome",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "quickfix.biome": "explicit"
+  },
+  "editor.tabSize": 2,
+  "editor.insertSpaces": false,
+  "files.eol": "\n",
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "typescript.tsdk": "control-plane/node_modules/typescript/lib",
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "shellcheck.enable": true,
+  "shellcheck.executablePath": "shellcheck",
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/.brain": true,
+    "**/.admiral": true
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[shellscript]": {
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true
+  }
+}

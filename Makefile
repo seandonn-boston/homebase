@@ -9,7 +9,7 @@
 #   make dev       Start control plane in watch mode
 #   make clean     Remove build artifacts
 
-.PHONY: setup test build lint ci dev clean help
+.PHONY: setup test build lint ci dev clean ide help
 
 # Default target
 help:
@@ -22,6 +22,7 @@ help:
 	@echo "  make lint      Run all linters (biome, shellcheck)"
 	@echo "  make ci        Full CI pipeline locally"
 	@echo "  make dev       Start control plane in watch mode"
+	@echo "  make ide       Copy IDE templates to .vscode/ (if not present)"
 	@echo "  make clean     Remove build artifacts"
 
 # ── Setup ─────────────────────────────────────────────────────
@@ -77,6 +78,20 @@ ci: lint build test
 
 dev:
 	@cd control-plane && npm run dev
+
+# ── IDE ───────────────────────────────────────────────────────
+
+ide:
+	@mkdir -p .vscode
+	@for f in settings.json launch.json extensions.json; do \
+		if [ ! -f ".vscode/$$f" ]; then \
+			cp "ide-templates/$$f" ".vscode/$$f"; \
+			echo "Copied $$f to .vscode/"; \
+		else \
+			echo ".vscode/$$f already exists — skipped"; \
+		fi; \
+	done
+	@echo "IDE setup complete."
 
 # ── Clean ─────────────────────────────────────────────────────
 
