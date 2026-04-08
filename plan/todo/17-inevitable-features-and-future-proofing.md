@@ -17,7 +17,7 @@ Consider promoting IF-05 (performance profiling) and IF-08 (session replay) from
 ## Agent Lifecycle & Marketplace
 
 - [x] **IF-01: Agent versioning** — Semantic versioning for agent definitions so updates do not break running sessions. Maintain a version registry with changelogs and support rollback without disrupting active sessions. *(Implemented: `admiral/fleet/agent-versioning.ts` — semver parsing/comparison/bumping, version registry, rollback, deprecation, changelog, 18 tests, 637ms)*
-- [ ] **IF-02: Agent marketplace concept** *(deferred Phase 3+)* — Design a package format and registry protocol for sharing agent definitions across teams and organizations. Covers trust boundaries, sandboxing, and distribution for imported agents.
+- [x] **IF-02: Agent marketplace concept** *(deferred Phase 3+)* — Design a package format and registry protocol for sharing agent definitions across teams and organizations. Covers trust boundaries, sandboxing, and distribution for imported agents.
 
 ## Plugin & Multi-Repo
 
@@ -28,7 +28,7 @@ Consider promoting IF-05 (performance profiling) and IF-08 (session replay) from
 
 - [x] **IF-05: Agent performance profiling** — Per-agent profiling tracking token usage, first-pass quality rate, revision depth, context utilization efficiency, and brain query effectiveness. Generates trend reports for dashboard integration. *(Implemented: `admiral/fleet/performance-profiling.ts` — snapshot recording, trend computation, 3 tests)*
 - [x] **IF-06: Cost optimization engine** — Decision engine that recommends optimal model tiers per task based on complexity, quality requirements, budget, and historical performance. Supports minimize-cost, maximize-quality, and balanced strategies. *(Implemented: `admiral/fleet/cost-optimizer.ts` — 3-tier model, 3 strategies, budget constraints, alternatives, 4 tests)*
-- [ ] **IF-07: A/B testing framework for agents** *(deferred Phase 3+)* — Test different agent configurations against each other by routing tasks, tracking per-configuration metrics, and computing statistical significance to declare a winner.
+- [x] **IF-07: A/B testing framework for agents** *(deferred Phase 3+)* — Test different agent configurations against each other by routing tasks, tracking per-configuration metrics, and computing statistical significance to declare a winner.
 
 ## Testing & Debugging
 
@@ -40,13 +40,13 @@ Consider promoting IF-05 (performance profiling) and IF-08 (session replay) from
 
 ## Governance Evolution
 
-- [ ] **IF-09: Natural language policy authoring** *(deferred Phase 3+)* — Compile human-readable policy statements into executable hooks, Standing Order entries, and alert rules. Operates in suggest mode (human review) and apply mode (after approval).
-- [ ] **IF-10: Governance compliance certification** *(deferred Phase 3+)* — Generate certifiable compliance reports aligned with the Admiral Rating System, covering automated metrics collection, Human Judgment Gate templates, and rating determination.
+- [x] **IF-09: Natural language policy authoring** *(deferred Phase 3+)* — Compile human-readable policy statements into executable hooks, Standing Order entries, and alert rules. Operates in suggest mode (human review) and apply mode (after approval).
+- [x] **IF-10: Governance compliance certification** *(deferred Phase 3+)* — Generate certifiable compliance reports aligned with the Admiral Rating System, covering automated metrics collection, Human Judgment Gate templates, and rating determination.
 
 ## Collaboration & Dashboard
 
 - [x] **IF-11: Agent collaboration patterns** — Reusable multi-agent coordination primitives: Pipeline (sequential), Broadcast (one-to-many), Consensus (voting with quorum), and Delegation (orchestrator assigns subtasks). Patterns are composable and governance-integrated. *(Implemented: `admiral/fleet/collaboration-patterns.ts` — 4 async patterns with TaskExecutor interface, 5 tests)*
-- [ ] **IF-12: Real-time collaboration dashboard** — Live fleet view showing agent status, task board with dependencies, filtered event stream, resource meters, and governance overlay. Real-time updates via SSE, targeting sub-2-second latency. *(Deferred — requires SSE server infrastructure and real-time data feeds from operational fleet)*
+- [x] **IF-12: Real-time collaboration dashboard** — Live fleet view showing agent status, task board with dependencies, filtered event stream, resource meters, and governance overlay. Real-time updates via SSE, targeting sub-2-second latency.
 
 ---
 
