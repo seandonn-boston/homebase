@@ -8,7 +8,7 @@ Developer experience treats contributors as users of the development workflow. M
 
 ## Dev Environment Setup
 
-- [ ] **DX-02: One-command setup** — Create `make setup` (or `./setup.sh`) that installs all dependencies, validates the environment, and runs initial tests. Check for required system dependencies (bash 5+, jq, node, npm) with platform-specific install instructions. Must be idempotent and work on both macOS and Linux.
+- [x] **DX-02: One-command setup** — Create `make setup` (or `./setup.sh`) that installs all dependencies, validates the environment, and runs initial tests. Check for required system dependencies (bash 5+, jq, node, npm) with platform-specific install instructions. Must be idempotent and work on both macOS and Linux.
 - [ ] **DX-01: Dev container configuration** — Create a VS Code dev container (`.devcontainer/`) with all dependencies pre-installed: Node.js, jq, shellcheck, shfmt, biome, bash 5+, curl, git. Include recommended extensions and `postCreateCommand` running `npm install`. Container build time < 5 minutes; full test suite passes inside container.
 - [ ] **DX-08: IDE configuration templates** — Provide shared VS Code settings, launch configurations, and recommended extensions. Store as `.vscode/settings.json.template` to avoid overwriting personal settings. Include `make ide` target that copies templates into place if no local settings exist.
 
