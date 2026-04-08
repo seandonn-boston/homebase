@@ -37,7 +37,7 @@ Developer experience treats contributors as users of the development workflow. M
 ## Scanner Core
 
 - [x] **MON-04: Scanner state management** — Track scanner state per `aiStrat/monitor/state-schema.json`. State includes last scan timestamps, known entity versions, watchlist configuration, and scan history. Atomic updates prevent corruption on mid-run failures. Provide query functions: `get_last_scan`, `is_known_version`, `get_scan_history`.
-- [ ] **MON-01: Scanner implementation** — Implement the scanner from `aiStrat/monitor/scanner-spec.md` supporting 5 scan types: `full`, `models`, `patterns`, `releases`, `discover`. Fetch from configured sources, classify findings by priority (HIGH/MEDIUM/LOW), auto-create GitHub issues for HIGH findings. Respect read-only and injection-safe constraints.
+- [x] **MON-01: Scanner implementation** — Implement the scanner from `aiStrat/monitor/scanner-spec.md` supporting 5 scan types: `full`, `models`, `patterns`, `releases`, `discover`. Fetch from configured sources, classify findings by priority (HIGH/MEDIUM/LOW), auto-create GitHub issues for HIGH findings. Respect read-only and injection-safe constraints.
 - [ ] **MON-05: Custom scan rules** — Allow defining custom scan rules as JSON/YAML in `monitor/rules/`. Each rule specifies: ID, description, scan type, check command, expected output, severity, remediation. Scaffold command generates templates. Include 3 example rules (TODO count, dependency freshness, documentation coverage).
 - [ ] **MON-10: Handoff validation implementation** — Validate agent handoffs against `aiStrat/handoff/v1.schema.json`. Check schema conformance, field constraints, referential integrity, and session handoff completeness. Runs as both a real-time hook and a scanner rule.
 
