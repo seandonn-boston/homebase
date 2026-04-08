@@ -1,0 +1,46 @@
+{
+  "engineering": {
+    "description": "Context checklist for engineering agents",
+    "required_at": "session_start",
+    "items": [
+      "Project structure awareness (key directories, module boundaries)",
+      "Active branch and recent commits context",
+      "Test framework and coverage requirements",
+      "Coding standards (ADMIRAL_STYLE.md)",
+      "Build system configuration (tsconfig, package.json)"
+    ]
+  },
+  "quality": {
+    "description": "Context checklist for quality/QA agents",
+    "required_at": "session_start",
+    "items": [
+      "Test coverage baselines and gates",
+      "Known flaky tests and exclusions",
+      "Quality metrics and thresholds",
+      "Review checklist requirements",
+      "CI pipeline structure and timing"
+    ]
+  },
+  "security": {
+    "description": "Context checklist for security agents",
+    "required_at": "session_start",
+    "items": [
+      "Security model document (docs/security/security-model.md)",
+      "Attack corpus (admiral/attack-corpus/)",
+      "Injection detection patterns",
+      "Access control boundaries (scope_boundary_guard)",
+      "Standing Orders related to security (SO-03, SO-08)"
+    ]
+  },
+  "governance": {
+    "description": "Context checklist for governance agents",
+    "required_at": "session_start",
+    "items": [
+      "Standing Orders (all 16)",
+      "Hook enforcement map",
+      "Fleet registry and routing rules",
+      "Escalation pipeline configuration",
+      "Audit trail requirements"
+    ]
+  }
+}

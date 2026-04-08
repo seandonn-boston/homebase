@@ -1,0 +1,35 @@
+{
+  "description": "Progressive disclosure rules — lazy-load skill files on matching patterns",
+  "rules": [
+    {
+      "id": "hooks",
+      "trigger": {"file_patterns": [".hooks/**", "admiral/lib/hook_*.sh"]},
+      "skills": ["docs/guides/hook-development.md", "docs/adr/001-bash-for-hooks.md", "docs/adr/004-fail-open-philosophy.md"]
+    },
+    {
+      "id": "brain",
+      "trigger": {"file_patterns": ["admiral/brain/**", ".brain/**", "admiral/lib/brain_*.sh"]},
+      "skills": ["docs/guides/brain-user-guide.md", "docs/adr/009-brain-graduation-criteria.md"]
+    },
+    {
+      "id": "security",
+      "trigger": {"file_patterns": ["admiral/attack-corpus/**", "admiral/lib/injection_*.sh"], "keywords": ["injection", "security", "attack"]},
+      "skills": ["docs/security/security-model.md"]
+    },
+    {
+      "id": "fleet",
+      "trigger": {"file_patterns": ["fleet/**", "admiral/config/fleet_registry.json"]},
+      "skills": ["docs/adr/008-fleet-orchestration-approach.md"]
+    },
+    {
+      "id": "control-plane",
+      "trigger": {"file_patterns": ["control-plane/src/**"]},
+      "skills": ["docs/adr/002-zero-runtime-dependencies.md", "docs/adr/003-spc-for-anomaly-detection.md"]
+    },
+    {
+      "id": "monitoring",
+      "trigger": {"file_patterns": ["monitor/**"], "keywords": ["scanner", "digest", "monitor"]},
+      "skills": ["aiStrat/monitor/scanner-spec.md"]
+    }
+  ]
+}
