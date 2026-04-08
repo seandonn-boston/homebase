@@ -24,7 +24,7 @@ Trust mechanics let agents earn independence through demonstrated competence. Wi
 
 ## Trust Approval & Operations
 
-- [ ] **AU-11: Admiral approval UI/API** — Operator-facing interface for approving/deferring trust promotions via CLI and API. Presents evidence (consecutive successes, time period, failure history); requires rationale; logs to Brain; pattern recognition for rubber-stamped approvals.
+- [x] **AU-11: Admiral approval UI/API** — Operator-facing interface for approving/deferring trust promotions via CLI and API. Presents evidence (consecutive successes, time period, failure history); requires rationale; logs to Brain; pattern recognition for rubber-stamped approvals.
 
 ## Trust Operations
 

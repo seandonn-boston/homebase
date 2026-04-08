@@ -101,7 +101,7 @@ Ship causality tracing (OB-02 + OB-09) within **90 days** — before Perplexity 
 
 - [x] **OB-07: Dashboard improvements** — Real-time event timeline, hook execution visualization (latency sparklines, pass/fail), brain query log with relevance scores; auto-refresh.
 - [~] **OB-09: Incident timeline reconstruction** — Given session ID, reconstruct complete chronological timeline with causal links; flag anomalies; < 5s for 1000 events; markdown and JSON output. *(partial — see audit)*
-- [ ] **OB-10: Performance regression detection** — Compare current metrics against statistical baselines (rolling averages + stddev); detect > 20% latency increase, > 20% throughput decrease; run in CI per PR; auto-update baselines on merge.
+- [x] **OB-10: Performance regression detection** — Compare current metrics against statistical baselines (rolling averages + stddev); detect > 20% latency increase, > 20% throughput decrease; run in CI per PR; auto-update baselines on merge.
 
 ## Fleet Control Plane Authorization & Tracing
 

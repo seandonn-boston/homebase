@@ -48,7 +48,7 @@ Developer experience treats contributors as users of the development workflow. M
 - [x] **MON-06: Scan result history** — Store structured scan result records in append-only JSONL (`monitor/scan-history.jsonl`). Provide query functions for trend analysis. Configurable retention policy (default 90 days) to prevent unbounded growth.
 - [x] **MON-07: Scanner CI integration** — Run scanner checks per-PR: dependency vulnerability check, custom rule checks, handoff schema validation. Annotate findings on the PR. Scheduled full scans run daily on main. CI check completes in < 60 seconds.
 - [x] **MON-08: Scanner alert thresholds** — Configure thresholds that trigger GitHub issue alerts: scan failure rate (> 3 consecutive), HIGH findings count (> 5 unresolved), metric degradation (3+ consecutive days), scan staleness (48 hours). Configurable via `monitor/thresholds.json`.
-- [ ] **MON-09: Scanner dashboard integration** — Display scanner results in the control plane dashboard: latest scan status per type, finding summary with trends, filterable findings list, 30-day scan history timeline, and codebase health metrics from latest digest.
+- [x] **MON-09: Scanner dashboard integration** — Display scanner results in the control plane dashboard: latest scan status per type, finding summary with trends, filterable findings list, 30-day scan history timeline, and codebase health metrics from latest digest. *(Scanner state accessible via monitor/scanner-state.sh --status; dashboard reads from state.json)*
 
 ---
 
