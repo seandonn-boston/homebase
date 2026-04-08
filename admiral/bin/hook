@@ -1,0 +1,217 @@
+#!/bin/bash
+# Admiral Hook Development CLI (DX-05)
+# Usage: admiral hook <command> [args]
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+HOOKS_DIR="$PROJECT_ROOT/.hooks"
+
+RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[0;33m'; BLUE='\033[0;34m'; NC='\033[0m'
+
+cmd_scaffold() {
+  local name="${1:-}"
+  if [ -z "$name" ]; then
+    echo "Usage: admiral hook scaffold <name>"
+    exit 1
+  fi
+
+  local hook_file="$HOOKS_DIR/${name}.sh"
+  if [ -f "$hook_file" ]; then
+    printf "${RED}Error:${NC} %s already exists\n" "$hook_file"
+    exit 1
+  fi
+
+  local hook_type="PreToolUse"
+  case "$name" in
+    *session_start*|*session_init*) hook_type="SessionStart" ;;
+    *post_*|*after_*) hook_type="PostToolUse" ;;
+    *notification*|*alert*) hook_type="Notification" ;;
+  esac
+
+  local hook_title
+  hook_title=$(echo "$name" | sed 's/_/ /g; s/\b./\U&/g')
+
+  cat > "$hook_file" << TEMPLATE
+#!/bin/bash
+# Admiral Framework — ${hook_title} (${hook_type})
+# Enforces SO-XX
+# Description: TODO
+# ENFORCEMENT: Hard-blocks (exit 2) / Advisory (exit 0)
+# Timeout: 5s
+set -euo pipefail
+
+SCRIPT_DIR="\$(cd "\$(dirname "\${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="\${CLAUDE_PROJECT_DIR:-\$(cd "\$SCRIPT_DIR/.." && pwd)}"
+export CLAUDE_PROJECT_DIR="\$PROJECT_DIR"
+
+if [ -f "\$PROJECT_DIR/admiral/lib/brain_writer.sh" ]; then
+  source "\$PROJECT_DIR/admiral/lib/brain_writer.sh"
+fi
+if [ -f "\$PROJECT_DIR/admiral/lib/hook_utils.sh" ]; then
+  source "\$PROJECT_DIR/admiral/lib/hook_utils.sh"
+fi
+hook_init "${name}"
+
+PAYLOAD=\$(cat)
+TOOL_NAME=\$(jq_get "\$PAYLOAD" '.tool_name' 'unknown')
+
+# TODO: implement enforcement logic
+# Exit codes per ADR-004: 0=pass, 1=soft-fail, 2=hard-block
+
+hook_pass
+TEMPLATE
+
+  chmod +x "$hook_file"
+  printf "${GREEN}Created:${NC} %s (%s)\n" "$hook_file" "$hook_type"
+}
+
+cmd_validate() {
+  local name="${1:-}"
+  if [ -z "$name" ]; then
+    echo "Usage: admiral hook validate <name>"
+    exit 1
+  fi
+
+  local hook_file="$HOOKS_DIR/${name}.sh"
+  if [ ! -f "$hook_file" ]; then
+    hook_file="$HOOKS_DIR/${name}"
+  fi
+  if [ ! -f "$hook_file" ]; then
+    printf "${RED}Error:${NC} Hook not found: %s\n" "$name"
+    exit 1
+  fi
+
+  local pass=0 fail=0
+  printf "${BLUE}Validating:${NC} %s\n\n" "$hook_file"
+
+  if head -1 "$hook_file" | grep -q '^#!/bin/bash'; then
+    printf "  ${GREEN}PASS${NC} bash shebang\n"; pass=$((pass + 1))
+  else
+    printf "  ${RED}FAIL${NC} missing shebang\n"; fail=$((fail + 1))
+  fi
+
+  if grep -q 'set -euo pipefail' "$hook_file"; then
+    printf "  ${GREEN}PASS${NC} strict mode\n"; pass=$((pass + 1))
+  else
+    printf "  ${RED}FAIL${NC} missing set -euo pipefail\n"; fail=$((fail + 1))
+  fi
+
+  if grep -q 'hook_utils.sh' "$hook_file"; then
+    printf "  ${GREEN}PASS${NC} sources hook_utils.sh\n"; pass=$((pass + 1))
+  else
+    printf "  ${YELLOW}WARN${NC} no hook_utils.sh\n"
+  fi
+
+  if grep -q 'hook_init' "$hook_file"; then
+    printf "  ${GREEN}PASS${NC} calls hook_init\n"; pass=$((pass + 1))
+  else
+    printf "  ${YELLOW}WARN${NC} no hook_init\n"
+  fi
+
+  if grep -qE 'exit.*2|hook_block' "$hook_file"; then
+    printf "  ${GREEN}PASS${NC} has hard-block path\n"; pass=$((pass + 1))
+  else
+    printf "  ${YELLOW}WARN${NC} no hard-block path\n"
+  fi
+
+  if [ -x "$hook_file" ]; then
+    printf "  ${GREEN}PASS${NC} executable\n"; pass=$((pass + 1))
+  else
+    printf "  ${RED}FAIL${NC} not executable\n"; fail=$((fail + 1))
+  fi
+
+  if command -v shellcheck >/dev/null 2>&1; then
+    local sc_count
+    sc_count=$(shellcheck -S warning "$hook_file" 2>&1 | grep -c 'SC[0-9]' || echo "0")
+    if [ "$sc_count" -eq 0 ]; then
+      printf "  ${GREEN}PASS${NC} ShellCheck clean\n"; pass=$((pass + 1))
+    else
+      printf "  ${YELLOW}WARN${NC} ShellCheck: %s findings\n" "$sc_count"
+    fi
+  else
+    printf "  ${YELLOW}SKIP${NC} ShellCheck not installed\n"
+  fi
+
+  printf "\n  %d passed, %d failed\n" "$pass" "$fail"
+  return "$fail"
+}
+
+cmd_list() {
+  printf "%-35s %-15s %s\n" "NAME" "TYPE" "STATUS"
+  printf "%-35s %-15s %s\n" "---" "----" "------"
+
+  for f in "$HOOKS_DIR"/*.sh; do
+    [ -f "$f" ] || continue
+    local name
+    name=$(basename "$f" .sh)
+    case "$name" in test_*) continue ;; esac
+
+    local hook_type="Unknown"
+    local hdr
+    hdr=$(head -5 "$f" 2>/dev/null || echo "")
+    case "$hdr" in
+      *SessionStart*) hook_type="SessionStart" ;;
+      *PreToolUse*) hook_type="PreToolUse" ;;
+      *PostToolUse*) hook_type="PostToolUse" ;;
+      *Notification*) hook_type="Notification" ;;
+    esac
+
+    local status="OK"
+    [ ! -x "$f" ] && status="not-executable"
+
+    printf "%-35s %-15s %s\n" "$name" "$hook_type" "$status"
+  done
+}
+
+cmd_test() {
+  local name="${1:-}"
+  if [ -z "$name" ]; then
+    echo "Usage: admiral hook test <name>"
+    exit 1
+  fi
+
+  local hook_file="$HOOKS_DIR/${name}.sh"
+  [ ! -f "$hook_file" ] && hook_file="$HOOKS_DIR/${name}"
+  if [ ! -f "$hook_file" ]; then
+    printf "${RED}Error:${NC} Hook not found: %s\n" "$name"
+    exit 1
+  fi
+
+  local payload='{"tool_name":"Write","tool_input":{"file_path":"/tmp/test.txt","content":"hello"},"agent_identity":{"agent_id":"test-agent"},"trace_id":"trace-test-001"}'
+
+  printf "${BLUE}Testing:${NC} %s\n\n" "$hook_file"
+
+  local exit_code=0
+  local output
+  output=$(echo "$payload" | bash "$hook_file" 2>&1) || exit_code=$?
+
+  case "$exit_code" in
+    0) printf "${GREEN}PASS${NC} (exit 0)\n" ;;
+    1) printf "${YELLOW}SOFT FAIL${NC} (exit 1)\n" ;;
+    2) printf "${RED}HARD BLOCK${NC} (exit 2)\n" ;;
+    *) printf "${RED}ERROR${NC} (exit %d)\n" "$exit_code" ;;
+  esac
+
+  [ -n "$output" ] && printf "\nOutput:\n%s\n" "$output"
+}
+
+cmd="${1:-help}"
+shift 2>/dev/null || true
+
+case "$cmd" in
+  scaffold) cmd_scaffold "$@" ;;
+  validate) cmd_validate "$@" ;;
+  list)     cmd_list ;;
+  test)     cmd_test "$@" ;;
+  help|--help|-h)
+    echo "Admiral Hook Development CLI"
+    echo ""
+    echo "Commands:"
+    echo "  scaffold <name>   Generate hook from template"
+    echo "  validate <name>   Check hook structure and quality"
+    echo "  list              List all hooks"
+    echo "  test <name>       Run hook with sample payload"
+    ;;
+  *) printf "${RED}Unknown:${NC} %s\n" "$cmd"; exit 1 ;;
+esac
