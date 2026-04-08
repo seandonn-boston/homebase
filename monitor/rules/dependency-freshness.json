@@ -1,0 +1,9 @@
+{
+  "id": "RULE-002",
+  "description": "Check for outdated npm dependencies",
+  "scan_type": "releases",
+  "check_command": "cd control-plane && npm outdated --json 2>/dev/null | jq 'length'",
+  "expected": "0",
+  "severity": "MEDIUM",
+  "remediation": "Run npm update or review Dependabot PRs"
+}

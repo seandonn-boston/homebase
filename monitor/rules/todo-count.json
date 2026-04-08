@@ -1,0 +1,9 @@
+{
+  "id": "RULE-001",
+  "description": "Count remaining TODO items across plan/todo/*.md",
+  "scan_type": "full",
+  "check_command": "grep -c '^- \\[ \\]' plan/todo/*.md 2>/dev/null | awk -F: '{s+=$2} END {print s}'",
+  "expected": "decreasing",
+  "severity": "LOW",
+  "remediation": "Complete TODO items per plan/ROADMAP.md execution order"
+}
