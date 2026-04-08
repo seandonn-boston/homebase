@@ -9,7 +9,7 @@
 #   make dev       Start control plane in watch mode
 #   make clean     Remove build artifacts
 
-.PHONY: setup test build lint ci dev clean ide help
+.PHONY: setup test build lint ci dev clean ide changelog help
 
 # Default target
 help:
@@ -83,6 +83,11 @@ dev:
 	@echo ""
 	@cd control-plane && npx tsc
 	@cd control-plane && node --watch dist/src/cli.js
+
+# ── Changelog ─────────────────────────────────────────────────
+
+changelog:
+	@bash scripts/changelog.sh
 
 # ── IDE ───────────────────────────────────────────────────────
 
