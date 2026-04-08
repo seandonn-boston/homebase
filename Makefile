@@ -77,7 +77,13 @@ ci: lint build test
 # ── Dev ───────────────────────────────────────────────────────
 
 dev:
-	@cd control-plane && npm run dev
+	@echo "Starting control plane in dev mode (tsc watch + auto-restart)..."
+	@echo "  TypeScript compiler watches src/ for changes"
+	@echo "  Server auto-restarts when dist/ files change"
+	@echo "  Press Ctrl+C to stop"
+	@echo ""
+	@cd control-plane && npx tsc
+	@cd control-plane && node --watch dist/src/cli.js
 
 # ── IDE ───────────────────────────────────────────────────────
 
