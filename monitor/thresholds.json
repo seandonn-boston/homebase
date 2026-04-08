@@ -1,0 +1,22 @@
+{
+  "scan_failure_rate": {
+    "description": "Alert after N consecutive scan failures",
+    "threshold": 3,
+    "action": "github_issue"
+  },
+  "high_findings_count": {
+    "description": "Alert when unresolved HIGH findings exceed threshold",
+    "threshold": 5,
+    "action": "github_issue"
+  },
+  "metric_degradation": {
+    "description": "Alert after N consecutive days of degrading metrics",
+    "threshold": 3,
+    "action": "github_issue"
+  },
+  "scan_staleness_hours": {
+    "description": "Alert when no scan has run for this many hours",
+    "threshold": 48,
+    "action": "github_issue"
+  }
+}
