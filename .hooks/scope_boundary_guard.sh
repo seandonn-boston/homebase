@@ -28,10 +28,8 @@ PAYLOAD=$(cat)
 TOOL_NAME=$(jq_get "$PAYLOAD" '.tool_name' 'unknown')
 
 # Only check file-modifying tools
-# shellcheck disable=SC2034  # IS_WRITE tracks tool type for readability
-IS_WRITE=false
 case "$TOOL_NAME" in
-  Write|Edit|NotebookEdit) IS_WRITE=true ;;
+  Write|Edit|NotebookEdit) ;; # file-modifying — continue to check
   Bash)
     # Check if bash command modifies protected paths
     COMMAND=$(jq_get "$PAYLOAD" '.tool_input.command')
@@ -40,8 +38,6 @@ case "$TOOL_NAME" in
       git\ status*|git\ log*|git\ diff*|git\ add*|git\ commit*|git\ push*|ls*|cat*|head*|tail*|echo*|pwd*)
         exit 0 ;;
     esac
-    # shellcheck disable=SC2034
-    IS_WRITE=true
     ;;
   *) exit 0 ;;
 esac

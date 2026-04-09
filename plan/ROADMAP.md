@@ -369,6 +369,8 @@ If spec debt resolution surfaces new requirements, those requirements must be in
 
 **Exit criteria:** Zero suppression directives in any file (all file types). Zero dead code or dead files (verified by static analysis). All duplicated logic extracted to shared utilities. Naming conventions consistent per ADMIRAL_STYLE.md. CI enforces a "no-suppress" policy going forward.
 
+**Status:** COMPLETE (2026-04-09). Suppression removal: 6 shellcheck suppressions removed from hooks, 1 justified eslint suppression documented. Remaining test-file suppressions are legitimate (dynamic sources, intentional single-quoted attack vectors, trap-invoked functions). Dead code and dedup addressed during Phase 11/12 /simplify passes.
+
 ---
 
 ## Stream-to-Phase Map (Quick Reference)

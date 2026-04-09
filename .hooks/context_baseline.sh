@@ -10,9 +10,8 @@ export CLAUDE_PROJECT_DIR="$PROJECT_DIR"
 
 source "$PROJECT_DIR/admiral/lib/state.sh"
 
-# Read payload from stdin (consumed to clear stdin buffer)
-# shellcheck disable=SC2034
-PAYLOAD=$(cat)
+# Consume stdin payload (this hook doesn't use the payload content)
+cat > /dev/null
 
 # Count Standing Orders tokens (approximate: character count / 4)
 SO_DIR="$PROJECT_DIR/admiral/standing-orders"
