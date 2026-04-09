@@ -9,7 +9,6 @@ PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
 pass=0
 fail=0
-skip=0
 
 assert_eq() {
   local desc="$1" expected="$2" actual="$3"
