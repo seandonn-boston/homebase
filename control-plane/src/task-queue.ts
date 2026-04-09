@@ -101,7 +101,9 @@ export class TaskQueue {
    */
   enqueue(options: EnqueueOptions): Task {
     if (this.queue.length >= this.config.maxQueueDepth) {
-      throw new Error(`Task queue full (${this.config.maxQueueDepth} tasks). Wait for tasks to complete or increase maxQueueDepth.`);
+      throw new Error(
+        `Task queue full (${this.config.maxQueueDepth} tasks). Wait for tasks to complete or increase maxQueueDepth.`,
+      );
     }
 
     this.taskCounter++;
