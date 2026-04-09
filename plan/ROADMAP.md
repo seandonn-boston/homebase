@@ -322,6 +322,8 @@ If spec debt resolution surfaces new requirements, those requirements must be in
 
 **Todo files:** `todo/15` (22 missing + 3 partial = ~25 items), `todo/06` (5 remaining), `todo/11` (1 remaining), `todo/09` (1 remaining) — ~32 items total.
 
+**Status:** COMPLETE (2026-04-08). All 32 Phase 12 tasks done. DX: setup.sh, Makefile, devcontainer, IDE templates, hot reload, hook CLI, local CI, changelog, preflight, dev guide, debugging guide, error audit, API examples, good first issues, session simulator. Monitoring: scanner, state management, daily digests, weekly trends, custom rules, scan history, CI integration, alert thresholds, dashboard integration, handoff validation. Fleet: template generator, tier tracking, context checklists, progressive disclosure, agent lifecycle. Autonomy: approval API. Observability: performance regression detection.
+
 ---
 
 ## Phase 13 — Strategic Positioning & Completion

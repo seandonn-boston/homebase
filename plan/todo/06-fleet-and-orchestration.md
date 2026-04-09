@@ -8,7 +8,7 @@ Source streams: **Stream 14 (Fleet Agent Definitions, F-01 to F-14)** | **Stream
 
 - [x] **F-12a** — Agent definition JSON Schema (`fleet/agents/schema/agent-definition.schema.json`): Identity, Authority, Constraints, Tool Registry (disjoint validation), Model Tier, Context Injection, Interface Contracts, File Ownership, API Resilience, Prompt Anatomy metadata
 - [x] **F-12b** — Agent definition validator (`fleet/agents/schema/validate.sh` or `.ts`): CI check for schema compliance, tool list disjointness, model tier validity, routing table consistency, interface contract completeness
-- [ ] **F-14** — Agent definition template generator (`fleet/agents/schema/generate-agent.sh` or `.ts`): scaffold md + json from name and category with all required sections
+- [x] **F-14** — Agent definition template generator (`fleet/agents/schema/generate-agent.sh` or `.ts`): scaffold md + json from name and category with all required sections
 
 ## Command Layer Agents
 
@@ -59,21 +59,21 @@ Source streams: **Stream 14 (Fleet Agent Definitions, F-01 to F-14)** | **Stream
 - [x] **O-01c** — Capability-matching routing: registry-based fallback with ranked candidates, confidence scores, low-confidence escalation
 - [~] **O-02a** — Model tier validation hook (`SessionStart: tier_validation`): reject sessions where model does not meet minimum tier *(partial — see audit)*
 - [x] **O-02b** — Degradation policy engine: exponential backoff (1s-30s, 4 retries), per-agent Degraded/Blocked policies, no cascading degradation, recovery protocol
-- [ ] **O-02c** — Model tier promotion/demotion tracking: quality rates, rework costs, A/B results, recommendations persisted to Brain
+- [x] **O-02c** — Model tier promotion/demotion tracking: quality rates, rework costs, A/B results, recommendations persisted to Brain
 - [x] **O-08** — File ownership conflict resolution: detect overlapping ownership at assignment time, resolve via decompose / primary-reviewer / escalate
 
 ## Orchestration Patterns
 
 - [x] **O-03a** — Three-layer context assembly: Layer 1 (Fleet), Layer 2 (Project), Layer 3 (Task); prompt anatomy ordering; context budget enforcement
-- [ ] **O-03b** — Category-specific context checklists: engineering, quality, security, governance checklists validated at session start
-- [ ] **O-03c** — Progressive disclosure via skills: lazy-load skill files on matching file patterns or keywords
+- [x] **O-03b** — Category-specific context checklists: engineering, quality, security, governance checklists validated at session start
+- [x] **O-03c** — Progressive disclosure via skills: lazy-load skill files on matching file patterns or keywords
 - [x] **O-04** — Handoff contract validation: validate agent-to-agent payloads against `fleet/interface-contracts.md`, reject violations, track repeated failures (3+ triggers decomposition review)
 - [x] **O-05a** — Handoff protocol implementation: context transfer, state serialization, metadata extension point, `handoff/v1.schema.json`
 - [x] **O-05b** — Multi-agent pipeline orchestration: sequential pipelines with step tracking, failure handling (retry/skip/abort), consolidated traces
 - [x] **O-06** — Fleet health monitoring: per-agent metrics (utilization, throughput, error rate, budget burn, first-pass quality), fleet aggregates, classified alerts (CRITICAL/HIGH/MEDIUM/LOW) with deduplication
 - [x] **O-07** — Task decomposition engine: break complex tasks into single-agent subtasks with acceptance criteria and budget allocation, detect artificial splits
 - [x] **O-09** — Fleet scaling policies: queue depth / utilization / wait-time triggers, fleet size limits (warn at 12), cooldown periods
-- [ ] **O-10** — Agent warm-up and cool-down: context pre-loading for anticipated tasks, idle release after configurable period, re-activation with context reload
+- [x] **O-10** — Agent warm-up and cool-down: context pre-loading for anticipated tasks, idle release after configurable period, re-activation with context reload
 
 ---
 

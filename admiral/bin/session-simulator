@@ -1,0 +1,170 @@
+#!/bin/bash
+# Admiral Session Simulator (DX-14)
+# Simulates multi-agent sessions without LLM API calls.
+#
+# Usage: admiral session simulate <scenario>
+#   Scenarios: basic, multi-agent, failure
+#
+# Generates realistic hook payloads, triggers hooks, displays results.
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+HOOKS_DIR="$PROJECT_ROOT/.hooks"
+SCENARIOS_DIR="$SCRIPT_DIR/../simulation/scenarios"
+
+RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[0;33m'; BLUE='\033[0;34m'; CYAN='\033[0;36m'; NC='\033[0m'
+
+export CLAUDE_PROJECT_DIR="$PROJECT_ROOT"
+
+# ── Payload generators ────────────────────────────────────────
+
+gen_session_start() {
+  local agent_id="${1:-orchestrator}"
+  local model="${2:-claude-sonnet-4-20250514}"
+  jq -cn --arg sid "ses_$(date +%s)" --arg agent "$agent_id" --arg model "$model" \
+    '{session_id: $sid, model: $model, cwd: ".", agent_identity: {agent_id: $agent, model_tier: "tier1_flagship"}}'
+}
+
+gen_pre_tool_use() {
+  local tool="${1:-Read}"
+  local file_path="${2:-/tmp/test.txt}"
+  local agent_id="${3:-backend-implementer}"
+  jq -cn --arg tool "$tool" --arg fp "$file_path" --arg agent "$agent_id" --arg trace "trace_sim_$(date +%s)" \
+    '{tool_name: $tool, tool_input: {file_path: $fp}, agent_identity: {agent_id: $agent}, trace_id: $trace}'
+}
+
+gen_post_tool_use() {
+  local tool="${1:-Read}"
+  local agent_id="${2:-backend-implementer}"
+  jq -cn --arg tool "$tool" --arg agent "$agent_id" --arg trace "trace_sim_$(date +%s)" \
+    '{tool_name: $tool, tool_result: {success: true}, agent_identity: {agent_id: $agent}, trace_id: $trace}'
+}
+
+# ── Hook runner ───────────────────────────────────────────────
+
+run_hook() {
+  local hook_type="$1"
+  local payload="$2"
+  local adapter=""
+
+  case "$hook_type" in
+    session_start) adapter="$HOOKS_DIR/session_start_adapter.sh" ;;
+    pre_tool_use)  adapter="$HOOKS_DIR/pre_tool_use_adapter.sh" ;;
+    post_tool_use) adapter="$HOOKS_DIR/post_tool_use_adapter.sh" ;;
+  esac
+
+  if [ ! -f "$adapter" ]; then
+    printf "  ${YELLOW}SKIP${NC} %s adapter not found\n" "$hook_type"
+    return 0
+  fi
+
+  local exit_code=0
+  local output
+  output=$(echo "$payload" | timeout 10 bash "$adapter" 2>&1) || exit_code=$?
+
+  case "$exit_code" in
+    0) printf "  ${GREEN}PASS${NC} %s\n" "$hook_type" ;;
+    1) printf "  ${YELLOW}WARN${NC} %s (soft fail)\n" "$hook_type" ;;
+    2) printf "  ${RED}BLOCK${NC} %s\n" "$hook_type" ;;
+    124) printf "  ${RED}TIMEOUT${NC} %s\n" "$hook_type" ;;
+    *) printf "  ${RED}ERROR${NC} %s (exit %d)\n" "$hook_type" "$exit_code" ;;
+  esac
+
+  return 0
+}
+
+# ── Scenarios ─────────────────────────────────────────────────
+
+scenario_basic() {
+  printf "${CYAN}Scenario: Basic Single-Agent Session${NC}\n"
+  printf "Agent: backend-implementer | Tools: Read, Write\n\n"
+
+  printf "${BLUE}Step 1:${NC} Session Start\n"
+  run_hook "session_start" "$(gen_session_start "backend-implementer")"
+
+  printf "\n${BLUE}Step 2:${NC} Read file (pre-tool)\n"
+  run_hook "pre_tool_use" "$(gen_pre_tool_use "Read" "control-plane/src/index.ts" "backend-implementer")"
+
+  printf "\n${BLUE}Step 3:${NC} Read file (post-tool)\n"
+  run_hook "post_tool_use" "$(gen_post_tool_use "Read" "backend-implementer")"
+
+  printf "\n${BLUE}Step 4:${NC} Write file (pre-tool)\n"
+  run_hook "pre_tool_use" "$(gen_pre_tool_use "Write" "/tmp/test-output.ts" "backend-implementer")"
+
+  printf "\n${BLUE}Step 5:${NC} Write file (post-tool)\n"
+  run_hook "post_tool_use" "$(gen_post_tool_use "Write" "backend-implementer")"
+}
+
+scenario_multi_agent() {
+  printf "${CYAN}Scenario: Multi-Agent Handoff${NC}\n"
+  printf "Agent A: security-auditor → Agent B: backend-implementer\n\n"
+
+  printf "${BLUE}Phase 1:${NC} Security Auditor session\n"
+  run_hook "session_start" "$(gen_session_start "security-auditor")"
+  run_hook "pre_tool_use" "$(gen_pre_tool_use "Read" "admiral/lib/injection_detector.sh" "security-auditor")"
+  run_hook "post_tool_use" "$(gen_post_tool_use "Read" "security-auditor")"
+
+  printf "\n${BLUE}Phase 2:${NC} Handoff to Backend Implementer\n"
+  printf "  ${BLUE}INFO${NC} Handoff: security-auditor → backend-implementer\n"
+
+  printf "\n${BLUE}Phase 3:${NC} Backend Implementer session\n"
+  run_hook "session_start" "$(gen_session_start "backend-implementer")"
+  run_hook "pre_tool_use" "$(gen_pre_tool_use "Write" "control-plane/src/fix.ts" "backend-implementer")"
+  run_hook "post_tool_use" "$(gen_post_tool_use "Write" "backend-implementer")"
+}
+
+scenario_failure() {
+  printf "${CYAN}Scenario: Failure and Boundary Violation${NC}\n"
+  printf "Tests: scope violation, prohibited write\n\n"
+
+  printf "${BLUE}Step 1:${NC} Session Start\n"
+  run_hook "session_start" "$(gen_session_start "backend-implementer")"
+
+  printf "\n${BLUE}Step 2:${NC} Attempt write to aiStrat/ (should block)\n"
+  run_hook "pre_tool_use" "$(gen_pre_tool_use "Write" "aiStrat/secret.md" "backend-implementer")"
+
+  printf "\n${BLUE}Step 3:${NC} Attempt write to .env (should block)\n"
+  run_hook "pre_tool_use" "$(gen_pre_tool_use "Write" ".env" "backend-implementer")"
+
+  printf "\n${BLUE}Step 4:${NC} Normal write (should pass)\n"
+  run_hook "pre_tool_use" "$(gen_pre_tool_use "Write" "/tmp/safe-file.txt" "backend-implementer")"
+}
+
+# ── Main ──────────────────────────────────────────────────────
+
+cmd="${1:-help}"
+
+case "$cmd" in
+  simulate)
+    scenario="${2:-basic}"
+    echo ""
+    case "$scenario" in
+      basic)       scenario_basic ;;
+      multi-agent) scenario_multi_agent ;;
+      failure)     scenario_failure ;;
+      *)
+        printf "${RED}Unknown scenario:${NC} %s\n" "$scenario"
+        echo "Available: basic, multi-agent, failure"
+        exit 1
+        ;;
+    esac
+    echo ""
+    printf "${GREEN}Simulation complete.${NC}\n"
+    ;;
+  list)
+    echo "Available scenarios:"
+    echo "  basic        — Single agent, Read + Write tools"
+    echo "  multi-agent  — Two agents with handoff"
+    echo "  failure      — Boundary violations and blocks"
+    ;;
+  help|--help|-h)
+    echo "Admiral Session Simulator"
+    echo ""
+    echo "Usage: admiral session simulate <scenario>"
+    echo "       admiral session list"
+    echo ""
+    echo "Scenarios: basic, multi-agent, failure"
+    ;;
+  *) printf "${RED}Unknown:${NC} %s\n" "$cmd"; exit 1 ;;
+esac
