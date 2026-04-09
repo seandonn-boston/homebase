@@ -123,7 +123,7 @@ interface AuditTrailEntry {
 	action: string;
 	agentId: string;
 	timestamp: number;
-	details: any;
+	details: Record<string, unknown>;
 }
 
 export class GovernanceSelfGovernance {
@@ -422,7 +422,7 @@ export class MultiOperatorGovernance {
 
 export interface FleetState {
 	roster: { agentId: string; state: string }[];
-	trustState: any;
+	trustState: Record<string, unknown>;
 	brainHealth: { entries: number; lastWrite: number };
 	activeTasks: { taskId: string; agent: string; status: string }[];
 	exportedAt: number;

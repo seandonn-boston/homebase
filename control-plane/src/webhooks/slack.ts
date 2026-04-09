@@ -42,7 +42,6 @@ function formatEventType(type: string): string {
 
 export function formatSlackPayload(event: WebhookEvent): SlackPayload {
   const emoji = SEVERITY_EMOJI[event.severity] ?? ":white_circle:";
-  const _color = SEVERITY_COLOR[event.severity] ?? "#E8E8E8";
 
   const title = `${emoji} ${formatEventType(event.type)}`;
   const fields = [

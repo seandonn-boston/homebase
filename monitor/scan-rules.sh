@@ -11,9 +11,6 @@ cd "$PROJECT_ROOT"
 
 RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[0;33m'; BLUE='\033[0;34m'; NC='\033[0m'
 
-pass=0
-fail=0
-
 for rule_file in "$RULES_DIR"/*.json; do
   [ -f "$rule_file" ] || continue
 

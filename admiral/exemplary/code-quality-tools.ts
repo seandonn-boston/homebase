@@ -94,7 +94,7 @@ export interface GitAuditResult {
   conventionalRate: number;
   largeBinaries: string[];
   secretPatterns: string[];
-  forcePoushes: number;
+  forcePushes: number;
   score: number;
   recommendations: string[];
 }
@@ -108,7 +108,7 @@ export function auditGitHistory(rootDir: string, commitCount = 100): GitAuditRes
   } catch {
     return {
       totalCommits: 0, conventionalCommits: 0, conventionalRate: 0,
-      largeBinaries: [], secretPatterns: [], forcePoushes: 0, score: 0,
+      largeBinaries: [], secretPatterns: [], forcePushes: 0, score: 0,
       recommendations: ["Could not read git history"],
     };
   }
@@ -128,7 +128,7 @@ export function auditGitHistory(rootDir: string, commitCount = 100): GitAuditRes
     conventionalRate,
     largeBinaries: [],
     secretPatterns: [],
-    forcePoushes: 0,
+    forcePushes: 0,
     score,
     recommendations,
   };

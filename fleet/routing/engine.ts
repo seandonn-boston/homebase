@@ -68,7 +68,7 @@ function normalize(s: string): string {
  * Minimalist glob matching — supports `*` (any segment chars) and `**`
  * (any depth).  No external deps.
  */
-function globMatch(pattern: string, filePath: string): boolean {
+export function globMatch(pattern: string, filePath: string): boolean {
 	// Normalize separators
 	const p = pattern.replace(/\\/g, "/");
 	const f = filePath.replace(/\\/g, "/");
