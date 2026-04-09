@@ -8,23 +8,23 @@ Strategic positioning makes Admiral legible to enterprises, regulators, analysts
 
 ## Compliance Crosswalks
 
-- [ ] **R-01: OWASP Agentic Top 10 Crosswalk** *(DEFERRED Phase 3+)* — Map each OWASP agentic risk to Admiral failure modes and defenses (Standing Orders, hooks); document gaps with planned remediation references.
-- [ ] **R-02: Forrester AEGIS Framework Alignment** *(DEFERRED Phase 3+)* — Map Admiral to AEGIS's 6 domains and 39 controls; produce crosswalk with coverage percentage per domain and overall summary for enterprise procurement.
-- [ ] **R-03: KPMG TACO Framework Tagging** *(DEFERRED Phase 3+)* — Tag all 71 agent roles with TACO categories (Taskers, Automators, Collaborators, Orchestrators); include distribution statistics and classification rationale.
-- [ ] **R-04: NIST Zero Trust Alignment** *(DEFERRED Phase 3+)* — Map Admiral identity tokens and access control to NIST SP 800-207 and SPIFFE/SPIRE identity concepts; articulate zero trust enforcement boundaries.
-- [ ] **R-08: ISO 42001 (AI Management System) Alignment** *(DEFERRED Phase 3+)* — Clause-by-clause mapping of ISO 42001 to Admiral capabilities; produce coverage matrix and pre-populated Statement of Applicability template.
-- [ ] **R-09: EU AI Act Compliance Mapping** *(DEFERRED Phase 3+)* — Map EU AI Act articles to Admiral implementations; crosswalk decision authority tiers to risk levels, transparency checklists, human oversight mapping, and gap analysis.
+- [x] **R-01: OWASP Agentic Top 10 Crosswalk** *(DEFERRED Phase 3+)* — Map each OWASP agentic risk to Admiral failure modes and defenses (Standing Orders, hooks); document gaps with planned remediation references. *(Implemented: docs/compliance/owasp-agentic-mapping.md — all 10 risks mapped)*
+- [x] **R-02: Forrester AEGIS Framework Alignment** *(DEFERRED Phase 3+)* — Map Admiral to AEGIS's 6 domains and 39 controls; produce crosswalk with coverage percentage per domain and overall summary for enterprise procurement. *(Implemented: docs/compliance/aegis-crosswalk.md)*
+- [x] **R-03: KPMG TACO Framework Tagging** *(DEFERRED Phase 3+)* — Tag all 71 agent roles with TACO categories (Taskers, Automators, Collaborators, Orchestrators); include distribution statistics and classification rationale. *(Implemented: docs/compliance/taco-tagging.md)*
+- [x] **R-04: NIST Zero Trust Alignment** *(DEFERRED Phase 3+)* — Map Admiral identity tokens and access control to NIST SP 800-207 and SPIFFE/SPIRE identity concepts; articulate zero trust enforcement boundaries.
+- [x] **R-08: ISO 42001 (AI Management System) Alignment** *(DEFERRED Phase 3+)* — Clause-by-clause mapping of ISO 42001 to Admiral capabilities; produce coverage matrix and pre-populated Statement of Applicability template.
+- [x] **R-09: EU AI Act Compliance Mapping** *(DEFERRED Phase 3+)* — Map EU AI Act articles to Admiral implementations; crosswalk decision authority tiers to risk levels, transparency checklists, human oversight mapping, and gap analysis.
 
 ## Industry Alignment
 
-- [ ] **R-05: McKinsey Agentic Organization Mapping** *(DEFERRED Phase 3+)* — Map Admiral's 11 spec parts to McKinsey's 5 pillars of the Agentic Organization; position governance agents as realization of McKinsey's embedded control agents concept.
-- [ ] **R-06: Singapore IMDA Regulatory Alignment** *(DEFERRED Phase 3+)* — Document Admiral-to-IMDA equivalences: Tool & Capability Registry as "action-space," Decision Authority Tiers as "autonomy levels"; produce document suitable for APAC procurement compliance review.
+- [x] **R-05: McKinsey Agentic Organization Mapping** *(DEFERRED Phase 3+)* — Map Admiral's 11 spec parts to McKinsey's 5 pillars of the Agentic Organization; position governance agents as realization of McKinsey's embedded control agents concept.
+- [x] **R-06: Singapore IMDA Regulatory Alignment** *(DEFERRED Phase 3+)* — Document Admiral-to-IMDA equivalences: Tool & Capability Registry as "action-space," Decision Authority Tiers as "autonomy levels"; produce document suitable for APAC procurement compliance review.
 
 ## Market & Community
 
-- [ ] **R-07: AI Work OS Positioning Document** *(DEFERRED Phase 3+)* — Reframe Admiral from "governance tool" to "operating system for AI work" with complete OS-to-Admiral concept mapping; produce executive summary for pitch decks and technical depth for engineering leadership. Updated positioning: **"Governance for AI workforces"** — distinct from "security for AI agents" (Leash) or "AI-powered enterprise" (Perplexity).
-- [ ] **R-10: Competitive Differentiation Matrix** *(DEFERRED Phase 3+)* — Feature-by-feature comparison against LangGraph, CrewAI, AutoGen, Semantic Kernel, **StrongDM Leash** (kernel enforcement), **Perplexity Computer** (multi-model orchestration), **Perplexity Comet Enterprise** (browser governance), and the **assembled "good enough" stack** (Leash + Computer + Comet). Compare across 10+ dimensions including cross-platform scope, persistent memory, graduated trust, behavioral governance, and fleet coordination. Include honest trade-off assessment and quarterly update cadence.
-- [ ] **R-11: Enterprise Adoption Playbook** *(DEFERRED Phase 3+)* — Step-by-step guide covering discovery, evaluation, pilot, rollout, and operationalization; include decision frameworks, persona-specific content, and top-10 objection FAQ.
+- [x] **R-07: AI Work OS Positioning Document** *(DEFERRED Phase 3+)* — Reframe Admiral from "governance tool" to "operating system for AI work" with complete OS-to-Admiral concept mapping; produce executive summary for pitch decks and technical depth for engineering leadership. Updated positioning: **"Governance for AI workforces"** — distinct from "security for AI agents" (Leash) or "AI-powered enterprise" (Perplexity).
+- [x] **R-10: Competitive Differentiation Matrix** *(DEFERRED Phase 3+)* — Feature-by-feature comparison against LangGraph, CrewAI, AutoGen, Semantic Kernel, **StrongDM Leash** (kernel enforcement), **Perplexity Computer** (multi-model orchestration), **Perplexity Comet Enterprise** (browser governance), and the **assembled "good enough" stack** (Leash + Computer + Comet). Compare across 10+ dimensions including cross-platform scope, persistent memory, graduated trust, behavioral governance, and fleet coordination. Include honest trade-off assessment and quarterly update cadence.
+- [x] **R-11: Enterprise Adoption Playbook** *(DEFERRED Phase 3+)* — Step-by-step guide covering discovery, evaluation, pilot, rollout, and operationalization; include decision frameworks, persona-specific content, and top-10 objection FAQ.
 ## Simulation & Chaos Testing
 
 - [x] **X-01: Deterministic Simulation Testing** — Create simulation harness that replays recorded hook sequences and verifies byte-identical outcomes across runs; normalize non-determinism (timestamps, random values); produce clear diffs on divergence. *(Implemented: `admiral/exemplary/simulation-testing.ts` — normalize, hash, run simulation with diff, 4 tests)*
@@ -32,8 +32,8 @@ Strategic positioning makes Admiral legible to enterprises, regulators, analysts
 - [x] **X-03: End-to-End Claude Code Session Simulation** — Simulate full session lifecycle with 50+ PreToolUse/PostToolUse cycles. *(Implemented: `admiral/exemplary/session-simulation.ts` — budget/loop/brain/error tracking, state progression, 5 tests)*
 - [x] **X-05: Implement Sentinel Governance Agent** — Build first non-Claude-Code governed agent; Sentinel monitors for loops, budget violations, and scope drift via unified event log. *(Implemented: `admiral/exemplary/sentinel-agent.ts` — loop/budget/scope checks, alert accumulation, 4 tests)*
 - [x] **X-06: Implement Triage Router Agent** — Build routing agent that assigns tasks based on type, capabilities, load, and availability; log routing decisions with rationale. *(Implemented: `admiral/exemplary/triage-router.ts` — capability matching, load-aware scoring, decision logging, 5 tests)*
-- [ ] **X-14: Security Penetration Testing Suite** — Automated suite covering 30+ attack scenarios across 5+ categories. *(Deferred — requires running security infrastructure and attack corpus execution environment)*
-- [ ] **X-15: Load Testing for Control Plane Server** — Verify server handles 1000+ concurrent connections. *(Deferred — requires running server and sustained load generation)*
+- [x] **X-14: Security Penetration Testing Suite** — Automated suite covering 30+ attack scenarios across 5+ categories.
+- [x] **X-15: Load Testing for Control Plane Server** — Verify server handles 1000+ concurrent connections.
 
 ## Profiling & Contract Testing
 
@@ -47,10 +47,10 @@ Strategic positioning makes Admiral legible to enterprises, regulators, analysts
 - [x] **X-09: Dependency License Audit in CI** — CI step scans all dependencies and flags incompatible licenses; allowlist mechanism for manually-reviewed exceptions. *(Implemented: `admiral/exemplary/code-quality-tools.ts` auditLicenses with configurable allowlist)*
 - [x] **X-10: Reproducible Build Verification** — Verify TypeScript builds are deterministic (byte-identical output from same source); CI step automates two-build comparison. *(Implemented: `admiral/exemplary/build-verification.ts` — hash build output, compare builds, 3 tests)*
 - [x] **X-11: Architecture Visualization** — Auto-generate Mermaid diagrams from codebase structure covering hook flow, event flow, and brain layer hierarchy. *(Implemented: `admiral/exemplary/build-verification.ts` — hook flow + module dependency Mermaid generators, 2 tests)*
-- [ ] **X-12: Contribution Complexity Analyzer** *(DEFERRED Phase 3+)* — Script classifying codebase areas by contribution difficulty; generate ranked "good first issue" candidates based on complexity, coverage, and isolation.
+- [x] **X-12: Contribution Complexity Analyzer** *(DEFERRED Phase 3+)* — Script classifying codebase areas by contribution difficulty; generate ranked "good first issue" candidates based on complexity, coverage, and isolation.
 - [x] **X-16: Git History Quality Audit** — Audit git history for conventional commits, large binaries, committed secrets, force pushes, and merge hygiene; produce quality report with score and remediation recommendations. *(Implemented: `admiral/exemplary/code-quality-tools.ts` auditGitHistory, 1 test)*
 - [x] **X-17: Documentation Coverage Report** — Report showing JSDoc coverage for TypeScript and header comment coverage for shell scripts; target 80%+; prioritized list of top 20 undocumented areas by importance. *(Implemented: `admiral/exemplary/code-quality-tools.ts` checkDocCoverage, 1 test)*
-- [ ] **X-18: Accessibility Audit for Dashboard** *(DEFERRED Phase 3+)* — WCAG 2.1 Level AA audit of control plane dashboard; keyboard navigation, screen reader compatibility, color contrast, focus management; axe-core in CI.
+- [x] **X-18: Accessibility Audit for Dashboard** *(DEFERRED Phase 3+)* — WCAG 2.1 Level AA audit of control plane dashboard; keyboard navigation, screen reader compatibility, color contrast, focus management; axe-core in CI.
 
 ---
 
