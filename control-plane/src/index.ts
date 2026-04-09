@@ -23,17 +23,10 @@ export {
 } from "./errors";
 export { AgentEvent, EventListener, EventStream, EventStreamConfig, EventType } from "./events";
 export {
-  ExecutionStatePersistence,
-  type ExecutionStateConfig,
-  type HistoryEntry,
-  type PersistedState,
-  type RestoreResult,
-} from "./execution-state";
-export {
   type EscalationEvent,
   type FailureRecord,
-  type LimitEnforcerConfig,
   LimitEnforcer,
+  type LimitEnforcerConfig,
   type RetryPolicy,
   type RetryRecord,
 } from "./execution-limits";
@@ -48,14 +41,12 @@ export {
   type SessionState,
 } from "./execution-runtime";
 export {
-  type EnqueueOptions,
-  type QueueConfig,
-  type QueueMetrics,
-  type Task,
-  TaskQueue,
-  type TaskPriority,
-  type TaskState,
-} from "./task-queue";
+  type ExecutionStateConfig,
+  ExecutionStatePersistence,
+  type HistoryEntry,
+  type PersistedState,
+  type RestoreResult,
+} from "./execution-state";
 export { FleetDashboard, FleetDashboardData } from "./fleet-dashboard";
 export {
   GovernanceDashboard,
@@ -78,6 +69,13 @@ export {
 } from "./intervention-catalog";
 export { EndpointTier, RateLimiter, RateLimitResult, RateLimitTier } from "./rate-limiter";
 export {
+  type AgentMetrics,
+  type FleetSummary,
+  ResultAggregator,
+  type SessionSummary,
+  type TaskSummary,
+} from "./result-aggregator";
+export {
   Alert,
   ControlChart,
   DetectorConfig,
@@ -85,21 +83,6 @@ export {
   SPCMonitor,
   SPCViolation,
 } from "./runaway-detector";
-export {
-  type DAGEdge,
-  type DecompositionInput,
-  type SubtaskInput,
-  type SubtaskNode,
-  type TaskDAG,
-  TaskDAGBuilder,
-} from "./task-decomposition";
-export {
-  type AgentMetrics,
-  type FleetSummary,
-  ResultAggregator,
-  type SessionSummary,
-  type TaskSummary,
-} from "./result-aggregator";
 export { AdmiralServer } from "./server";
 export { SessionThermalModel, ThermalState } from "./session-thermal";
 // Observability enhancements
@@ -109,6 +92,23 @@ export {
   StructuredLogFilter,
   StructuredLogLevel,
 } from "./structured-logging";
+export {
+  type DAGEdge,
+  type DecompositionInput,
+  type SubtaskInput,
+  type SubtaskNode,
+  type TaskDAG,
+  TaskDAGBuilder,
+} from "./task-decomposition";
+export {
+  type EnqueueOptions,
+  type QueueConfig,
+  type QueueMetrics,
+  type Task,
+  type TaskPriority,
+  TaskQueue,
+  type TaskState,
+} from "./task-queue";
 export { ExecutionTrace, TraceNode, TraceStats } from "./trace";
 export {
   CanonicalSpan,
