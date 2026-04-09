@@ -1,0 +1,41 @@
+{
+  "name": "Admiral Framework",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:22",
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": false
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "biomejs.biome",
+        "timonwong.shellcheck",
+        "foxundermoon.shell-format",
+        "dbaeumer.vscode-eslint",
+        "redhat.vscode-yaml",
+        "esbenp.prettier-vscode"
+      ],
+      "settings": {
+        "editor.defaultFormatter": "biomejs.biome",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+          "quickfix.biome": "explicit"
+        },
+        "typescript.tsdk": "control-plane/node_modules/typescript/lib",
+        "shellcheck.enable": true,
+        "files.eol": "\n"
+      }
+    }
+  },
+  "forwardPorts": [4510],
+  "portsAttributes": {
+    "4510": {
+      "label": "Admiral Control Plane",
+      "onAutoForward": "notify"
+    }
+  },
+  "remoteUser": "node"
+}

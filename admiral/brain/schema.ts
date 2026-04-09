@@ -11,6 +11,8 @@ import { randomUUID } from "node:crypto";
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
 
+// node:sqlite is experimental (Node 22+) and has no TypeScript declarations.
+// require() is the only way to access it until types are published.
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { DatabaseSync } = require("node:sqlite");
 

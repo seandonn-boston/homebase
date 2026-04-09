@@ -9,7 +9,6 @@
 
 import * as http from "node:http";
 import type { PolicyRecord, FleetStatus, ResourceUsage, AuditEntry, TaskProgress, DecisionRecord, FailureRecord } from "./api-server";
-import type { GovernanceReport, ReportType } from "./governance-reporting";
 
 // ---------------------------------------------------------------------------
 // Types

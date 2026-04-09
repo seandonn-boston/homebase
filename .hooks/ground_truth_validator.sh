@@ -2,16 +2,15 @@
 # Admiral Framework — Ground Truth Validation Hook (ST-06)
 # SessionStart hook that loads and validates the Ground Truth document
 # against the schema on every session start.
-# Advisory: warns on incomplete, blocks on missing (exit 2).
+# Advisory: warns on incomplete or missing (exit 0, fail-open per ADR-004).
 # Must complete in under 2 seconds.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$SCRIPT_DIR/.." && pwd)}"
 
-# Read payload from stdin (consumed for protocol compliance, validation uses files not payload)
-# shellcheck disable=SC2034
-PAYLOAD=$(cat)
+# Consume stdin (validation uses files, not the payload)
+cat > /dev/null
 
 # Look for Ground Truth document
 GT_FILE=""

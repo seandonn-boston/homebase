@@ -115,8 +115,9 @@ export class ExecutionRuntime {
     const activeSessions = this.getSessionsByState("running").length;
     if (activeSessions >= this.config.maxConcurrentSessions) {
       throw new Error(
-        `Max concurrent sessions reached (${this.config.maxConcurrentSessions}). ` +
-          `Cannot spawn session for agent ${sessionConfig.agentId}.`,
+        `Max concurrent sessions (${this.config.maxConcurrentSessions}) reached. ` +
+          `Wait for a session to complete or increase maxConcurrentSessions. ` +
+          `Agent: ${sessionConfig.agentId}.`,
       );
     }
 

@@ -1,0 +1,9 @@
+{
+  "id": "RULE-003",
+  "description": "Verify key documentation files exist",
+  "scan_type": "full",
+  "check_command": "for f in CONTRIBUTING.md AGENTS.md docs/ADMIRAL_STYLE.md docs/adr/001-bash-for-hooks.md; do test -f \"$f\" || echo \"missing: $f\"; done | wc -l",
+  "expected": "0",
+  "severity": "MEDIUM",
+  "remediation": "Create missing documentation files per plan/todo/04-architecture-docs-ci-enforcement.md"
+}

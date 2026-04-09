@@ -18,6 +18,9 @@ fi
 if [ -f "$PROJECT_DIR/admiral/lib/hook_utils.sh" ]; then
   source "$PROJECT_DIR/admiral/lib/hook_utils.sh"
 fi
+if [ -f "$PROJECT_DIR/admiral/lib/hook_config.sh" ]; then
+  source "$PROJECT_DIR/admiral/lib/hook_config.sh"
+fi
 hook_init "prohibitions_enforcer"
 
 # Read payload from stdin
@@ -68,23 +71,9 @@ if [ "$TOOL_NAME" = "Bash" ]; then
   # Secrets in heredoc bodies ARE worth flagging — a heredoc writing a config file
   # with embedded credentials is exactly the scenario this detects. False positives
   # are acceptable here because the pattern is advisory-only (never blocks).
-  SECRET_PATTERNS=(
-    'password\s*='
-    'api_key\s*='
-    'secret\s*='
-    'token\s*='
-    'AWS_ACCESS_KEY'
-    'PRIVATE_KEY'
-    'BEGIN RSA'
-    'BEGIN OPENSSH'
-    'BEGIN PGP'
-  )
-  for PATTERN in "${SECRET_PATTERNS[@]}"; do
-    if echo "$COMMAND" | grep -qiE -- "$PATTERN"; then
+  if config_has_secrets "$COMMAND"; then
       ALERTS+="PROHIBITION (SO-10): Command may contain or create secrets/credentials. Never store secrets in code or configuration. "
-      break
-    fi
-  done
+  fi
 
   # --- Rule: Never escalate privileges without approval (SO-12 enforcement) → HARD BLOCK ---
   PRIVILEGE_PATTERNS=(

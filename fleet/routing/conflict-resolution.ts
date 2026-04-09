@@ -7,7 +7,7 @@
  * Zero external dependencies — Node.js built-ins only.
  */
 
-import type { FileOwnershipRule } from "./engine";
+import { globMatch, type FileOwnershipRule } from "./engine";
 
 // ---------------------------------------------------------------------------
 // Interfaces
@@ -27,40 +27,6 @@ export interface OwnershipConflict {
 // ---------------------------------------------------------------------------
 // OwnershipConflictResolver
 // ---------------------------------------------------------------------------
-
-/**
- * Minimalist glob matching — supports `*` (any segment chars) and `**`
- * (any depth).  Duplicated from engine.ts to avoid coupling to private fn.
- */
-function globMatch(pattern: string, filePath: string): boolean {
-	const p = pattern.replace(/\\/g, "/");
-	const f = filePath.replace(/\\/g, "/");
-
-	let regex = "^";
-	let i = 0;
-	while (i < p.length) {
-		if (p[i] === "*" && p[i + 1] === "*") {
-			regex += ".*";
-			i += 2;
-			if (p[i] === "/") i++;
-		} else if (p[i] === "*") {
-			regex += "[^/]*";
-			i++;
-		} else if (p[i] === "?") {
-			regex += "[^/]";
-			i++;
-		} else if (".+^${}()|[]\\".includes(p[i])) {
-			regex += "\\" + p[i];
-			i++;
-		} else {
-			regex += p[i];
-			i++;
-		}
-	}
-	regex += "$";
-
-	return new RegExp(regex).test(f);
-}
 
 export class OwnershipConflictResolver {
 	constructor() {}
