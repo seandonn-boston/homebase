@@ -40,16 +40,10 @@ parallel_get_ready() {
   local filepath="$1"
   [ -f "$filepath" ] || { echo "[]"; return 0; }
 
-  jq '[.tasks[] | select(
-    .status == "pending" and
-    ((.depends_on // []) | all(. as $dep | input.tasks[] | select(.task_id == $dep) | .status == "completed"))
-  )]' "$filepath" 2>/dev/null | tr -d '\r' || echo "[]"
-
-  # Simpler approach: get all pending tasks with no unresolved deps
   jq '
     (.tasks | map(select(.status == "completed")) | map(.task_id)) as $done |
     [.tasks[] | select(.status == "pending" and ((.depends_on // []) - $done | length == 0))]
-  ' "$filepath" 2>/dev/null | tr -d '\r'
+  ' "$filepath" 2>/dev/null | tr -d '\r' || echo "[]"
 }
 
 # Mark a task as started

@@ -104,9 +104,11 @@ brain_format_context() {
   fi
 
   local output="[Brain Context: $count relevant entries]\n"
-  echo "$json_array" | tr -d '\r' | jq -r '.[] | "- [\(.category)] \(.title): \(.content)"' 2>/dev/null | while IFS= read -r line; do
-    output+="$line\n"
-  done
+  local entries
+  entries=$(echo "$json_array" | tr -d '\r' | jq -r '.[] | "- [\(.category)] \(.title): \(.content)"' 2>/dev/null)
+  if [ -n "$entries" ]; then
+    output+="$entries\n"
+  fi
 
   echo -e "$output"
 }

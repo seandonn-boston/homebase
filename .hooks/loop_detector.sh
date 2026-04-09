@@ -28,6 +28,9 @@ source "$PROJECT_DIR/admiral/lib/state.sh"
 if [ -f "$PROJECT_DIR/admiral/lib/jq_helpers.sh" ]; then
   source "$PROJECT_DIR/admiral/lib/jq_helpers.sh"
 fi
+if [ -f "$PROJECT_DIR/admiral/lib/hook_config.sh" ]; then
+  source "$PROJECT_DIR/admiral/lib/hook_config.sh"
+fi
 
 # Load thresholds from central config via hook_config.sh
 MAX_SAME_ERROR=$(config_max_same_error)
@@ -38,8 +41,6 @@ SUCCESS_DECAY=$(config_success_decay)
 PAYLOAD=$(cat)
 
 # Extract tool response and check for errors
-# shellcheck disable=SC2034  # TOOL_NAME reserved for future use in error signatures
-TOOL_NAME=$(jq_get "$PAYLOAD" '.tool_name' 'unknown')
 TOOL_RESPONSE=$(jq_get "$PAYLOAD" '.tool_response')
 
 # Check if the tool response indicates an error
