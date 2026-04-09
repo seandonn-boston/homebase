@@ -168,9 +168,12 @@ for r in data.get('watchlist', {}).get('repos', []):
 
     # Check if this is a new version
     known_version=$(jq_state sources "$source_key" known_version 2>/dev/null || echo "")
-    # Also check the org-level source if it exists
+    # Also check the org-level source if repo-level key isn't tracked
     local org_key
     org_key=$(echo "$repo" | cut -d'/' -f1 | tr '[:upper:]' '[:lower:]')
+    if [[ -z "$known_version" ]]; then
+      known_version=$(jq_state sources "$org_key" known_version 2>/dev/null || echo "")
+    fi
 
     if [[ "$tag_name" != "$known_version" ]] && [[ -n "$tag_name" ]]; then
       log "  NEW: $repo $tag_name (was: $known_version)"
@@ -178,7 +181,7 @@ for r in data.get('watchlist', {}).get('repos', []):
 
       # Classify priority based on repo importance
       case "$repo" in
-        anthropics/*|openai/*|google-deepmind/*|meta-llama/*)
+        anthropics/*|openai/*|google-deepmind/*|meta-llama/*|QwenLM/*|THUDM/*|01-ai/*|cohere-ai/*|AI21Labs/*|tiiuae/*|google/*|baichuan-inc/*)
           HIGH_COUNT=$((HIGH_COUNT + 1))
           echo "### $repo $tag_name" >> "$FINDINGS_HIGH"
           echo "- **Source:** GitHub Releases" >> "$FINDINGS_HIGH"

@@ -71,6 +71,27 @@ jobs:
           chmod +x aiStrat/monitor/scanner.sh
           bash aiStrat/monitor/scanner.sh $ARGS
 
+      - name: Close stale Monitor issues (older than 7 days)
+        if: steps.scan-config.outputs.dry_run != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          CUTOFF=$(date -u -d "7 days ago" +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -v-7d +%Y-%m-%dT%H:%M:%SZ)
+          gh issue list --search "\"[Monitor] High-priority findings\" in:title" --state open --json number,title,createdAt --limit 100 | \
+            python3 -c "
+          import json, sys
+          from datetime import datetime
+          cutoff = datetime.fromisoformat('${CUTOFF}'.replace('Z', '+00:00'))
+          issues = json.load(sys.stdin)
+          for issue in issues:
+              created = datetime.fromisoformat(issue['createdAt'].replace('Z', '+00:00'))
+              if created < cutoff:
+                  print(issue['number'])
+          " | while read -r num; do
+              echo "Closing stale Monitor issue #$num"
+              gh issue close "$num" --comment "Auto-closed: superseded by newer scan. Findings archived in monitor/digests/." || true
+            done
+
       - name: Commit state and digest
         if: steps.scan-config.outputs.dry_run != 'true'
         run: |
