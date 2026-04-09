@@ -31,7 +31,7 @@ quality_check_lint() {
 
   if [ -f "$project_dir/node_modules/.bin/biome" ]; then
     local exit_code=0
-    cd "$project_dir" && npx biome check . 2>/dev/null || exit_code=$?
+    (cd "$project_dir" && npx biome check . 2>/dev/null) || exit_code=$?
     if [ "$exit_code" -eq 0 ]; then
       result=$(jq -n '{"check": "lint", "status": "pass", "details": "Biome lint passed"}')
     else

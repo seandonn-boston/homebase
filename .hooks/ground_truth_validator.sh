@@ -2,7 +2,7 @@
 # Admiral Framework — Ground Truth Validation Hook (ST-06)
 # SessionStart hook that loads and validates the Ground Truth document
 # against the schema on every session start.
-# Advisory: warns on incomplete, blocks on missing (exit 2).
+# Advisory: warns on incomplete or missing (exit 0, fail-open per ADR-004).
 # Must complete in under 2 seconds.
 set -euo pipefail
 

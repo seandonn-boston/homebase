@@ -61,7 +61,10 @@ export class TenantManager {
   }
 
   getEffectivePolicies(tenantId: string): GlobalPolicy[] {
-    return this.globalPolicies.filter((p) => p.enforceAcrossTenants);
+    const tenant = this.tenants.get(tenantId);
+    const global = this.globalPolicies.filter((p) => p.enforceAcrossTenants);
+    if (!tenant) return global;
+    return global;
   }
 
   getBrainNamespace(tenantId: string): string {

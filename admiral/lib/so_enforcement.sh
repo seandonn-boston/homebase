@@ -22,10 +22,6 @@ so_01_identity_discipline() {
   local tool_name
   tool_name=$(echo "$payload" | jq -r '.tool_name // ""' | tr -d '\r')
 
-  # Track tool diversity — agents should use tools consistent with their role
-  local tool_count
-  tool_count=$(echo "$state" | jq '.tool_call_count // 0' | tr -d '\r')
-
   echo '{"enforced": true, "alert": "", "severity": "info"}'
 }
 
@@ -34,12 +30,6 @@ so_02_output_routing() {
   local payload="$1"
   local state="$2"
 
-  local tool_name
-  tool_name=$(echo "$payload" | jq -r '.tool_name // ""' | tr -d '\r')
-
-  # Write/Edit tools always have a destination (file path)
-  # Agent tool always has a destination (agent)
-  # Flag if output appears to have no clear destination
   echo '{"enforced": true, "alert": "", "severity": "info"}'
 }
 
