@@ -298,6 +298,8 @@ If spec debt resolution surfaces new requirements, those requirements must be in
 
 **Exit criteria:** Agent execution runtime can spawn sessions, track state, and collect results for at least 3 concurrent tasks. Hook-to-B2 integration path is decided, implemented, and documented (with latency benchmarks). End-to-end multi-agent test passes in CI, covering both happy path and failure/re-route scenarios.
 
+**Status:** COMPLETE (2026-04-04). All 16 Phase 11 tasks done across 3 streams. Stream 34: ExecutionRuntime (session spawner, task queue, state persistence, limit enforcer with retry/escalation, result aggregator, DAG-based task decomposition). Stream 35: Hook-to-B2 integration (ADR-010 direct SQLite access pattern, query helpers, async write queue, transactional safety, fallback/replay, latency benchmarks). Stream 36: E2E multi-agent tests (mock agent harness, happy path handoff, failure re-route, fleet metrics). 133+ new tests. Simplify pass: deduplicated nodeMap, reduced history I/O, removed unused vars.
+
 ---
 
 ## Phase 12 — Developer Experience & Monitoring
