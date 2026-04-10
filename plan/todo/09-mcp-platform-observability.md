@@ -40,7 +40,7 @@ MCP is the protocol bridge between agents and the Admiral framework. Platform ad
 - [x] **M-06: JSON Schema definitions for all MCP tools** — Input, output, and error schemas for all tools (Brain 6+, Fleet 3, Governance 3); served via tool discovery; versioned; validated at server level.
 - [x] **M-07a: Connection and permission tests (Level 1-2)** — Level 1: connectivity, tool discovery, minimal valid calls; Level 2: minimum-permission credentials, out-of-scope rejection, escalation prevention.
 - [x] **M-07b: Identity and integration tests (Level 3-4)** — Level 3: valid/no/expired/wrong-project/wrong-role/revoked tokens; Level 4: full Brain lifecycle through MCP.
-- [~] **M-07c: Security tests (Level 5)** — OWASP MCP Top 10: SSRF, injection, excessive permissions, undeclared egress monitoring. *(partial — see audit)*
+- [~] ~~**M-07c: Security tests (Level 5)** — OWASP MCP Top 10: SSRF, injection, excessive permissions, undeclared egress monitoring. *(partial — see audit)*~~ → **MOVED 2026-04-10 to Phase 23 / Stream 46 (LC-M07c)** — see `plan/todo/28-legacy-carryover-sweep.md`. Phase 13 closeout marked this complete but it remained partial.
 - [x] **M-08: Lightweight MCP client SDK** — Connection management (stdio + HTTP+SSE), tool discovery, auto token injection, typed errors, retry with exponential backoff; consumable by platform adapters.
 
 ## MCP Behavioral Security
@@ -100,7 +100,7 @@ Ship causality tracing (OB-02 + OB-09) within **90 days** — before Perplexity 
 ### Visualization & Analysis
 
 - [x] **OB-07: Dashboard improvements** — Real-time event timeline, hook execution visualization (latency sparklines, pass/fail), brain query log with relevance scores; auto-refresh.
-- [~] **OB-09: Incident timeline reconstruction** — Given session ID, reconstruct complete chronological timeline with causal links; flag anomalies; < 5s for 1000 events; markdown and JSON output. *(partial — see audit)*
+- [~] ~~**OB-09: Incident timeline reconstruction** — Given session ID, reconstruct complete chronological timeline with causal links; flag anomalies; < 5s for 1000 events; markdown and JSON output. *(partial — see audit)*~~ → **MOVED 2026-04-10 to Phase 23 / Stream 46 (LC-OB09)** — see `plan/todo/28-legacy-carryover-sweep.md`. Phase 13 closeout marked this complete but it remained partial.
 - [x] **OB-10: Performance regression detection** — Compare current metrics against statistical baselines (rolling averages + stddev); detect > 20% latency increase, > 20% throughput decrease; run in CI per PR; auto-update baselines on merge.
 
 ## Fleet Control Plane Authorization & Tracing

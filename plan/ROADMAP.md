@@ -7,9 +7,9 @@
 
 ## How to Read This Document
 
-The work is organized into **23 Phases (0–22)**. Each phase contains streams that can be worked **concurrently** within that phase, but phases themselves have dependency relationships — a phase generally cannot start until the prior phase's foundational outputs exist. Some streams span multiple phases (noted with `(continues)` markers).
+The work is organized into **25 Phases (0–24)**. Each phase contains streams that can be worked **concurrently** within that phase, but phases themselves have dependency relationships — a phase generally cannot start until the prior phase's foundational outputs exist. Some streams span multiple phases (noted with `(continues)` markers).
 
-Phases 0–14 built the broad architecture, closed depth gaps, and polished the codebase. **Phases 15–22 are the Credibility Closure Tier** — they address the eight weaknesses identified in the Phase 14+ rating audit (helm/ 7.5/10, admiral/ 6.8/10), each phase scoped to resolve exactly one weakness in dependency order.
+Phases 0–14 built the broad architecture, closed depth gaps, and polished the codebase. **Phases 15–22 are the Credibility Closure Tier** — they address the eight weaknesses identified in the Phase 14+ rating audit (helm/ 7.5/10, admiral/ 6.8/10), each phase scoped to resolve exactly one weakness in dependency order. **Phases 23–24 are the Legacy Reconciliation & Enterprise Profile Tier** — Phase 23 sweeps up 14 carryover items hidden under "COMPLETE" status markers in Phases 9–13 and refreshes documentation drift; Phase 24 closes the aiStrat ladder gap by building the F4/CP5/DE5/ASP work required for the Enterprise profile.
 
 **Key:**
 - **Streams** are the unit of work (Stream 0–33)
@@ -72,6 +72,12 @@ Phase 20 End-to-End Stitched System Demo
 Phase 21 Directory Namespace Deduplication
   │
 Phase 22 Spec-to-Code Ratio Rebalance & Rating Re-Audit
+  │
+  │  ── Phases 23-24: Legacy Reconciliation & Enterprise Profile Tier ──
+  │
+Phase 23 Legacy Carryover Sweep & Documentation Reconciliation
+  │
+Phase 24 aiStrat Enterprise Profile (Ladder Closure)
 ```
 
 ---
@@ -570,6 +576,84 @@ If spec debt resolution surfaces new requirements, those requirements must be in
 
 ---
 
+# Legacy Reconciliation & Enterprise Profile Tier (Phases 23–24)
+
+> Phases 23–24 close two distinct categories of work that the Credibility Closure Tier (Phases 15–22) does not address: (1) **legacy carryovers** — items from Phases 9, 10, 12, 13 that were marked complete or deferred to closed phases without being finished, and (2) **aiStrat ladder gaps** — the F4/CP5/DE5/ASP work required to actually deliver the Enterprise profile that `aiStrat/admiral/spec/index.md` defines but that no current phase claims.
+
+| Phase | Tier | Headline Outcome |
+|---|---|---|
+| 23 | Legacy reconciliation | 14 carryover items re-homed; missing Stream 37 reconciliation report published; `IMPLEMENTATION_STATUS.md` brought current to spec v0.23.15-alpha (incl. Part 13 + ASP rows) |
+| 24 | aiStrat Enterprise profile | F4 federation, CP5 Federation Dashboard, DE5 autonomous optimization, ASP full alignment — the Enterprise tuple `B3 F4 E3 CP5 S3 P3 DE5` becomes runnable |
+
+---
+
+## Phase 23 — Legacy Carryover Sweep & Documentation Reconciliation
+
+> Re-home every item from Phases 9, 10, 12, 13 that was deferred to a closed phase, marked partial without follow-up, or quietly skipped. Publish the missing Stream 37 Roadmap-to-Code Reconciliation report. Bring `admiral/IMPLEMENTATION_STATUS.md` up to spec v0.23.15-alpha (currently pinned to v0.17.1-alpha) and add the missing rows for Part 13 (MCP Integration) and the Agent Spec Protocol sub-spec.
+
+| Stream | Name | Scope | ← Needs | Feeds → |
+|--------|------|-------|---------|---------|
+| **46** | Legacy Carryover Sweep & Documentation Reconciliation | Re-home 14 carryover items (A-08, A-09, D-04, C-03 from Phase 9; B-12, B-16, B-18, DE-10 from Phase 10; O-02a, AU-10 from Phase 12; M-07c, OB-09 from Phase 13); publish the missing Stream 37 reconciliation report mapping every "done" claim to its file/test; update `admiral/IMPLEMENTATION_STATUS.md` from v0.17.1-alpha to v0.23.15-alpha; add row for Part 13 (MCP Integration); add row for Agent Spec Protocol; reconcile the "15 vs 16 Standing Orders" drift between `aiStrat/admiral/spec/index.md` (says 15) and runtime (carries 16) | Phase 22 (so the audit reflects post-Credibility-Closure reality) | Phase 24 (clean baseline for Enterprise profile work) |
+
+**Why now:** The Phase 14+ rating audit assumed Phases 9–14 were complete but the carryover audit reveals 14 unfinished items hidden under "COMPLETE" status markers. Phase 10 has no Status: line at all and quietly carries B-12, B-16, B-18, and DE-10 — yet its exit criterion claimed those were done. Worse, Stream 37 (Roadmap-to-Code Reconciliation) was the very mechanism designed to catch this kind of drift, and there is no evidence it was published. Phase 23 fixes the bookkeeping before Phase 24 builds the Enterprise profile on top of it.
+
+**Carryover origin map:**
+
+| Item | Original phase | Original status | Disposition |
+|---|---|---|---|
+| **A-08** Hook execution pipeline abstraction | Phase 9 (deferred to closed Phase 3) | unchecked | Phase 23 / Stream 46 |
+| **A-09** Plugin architecture for hook extensions | Phase 9 (deferred to closed Phase 3) | unchecked | Phase 23 / Stream 46 |
+| **D-04** Inline "why" comments on hook regex/thresholds | Phase 9 (deferred to closed Phase 2) | unchecked | Phase 23 / Stream 46 |
+| **C-02** Matrix CI builds (ubuntu + macOS) | Phase 9 ("infrastructure-dependent") | unchecked | **Phase 15 / DV-06** (already reclaimed) |
+| **C-03** CodeQL security scanning | Phase 9 ("requires GitHub Advanced Security") | unchecked | Phase 23 / Stream 46 |
+| **P-09** Standing Order compliance audit | Phase 9 (deferred to closed Phase 3) | unchecked | **Phase 18 / PE-09** (already reclaimed) |
+| **P-10** Hook coverage report | Phase 9 (deferred to closed Phase 3) | unchecked | **Phase 17 / HD-07** (already reclaimed) |
+| **B-12** MCP server scaffold (8 endpoints) | Phase 10 | partial | Phase 23 / Stream 46 |
+| **B-16** Multi-signal retrieval pipeline (FTS + pgvector + temporal + graph) | Phase 10 | unchecked | Phase 23 / Stream 46 |
+| **B-18** Quarantine integration with brain ingestion | Phase 10 | partial | Phase 23 / Stream 46 |
+| **DE-10** Knowledge search REST API | Phase 10 | unchecked | Phase 23 / Stream 46 |
+| **F-15** Agent Spec Protocol alignment for fleet definitions | Phase 12 | partial | **Phase 24 / Stream 47** (ASP belongs with Fleet F4) |
+| **O-02a** `tier_validation` SessionStart hook | Phase 12 | partial | Phase 23 / Stream 46 |
+| **AU-10** Trust reporting and analytics | Phase 12 | partial | Phase 23 / Stream 46 |
+| **M-07c** MCP Level 5 security tests (OWASP MCP Top 10) | Phase 13 | partial | Phase 23 / Stream 46 |
+| **OB-09** Incident timeline reconstruction | Phase 13 | partial | Phase 23 / Stream 46 |
+
+Items already covered by the Credibility Closure Tier (C-02, P-09, P-10) and items belonging to the Enterprise ladder (F-15) are struck through in their original todo files with redirect pointers; they are NOT duplicated in Phase 23.
+
+**Concurrency:** The 14 carryover items are independent and can run in parallel. The reconciliation report and `IMPLEMENTATION_STATUS.md` refresh are independent tracks.
+
+**Exit criteria:** Every legacy carryover item is either checked (complete) or has been moved to Phase 24 with a tracking pointer. Stream 37 reconciliation report exists and is published in `docs/`. `IMPLEMENTATION_STATUS.md` is current to spec v0.23.15-alpha and has rows for all 13 spec parts plus ASP. The "15 vs 16 Standing Orders" drift is resolved with one canonical count documented in both `aiStrat/admiral/spec/index.md` and the runtime status.
+
+**Todo file:** `todo/28-legacy-carryover-sweep.md`
+
+**Status:** PENDING.
+
+---
+
+## Phase 24 — aiStrat Enterprise Profile (Ladder Closure)
+
+> Build the F4 / CP5 / DE5 / ASP work required to actually run the **Enterprise profile** the spec describes. Today, the Starter, Team, and most of the Governed profiles work; Production has gaps; Enterprise is unreachable. The aiStrat spec defines the ladder explicitly (`aiStrat/admiral/spec/index.md` § Per-Component Scaling) and Helm cannot credibly claim "spec-complete" until the top rung exists.
+
+| Stream | Name | Scope | ← Needs | Feeds → |
+|--------|------|-------|---------|---------|
+| **47** | F4 — Multi-Orchestrator Federation & ASP Full Alignment | Multi-orchestrator coordination protocol; cross-fleet handoff; orchestrator election/failover; federated routing across fleets; F-15 ASP full alignment (convert all 71 core + 34 extended agent definitions to ASP-compliant format with authority relationships, `extends` inheritance, per-agent Decision Authority tiers, negative tool lists, ASP validation in CI) | Phase 23 (clean baseline), Streams 14, 15 | Streams 48, 49 |
+| **48** | CP5 — Federation Dashboard | Cross-fleet visibility layer; multi-operator governance UI; aggregated trace view across fleets; federation health monitoring; operator session management; cross-fleet alert routing; federation-level audit trail | Stream 47, Phase 7 (Stream 23 single-fleet baseline) | Stream 49 |
+| **49** | DE5 — Autonomous Optimization | Expanded autonomous tier criteria (extending the 4-tier model with auto-promotion based on earned trust); predictive routing; predictive cost forecasting; closed-loop tuning of routing weights, context budgets, and trust thresholds; safety gates ensuring Admiral retains override authority | Stream 47, Phase 6 (B2/B3 stable) | — (capstone) |
+
+**Why now:** The aiStrat spec defines the Enterprise profile (`B3 F4 E3 CP5 S3 P3 DE5`) but no current phase commits to it. Phases 0–22 deliver up to roughly the Production profile. The framework's value proposition is "the operational infrastructure for AI workforces" — which requires multi-fleet federation. Without Phase 24, the Enterprise marketing claims (Phase 13 strategic positioning) outrun the implementation by the largest margin in the codebase.
+
+**Why split into 3 streams:** F4 (multi-orchestrator federation) is a prerequisite for both CP5 (you can't visualize what doesn't exist) and DE5 (autonomous optimization needs federation telemetry). ASP full alignment is folded into Stream 47 because Fleet F4 is exactly where ASP authority relationships and `extends` inheritance pay off.
+
+**Concurrency:** Stream 47 must start first. Streams 48 and 49 can run in parallel after Stream 47 delivers the federation protocol.
+
+**Exit criteria:** Two or more fleets can operate under one federation with cross-fleet handoff and orchestrator failover. Federation Dashboard shows aggregated trace, alert, and audit views across fleets. Autonomous optimization adjusts routing weights and context budgets based on earned trust without operator intervention, with documented safety gates. All 71 core + 34 extended agent definitions are ASP-compliant and validated in CI. The Enterprise profile tuple `B3 F4 E3 CP5 S3 P3 DE5` is documented as runnable in `aiStrat/QUICKSTART.md` with a working configuration example.
+
+**Todo file:** `todo/29-enterprise-profile-ladder-closure.md`
+
+**Status:** PENDING.
+
+---
+
 ## Stream-to-Phase Map (Quick Reference)
 
 | Stream | Name | Phase(s) |
@@ -620,6 +704,10 @@ If spec debt resolution surfaces new requirements, those requirements must be in
 | 43 | End-to-End Stitched System Demo | **20** |
 | 44 | Directory Namespace Deduplication | **21** |
 | 45 | Spec-to-Code Rebalance & Rating Re-Audit | **22** |
+| 46 | Legacy Carryover Sweep & Documentation Reconciliation | **23** |
+| 47 | F4 — Multi-Orchestrator Federation & ASP Full Alignment | **24** |
+| 48 | CP5 — Federation Dashboard | **24** |
+| 49 | DE5 — Autonomous Optimization | **24** |
 
 ---
 
@@ -683,6 +771,12 @@ Phase 20 ║ [Stream 43: End-to-End Stitched System Demo]
 Phase 21 ║ [Stream 44: Directory Namespace Deduplication]
          ║
 Phase 22 ║ [Stream 45: Spec-to-Code Rebalance & Rating Re-Audit]
+         ║
+         ║  ── Legacy Reconciliation & Enterprise Profile Tier (Phases 23-24) ──
+         ║
+Phase 23 ║ [Stream 46: Legacy Carryover Sweep & Documentation Reconciliation]
+         ║
+Phase 24 ║ [Stream 47: F4 Federation + ASP] ──→ [Stream 48: CP5 Dashboard] [Stream 49: DE5 Autonomous]
 ```
 
 *↑ = depth continuation of a stream that delivered foundational outputs in an earlier phase.*
@@ -836,3 +930,5 @@ Streams 21 and 00 run in parallel (Phase 0), but both must deliver before Phase 
 8. **Phase 11 (Orchestration Runtime) is on the critical path for fleet claims.** No enterprise positioning (Phase 13) or thesis validation should claim multi-agent coordination capabilities until the end-to-end multi-agent test (Stream 36) passes in CI.
 
 9. **Phases 15–22 are the Credibility Closure Tier.** They are sequenced strictly: Phase 15 unblocks Phase 16, Phase 16 unblocks 17/18/19, Phase 18 closes the framework's central thesis gap, Phase 20 proves the system stitches together, Phase 21 cleans up, Phase 22 re-audits. Skipping a phase invalidates the dependency chain. The tier ends with a published rating delta — no claim of "improved score" should be made before Phase 22 completes.
+
+10. **Phases 23–24 are the Legacy Reconciliation & Enterprise Profile Tier.** Phase 23 must run after Phase 22 so the carryover audit reflects post-Credibility-Closure reality (some carryovers may already be closed by side-effects of Phases 15–22). Phase 24 must run after Phase 23 so it builds on a clean baseline. Within Phase 24, Stream 47 (F4 federation + ASP) must complete before Streams 48 (CP5 Dashboard) and 49 (DE5 Autonomous) — federation telemetry is a prerequisite for both. No "spec-complete" claim is valid until Phase 24 delivers a working Enterprise profile (`B3 F4 E3 CP5 S3 P3 DE5`) with a documented configuration in `aiStrat/QUICKSTART.md`.

@@ -24,8 +24,8 @@
 
 ### 3.4 Advanced Architecture
 
-- [ ] **A-08:** Hook execution pipeline abstraction — *Deferred to Phase 3.* — formal 5-phase lifecycle: load -> validate -> execute -> emit -> report `[L]`
-- [ ] **A-09:** Plugin architecture for hook extensions — *Deferred to Phase 3.* — plugin discovery in `admiral/plugins/hooks/`, manifest schema, example plugin `[L]`
+- [ ] ~~**A-08:** Hook execution pipeline abstraction — *Deferred to Phase 3.* — formal 5-phase lifecycle: load -> validate -> execute -> emit -> report `[L]`~~ → **MOVED 2026-04-10 to Phase 23 / Stream 46 (LC-A08)** — see `plan/todo/28-legacy-carryover-sweep.md`. Original Phase 3 home is closed; Phase 23 owns it.
+- [ ] ~~**A-09:** Plugin architecture for hook extensions — *Deferred to Phase 3.* — plugin discovery in `admiral/plugins/hooks/`, manifest schema, example plugin `[L]`~~ → **MOVED 2026-04-10 to Phase 23 / Stream 46 (LC-A09)** — see `plan/todo/28-legacy-carryover-sweep.md`. Depends on LC-A08.
 - [x] **A-10:** State machine for session lifecycle — 5 states (init -> active -> paused -> terminating -> complete), invalid transitions rejected `[L]`
 - [x] **A-11:** Event schema registry — versioned JSON schemas for all event types, CI-enforced registration `[L]`
 - [x] **A-12:** Configuration schema validation at startup — validate config at session start, report all errors, fail-closed `[M]`
@@ -48,7 +48,7 @@
 
 ### 4.2 Inline Documentation
 
-- [ ] **D-04:** Add inline "why" comments to hooks — *Deferred to Phase 2.* — audit all 13+ hooks, annotate regex patterns, thresholds, state mutations, magic numbers `[L]`
+- [ ] ~~**D-04:** Add inline "why" comments to hooks — *Deferred to Phase 2.* — audit all 13+ hooks, annotate regex patterns, thresholds, state mutations, magic numbers `[L]`~~ → **MOVED 2026-04-10 to Phase 23 / Stream 46 (LC-D04)** — see `plan/todo/28-legacy-carryover-sweep.md`. Original Phase 2 home is closed; Phase 23 owns it. Now scoped to all 21 hooks.
 - [x] **D-05:** Add usage examples to templates — *Completed in Phase 9.* — Added `_purpose`, `_usage`, `_expected_output`/`_example_invocation` fields to ground-truth, task-criteria, and spec-change-impact templates `[S]`
 
 ### 4.3 Architecture Decision Records
@@ -86,8 +86,8 @@
 
 ### 5.2 Cross-Platform & Security
 
-- [ ] **C-02:** Add matrix CI builds — *Deferred (requires macOS runner access).* — ubuntu + macOS for TypeScript and hook tests `[S]`
-- [ ] **C-03:** Add CodeQL security scanning — *Deferred (requires GitHub Advanced Security setup).* — TypeScript + bash analysis, block on high/critical, weekly schedule `[S]`
+- [ ] ~~**C-02:** Add matrix CI builds — *Deferred (requires macOS runner access).* — ubuntu + macOS for TypeScript and hook tests `[S]`~~ → **MOVED 2026-04-10 to Phase 15 / Stream 38 (DV-06)** — see `plan/todo/20-dependency-version-realism.md`. Reclaimed by the Credibility Closure Tier as part of dependency reproducibility.
+- [ ] ~~**C-03:** Add CodeQL security scanning — *Deferred (requires GitHub Advanced Security setup).* — TypeScript + bash analysis, block on high/critical, weekly schedule `[S]`~~ → **MOVED 2026-04-10 to Phase 23 / Stream 46 (LC-C03)** — see `plan/todo/28-legacy-carryover-sweep.md`. The GitHub Advanced Security setup is in scope here.
 
 ### 5.3 Integration & Performance
 
@@ -128,8 +128,8 @@
 
 - [x] **P-07:** Spec-implementation drift detector `[L]`
 - [x] **P-08:** Plan auto-validation — verify `plan/index.md` counts match stream files, no orphaned refs, no duplicate IDs `[M]`
-- [ ] **P-09:** Standing Order compliance audit — *Relocated to Phase 3 (`05-hooks-standing-orders-infrastructure.md`), depends on S-05.* `[M]`
-- [ ] **P-10:** Hook coverage report — *Relocated to Phase 3 (`05-hooks-standing-orders-infrastructure.md`), depends on S-05.* `[M]`
+- [ ] ~~**P-09:** Standing Order compliance audit — *Relocated to Phase 3 (`05-hooks-standing-orders-infrastructure.md`), depends on S-05.* `[M]`~~ → **MOVED 2026-04-10 to Phase 18 / Stream 41 (PE-09 enforcement completeness matrix)** — see `plan/todo/23-policy-enforcement-closure.md`. The Credibility Closure Tier reclaimed this as part of the policy → enforcement closure.
+- [ ] ~~**P-10:** Hook coverage report — *Relocated to Phase 3 (`05-hooks-standing-orders-infrastructure.md`), depends on S-05.* `[M]`~~ → **MOVED 2026-04-10 to Phase 17 / Stream 40 (HD-07 hook coverage metric)** — see `plan/todo/22-hook-test-depth.md`. The Credibility Closure Tier reclaimed this as part of hook test depth.
 
 ---
 

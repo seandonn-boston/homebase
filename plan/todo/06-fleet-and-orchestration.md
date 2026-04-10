@@ -41,7 +41,7 @@ Source streams: **Stream 14 (Fleet Agent Definitions, F-01 to F-14)** | **Stream
 
 ## ASP Alignment
 
-- [~] **F-15** — Align agent definitions with Agent Spec Protocol (ASP) format: update F-12a schema to validate ASP-compliant definitions, convert Orchestrator/QA/Security Auditor to full ASP format, integrate ASP validation schemas, enforce negative tool lists. ASP introduces authority relationships, `extends` inheritance, and per-agent Decision Authority tiers. Depends on F-12a. *(partial — see audit)*
+- [~] ~~**F-15** — Align agent definitions with Agent Spec Protocol (ASP) format: update F-12a schema to validate ASP-compliant definitions, convert Orchestrator/QA/Security Auditor to full ASP format, integrate ASP validation schemas, enforce negative tool lists. ASP introduces authority relationships, `extends` inheritance, and per-agent Decision Authority tiers. Depends on F-12a. *(partial — see audit)*~~ → **MOVED 2026-04-10 to Phase 24 / Stream 47 (F4-07 through F4-10)** — see `plan/todo/29-enterprise-profile-ladder-closure.md`. ASP full alignment belongs with Fleet F4 because ASP authority relationships and `extends` inheritance pay off in multi-orchestrator federation. Phase 24 expands the scope to all 71 core + 34 extended agents (originally just Orchestrator/QA/Security Auditor).
 
 ## ASP Templates & Migration
 
@@ -57,7 +57,7 @@ Source streams: **Stream 14 (Fleet Agent Definitions, F-01 to F-14)** | **Stream
 - [x] **O-01a** — Task-type routing implementation: parse 86 routing rules from `fleet/routing-rules.md`, resolve primary/fallback/escalation, enforce constraints (no self-review, no Does-NOT-Do violations)
 - [x] **O-01b** — File-ownership routing implementation: configurable file-path-to-agent ownership, multi-owner decomposition signals
 - [x] **O-01c** — Capability-matching routing: registry-based fallback with ranked candidates, confidence scores, low-confidence escalation
-- [~] **O-02a** — Model tier validation hook (`SessionStart: tier_validation`): reject sessions where model does not meet minimum tier *(partial — see audit)*
+- [~] ~~**O-02a** — Model tier validation hook (`SessionStart: tier_validation`): reject sessions where model does not meet minimum tier *(partial — see audit)*~~ → **MOVED 2026-04-10 to Phase 23 / Stream 46 (LC-O02a)** — see `plan/todo/28-legacy-carryover-sweep.md`. Phase 12 closeout marked this complete but it remained partial.
 - [x] **O-02b** — Degradation policy engine: exponential backoff (1s-30s, 4 retries), per-agent Degraded/Blocked policies, no cascading degradation, recovery protocol
 - [x] **O-02c** — Model tier promotion/demotion tracking: quality rates, rework costs, A/B results, recommendations persisted to Brain
 - [x] **O-08** — File ownership conflict resolution: detect overlapping ownership at assignment time, resolve via decompose / primary-reviewer / escalate

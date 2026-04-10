@@ -1,6 +1,6 @@
 # Admiral Framework — Comprehensive Roadmap Index
 
-**Last updated:** 2026-04-10 (Credibility Closure Tier — Phases 15–22 added; rating audit baselines recorded)
+**Last updated:** 2026-04-10 (Credibility Closure Tier — Phases 15–22; Legacy Reconciliation & Enterprise Profile Tier — Phases 23–24; 14 legacy carryover items struck through and re-homed)
 
 **Target:** Transform Helm from a strong prototype into a showcase-quality, fully-governed, spec-complete AI agent orchestration platform — a codebase that earns a 10/10 on every dimension.
 
@@ -51,6 +51,26 @@ These are independent ratings from a fresh-eyes audit of the codebase, distinct 
 8. Spec-to-code ratio inverted (365 MD vs 363 TS + 194 sh) → **Phase 22** (Stream 45)
 
 See `plan/ROADMAP.md` § Credibility Closure Tier for the full sequencing rationale.
+
+### Phase 14+ Legacy Carryover Audit (closed by Phases 23–24)
+
+A check-state audit across `plan/todo/01–19` revealed 14 unchecked or partial items hidden under "COMPLETE" status markers in Phases 9–13, plus Phase 10 has no Status: marker at all. The Stream 37 reconciliation report — designed to detect exactly this drift — was never published. `admiral/IMPLEMENTATION_STATUS.md` is six spec versions stale (pinned to v0.17.1-alpha; current spec is v0.23.15-alpha) and missing rows for Part 13 (MCP Integration) and the Agent Spec Protocol. The aiStrat Enterprise profile (`B3 F4 E3 CP5 S3 P3 DE5`) is unreachable.
+
+| Carryover origin | Count | Resolution |
+|---|---|---|
+| Phase 9 (`todo/04`) — A-08, A-09, D-04, C-02, C-03, P-09, P-10 | 7 | 4 → Phase 23 (LC-A08, LC-A09, LC-D04, LC-C03); 1 → Phase 15 (DV-06); 1 → Phase 18 (PE-09); 1 → Phase 17 (HD-07) |
+| Phase 10 (`todo/08`) — B-12, B-16, B-18, DE-10 | 4 | All → Phase 23 (LC-B12, LC-B16, LC-B18, LC-DE10) |
+| Phase 12 (`todo/06`, `todo/11`) — F-15, O-02a, AU-10 | 3 | F-15 → Phase 24 (Stream 47, ASP belongs with F4); O-02a + AU-10 → Phase 23 |
+| Phase 13 (`todo/09`) — M-07c, OB-09 | 2 | All → Phase 23 |
+
+Each origin item in `plan/todo/04, 06, 08, 09, 11` has been struck through with a "MOVED 2026-04-10 to Phase X / Stream Y (item-id)" pointer to its new owner.
+
+**Two new tier weaknesses → Phases 23–24:**
+
+9. 14 legacy carryovers + missing reconciliation report + stale `IMPLEMENTATION_STATUS.md` → **Phase 23** (Stream 46)
+10. Enterprise profile unreachable (no F4, no CP5, no DE5, partial ASP) → **Phase 24** (Streams 47, 48, 49)
+
+See `plan/ROADMAP.md` § Legacy Reconciliation & Enterprise Profile Tier for the sequencing rationale.
 
 ---
 
@@ -136,6 +156,17 @@ See `plan/ROADMAP.md` § Credibility Closure Tier for the full sequencing ration
 | 44 | [Directory Namespace Deduplication](stream-44-namespace-deduplication.md) | `stream-44-namespace-deduplication.md` | ND-01 to ND-08 | Three-layer rule, canonical decisions, redirect READMEs, CI lint blocking new duplicates |
 | 45 | [Spec-to-Code Rebalance & Rating Re-Audit](stream-45-spec-code-rebalance-and-reaudit.md) | `stream-45-spec-code-rebalance-and-reaudit.md` | RB-01 to RB-09 | Tag every `.md`, quarantine speculative content, re-run helm/admiral rating audit, publish before/after delta |
 
+### Part V-D: Legacy Reconciliation & Enterprise Profile Tier (Streams 46-49, Phases 23-24)
+
+> Phase 23 sweeps up 14 carryover items hidden under "COMPLETE" status markers in Phases 9–13, publishes the missing Stream 37 reconciliation report, and refreshes documentation drift. Phase 24 closes the aiStrat ladder gap by building the F4/CP5/DE5/ASP work required for the Enterprise profile (`B3 F4 E3 CP5 S3 P3 DE5`).
+
+| # | Stream | File | Items | Focus |
+|---|---|---|---|---|
+| 46 | [Legacy Carryover Sweep & Documentation Reconciliation](stream-46-legacy-carryover-sweep.md) | `stream-46-legacy-carryover-sweep.md` | LC-A08, LC-A09, LC-D04, LC-C03, LC-B12, LC-B16, LC-B18, LC-DE10, LC-O02a, LC-AU10, LC-M07c, LC-OB09, LC-RC01, LC-RC02, LC-DR01..04 | Re-home 14 carryover items from Phases 9–13; publish missing Stream 37 reconciliation report; refresh `IMPLEMENTATION_STATUS.md` to spec v0.23.15-alpha; resolve "15 vs 16 Standing Orders" drift |
+| 47 | [F4 — Multi-Orchestrator Federation & ASP Full Alignment](stream-47-f4-federation-asp-alignment.md) | `stream-47-f4-federation-asp-alignment.md` | F4-01 to F4-11 | Federation protocol + bus, cross-fleet handoff, orchestrator election/failover, federated routing, ASP validator + 71+34 agent conversion, 2-fleet smoke test |
+| 48 | [CP5 — Federation Dashboard](stream-48-cp5-federation-dashboard.md) | `stream-48-cp5-federation-dashboard.md` | CP5-01 to CP5-09 | Federation telemetry aggregator, cross-fleet trace view, multi-operator identity & sessions, permission-scoped views, federation health, alert routing, audit log + API |
+| 49 | [DE5 — Autonomous Optimization](stream-49-de5-autonomous-optimization.md) | `stream-49-de5-autonomous-optimization.md` | DE5-01 to DE5-11 | Expanded autonomy tiers, auto-promotion/demotion, predictive routing/forecasting, weight/budget/threshold tuning loops, Admiral override, anomaly detection, 30-day simulation |
+
 ### Part VI: Strategic & Excellence (Streams 12-13, 29-33)
 
 | # | Stream | File | Items | Focus |
@@ -162,8 +193,9 @@ See `plan/ROADMAP.md` § Credibility Closure Tier for the full sequencing ration
 | Part V: Hardening & Observability | 24-28 | ~64 items | Security (incl. MCP/A2A), observability, DX, monitoring, future features |
 | Part V-B: Orchestration Runtime | 34-36 | ~16 items | Execution runtime, hook-to-B2 integration, E2E multi-agent test |
 | Part V-C: Credibility Closure Tier | 38-45 | ~68 items | Version realism, admiral test runner, hook test depth, policy enforcement, module reconnection, E2E demo, namespace dedup, spec-code rebalance + rating re-audit |
+| Part V-D: Legacy Reconciliation & Enterprise Profile | 46-49 | ~50 items | 14 carryover sweep + reconciliation report + IMPLEMENTATION_STATUS refresh; F4 federation + ASP; CP5 Federation Dashboard; DE5 autonomous optimization |
 | Part VI: Strategic & Excellence | 12-13, 29-33 | ~86 items | Positioning, excellence, SOs, context, QA, rating, thesis |
-| **Total** | **45 streams** | **~563 items** | **Complete roadmap** |
+| **Total** | **49 streams** | **~613 items** | **Complete roadmap** |
 
 ---
 

@@ -30,7 +30,7 @@ Trust mechanics let agents earn independence through demonstrated competence. Wi
 
 - [x] **AU-07: Trust dashboard** — Visualize per-agent trust levels by category, score trends, recent promotions/demotions, upcoming graduation signals, decay warnings, and the fleet-wide autonomy matrix. Provide both terminal rendering and API access.
 - [x] **AU-08: Human trust override** — Allow operators to manually adjust trust levels with a required reason and full audit trail. Distinguish earned (automatic) from imposed (override) trust changes; restrict promotions beyond Stage 2 to Owner-level operators.
-- [~] **AU-10: Trust reporting and analytics** — Generate fleet-wide reports covering trust distribution, trust velocity, demotion frequency, trust-cost correlation, and operator override frequency. Store reports in Brain for long-term trend analysis. *(partial — see audit)*
+- [~] ~~**AU-10: Trust reporting and analytics** — Generate fleet-wide reports covering trust distribution, trust velocity, demotion frequency, trust-cost correlation, and operator override frequency. Store reports in Brain for long-term trend analysis. *(partial — see audit)*~~ → **MOVED 2026-04-10 to Phase 23 / Stream 46 (LC-AU10)** — see `plan/todo/28-legacy-carryover-sweep.md`. Phase 12 closeout marked this complete but it remained partial.
 
 ---
 

@@ -49,16 +49,16 @@ Brain is Admiral's primary competitive moat. Ship B2 within **120 days** before 
 
 ## B3 Production
 
-- [~] **B-12** MCP server scaffold — 8 tool endpoints (brain_record, brain_query, brain_retrieve, brain_strengthen, brain_supersede, brain_status, brain_audit, brain_purge) *(partial — see audit)*
+- [~] ~~**B-12** MCP server scaffold — 8 tool endpoints (brain_record, brain_query, brain_retrieve, brain_strengthen, brain_supersede, brain_status, brain_audit, brain_purge) *(partial — see audit)*~~ → **MOVED 2026-04-10 to Phase 23 / Stream 46 (LC-B12)** — see `plan/todo/28-legacy-carryover-sweep.md`. Phase 10 had no Status: line and quietly carried this as partial.
 - [x] **B-13** Postgres + pgvector schema deployment — *Completed in Phase 10.* — `admiral/brain/postgres-schema.ts` with 5 versioned migrations (entries+FTS, links, pgvector+embeddings, audit+demand, meta), rollback support, migration status tracking, connection pool config from env vars. 19-test suite.
 - [x] **B-14** Identity token lifecycle — *Completed in Phase 10.* — `admiral/brain/identity-tokens.ts` with create (configurable TTL), rotate (overlapping validity window), revoke (immediate), validate, bulk agent revocation, auto-expiry pruning, stats. 20-test suite.
 - [x] **B-15** Access control enforcement — *Completed in Phase 10.* — `admiral/brain/access-control.ts` with 3 access levels (read-only/contributor/admin), scope-based grants, per-entry overrides, expired grant handling, readable/writable filtering, full decision audit log. 18-test suite.
 
 ## B3 Advanced
 
-- [ ] **B-16** Multi-signal retrieval pipeline — keyword (FTS), semantic (pgvector), temporal (recency), link-based (graph proximity); configurable weights, query-time signal selection
+- [ ] ~~**B-16** Multi-signal retrieval pipeline — keyword (FTS), semantic (pgvector), temporal (recency), link-based (graph proximity); configurable weights, query-time signal selection~~ → **MOVED 2026-04-10 to Phase 23 / Stream 46 (LC-B16)** — see `plan/todo/28-legacy-carryover-sweep.md`. Phase 10 never started this; it is a hard prerequisite for LC-DE10 (Knowledge Search REST API).
 - [x] **B-17** Multi-hop link traversal — supports/contradicts/supersedes/related_to relationships, configurable depth, cycle detection, traversal path in results
-- [~] **B-18** Quarantine integration — external content passes 5-layer pipeline before brain ingestion, `quarantine_status` metadata *(partial — see audit)*
+- [~] ~~**B-18** Quarantine integration — external content passes 5-layer pipeline before brain ingestion, `quarantine_status` metadata *(partial — see audit)*~~ → **MOVED 2026-04-10 to Phase 23 / Stream 46 (LC-B18)** — see `plan/todo/28-legacy-carryover-sweep.md`. Phase 10 carried this as partial.
 - [x] **B-19** Sensitivity classification — *Completed in Phase 10.* — `admiral/brain/sensitivity-classification.ts` with 4-level taxonomy (PUBLIC/INTERNAL/CONFIDENTIAL/RESTRICTED), agent clearance grants, access checking, query filtering by clearance, single and bulk reclassification with audit log. 15-test suite.
 - [x] **B-20** Audit logging — *Completed in Phase 10.* — `admiral/brain/audit-logging.ts` with append-only log, queryable by time/agent/operation/entry, configurable retention (maxEntries, maxAge), JSONL export, summary statistics. 15-test suite.
 
@@ -84,7 +84,7 @@ Brain is Admiral's primary competitive moat. Ship B2 within **120 days** before 
 - [x] **DE-07** Knowledge quality metrics — freshness, accuracy proxy, usage frequency, contradiction rate, coverage, link density; periodic Brain Health Report with trends
 - [x] **DE-08** Cross-session knowledge transfer — session-end capture, session-start loading of relevant entries, repeat-failure prevention
 - [x] **DE-09** Knowledge export/import — self-contained JSON archive, filtered subsets (category/tag/date/quality), PII stripping via Data Sensitivity Protocol, merge with deduplication on import
-- [ ] **DE-10** Knowledge search API — REST endpoints (search, entry, links, health, stats) in control plane; semantic search, authentication, rate limiting
+- [ ] ~~**DE-10** Knowledge search API — REST endpoints (search, entry, links, health, stats) in control plane; semantic search, authentication, rate limiting~~ → **MOVED 2026-04-10 to Phase 23 / Stream 46 (LC-DE10)** — see `plan/todo/28-legacy-carryover-sweep.md`. Phase 10 exit criteria explicitly claimed this was done; it never was. Depends on LC-B16.
 
 ---
 
