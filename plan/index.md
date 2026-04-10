@@ -1,6 +1,6 @@
 # Admiral Framework — Comprehensive Roadmap Index
 
-**Last updated:** 2026-03-28
+**Last updated:** 2026-04-10 (Credibility Closure Tier — Phases 15–22 added; rating audit baselines recorded)
 
 **Target:** Transform Helm from a strong prototype into a showcase-quality, fully-governed, spec-complete AI agent orchestration platform — a codebase that earns a 10/10 on every dimension.
 
@@ -29,6 +29,28 @@
 | Security & Compliance | 9/10 | 10/10 | 90-pattern injection detection (3 layers), privilege escalation hardening, secret scanning, tamper-proof audit trail (SHA-256 hash chain), MCP behavioral security (5 layers), identity tokens, RBAC, PII detection (email/SSN/CC/API keys/JWT), attack corpus (30 ATK scenarios), security audit trail. Missing: SBOM, Leash Cedar integration |
 | Strategic Positioning | 3/10 | 10/10 | Rating system with 5-tier scale, benchmark comparisons. Thesis validation framework with 12 metrics, A/B comparison, ROI model. Missing: OWASP/AEGIS/NIST crosswalks (all deferred Phase 3+) |
 | **Overall** | **9/10** | **10/10** | Phase 9 complete: Quality rigor (property tests, mutation testing, hook idempotency, snapshot tests), documentation depth (ADMIRAL_STYLE.md, 9 ADRs, runbook, troubleshooting guide, Brain guide, security model, glossary, quick-start, hook dev guide, FAQ, API versioning), CI hardening (Dependabot grouping, doc validation, vitest-to-node:test migration), self-enforcement (documentation discipline, EDD gate system). Remaining: security hardening (Phase 10), DX/monitoring (Phase 11), strategic positioning (Phase 12) |
+
+### Phase 14+ Rating Audit Baselines (to be closed by Credibility Closure Tier)
+
+These are independent ratings from a fresh-eyes audit of the codebase, distinct from the per-dimension self-assessment above. They are the baselines that Phase 22 (Stream 45) will re-audit and publish a delta against.
+
+| Target | Baseline (post-Phase-14) | Target (post-Phase-22) | Headline weakness |
+|---|---|---|---|
+| **helm/** (repo-wide) | **7.5/10** | ≥8.5/10 | Spec-to-code ratio inverted; module integration thin; namespace sprawl |
+| **admiral/** (runtime) | **6.8/10** | ≥8/10 | `so_enforcement.sh` stubbed; `package.json` boilerplate; large orphaned TS sub-trees |
+
+**Eight rating-review weaknesses → Phases 15–22 (one phase per weakness):**
+
+1. Version fiction in `package.json` → **Phase 15** (Stream 38)
+2. `admiral/` test runner is `npm init` boilerplate → **Phase 16** (Stream 39)
+3. 21 hooks share 1 test file → **Phase 17** (Stream 40)
+4. Standing Orders are advisory stubs → **Phase 18** (Stream 41)
+5. Large TS sub-trees in `admiral/` are orphaned → **Phase 19** (Stream 42)
+6. No end-to-end stitched demo across components → **Phase 20** (Stream 43)
+7. Triple namespaces (`fleet/`, `monitor/`, `brain/`) → **Phase 21** (Stream 44)
+8. Spec-to-code ratio inverted (365 MD vs 363 TS + 194 sh) → **Phase 22** (Stream 45)
+
+See `plan/ROADMAP.md` § Credibility Closure Tier for the full sequencing rationale.
 
 ---
 
@@ -99,6 +121,21 @@
 | 35 | [Hook-to-B2 Integration](stream-35-hook-to-b2-integration.md) | `stream-35-hook-to-b2-integration.md` | HB-01 to HB-06 | Access pattern, query/write helpers, transactional safety, fallback, benchmarks |
 | 36 | [E2E Multi-Agent Test](stream-36-e2e-multi-agent-test.md) | `stream-36-e2e-multi-agent-test.md` | E2E-01 to E2E-04 | Test harness, happy path, failure path, CI integration |
 
+### Part V-C: Credibility Closure Tier (Streams 38-45, Phases 15-22)
+
+> Eight streams resolving the eight weaknesses from the Phase 14+ rating audit (helm/ baseline 7.5/10, admiral/ baseline 6.8/10). Sequenced strictly: each phase unblocks the next.
+
+| # | Stream | File | Items | Focus |
+|---|---|---|---|---|
+| 38 | [Dependency & Version Realism](stream-38-dependency-version-realism.md) | `stream-38-dependency-version-realism.md` | DV-01 to DV-07 | Pin TS/Node/Biome/Stryker to GA, regenerate lockfiles, `engines` fields, CI matrix on Linux+macOS |
+| 39 | [Admiral Test Runner Repair & Reachable-Modules Audit](stream-39-admiral-test-runner-repair.md) | `stream-39-admiral-test-runner-repair.md` | TR-01 to TR-08 | Replace `npm init` boilerplate, run all `.test.ts` + shell tests, build import graph, classify every TS file |
+| 40 | [Hook Test Depth](stream-40-hook-test-depth.md) | `stream-40-hook-test-depth.md` | HD-01 to HD-08 | One `test_<hook>.sh` per hook, ≥5 negative cases each, pipeline sequencing + idempotency tests, ≥95% coverage |
+| 41 | [Standing Orders Enforcement Closure](stream-41-policy-enforcement-closure.md) | `stream-41-policy-enforcement-closure.md` | PE-01 to PE-10 | Remove SO-01..SO-09 stubs, MCP tool response scanning, promote SO-03/SO-09 to hard-block, ≥12/16 enforced |
+| 42 | [Admiral Module Reconnection](stream-42-admiral-module-reconnection.md) | `stream-42-admiral-module-reconnection.md` | MR-01 to MR-09 | Wire-or-delete every orphaned TS module, deletion ADRs, smoke tests for wired modules, zero orphans |
+| 43 | [End-to-End Stitched System Demo](stream-43-e2e-stitched-system-demo.md) | `stream-43-e2e-stitched-system-demo.md` | DM-01 to DM-08 | Single CI-wired demo touching ≥5 components, hard-block + Brain round-trip scenarios, asciicast |
+| 44 | [Directory Namespace Deduplication](stream-44-namespace-deduplication.md) | `stream-44-namespace-deduplication.md` | ND-01 to ND-08 | Three-layer rule, canonical decisions, redirect READMEs, CI lint blocking new duplicates |
+| 45 | [Spec-to-Code Rebalance & Rating Re-Audit](stream-45-spec-code-rebalance-and-reaudit.md) | `stream-45-spec-code-rebalance-and-reaudit.md` | RB-01 to RB-09 | Tag every `.md`, quarantine speculative content, re-run helm/admiral rating audit, publish before/after delta |
+
 ### Part VI: Strategic & Excellence (Streams 12-13, 29-33)
 
 | # | Stream | File | Items | Focus |
@@ -124,8 +161,9 @@
 | Part IV: Governance & Data | 19-23 | ~56 items | Meta-governance, data ecosystem, spec debt, intent, platform |
 | Part V: Hardening & Observability | 24-28 | ~64 items | Security (incl. MCP/A2A), observability, DX, monitoring, future features |
 | Part V-B: Orchestration Runtime | 34-36 | ~16 items | Execution runtime, hook-to-B2 integration, E2E multi-agent test |
+| Part V-C: Credibility Closure Tier | 38-45 | ~68 items | Version realism, admiral test runner, hook test depth, policy enforcement, module reconnection, E2E demo, namespace dedup, spec-code rebalance + rating re-audit |
 | Part VI: Strategic & Excellence | 12-13, 29-33 | ~86 items | Positioning, excellence, SOs, context, QA, rating, thesis |
-| **Total** | **37 streams** | **~495 items** | **Complete roadmap** |
+| **Total** | **45 streams** | **~563 items** | **Complete roadmap** |
 
 ---
 
