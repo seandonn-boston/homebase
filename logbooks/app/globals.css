@@ -1081,158 +1081,352 @@ kbd {
   line-height: 1.55;
 }
 
-/* ============ Graph — 3D cube diorama ============ */
+/* ============ Graph — 2D parallax scroll ============ */
 
-.cube-graph {
-  margin: 1em -1.5em 3em;
-  padding: 0;
+.parallax-graph {
   position: relative;
+  margin: 1em -1.5em 3em;
   width: calc(100% + 3em);
 }
 
-.cube-canvas-wrap {
-  position: relative;
-  width: 100%;
-  height: 72vh;
-  min-height: 480px;
-  max-height: 760px;
-  background:
-    radial-gradient(ellipse 70% 60% at 50% 50%, rgba(255, 220, 180, 0.12), transparent 70%),
-    linear-gradient(180deg, rgba(40, 24, 14, 0.04) 0%, rgba(40, 24, 14, 0.10) 100%);
-}
-
-.cube-canvas-wrap canvas {
-  display: block;
-  outline: none;
-}
-
-.cube-hint {
-  text-align: center;
-  font-variant: small-caps;
-  letter-spacing: 0.24em;
-  color: var(--ink-faint);
-  font-size: 0.7em;
-  margin: 1em 1.5em 0;
-}
-
-/* Cube canvas has a soft warm background gradient underneath so the
-   scene reads against an atmospheric backdrop, not the site background. */
-.cube-canvas-wrap::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(ellipse 60% 55% at 50% 45%,
-      rgba(255, 225, 180, 0.20) 0%,
-      rgba(255, 200, 150, 0.08) 40%,
-      transparent 70%);
-}
-
-/* "Other views" block at the bottom of each graph page */
-.graph-alternatives {
-  margin: 2.5em 0 2em;
-  padding: 1.6em 1.8em;
-  background: var(--surface);
-  border: 1px solid var(--rule-soft);
-  border-left: 2px solid var(--gold);
-  border-radius: 0 8px 8px 0;
+/* Floating HUD — phase indicator + scroll progress bar */
+.pg-hud {
+  position: fixed;
+  left: 50%;
+  top: 5.4em;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.6em 1.2em 0.5em;
+  background: var(--site-bg);
+  background-attachment: fixed;
+  border-radius: 999px;
   box-shadow: var(--shadow-sm);
+  z-index: 90;
+  pointer-events: none;
 }
 
-.graph-alternatives .alt-label {
-  display: block;
+.pg-hud-phase {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6em;
+}
+
+.pg-hud-label {
   font-variant: small-caps;
-  letter-spacing: 0.28em;
-  font-size: 0.7em;
-  color: var(--gold);
-  margin: 0 0 1em;
+  letter-spacing: 0.22em;
+  font-size: 0.66em;
+  color: var(--ink-faint);
   font-weight: 600;
 }
 
-.graph-alternatives .alt-link {
-  display: flex;
-  flex-direction: column;
-  padding: 0.8em 0;
-  border-bottom: 1px solid var(--rule-soft);
-  text-decoration: none;
-  color: inherit;
-  transition: color var(--motion) var(--ease);
-}
-.graph-alternatives .alt-link:last-of-type { border-bottom: none; }
-
-.graph-alternatives .alt-link .alt-name {
+.pg-hud-value {
   font-family: "Baskerville", Georgia, serif;
   font-weight: 400;
-  font-size: 1.1em;
+  font-size: 0.92em;
   color: var(--ink);
 }
-.graph-alternatives .alt-link .alt-desc {
-  color: var(--ink-soft);
-  font-size: 0.88em;
-  margin-top: 0.15em;
-  line-height: 1.5;
-}
-.graph-alternatives .alt-link:hover .alt-name { color: var(--accent); }
 
-/* SVG tree viewport */
-.svg-tree-wrap {
+.pg-hud-progress {
+  width: 12em;
+  height: 2px;
+  background: rgba(181, 138, 62, 0.18);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.pg-hud-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--gold));
+  border-radius: 999px;
+  transition: width 120ms linear;
+}
+
+/* The tall scrolling stage */
+.pg-stage {
   position: relative;
   width: 100%;
-  min-height: 600px;
-  max-height: 78vh;
-  overflow: auto;
-  background:
-    radial-gradient(ellipse 60% 50% at 50% 40%,
-      rgba(255, 225, 180, 0.18) 0%,
-      rgba(255, 200, 150, 0.06) 45%,
-      transparent 70%);
+  overflow: hidden;
+}
+
+.pg-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.pg-layer.pg-graph {
+  pointer-events: auto;
+}
+
+/* Deep background — giant phase numerals */
+.pg-deep {
+  z-index: 1;
+}
+.pg-phase-numeral {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: "Baskerville", "Libre Baskerville", Georgia, serif;
+  font-weight: 200;
+  font-size: clamp(18em, 40vw, 42em);
+  line-height: 0.85;
+  color: var(--gold);
+  opacity: 0.055;
+  letter-spacing: -0.04em;
+  user-select: none;
+  white-space: nowrap;
+}
+
+/* Mid background — month labels */
+.pg-mid {
+  z-index: 2;
+}
+.pg-month {
+  position: absolute;
+  left: 6%;
+  transform: translateY(-50%);
+  font-variant: small-caps;
+  letter-spacing: 0.28em;
+  font-size: 0.76em;
+  color: var(--ink-faint);
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0.6;
+}
+
+/* Rail — phase names on the right */
+.pg-rail {
+  z-index: 3;
+}
+.pg-phase-name {
+  position: absolute;
+  right: 6%;
+  transform: translateY(-50%);
+  font-variant: small-caps;
+  letter-spacing: 0.3em;
+  font-size: 0.78em;
+  color: var(--accent);
+  font-weight: 600;
+  text-align: right;
+}
+
+/* Main graph layer */
+.pg-graph {
+  z-index: 4;
+}
+
+.pg-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.pg-commit {
+  position: absolute;
+  width: 0.7em;
+  height: 0.7em;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid rgba(255, 250, 242, 0.7);
+  padding: 0;
+  cursor: pointer;
+  transition: transform 140ms var(--ease), box-shadow 140ms var(--ease);
+  box-shadow: 0 0 0 0 rgba(196, 80, 58, 0);
+  z-index: 5;
+}
+.pg-commit.main {
+  width: 0.9em;
+  height: 0.9em;
+  border-width: 1.5px;
+}
+.pg-commit:hover,
+.pg-commit.hovered {
+  transform: translate(-50%, -50%) scale(1.8);
+  box-shadow: 0 0 0 5px rgba(196, 80, 58, 0.18), 0 0 16px rgba(196, 80, 58, 0.3);
+  z-index: 10;
+}
+.pg-commit.pinned {
+  transform: translate(-50%, -50%) scale(1.5);
+  box-shadow: 0 0 0 4px rgba(196, 80, 58, 0.22);
+}
+
+/* Foreground — callout cards */
+.pg-fg {
+  z-index: 6;
+}
+
+.pg-callout {
+  position: absolute;
+  transform: translateY(-50%);
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 1em;
+  pointer-events: none;
+  width: 18em;
+  max-width: 26vw;
 }
 
-.svg-tree {
-  display: block;
-  width: auto;
-  height: 100%;
-  max-height: calc(78vh - 2em);
-  min-height: 560px;
+.pg-callout.pg-callout-right {
+  flex-direction: row;
+}
+.pg-callout.pg-callout-left {
+  flex-direction: row-reverse;
+  transform: translateX(-100%) translateY(-50%);
 }
 
-/* Canvas timeline viewport */
-.canvas-timeline-wrap {
-  position: relative;
-  width: 100%;
-  height: 72vh;
-  min-height: 440px;
-  max-height: 720px;
+.pg-callout-line {
+  flex-shrink: 0;
+  width: 1.4em;
+  height: 1px;
+  background: var(--gold);
+  opacity: 0.55;
+}
+
+.pg-callout-card {
+  flex: 1;
+  padding: 0.55em 0.8em;
+  background: var(--surface);
+  border: 1px solid rgba(181, 138, 62, 0.25);
+  border-radius: 6px;
+  box-shadow: var(--shadow-sm);
+  font-size: 0.7em;
+  line-height: 1.35;
+  pointer-events: auto;
+}
+
+.pg-callout-sha {
+  font-family: "JetBrains Mono", Consolas, monospace;
+  font-size: 0.85em;
+  color: var(--accent);
+  margin-bottom: 0.15em;
+}
+
+.pg-callout-msg {
+  color: var(--ink);
+  font-family: "Baskerville", Georgia, serif;
+  font-size: 1em;
+  margin-bottom: 0.3em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  background:
-    radial-gradient(ellipse 70% 55% at 50% 50%,
-      rgba(255, 225, 180, 0.14) 0%,
-      rgba(255, 200, 150, 0.05) 50%,
-      transparent 80%);
-}
-.canvas-timeline {
-  display: block;
-  width: 100%;
-  height: 100%;
 }
 
-/* Commit stack — HTML overlay on top of the 3D cube canvas */
-.commit-stack {
+.pg-callout-refs {
+  display: flex;
+  gap: 0.25em;
+  flex-wrap: wrap;
+}
+
+.pg-callout-ref {
+  font-family: "JetBrains Mono", Consolas, monospace;
+  font-size: 0.65em;
+  background: var(--gold-soft);
+  color: var(--gold);
+  border: 1px solid rgba(181, 138, 62, 0.3);
+  padding: 0.1em 0.45em;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+/* Ambient petals drifting continuously */
+.pg-ambient {
   position: absolute;
-  top: 1.4em;
-  right: 1.6em;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.pg-petal {
+  position: absolute;
+  width: 0.42em;
+  height: 0.42em;
+  border-radius: 60% 40% 70% 30% / 50% 60% 40% 50%;
+  background: radial-gradient(
+    circle at 35% 35%,
+    rgba(255, 232, 196, 0.6) 0%,
+    rgba(244, 207, 199, 0.5) 50%,
+    rgba(230, 169, 154, 0.4) 100%
+  );
+  box-shadow: 0 1px 2px rgba(196, 80, 58, 0.1);
+  animation: pg-petal-drift linear infinite;
+  opacity: 0;
+}
+
+@keyframes pg-petal-drift {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.55;
+  }
+  90% {
+    opacity: 0.55;
+  }
+  100% {
+    transform: translate(60px, 180px) rotate(120deg);
+    opacity: 0;
+  }
+}
+
+/* Tooltip for hovered commit */
+.pg-tooltip {
+  position: fixed;
+  bottom: 4.5em;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
+  padding: 0.5em 1em;
+  background: var(--surface);
+  border: 1px solid var(--rule-soft);
+  border-radius: 999px;
+  box-shadow: var(--shadow);
+  font-size: 0.82em;
+  z-index: 80;
+  pointer-events: none;
+  max-width: calc(100vw - 4em);
+}
+.pg-tooltip code {
+  background: var(--code-bg);
+  border: 1px solid var(--code-edge);
+  padding: 0.1em 0.5em;
+  border-radius: 4px;
+  color: var(--accent);
+  font-size: 0.9em;
+}
+.pg-tooltip-msg {
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 32em;
+}
+
+/* Commit detail stack — floating overlay top-right of viewport */
+.commit-stack {
+  position: fixed;
+  right: 1.5em;
+  top: 7em;
   width: 22em;
-  max-width: calc(100vw - 3.2em);
-  max-height: calc(72vh - 3em);
+  max-width: calc(100vw - 3em);
+  max-height: calc(100vh - 12em);
+  z-index: 85;
+}
+
+/* Pinned commit stack internals (layout is set by the main
+   .commit-stack block above as a fixed floating overlay) */
+.commit-stack {
   display: flex;
   flex-direction: column;
   gap: 0.7em;
-  z-index: 20;
   overflow-y: auto;
   padding: 0.2em 0.3em;
   scrollbar-width: thin;
@@ -1467,14 +1661,26 @@ footer.end-border .colophon {
 
   .landing-card { padding: 1.4em 1.5em; }
 
-  .cube-canvas-wrap { height: 60vh; min-height: 360px; }
+  /* Parallax graph — simplify on small screens */
+  .parallax-graph { margin: 1em 0 3em; width: 100%; }
+  .pg-phase-numeral { font-size: clamp(10em, 30vw, 18em); }
+  .pg-month { left: 4%; font-size: 0.7em; }
+  .pg-phase-name { right: 4%; font-size: 0.7em; }
+  .pg-callout { width: 12em; max-width: 38vw; font-size: 0.9em; }
+
+  .pg-hud {
+    top: 4.2em;
+    padding: 0.5em 0.9em;
+  }
+  .pg-hud-progress { width: 8em; }
+
   .commit-stack {
-    position: static;
-    margin: 1.2em auto;
-    width: auto;
-    max-width: 100%;
-    max-height: none;
-    padding: 0 1em;
+    position: fixed;
+    right: 0.8em;
+    top: auto;
+    bottom: 5.5em;
+    width: calc(100vw - 1.6em);
+    max-height: 40vh;
   }
   .commit-stack .stack-card:not(:first-child) { display: none; }
 }

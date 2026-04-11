@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import CommitGraph from "@/components/CommitGraph";
 import NavLink from "@/components/NavLink";
+import ParallaxGraph from "@/components/ParallaxGraph";
 import graphData from "./data.json";
 
 export const metadata: Metadata = {
-  title: "Growing Tree",
+  title: "Commit Graph",
 };
 
 export default function GraphPage() {
@@ -14,36 +13,19 @@ export default function GraphPage() {
       <div className="page-wider">
         <header className="frontispiece" style={{ marginBottom: "1.5em" }}>
           <div className="eyebrow">The Helm Chronicle &middot; Companion</div>
-          <h1>Growing Tree</h1>
+          <h1>The Long Scroll</h1>
           <p className="subtitle">
-            Fifty-two days as a tree. The trunk is main; every side branch
-            peels off at its first commit and extends to its last. Five
-            gold phase rings mark the project&rsquo;s five acts.
+            Fifty-two days of commits on a single tall page. Scroll the
+            page to move through time. The phase numerals drift behind
+            the graph, the month names drift through the middle, and the
+            callouts float forward.
           </p>
         </header>
       </div>
 
-      <CommitGraph data={graphData} />
+      <ParallaxGraph data={graphData} />
 
       <div className="page-wider">
-        <div className="graph-alternatives">
-          <p className="alt-label">Other views</p>
-          <Link href="/graph/svg-tree" className="alt-link">
-            <span className="alt-name">SVG Tree</span>
-            <span className="alt-desc">
-              The same tree as a flat 2D illustration — no WebGL, no 3D
-              library
-            </span>
-          </Link>
-          <Link href="/graph/timeline" className="alt-link">
-            <span className="alt-name">Canvas Timeline</span>
-            <span className="alt-desc">
-              Horizontal scrolling timeline on HTML canvas — commits as
-              dots, branches as colored lines
-            </span>
-          </Link>
-        </div>
-
         <footer className="end-border">
           <div className="nav-links">
             <NavLink href="/chronicle">Chronicle</NavLink>
@@ -51,7 +33,7 @@ export default function GraphPage() {
           </div>
           <div className="colophon">
             {graphData.totalCommits} commits &middot; {graphData.dates.length}{" "}
-            active days &middot; one tree
+            active days &middot; one long scroll
           </div>
         </footer>
       </div>
