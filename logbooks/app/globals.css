@@ -1081,67 +1081,15 @@ kbd {
   line-height: 1.55;
 }
 
-/* ============ Graph — 2D horizontal parallax scroll ============ */
+/* ============ Graph — HorizontalTrunk (.ht-*) ============ */
 
-.parallax-graph {
+.ht-graph {
   position: relative;
   margin: 1em -1.5em 3em;
   width: calc(100% + 3em);
 }
 
-/* Minimap strip above the graph */
-.pg-minimap {
-  position: relative;
-  height: 2.2em;
-  margin: 0 2em 0.6em;
-  cursor: pointer;
-  user-select: none;
-}
-
-.pg-minimap-bg {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  background: var(--surface);
-  border: 1px solid var(--rule-soft);
-  border-radius: 999px;
-  box-shadow: var(--shadow-sm);
-  overflow: hidden;
-}
-
-.pg-minimap-phase {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-right: 1px solid rgba(181, 138, 62, 0.18);
-}
-.pg-minimap-phase:last-child { border-right: none; }
-
-.pg-minimap-phase-label {
-  font-family: "Baskerville", Georgia, serif;
-  font-size: 0.9em;
-  color: var(--gold);
-  font-weight: 500;
-  opacity: 0.75;
-}
-
-.pg-minimap-window {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  background: rgba(196, 80, 58, 0.22);
-  border: 1px solid var(--accent);
-  border-radius: 999px;
-  pointer-events: none;
-  transition: left 120ms linear;
-  box-shadow: 0 0 10px rgba(196, 80, 58, 0.2);
-}
-
-/* The horizontally-scrolling container */
-.pg-container {
+.ht-container {
   position: relative;
   width: 100%;
   height: 720px;
@@ -1155,50 +1103,28 @@ kbd {
   scrollbar-width: thin;
   scrollbar-color: rgba(196, 80, 58, 0.32) transparent;
 }
-.pg-container::-webkit-scrollbar { height: 10px; }
-.pg-container::-webkit-scrollbar-track { background: transparent; }
-.pg-container::-webkit-scrollbar-thumb {
+.ht-container::-webkit-scrollbar { height: 10px; }
+.ht-container::-webkit-scrollbar-track { background: transparent; }
+.ht-container::-webkit-scrollbar-thumb {
   background: rgba(196, 80, 58, 0.28);
   border-radius: 999px;
 }
 
-/* The stage itself — wider than the container, scrolls horizontally */
-.pg-stage {
+.ht-stage {
   position: relative;
-  /* width/height set inline */
+  /* width/height set inline by the component */
 }
 
-.pg-layer {
+.ht-svg {
   position: absolute;
-  inset: 0;
-  pointer-events: none;
-  will-change: transform;
-}
-
-.pg-layer.pg-graph { pointer-events: auto; }
-
-/* Deep background — giant phase numerals */
-.pg-deep { z-index: 1; }
-
-.pg-phase-numeral {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  font-family: "Baskerville", "Libre Baskerville", Georgia, serif;
-  font-weight: 200;
-  font-size: 36em;
-  line-height: 0.85;
-  color: var(--gold);
-  opacity: 0.055;
-  letter-spacing: -0.04em;
-  user-select: none;
-  white-space: nowrap;
+  top: 0;
+  left: 0;
+  z-index: 1;
   pointer-events: none;
 }
 
-/* Midground — month labels along the top */
-.pg-mid { z-index: 2; }
-
-.pg-month {
+/* Month labels along the top edge */
+.ht-month {
   position: absolute;
   transform: translate(-50%, -50%);
   font-variant: small-caps;
@@ -1208,28 +1134,28 @@ kbd {
   font-weight: 600;
   white-space: nowrap;
   opacity: 0.7;
+  z-index: 2;
+  pointer-events: none;
 }
 
-/* Near ground — phase name + date strip below the trunk */
-.pg-near { z-index: 3; }
-
-.pg-phase-strip {
+/* Phase label centered below the trunk at each phase's true center */
+.ht-phase-label {
   position: absolute;
   display: flex;
   align-items: baseline;
   gap: 0.6em;
-  padding: 0.35em 0.8em;
-  color: var(--ink-soft);
   transform: translateX(-50%);
   white-space: nowrap;
+  z-index: 3;
+  pointer-events: none;
 }
-.pg-phase-strip-num {
+.ht-phase-num {
   font-family: "Baskerville", Georgia, serif;
   font-size: 1.5em;
   color: var(--gold);
   font-weight: 400;
 }
-.pg-phase-strip-name {
+.ht-phase-name {
   font-variant: small-caps;
   letter-spacing: 0.24em;
   font-size: 0.76em;
@@ -1237,16 +1163,8 @@ kbd {
   font-weight: 600;
 }
 
-/* Main graph layer */
-.pg-graph { z-index: 4; }
-
-.pg-svg {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.pg-commit {
+/* Commit dots */
+.ht-commit {
   position: absolute;
   width: 10px;
   height: 10px;
@@ -1259,37 +1177,35 @@ kbd {
   box-shadow: 0 0 0 0 rgba(196, 80, 58, 0);
   z-index: 5;
 }
-.pg-commit.main {
+.ht-commit.main {
   width: 14px;
   height: 14px;
   border-width: 1.5px;
 }
-.pg-commit:hover,
-.pg-commit.hovered {
+.ht-commit:hover,
+.ht-commit.hovered {
   transform: translate(-50%, -50%) scale(1.8);
   box-shadow:
     0 0 0 5px rgba(196, 80, 58, 0.18),
     0 0 20px rgba(196, 80, 58, 0.4);
   z-index: 10;
 }
-.pg-commit.pinned {
+.ht-commit.pinned {
   transform: translate(-50%, -50%) scale(1.55);
   box-shadow: 0 0 0 4px rgba(196, 80, 58, 0.28);
 }
 
-/* Foreground — hero cards + note cards */
-.pg-fg { z-index: 6; }
-
-/* Hero cards — one per phase */
-.pg-hero {
+/* Hero cards — one per phase, alternating above/below */
+.ht-hero {
   position: absolute;
   transform: translateX(-50%);
   width: 26em;
   max-width: 32vw;
   pointer-events: none;
+  z-index: 6;
 }
 
-.pg-hero .pg-hero-line {
+.ht-hero .ht-hero-line {
   position: absolute;
   left: 50%;
   width: 1px;
@@ -1300,11 +1216,11 @@ kbd {
   );
   transform: translateX(-50%);
 }
-.pg-hero.above .pg-hero-line {
+.ht-hero.above .ht-hero-line {
   top: 100%;
   height: 70px;
 }
-.pg-hero.below .pg-hero-line {
+.ht-hero.below .ht-hero-line {
   bottom: 100%;
   height: 80px;
   background: linear-gradient(
@@ -1314,7 +1230,7 @@ kbd {
   );
 }
 
-.pg-hero-card {
+.ht-hero-card {
   position: relative;
   padding: 1.4em 1.6em 1.2em;
   background: linear-gradient(180deg, #fffdf8 0%, var(--surface) 100%);
@@ -1325,14 +1241,14 @@ kbd {
   pointer-events: auto;
 }
 
-.pg-hero-head {
+.ht-hero-head {
   display: flex;
   align-items: baseline;
   gap: 0.6em;
   margin-bottom: 0.4em;
 }
 
-.pg-hero-num {
+.ht-hero-num {
   font-family: "Baskerville", Georgia, serif;
   font-weight: 300;
   font-size: 1.9em;
@@ -1340,7 +1256,7 @@ kbd {
   color: var(--gold);
 }
 
-.pg-hero-name {
+.ht-hero-name {
   font-variant: small-caps;
   letter-spacing: 0.28em;
   font-size: 0.75em;
@@ -1348,7 +1264,7 @@ kbd {
   font-weight: 600;
 }
 
-.pg-hero-title {
+.ht-hero-title {
   font-family: "Baskerville", Georgia, serif;
   font-weight: 400;
   font-size: 1.55em;
@@ -1358,7 +1274,7 @@ kbd {
   letter-spacing: -0.01em;
 }
 
-.pg-hero-desc {
+.ht-hero-desc {
   font-size: 0.92em;
   line-height: 1.55;
   color: var(--ink-soft);
@@ -1366,7 +1282,7 @@ kbd {
   font-style: italic;
 }
 
-.pg-hero-meta {
+.ht-hero-meta {
   font-variant: small-caps;
   letter-spacing: 0.22em;
   font-size: 0.7em;
@@ -1376,32 +1292,33 @@ kbd {
   font-weight: 600;
 }
 
-/* Note cards — for commits with refs */
-.pg-note {
+/* Note cards for tagged commits */
+.ht-note {
   position: absolute;
   transform: translateX(-50%);
   width: 15em;
   max-width: 22vw;
   pointer-events: none;
+  z-index: 6;
 }
 
-.pg-note .pg-note-line {
+.ht-note .ht-note-line {
   position: absolute;
   left: 50%;
   width: 1px;
   background: rgba(181, 138, 62, 0.4);
   transform: translateX(-50%);
 }
-.pg-note.above .pg-note-line {
+.ht-note.above .ht-note-line {
   top: 100%;
   height: 40px;
 }
-.pg-note.below .pg-note-line {
+.ht-note.below .ht-note-line {
   bottom: 100%;
   height: 40px;
 }
 
-.pg-note-card {
+.ht-note-card {
   padding: 0.6em 0.85em;
   background: var(--surface);
   border: 1px solid rgba(181, 138, 62, 0.25);
@@ -1412,14 +1329,14 @@ kbd {
   pointer-events: auto;
 }
 
-.pg-note-sha {
+.ht-note-sha {
   font-family: "JetBrains Mono", Consolas, monospace;
   font-size: 0.82em;
   color: var(--accent);
   margin-bottom: 0.15em;
 }
 
-.pg-note-msg {
+.ht-note-msg {
   color: var(--ink);
   font-family: "Baskerville", Georgia, serif;
   font-size: 1em;
@@ -1430,13 +1347,13 @@ kbd {
   overflow: hidden;
 }
 
-.pg-note-refs {
+.ht-note-refs {
   display: flex;
   gap: 0.25em;
   flex-wrap: wrap;
 }
 
-.pg-note-ref {
+.ht-note-ref {
   font-family: "JetBrains Mono", Consolas, monospace;
   font-size: 0.64em;
   background: var(--gold-soft);
@@ -1447,62 +1364,7 @@ kbd {
   white-space: nowrap;
 }
 
-/* Floating HUD — phase indicator + scroll progress */
-.pg-hud {
-  position: fixed;
-  left: 50%;
-  top: 5.4em;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5em;
-  padding: 0.55em 1.2em 0.5em;
-  background: var(--site-bg);
-  background-attachment: fixed;
-  border-radius: 999px;
-  box-shadow: var(--shadow-sm);
-  z-index: 90;
-  pointer-events: none;
-}
-
-.pg-hud-phase {
-  display: flex;
-  align-items: baseline;
-  gap: 0.6em;
-}
-
-.pg-hud-label {
-  font-variant: small-caps;
-  letter-spacing: 0.22em;
-  font-size: 0.66em;
-  color: var(--ink-faint);
-  font-weight: 600;
-}
-
-.pg-hud-value {
-  font-family: "Baskerville", Georgia, serif;
-  font-weight: 400;
-  font-size: 0.92em;
-  color: var(--ink);
-}
-
-.pg-hud-progress {
-  width: 12em;
-  height: 2px;
-  background: rgba(181, 138, 62, 0.18);
-  border-radius: 999px;
-  overflow: hidden;
-}
-
-.pg-hud-progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--accent), var(--gold));
-  border-radius: 999px;
-  transition: width 120ms linear;
-}
-
-/* Hover tooltip */
+/* Hover tooltip (shared by all graph variants) */
 .pg-tooltip {
   position: fixed;
   bottom: 5em;
@@ -3339,18 +3201,11 @@ footer.end-border .colophon {
 
   .landing-card { padding: 1.4em 1.5em; }
 
-  /* Parallax graph — simplify on small screens */
-  .parallax-graph { margin: 1em 0 3em; width: 100%; }
-  .pg-phase-numeral { font-size: clamp(10em, 30vw, 18em); }
-  .pg-month { left: 4%; font-size: 0.7em; }
-  .pg-phase-name { right: 4%; font-size: 0.7em; }
-  .pg-callout { width: 12em; max-width: 38vw; font-size: 0.9em; }
-
-  .pg-hud {
-    top: 4.2em;
-    padding: 0.5em 0.9em;
-  }
-  .pg-hud-progress { width: 8em; }
+  /* Horizontal trunk graph — simplify on small screens */
+  .ht-graph { margin: 1em 0 3em; width: 100%; }
+  .ht-month { font-size: 0.7em; }
+  .ht-hero { width: 18em; max-width: 70vw; }
+  .ht-note { width: 12em; max-width: 38vw; font-size: 0.9em; }
 
   .commit-stack {
     position: fixed;
