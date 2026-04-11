@@ -11,12 +11,13 @@ export default function GraphPage() {
   return (
     <article className="page-bleed">
       <div className="page-wider">
-        <header className="frontispiece" style={{ marginBottom: "2em" }}>
+        <header className="frontispiece" style={{ marginBottom: "1.5em" }}>
           <div className="eyebrow">The Helm Chronicle &middot; Companion</div>
-          <h1>Commit Graph</h1>
+          <h1>The Cube</h1>
           <p className="subtitle">
-            1,242 commits across 354 pull requests &mdash; an edge-to-edge
-            timeline of the entire history.
+            The commit history as a 3D diorama &mdash; four visualizations of
+            the same 1,242 commits arranged around a central index. Orbit to
+            explore.
           </p>
         </header>
       </div>
@@ -31,7 +32,7 @@ export default function GraphPage() {
           </div>
           <div className="colophon">
             {graphData.totalCommits} commits &middot; {graphData.dates.length}{" "}
-            active days &middot; 9 April 2026
+            active days &middot; four visualizations
           </div>
         </footer>
       </div>
