@@ -62,12 +62,14 @@ const REPO_URL = "https://github.com/seandonn-boston/helm";
 
 // --- Stage geometry ---------------------------------------------------------
 
-/** Total horizontal extent of the stage in pixels. */
-const STAGE_WIDTH = 11000;
 /** Container CSS height. */
 const CONTAINER_HEIGHT_PX = 720;
 /** Horizontal padding inside the stage before commits start/end */
-const PAD_X = 160;
+const PAD_X = 180;
+/** Pixels per commit — stage width scales with commit count */
+const PX_PER_COMMIT = 9;
+/** Minimum total stage width even for small datasets */
+const MIN_STAGE_WIDTH = 4000;
 /** Y of the trunk (center of container) */
 const TRUNK_Y = CONTAINER_HEIGHT_PX / 2;
 /** Max branch reach above/below the trunk */
@@ -276,9 +278,8 @@ function prepareLayout(data: GraphData): {
 
 // --- Position helpers -------------------------------------------------------
 
-function tToX(t: number): number {
-  // t=0 → leftmost, t=1 → rightmost
-  return PAD_X + t * (STAGE_WIDTH - 2 * PAD_X);
+function makeTToX(stageWidth: number) {
+  return (t: number) => PAD_X + t * (stageWidth - 2 * PAD_X);
 }
 
 function ease(x: number): number {
@@ -288,7 +289,8 @@ function ease(x: number): number {
 /** Position of a commit along its branch's bezier */
 function positionCommit(
   l: Layout,
-  branches: Map<number, BranchInfo>
+  branches: Map<number, BranchInfo>,
+  tToX: (t: number) => number
 ): { x: number; y: number } {
   const key = Math.floor(l.visualLane);
   const x = tToX(l.t);
@@ -298,7 +300,6 @@ function positionCommit(
   const span = Math.max(0.001, bi.endT - bi.startT);
   const progress = Math.max(0, Math.min(1, (l.t - bi.startT) / span));
   const eased = ease(progress);
-  // Quadratic bezier along the branch curve
   const p0x = tToX(bi.startT);
   const p0y = TRUNK_Y;
   const p2x = tToX(bi.endT);
@@ -312,7 +313,10 @@ function positionCommit(
 }
 
 /** SVG path string for a branch limb */
-function branchPath(bi: BranchInfo): string {
+function branchPath(
+  bi: BranchInfo,
+  tToX: (t: number) => number
+): string {
   if (bi.lane === 0) return "";
   const p0x = tToX(bi.startT);
   const p0y = TRUNK_Y;
@@ -326,7 +330,10 @@ function branchPath(bi: BranchInfo): string {
 // --- Activity heatmap computation ------------------------------------------
 
 /** Compute a density profile across time for the heatmap area chart */
-function computeHeatmap(layouts: Layout[]): {
+function computeHeatmap(
+  layouts: Layout[],
+  tToX: (t: number) => number
+): {
   points: [number, number][];
   maxDensity: number;
 } {
@@ -342,8 +349,6 @@ function computeHeatmap(layouts: Layout[]): {
     const t = i / buckets;
     const c = counts[Math.min(buckets - 1, i)] ?? 0;
     const normalized = c / maxDensity;
-    // Height above and below the trunk — symmetric-ish, but a little
-    // more above for visual weight
     points.push([tToX(t), normalized]);
   }
   return { points, maxDensity };
@@ -352,11 +357,11 @@ function computeHeatmap(layouts: Layout[]): {
 // --- Month labels -----------------------------------------------------------
 
 function extractMonthLabels(
-  layouts: Layout[]
+  layouts: Layout[],
+  tToX: (t: number) => number
 ): { x: number; label: string }[] {
   const seen = new Set<string>();
   const out: { x: number; label: string }[] = [];
-  // Iterate oldest → newest
   for (let i = layouts.length - 1; i >= 0; i--) {
     const key = layouts[i].commit.date.slice(0, 7);
     if (seen.has(key)) continue;
@@ -507,9 +512,28 @@ export default function ParallaxGraph({ data }: { data: GraphData }) {
     () => prepareLayout(data),
     [data]
   );
-  const monthLabels = useMemo(() => extractMonthLabels(layouts), [layouts]);
+
+  // Stage width scales with commit count, with a floor for tiny datasets.
+  const STAGE_WIDTH = useMemo(
+    () =>
+      Math.max(
+        MIN_STAGE_WIDTH,
+        data.commits.length * PX_PER_COMMIT + PAD_X * 2
+      ),
+    [data.commits.length]
+  );
+
+  const tToX = useMemo(() => makeTToX(STAGE_WIDTH), [STAGE_WIDTH]);
+
+  const monthLabels = useMemo(
+    () => extractMonthLabels(layouts, tToX),
+    [layouts, tToX]
+  );
   const noteCommits = useMemo(() => selectNoteCommits(layouts), [layouts]);
-  const heatmap = useMemo(() => computeHeatmap(layouts), [layouts]);
+  const heatmap = useMemo(
+    () => computeHeatmap(layouts, tToX),
+    [layouts, tToX]
+  );
 
   // Branch paths
   const branchPaths = useMemo(() => {
@@ -517,14 +541,14 @@ export default function ParallaxGraph({ data }: { data: GraphData }) {
     branches.forEach((bi) => {
       if (bi.lane === 0) return;
       out.push({
-        d: branchPath(bi),
+        d: branchPath(bi, tToX),
         color: branchColor(bi.lane),
         width: Math.min(3, 1.1 + Math.sqrt(bi.count) * 0.22),
         key: `br-${bi.lane}`,
       });
     });
     return out;
-  }, [branches]);
+  }, [branches, tToX]);
 
   // Heatmap path (area chart)
   const heatmapPath = useMemo(() => {
@@ -548,7 +572,7 @@ export default function ParallaxGraph({ data }: { data: GraphData }) {
         startX: tToX(p.startT),
         endX: tToX(p.endT),
       })),
-    [phaseInfo]
+    [phaseInfo, tToX]
   );
 
   // --- Scroll + parallax -------------------------------------------------
@@ -581,7 +605,7 @@ export default function ParallaxGraph({ data }: { data: GraphData }) {
       Math.min(PHASE_COUNT - 1, Math.floor(centerT * PHASE_COUNT))
     );
     setCurrentPhase(phase);
-  }, []);
+  }, [STAGE_WIDTH]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -809,15 +833,15 @@ export default function ParallaxGraph({ data }: { data: GraphData }) {
             ))}
           </div>
 
-          {/* Near ground — phase title strip below the trunk */}
+          {/* Near ground — phase title strip below the trunk, centered
+              on each phase's true center X so labels align with content */}
           <div className="pg-layer pg-near" ref={nearRef}>
             {phaseXs.map((p) => (
               <div
                 key={`near-${p.index}`}
                 className="pg-phase-strip"
                 style={{
-                  left: `${p.startX}px`,
-                  width: `${p.endX - p.startX}px`,
+                  left: `${p.centerX}px`,
                   top: `${TRUNK_Y + MAX_REACH + 30}px`,
                 }}
               >
@@ -917,7 +941,7 @@ export default function ParallaxGraph({ data }: { data: GraphData }) {
 
             {/* Commit dots as absolute-positioned buttons */}
             {layouts.map((l) => {
-              const { x, y } = positionCommit(l, branches);
+              const { x, y } = positionCommit(l, branches, tToX);
               const isMain = Math.floor(l.visualLane) === 0;
               const isHovered = hoveredIdx === l.idx;
               const isPinned = pinnedIdxs.includes(l.idx);
@@ -981,7 +1005,7 @@ export default function ParallaxGraph({ data }: { data: GraphData }) {
 
             {/* Note cards: for commits with refs (tags, named branches) */}
             {noteCommits.map((l) => {
-              const { x, y } = positionCommit(l, branches);
+              const { x, y } = positionCommit(l, branches, tToX);
               const above = y < TRUNK_Y;
               const cardY = above ? y - 40 : y + 50;
               const cleanRefs = Array.from(

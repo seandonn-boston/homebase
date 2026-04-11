@@ -218,3 +218,89 @@ export function HoverTooltip({ commit }: HoverTooltipProps) {
     </div>
   );
 }
+
+// --- Shared typography components ------------------------------------------
+// These pull their look from the --gt-* tokens defined in globals.css by
+// the Typographic Flow variant, so every graph variant reads with one
+// coherent typographic voice.
+
+interface ChapterHeaderProps {
+  numeral: string;
+  name: string;
+  title: string;
+  desc: string;
+  stats?: string;
+}
+
+export function GraphChapterHeader({
+  numeral,
+  name,
+  title,
+  desc,
+  stats,
+}: ChapterHeaderProps) {
+  return (
+    <header className="gt-chapter-header">
+      <div className="gt-chapter-initial" aria-hidden="true">
+        {numeral}
+      </div>
+      <div className="gt-chapter-meta">
+        <div className="gt-chapter-name">{name}</div>
+        <h2 className="gt-chapter-title">{title}</h2>
+        <p className="gt-chapter-desc">{desc}</p>
+        {stats && <div className="gt-chapter-stats">{stats}</div>}
+      </div>
+    </header>
+  );
+}
+
+interface PhaseProgressProps {
+  phases: { numeral: string; name: string }[];
+  current: number;
+  progress: number;
+  onJump?: (index: number) => void;
+}
+
+export function GraphPhaseProgress({
+  phases,
+  current,
+  progress,
+  onJump,
+}: PhaseProgressProps) {
+  return (
+    <aside className="gt-progress" aria-hidden="true">
+      <div className="gt-progress-inner">
+        {phases.map((p, i) => {
+          const isCurrent = current === i;
+          const className = `gt-progress-item${isCurrent ? " current" : ""}`;
+          if (onJump) {
+            return (
+              <button
+                key={`pr-${i}`}
+                type="button"
+                className={className}
+                onClick={() => onJump(i)}
+                aria-label={`Jump to ${p.name}`}
+              >
+                <span className="gt-progress-num">{p.numeral}</span>
+                <span className="gt-progress-name">{p.name}</span>
+              </button>
+            );
+          }
+          return (
+            <div key={`pr-${i}`} className={className}>
+              <span className="gt-progress-num">{p.numeral}</span>
+              <span className="gt-progress-name">{p.name}</span>
+            </div>
+          );
+        })}
+      </div>
+      <div className="gt-progress-bar">
+        <div
+          className="gt-progress-fill"
+          style={{ height: `${progress * 100}%` }}
+        />
+      </div>
+    </aside>
+  );
+}

@@ -10,14 +10,16 @@
 import { useMemo, useRef, useState, useCallback, useEffect } from "react";
 import {
   GraphData,
-prepareLayout,
-branchColor,
-PHASE_META,
+  prepareLayout,
+  branchColor,
+  PHASE_META,
+  PHASE_COUNT,
 } from "./graphShared";
 import {
   useCommitStack,
-CommitStack,
-HoverTooltip,
+  CommitStack,
+  HoverTooltip,
+  GraphPhaseProgress,
 } from "./graphSharedClient";
 
 const STAGE_WIDTH = 2800;
@@ -41,6 +43,8 @@ export default function Constellation({ data }: { data: GraphData }) {
   );
   const { pinnedIdxs, hoveredIdx, setHoveredIdx, handleClick, handleDismiss } =
     useCommitStack(data.commits.length, { initial: [0], stepMode: "stack" });
+  const [currentPhase, setCurrentPhase] = useState(0);
+  const [progress, setProgress] = useState(0);
 
   // Commits distributed across the full stage — time on X, lane on Y
   const positionCommit = useCallback(
@@ -141,10 +145,53 @@ export default function Constellation({ data }: { data: GraphData }) {
     return () => container.removeEventListener("wheel", handleWheel);
   }, [handleWheel]);
 
+  // Track current phase from scrollLeft
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    let raf = 0;
+    const onScroll = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        const maxScroll = container.scrollWidth - container.clientWidth;
+        const prog = maxScroll > 0 ? container.scrollLeft / maxScroll : 0;
+        setProgress(prog);
+        const phase = Math.max(
+          0,
+          Math.min(PHASE_COUNT - 1, Math.floor(prog * PHASE_COUNT))
+        );
+        setCurrentPhase(phase);
+      });
+    };
+    container.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => {
+      container.removeEventListener("scroll", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
+
   const hovered = hoveredIdx !== null ? layouts[hoveredIdx].commit : null;
 
   return (
     <div className="cst-graph">
+      <GraphPhaseProgress
+        phases={PHASE_META.map((m) => ({ numeral: m.numeral, name: m.name }))}
+        current={currentPhase}
+        progress={progress}
+        onJump={(i) => {
+          const container = containerRef.current;
+          if (!container) return;
+          const maxScroll = container.scrollWidth - container.clientWidth;
+          const targetProg = (i + 0.5) / PHASE_COUNT;
+          container.scrollTo({
+            left: targetProg * maxScroll,
+            behavior: "smooth",
+          });
+        }}
+      />
+
       <div
         className="cst-container"
         ref={containerRef}

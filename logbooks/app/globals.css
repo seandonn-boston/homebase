@@ -1219,8 +1219,9 @@ kbd {
   align-items: baseline;
   gap: 0.6em;
   padding: 0.35em 0.8em;
-  border-top: 1px solid rgba(181, 138, 62, 0.25);
   color: var(--ink-soft);
+  transform: translateX(-50%);
+  white-space: nowrap;
 }
 .pg-phase-strip-num {
   font-family: "Baskerville", Georgia, serif;
@@ -1810,46 +1811,160 @@ kbd {
   font-weight: 600;
 }
 
-/* ============ III. Spiral Rose ============ */
+/* ============ III. Spiral Tunnel ============ */
 
-.sr-graph {
+.spt-graph {
+  position: relative;
+  margin: 1em -1.5em 3em;
+  width: calc(100% + 3em);
+}
+
+/* Outer scroll container — drives viewerZ via scrollTop */
+.spt-container {
   position: relative;
   width: 100%;
-  height: 82vh;
-  min-height: 600px;
-  max-height: 920px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  user-select: none;
-  margin: 1em 0 3em;
+  height: 78vh;
+  min-height: 560px;
+  max-height: 820px;
+  overflow-y: auto;
+  overflow-x: hidden;
   background:
-    radial-gradient(ellipse 60% 55% at 50% 50%,
-      rgba(255, 220, 160, 0.12) 0%,
-      transparent 70%);
-  cursor: grab;
+    radial-gradient(ellipse 70% 60% at 50% 50%,
+      rgba(60, 30, 15, 0.45) 0%,
+      rgba(30, 16, 8, 0.8) 60%,
+      rgba(10, 5, 2, 1) 100%);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(232, 194, 136, 0.32) transparent;
 }
-.sr-graph:active { cursor: grabbing; }
-
-.sr-svg {
-  max-width: 100%;
-  max-height: 100%;
-  transition: transform 80ms linear;
-}
-
-.sr-commit:hover {
-  filter: drop-shadow(0 0 8px rgba(196, 80, 58, 0.5));
+.spt-container::-webkit-scrollbar { width: 10px; }
+.spt-container::-webkit-scrollbar-track { background: transparent; }
+.spt-container::-webkit-scrollbar-thumb {
+  background: rgba(232, 194, 136, 0.32);
+  border-radius: 999px;
 }
 
-.sr-hint {
+/* Sticky wrapper keeps the viewport fixed while the spacer scrolls */
+.spt-viewport-sticky {
+  position: sticky;
+  top: 0;
+  height: 78vh;
+  min-height: 560px;
+  max-height: 820px;
+  width: 100%;
+}
+
+.spt-viewport {
   position: absolute;
-  bottom: 1em;
+  inset: 0;
+  perspective: 900px;
+  perspective-origin: 50% 50%;
+  overflow: hidden;
+}
+
+.spt-scene {
+  position: absolute;
   left: 50%;
-  transform: translateX(-50%);
+  top: 50%;
+  transform-style: preserve-3d;
+  width: 0;
+  height: 0;
+}
+
+/* Ambient faint rings that define the tunnel's shape */
+.spt-ring {
+  position: absolute;
+  left: -300px;
+  top: -300px;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  border: 1px solid rgba(232, 194, 136, 0.08);
+  pointer-events: none;
+}
+
+/* Phase entry marker — a larger brighter ring with a label */
+.spt-phase-ring {
+  position: absolute;
+  left: -340px;
+  top: -340px;
+  width: 680px;
+  height: 680px;
+  border-radius: 50%;
+  border: 1px solid rgba(232, 194, 136, 0.4);
+  box-shadow:
+    inset 0 0 40px rgba(232, 194, 136, 0.08),
+    0 0 30px rgba(232, 194, 136, 0.12);
+  pointer-events: none;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 30px;
+}
+
+.spt-phase-ring-label {
+  font-family: "Baskerville", Georgia, serif;
   font-variant: small-caps;
   letter-spacing: 0.24em;
-  font-size: 0.7em;
+  font-size: 0.78em;
+  color: #e8c288;
+  font-weight: 600;
+  text-shadow: 0 0 12px rgba(232, 194, 136, 0.5);
+  white-space: nowrap;
+}
+
+/* Commit dots — absolutely positioned in 3D space */
+.spt-commit {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  padding: 0;
+  border: 1.5px solid rgba(255, 250, 242, 0.9);
+  cursor: pointer;
+  transform-origin: center center;
+  box-shadow:
+    0 0 8px rgba(232, 194, 136, 0.4),
+    0 0 16px rgba(196, 80, 58, 0.25);
+  transition: border-width 140ms ease, box-shadow 140ms ease;
+}
+
+.spt-commit.main {
+  width: 18px;
+  height: 18px;
+  border-width: 2px;
+  box-shadow:
+    0 0 12px rgba(232, 194, 136, 0.6),
+    0 0 28px rgba(196, 80, 58, 0.4);
+}
+
+.spt-commit:hover,
+.spt-commit.hovered {
+  border-color: var(--gold-light, #e8c288);
+  box-shadow:
+    0 0 16px rgba(255, 220, 160, 0.7),
+    0 0 34px rgba(196, 80, 58, 0.55);
+}
+
+.spt-commit.pinned {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(255, 220, 160, 0.4);
+}
+
+.spt-spacer {
+  position: relative;
+  width: 100%;
+  pointer-events: none;
+}
+
+.spt-hint {
+  text-align: center;
+  font-variant: small-caps;
+  letter-spacing: 0.24em;
   color: var(--ink-faint);
+  font-size: 0.7em;
+  margin: 1em 1.5em 0;
 }
 
 /* ============ IV. Ribbon ============ */
@@ -2416,6 +2531,19 @@ kbd {
   margin: 1em 1.5em 0;
 }
 
+/* Constellation-scoped phase progress override — light-on-dark */
+.cst-graph .gt-progress-item { color: #e8c288; }
+.cst-graph .gt-progress-name { color: rgba(255, 250, 242, 0.65); }
+.cst-graph .gt-progress-item.current .gt-progress-name { color: #ffd89a; }
+.cst-graph .gt-progress-item.current {
+  background: rgba(255, 220, 160, 0.1);
+}
+.cst-graph .gt-progress-num { color: #e8c288; }
+.cst-graph .gt-progress-bar { background: rgba(232, 194, 136, 0.2); }
+.cst-graph .gt-progress-fill {
+  background: linear-gradient(180deg, #ffd89a, #e8c288);
+}
+
 /* ============ IX. Constellation Map ============ */
 
 .cst-graph {
@@ -2467,7 +2595,173 @@ kbd {
   margin: 1em 1.5em 0;
 }
 
-/* ============ X. Typographic Flow ============ */
+/* ============ Graph typography tokens ============
+
+   The Typographic Flow variant defines the canonical reading
+   treatment for graph content. Other variants pull these tokens
+   so the graph section reads with one coherent voice. */
+
+:root {
+  --gt-chapter-initial-size: clamp(6em, 10vw, 9em);
+  --gt-chapter-title-size:    clamp(2.2em, 4vw, 3.4em);
+  --gt-pull-quote-size:       1.25em;
+  --gt-body-line-size:        1em;
+  --gt-body-line-height:      1.62;
+  --gt-max-reading-width:     44em;
+  --gt-margin-date-width:     4.5em;
+}
+
+/* ---- Shared chapter header (reusable across variants) ---- */
+
+.gt-chapter-header {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.6em 2em;
+  margin-bottom: 2em;
+  align-items: start;
+}
+
+.gt-chapter-initial {
+  font-family: "Baskerville", Georgia, serif;
+  font-weight: 200;
+  font-size: var(--gt-chapter-initial-size);
+  line-height: 0.82;
+  color: var(--gold);
+  letter-spacing: -0.03em;
+  user-select: none;
+  align-self: start;
+  margin-top: -0.15em;
+  opacity: 0.85;
+}
+
+.gt-chapter-meta { padding-top: 0.6em; }
+
+.gt-chapter-name {
+  font-variant: small-caps;
+  letter-spacing: 0.32em;
+  color: var(--accent);
+  font-size: 0.78em;
+  margin-bottom: 0.6em;
+  font-weight: 600;
+}
+
+.gt-chapter-title {
+  font-family: "Baskerville", Georgia, serif;
+  font-weight: 300;
+  font-size: var(--gt-chapter-title-size);
+  line-height: 1.05;
+  margin: 0 0 0.5em;
+  color: var(--ink);
+  letter-spacing: -0.018em;
+}
+
+.gt-chapter-desc {
+  font-style: italic;
+  color: var(--ink-soft);
+  font-size: 1.1em;
+  line-height: 1.55;
+  margin: 0 0 1em;
+  max-width: 32em;
+  font-weight: 300;
+}
+
+.gt-chapter-stats {
+  font-variant: small-caps;
+  letter-spacing: 0.22em;
+  font-size: 0.7em;
+  color: var(--ink-faint);
+  font-weight: 600;
+  padding-top: 0.6em;
+  border-top: 1px solid var(--rule-soft);
+  max-width: 32em;
+}
+
+/* ---- Shared phase progress rail ---- */
+
+.gt-progress {
+  position: fixed;
+  right: 1.2em;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 75;
+  display: flex;
+  align-items: center;
+  gap: 0.9em;
+  pointer-events: auto;
+}
+
+.gt-progress-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3em;
+}
+
+.gt-progress-item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55em;
+  padding: 0.3em 0.6em;
+  text-decoration: none;
+  border: none;
+  background: none;
+  border-radius: 999px;
+  opacity: 0.55;
+  cursor: pointer;
+  transition: background var(--motion) var(--ease), opacity var(--motion) var(--ease);
+  font-family: inherit;
+}
+
+.gt-progress-item.current {
+  opacity: 1;
+  background: rgba(196, 80, 58, 0.06);
+}
+
+.gt-progress-item:hover { opacity: 1; }
+
+.gt-progress-num {
+  font-family: "Baskerville", Georgia, serif;
+  font-weight: 300;
+  font-size: 1.2em;
+  color: var(--gold);
+  line-height: 1;
+  min-width: 1.2em;
+  text-align: right;
+}
+
+.gt-progress-name {
+  font-variant: small-caps;
+  letter-spacing: 0.2em;
+  font-size: 0.66em;
+  color: var(--ink-soft);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.gt-progress-item.current .gt-progress-name {
+  color: var(--accent);
+}
+
+.gt-progress-bar {
+  width: 1px;
+  height: 12em;
+  background: var(--rule-soft);
+  position: relative;
+}
+
+.gt-progress-fill {
+  position: absolute;
+  top: 0;
+  left: -0.5px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--accent), var(--gold));
+  transition: height 120ms linear;
+}
+
+@media (max-width: 1100px) {
+  .gt-progress { display: none; }
+}
+
+/* ============ Typographic Flow variant ============ */
 
 .tgf-graph {
   position: relative;
@@ -2475,72 +2769,227 @@ kbd {
 }
 
 .tgf-scroll {
-  max-width: 52em;
+  max-width: var(--gt-max-reading-width);
   margin: 0 auto;
+  padding: 0 2em 4em;
 }
 
-.tgf-phase {
-  padding: 5em 0 4em;
-  border-bottom: 1px solid var(--rule-soft);
+/* Floating phase-progress rail on the right edge of the viewport */
+.tgf-progress {
+  position: fixed;
+  right: 1.2em;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 75;
+  display: flex;
+  align-items: center;
+  gap: 0.9em;
+  pointer-events: auto;
 }
-.tgf-phase:last-child { border-bottom: none; }
 
-.tgf-phase-header {
-  text-align: center;
-  margin-bottom: 3em;
+.tgf-progress-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3em;
 }
-.tgf-phase-num {
-  display: block;
-  font-family: "Baskerville", Georgia, serif;
-  font-weight: 200;
-  font-size: 7em;
-  line-height: 0.85;
-  color: var(--gold);
+
+.tgf-progress-item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55em;
+  padding: 0.3em 0.6em;
+  text-decoration: none;
+  border-radius: 999px;
+  transition: background var(--motion) var(--ease);
   opacity: 0.55;
-  margin-bottom: 0.2em;
 }
-.tgf-phase-title {
+
+.tgf-progress-item.current {
+  opacity: 1;
+  background: rgba(196, 80, 58, 0.06);
+}
+
+.tgf-progress-item:hover { opacity: 1; }
+
+.tgf-progress-num {
   font-family: "Baskerville", Georgia, serif;
   font-weight: 300;
-  font-size: 2.8em;
-  line-height: 1.05;
-  margin: 0 0 0.25em;
-  color: var(--ink);
-  letter-spacing: -0.015em;
+  font-size: 1.2em;
+  color: var(--gold);
+  line-height: 1;
+  min-width: 1.2em;
+  text-align: right;
 }
-.tgf-phase-sub {
+
+.tgf-progress-name {
+  font-variant: small-caps;
+  letter-spacing: 0.2em;
+  font-size: 0.66em;
+  color: var(--ink-soft);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.tgf-progress-item.current .tgf-progress-name {
+  color: var(--accent);
+}
+
+.tgf-progress-bar {
+  width: 1px;
+  height: 12em;
+  background: var(--rule-soft);
+  position: relative;
+}
+
+.tgf-progress-fill {
+  position: absolute;
+  top: 0;
+  left: -0.5px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--accent), var(--gold));
+  transition: height 120ms linear;
+}
+
+/* Each phase is a chapter with an illuminated opener */
+
+.tgf-chapter {
+  padding: 6em 0 5em;
+  position: relative;
+}
+
+.tgf-chapter:not(:first-child) {
+  border-top: 1px solid var(--rule-soft);
+}
+
+.tgf-chapter-header {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.6em 2em;
+  margin-bottom: 3em;
+  align-items: start;
+}
+
+.tgf-chapter-initial {
+  font-family: "Baskerville", "Libre Baskerville", Georgia, serif;
+  font-weight: 200;
+  font-size: var(--gt-chapter-initial-size);
+  line-height: 0.82;
+  color: var(--gold);
+  letter-spacing: -0.03em;
+  user-select: none;
+  grid-row: span 4;
+  align-self: start;
+  margin-top: -0.15em;
+  opacity: 0.85;
+}
+
+.tgf-chapter-meta { padding-top: 0.6em; }
+
+.tgf-chapter-name {
   font-variant: small-caps;
   letter-spacing: 0.32em;
   color: var(--accent);
   font-size: 0.78em;
-  margin: 0 0 1em;
+  margin-bottom: 0.6em;
   font-weight: 600;
 }
-.tgf-phase-desc {
+
+.tgf-chapter-title {
+  font-family: "Baskerville", "Libre Baskerville", Georgia, serif;
+  font-weight: 300;
+  font-size: var(--gt-chapter-title-size);
+  line-height: 1.05;
+  margin: 0 0 0.5em;
+  color: var(--ink);
+  letter-spacing: -0.018em;
+}
+
+.tgf-chapter-desc {
   font-style: italic;
   color: var(--ink-soft);
-  font-size: 1.12em;
-  max-width: 30em;
-  margin: 0 auto;
+  font-size: 1.1em;
   line-height: 1.55;
+  margin: 0 0 1em;
+  max-width: 32em;
   font-weight: 300;
 }
 
-.tgf-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-.tgf-line {
-  padding: 0.3em 0;
+.tgf-chapter-stats {
   display: flex;
   align-items: baseline;
   gap: 0.6em;
+  font-variant: small-caps;
+  letter-spacing: 0.22em;
+  font-size: 0.7em;
+  color: var(--ink-faint);
+  font-weight: 600;
+  padding-top: 0.6em;
+  border-top: 1px solid var(--rule-soft);
+  max-width: 32em;
 }
-.tgf-line.tagged { padding: 0.7em 0; }
-.tgf-line.main { padding: 0.5em 0; }
-.tgf-line.pinned .tgf-line-btn { color: var(--accent); }
 
+.tgf-stat-count { color: var(--ink-soft); }
+.tgf-stat-sep   { opacity: 0.5; }
+.tgf-stat-range { color: var(--ink-faint); }
+
+/* Chapter body — the list of commits as prose */
+
+.tgf-chapter-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.tgf-line {
+  display: grid;
+  grid-template-columns: var(--gt-margin-date-width) 1fr auto;
+  gap: 0.9em;
+  align-items: baseline;
+  padding: 0.32em 0;
+  position: relative;
+  border-left: 1px solid transparent;
+}
+
+.tgf-line:hover .tgf-line-msg { color: var(--accent); }
+
+/* Tagged (ref) commits get pull-quote treatment */
+.tgf-line.tagged {
+  padding: 1.4em 0 1.4em 1.6em;
+  margin: 0.9em 0;
+  border-left: 2px solid var(--accent);
+  background: linear-gradient(
+    90deg,
+    rgba(196, 80, 58, 0.04),
+    transparent 40%
+  );
+}
+
+.tgf-line.main .tgf-line-msg {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.tgf-line.pinned {
+  background: rgba(196, 80, 58, 0.08);
+  border-left-color: var(--accent);
+}
+
+/* Date marginalia */
+.tgf-date {
+  font-variant: small-caps;
+  letter-spacing: 0.16em;
+  font-size: 0.68em;
+  color: var(--ink-faint);
+  font-weight: 600;
+  font-family: "Iowan Old Style", Georgia, serif;
+  text-align: right;
+  padding-top: 0.2em;
+}
+
+.tgf-line.tagged .tgf-date {
+  color: var(--accent);
+}
+
+/* Commit button takes the main column */
 .tgf-line-btn {
   background: none;
   border: none;
@@ -2552,54 +3001,102 @@ kbd {
   display: flex;
   gap: 0.7em;
   align-items: baseline;
-  flex: 1;
   transition: color var(--motion) var(--ease);
 }
-.tgf-line-btn:hover { color: var(--accent); }
 
 .tgf-line-sha {
   font-family: "JetBrains Mono", Consolas, monospace;
-  font-size: 0.78em;
+  font-size: 0.72em;
   color: var(--ink-faint);
   background: none;
   border: none;
   padding: 0;
   flex-shrink: 0;
-  opacity: 0.7;
+  opacity: 0.6;
 }
-.tgf-line.tagged .tgf-line-sha { color: var(--accent); opacity: 1; }
+
+.tgf-line.tagged .tgf-line-sha {
+  color: var(--accent);
+  opacity: 1;
+  font-size: 0.8em;
+}
 
 .tgf-line-msg {
-  font-family: "Iowan Old Style", Georgia, serif;
-  font-size: 1em;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: var(--gt-body-line-size);
   color: var(--ink-soft);
-  line-height: 1.5;
+  line-height: var(--gt-body-line-height);
+  transition: color var(--motion) var(--ease);
 }
+
 .tgf-line.tagged .tgf-line-msg {
-  font-family: "Baskerville", Georgia, serif;
-  font-size: 1.35em;
+  font-family: "Baskerville", "Libre Baskerville", Georgia, serif;
+  font-size: var(--gt-pull-quote-size);
   color: var(--ink);
   font-weight: 400;
+  letter-spacing: -0.005em;
+  line-height: 1.35;
 }
-.tgf-line.main .tgf-line-msg {
-  color: var(--ink);
-  font-weight: 500;
+
+.tgf-line-refs {
+  grid-column: 2;
+  display: flex;
+  gap: 0.4em;
+  flex-wrap: wrap;
+  margin-top: 0.35em;
+}
+
+.tgf-line-ref {
+  font-family: "JetBrains Mono", Consolas, monospace;
+  font-size: 0.66em;
+  background: var(--gold-soft);
+  color: var(--gold);
+  border: 1px solid rgba(181, 138, 62, 0.3);
+  padding: 0.12em 0.5em;
+  border-radius: 999px;
+  white-space: nowrap;
 }
 
 .tgf-line-link {
   color: var(--accent);
   text-decoration: none;
   border: none;
-  font-size: 0.9em;
+  font-size: 1.1em;
+  padding: 0 0.3em;
+  opacity: 0.6;
+  transition: opacity var(--motion) var(--ease);
+}
+.tgf-line-link:hover { opacity: 1; }
+
+/* End-of-chapter flourish */
+.tgf-chapter-end {
+  text-align: center;
+  margin-top: 3em;
+  color: var(--gold);
+  opacity: 0.5;
+  font-size: 1.4em;
 }
 
-.tgf-hint {
-  text-align: center;
-  font-variant: small-caps;
-  letter-spacing: 0.24em;
-  color: var(--ink-faint);
-  font-size: 0.7em;
-  margin: 2em 1.5em 0;
+.tgf-flourish {
+  display: inline-block;
+  padding: 0 1em;
+  position: relative;
+}
+.tgf-flourish::before,
+.tgf-flourish::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 3em;
+  height: 1px;
+  background: var(--rule-soft);
+}
+.tgf-flourish::before { right: 100%; }
+.tgf-flourish::after  { left: 100%; }
+
+/* Hide progress rail on smaller screens */
+@media (max-width: 1100px) {
+  .tgf-progress { display: none; }
 }
 
 /* Pinned commit stack internals (layout is set by the main

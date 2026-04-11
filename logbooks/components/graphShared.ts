@@ -241,83 +241,35 @@ export interface VariantMeta {
 
 export const VARIANTS: VariantMeta[] = [
   {
-    slug: "horizontal",
+    slug: "typographic",
     numeral: "I",
-    name: "Horizontal Trunk",
-    tagline: "The reference implementation",
+    name: "Typographic Flow",
+    tagline: "The log as prose",
     description:
-      "Trunk runs left-to-right. Branches above and below. Hero cards per phase, note cards for tagged commits, minimap, activity heatmap, drag-to-pan, dual wheel input.",
+      "The chronicle of 1,242 commits rendered as a long reading experience. Each phase is a chapter with an illuminated initial, a pull-quote opener, and commits flowing as serif lines beneath. Tagged commits are set as pull-quotes.",
   },
   {
-    slug: "vertical",
+    slug: "horizontal",
     numeral: "II",
-    name: "Vertical Trunk",
-    tagline: "Scroll the page, move through time",
+    name: "Horizontal Trunk",
+    tagline: "The trunk runs left-to-right",
     description:
-      "Trunk runs top-to-bottom. Branches left and right. Native page scroll drives everything. No wheel hijacking.",
+      "The graph as a horizontal timeline. Trunk runs through the middle, branches peel off above and below, hero cards per phase, activity heatmap underneath. Dynamic stage width based on the actual commit count.",
   },
   {
     slug: "spiral",
     numeral: "III",
-    name: "Spiral Rose",
-    tagline: "The history as a golden spiral",
+    name: "Spiral Tunnel",
+    tagline: "Looking down a spiraling tunnel",
     description:
-      "1,242 commits arranged on an Archimedean spiral. Oldest at center, newest at rim. Drag to rotate the rose.",
-  },
-  {
-    slug: "ribbon",
-    numeral: "IV",
-    name: "Ribbon",
-    tagline: "An S-curve weaving through time",
-    description:
-      "Commits flow along a single sinuous ribbon that weaves up and down across the viewport. Horizontal scroll moves along the ribbon.",
-  },
-  {
-    slug: "slideshow",
-    numeral: "V",
-    name: "Slideshow",
-    tagline: "One phase per full viewport",
-    description:
-      "Five full-viewport slides, one per phase. CSS scroll-snap carries you between them with big typography and phase statistics.",
-  },
-  {
-    slug: "calendar",
-    numeral: "VI",
-    name: "Calendar Heatmap",
-    tagline: "Every day as a cell",
-    description:
-      "Fifty-two days as a grid. Each cell is a day, colored by commit count. Horizontal scroll through weeks.",
-  },
-  {
-    slug: "cards",
-    numeral: "VII",
-    name: "Card Gallery",
-    tagline: "Every tagged commit as a physical card",
-    description:
-      "A horizontal rolodex of physical-looking porcelain cards, one per tagged commit. Snap-scroll from one card to the next.",
-  },
-  {
-    slug: "terrain",
-    numeral: "VIII",
-    name: "Elevation",
-    tagline: "The project as a mountain range",
-    description:
-      "Commit density rendered as a terrain profile. Busy days are peaks, quiet days are valleys. Scroll horizontally across the landscape.",
+      "Commits arranged on the wall of a 3D tunnel you look down into. Scroll takes you deeper — farther commits come into view, closer ones scale up and pass behind. CSS 3D perspective, no 3D library.",
   },
   {
     slug: "constellation",
-    numeral: "IX",
+    numeral: "IV",
     name: "Constellation Map",
-    tagline: "Commits as a star field in a dark room",
+    tagline: "A star field in a dark room",
     description:
-      "Dark warm background, commits as luminous points, branches as faint star-connecting lines. Pan both axes, zoom in to inspect.",
-  },
-  {
-    slug: "typographic",
-    numeral: "X",
-    name: "Typographic Flow",
-    tagline: "The log as prose",
-    description:
-      "Pure text experiment. Commit messages render as Baskerville lines flowing past as you scroll, each phase a chapter break.",
+      "Dark warm backdrop, commits as luminous stars, branches as faint constellation lines. Pan both axes to roam the night sky, ctrl+scroll to zoom.",
   },
 ];
