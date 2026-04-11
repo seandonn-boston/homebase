@@ -1,29 +1,28 @@
 "use client";
 
 /*
- * CommitGraph — 3D cube diorama
+ * CommitGraph — single visualization, full canvas.
  *
- * A literal cube in 3D space. Eight visualizations of the same commit
- * history are placed at the eight corners of the cube, and a central
- * index sits at the origin.
+ * Takes a `variant` prop selecting one of eight ways to render the
+ * commit history in 3D:
  *
- *   I.    Constellation      — stars + hairline branch lines
- *   II.   Growing Tree       — trunk + radial limbs
- *   III.  Lantern Procession — emissive spheres along vertical columns
- *   IV.   Nebular Cloud      — scattered particles with a bright filament
- *   V.    Helix              — single spiral ascending the Y axis
- *   VI.   Orbital Rings      — concentric horizontal rings per branch
- *   VII.  Cathedral Tiers    — stacked horizontal floors per phase
- *   VIII. Crystal Lattice    — commits on an orthogonal 3D grid
+ *   constellation — stars + hairline branch lines
+ *   tree          — trunk + radial limbs
+ *   lanterns      — emissive spheres along vertical columns
+ *   nebula        — scattered particles with a bright central filament
+ *   helix         — spiral around a central axis
+ *   orbital       — concentric horizontal rings per branch
+ *   cathedral     — horizontal tiers, one per phase
+ *   lattice       — commits on an orthogonal 3D grid
  *
- * Interaction is deliberately minimal: drag to orbit, scroll to zoom,
- * click any commit in any visualization to pin it into the detail
- * stack overlay, click the pinned commit at the top of the stack to
- * dismiss, Escape clears the stack.
+ * The component renders just one of these at a time, centered at the
+ * origin, with orbit controls, warm lighting, and the commit detail
+ * stack overlaid on top. Each visualization lives at its own route
+ * (/graph/constellation, /graph/tree, etc.) so they never share
+ * a space.
  */
 
 import {
-  useRef,
   useState,
   useMemo,
   useCallback,
@@ -32,9 +31,18 @@ import {
 } from "react";
 import { Canvas, type ThreeEvent } from "@react-three/fiber";
 import { OrbitControls, Instances, Instance, Line } from "@react-three/drei";
-import * as THREE from "three";
 
 // --- Types -------------------------------------------------------------------
+
+export type VizVariant =
+  | "constellation"
+  | "tree"
+  | "lanterns"
+  | "nebula"
+  | "helix"
+  | "orbital"
+  | "cathedral"
+  | "lattice";
 
 interface Commit {
   short: string;
@@ -63,12 +71,8 @@ interface GraphData {
 // --- Constants ---------------------------------------------------------------
 
 const REPO_URL = "https://github.com/seandonn-boston/helm";
-
-/** Half-extent of the cube in world units — corners sit at ±CUBE. */
-const CUBE = 22;
-
-/** Half-extent of each individual visualization cluster */
-const VIZ_HALF = 7;
+const VIZ_HALF = 14;
+const VIZ_HEIGHT = VIZ_HALF * 1.9;
 
 const ACCENT = "#c4503a";
 const GOLD = "#b58a3e";
@@ -100,10 +104,7 @@ interface CommitLayout {
   phase: number;
 }
 
-function prepareLayout(data: GraphData): {
-  layouts: CommitLayout[];
-  laneCount: number;
-} {
+function prepareLayout(data: GraphData): CommitLayout[] {
   const commits = data.commits;
   const n = commits.length;
 
@@ -145,7 +146,6 @@ function prepareLayout(data: GraphData): {
     const t = 1 - i / Math.max(1, n - 1);
     const laneCount = laneCounts.get(c.lane) ?? 1;
     const significance = c.lane === 0 ? 1 : Math.min(0.85, laneCount / 50);
-    // Assign one of 5 phases based on time (for cathedral viz)
     const phase = Math.floor(t * 4.99);
 
     return {
@@ -163,13 +163,11 @@ function prepareLayout(data: GraphData): {
   const uniqueLanes = Array.from(new Set(layouts.map((l) => l.visualLane))).sort(
     (a, b) => a - b
   );
-  const laneCount = uniqueLanes.length;
   const laneToAngle = new Map<number, number>();
   uniqueLanes.forEach((lane, i) => {
     if (lane === 0) {
       laneToAngle.set(lane, 0);
     } else {
-      // Golden-angle spread
       laneToAngle.set(lane, i * Math.PI * (3 - Math.sqrt(5)));
     }
   });
@@ -178,7 +176,7 @@ function prepareLayout(data: GraphData): {
     l.theta = laneToAngle.get(l.visualLane) ?? 0;
   });
 
-  return { layouts, laneCount };
+  return layouts;
 }
 
 function branchColor(l: CommitLayout): string {
@@ -186,13 +184,11 @@ function branchColor(l: CommitLayout): string {
   return BRANCH_COLORS[Math.floor(l.visualLane) % BRANCH_COLORS.length];
 }
 
-// --- Position functions (one per visualization) -----------------------------
-// Each returns a position in a local frame centered on the viz origin.
-// The viz cluster is then translated to its cube corner by a parent group.
+// --- Position functions ------------------------------------------------------
 
 function posConstellation(l: CommitLayout): [number, number, number] {
-  const y = (l.t - 0.5) * (VIZ_HALF * 1.9);
-  const r = l.visualLane === 0 ? 0.15 : 1.2 + l.visualLane * 0.28;
+  const y = (l.t - 0.5) * VIZ_HEIGHT;
+  const r = l.visualLane === 0 ? 0.25 : 2.2 + l.visualLane * 0.55;
   return [
     Math.cos(l.theta * 1.7 + l.t * 0.8) * r,
     y,
@@ -201,43 +197,40 @@ function posConstellation(l: CommitLayout): [number, number, number] {
 }
 
 function posTree(l: CommitLayout): [number, number, number] {
-  const y = (l.t - 0.5) * (VIZ_HALF * 1.9);
+  const y = (l.t - 0.5) * VIZ_HEIGHT;
   if (l.visualLane === 0) return [0, y, 0];
-  const r = 0.25 + (2.5 * (0.45 + 0.55 * Math.sin(l.t * Math.PI * 2 + l.visualLane)));
+  const r =
+    0.45 + 4.5 * (0.45 + 0.55 * Math.sin(l.t * Math.PI * 2 + l.visualLane));
   const theta = l.theta + l.t * 0.4;
   return [Math.cos(theta) * r, y, Math.sin(theta) * r];
 }
 
 function posLantern(l: CommitLayout): [number, number, number] {
-  const y = (l.t - 0.5) * (VIZ_HALF * 1.9);
+  const y = (l.t - 0.5) * VIZ_HEIGHT;
   if (l.visualLane === 0) return [0, y, 0];
-  const r = 1 + l.visualLane * 0.38;
+  const r = 1.8 + l.visualLane * 0.68;
   return [Math.cos(l.theta) * r, y, Math.sin(l.theta) * r];
 }
 
 function posNebula(l: CommitLayout): [number, number, number] {
-  const y = (l.t - 0.5) * (VIZ_HALF * 1.9);
+  const y = (l.t - 0.5) * VIZ_HEIGHT;
   if (l.visualLane === 0) {
-    return [Math.sin(l.t * 12) * 0.25, y, Math.cos(l.t * 11) * 0.25];
+    return [Math.sin(l.t * 12) * 0.5, y, Math.cos(l.t * 11) * 0.5];
   }
-  const radius = 0.9 + l.visualLane * 0.28;
-  const scatter = 0.3;
+  const radius = 1.7 + l.visualLane * 0.5;
+  const scatter = 0.55;
   return [
     Math.cos(l.theta + l.t * 2) * radius + Math.sin(l.t * 18) * scatter,
-    y + Math.sin(l.idx * 0.07) * 0.3,
+    y + Math.sin(l.idx * 0.07) * 0.5,
     Math.sin(l.theta + l.t * 2) * radius + Math.cos(l.t * 17) * scatter,
   ];
 }
 
-// ---- New visualizations ----
-
 function posHelix(l: CommitLayout): [number, number, number] {
-  // A single spiral: everything winds around the central Y axis.
-  // Side branches spiral at slightly larger radii, offset by branch angle.
   const turns = 5;
-  const y = (l.t - 0.5) * (VIZ_HALF * 1.9);
-  const baseR = 1.8;
-  const laneOffset = l.visualLane === 0 ? 0 : 0.35 + l.visualLane * 0.12;
+  const y = (l.t - 0.5) * VIZ_HEIGHT;
+  const baseR = 3.2;
+  const laneOffset = l.visualLane === 0 ? 0 : 0.7 + l.visualLane * 0.22;
   const r = baseR + laneOffset;
   const phase = l.theta;
   const angle = l.t * Math.PI * 2 * turns + phase;
@@ -245,47 +238,44 @@ function posHelix(l: CommitLayout): [number, number, number] {
 }
 
 function posOrbital(l: CommitLayout): [number, number, number] {
-  // Each branch is a ring at a fixed Y level, radius grows by branch index.
-  // Commits are placed around the ring by angular position derived from t.
   const laneIndex = Math.floor(l.visualLane);
   const levels = 10;
   const level = laneIndex % levels;
-  const y = ((level / Math.max(1, levels - 1)) - 0.5) * (VIZ_HALF * 1.9);
-  const r = 0.6 + Math.floor(laneIndex / levels) * 0.9 + (laneIndex % 3) * 0.35 + 1.1;
+  const y = ((level / Math.max(1, levels - 1)) - 0.5) * VIZ_HEIGHT;
+  const r =
+    1.2 +
+    Math.floor(laneIndex / levels) * 1.6 +
+    (laneIndex % 3) * 0.6 +
+    2;
   const angle = l.t * Math.PI * 2 * 3 + l.theta;
   return [Math.cos(angle) * r, y, Math.sin(angle) * r];
 }
 
 function posCathedral(l: CommitLayout): [number, number, number] {
-  // Five horizontal floors, one per phase of the project.
-  // Commits on each floor are laid out on a small spiral around the floor.
   const floors = 5;
   const phase = Math.max(0, Math.min(floors - 1, l.phase));
-  const y = ((phase / (floors - 1)) - 0.5) * (VIZ_HALF * 1.9);
-  // Position within the floor — spiral out based on within-floor index
-  const phaseFraction =
-    phase === 0 ? l.t * 5 : (l.t * 5) - phase;
+  const y = ((phase / (floors - 1)) - 0.5) * VIZ_HEIGHT;
+  const phaseFraction = phase === 0 ? l.t * 5 : (l.t * 5) - phase;
   const clamped = Math.max(0, Math.min(1, phaseFraction));
-  const r = 0.3 + clamped * 2.2 + (l.visualLane % 4) * 0.25;
+  const r = 0.5 + clamped * 4.4 + (l.visualLane % 4) * 0.5;
   const angle = l.theta + clamped * Math.PI * 6;
   return [Math.cos(angle) * r, y, Math.sin(angle) * r];
 }
 
 function posLattice(l: CommitLayout): [number, number, number] {
-  // Orthogonal 3D grid. Place commits at integer lattice intersections.
-  const dim = 10; // 10×10×10 grid
-  const cellSize = (VIZ_HALF * 1.9) / dim;
+  const dim = 12;
+  const cellSize = VIZ_HEIGHT / dim;
   const half = (dim - 1) / 2;
-  // Time drives the Y coordinate, branch drives X, commit index drives Z
   const y = (Math.round(l.t * (dim - 1)) - half) * cellSize;
   const laneIndex = Math.floor(l.visualLane);
   const x = ((laneIndex % dim) - half) * cellSize;
-  const z = (Math.floor(laneIndex / dim) % dim - half) * cellSize +
-    ((l.idx % dim) - half) * cellSize * 0.3;
+  const z =
+    ((Math.floor(laneIndex / dim) % dim) - half) * cellSize +
+    ((l.idx % dim) - half) * cellSize * 0.35;
   return [x, y, z];
 }
 
-// --- Shared commit-instance renderer -----------------------------------------
+// --- Shared instance renderer ------------------------------------------------
 
 interface VizProps {
   layouts: CommitLayout[];
@@ -347,7 +337,7 @@ function CommitInstances({
   );
 }
 
-// --- I. Constellation --------------------------------------------------------
+// --- Individual visualization components -------------------------------------
 
 function Constellation(props: VizProps) {
   const lines = useMemo(() => {
@@ -377,15 +367,15 @@ function Constellation(props: VizProps) {
           key={ln.key}
           points={ln.points}
           color={ln.color}
-          lineWidth={ln.key === "l-0" ? 1.5 : 0.6}
+          lineWidth={ln.key === "l-0" ? 2.2 : 0.9}
           transparent
-          opacity={ln.key === "l-0" ? 0.75 : 0.3}
+          opacity={ln.key === "l-0" ? 0.8 : 0.35}
         />
       ))}
       <CommitInstances
         {...props}
         position={posConstellation}
-        geometry={<sphereGeometry args={[0.07, 8, 8]} />}
+        geometry={<sphereGeometry args={[0.13, 8, 8]} />}
         material={
           <meshStandardMaterial
             emissive={CREAM}
@@ -394,21 +384,21 @@ function Constellation(props: VizProps) {
             toneMapped={false}
           />
         }
-        baseScale={(l) => 0.9 + l.significance * 0.6}
+        baseScale={(l) => 0.9 + l.significance * 0.7}
       />
     </group>
   );
 }
 
-// --- II. Growing Tree --------------------------------------------------------
-
 function GrowingTree(props: VizProps) {
-  const trunkPoints = useMemo(() => {
-    return props.layouts
-      .filter((l) => l.branchId === 0 || l.visualLane === 0)
-      .sort((a, b) => a.t - b.t)
-      .map(posTree);
-  }, [props.layouts]);
+  const trunkPoints = useMemo(
+    () =>
+      props.layouts
+        .filter((l) => l.branchId === 0 || l.visualLane === 0)
+        .sort((a, b) => a.t - b.t)
+        .map(posTree),
+    [props.layouts]
+  );
 
   const branchLines = useMemo(() => {
     const byLane = new Map<number, CommitLayout[]>();
@@ -423,7 +413,7 @@ function GrowingTree(props: VizProps) {
       if (arr.length < 1) return;
       const sorted = arr.slice().sort((a, b) => a.t - b.t);
       const startT = sorted[0].t;
-      const trunkStart: [number, number, number] = [0, (startT - 0.5) * (VIZ_HALF * 1.9), 0];
+      const trunkStart: [number, number, number] = [0, (startT - 0.5) * VIZ_HEIGHT, 0];
       result.push({
         points: [trunkStart, ...sorted.map(posTree)],
         color: BRANCH_COLORS[lane % BRANCH_COLORS.length],
@@ -436,30 +426,28 @@ function GrowingTree(props: VizProps) {
   return (
     <group>
       {trunkPoints.length >= 2 && (
-        <Line points={trunkPoints} color={ACCENT} lineWidth={2.2} transparent opacity={0.9} />
+        <Line points={trunkPoints} color={ACCENT} lineWidth={3} transparent opacity={0.9} />
       )}
       {branchLines.map((br) => (
         <Line
           key={br.key}
           points={br.points}
           color={br.color}
-          lineWidth={1}
+          lineWidth={1.3}
           transparent
-          opacity={0.45}
+          opacity={0.5}
         />
       ))}
       <CommitInstances
         {...props}
         position={posTree}
-        geometry={<sphereGeometry args={[0.09, 10, 10]} />}
+        geometry={<sphereGeometry args={[0.16, 10, 10]} />}
         material={<meshStandardMaterial roughness={0.45} metalness={0.25} />}
-        baseScale={(l) => (l.visualLane === 0 ? 1.15 : 0.85)}
+        baseScale={(l) => (l.visualLane === 0 ? 1.2 : 0.9)}
       />
     </group>
   );
 }
-
-// --- III. Lantern Procession -------------------------------------------------
 
 function LanternProcession(props: VizProps) {
   const threads = useMemo(() => {
@@ -489,15 +477,15 @@ function LanternProcession(props: VizProps) {
           key={t.key}
           points={t.points}
           color={t.color}
-          lineWidth={0.6}
+          lineWidth={0.8}
           transparent
-          opacity={0.42}
+          opacity={0.5}
         />
       ))}
       <CommitInstances
         {...props}
         position={posLantern}
-        geometry={<sphereGeometry args={[0.11, 12, 12]} />}
+        geometry={<sphereGeometry args={[0.18, 12, 12]} />}
         material={
           <meshStandardMaterial
             color={CREAM}
@@ -506,39 +494,35 @@ function LanternProcession(props: VizProps) {
             roughness={0.6}
           />
         }
-        baseScale={(l) => 0.75 + l.significance * 0.6}
+        baseScale={(l) => 0.8 + l.significance * 0.65}
         colorFor={(l) => (l.visualLane === 0 ? "#ffe0a8" : LANTERN_GLOW)}
       />
     </group>
   );
 }
 
-// --- IV. Nebular Cloud -------------------------------------------------------
-
 function NebulaCloud(props: VizProps) {
   return (
     <CommitInstances
       {...props}
       position={posNebula}
-      geometry={<sphereGeometry args={[0.06, 6, 6]} />}
-      material={<meshBasicMaterial transparent opacity={0.85} />}
-      baseScale={(l) => (l.visualLane === 0 ? 1.6 : 0.7 + l.significance * 0.5)}
+      geometry={<sphereGeometry args={[0.11, 6, 6]} />}
+      material={<meshBasicMaterial transparent opacity={0.9} />}
+      baseScale={(l) => (l.visualLane === 0 ? 1.7 : 0.75 + l.significance * 0.55)}
       colorFor={(l) => (l.visualLane === 0 ? "#ffe4b8" : branchColor(l))}
     />
   );
 }
 
-// --- V. Helix ----------------------------------------------------------------
-
 function Helix(props: VizProps) {
-  // Generate the main branch as a dense spiral polyline
-  const spinePoints = useMemo(() => {
-    const arr = props.layouts
-      .filter((l) => l.visualLane === 0 || l.branchId === 0)
-      .sort((a, b) => a.t - b.t)
-      .map(posHelix);
-    return arr;
-  }, [props.layouts]);
+  const spinePoints = useMemo(
+    () =>
+      props.layouts
+        .filter((l) => l.visualLane === 0 || l.branchId === 0)
+        .sort((a, b) => a.t - b.t)
+        .map(posHelix),
+    [props.layouts]
+  );
 
   return (
     <group>
@@ -546,26 +530,23 @@ function Helix(props: VizProps) {
         <Line
           points={spinePoints}
           color={ACCENT}
-          lineWidth={1.4}
+          lineWidth={1.8}
           transparent
-          opacity={0.7}
+          opacity={0.75}
         />
       )}
       <CommitInstances
         {...props}
         position={posHelix}
-        geometry={<sphereGeometry args={[0.07, 8, 8]} />}
+        geometry={<sphereGeometry args={[0.13, 8, 8]} />}
         material={<meshStandardMaterial roughness={0.5} metalness={0.2} />}
-        baseScale={(l) => (l.visualLane === 0 ? 1.1 : 0.8)}
+        baseScale={(l) => (l.visualLane === 0 ? 1.15 : 0.85)}
       />
     </group>
   );
 }
 
-// --- VI. Orbital Rings -------------------------------------------------------
-
 function OrbitalRings(props: VizProps) {
-  // Draw a faint guide ring at each distinct lane's Y level
   const rings = useMemo(() => {
     const seen = new Set<number>();
     const out: { y: number; r: number; key: string }[] = [];
@@ -575,12 +556,12 @@ function OrbitalRings(props: VizProps) {
       seen.add(laneIndex);
       const levels = 10;
       const level = laneIndex % levels;
-      const y = ((level / Math.max(1, levels - 1)) - 0.5) * (VIZ_HALF * 1.9);
+      const y = ((level / Math.max(1, levels - 1)) - 0.5) * VIZ_HEIGHT;
       const r =
-        0.6 +
-        Math.floor(laneIndex / levels) * 0.9 +
-        (laneIndex % 3) * 0.35 +
-        1.1;
+        1.2 +
+        Math.floor(laneIndex / levels) * 1.6 +
+        (laneIndex % 3) * 0.6 +
+        2;
       out.push({ y, r, key: `ring-${laneIndex}` });
     });
     return out;
@@ -590,7 +571,7 @@ function OrbitalRings(props: VizProps) {
     <group>
       {rings.map((ring) => {
         const pts: [number, number, number][] = [];
-        const segs = 64;
+        const segs = 80;
         for (let i = 0; i <= segs; i++) {
           const a = (i / segs) * Math.PI * 2;
           pts.push([Math.cos(a) * ring.r, ring.y, Math.sin(a) * ring.r]);
@@ -600,39 +581,36 @@ function OrbitalRings(props: VizProps) {
             key={ring.key}
             points={pts}
             color={GOLD}
-            lineWidth={0.5}
+            lineWidth={0.6}
             transparent
-            opacity={0.28}
+            opacity={0.35}
           />
         );
       })}
       <CommitInstances
         {...props}
         position={posOrbital}
-        geometry={<sphereGeometry args={[0.08, 8, 8]} />}
+        geometry={<sphereGeometry args={[0.14, 8, 8]} />}
         material={
           <meshStandardMaterial
             emissive={GOLD_LIGHT}
-            emissiveIntensity={0.4}
+            emissiveIntensity={0.45}
             roughness={0.5}
           />
         }
-        baseScale={(l) => (l.visualLane === 0 ? 1.1 : 0.78)}
+        baseScale={(l) => (l.visualLane === 0 ? 1.15 : 0.82)}
       />
     </group>
   );
 }
 
-// --- VII. Cathedral Tiers ----------------------------------------------------
-
 function CathedralTiers(props: VizProps) {
-  // Draw a thin square ring at each floor level
   const tierBorders = useMemo(() => {
     const floors = 5;
     const out: [number, number, number][][] = [];
     const halfW = VIZ_HALF * 0.85;
     for (let p = 0; p < floors; p++) {
-      const y = ((p / (floors - 1)) - 0.5) * (VIZ_HALF * 1.9);
+      const y = ((p / (floors - 1)) - 0.5) * VIZ_HEIGHT;
       out.push([
         [-halfW, y, -halfW],
         [halfW, y, -halfW],
@@ -651,15 +629,15 @@ function CathedralTiers(props: VizProps) {
           key={`tier-${i}`}
           points={pts}
           color={GOLD}
-          lineWidth={0.4}
+          lineWidth={0.55}
           transparent
-          opacity={0.22}
+          opacity={0.3}
         />
       ))}
       <CommitInstances
         {...props}
         position={posCathedral}
-        geometry={<sphereGeometry args={[0.08, 10, 10]} />}
+        geometry={<sphereGeometry args={[0.14, 10, 10]} />}
         material={
           <meshStandardMaterial
             color={CREAM}
@@ -668,16 +646,13 @@ function CathedralTiers(props: VizProps) {
             roughness={0.55}
           />
         }
-        baseScale={(l) => 0.8 + l.significance * 0.5}
+        baseScale={(l) => 0.85 + l.significance * 0.55}
       />
     </group>
   );
 }
 
-// --- VIII. Crystal Lattice ---------------------------------------------------
-
 function CrystalLattice(props: VizProps) {
-  // Thin orthogonal guide lines at the lattice axes
   const guideLines = useMemo(() => {
     const h = VIZ_HALF * 0.95;
     return [
@@ -694,15 +669,15 @@ function CrystalLattice(props: VizProps) {
           key={`axis-${i}`}
           points={pts}
           color={GOLD}
-          lineWidth={0.4}
+          lineWidth={0.55}
           transparent
-          opacity={0.25}
+          opacity={0.35}
         />
       ))}
       <CommitInstances
         {...props}
         position={posLattice}
-        geometry={<boxGeometry args={[0.12, 0.12, 0.12]} />}
+        geometry={<boxGeometry args={[0.2, 0.2, 0.2]} />}
         material={<meshStandardMaterial roughness={0.3} metalness={0.45} />}
         baseScale={() => 1}
       />
@@ -710,135 +685,65 @@ function CrystalLattice(props: VizProps) {
   );
 }
 
-// --- Wireframe cube edges ----------------------------------------------------
+// --- Variant dispatch --------------------------------------------------------
 
-function CubeEdges() {
-  const h = CUBE;
-  const corners: [number, number, number][] = [
-    [-h, -h, -h],
-    [h, -h, -h],
-    [h, h, -h],
-    [-h, h, -h],
-    [-h, -h, h],
-    [h, -h, h],
-    [h, h, h],
-    [-h, h, h],
-  ];
-  const edges: [number, number][] = [
-    [0, 1], [1, 2], [2, 3], [3, 0],
-    [4, 5], [5, 6], [6, 7], [7, 4],
-    [0, 4], [1, 5], [2, 6], [3, 7],
-  ];
-  return (
-    <group>
-      {edges.map(([a, b], i) => (
-        <Line
-          key={`edge-${i}`}
-          points={[corners[a], corners[b]]}
-          color={GOLD}
-          lineWidth={0.8}
-          transparent
-          opacity={0.22}
-        />
-      ))}
-    </group>
-  );
+function Viz({ variant, ...props }: VizProps & { variant: VizVariant }) {
+  switch (variant) {
+    case "constellation":
+      return <Constellation {...props} />;
+    case "tree":
+      return <GrowingTree {...props} />;
+    case "lanterns":
+      return <LanternProcession {...props} />;
+    case "nebula":
+      return <NebulaCloud {...props} />;
+    case "helix":
+      return <Helix {...props} />;
+    case "orbital":
+      return <OrbitalRings {...props} />;
+    case "cathedral":
+      return <CathedralTiers {...props} />;
+    case "lattice":
+      return <CrystalLattice {...props} />;
+  }
 }
 
-// --- Central index -----------------------------------------------------------
+// --- Scene wrapper with lighting + orbit controls ---------------------------
 
-function CentralIndex() {
-  return (
-    <group>
-      {/* Glowing gold core */}
-      <mesh>
-        <icosahedronGeometry args={[0.85, 1]} />
-        <meshStandardMaterial
-          color={GOLD}
-          emissive={GOLD_LIGHT}
-          emissiveIntensity={0.9}
-          roughness={0.35}
-          metalness={0.55}
-        />
-      </mesh>
-      {/* Three orthogonal rings around it */}
-      <mesh>
-        <torusGeometry args={[1.5, 0.035, 16, 64]} />
-        <meshStandardMaterial color={GOLD_LIGHT} emissive={GOLD_LIGHT} emissiveIntensity={0.55} />
-      </mesh>
-      <mesh rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[1.5, 0.035, 16, 64]} />
-        <meshStandardMaterial color={GOLD_LIGHT} emissive={GOLD_LIGHT} emissiveIntensity={0.55} />
-      </mesh>
-      <mesh rotation={[0, 0, Math.PI / 2]}>
-        <torusGeometry args={[1.5, 0.035, 16, 64]} />
-        <meshStandardMaterial color={GOLD_LIGHT} emissive={GOLD_LIGHT} emissiveIntensity={0.55} />
-      </mesh>
-      {/* Soft warm point light at origin — illuminates nearby viz */}
-      <pointLight intensity={2} color={GOLD_LIGHT} distance={30} decay={1.4} />
-    </group>
-  );
-}
-
-// --- Cube world content ------------------------------------------------------
-
-interface CubeWorldProps {
+function Scene({
+  variant,
+  layouts,
+  pinnedIdxs,
+  hoveredIdx,
+  onClick,
+  onHover,
+}: {
+  variant: VizVariant;
   layouts: CommitLayout[];
   pinnedIdxs: number[];
   hoveredIdx: number | null;
   onClick: (idx: number) => void;
   onHover: (idx: number | null) => void;
-}
-
-function CubeWorld(props: CubeWorldProps) {
-  // The eight cube corners — CORNER_OFFSET positions each viz cluster
-  // so its origin sits at (±CORNER, ±CORNER, ±CORNER).
-  const C = CUBE * 0.62; // pulled in from the edges so viz don't touch the wireframe
-
-  const vizGroups: Array<{
-    position: [number, number, number];
-    Component: React.ComponentType<VizProps>;
-  }> = [
-    { position: [-C,  C, -C], Component: Constellation },
-    { position: [ C,  C, -C], Component: GrowingTree },
-    { position: [ C,  C,  C], Component: LanternProcession },
-    { position: [-C,  C,  C], Component: NebulaCloud },
-    { position: [-C, -C, -C], Component: Helix },
-    { position: [ C, -C, -C], Component: OrbitalRings },
-    { position: [ C, -C,  C], Component: CathedralTiers },
-    { position: [-C, -C,  C], Component: CrystalLattice },
-  ];
-
+}) {
   return (
     <>
-      {/* Warm lighting */}
       <ambientLight intensity={0.55} color={"#fff0d8"} />
-      <directionalLight position={[20, 30, 25]} intensity={0.75} color={CREAM} />
-      <directionalLight position={[-20, -15, -20]} intensity={0.3} color={"#e07b5f"} />
-
-      {/* Wireframe bounding cube */}
-      <CubeEdges />
-
-      {/* Central index at origin */}
-      <CentralIndex />
-
-      {/* Eight visualizations at the eight corners */}
-      {vizGroups.map(({ position, Component }, i) => (
-        <group key={i} position={position}>
-          <Component
-            layouts={props.layouts}
-            pinnedIdxs={props.pinnedIdxs}
-            hoveredIdx={props.hoveredIdx}
-            onClick={props.onClick}
-            onHover={props.onHover}
-          />
-        </group>
-      ))}
+      <directionalLight position={[15, 25, 20]} intensity={0.8} color={CREAM} />
+      <directionalLight position={[-15, -10, -15]} intensity={0.35} color={"#e07b5f"} />
+      <pointLight position={[0, 0, 0]} intensity={0.8} color={GOLD_LIGHT} distance={30} decay={1.4} />
+      <Viz
+        variant={variant}
+        layouts={layouts}
+        pinnedIdxs={pinnedIdxs}
+        hoveredIdx={hoveredIdx}
+        onClick={onClick}
+        onHover={onHover}
+      />
     </>
   );
 }
 
-// --- Commit detail stack card (HTML overlay) --------------------------------
+// --- Commit detail stack overlay --------------------------------------------
 
 interface StackCardProps {
   commit: Commit;
@@ -933,13 +838,19 @@ function StackCard({ commit, idx, total, isTop, onDismiss }: StackCardProps) {
   );
 }
 
-// --- Top-level CommitGraph ---------------------------------------------------
+// --- Top-level -------------------------------------------------------------
 
-export default function CommitGraph({ data }: { data: GraphData }) {
+export default function CommitGraph({
+  data,
+  variant,
+}: {
+  data: GraphData;
+  variant: VizVariant;
+}) {
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const [pinnedIdxs, setPinnedIdxs] = useState<number[]>([0]);
 
-  const { layouts } = useMemo(() => prepareLayout(data), [data]);
+  const layouts = useMemo(() => prepareLayout(data), [data]);
 
   const handleClick = useCallback((idx: number) => {
     setPinnedIdxs((curr) => {
@@ -996,12 +907,13 @@ export default function CommitGraph({ data }: { data: GraphData }) {
     <div className="cube-graph">
       <div className="cube-canvas-wrap">
         <Canvas
-          camera={{ position: [38, 26, 58], fov: 48 }}
+          camera={{ position: [22, 12, 28], fov: 52 }}
           dpr={[1, 2]}
           gl={{ antialias: true, alpha: true }}
         >
           <Suspense fallback={null}>
-            <CubeWorld
+            <Scene
+              variant={variant}
               layouts={layouts}
               pinnedIdxs={pinnedIdxs}
               hoveredIdx={hoveredIdx}
@@ -1012,15 +924,15 @@ export default function CommitGraph({ data }: { data: GraphData }) {
           <OrbitControls
             makeDefault
             enablePan={false}
-            minDistance={20}
-            maxDistance={140}
+            minDistance={8}
+            maxDistance={80}
             target={[0, 0, 0]}
           />
         </Canvas>
       </div>
 
       <div className="cube-hint">
-        Drag to orbit · scroll to zoom · click any commit in any corner to pin it · esc clears
+        Drag to orbit · scroll to zoom · click any commit to pin it · esc clears
       </div>
 
       {pinnedIdxs.length > 0 && (

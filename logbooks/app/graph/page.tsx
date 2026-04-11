@@ -1,41 +1,47 @@
 import type { Metadata } from "next";
-import CommitGraph from "@/components/CommitGraph";
+import Link from "next/link";
 import NavLink from "@/components/NavLink";
+import { VARIANTS } from "@/components/graphVariants";
 import graphData from "./data.json";
 
 export const metadata: Metadata = {
   title: "Commit Graph",
 };
 
-export default function GraphPage() {
+export default function GraphIndexPage() {
   return (
-    <article className="page-bleed">
-      <div className="page-wider">
-        <header className="frontispiece" style={{ marginBottom: "1.5em" }}>
-          <div className="eyebrow">The Helm Chronicle &middot; Companion</div>
-          <h1>The Cube</h1>
-          <p className="subtitle">
-            The commit history as a 3D diorama &mdash; four visualizations of
-            the same 1,242 commits arranged around a central index. Orbit to
-            explore.
-          </p>
-        </header>
+    <article className="page-wide">
+      <header className="frontispiece">
+        <div className="eyebrow">The Helm Chronicle &middot; Companion</div>
+        <h1>The Gallery</h1>
+        <p className="subtitle">
+          Eight ways of seeing the same 1,242 commits. Each visualization
+          lives on its own page, on its own canvas, at its own scale.
+          Pick one.
+        </p>
+      </header>
+
+      <div className="graph-gallery">
+        {VARIANTS.map((v) => (
+          <Link key={v.key} href={`/graph/${v.slug}`} className="gallery-card">
+            <span className="gallery-numeral">{v.numeral}</span>
+            <h2>{v.name}</h2>
+            <p className="gallery-tagline">{v.tagline}</p>
+            <p className="gallery-desc">{v.description}</p>
+          </Link>
+        ))}
       </div>
 
-      <CommitGraph data={graphData} />
-
-      <div className="page-wider">
-        <footer className="end-border">
-          <div className="nav-links">
-            <NavLink href="/chronicle">Chronicle</NavLink>
-            <NavLink href="/phases">Phases</NavLink>
-          </div>
-          <div className="colophon">
-            {graphData.totalCommits} commits &middot; {graphData.dates.length}{" "}
-            active days &middot; four visualizations
-          </div>
-        </footer>
-      </div>
+      <footer className="end-border">
+        <div className="nav-links">
+          <NavLink href="/chronicle">Chronicle</NavLink>
+          <NavLink href="/phases">Phases</NavLink>
+        </div>
+        <div className="colophon">
+          {graphData.totalCommits} commits &middot; {graphData.dates.length}{" "}
+          active days &middot; eight visualizations
+        </div>
+      </footer>
     </article>
   );
 }
