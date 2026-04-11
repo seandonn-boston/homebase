@@ -1,25 +1,18 @@
 "use client";
 
 /*
- * CommitGraph — single visualization, full canvas.
+ * CommitGraph — Growing Tree
  *
- * Takes a `variant` prop selecting one of eight ways to render the
- * commit history in 3D:
+ * A 3D tree rooted at the oldest commit. The trunk runs straight up
+ * the Y axis and IS the main branch: every commit where lane === 0
+ * sits on the trunk, oldest at the bottom, newest at the top. Each
+ * side branch peels off from the trunk at its actual first-commit
+ * time, curves outward in a stable radial direction, and extends to
+ * its last-commit time. Commits render as nodes on trunk or limb.
  *
- *   constellation — stars + hairline branch lines
- *   tree          — trunk + radial limbs
- *   lanterns      — emissive spheres along vertical columns
- *   nebula        — scattered particles with a bright central filament
- *   helix         — spiral around a central axis
- *   orbital       — concentric horizontal rings per branch
- *   cathedral     — horizontal tiers, one per phase
- *   lattice       — commits on an orthogonal 3D grid
- *
- * The component renders just one of these at a time, centered at the
- * origin, with orbit controls, warm lighting, and the commit detail
- * stack overlaid on top. Each visualization lives at its own route
- * (/graph/constellation, /graph/tree, etc.) so they never share
- * a space.
+ * Horizontal phase rings around the trunk mark the five project
+ * phases (derived from time bins). They turn the trunk into a
+ * measurable time axis.
  */
 
 import {
@@ -31,18 +24,9 @@ import {
 } from "react";
 import { Canvas, type ThreeEvent } from "@react-three/fiber";
 import { OrbitControls, Instances, Instance, Line } from "@react-three/drei";
+import * as THREE from "three";
 
 // --- Types -------------------------------------------------------------------
-
-export type VizVariant =
-  | "constellation"
-  | "tree"
-  | "lanterns"
-  | "nebula"
-  | "helix"
-  | "orbital"
-  | "cathedral"
-  | "lattice";
 
 interface Commit {
   short: string;
@@ -71,14 +55,21 @@ interface GraphData {
 // --- Constants ---------------------------------------------------------------
 
 const REPO_URL = "https://github.com/seandonn-boston/helm";
-const VIZ_HALF = 14;
-const VIZ_HEIGHT = VIZ_HALF * 1.9;
+
+/** Total vertical extent of the tree in world units */
+const TREE_HEIGHT = 30;
+/** Maximum radial extent that any branch can reach */
+const TREE_RADIUS = 14;
+/** Number of phase rings around the trunk */
+const PHASE_COUNT = 5;
 
 const ACCENT = "#c4503a";
+const TRUNK_COLOR = "#8b3e22";
+const TRUNK_LIT = "#c4593a";
 const GOLD = "#b58a3e";
 const GOLD_LIGHT = "#e8c288";
 const CREAM = "#fffaf2";
-const LANTERN_GLOW = "#ffd89a";
+const LEAF_COLOR = "#f6c06a";
 
 const BRANCH_COLORS = [
   "#c4503a",
@@ -96,15 +87,34 @@ const BRANCH_COLORS = [
 interface CommitLayout {
   idx: number;
   commit: Commit;
+  /** 1 if main branch, else descending */
   significance: number;
+  /** compacted visual lane (0 = main) */
   visualLane: number;
+  /** original git lane */
   branchId: number;
+  /** normalized time: oldest = 0, newest = 1 */
   t: number;
-  theta: number;
-  phase: number;
 }
 
-function prepareLayout(data: GraphData): CommitLayout[] {
+interface BranchInfo {
+  lane: number;
+  /** earliest t among this branch's commits */
+  startT: number;
+  /** latest t */
+  endT: number;
+  /** total commit count on this branch */
+  count: number;
+  /** stable radial direction (radians) */
+  angle: number;
+  /** radius reached by the branch tip */
+  reachR: number;
+}
+
+function prepareLayout(data: GraphData): {
+  layouts: CommitLayout[];
+  branches: Map<number, BranchInfo>;
+} {
   const commits = data.commits;
   const n = commits.length;
 
@@ -145,8 +155,7 @@ function prepareLayout(data: GraphData): CommitLayout[] {
 
     const t = 1 - i / Math.max(1, n - 1);
     const laneCount = laneCounts.get(c.lane) ?? 1;
-    const significance = c.lane === 0 ? 1 : Math.min(0.85, laneCount / 50);
-    const phase = Math.floor(t * 4.99);
+    const significance = c.lane === 0 ? 1 : Math.min(0.85, laneCount / 40);
 
     return {
       idx: i,
@@ -155,423 +164,139 @@ function prepareLayout(data: GraphData): CommitLayout[] {
       visualLane,
       branchId: c.lane,
       t,
-      theta: 0,
-      phase,
     };
   });
 
-  const uniqueLanes = Array.from(new Set(layouts.map((l) => l.visualLane))).sort(
-    (a, b) => a - b
-  );
-  const laneToAngle = new Map<number, number>();
-  uniqueLanes.forEach((lane, i) => {
-    if (lane === 0) {
-      laneToAngle.set(lane, 0);
-    } else {
-      laneToAngle.set(lane, i * Math.PI * (3 - Math.sqrt(5)));
-    }
-  });
-
+  // Compute per-branch info
+  const byLane = new Map<number, CommitLayout[]>();
   layouts.forEach((l) => {
-    l.theta = laneToAngle.get(l.visualLane) ?? 0;
+    const key = Math.floor(l.visualLane);
+    if (!byLane.has(key)) byLane.set(key, []);
+    byLane.get(key)!.push(l);
   });
 
-  return layouts;
-}
+  const branches = new Map<number, BranchInfo>();
+  // Deterministic golden-angle spread for branch angles
+  const goldenAngle = Math.PI * (3 - Math.sqrt(5));
+  let angleCounter = 0;
+  [...byLane.keys()].sort((a, b) => a - b).forEach((lane) => {
+    const arr = byLane.get(lane)!;
+    const startT = Math.min(...arr.map((l) => l.t));
+    const endT = Math.max(...arr.map((l) => l.t));
+    const count = arr.length;
+    // Branch angle: main = 0 (trunk), others spread by golden angle
+    const angle = lane === 0 ? 0 : angleCounter++ * goldenAngle;
+    // Reach: proportional to branch count, capped
+    const reachR = lane === 0 ? 0 : Math.min(TREE_RADIUS, 2.2 + Math.sqrt(count) * 1.1);
+    branches.set(lane, { lane, startT, endT, count, angle, reachR });
+  });
 
-function branchColor(l: CommitLayout): string {
-  if (l.branchId === 0 || l.visualLane === 0) return BRANCH_COLORS[0];
-  return BRANCH_COLORS[Math.floor(l.visualLane) % BRANCH_COLORS.length];
+  return { layouts, branches };
 }
 
 // --- Position functions ------------------------------------------------------
 
-function posConstellation(l: CommitLayout): [number, number, number] {
-  const y = (l.t - 0.5) * VIZ_HEIGHT;
-  const r = l.visualLane === 0 ? 0.25 : 2.2 + l.visualLane * 0.55;
-  return [
-    Math.cos(l.theta * 1.7 + l.t * 0.8) * r,
-    y,
-    Math.sin(l.theta * 1.7 + l.t * 0.8) * r,
-  ];
+function easeOutCubic(t: number): number {
+  return 1 - Math.pow(1 - t, 3);
 }
 
-function posTree(l: CommitLayout): [number, number, number] {
-  const y = (l.t - 0.5) * VIZ_HEIGHT;
-  if (l.visualLane === 0) return [0, y, 0];
-  const r =
-    0.45 + 4.5 * (0.45 + 0.55 * Math.sin(l.t * Math.PI * 2 + l.visualLane));
-  const theta = l.theta + l.t * 0.4;
-  return [Math.cos(theta) * r, y, Math.sin(theta) * r];
+function yForT(t: number): number {
+  return (t - 0.5) * TREE_HEIGHT;
 }
 
-function posLantern(l: CommitLayout): [number, number, number] {
-  const y = (l.t - 0.5) * VIZ_HEIGHT;
-  if (l.visualLane === 0) return [0, y, 0];
-  const r = 1.8 + l.visualLane * 0.68;
-  return [Math.cos(l.theta) * r, y, Math.sin(l.theta) * r];
-}
-
-function posNebula(l: CommitLayout): [number, number, number] {
-  const y = (l.t - 0.5) * VIZ_HEIGHT;
-  if (l.visualLane === 0) {
-    return [Math.sin(l.t * 12) * 0.5, y, Math.cos(l.t * 11) * 0.5];
+/**
+ * Position of a commit along its branch.
+ * Main branch: strictly on the trunk (0, y, 0).
+ * Side branch: curves outward from the trunk at its start-time,
+ * following a smooth eased radius, at a stable branch-specific angle.
+ */
+function positionCommit(l: CommitLayout, branches: Map<number, BranchInfo>): [number, number, number] {
+  const key = Math.floor(l.visualLane);
+  if (key === 0) {
+    // Trunk
+    return [0, yForT(l.t), 0];
   }
-  const radius = 1.7 + l.visualLane * 0.5;
-  const scatter = 0.55;
+  const bi = branches.get(key);
+  if (!bi) return [0, yForT(l.t), 0];
+
+  const span = Math.max(0.001, bi.endT - bi.startT);
+  const rawProgress = (l.t - bi.startT) / span;
+  const progress = Math.max(0, Math.min(1, rawProgress));
+
+  // Eased radius — branch starts tangent to the trunk and spreads
+  // outward quickly at first, then settles near the tip.
+  const r = bi.reachR * easeOutCubic(progress);
+
+  // Subtle upward arc — branches rise slightly as they extend
+  const lift = progress * 0.8;
+
   return [
-    Math.cos(l.theta + l.t * 2) * radius + Math.sin(l.t * 18) * scatter,
-    y + Math.sin(l.idx * 0.07) * 0.5,
-    Math.sin(l.theta + l.t * 2) * radius + Math.cos(l.t * 17) * scatter,
+    Math.cos(bi.angle) * r,
+    yForT(l.t) + lift,
+    Math.sin(bi.angle) * r,
   ];
 }
 
-function posHelix(l: CommitLayout): [number, number, number] {
-  const turns = 5;
-  const y = (l.t - 0.5) * VIZ_HEIGHT;
-  const baseR = 3.2;
-  const laneOffset = l.visualLane === 0 ? 0 : 0.7 + l.visualLane * 0.22;
-  const r = baseR + laneOffset;
-  const phase = l.theta;
-  const angle = l.t * Math.PI * 2 * turns + phase;
-  return [Math.cos(angle) * r, y, Math.sin(angle) * r];
+/** Point at the trunk at a specific time — used as branch start anchor */
+function trunkAt(t: number): [number, number, number] {
+  return [0, yForT(t), 0];
 }
 
-function posOrbital(l: CommitLayout): [number, number, number] {
-  const laneIndex = Math.floor(l.visualLane);
-  const levels = 10;
-  const level = laneIndex % levels;
-  const y = ((level / Math.max(1, levels - 1)) - 0.5) * VIZ_HEIGHT;
-  const r =
-    1.2 +
-    Math.floor(laneIndex / levels) * 1.6 +
-    (laneIndex % 3) * 0.6 +
-    2;
-  const angle = l.t * Math.PI * 2 * 3 + l.theta;
-  return [Math.cos(angle) * r, y, Math.sin(angle) * r];
+// --- Branch line generators --------------------------------------------------
+
+/**
+ * Build a smooth bezier polyline from the trunk at the branch's
+ * start time to the branch's tip, with intermediate points eased
+ * along the same function positionCommit uses. Used to draw the
+ * branch's visible "limb" line.
+ */
+function buildBranchLine(
+  bi: BranchInfo,
+  samples = 18
+): [number, number, number][] {
+  if (bi.lane === 0) return [];
+  const pts: [number, number, number][] = [];
+  for (let i = 0; i <= samples; i++) {
+    const progress = i / samples;
+    const r = bi.reachR * easeOutCubic(progress);
+    const t = bi.startT + progress * (bi.endT - bi.startT);
+    const lift = progress * 0.8;
+    pts.push([
+      Math.cos(bi.angle) * r,
+      yForT(t) + lift,
+      Math.sin(bi.angle) * r,
+    ]);
+  }
+  return pts;
 }
 
-function posCathedral(l: CommitLayout): [number, number, number] {
-  const floors = 5;
-  const phase = Math.max(0, Math.min(floors - 1, l.phase));
-  const y = ((phase / (floors - 1)) - 0.5) * VIZ_HEIGHT;
-  const phaseFraction = phase === 0 ? l.t * 5 : (l.t * 5) - phase;
-  const clamped = Math.max(0, Math.min(1, phaseFraction));
-  const r = 0.5 + clamped * 4.4 + (l.visualLane % 4) * 0.5;
-  const angle = l.theta + clamped * Math.PI * 6;
-  return [Math.cos(angle) * r, y, Math.sin(angle) * r];
+/** Trunk polyline from oldest commit (bottom) to newest (top) */
+function buildTrunkLine(layouts: CommitLayout[]): [number, number, number][] {
+  return layouts
+    .filter((l) => Math.floor(l.visualLane) === 0)
+    .sort((a, b) => a.t - b.t)
+    .map((l) => trunkAt(l.t));
 }
 
-function posLattice(l: CommitLayout): [number, number, number] {
-  const dim = 12;
-  const cellSize = VIZ_HEIGHT / dim;
-  const half = (dim - 1) / 2;
-  const y = (Math.round(l.t * (dim - 1)) - half) * cellSize;
-  const laneIndex = Math.floor(l.visualLane);
-  const x = ((laneIndex % dim) - half) * cellSize;
-  const z =
-    ((Math.floor(laneIndex / dim) % dim) - half) * cellSize +
-    ((l.idx % dim) - half) * cellSize * 0.35;
-  return [x, y, z];
-}
+// --- Phase rings -------------------------------------------------------------
 
-// --- Shared instance renderer ------------------------------------------------
-
-interface VizProps {
-  layouts: CommitLayout[];
-  pinnedIdxs: number[];
-  hoveredIdx: number | null;
-  onClick: (idx: number) => void;
-  onHover: (idx: number | null) => void;
-}
-
-interface CommitInstancesProps extends VizProps {
-  position: (l: CommitLayout) => [number, number, number];
-  geometry: React.ReactNode;
-  material: React.ReactNode;
-  baseScale?: (l: CommitLayout) => number;
-  colorFor?: (l: CommitLayout) => string;
-}
-
-function CommitInstances({
-  layouts,
-  pinnedIdxs,
-  hoveredIdx,
-  onClick,
-  onHover,
-  position,
-  geometry,
-  material,
-  baseScale,
-  colorFor,
-}: CommitInstancesProps) {
-  return (
-    <Instances limit={layouts.length} range={layouts.length}>
-      {geometry}
-      {material}
-      {layouts.map((l) => {
-        const isPinned = pinnedIdxs.includes(l.idx);
-        const isHovered = hoveredIdx === l.idx;
-        const base = baseScale ? baseScale(l) : 1;
-        const scale = isHovered ? base * 2.6 : isPinned ? base * 2 : base;
-        const [x, y, z] = position(l);
-        return (
-          <Instance
-            key={l.idx}
-            position={[x, y, z]}
-            scale={scale}
-            color={colorFor ? colorFor(l) : branchColor(l)}
-            onClick={(e: ThreeEvent<MouseEvent>) => {
-              e.stopPropagation();
-              onClick(l.idx);
-            }}
-            onPointerOver={(e: ThreeEvent<PointerEvent>) => {
-              e.stopPropagation();
-              onHover(l.idx);
-            }}
-            onPointerOut={() => onHover(null)}
-          />
-        );
-      })}
-    </Instances>
-  );
-}
-
-// --- Individual visualization components -------------------------------------
-
-function Constellation(props: VizProps) {
-  const lines = useMemo(() => {
-    const byLane = new Map<number, CommitLayout[]>();
-    props.layouts.forEach((l) => {
-      const key = Math.floor(l.visualLane);
-      if (!byLane.has(key)) byLane.set(key, []);
-      byLane.get(key)!.push(l);
+function PhaseRings() {
+  // Draw PHASE_COUNT rings at evenly-spaced time positions
+  const rings: { y: number; r: number; key: string; label: number }[] = [];
+  for (let p = 0; p < PHASE_COUNT; p++) {
+    const t = p / Math.max(1, PHASE_COUNT - 1);
+    rings.push({
+      y: yForT(t),
+      r: 1.2 + p * 0.05,
+      key: `ring-${p}`,
+      label: p,
     });
-    const result: { points: [number, number, number][]; color: string; key: string }[] = [];
-    byLane.forEach((arr, lane) => {
-      if (arr.length < 2) return;
-      const sorted = arr.slice().sort((a, b) => a.t - b.t);
-      result.push({
-        points: sorted.map(posConstellation),
-        color: lane === 0 ? ACCENT : BRANCH_COLORS[lane % BRANCH_COLORS.length],
-        key: `l-${lane}`,
-      });
-    });
-    return result;
-  }, [props.layouts]);
-
-  return (
-    <group>
-      {lines.map((ln) => (
-        <Line
-          key={ln.key}
-          points={ln.points}
-          color={ln.color}
-          lineWidth={ln.key === "l-0" ? 2.2 : 0.9}
-          transparent
-          opacity={ln.key === "l-0" ? 0.8 : 0.35}
-        />
-      ))}
-      <CommitInstances
-        {...props}
-        position={posConstellation}
-        geometry={<sphereGeometry args={[0.13, 8, 8]} />}
-        material={
-          <meshStandardMaterial
-            emissive={CREAM}
-            emissiveIntensity={1.8}
-            color={CREAM}
-            toneMapped={false}
-          />
-        }
-        baseScale={(l) => 0.9 + l.significance * 0.7}
-      />
-    </group>
-  );
-}
-
-function GrowingTree(props: VizProps) {
-  const trunkPoints = useMemo(
-    () =>
-      props.layouts
-        .filter((l) => l.branchId === 0 || l.visualLane === 0)
-        .sort((a, b) => a.t - b.t)
-        .map(posTree),
-    [props.layouts]
-  );
-
-  const branchLines = useMemo(() => {
-    const byLane = new Map<number, CommitLayout[]>();
-    props.layouts.forEach((l) => {
-      if (l.branchId === 0 || l.visualLane === 0) return;
-      const key = Math.floor(l.visualLane);
-      if (!byLane.has(key)) byLane.set(key, []);
-      byLane.get(key)!.push(l);
-    });
-    const result: { points: [number, number, number][]; color: string; key: string }[] = [];
-    byLane.forEach((arr, lane) => {
-      if (arr.length < 1) return;
-      const sorted = arr.slice().sort((a, b) => a.t - b.t);
-      const startT = sorted[0].t;
-      const trunkStart: [number, number, number] = [0, (startT - 0.5) * VIZ_HEIGHT, 0];
-      result.push({
-        points: [trunkStart, ...sorted.map(posTree)],
-        color: BRANCH_COLORS[lane % BRANCH_COLORS.length],
-        key: `b-${lane}`,
-      });
-    });
-    return result;
-  }, [props.layouts]);
-
-  return (
-    <group>
-      {trunkPoints.length >= 2 && (
-        <Line points={trunkPoints} color={ACCENT} lineWidth={3} transparent opacity={0.9} />
-      )}
-      {branchLines.map((br) => (
-        <Line
-          key={br.key}
-          points={br.points}
-          color={br.color}
-          lineWidth={1.3}
-          transparent
-          opacity={0.5}
-        />
-      ))}
-      <CommitInstances
-        {...props}
-        position={posTree}
-        geometry={<sphereGeometry args={[0.16, 10, 10]} />}
-        material={<meshStandardMaterial roughness={0.45} metalness={0.25} />}
-        baseScale={(l) => (l.visualLane === 0 ? 1.2 : 0.9)}
-      />
-    </group>
-  );
-}
-
-function LanternProcession(props: VizProps) {
-  const threads = useMemo(() => {
-    const byLane = new Map<number, CommitLayout[]>();
-    props.layouts.forEach((l) => {
-      const key = Math.floor(l.visualLane);
-      if (!byLane.has(key)) byLane.set(key, []);
-      byLane.get(key)!.push(l);
-    });
-    const result: { points: [number, number, number][]; color: string; key: string }[] = [];
-    byLane.forEach((arr, lane) => {
-      if (arr.length < 2) return;
-      const sorted = arr.slice().sort((a, b) => a.t - b.t);
-      result.push({
-        points: sorted.map(posLantern),
-        color: lane === 0 ? GOLD : GOLD_LIGHT,
-        key: `th-${lane}`,
-      });
-    });
-    return result;
-  }, [props.layouts]);
-
-  return (
-    <group>
-      {threads.map((t) => (
-        <Line
-          key={t.key}
-          points={t.points}
-          color={t.color}
-          lineWidth={0.8}
-          transparent
-          opacity={0.5}
-        />
-      ))}
-      <CommitInstances
-        {...props}
-        position={posLantern}
-        geometry={<sphereGeometry args={[0.18, 12, 12]} />}
-        material={
-          <meshStandardMaterial
-            color={CREAM}
-            emissive={LANTERN_GLOW}
-            emissiveIntensity={1.4}
-            roughness={0.6}
-          />
-        }
-        baseScale={(l) => 0.8 + l.significance * 0.65}
-        colorFor={(l) => (l.visualLane === 0 ? "#ffe0a8" : LANTERN_GLOW)}
-      />
-    </group>
-  );
-}
-
-function NebulaCloud(props: VizProps) {
-  return (
-    <CommitInstances
-      {...props}
-      position={posNebula}
-      geometry={<sphereGeometry args={[0.11, 6, 6]} />}
-      material={<meshBasicMaterial transparent opacity={0.9} />}
-      baseScale={(l) => (l.visualLane === 0 ? 1.7 : 0.75 + l.significance * 0.55)}
-      colorFor={(l) => (l.visualLane === 0 ? "#ffe4b8" : branchColor(l))}
-    />
-  );
-}
-
-function Helix(props: VizProps) {
-  const spinePoints = useMemo(
-    () =>
-      props.layouts
-        .filter((l) => l.visualLane === 0 || l.branchId === 0)
-        .sort((a, b) => a.t - b.t)
-        .map(posHelix),
-    [props.layouts]
-  );
-
-  return (
-    <group>
-      {spinePoints.length >= 2 && (
-        <Line
-          points={spinePoints}
-          color={ACCENT}
-          lineWidth={1.8}
-          transparent
-          opacity={0.75}
-        />
-      )}
-      <CommitInstances
-        {...props}
-        position={posHelix}
-        geometry={<sphereGeometry args={[0.13, 8, 8]} />}
-        material={<meshStandardMaterial roughness={0.5} metalness={0.2} />}
-        baseScale={(l) => (l.visualLane === 0 ? 1.15 : 0.85)}
-      />
-    </group>
-  );
-}
-
-function OrbitalRings(props: VizProps) {
-  const rings = useMemo(() => {
-    const seen = new Set<number>();
-    const out: { y: number; r: number; key: string }[] = [];
-    props.layouts.forEach((l) => {
-      const laneIndex = Math.floor(l.visualLane);
-      if (seen.has(laneIndex)) return;
-      seen.add(laneIndex);
-      const levels = 10;
-      const level = laneIndex % levels;
-      const y = ((level / Math.max(1, levels - 1)) - 0.5) * VIZ_HEIGHT;
-      const r =
-        1.2 +
-        Math.floor(laneIndex / levels) * 1.6 +
-        (laneIndex % 3) * 0.6 +
-        2;
-      out.push({ y, r, key: `ring-${laneIndex}` });
-    });
-    return out;
-  }, [props.layouts]);
-
+  }
   return (
     <group>
       {rings.map((ring) => {
         const pts: [number, number, number][] = [];
-        const segs = 80;
+        const segs = 64;
         for (let i = 0; i <= segs; i++) {
           const a = (i / segs) * Math.PI * 2;
           pts.push([Math.cos(a) * ring.r, ring.y, Math.sin(a) * ring.r]);
@@ -581,159 +306,161 @@ function OrbitalRings(props: VizProps) {
             key={ring.key}
             points={pts}
             color={GOLD}
-            lineWidth={0.6}
+            lineWidth={1}
             transparent
-            opacity={0.35}
+            opacity={0.4}
           />
         );
       })}
-      <CommitInstances
-        {...props}
-        position={posOrbital}
-        geometry={<sphereGeometry args={[0.14, 8, 8]} />}
-        material={
-          <meshStandardMaterial
-            emissive={GOLD_LIGHT}
-            emissiveIntensity={0.45}
-            roughness={0.5}
-          />
-        }
-        baseScale={(l) => (l.visualLane === 0 ? 1.15 : 0.82)}
-      />
     </group>
   );
 }
 
-function CathedralTiers(props: VizProps) {
-  const tierBorders = useMemo(() => {
-    const floors = 5;
-    const out: [number, number, number][][] = [];
-    const halfW = VIZ_HALF * 0.85;
-    for (let p = 0; p < floors; p++) {
-      const y = ((p / (floors - 1)) - 0.5) * VIZ_HEIGHT;
-      out.push([
-        [-halfW, y, -halfW],
-        [halfW, y, -halfW],
-        [halfW, y, halfW],
-        [-halfW, y, halfW],
-        [-halfW, y, -halfW],
-      ]);
-    }
-    return out;
-  }, []);
+// --- Growing Tree ------------------------------------------------------------
 
-  return (
-    <group>
-      {tierBorders.map((pts, i) => (
-        <Line
-          key={`tier-${i}`}
-          points={pts}
-          color={GOLD}
-          lineWidth={0.55}
-          transparent
-          opacity={0.3}
-        />
-      ))}
-      <CommitInstances
-        {...props}
-        position={posCathedral}
-        geometry={<sphereGeometry args={[0.14, 10, 10]} />}
-        material={
-          <meshStandardMaterial
-            color={CREAM}
-            emissive={LANTERN_GLOW}
-            emissiveIntensity={0.9}
-            roughness={0.55}
-          />
-        }
-        baseScale={(l) => 0.85 + l.significance * 0.55}
-      />
-    </group>
-  );
-}
-
-function CrystalLattice(props: VizProps) {
-  const guideLines = useMemo(() => {
-    const h = VIZ_HALF * 0.95;
-    return [
-      [[-h, 0, 0], [h, 0, 0]],
-      [[0, -h, 0], [0, h, 0]],
-      [[0, 0, -h], [0, 0, h]],
-    ] as [number, number, number][][];
-  }, []);
-
-  return (
-    <group>
-      {guideLines.map((pts, i) => (
-        <Line
-          key={`axis-${i}`}
-          points={pts}
-          color={GOLD}
-          lineWidth={0.55}
-          transparent
-          opacity={0.35}
-        />
-      ))}
-      <CommitInstances
-        {...props}
-        position={posLattice}
-        geometry={<boxGeometry args={[0.2, 0.2, 0.2]} />}
-        material={<meshStandardMaterial roughness={0.3} metalness={0.45} />}
-        baseScale={() => 1}
-      />
-    </group>
-  );
-}
-
-// --- Variant dispatch --------------------------------------------------------
-
-function Viz({ variant, ...props }: VizProps & { variant: VizVariant }) {
-  switch (variant) {
-    case "constellation":
-      return <Constellation {...props} />;
-    case "tree":
-      return <GrowingTree {...props} />;
-    case "lanterns":
-      return <LanternProcession {...props} />;
-    case "nebula":
-      return <NebulaCloud {...props} />;
-    case "helix":
-      return <Helix {...props} />;
-    case "orbital":
-      return <OrbitalRings {...props} />;
-    case "cathedral":
-      return <CathedralTiers {...props} />;
-    case "lattice":
-      return <CrystalLattice {...props} />;
-  }
-}
-
-// --- Scene wrapper with lighting + orbit controls ---------------------------
-
-function Scene({
-  variant,
-  layouts,
-  pinnedIdxs,
-  hoveredIdx,
-  onClick,
-  onHover,
-}: {
-  variant: VizVariant;
+interface TreeProps {
   layouts: CommitLayout[];
+  branches: Map<number, BranchInfo>;
   pinnedIdxs: number[];
   hoveredIdx: number | null;
   onClick: (idx: number) => void;
   onHover: (idx: number | null) => void;
-}) {
+}
+
+function GrowingTree({
+  layouts,
+  branches,
+  pinnedIdxs,
+  hoveredIdx,
+  onClick,
+  onHover,
+}: TreeProps) {
+  // Trunk as a thick mesh tube
+  const trunkPoints = useMemo(() => buildTrunkLine(layouts), [layouts]);
+  const trunkCurve = useMemo(() => {
+    if (trunkPoints.length < 2) return null;
+    return new THREE.CatmullRomCurve3(
+      trunkPoints.map((p) => new THREE.Vector3(...p)),
+      false,
+      "catmullrom",
+      0.1
+    );
+  }, [trunkPoints]);
+
+  // Branch limb lines
+  const branchLines = useMemo(() => {
+    const out: { points: [number, number, number][]; color: string; thickness: number; key: string }[] = [];
+    branches.forEach((bi) => {
+      if (bi.lane === 0) return;
+      const start = trunkAt(bi.startT);
+      const tip = buildBranchLine(bi);
+      const points = [start, ...tip];
+      out.push({
+        points,
+        color: BRANCH_COLORS[bi.lane % BRANCH_COLORS.length],
+        thickness: Math.min(2.4, 0.9 + Math.sqrt(bi.count) * 0.2),
+        key: `limb-${bi.lane}`,
+      });
+    });
+    return out;
+  }, [branches]);
+
+  return (
+    <group>
+      {/* Trunk — thick swept tube along the curve */}
+      {trunkCurve && (
+        <mesh>
+          <tubeGeometry args={[trunkCurve, 64, 0.32, 14, false]} />
+          <meshStandardMaterial
+            color={TRUNK_COLOR}
+            emissive={TRUNK_LIT}
+            emissiveIntensity={0.15}
+            roughness={0.72}
+            metalness={0.1}
+          />
+        </mesh>
+      )}
+
+      {/* Phase rings around trunk */}
+      <PhaseRings />
+
+      {/* Branch limb lines */}
+      {branchLines.map((br) => (
+        <Line
+          key={br.key}
+          points={br.points}
+          color={br.color}
+          lineWidth={br.thickness}
+          transparent
+          opacity={0.65}
+        />
+      ))}
+
+      {/* Commit instances */}
+      <Instances limit={layouts.length} range={layouts.length}>
+        <sphereGeometry args={[0.18, 12, 12]} />
+        <meshStandardMaterial
+          color={CREAM}
+          emissive={LEAF_COLOR}
+          emissiveIntensity={0.55}
+          roughness={0.45}
+          metalness={0.15}
+        />
+        {layouts.map((l) => {
+          const isPinned = pinnedIdxs.includes(l.idx);
+          const isHovered = hoveredIdx === l.idx;
+          const [x, y, z] = positionCommit(l, branches);
+          const isMain = Math.floor(l.visualLane) === 0;
+          const base = isMain ? 1.25 : 0.85 + l.significance * 0.4;
+          const scale = isHovered ? base * 2.6 : isPinned ? base * 2 : base;
+          let color: string;
+          if (isMain) {
+            color = ACCENT;
+          } else {
+            color = BRANCH_COLORS[Math.floor(l.visualLane) % BRANCH_COLORS.length];
+          }
+          return (
+            <Instance
+              key={l.idx}
+              position={[x, y, z]}
+              scale={scale}
+              color={color}
+              onClick={(e: ThreeEvent<MouseEvent>) => {
+                e.stopPropagation();
+                onClick(l.idx);
+              }}
+              onPointerOver={(e: ThreeEvent<PointerEvent>) => {
+                e.stopPropagation();
+                onHover(l.idx);
+              }}
+              onPointerOut={() => onHover(null)}
+            />
+          );
+        })}
+      </Instances>
+    </group>
+  );
+}
+
+// --- Scene wrapper -----------------------------------------------------------
+
+function Scene({
+  layouts,
+  branches,
+  pinnedIdxs,
+  hoveredIdx,
+  onClick,
+  onHover,
+}: TreeProps) {
   return (
     <>
       <ambientLight intensity={0.55} color={"#fff0d8"} />
-      <directionalLight position={[15, 25, 20]} intensity={0.8} color={CREAM} />
-      <directionalLight position={[-15, -10, -15]} intensity={0.35} color={"#e07b5f"} />
-      <pointLight position={[0, 0, 0]} intensity={0.8} color={GOLD_LIGHT} distance={30} decay={1.4} />
-      <Viz
-        variant={variant}
+      <directionalLight position={[20, 30, 25]} intensity={0.9} color={CREAM} castShadow />
+      <directionalLight position={[-20, -10, -20]} intensity={0.3} color={"#e07b5f"} />
+      <pointLight position={[0, 0, 0]} intensity={1.4} color={GOLD_LIGHT} distance={32} decay={1.3} />
+      <GrowingTree
         layouts={layouts}
+        branches={branches}
         pinnedIdxs={pinnedIdxs}
         hoveredIdx={hoveredIdx}
         onClick={onClick}
@@ -838,19 +565,13 @@ function StackCard({ commit, idx, total, isTop, onDismiss }: StackCardProps) {
   );
 }
 
-// --- Top-level -------------------------------------------------------------
+// --- Top-level CommitGraph ---------------------------------------------------
 
-export default function CommitGraph({
-  data,
-  variant,
-}: {
-  data: GraphData;
-  variant: VizVariant;
-}) {
+export default function CommitGraph({ data }: { data: GraphData }) {
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const [pinnedIdxs, setPinnedIdxs] = useState<number[]>([0]);
 
-  const layouts = useMemo(() => prepareLayout(data), [data]);
+  const { layouts, branches } = useMemo(() => prepareLayout(data), [data]);
 
   const handleClick = useCallback((idx: number) => {
     setPinnedIdxs((curr) => {
@@ -907,14 +628,14 @@ export default function CommitGraph({
     <div className="cube-graph">
       <div className="cube-canvas-wrap">
         <Canvas
-          camera={{ position: [22, 12, 28], fov: 52 }}
+          camera={{ position: [26, 10, 30], fov: 48 }}
           dpr={[1, 2]}
           gl={{ antialias: true, alpha: true }}
         >
           <Suspense fallback={null}>
             <Scene
-              variant={variant}
               layouts={layouts}
+              branches={branches}
               pinnedIdxs={pinnedIdxs}
               hoveredIdx={hoveredIdx}
               onClick={handleClick}
@@ -924,8 +645,8 @@ export default function CommitGraph({
           <OrbitControls
             makeDefault
             enablePan={false}
-            minDistance={8}
-            maxDistance={80}
+            minDistance={10}
+            maxDistance={90}
             target={[0, 0, 0]}
           />
         </Canvas>

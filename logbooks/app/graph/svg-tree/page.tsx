@@ -1,45 +1,41 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import CommitGraph from "@/components/CommitGraph";
+import SvgTree from "@/components/SvgTree";
 import NavLink from "@/components/NavLink";
-import graphData from "./data.json";
+import graphData from "../data.json";
 
-export const metadata: Metadata = {
-  title: "Growing Tree",
-};
+export const metadata: Metadata = { title: "SVG Tree" };
 
-export default function GraphPage() {
+export default function SvgTreePage() {
   return (
     <article className="page-bleed">
       <div className="page-wider">
         <header className="frontispiece" style={{ marginBottom: "1.5em" }}>
           <div className="eyebrow">The Helm Chronicle &middot; Companion</div>
-          <h1>Growing Tree</h1>
+          <h1>SVG Tree</h1>
           <p className="subtitle">
-            Fifty-two days as a tree. The trunk is main; every side branch
-            peels off at its first commit and extends to its last. Five
-            gold phase rings mark the project&rsquo;s five acts.
+            The same growing tree rendered flat in 2D as scalable vector
+            graphics. No WebGL, no three.js &mdash; just{" "}
+            <code>&lt;svg&gt;</code> paths and circles.
           </p>
         </header>
       </div>
 
-      <CommitGraph data={graphData} />
+      <SvgTree data={graphData} />
 
       <div className="page-wider">
         <div className="graph-alternatives">
           <p className="alt-label">Other views</p>
-          <Link href="/graph/svg-tree" className="alt-link">
-            <span className="alt-name">SVG Tree</span>
+          <Link href="/graph" className="alt-link">
+            <span className="alt-name">Growing Tree (3D)</span>
             <span className="alt-desc">
-              The same tree as a flat 2D illustration — no WebGL, no 3D
-              library
+              The three.js original with full orbit and depth
             </span>
           </Link>
           <Link href="/graph/timeline" className="alt-link">
             <span className="alt-name">Canvas Timeline</span>
             <span className="alt-desc">
-              Horizontal scrolling timeline on HTML canvas — commits as
-              dots, branches as colored lines
+              Horizontal scrolling timeline on HTML canvas
             </span>
           </Link>
         </div>
@@ -50,8 +46,7 @@ export default function GraphPage() {
             <NavLink href="/phases">Phases</NavLink>
           </div>
           <div className="colophon">
-            {graphData.totalCommits} commits &middot; {graphData.dates.length}{" "}
-            active days &middot; one tree
+            {graphData.totalCommits} commits &middot; flat SVG &middot; zero deps
           </div>
         </footer>
       </div>

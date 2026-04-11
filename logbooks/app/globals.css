@@ -1129,131 +1129,96 @@ kbd {
       transparent 70%);
 }
 
-/* Prev/next pager between variant pages */
-.graph-pager {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  gap: 1.4em;
-  align-items: center;
-  margin: 2em 0 2em;
-  padding: 1.4em 0;
-  border-top: 1px solid var(--rule-soft);
-  border-bottom: 1px solid var(--rule-soft);
+/* "Other views" block at the bottom of each graph page */
+.graph-alternatives {
+  margin: 2.5em 0 2em;
+  padding: 1.6em 1.8em;
+  background: var(--surface);
+  border: 1px solid var(--rule-soft);
+  border-left: 2px solid var(--gold);
+  border-radius: 0 8px 8px 0;
+  box-shadow: var(--shadow-sm);
 }
 
-.graph-pager-link {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2em;
-  padding: 0.4em 0.6em;
-  text-decoration: none;
-  border-bottom: none;
-  color: inherit;
-  transition: color var(--motion) var(--ease);
-}
-.graph-pager-link.prev { text-align: left; }
-.graph-pager-link.next { text-align: right; }
-
-.graph-pager-link .graph-pager-label {
+.graph-alternatives .alt-label {
+  display: block;
   font-variant: small-caps;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.28em;
   font-size: 0.7em;
   color: var(--gold);
+  margin: 0 0 1em;
   font-weight: 600;
 }
 
-.graph-pager-link .graph-pager-name {
+.graph-alternatives .alt-link {
+  display: flex;
+  flex-direction: column;
+  padding: 0.8em 0;
+  border-bottom: 1px solid var(--rule-soft);
+  text-decoration: none;
+  color: inherit;
+  transition: color var(--motion) var(--ease);
+}
+.graph-alternatives .alt-link:last-of-type { border-bottom: none; }
+
+.graph-alternatives .alt-link .alt-name {
   font-family: "Baskerville", Georgia, serif;
   font-weight: 400;
   font-size: 1.1em;
   color: var(--ink);
 }
-
-.graph-pager-link:hover .graph-pager-name { color: var(--accent); }
-
-.graph-pager-home {
-  font-variant: small-caps;
-  letter-spacing: 0.24em;
-  font-size: 0.72em;
-  color: var(--ink-soft);
-  text-decoration: none;
-  border-bottom: 1px solid transparent;
-  padding: 0.4em 0.8em;
-  transition: color var(--motion) var(--ease), border-color var(--motion) var(--ease);
-  white-space: nowrap;
-  font-weight: 600;
-}
-.graph-pager-home:hover {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
-}
-
-/* Gallery of 8 visualization cards on /graph */
-.graph-gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(18em, 1fr));
-  gap: 1.2em;
-  margin: 3em 0 4em;
-}
-
-.gallery-card {
-  position: relative;
-  display: block;
-  padding: 1.8em 1.8em 1.6em;
-  background: var(--surface);
-  border: 1px solid var(--rule-soft);
-  border-radius: 10px;
-  text-decoration: none;
-  color: inherit;
-  box-shadow: var(--shadow-sm);
-  transition:
-    transform var(--motion) var(--ease),
-    box-shadow var(--motion) var(--ease),
-    border-color var(--motion) var(--ease);
-}
-
-.gallery-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow);
-  border-color: var(--rule);
-}
-
-.gallery-card .gallery-numeral {
-  position: absolute;
-  top: 0.6em;
-  right: 1em;
-  font-family: "Baskerville", Georgia, serif;
-  font-weight: 300;
-  font-size: 2.4em;
-  line-height: 1;
-  color: var(--gold);
-  opacity: 0.55;
-  pointer-events: none;
-  user-select: none;
-}
-
-.gallery-card h2 {
-  font-family: "Baskerville", Georgia, serif;
-  font-weight: 400;
-  font-size: 1.3em;
-  line-height: 1.2;
-  margin: 0.4em 0 0.3em;
-  color: var(--ink);
-}
-
-.gallery-card .gallery-tagline {
-  font-style: italic;
-  color: var(--accent);
-  font-size: 0.9em;
-  margin: 0 0 0.65em;
-  font-weight: 500;
-}
-
-.gallery-card .gallery-desc {
-  margin: 0;
+.graph-alternatives .alt-link .alt-desc {
   color: var(--ink-soft);
   font-size: 0.88em;
-  line-height: 1.55;
+  margin-top: 0.15em;
+  line-height: 1.5;
+}
+.graph-alternatives .alt-link:hover .alt-name { color: var(--accent); }
+
+/* SVG tree viewport */
+.svg-tree-wrap {
+  position: relative;
+  width: 100%;
+  min-height: 600px;
+  max-height: 78vh;
+  overflow: auto;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 40%,
+      rgba(255, 225, 180, 0.18) 0%,
+      rgba(255, 200, 150, 0.06) 45%,
+      transparent 70%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1em;
+}
+
+.svg-tree {
+  display: block;
+  width: auto;
+  height: 100%;
+  max-height: calc(78vh - 2em);
+  min-height: 560px;
+}
+
+/* Canvas timeline viewport */
+.canvas-timeline-wrap {
+  position: relative;
+  width: 100%;
+  height: 72vh;
+  min-height: 440px;
+  max-height: 720px;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 50%,
+      rgba(255, 225, 180, 0.14) 0%,
+      rgba(255, 200, 150, 0.05) 50%,
+      transparent 80%);
+}
+.canvas-timeline {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 /* Commit stack — HTML overlay on top of the 3D cube canvas */
