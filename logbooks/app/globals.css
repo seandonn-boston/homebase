@@ -1115,76 +1115,18 @@ kbd {
   margin: 1em 1.5em 0;
 }
 
-/* Central index (HTML overlay inside the canvas) */
-.cube-index {
+/* Cube canvas has a soft warm background gradient underneath so the
+   scene reads against an atmospheric backdrop, not the site background. */
+.cube-canvas-wrap::before {
+  content: "";
+  position: absolute;
+  inset: 0;
   pointer-events: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.cube-index-center {
-  pointer-events: auto;
-  background: transparent;
-  border: none;
-  font-family: "Baskerville", "Libre Baskerville", Georgia, serif;
-  font-variant: small-caps;
-  letter-spacing: 0.28em;
-  font-size: 0.78em;
-  color: var(--gold);
-  text-shadow:
-    0 0 10px rgba(255, 230, 170, 0.9),
-    0 0 24px rgba(255, 210, 140, 0.5);
-  cursor: pointer;
-  padding: 0.3em 0.7em;
-  font-weight: 700;
-  user-select: none;
-}
-
-.cube-index-center.focused,
-.cube-index-center:hover {
-  color: var(--accent);
-}
-
-/* Visualization labels (HTML overlays inside the canvas) */
-.viz-label {
-  pointer-events: auto;
-  display: inline-flex;
-  align-items: baseline;
-  gap: 0.45em;
-  background: transparent;
-  border: none;
-  color: var(--ink);
-  cursor: pointer;
-  padding: 0.35em 0.8em;
-  font-family: "Baskerville", Georgia, serif;
-  white-space: nowrap;
-  text-shadow:
-    0 0 8px rgba(251, 243, 234, 0.95),
-    0 0 18px rgba(251, 243, 234, 0.6);
-}
-
-.viz-label-num {
-  font-variant: small-caps;
-  letter-spacing: 0.22em;
-  font-size: 0.7em;
-  color: var(--gold);
-  font-weight: 700;
-}
-
-.viz-label-name {
-  font-size: 0.92em;
-  font-weight: 400;
-  color: var(--ink);
-  letter-spacing: -0.005em;
-}
-
-.viz-label:hover .viz-label-name,
-.viz-label.active .viz-label-name {
-  color: var(--accent);
-}
-.viz-label.active .viz-label-num {
-  color: var(--accent);
+  background:
+    radial-gradient(ellipse 60% 55% at 50% 45%,
+      rgba(255, 225, 180, 0.20) 0%,
+      rgba(255, 200, 150, 0.08) 40%,
+      transparent 70%);
 }
 
 /* Commit stack — HTML overlay on top of the 3D cube canvas */
