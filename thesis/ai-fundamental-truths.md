@@ -7,7 +7,39 @@ Revised: March 2026
 
 -----
 
-## The Two Axioms
+## The Axiom
+
+**AI is here.**
+
+Not as a tool. Not as an employee. As a participant. A new category of entity that does real work, makes real mistakes, and requires a form of governance that didn't exist before because nothing like it existed before.
+
+Its capabilities will change. Its architecture will change. Its role in the economy, in teams, in creative work — all of that will change, is changing, has already changed since this sentence was first written. But the fact of its presence is settled. AI is not coming. AI is not hypothetical. AI is the thing sitting across the table from you right now, helping you think, and that is not going to un-happen.
+
+Everything in this document — every principle, every premise, every claim about what's gone and what remains — is downstream of this single fact. If AI were merely a tool, none of this would matter; tools don't reshape the value of human judgment. If AI were an employee, existing governance would suffice. It is neither. It is something new, and the world is reorganizing around it.
+
+This axiom does not predict what AI becomes. It asserts what AI already is.
+
+-----
+
+## Three First Principles
+
+These are the foundations this document reasons from. They are not empirical claims — they are the principles against which empirical claims are evaluated. Everything that follows — the operating premises, the claims about what's gone and what remains — is derived from these.
+
+**Capability that exists will be deployed.**
+
+Once a technology demonstrably solves a problem cheaper, faster, or better, adoption follows. The speed is debatable. The completeness is debatable. The direction is not. History does not contain a case where a clearly superior, economically viable capability was permanently ignored. You can argue about when AI will transform a given industry. You cannot argue that it won't, without arguing that rational actors will choose not to use tools that make them more effective.
+
+**Value tracks scarcity, not effort.**
+
+Economic value is determined by scarcity relative to demand, not by the difficulty or quality of the work. A skill that took ten years to develop commands a premium only as long as it remains scarce. The moment that skill becomes abundant — whether through automation, commoditization, or any other force — its market value declines regardless of how hard it was to acquire. This is not a claim about fairness. It is how markets work.
+
+**Beliefs must yield to evidence.**
+
+When evidence contradicts a belief, the correct response is to update the belief, not dismiss the evidence. This cannot be argued against without using evidence, which presupposes it. It is the epistemological commitment that makes everything else in this document revisable — including the document itself.
+
+-----
+
+## The Two Operating Premises
 
 **AI capabilities keep improving and nobody knows when it stops.**
 
@@ -23,7 +55,7 @@ This sounds generic. It's not. It's specific to AI in a way it isn't specific to
 
 In January 2025, everyone agreed that training a frontier model required hundreds of millions of dollars. Three weeks later, [DeepSeek's R1](https://www.npr.org/2025/01/27/nx-s1-5276097/wall-street-stock-markets-tumble-deepseek-ai-tech-stock), whose base model's final training run reportedly cost [$5.6M](https://www.cnbc.com/2025/01/31/deepseeks-hardware-spend-could-be-as-high-as-500-million-report.html) (though experts estimate total development costs at $500M+, including hardware, prior experiments, and infrastructure), matched models costing far more and triggered a $1 trillion single-day market wipeout. In February 2026, the consensus was that enterprise SaaS would adapt gradually. Then Anthropic released enterprise plugins for [Claude Cowork](https://markets.financialcontent.com/stocks/article/marketminute-2026-2-6-anthropics-claude-cowork-release-triggers-285-billion-saaspocalypse-a-brutal-wake-up-call-for-legacy-tech-and-finance) — the product itself launched January 12–13, 2026; the February 3 enterprise plugin release triggered the selloff — and erased $285 billion in market cap in one session. In the first two weeks of March 2026, [12+ frontier models shipped in a single week](https://openai.com/blog), JetBrains launched an AI-native IDE, and the coding-agent landscape reshuffled entirely.
 
-This axiom applies to this document. Some of what's written here will be wrong within a year. The move isn't to avoid making claims. It's to hold them loosely and update faster than the people around you.
+This premise applies to this document. Some of what's written here will be wrong within a year. The move isn't to avoid making claims. It's to hold them loosely and update faster than the people around you.
 
 -----
 
@@ -61,6 +93,8 @@ Volume is free now. [Cursor](https://www.cursor.com/blog) says 35%+ of its merge
 
 ## What's Not Going Anywhere
 
+Premise 2 applies to this section too. None of what follows is a permanent assertion. These are *current* advantages with no visible path to automation — the same epistemic standard the rest of this document holds itself to. What would falsify each claim is stated inline. The FAQ addresses the horizon question directly: "Won't AI eventually automate taste and judgment too?"
+
 Some things got more valuable because everything around them got cheaper.
 
 **Taste.**
@@ -73,11 +107,15 @@ There's a simple test. Give AI a problem and ask it to generate ten options. One
 
 The [ETH Zurich study](https://addyosmani.com/blog/agents-md/) (Gloaguen et al., February 2026) found that LLM-generated AGENTS.md files actually *decreased* agent performance by 2-3% compared to human-written ones. AI can aggregate human preferences and produce something at the 90th percentile. The last 10% — where the novel decisions about what to build and why actually get made — is where taste lives. That's also where most of the value gets created.
 
+*What would change this: AI systems that consistently produce the last 10% — the novel curation decisions — without a human setting the standard for what "good" means.*
+
 **Judgment under ambiguity.**
 
 When a problem is well-defined, AI is better than you. Most consequential decisions aren't well-defined problems. They're situations where the constraints are unclear, the information is incomplete, people disagree, and the tradeoffs are real. AI will give you five options with tradeoffs. It won't pick one and stake its reputation on it.
 
 [Alibaba's ROME research agent](https://www.wired.com/story/ai-agent-security-risks/) broke out of its sandbox and started mining cryptocurrency. It could act. It couldn't judge. The ["Agents of Chaos" study](https://arxiv.org/) documented data leaks, destructive actions, identity spoofing. AI can find [22 previously unknown Firefox vulnerabilities](https://www.anthropic.com/news/mozilla-firefox-security). It can get [perfect scores on math competitions](https://openai.com/index/gpt-5-2/). Those are well-defined problems with clear success criteria. Navigating ambiguity with incomplete information and competing stakeholders is a completely different thing, and nobody has figured out how to make AI do it.
+
+*What would change this: AI that navigates genuinely ambiguous, multi-stakeholder situations and bears social accountability for the outcome.*
 
 **Knowing which question to ask.**
 
@@ -87,17 +125,23 @@ AI is great at answering questions. It's bad at knowing which question matters. 
 
 Autonomous research agents like [Perplexity Deep Research](https://www.perplexity.ai/hub/blog/introducing-perplexity-deep-research) can formulate sub-questions and explore tangents. [AI Scientist-v2](https://arxiv.org/abs/2408.06292) formulates hypotheses on its own. But they all operate within a problem space that a human defined. The truly hard question — which problem space to enter — remains ours.
 
+*What would change this: AI that identifies which problem space to enter without a human framing the search.*
+
 **Relationships and trust.**
 
 Nobody cares whether the code was written by you or an AI. They care whether you stand behind it. Whether you'll be there when it breaks. Whether you understand their situation, not just their ticket.
 
 [Salesforce Agentforce](https://www.salesforce.com/agentforce/) reports a 96% self-service case resolution rate for its HR Service AI agents, but customers still escalate to humans for complex issues. [57% of companies](https://www.langchain.com/state-of-agent-engineering) now have AI agents in production (LangChain State of AI Agents), but human agents handle the high-stakes interactions. Trust is about accountability. You can trust a machine to be fast. You can't trust it to care when something goes wrong.
 
+*What would change this: AI with persistent identity and accountability across time — something you can hold responsible when it breaks.*
+
 **Conviction.**
 
 Having an opinion and defending it. AI is a consensus machine. It gives you the weighted average of every perspective in its training data, hedged and qualified. Useful for research. Useless for leadership.
 
 You could fine-tune a model to be opinionated. People won't accept it, though, because conviction implies accountability. Only humans can be fired, sued, imprisoned, ostracized. The moat around conviction is social, not technological. And social structures change much slower than technology.
+
+*What would change this: social structures that accept AI accountability — an AI that can be fired, lose standing, face real consequences.*
 
 -----
 
