@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-04-27T06:58:49Z",
+  "last_updated": "2026-04-27T07:49:36Z",
   "sources": {
     "anthropic": {
       "type": "model_provider",
@@ -10,7 +10,7 @@
     },
     "openai": {
       "type": "model_provider",
-      "last_scanned": "2026-04-27T06:58:49Z",
+      "last_scanned": "2026-04-27T07:49:36Z",
       "known_version": "v0.14.6",
       "enabled": true
     },
@@ -22,19 +22,19 @@
     },
     "meta-llama": {
       "type": "model_provider",
-      "last_scanned": "2026-04-27T06:58:49Z",
+      "last_scanned": "2026-04-27T07:49:36Z",
       "known_version": "v0.2.0",
       "enabled": true
     },
     "mistralai": {
       "type": "model_provider",
-      "last_scanned": "2026-04-27T06:58:49Z",
+      "last_scanned": "2026-04-27T07:49:36Z",
       "known_version": "v1.10.0",
       "enabled": true
     },
     "deepseek-ai": {
       "type": "model_provider",
-      "last_scanned": "2026-04-27T06:58:49Z",
+      "last_scanned": "2026-04-27T07:49:36Z",
       "known_version": "v1.0.0",
       "enabled": true
     },
@@ -52,7 +52,7 @@
     },
     "cline": {
       "type": "framework",
-      "last_scanned": "2026-04-27T06:58:49Z",
+      "last_scanned": "2026-04-27T07:49:36Z",
       "known_version": "v3.81.0",
       "enabled": true
     },
@@ -82,6 +82,14 @@
     }
   },
   "scan_history": [
+    {
+      "timestamp": "2026-04-27T07:49:36Z",
+      "scan_type": "full",
+      "status": "success",
+      "findings_count": 17,
+      "high_priority_count": 3,
+      "digest_file": "monitor/digests/2026-04-27.md"
+    },
     {
       "timestamp": "2026-04-27T06:58:49Z",
       "scan_type": "discover",
