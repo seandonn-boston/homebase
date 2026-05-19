@@ -92,7 +92,7 @@ Deep research supporting Admiral's positioning and thesis:
 
 The intellectual foundation underlying everything else:
 
-- **Fundamental Truths About AI** — Two axioms: capabilities keep improving, and what we know today may not be true tomorrow
+- **Fundamental Truths About AI** — The Axiom, Three First Principles, and Two Operating Premises: a layered epistemological foundation for understanding why AI reshapes the value of human work
 - **AI Investment Thesis** — Why the current AI infrastructure cycle is a down payment, not a bubble
 - **AI Inherits the Internet** — Why AI adoption is faster than any prior technology wave
 - **Competitive Advantage Analysis** — Honest founder's assessment of Admiral's viability and moats
